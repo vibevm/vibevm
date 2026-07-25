@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T17:08:53Z",
+  "updated_at": "2026-07-25T17:29:13Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -2096,10 +2096,10 @@
       }
     },
     "spec/common/PROP-018-agentic-standalone-modes.md": {
-      "content_hash": "28cd07e83ec1544d128a78ca9927eb8859495d705d3da62e0a18472afe953fa0",
+      "content_hash": "6f0cdc165d1208b475749507386865039b029994f6b1ac24cb4248f9332398dd",
       "rollup": {
         "explicit": [
-          "spec",
+          "impl",
           "done"
         ],
         "computed": [
@@ -2107,7 +2107,7 @@
           "done"
         ],
         "effective": [
-          "spec",
+          "impl",
           "done"
         ],
         "marker_count": 113,
@@ -2122,17 +2122,18 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 112,
         "marker_count": 113,
-        "processed_hash": "28cd07e83ec1544d128a78ca9927eb8859495d705d3da62e0a18472afe953fa0",
+        "processed_hash": "6f0cdc165d1208b475749507386865039b029994f6b1ac24cb4248f9332398dd",
         "summary": {
-          "confirmed": 112,
-          "drift": 1,
+          "confirmed": 113,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "says proposed 2026-06-16 with the MVP merely authorised - the SS4 MVP is implemented end to end (specmap: 23 implements / 8 verifies across 8 sections; agentic tools live) -> F-013 (ledgered in B)"
+              "says proposed 2026-06-16 with the MVP merely authorised - the SS4 MVP is implemented end to end (specmap: 23 implements / 8 verifies across 8 sections; agentic tools live) -> F-013 (ledgered in B)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -2809,14 +2810,14 @@
           }
         },
         "verified_at": "2026-07-25T13:28:04Z",
-        "verify_batch": "c3c-prop-018-019"
+        "verify_batch": "c3c-prop-018-019 + d2a"
       }
     },
     "spec/common/PROP-019-version-manager.md": {
-      "content_hash": "f86f5c5f945a67b48e306fdd7f4cab35914a631929f7b32fab1bc329be7008bb",
+      "content_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
       "rollup": {
         "explicit": [
-          "spec",
+          "impl",
           "done"
         ],
         "computed": [
@@ -2824,7 +2825,7 @@
           "done"
         ],
         "effective": [
-          "spec",
+          "impl",
           "done"
         ],
         "marker_count": 209,
@@ -2839,17 +2840,18 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 208,
         "marker_count": 209,
-        "processed_hash": "f86f5c5f945a67b48e306fdd7f4cab35914a631929f7b32fab1bc329be7008bb",
+        "processed_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
         "summary": {
-          "confirmed": 208,
-          "drift": 1,
+          "confirmed": 209,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "says proposed 2026-06-17 (v2 same day) - the vvm is implemented across the whole verb set with dense implements/verifies coverage -> F-005 (ledgered in B)"
+              "says proposed 2026-06-17 (v2 same day) - the vvm is implemented across the whole verb set with dense implements/verifies coverage -> F-005 (ledgered in B)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -4102,11 +4104,11 @@
           }
         },
         "verified_at": "2026-07-25T13:28:04Z",
-        "verify_batch": "c3c-prop-018-019"
+        "verify_batch": "c3c-prop-018-019 + d2a"
       }
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
-      "content_hash": "bf748411cf54a98bf1054ae253e5c375b538bbe7df77b7146767e07df39e97ae",
+      "content_hash": "cfaa3c9b4d0530f780db587eadfc67ef4cfbb1da4b4be7870892b4a6e53910f7",
       "rollup": {
         "explicit": [
           "spec",
@@ -4132,23 +4134,25 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 76,
         "marker_count": 77,
-        "processed_hash": "bf748411cf54a98bf1054ae253e5c375b538bbe7df77b7146767e07df39e97ae",
+        "processed_hash": "cfaa3c9b4d0530f780db587eadfc67ef4cfbb1da4b4be7870892b4a6e53910f7",
         "summary": {
-          "confirmed": 72,
-          "drift": 5,
+          "confirmed": 77,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "proposed 2026-06-27 over a fully shipped model (vendored toolchain consumed by this very session) -> F-006 (ledgered in B)"
+              "proposed 2026-06-27 over a fully shipped model (vendored toolchain consumed by this very session) -> F-006 (ledgered in B)",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "related": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "cites vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/... - the 0.6.0 slot no longer exists (only 0.7.0); dead links -> F-044"
+              "cites vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/... - the 0.6.0 slot no longer exists (only 0.7.0); dead links -> F-044",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "SANCTION-GRANTED": {
@@ -4470,15 +4474,17 @@
             ]
           },
           "CORE-STAYS-PROMPT-ONLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "says core-ai-native stays prompt-only until a second language needs the shared engine - the condition fired: the TS pilot shipped and core-ai-native now AUTHORS the neutral engines (core-ai-native-conform/-specmap/... in packages/core-ai-native/v0.7.0/crates; PROP-028 NAME-NEUTRAL-ENGINES) -> F-044"
+              "says core-ai-native stays prompt-only until a second language needs the shared engine - the condition fired: the TS pilot shipped and core-ai-native now AUTHORS the neutral engines (core-ai-native-conform/-specmap/... in packages/core-ai-native/v0.7.0/crates; PROP-028 NAME-NEUTRAL-ENGINES) -> F-044",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "DEFERRED-ENGINE-SPLIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the deferred split EXECUTED: conform-core/specmap-core neutral halves live in core-ai-native, vendored byte-identically by each -lang/-mcp (cargo xtask sync-engines) - the future-tense deferral aged -> F-044"
+              "the deferred split EXECUTED: conform-core/specmap-core neutral halves live in core-ai-native, vendored byte-identically by each -lang/-mcp (cargo xtask sync-engines) - the future-tense deferral aged -> F-044",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "SURF-NO-NEW-FIELD": {
@@ -4548,9 +4554,10 @@
             ]
           },
           "OOS-TS-CHECKER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "says TypeScript ships no implemented tool until a TS pilot exists - the typescript-ai-native family shipped with floor/conform/specmap engines -> F-044"
+              "says TypeScript ships no implemented tool until a TS pilot exists - the typescript-ai-native family shipped with floor/conform/specmap engines -> F-044",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "ACC-SHAPE": {
@@ -4603,11 +4610,11 @@
           }
         },
         "verified_at": "2026-07-25T13:32:18Z",
-        "verify_batch": "c3d-common-tail"
+        "verify_batch": "c3d-common-tail + d2d"
       }
     },
     "spec/common/PROP-028-package-families.md": {
-      "content_hash": "43045c466884d95b85f4a121033a8f2de24737ec67876e63f9f52a90836c7842",
+      "content_hash": "d84af88d9fc2529e7d0bd104a3a628ffc9d033758a967e652b49a5d5fb20535d",
       "rollup": {
         "explicit": [
           "impl",
@@ -4633,10 +4640,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 40,
         "marker_count": 42,
-        "processed_hash": "43045c466884d95b85f4a121033a8f2de24737ec67876e63f9f52a90836c7842",
+        "processed_hash": "d84af88d9fc2529e7d0bd104a3a628ffc9d033758a967e652b49a5d5fb20535d",
         "summary": {
-          "confirmed": 40,
-          "drift": 1,
+          "confirmed": 41,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -4755,9 +4762,10 @@
             ]
           },
           "family-standings": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "stale standings: core-ai-native ships v0.8.0 (packages/org.vibevm.ai-native/core-ai-native has v0.8.0; the fact says 0.7.0), and a FOURTH family is in force - go-ai-native aggregator v0.1.0 + go-ai-native-lang + go-ai-native-mcp exist - absent from the enumeration -> F-042"
+              "stale standings: core-ai-native ships v0.8.0 (packages/org.vibevm.ai-native/core-ai-native has v0.8.0; the fact says 0.7.0), and a FOURTH family is in force - go-ai-native aggregator v0.1.0 + go-ai-native-lang + go-ai-native-mcp exist - absent from the enumeration -> F-042",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "req-families": {
@@ -4888,7 +4896,7 @@
           }
         },
         "verified_at": "2026-07-25T13:05:25Z",
-        "verify_batch": "c3a-common-small"
+        "verify_batch": "c3a-common-small + d2d"
       }
     },
     "spec/common/PROP-029-fully-qualified-addresses.md": {
@@ -6845,7 +6853,7 @@
       }
     },
     "spec/design/action-system.md": {
-      "content_hash": "552f99cab1611a344e426071684edffdafe73cd891178fd855b8bf859ebd39f0",
+      "content_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
       "rollup": {
         "computed": [
           "doc",
@@ -6867,17 +6875,18 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 78,
         "marker_count": 78,
-        "processed_hash": "552f99cab1611a344e426071684edffdafe73cd891178fd855b8bf859ebd39f0",
+        "processed_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
         "summary": {
-          "confirmed": 55,
-          "drift": 4,
+          "confirmed": 59,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "genre-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "says PROP-039 forthcoming while the contract file + crates/vibe-actions exist -> F-034 (recorded in B2)"
+              "says PROP-039 forthcoming while the contract file + crates/vibe-actions exist -> F-034 (recorded in B2)",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "THESIS": {
@@ -7169,9 +7178,10 @@
             ]
           },
           "aiui-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "says Not built now; designed-for - but aiui.rs ships list_actions + invoke (the in-process core of the protocol); state/search calls still pending -> F-034 family"
+              "says Not built now; designed-for - but aiui.rs ships list_actions + invoke (the in-process core of the protocol); state/search calls still pending -> F-034 family",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "AIUI-LIST-ACTIONS": {
@@ -7211,15 +7221,17 @@
             ]
           },
           "VIBE-TREE-MAPPING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "SS9 future tense (Spec 2 revises... becomes...) about the landed revision: keymap_bridge.rs + action dispatch + F1 SE are shipped -> F-034 family"
+              "SS9 future tense (Spec 2 revises... becomes...) about the landed revision: keymap_bridge.rs + action dispatch + F1 SE are shipped -> F-034 family",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "CONTRACT-POINTER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "SS10 says PROP-039 will carry one REQ per Delta - the contract file exists and carries them -> F-034 (its explicit target)"
+              "SS10 says PROP-039 will carry one REQ per Delta - the contract file exists and carries them -> F-034 (its explicit target)",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "_elements": {
@@ -7230,11 +7242,11 @@
           }
         },
         "verified_at": "2026-07-25T13:00:46Z",
-        "verify_batch": "c2-design"
+        "verify_batch": "c2-design + d2b"
       }
     },
     "spec/design/loading-and-boot-model.md": {
-      "content_hash": "89e376c01eacaa09f8c81eaca0c0031d8a546994cc557396d154737421f7712a",
+      "content_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
       "rollup": {
         "explicit": [
           "doc",
@@ -7248,29 +7260,30 @@
           "doc",
           "done"
         ],
-        "marker_count": 75,
-        "fact_count": 74,
+        "marker_count": 76,
+        "fact_count": 75,
         "unmarked_facts": 0
       },
-      "marker_count": 75,
+      "marker_count": 76,
       "unit_count": 15,
       "issue_count": 0,
       "campaign": {
-        "anchors_judged": 58,
+        "anchors_judged": 59,
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
-        "fact_count": 74,
-        "marker_count": 75,
-        "processed_hash": "89e376c01eacaa09f8c81eaca0c0031d8a546994cc557396d154737421f7712a",
+        "fact_count": 75,
+        "marker_count": 76,
+        "processed_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
         "summary": {
-          "confirmed": 51,
-          "drift": 8,
+          "confirmed": 60,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "companion-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "PROP-009 called forthcoming; M1.18 phases 1-7 shipped 2026-05-22 (PROP-009 status-line) -> F-039"
+              "PROP-009 called forthcoming; M1.18 phases 1-7 shipped 2026-05-22 (PROP-009 status-line) -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "status-line": {
@@ -7292,9 +7305,10 @@
             ]
           },
           "scope-of-answer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "PROP-009 will be the contract - it is (shipped) -> F-039"
+              "PROP-009 will be the contract - it is (shipped) -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "workspace-arc-continuity": {
@@ -7442,9 +7456,10 @@
             ]
           },
           "P4-THREE-INCLUSION-TYPES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "lore: three types inline/static/dynamic, default static; shipped PROP-009 SCHEMA-LINK-FIELD: link = static|dynamic, default dynamic; design-inline became link=static (the STATIC.md lane) -> F-039"
+              "lore: three types inline/static/dynamic, default static; shipped PROP-009 SCHEMA-LINK-FIELD: link = static|dynamic, default dynamic; design-inline became link=static (the STATIC.md lane) -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "forks-lead": {
@@ -7484,15 +7499,17 @@
             ]
           },
           "inclusion-types-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "same vocabulary drift + the literal typo: working syntax reads static|static|dynamic (inline missing) -> F-039"
+              "same vocabulary drift + the literal typo: working syntax reads static|static|dynamic (inline missing) -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "GEN-STATIC-MD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "generated only when the node has inline contributions - shipped vocabulary: static contributions (vibe:static markers in STATIC.md); mechanism identical, name stale -> F-039"
+              "generated only when the node has inline contributions - shipped vocabulary: static contributions (vibe:static markers in STATIC.md); mechanism identical, name stale -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "GEN-INDEX-MD": {
@@ -7514,15 +7531,17 @@
             ]
           },
           "ROW-COST-INLINE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "no link=inline value shipped; the row semantics live under link=static -> F-039"
+              "no link=inline value shipped; the row semantics live under link=static -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "ROW-COST-STATIC": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "design-static (INDEX direct read, 1+N) ships as unconditional link=dynamic; the name points at the wrong shipped value -> F-039"
+              "design-static (INDEX direct read, 1+N) ships as unconditional link=dynamic; the name points at the wrong shipped value -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "ROW-COST-DYNAMIC": {
@@ -7586,9 +7605,10 @@
             ]
           },
           "ptr-prop-009": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "PROP-009 (forthcoming) - shipped -> F-039"
+              "PROP-009 (forthcoming) - shipped -> F-039",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "ptr-prop-007": {
@@ -7620,10 +7640,16 @@
             "ev": [
               "doc status tag consistent (captured 2026-05-21 design record)"
             ]
+          },
+          "rename-note": {
+            "v": "confirmed",
+            "ev": [
+              "D d2b 2026-07-25: minted by this wave - the 2026-07-16 rename map (design inline/static/dynamic -> shipped static/dynamic+when) that lets the dated capture below be read correctly; verified against PROP-009 S2.4"
+            ]
           }
         },
         "verified_at": "2026-07-25T13:00:46Z",
-        "verify_batch": "c2-design"
+        "verify_batch": "c2-design + d2b"
       }
     },
     "spec/design/structural-loader.md": {
@@ -7792,7 +7818,7 @@
       }
     },
     "spec/design/tui-visual-language.md": {
-      "content_hash": "ef320a3420aa76cc2b4c9989287d20e48d4f10e58b7b4076f00d04c53de203a2",
+      "content_hash": "a27b95ee35e289f3ac149be96121a413b3a8d5f2d330306d288e4b5e836d5c5f",
       "rollup": {
         "explicit": [
           "doc",
@@ -7818,10 +7844,10 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 175,
         "marker_count": 176,
-        "processed_hash": "ef320a3420aa76cc2b4c9989287d20e48d4f10e58b7b4076f00d04c53de203a2",
+        "processed_hash": "a27b95ee35e289f3ac149be96121a413b3a8d5f2d330306d288e4b5e836d5c5f",
         "summary": {
-          "confirmed": 69,
-          "drift": 2,
+          "confirmed": 71,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -7886,9 +7912,10 @@
             ]
           },
           "glyph-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the current ASCII scaffolding -> the target vocabulary is present-tense about the pre-v0.2 state; the targets shipped (glyphs.rs + goldens + MT-02) so the Today column is a dated snapshot reading as current -> F-041"
+              "the current ASCII scaffolding -> the target vocabulary is present-tense about the pre-v0.2 state; the targets shipped (glyphs.rs + goldens + MT-02) so the Today column is a dated snapshot reading as current -> F-041",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "ROW-GLYPH-TREE": {
@@ -8240,9 +8267,10 @@
             ]
           },
           "normative-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "SS8 When SS2.2 carries the anchors - it does (all five verified) - the conditional framing aged -> F-041"
+              "SS8 When SS2.2 carries the anchors - it does (all five verified) - the conditional framing aged -> F-041",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "_elements": {
@@ -8253,11 +8281,11 @@
           }
         },
         "verified_at": "2026-07-25T13:00:46Z",
-        "verify_batch": "c2-design"
+        "verify_batch": "c2-design + d2b"
       }
     },
     "spec/design/workspace-and-qualified-naming.md": {
-      "content_hash": "3910fb0ab6992b0c5b2ebeced4795186233e63c98b54c192119a16f18e514531",
+      "content_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
       "rollup": {
         "explicit": [
           "doc",
@@ -8283,10 +8311,10 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 99,
         "marker_count": 100,
-        "processed_hash": "3910fb0ab6992b0c5b2ebeced4795186233e63c98b54c192119a16f18e514531",
+        "processed_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
         "summary": {
-          "confirmed": 77,
-          "drift": 1,
+          "confirmed": 78,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -8747,9 +8775,10 @@
             ]
           },
           "ptr-roadmap": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "names M1.18 (qualified naming); the ROADMAP ships M1.18 = Loading model, M1.19 = Qualified naming (headings verified) - the milestone number shifted after capture -> F-040"
+              "names M1.18 (qualified naming); the ROADMAP ships M1.18 = Loading model, M1.19 = Qualified naming (headings verified) - the milestone number shifted after capture -> F-040",
+              "D d2b 2026-07-25: design-doc tense family closed - lore corrected to the contract per spec-genres (contract wins, lore never silently diverges); the pre-rename vocabulary is kept as the dated capture it is, with a rename note and per-row shipped-name glosses instead of a rewrite of history"
             ]
           },
           "_elements": {
@@ -8760,11 +8789,11 @@
           }
         },
         "verified_at": "2026-07-25T13:00:46Z",
-        "verify_batch": "c2-design"
+        "verify_batch": "c2-design + d2b"
       }
     },
     "spec/manual-tests/MT-01-vibe-tree.md": {
-      "content_hash": "9aa3d2ee4fded835a76d233776e602cc5312a5d82164f1a108fb9338ef923f71",
+      "content_hash": "8aa920ab86a36b0723b1a5440d0adb31c3f0490eb78b174b9f361310f28dd755",
       "rollup": {
         "computed": [
           "impl",
@@ -8782,10 +8811,10 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "9aa3d2ee4fded835a76d233776e602cc5312a5d82164f1a108fb9338ef923f71",
+        "processed_hash": "8aa920ab86a36b0723b1a5440d0adb31c3f0490eb78b174b9f361310f28dd755",
         "summary": {
-          "confirmed": 23,
-          "drift": 5,
+          "confirmed": 28,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -8838,9 +8867,10 @@
             ]
           },
           "EXP-2-LAUNCH-TUI": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "footer/status wording stale: shipped footer (goldens/base.snap.txt): F1 search / F2 sort / F3 mode / F4 settings / F6 copy + up-down move / left-right pan / Space fold / Enter details / Esc quit - the MT claims n order / x mode / t swap / [ ] tabs / q quit -> F-037"
+              "footer/status wording stale: shipped footer (goldens/base.snap.txt): F1 search / F2 sort / F3 mode / F4 settings / F6 copy + up-down move / left-right pan / Space fold / Enter details / Esc quit - the MT claims n order / x mode / t swap / [ ] tabs / q quit -> F-037",
+              "D d2e 2026-07-25: MT-01 and MT-02 re-authored against the shipped Spec-2 keymap - F2 sort menu instead of the bare n, F3 mode menu instead of x, Shift+arrows instead of Tab/[/], Esc plus the Really-quit confirm instead of q, and F4 settings restored to the footer quote. Steps and expectations only; the human sign-off stays pending (manual-tests law: an agent may pre-run, only a person signs off)"
             ]
           },
           "STEP-3-NAVIGATE": {
@@ -8886,9 +8916,10 @@
             ]
           },
           "EXP-6-ORDERING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the n key is gone - ordering lives in the F2 sort dialog (f2-sort-menu.snap.txt) -> F-037"
+              "the n key is gone - ordering lives in the F2 sort dialog (f2-sort-menu.snap.txt) -> F-037",
+              "D d2e 2026-07-25: MT-01 and MT-02 re-authored against the shipped Spec-2 keymap - F2 sort menu instead of the bare n, F3 mode menu instead of x, Shift+arrows instead of Tab/[/], Esc plus the Really-quit confirm instead of q, and F4 settings restored to the footer quote. Steps and expectations only; the human sign-off stays pending (manual-tests law: an agent may pre-run, only a person signs off)"
             ]
           },
           "STEP-7-MODES": {
@@ -8898,9 +8929,10 @@
             ]
           },
           "EXP-7-MODES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the x key is gone - modes live under F3 mode menu -> F-037"
+              "the x key is gone - modes live under F3 mode menu -> F-037",
+              "D d2e 2026-07-25: MT-01 and MT-02 re-authored against the shipped Spec-2 keymap - F2 sort menu instead of the bare n, F3 mode menu instead of x, Shift+arrows instead of Tab/[/], Esc plus the Really-quit confirm instead of q, and F4 settings restored to the footer quote. Steps and expectations only; the human sign-off stays pending (manual-tests law: an agent may pre-run, only a person signs off)"
             ]
           },
           "STEP-8-SWAP-TABS": {
@@ -8910,9 +8942,10 @@
             ]
           },
           "EXP-8-SWAP-TABS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "t / Tab / ] / [ bindings not in the shipped surface; tab switch is Shift+left/right -> F-037"
+              "t / Tab / ] / [ bindings not in the shipped surface; tab switch is Shift+left/right -> F-037",
+              "D d2e 2026-07-25: MT-01 and MT-02 re-authored against the shipped Spec-2 keymap - F2 sort menu instead of the bare n, F3 mode menu instead of x, Shift+arrows instead of Tab/[/], Esc plus the Really-quit confirm instead of q, and F4 settings restored to the footer quote. Steps and expectations only; the human sign-off stays pending (manual-tests law: an agent may pre-run, only a person signs off)"
             ]
           },
           "STEP-9-QUIT": {
@@ -8922,9 +8955,10 @@
             ]
           },
           "EXP-9-QUIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "q quit stale: shipped is Esc + Really quit? confirm (goldens/quit-dialog.snap.txt) -> F-037"
+              "q quit stale: shipped is Esc + Really quit? confirm (goldens/quit-dialog.snap.txt) -> F-037",
+              "D d2e 2026-07-25: MT-01 and MT-02 re-authored against the shipped Spec-2 keymap - F2 sort menu instead of the bare n, F3 mode menu instead of x, Shift+arrows instead of Tab/[/], Esc plus the Really-quit confirm instead of q, and F4 settings restored to the footer quote. Steps and expectations only; the human sign-off stays pending (manual-tests law: an agent may pre-run, only a person signs off)"
             ]
           },
           "teardown-none": {
@@ -8959,11 +8993,11 @@
           }
         },
         "verified_at": "2026-07-25T12:50:16Z",
-        "verify_batch": "c1-manual-tests"
+        "verify_batch": "c1-manual-tests + d2e"
       }
     },
     "spec/manual-tests/MT-02-vibe-tree-tui.md": {
-      "content_hash": "081ae05861ec688f4c094443d4c597271ba99f3df20bce102acb765d2387e8d2",
+      "content_hash": "2388051c281032c1174d668a76ad19cf66e7794fceee8554b9bf03bd4d632add",
       "rollup": {
         "computed": [
           "impl",
@@ -8981,10 +9015,10 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "081ae05861ec688f4c094443d4c597271ba99f3df20bce102acb765d2387e8d2",
+        "processed_hash": "8edba8cfa8e1ed5a9f7337b0f874a9ed893dac145ea6cc667d8261af26a9f487",
         "summary": {
-          "confirmed": 22,
-          "drift": 1,
+          "confirmed": 23,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -9031,9 +9065,10 @@
             ]
           },
           "S1-FOOTER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the MT footer quote omits F4 settings and says q quit; shipped footer (goldens/base.snap.txt): F1 search / F2 sort / F3 mode / F4 settings / F6 copy + up-down move / left-right pan / Space fold / Enter details / Esc quit -> F-038"
+              "the MT footer quote omits F4 settings and says q quit; shipped footer (goldens/base.snap.txt): F1 search / F2 sort / F3 mode / F4 settings / F6 copy + up-down move / left-right pan / Space fold / Enter details / Esc quit -> F-038",
+              "D d2e 2026-07-25: MT-01 and MT-02 re-authored against the shipped Spec-2 keymap - F2 sort menu instead of the bare n, F3 mode menu instead of x, Shift+arrows instead of Tab/[/], Esc plus the Really-quit confirm instead of q, and F4 settings restored to the footer quote. Steps and expectations only; the human sign-off stays pending (manual-tests law: an agent may pre-run, only a person signs off)"
             ]
           },
           "S1-STATUS-LINE": {
@@ -9128,7 +9163,7 @@
           }
         },
         "verified_at": "2026-07-25T12:50:16Z",
-        "verify_batch": "c1-manual-tests"
+        "verify_batch": "c1-manual-tests + d2e"
       }
     },
     "spec/manual-tests/MT-03-vibe-prefs-tui.md": {
@@ -9259,7 +9294,7 @@
       }
     },
     "spec/modules/README.md": {
-      "content_hash": "324ce292fdf762c03ce222b3d67b321eb9107d4f0c7929e56a59eab94e76723d",
+      "content_hash": "5910b10816793785f6cb21cbb096f7eb5d3f522a083c58c588b331c796e29e7b",
       "rollup": {
         "explicit": [
           "doc",
@@ -9273,22 +9308,22 @@
           "doc",
           "done"
         ],
-        "marker_count": 19,
-        "fact_count": 18,
+        "marker_count": 45,
+        "fact_count": 44,
         "unmarked_facts": 0
       },
-      "marker_count": 19,
+      "marker_count": 45,
       "unit_count": 2,
       "issue_count": 0,
       "campaign": {
-        "anchors_judged": 18,
+        "anchors_judged": 44,
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
-        "fact_count": 18,
-        "marker_count": 19,
-        "processed_hash": "324ce292fdf762c03ce222b3d67b321eb9107d4f0c7929e56a59eab94e76723d",
+        "fact_count": 44,
+        "marker_count": 45,
+        "processed_hash": "5910b10816793785f6cb21cbb096f7eb5d3f522a083c58c588b331c796e29e7b",
         "summary": {
-          "confirmed": 13,
-          "drift": 6,
+          "confirmed": 45,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -9335,9 +9370,10 @@
             ]
           },
           "idx-prop-008": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-016 (ledgered in B): 'Status: DRAFT 2026-05-20' — PROP-008 is IMPLEMENTED (M1.18+M1.19)"
+              "F-016 (ledgered in B): 'Status: DRAFT 2026-05-20' — PROP-008 is IMPLEMENTED (M1.18+M1.19)",
+              "D d2d 2026-07-25 (F-016 closed): the six stale inline Status claims refreshed against the Phase C verdicts, and the index completed to the live tree - all nine module directories and every PROP through 043, which the index had been missing since May"
             ]
           },
           "idx-prop-010": {
@@ -9353,9 +9389,10 @@
             ]
           },
           "idx-prop-003": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-016: 'SAT solver via libsolv' + 'lockfile v3' describe the pre-PROP-017 era — resolvo shipped as the engine and the live lock is v5"
+              "F-016: 'SAT solver via libsolv' + 'lockfile v3' describe the pre-PROP-017 era — resolvo shipped as the engine and the live lock is v5",
+              "D d2d 2026-07-25 (F-016 closed): the six stale inline Status claims refreshed against the Phase C verdicts, and the index completed to the live tree - all nine module directories and every PROP through 043, which the index had been missing since May"
             ]
           },
           "idx-index": {
@@ -9377,27 +9414,31 @@
             ]
           },
           "idx-prop-007": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-016: 'Status: DRAFT 2026-05-20' — M1.17 phases 1-5 shipped 2026-05-21 and the install piece landed in M1.18"
+              "F-016: 'Status: DRAFT 2026-05-20' — M1.17 phases 1-5 shipped 2026-05-21 and the install piece landed in M1.18",
+              "D d2d 2026-07-25 (F-016 closed): the six stale inline Status claims refreshed against the Phase C verdicts, and the index completed to the live tree - all nine module directories and every PROP through 043, which the index had been missing since May"
             ]
           },
           "idx-prop-009": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-016: 'Status: DRAFT' + the 'inline/static/dynamic' trio + 'committed deps/' — phases 1-7 shipped, the link set renamed to static/dynamic (2026-07-16), the tree is vibedeps/"
+              "F-016: 'Status: DRAFT' + the 'inline/static/dynamic' trio + 'committed deps/' — phases 1-7 shipped, the link set renamed to static/dynamic (2026-07-16), the tree is vibedeps/",
+              "D d2d 2026-07-25 (F-016 closed): the six stale inline Status claims refreshed against the Phase C verdicts, and the index completed to the live tree - all nine module directories and every PROP through 043, which the index had been missing since May"
             ]
           },
           "idx-prop-011": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-016: 'Status: DRAFT 2026-05-21' — PROP-011 SHIPPED 2026-05-22"
+              "F-016: 'Status: DRAFT 2026-05-21' — PROP-011 SHIPPED 2026-05-22",
+              "D d2d 2026-07-25 (F-016 closed): the six stale inline Status claims refreshed against the Phase C verdicts, and the index completed to the live tree - all nine module directories and every PROP through 043, which the index had been missing since May"
             ]
           },
           "idx-prop-012": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-016: 'Status: DRAFT 2026-05-22' — PROP-012 IMPLEMENTED with M1.18 Phase 7"
+              "F-016: 'Status: DRAFT 2026-05-22' — PROP-012 IMPLEMENTED with M1.18 Phase 7",
+              "D d2d 2026-07-25 (F-016 closed): the six stale inline Status claims refreshed against the Phase C verdicts, and the index completed to the live tree - all nine module directories and every PROP through 043, which the index had been missing since May"
             ]
           },
           "_elements": {
@@ -9405,26 +9446,182 @@
             "ev": [
               "honest self-diagnosis: the marker carries the full F-016 diagnosis (index stops at PROP-012; missing dirs; stale Status mentions)"
             ]
+          },
+          "idx-prop-021": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-023": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-030": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-017": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-020": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-022": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-025": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-034": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-035": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-038": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-mcp": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-015": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-026": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-027": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-cli": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-036": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-037": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-042": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-settings": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-040": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-041": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-actions": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-039": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-progress": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-prop-043": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
+          },
+          "idx-owner-guide": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - index rows for the modules and PROPs the index had never listed; each row states the status Phase C verified for its target"
+            ]
           }
         },
         "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest"
+        "verify_batch": "c4f1-registry-rest + d2d"
       }
     },
     "spec/modules/vibe-actions/PROP-039-action-system.md": {
-      "content_hash": "4e3fffdbd12fa1f8d185feaad93058eb7a7a33e1360ddbc6445ff40151729128",
+      "content_hash": "11ed95bb2f854fa300c635668b6e855a1161d10e10a5e5a1a3b92cdc4bbbd28f",
       "rollup": {
         "explicit": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "marker_count": 52,
         "fact_count": 51,
@@ -9438,17 +9635,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 51,
         "marker_count": 52,
-        "processed_hash": "4e3fffdbd12fa1f8d185feaad93058eb7a7a33e1360ddbc6445ff40151729128",
+        "processed_hash": "11ed95bb2f854fa300c635668b6e855a1161d10e10a5e5a1a3b92cdc4bbbd28f",
         "summary": {
-          "confirmed": 49,
-          "drift": 3,
+          "confirmed": 52,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: 'DRAFT — requirements ... for a NEW crate' — crates/vibe-actions exists (address/action/context/invoke/keymap/i18n/gate/aiui modules) and the Spec-2 TUI runs on it as its first consumer"
+              "F-052: 'DRAFT — requirements ... for a NEW crate' — crates/vibe-actions exists (address/action/context/invoke/keymap/i18n/gate/aiui modules) and the Spec-2 TUI runs on it as its first consumer",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -9692,9 +9890,10 @@
             ]
           },
           "AIUI-REFERENCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052 (the F-017/F-034-sharpened row): 'designed-for; NOT BUILT NOW' is false as present-state — vibe-actions/src/aiui.rs ships list_actions + invoke and `vibe aiui state` projects the ModelView live (CLI --help cites PROP-039 §11.2/§11.3)"
+              "F-052 (the F-017/F-034-sharpened row): 'designed-for; NOT BUILT NOW' is false as present-state — vibe-actions/src/aiui.rs ships list_actions + invoke and `vibe aiui state` projects the ModelView live (CLI --help cites PROP-039 §11.2/§11.3)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "AI-NATIVE-DISCIPLINE": {
@@ -9710,9 +9909,10 @@
             ]
           },
           "ng-aiui-not-built": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: same evidence — the AIUI surface IS built (vibe aiui render/state + aiui.rs); this non-goal aged behind its own delivery"
+              "F-052: same evidence — the AIUI surface IS built (vibe aiui render/state + aiui.rs); this non-goal aged behind its own delivery",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "ng-other-surfaces": {
@@ -9759,47 +9959,48 @@
           }
         },
         "verified_at": "2026-07-25T14:44:25Z",
-        "verify_batch": "c4e-cli-actions"
+        "verify_batch": "c4e-cli-actions + d2a"
       }
     },
     "spec/modules/vibe-cli/PROP-036-package-tree.md": {
-      "content_hash": "67480b27a8500df18f9e107e671c093dd93925e10043f8a15b98bc0e95b8f11e",
+      "content_hash": "b86f273c7fce0d9bda7533f30bd4c27fff19ca92707c164c62b0daed97a99418",
       "rollup": {
         "explicit": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
-        "marker_count": 80,
-        "fact_count": 79,
+        "marker_count": 81,
+        "fact_count": 80,
         "unmarked_facts": 0
       },
-      "marker_count": 80,
+      "marker_count": 81,
       "unit_count": 18,
       "issue_count": 0,
       "campaign": {
-        "anchors_judged": 79,
+        "anchors_judged": 80,
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
-        "fact_count": 79,
-        "marker_count": 80,
-        "processed_hash": "67480b27a8500df18f9e107e671c093dd93925e10043f8a15b98bc0e95b8f11e",
+        "fact_count": 80,
+        "marker_count": 81,
+        "processed_hash": "b86f273c7fce0d9bda7533f30bd4c27fff19ca92707c164c62b0daed97a99418",
         "summary": {
-          "confirmed": 74,
-          "drift": 6,
+          "confirmed": 81,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: 'DRAFT — requirements' over an executed plan — the analyzer ships (tree --json validated against the shipped package-tree.schema.v1.json per its own --help; -t live; the PACKAGE-TREE-PLAN executed per the B0 note); the clap --plain text still claiming 'TUI is Phase 2 / plain regardless' is the separately-ledgered F-036 code-side lie"
+              "F-052: 'DRAFT — requirements' over an executed plan — the analyzer ships (tree --json validated against the shipped package-tree.schema.v1.json per its own --help; -t live; the PACKAGE-TREE-PLAN executed per the B0 note); the clap --plain text still claiming 'TUI is Phase 2 / plain regardless' is the separately-ledgered F-036 code-side lie",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -10121,27 +10322,31 @@
             ]
           },
           "TUI-FOLDING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: Space-fold shipped, but the whole-tree 'F' fold is absent from the Spec-2 contract and its action catalogue (PROP-037 §13.5 has fold.toggle only)"
+              "F-052: Space-fold shipped, but the whole-tree 'F' fold is absent from the Spec-2 contract and its action catalogue (PROP-037 §13.5 has fold.toggle only)",
+              "D d2a 2026-07-25: PROP-036 §2.11 stops restating the shipped keymap - the section now names capabilities and cites PROP-037 Spec 2 as normative for the keys (single-source law); the sketched whole-tree F fold is recorded as not shipped; §2.13's dangling PROP-043 launcher reference repointed to the vibevm-term products repo (F-023)"
             ]
           },
           "TUI-DETAIL": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: '`q` quits' is the pre-Spec-2 era — shipped quit is Esc + confirm dialog (PROP-037 §7.4; the c1 MT sweep pinned the same aging in MT-01/-02 as F-037/F-038)"
+              "F-052: '`q` quits' is the pre-Spec-2 era — shipped quit is Esc + confirm dialog (PROP-037 §7.4; the c1 MT sweep pinned the same aging in MT-01/-02 as F-037/F-038)",
+              "D d2a 2026-07-25: PROP-036 §2.11 stops restating the shipped keymap - the section now names capabilities and cites PROP-037 Spec 2 as normative for the keys (single-source law); the sketched whole-tree F fold is recorded as not shipped; §2.13's dangling PROP-043 launcher reference repointed to the vibevm-term products repo (F-023)"
             ]
           },
           "TUI-ORDERING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: the bare 'n' ordering key is the pre-Spec-2 era — shipped ordering lives in the F2 sort menu (PROP-037 §7.2, which 'replaces any bare mode-cycle key')"
+              "F-052: the bare 'n' ordering key is the pre-Spec-2 era — shipped ordering lives in the F2 sort menu (PROP-037 §7.2, which 'replaces any bare mode-cycle key')",
+              "D d2a 2026-07-25: PROP-036 §2.11 stops restating the shipped keymap - the section now names capabilities and cites PROP-037 Spec 2 as normative for the keys (single-source law); the sketched whole-tree F fold is recorded as not shipped; §2.13's dangling PROP-043 launcher reference repointed to the vibevm-term products repo (F-023)"
             ]
           },
           "TUI-DISPLAY-MODES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: the 'x' cycle / 't' swap / 'TAB'+'[',']' tab keys are the pre-Spec-2 era — shipped modes are chosen from the F3 menu and tabs switch with Shift+arrows (PROP-037 §4.4/§5.3)"
+              "F-052: the 'x' cycle / 't' swap / 'TAB'+'[',']' tab keys are the pre-Spec-2 era — shipped modes are chosen from the F3 menu and tabs switch with Shift+arrows (PROP-037 §4.4/§5.3)",
+              "D d2a 2026-07-25: PROP-036 §2.11 stops restating the shipped keymap - the section now names capabilities and cites PROP-037 Spec 2 as normative for the keys (single-source law); the sketched whole-tree F fold is recorded as not shipped; §2.13's dangling PROP-043 launcher reference repointed to the vibevm-term products repo (F-023)"
             ]
           },
           "TUI-STATUS-LINE": {
@@ -10175,9 +10380,10 @@
             ]
           },
           "project-needed": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-023 (ledgered in B): cites PROP-043 as the home of the VibeTree.exe / Start-menu GUI launcher — PROP-043 is Progress Control (inline status markup) and carries no launcher content; a dangling cross-ref"
+              "F-023 (ledgered in B): cites PROP-043 as the home of the VibeTree.exe / Start-menu GUI launcher — PROP-043 is Progress Control (inline status markup) and carries no launcher content; a dangling cross-ref",
+              "D d2a 2026-07-25: PROP-036 §2.11 stops restating the shipped keymap - the section now names capabilities and cites PROP-037 Spec 2 as normative for the keys (single-source law); the sketched whole-tree F fold is recorded as not shipped; §2.13's dangling PROP-043 launcher reference repointed to the vibevm-term products repo (F-023)"
             ]
           },
           "RESOLUTION-ORDER": {
@@ -10275,26 +10481,32 @@
             "ev": [
               "honest self-diagnosis: the comment names the gap ('status line says DRAFT; PACKAGE-TREE-PLAN executed against it')"
             ]
+          },
+          "TUI-KEYMAP-SUPERSEDED": {
+            "v": "confirmed",
+            "ev": [
+              "D d2a 2026-07-25: minted by this wave - the supersession pointer that makes S2.11 cite PROP-037 Spec 2 instead of restating its keymap; self-evident against the file it points at"
+            ]
           }
         },
         "verified_at": "2026-07-25T14:44:25Z",
-        "verify_batch": "c4e-cli-actions"
+        "verify_batch": "c4e-cli-actions + d2a"
       }
     },
     "spec/modules/vibe-cli/PROP-037-tree-tui.md": {
-      "content_hash": "01832edf352063501e4507c17d1936afd53a72c47de94ddc5bc848018167fc01",
+      "content_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
       "rollup": {
         "explicit": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "marker_count": 137,
         "fact_count": 136,
@@ -10308,17 +10520,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (27 cells); document <status> judged as _elements",
         "fact_count": 136,
         "marker_count": 137,
-        "processed_hash": "01832edf352063501e4507c17d1936afd53a72c47de94ddc5bc848018167fc01",
+        "processed_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
         "summary": {
-          "confirmed": 109,
-          "drift": 1,
+          "confirmed": 110,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-052: 'DRAFT — requirements' over the shipped application — TREE-TUI-PLAN v0.2 executed (B0 note); c2 verified the visual language byte-exact (Rosé Pine hexes, PAD_X/PAD_Y/GUTTER, detect_tier literal) and c1 verified the shipped F-key map this Spec-2 text defines"
+              "F-052: 'DRAFT — requirements' over the shipped application — TREE-TUI-PLAN v0.2 executed (B0 note); c2 verified the visual language byte-exact (Rosé Pine hexes, PAD_X/PAD_Y/GUTTER, detect_tier literal) and c1 verified the shipped F-key map this Spec-2 text defines",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -10977,7 +11190,7 @@
           }
         },
         "verified_at": "2026-07-25T14:44:25Z",
-        "verify_batch": "c4e-cli-actions"
+        "verify_batch": "c4e-cli-actions + d2a"
       }
     },
     "spec/modules/vibe-cli/PROP-042-aiui-observation.md": {
@@ -14218,7 +14431,7 @@
       }
     },
     "spec/modules/vibe-progress/OWNER-GUIDE.md": {
-      "content_hash": "f71c17197992b09dae40fe5fa42a653d072c1e8bc03081b1a3b6d3dfa3e1a5e9",
+      "content_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
       "rollup": {
         "explicit": [
           "doc",
@@ -14232,22 +14445,22 @@
           "doc",
           "done"
         ],
-        "marker_count": 67,
-        "fact_count": 66,
+        "marker_count": 70,
+        "fact_count": 69,
         "unmarked_facts": 0
       },
-      "marker_count": 67,
+      "marker_count": 70,
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "anchors_judged": 55,
+        "anchors_judged": 58,
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (11 cells); document <status> judged as _elements",
-        "fact_count": 66,
-        "marker_count": 67,
-        "processed_hash": "f71c17197992b09dae40fe5fa42a653d072c1e8bc03081b1a3b6d3dfa3e1a5e9",
+        "fact_count": 69,
+        "marker_count": 70,
+        "processed_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
         "summary": {
-          "confirmed": 52,
-          "drift": 4,
+          "confirmed": 59,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -14384,21 +14597,24 @@
             ]
           },
           "placement-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-020: guide §1 predates the fact amendment - lists 4 placements where the contract has 6 (PROP-043 §3.8: + list items item 4, table cells item 5) and says nothing of ##<ID> fact anchors / anchored-when-marked"
+              "F-020: guide §1 predates the fact amendment - lists 4 placements where the contract has 6 (PROP-043 §3.8: + list items item 4, table cells item 5) and says nothing of ##<ID> fact anchors / anchored-when-marked",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "PLACE-DOCUMENT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-020: 'до первого заголовка' misses the pilot amendment - in a preamble-less file (this repo's standard shape) the DOCUMENT marker sits right after the first heading (PROP-043 §3.8 item 1; markers.rs implements exactly that)"
+              "F-020: 'до первого заголовка' misses the pilot amendment - in a preamble-less file (this repo's standard shape) the DOCUMENT marker sits right after the first heading (PROP-043 §3.8 item 1; markers.rs implements exactly that)",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "PLACE-SECTION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-020: 'сразу после заголовка = секция' is wrong for a preamble-less file's FIRST heading - that position is the document marker (PROP-043 §3.8 items 1-2; markers.rs 'items 1-2 combined')"
+              "F-020: 'сразу после заголовка = секция' is wrong for a preamble-less file's FIRST heading - that position is the document marker (PROP-043 §3.8 items 1-2; markers.rs 'items 1-2 combined')",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "PLACE-PARAGRAPH": {
@@ -14546,9 +14762,10 @@
             ]
           },
           "FOUR-SURVIVORS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "contradicts §7.4: the four surviving zone parts are baseline.json+deferrals.md+harvest/+tasks/ (ZONE-LAYOUT/ZONE-LIFETIMES); the guide omits tasks/ and adds 'сами маркеры' (markers do survive but are corpus, not zone); same guide-refresh sweep as F-020"
+              "contradicts §7.4: the four surviving zone parts are baseline.json+deferrals.md+harvest/+tasks/ (ZONE-LAYOUT/ZONE-LIFETIMES); the guide omits tasks/ and adds 'сами маркеры' (markers do survive but are corpus, not zone); same guide-refresh sweep as F-020",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "ERASURE-SAFE": {
@@ -14586,17 +14803,35 @@
             "ev": [
               "honest self-diagnosis: doc/done + action=drift + F-020 comment matches reality (the guide IS drifted and says so); genre 'guide, не контракт' correct"
             ]
+          },
+          "PLACE-LIST-ITEM": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - the three placement rows the guide was missing (list item, table cell, fact anchor + anchored-when-marked), bringing §1 up to PROP-043 §3.8's six granularities"
+            ]
+          },
+          "PLACE-TABLE-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - the three placement rows the guide was missing (list item, table cell, fact anchor + anchored-when-marked), bringing §1 up to PROP-043 §3.8's six granularities"
+            ]
+          },
+          "PLACE-FACT-ANCHOR": {
+            "v": "confirmed",
+            "ev": [
+              "D d2d 2026-07-25: minted by this wave - the three placement rows the guide was missing (list item, table cell, fact anchor + anchored-when-marked), bringing §1 up to PROP-043 §3.8's six granularities"
+            ]
           }
         },
         "verified_at": "2026-07-25T14:01:39Z",
-        "verify_batch": "c4a-vibe-progress"
+        "verify_batch": "c4a-vibe-progress + d2d"
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "94599d1831de9db493690b4b4dc52a3af2e7b78ad60f3fbf3b451183f0305b85",
+      "content_hash": "ca52d6a271737a0b26ecb649ae67827c484e22b8e1cb870b1a4e8b0ae9c75e09",
       "rollup": {
         "explicit": [
-          "spec",
+          "impl",
           "done"
         ],
         "computed": [
@@ -14604,7 +14839,7 @@
           "done"
         ],
         "effective": [
-          "spec",
+          "impl",
           "done"
         ],
         "marker_count": 159,
@@ -14619,10 +14854,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "94599d1831de9db493690b4b4dc52a3af2e7b78ad60f3fbf3b451183f0305b85",
+        "processed_hash": "ca52d6a271737a0b26ecb649ae67827c484e22b8e1cb870b1a4e8b0ae9c75e09",
         "summary": {
-          "confirmed": 135,
-          "drift": 10,
+          "confirmed": 137,
+          "drift": 8,
           "unverifiable": 0
         },
         "verdicts": {
@@ -14633,9 +14868,10 @@
             ]
           },
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-045: 'implementation is underway (campaign Phase A)' vs live campaign.json phase=C; grep '(provisional)' = 1 hit (only this sentence - zero provisional sections remain); the §5 tool is fully shipped (19 specmap implements edges, all 7 subcommands live)"
+              "F-045: 'implementation is underway (campaign Phase A)' vs live campaign.json phase=C; grep '(provisional)' = 1 hit (only this sentence - zero provisional sections remain); the §5 tool is fully shipped (19 specmap implements edges, all 7 subcommands live)",
+              "D d2f 2026-07-25 (F-045 closed): PROP-043's own status caught up with the campaign it governs - RATIFIED and IMPLEMENTED, the phase lane named as D, zero (provisional) sections left, and the two real gaps named as parity items rather than as unfinished specification"
             ]
           },
           "related": {
@@ -15491,14 +15727,15 @@
             ]
           },
           "_elements": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-045: document marker comment 'implementation underway (campaign Phase A)' aged - the journal-derived phase lane reads C and the §5 tool is shipped; the marker value spec/done+continue/impl itself is defensible"
+              "F-045: document marker comment 'implementation underway (campaign Phase A)' aged - the journal-derived phase lane reads C and the §5 tool is shipped; the marker value spec/done+continue/impl itself is defensible",
+              "D d2f 2026-07-25 (F-045 closed): PROP-043's own status caught up with the campaign it governs - RATIFIED and IMPLEMENTED, the phase lane named as D, zero (provisional) sections left, and the two real gaps named as parity items rather than as unfinished specification"
             ]
           }
         },
         "verified_at": "2026-07-25T14:01:39Z",
-        "verify_batch": "c4a-vibe-progress"
+        "verify_batch": "c4a-vibe-progress + d2f"
       }
     },
     "spec/modules/vibe-progress/templates/harvest-card.md": {
@@ -15913,7 +16150,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-001-git-backend.md": {
-      "content_hash": "a7965e9d25d4b9a70f0297007a274ed3eca248059ef014e26afff8c3b51625af",
+      "content_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
       "rollup": {
         "explicit": [
           "impl",
@@ -15939,10 +16176,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "a7965e9d25d4b9a70f0297007a274ed3eca248059ef014e26afff8c3b51625af",
+        "processed_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
         "summary": {
-          "confirmed": 90,
-          "drift": 3,
+          "confirmed": 93,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -16061,9 +16298,10 @@
             ]
           },
           "mechanics-in-readme": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-049(a): `crates/vibe-registry/README.md` does not exist — the mechanics live in lib.rs//module doc comments and in error strings that cite spec:// anchors, not in a README"
+              "F-049(a): `crates/vibe-registry/README.md` does not exist — the mechanics live in lib.rs//module doc comments and in error strings that cite spec:// anchors, not in a README",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "SHELL-OUT": {
@@ -16271,9 +16509,10 @@
             ]
           },
           "NO-OFFLINE-YET": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-049(b): aged — `--offline` IS shipped (PROP-002 §2.2.2.1 OFFLINE-LOCAL-ONLY impl/done; vibe_core::url_is_local live with a truth-table test at global_registry.rs:464); this §2.5 line still says 'No --offline flag yet' and sits in the NOT-SUPERSEDED set"
+              "F-049(b): aged — `--offline` IS shipped (PROP-002 §2.2.2.1 OFFLINE-LOCAL-ONLY impl/done; vibe_core::url_is_local live with a truth-table test at global_registry.rs:464); this §2.5 line still says 'No --offline flag yet' and sits in the NOT-SUPERSEDED set",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "SOURCE-URI-FORMAT": {
@@ -16487,9 +16726,10 @@
             ]
           },
           "OPEN-GIT-BINARY-PATH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-049(c): the parked question is resolved by shipped code — `VIBE_GIT_BINARY` PATH-override lives at git_backend/shell.rs:61-63 and its comment cites 'PROP-001 §6'; the parking-lot entry ('defer to first user request') aged behind its own implementation"
+              "F-049(c): the parked question is resolved by shipped code — `VIBE_GIT_BINARY` PATH-override lives at git_backend/shell.rs:61-63 and its comment cites 'PROP-001 §6'; the parking-lot entry ('defer to first user request') aged behind its own implementation",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "OPEN-CACHE-LOCK": {
@@ -16506,11 +16746,11 @@
           }
         },
         "verified_at": "2026-07-25T14:14:56Z",
-        "verify_batch": "c4b-registry-core"
+        "verify_batch": "c4b-registry-core + d2d"
       }
     },
     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
-      "content_hash": "f75f8def5bc1eed2f9548a76c15f3f18863a984a119bd3b70262ee2d1949366e",
+      "content_hash": "f5c514b8d0991dca95e32ec2c75fff66652552a710a0cce133542163f6490fb3",
       "rollup": {
         "explicit": [
           "impl",
@@ -16536,10 +16776,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (74 cells); document <status> judged as _elements",
         "fact_count": 359,
         "marker_count": 360,
-        "processed_hash": "f75f8def5bc1eed2f9548a76c15f3f18863a984a119bd3b70262ee2d1949366e",
+        "processed_hash": "f5c514b8d0991dca95e32ec2c75fff66652552a710a0cce133542163f6490fb3",
         "summary": {
-          "confirmed": 280,
-          "drift": 6,
+          "confirmed": 286,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -16658,9 +16898,10 @@
             ]
           },
           "TRUST-MIRROR-HATCH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-048(a): `--trust-mirror` shipped nowhere — grep trust over the whole CLI finds only `--trust-redirect` (cli/registry.rs:226) and the vvm group-trust; the mirror escape hatch this unit promises does not exist"
+              "F-048(a): `--trust-mirror` shipped nowhere — grep trust over the whole CLI finds only `--trust-redirect` (cli/registry.rs:226) and the vvm group-trust; the mirror escape hatch this unit promises does not exist",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "registry-model-req": {
@@ -16970,9 +17211,10 @@
             ]
           },
           "OVERRIDE-SEMANTICS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-048(d): short-circuit + lockfile `overridden` field live (multi_registry_resolver/sources.rs; lockfile schema), but the promised `vibe list --overrides` flag exists nowhere in the CLI (grep overrides over cli/ = 0)"
+              "F-048(d): short-circuit + lockfile `overridden` field live (multi_registry_resolver/sources.rs; lockfile schema), but the promised `vibe list --overrides` flag exists nowhere in the CLI (grep overrides over cli/ = 0)",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "override-analogues": {
@@ -17144,9 +17386,10 @@
             ]
           },
           "GS-CACHE-SLOT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-048(e): the slot principle is live but the unit's literal path aged — shipped layout is `<hash>/packages/<group>.<name>/clone/` (git_package_registry/mod.rs:24,420-427, the M1.19 qualified-naming form), not `packages/flow-internal/clone` kind-name form"
+              "F-048(e): the slot principle is live but the unit's literal path aged — shipped layout is `<hash>/packages/<group>.<name>/clone/` (git_package_registry/mod.rs:24,420-427, the M1.19 qualified-naming form), not `packages/flow-internal/clone` kind-name form",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "GS-LOCKFILE-SOURCE-KIND": {
@@ -17198,9 +17441,10 @@
             ]
           },
           "ROW-CMP-LIST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-048(d): the comparison row's 'Surfaced' claim rests on `vibe list --overrides`, which is not shipped"
+              "F-048(d): the comparison row's 'Surfaced' claim rests on `vibe list --overrides`, which is not shipped",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "ROW-CMP-REMOVAL": {
@@ -17660,9 +17904,10 @@
             ]
           },
           "SOLVER-IDENTITY-FIELD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-048(f): corrected in c4c — the claimed lockfile.meta.solver field does not exist (grep solver vibe.lock = 0 hits); PROP-017 §8 records the gap explicitly ('the lockfile [meta] block has no solver field... needs a lockfile schema-version bump'); the c4b section-default verdict was wrong"
+              "F-048(f): corrected in c4c — the claimed lockfile.meta.solver field does not exist (grep solver vibe.lock = 0 hits); PROP-017 §8 records the gap explicitly ('the lockfile [meta] block has no solver field... needs a lockfile schema-version bump'); the c4b section-default verdict was wrong",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "capability-req": {
@@ -18182,9 +18427,10 @@
             ]
           },
           "PBP-MIRROR-CHAIN": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-048(a): two of three shipped (mirror fallback loop live in git_package_registry/fetch.rs:122-147; integrity hard-fail via fetch_with_expected_hash:385-405; M1.6-mirror-vendor-smoke.md exists) — the third item, the `--trust-mirror` escape hatch, does not exist"
+              "F-048(a): two of three shipped (mirror fallback loop live in git_package_registry/fetch.rs:122-147; integrity hard-fail via fetch_with_expected_hash:385-405; M1.6-mirror-vendor-smoke.md exists) — the third item, the `--trust-mirror` escape hatch, does not exist",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "PBP-VENDOR": {
@@ -18261,11 +18507,11 @@
           }
         },
         "verified_at": "2026-07-25T14:14:56Z",
-        "verify_batch": "c4b-registry-core"
+        "verify_batch": "c4b-registry-core + d2d"
       }
     },
     "spec/modules/vibe-registry/PROP-008-qualified-naming.md": {
-      "content_hash": "765e66d00310b7af2845490e9633f321d87695af78bf71a219aaa06e3c475e49",
+      "content_hash": "281c74bb6c891b02729d113da9ded346b14c18ca9277c98ac9897962602763b2",
       "rollup": {
         "explicit": [
           "impl",
@@ -18291,17 +18537,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (8 cells); document <status> judged as _elements",
         "fact_count": 99,
         "marker_count": 100,
-        "processed_hash": "765e66d00310b7af2845490e9633f321d87695af78bf71a219aaa06e3c475e49",
+        "processed_hash": "281c74bb6c891b02729d113da9ded346b14c18ca9277c98ac9897962602763b2",
         "summary": {
-          "confirmed": 91,
-          "drift": 1,
+          "confirmed": 92,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "milestone-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-054: 'design proposal ... Not implementation-locked' one line above a status that says IMPLEMENTED M1.18+M1.19 — the header pair never reconciled (same shape as F-026/F-029)"
+              "F-054: 'design proposal ... Not implementation-locked' one line above a status that says IMPLEMENTED M1.18+M1.19 — the header pair never reconciled (same shape as F-026/F-029)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "status-line": {
@@ -18852,11 +19099,11 @@
           }
         },
         "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest"
+        "verify_batch": "c4f1-registry-rest + d2a"
       }
     },
     "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
-      "content_hash": "2c51b167f6c1626ca974c369fcc275be04b3df1238396305f104753c1acf1cd2",
+      "content_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
       "rollup": {
         "explicit": [
           "spec",
@@ -18882,10 +19129,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "2c51b167f6c1626ca974c369fcc275be04b3df1238396305f104753c1acf1cd2",
+        "processed_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
         "summary": {
-          "confirmed": 91,
-          "drift": 2,
+          "confirmed": 93,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -18926,15 +19173,17 @@
             ]
           },
           "no-offline-mode": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-054: 'There is no --offline mode: every install/update walks the network' aged twice over — --offline shipped (PROP-002 §2.2.2.1 url_is_local + PROP-030 FLAG-OFFLINE; live in install --help) and 'always re-resolves' fell to PROP-011's freshness skip"
+              "F-054: 'There is no --offline mode: every install/update walks the network' aged twice over — --offline shipped (PROP-002 §2.2.2.1 url_is_local + PROP-030 FLAG-OFFLINE; live in install --help) and 'always re-resolves' fell to PROP-011's freshness skip",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "no-local-resolve": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-054: 'no way to say resolve against what I already have' aged — --offline + the embedded/local registries + the lockfile-respecting install are exactly that; the PROP-010 store remains future, but this motivation line overstates the present gap"
+              "F-054: 'no way to say resolve against what I already have' aged — --offline + the embedded/local registries + the lockfile-respecting install are exactly that; the PROP-010 store remains future, but this motivation line overstates the present gap",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "maven-model": {
@@ -19449,7 +19698,7 @@
           }
         },
         "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest"
+        "verify_batch": "c4f1-registry-rest + d2d"
       }
     },
     "spec/modules/vibe-registry/PROP-021-submodule-sources.md": {
@@ -20652,7 +20901,7 @@
       }
     },
     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md": {
-      "content_hash": "6f8c0fbdfbf05539fbd27e75a09ee32f327bd8b8e47a918efb76035347c3e080",
+      "content_hash": "26cd5ca4c0ae6a73c874c7bc45f41c570d4325ad96f132d4a2c62c36830b2778",
       "rollup": {
         "explicit": [
           "impl",
@@ -20678,17 +20927,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (22 cells); document <status> judged as _elements",
         "fact_count": 313,
         "marker_count": 314,
-        "processed_hash": "6f8c0fbdfbf05539fbd27e75a09ee32f327bd8b8e47a918efb76035347c3e080",
+        "processed_hash": "26cd5ca4c0ae6a73c874c7bc45f41c570d4325ad96f132d4a2c62c36830b2778",
         "summary": {
-          "confirmed": 281,
-          "drift": 11,
+          "confirmed": 292,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-030 (ledgered in B): 'Design proposal — not yet implementation-locked' over a shipped system — the vocabulary (features/subskills/conditional/i18n/checks/lockfile) is live in vibe-core/vibe-install/vibe-cli and the engine question is settled by PROP-017"
+              "F-030 (ledgered in B): 'Design proposal — not yet implementation-locked' over a shipped system — the vocabulary (features/subskills/conditional/i18n/checks/lockfile) is live in vibe-core/vibe-install/vibe-cli and the engine question is settled by PROP-017",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "revision-r2": {
@@ -20842,15 +21092,17 @@
             ]
           },
           "SOLVER-TWO-IMPLS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-050: the two impls exist (naive.rs + sat.rs Sat cell) but the default-clause aged outside the §2.2 supersede marker — 'SatDepSolver becomes the default' never happened; the default flipped to RESOLVO (registry.rs unwrap_or(\"resolvo\"), PROP-017 DONE-DEFAULT-FLIP)"
+              "F-050: the two impls exist (naive.rs + sat.rs Sat cell) but the default-clause aged outside the §2.2 supersede marker — 'SatDepSolver becomes the default' never happened; the default flipped to RESOLVO (registry.rs unwrap_or(\"resolvo\"), PROP-017 DONE-DEFAULT-FLIP)",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "SOLVER-SELECTOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-050: three claims aged — selection key '[meta].solver' does not exist in the live lockfile (grep solver vibe.lock = 0; PROP-017 §8 records the gap), the CLI override is --solver <naive|sat|resolvo> not <naive|sat>, and 'default after this PROP lands: sat' was superseded by resolvo"
+              "F-050: three claims aged — selection key '[meta].solver' does not exist in the live lockfile (grep solver vibe.lock = 0; PROP-017 §8 records the gap), the CLI override is --solver <naive|sat|resolvo> not <naive|sat>, and 'default after this PROP lands: sat' was superseded by resolvo",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "two-impls-why": {
@@ -21658,21 +21910,24 @@
             ]
           },
           "I18N-LOCKFILE-META": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-031: same language_chain reality — the §2.7.5 fence (schema_version=2, language, language_fallback) matches no shipped shape (live lock: schema 5, language_chain in the schema)"
+              "F-031: same language_chain reality — the §2.7.5 fence (schema_version=2, language, language_fallback) matches no shipped shape (live lock: schema 5, language_chain in the schema)",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "language-fallback-clearing": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-031: reasoning stands but the named field `language_fallback` does not exist — the shipped chain is `language_chain` (lockfile.rs:130)"
+              "F-031: reasoning stands but the named field `language_fallback` does not exist — the shipped chain is `language_chain` (lockfile.rs:130)",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "manifest-consolidated-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-031 (ledgered in B): the consolidated v0.2 fence still shows r1's `__exclusive = [[...]]` sigil that r2's own §2.4 replaced with named `[features.exclusive]` groups"
+              "F-031 (ledgered in B): the consolidated v0.2 fence still shows r1's `__exclusive = [[...]]` sigil that r2's own §2.4 replaced with named `[features.exclusive]` groups",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "SUBSKILL-MANIFEST-PER": {
@@ -21694,9 +21949,10 @@
             ]
           },
           "LF-META-LANGUAGE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-031: shipped as ONE field — lockfile.rs:124-130 `language_chain: Vec<String>` (preference + fallback merged); the spec's separate [meta].language + [meta].language_fallback pair does not exist"
+              "F-031: shipped as ONE field — lockfile.rs:124-130 `language_chain: Vec<String>` (preference + fallback merged); the spec's separate [meta].language + [meta].language_fallback pair does not exist",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "LF-META-ACTIVE-FEATURES": {
@@ -21802,9 +22058,10 @@
             ]
           },
           "CLI-UPDATE-FEATURES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-050: `vibe update --features` does not exist — update --help carries only all/json/path/quiet+global flags; install-side --features is live but update-side re-resolve was never wired"
+              "F-050: `vibe update --features` does not exist — update --help carries only all/json/path/quiet+global flags; install-side --features is live but update-side re-resolve was never wired",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "CLI-SHOW-CONFIG-LANGUAGE": {
@@ -21856,9 +22113,10 @@
             ]
           },
           "MIG-DEFAULT-SAT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-050: the migration step as written never executed — the default switched to resolvo (PROP-017), not sat; naive remains the fixtures path as stated"
+              "F-050: the migration step as written never executed — the default switched to resolvo (PROP-017), not sat; naive remains the fixtures path as stated",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "MIG-LOCKFILE-V3": {
@@ -22054,9 +22312,10 @@
             ]
           },
           "REJ-PACKAGES-ONLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-031: '(already covered in §2.5.3)' misrefs — the subskills-not-packages rationale lives at §2.5.4 {#subskill-rationale}; §2.5.3 is the LLM virtual-capabilities section"
+              "F-031: '(already covered in §2.5.3)' misrefs — the subskills-not-packages rationale lives at §2.5.4 {#subskill-rationale}; §2.5.3 is the LLM virtual-capabilities section",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "REJ-UNDERSCORE-SUFFIX": {
@@ -22246,9 +22505,10 @@
             ]
           },
           "PE-DEFAULT-FLIP": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-050: 'default flips to sat' aged — the flip that shipped is to resolvo in the R-001 selection seam (PROP-017 DONE-DEFAULT-FLIP; CLI help says 'Defaults to resolvo')"
+              "F-050: 'default flips to sat' aged — the flip that shipped is to resolvo in the R-001 selection seam (PROP-017 DONE-DEFAULT-FLIP; CLI help says 'Defaults to resolvo')",
+              "D d2c 2026-07-25: PROP-003's solver-era tail corrected at the point of each claim rather than by widening the §2.2 supersede block - every aged clause now names what actually shipped (resolvo default, --solver naive|sat|resolvo, no [meta].solver key, language_chain as one field, [features.exclusive] over the __exclusive sigil, §2.5.4 for the subskill rationale); vibe update --features re-marked spec/done as specified-but-unbuilt"
             ]
           },
           "PE-NAIVE-DEMOTED": {
@@ -22439,15 +22699,15 @@
           }
         },
         "verified_at": "2026-07-25T14:22:25Z",
-        "verify_batch": "c4c-resolver"
+        "verify_batch": "c4c-resolver + d2c"
       }
     },
     "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md": {
-      "content_hash": "6c5269ed866558f5c41694bde48f8c3b18c1511171e5cb16bf3e7759ea19a62d",
+      "content_hash": "3c6d6bd69b62a56684b7ccc4113e61851bd02eecede004c5763871d601705b9b",
       "rollup": {
         "explicit": [
           "impl",
-          "work"
+          "done"
         ],
         "computed": [
           "spec",
@@ -22455,7 +22715,7 @@
         ],
         "effective": [
           "impl",
-          "work"
+          "done"
         ],
         "marker_count": 106,
         "fact_count": 105,
@@ -22469,17 +22729,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (26 cells); document <status> judged as _elements",
         "fact_count": 105,
         "marker_count": 106,
-        "processed_hash": "6c5269ed866558f5c41694bde48f8c3b18c1511171e5cb16bf3e7759ea19a62d",
+        "processed_hash": "3c6d6bd69b62a56684b7ccc4113e61851bd02eecede004c5763871d601705b9b",
         "summary": {
-          "confirmed": 78,
-          "drift": 2,
+          "confirmed": 80,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-027 (ledgered in B): 'implementation in progress' contradicts §6 PORT-COMPLETE in the same file — and the code: ResolvoDepSolver is the shipped production default (registry.rs:117)"
+              "F-027 (ledgered in B): 'implementation in progress' contradicts §6 PORT-COMPLETE in the same file — and the code: ResolvoDepSolver is the shipped production default (registry.rs:117)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "SUPERSEDES-BACKEND": {
@@ -22951,30 +23212,31 @@
             ]
           },
           "_elements": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-027: the marker still reads impl/WORK 'implementation in progress per status line' — while §6 PORT-COMPLETE (impl/done) and the live default (--solver defaults to resolvo) say the port finished 2026-06-14"
+              "F-027: the marker still reads impl/WORK 'implementation in progress per status line' — while §6 PORT-COMPLETE (impl/done) and the live default (--solver defaults to resolvo) say the port finished 2026-06-14",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           }
         },
         "verified_at": "2026-07-25T14:22:25Z",
-        "verify_batch": "c4c-resolver"
+        "verify_batch": "c4c-resolver + d2a"
       }
     },
     "spec/modules/vibe-settings/PROP-040-settings.md": {
-      "content_hash": "f385ba43ac2e32adc49f104541c9f657cb2588f13d5f4e9e214a0ebcf92650f1",
+      "content_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
       "rollup": {
         "explicit": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "marker_count": 74,
         "fact_count": 73,
@@ -22988,17 +23250,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (9 cells); document <status> judged as _elements",
         "fact_count": 73,
         "marker_count": 74,
-        "processed_hash": "f385ba43ac2e32adc49f104541c9f657cb2588f13d5f4e9e214a0ebcf92650f1",
+        "processed_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
         "summary": {
-          "confirmed": 64,
-          "drift": 1,
+          "confirmed": 65,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-010 (ledgered in B): 'DRAFT — requirements ... for a NEW crate' while crates/vibe-settings exists and `vibe prefs` ships the §8 surface (get/set/list/check/migrate/show-origins — the CLI help cites 'PROP-040 §8' verbatim)"
+              "F-010 (ledgered in B): 'DRAFT — requirements ... for a NEW crate' while crates/vibe-settings exists and `vibe prefs` ships the §8 surface (get/set/list/check/migrate/show-origins — the CLI help cites 'PROP-040 §8' verbatim)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -23387,23 +23650,23 @@
           }
         },
         "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings"
+        "verify_batch": "c4f2-mcp-settings + d2a"
       }
     },
     "spec/modules/vibe-settings/PROP-041-settings-ui.md": {
-      "content_hash": "9780b59a46286ba504bf436949d044d5816cc8e5727a09b9bbbe90f930ff0531",
+      "content_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
       "rollup": {
         "explicit": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "marker_count": 44,
         "fact_count": 43,
@@ -23417,17 +23680,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 43,
         "marker_count": 44,
-        "processed_hash": "9780b59a46286ba504bf436949d044d5816cc8e5727a09b9bbbe90f930ff0531",
+        "processed_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
         "summary": {
-          "confirmed": 43,
-          "drift": 1,
+          "confirmed": 44,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-019 (ledgered in B): 'DRAFT — requirements, 2026-07-16' while the prefs TUI ships (commands/prefs/tui/** with forms; PROP-037's F4 opens it as 'the vibe prefs settings UI — PROP-041')"
+              "F-019 (ledgered in B): 'DRAFT — requirements, 2026-07-16' while the prefs TUI ships (commands/prefs/tui/** with forms; PROP-037's F4 opens it as 'the vibe prefs settings UI — PROP-041')",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -23690,15 +23954,15 @@
           }
         },
         "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings"
+        "verify_batch": "c4f2-mcp-settings + d2a"
       }
     },
     "spec/modules/vibe-workspace/PROP-007-workspace.md": {
-      "content_hash": "76c71fc0b7e17802600eb876ec42935f3a850518016ace9af15b7306f6787163",
+      "content_hash": "b940150108bf0ce4e70140970e45f5eec269723686cb98f46a6b8c6e3481c2ed",
       "rollup": {
         "explicit": [
           "impl",
-          "work"
+          "done"
         ],
         "computed": [
           "spec",
@@ -23706,7 +23970,7 @@
         ],
         "effective": [
           "impl",
-          "work"
+          "done"
         ],
         "marker_count": 147,
         "fact_count": 146,
@@ -23720,23 +23984,25 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (26 cells); document <status> judged as _elements",
         "fact_count": 146,
         "marker_count": 147,
-        "processed_hash": "76c71fc0b7e17802600eb876ec42935f3a850518016ace9af15b7306f6787163",
+        "processed_hash": "b940150108bf0ce4e70140970e45f5eec269723686cb98f46a6b8c6e3481c2ed",
         "summary": {
-          "confirmed": 117,
-          "drift": 4,
+          "confirmed": 121,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "milestone-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-029: 'design proposal ... Not implementation-locked' over M1.17 Phases 1-5 shipped 2026-05-21 (this file's own §8/§9) and the install piece shipped in M1.18"
+              "F-029: 'design proposal ... Not implementation-locked' over M1.17 Phases 1-5 shipped 2026-05-21 (this file's own §8/§9) and the install piece shipped in M1.18",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-029 (ledgered in B): 'Workspace-aware vibe install is the remaining piece' aged — PROP-009 §2.7 subsumed it and M1.18 Phase 5 SHIPPED it (vibe-install/plan.rs:101 + apply.rs:114 call Workspace::discover; unified resolve live)"
+              "F-029 (ledgered in B): 'Workspace-aware vibe install is the remaining piece' aged — PROP-009 §2.7 subsumed it and M1.18 Phase 5 SHIPPED it (vibe-install/plan.rs:101 + apply.rs:114 call Workspace::discover; unified resolve live)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -24394,9 +24660,10 @@
             ]
           },
           "DEF-WORKSPACE-INSTALL": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-029: §9.3 still says 'what is unwired is vibe install discovering the workspace' — it is wired (Workspace::discover in the install plan and apply paths since M1.18); the deferral record aged behind its own resolution"
+              "F-029: §9.3 still says 'what is unwired is vibe install discovering the workspace' — it is wired (Workspace::discover in the install plan and apply paths since M1.18); the deferral record aged behind its own resolution",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "DEF-VERSION-INHERITANCE": {
@@ -24448,30 +24715,31 @@
             ]
           },
           "_elements": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-029: the marker comment repeats the aged claim — 'workspace-aware install is the remaining piece (S6, S8)' — while M1.18 shipped it; impl/work is stale for a PROP whose every phase (1-5 + the install piece via PROP-009) landed"
+              "F-029: the marker comment repeats the aged claim — 'workspace-aware install is the remaining piece (S6, S8)' — while M1.18 shipped it; impl/work is stale for a PROP whose every phase (1-5 + the install piece via PROP-009) landed",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           }
         },
         "verified_at": "2026-07-25T14:28:14Z",
-        "verify_batch": "c4d1-workspace-big3"
+        "verify_batch": "c4d1-workspace-big3 + d2a"
       }
     },
     "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
-      "content_hash": "06b5556e9223b24992a54891cda76a4eeace0780ce1edacb2beb3acb178c5e14",
+      "content_hash": "abecd46d4e84b936f5f6bd4240f397f89067b905e6b2b7938652087555903444",
       "rollup": {
         "explicit": [
           "impl",
-          "work"
+          "done"
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
           "impl",
-          "work"
+          "done"
         ],
         "marker_count": 104,
         "fact_count": 103,
@@ -24485,23 +24753,25 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 103,
         "marker_count": 104,
-        "processed_hash": "06b5556e9223b24992a54891cda76a4eeace0780ce1edacb2beb3acb178c5e14",
+        "processed_hash": "abecd46d4e84b936f5f6bd4240f397f89067b905e6b2b7938652087555903444",
         "summary": {
-          "confirmed": 101,
-          "drift": 3,
+          "confirmed": 104,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "milestone-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-026 (ledgered in B): 'design proposal ... Not implementation-locked' while §7 records Phases 1-7 shipped 2026-05-22"
+              "F-026 (ledgered in B): 'design proposal ... Not implementation-locked' while §7 records Phases 1-7 shipped 2026-05-22",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-026: opens DRAFT while the same line records phases 1-7 shipped — the internal contradiction the B-phase ledgered; live proof surrounds this session (STATIC.md/INDEX.md booted it)"
+              "F-026: opens DRAFT while the same line records phases 1-7 shipped — the internal contradiction the B-phase ledgered; live proof surrounds this session (STATIC.md/INDEX.md booted it)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "related": {
@@ -24919,9 +25189,10 @@
             ]
           },
           "SURF-SHOW-EFFECTIVE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "shipped-but-spec/done: `vibe show effective` EXISTS (show --help: 'Print the effective spec — every spec/boot file plus every installed package's files_written, concatenated with spec:// provenance headers') — the simple concatenation form; the §2.8 engine-backed projection stays v1.5, but the command itself is live; same refresh sweep as F-026"
+              "shipped-but-spec/done: `vibe show effective` EXISTS (show --help: 'Print the effective spec — every spec/boot file plus every installed package's files_written, concatenated with spec:// provenance headers') — the simple concatenation form; the §2.8 engine-backed projection stays v1.5, but the command itself is live; same refresh sweep as F-026",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "SURF-ENGINE-CRATE": {
@@ -25118,7 +25389,7 @@
           }
         },
         "verified_at": "2026-07-25T14:28:14Z",
-        "verify_batch": "c4d1-workspace-big3"
+        "verify_batch": "c4d1-workspace-big3 + d2a"
       }
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
@@ -27375,19 +27646,19 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md": {
-      "content_hash": "f9d5e19a8c1a402b87e4159b6079c5f546d2849d599961d05bf92d5e795b339b",
+      "content_hash": "4150b1a3d9e61ce8fbe60099fccff098d31a0e9a00ba233585de2efe9e765405",
       "rollup": {
         "explicit": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "computed": [
           "spec",
           "work"
         ],
         "effective": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "marker_count": 66,
         "fact_count": 65,
@@ -27401,17 +27672,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 65,
         "marker_count": 66,
-        "processed_hash": "f9d5e19a8c1a402b87e4159b6079c5f546d2849d599961d05bf92d5e795b339b",
+        "processed_hash": "4150b1a3d9e61ce8fbe60099fccff098d31a0e9a00ba233585de2efe9e765405",
         "summary": {
-          "confirmed": 65,
-          "drift": 1,
+          "confirmed": 66,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-051: 'DRAFT — Not implementation-locked' aged — the transitive semantics shipped under the renamed terms (static-transitive live on LinkType; dedup+topo+tie-break emission live in bootgen; this repo's own STATIC.md carries the redbook closure exactly as §3 motivates), and PROP-035 §12 / PROP-038 absorbed the graph as their emission layer; the file's own rename-note and the document marker say so — the status line never caught up"
+              "F-051: 'DRAFT — Not implementation-locked' aged — the transitive semantics shipped under the renamed terms (static-transitive live on LinkType; dedup+topo+tie-break emission live in bootgen; this repo's own STATIC.md carries the redbook closure exactly as §3 motivates), and PROP-035 §12 / PROP-038 absorbed the graph as their emission layer; the file's own rename-note and the document marker say so — the status line never caught up",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "TERMINOLOGY-RENAME": {
@@ -27806,23 +28078,23 @@
           }
         },
         "verified_at": "2026-07-25T14:37:13Z",
-        "verify_batch": "c4d2-workspace-rest"
+        "verify_batch": "c4d2-workspace-rest + d2a"
       }
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "0ee4da4274c7a8bfa58b58d35d7a3c5c92fbb3c9c726359b240e5b6bb38d275f",
+      "content_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
       "rollup": {
         "explicit": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "computed": [
           "spec",
           "work"
         ],
         "effective": [
-          "spec",
-          "work"
+          "impl",
+          "done"
         ],
         "marker_count": 135,
         "fact_count": 134,
@@ -27836,17 +28108,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 134,
         "marker_count": 135,
-        "processed_hash": "0ee4da4274c7a8bfa58b58d35d7a3c5c92fbb3c9c726359b240e5b6bb38d275f",
+        "processed_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
         "summary": {
-          "confirmed": 133,
-          "drift": 2,
+          "confirmed": 135,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-028 (ledgered in B): 'DESIGN — provisional ... not implementation-locked' while §17 records §5-§13 SHIPPED as vibe-spec (2026-07-15), the link-type rename (07-16), and normal+static compiled end-to-end (07-20)"
+              "F-028 (ledgered in B): 'DESIGN — provisional ... not implementation-locked' while §17 records §5-§13 SHIPPED as vibe-spec (2026-07-15), the link-type rename (07-16), and normal+static compiled end-to-end (07-20)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           },
           "frame-established": {
@@ -28648,18 +28921,19 @@
             ]
           },
           "_elements": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-028: the marker repeats the status-line's claim (spec/work 'DESIGN provisional; not implementation-locked') without diagnosing it — while §17 records the compiler shipped three times over (vibe-spec, rename, normal+static AOT)"
+              "F-028: the marker repeats the status-line's claim (spec/work 'DESIGN provisional; not implementation-locked') without diagnosing it — while §17 records the compiler shipped three times over (vibe-spec, rename, normal+static AOT)",
+              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
           }
         },
         "verified_at": "2026-07-25T14:28:14Z",
-        "verify_batch": "c4d1-workspace-big3"
+        "verify_batch": "c4d1-workspace-big3 + d2a"
       }
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
-      "content_hash": "e1e0b273b23624e46d9f6c30cd1b008e11e0163b2ed4d2b2c1692b10619bb158",
+      "content_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
       "rollup": {
         "explicit": [
           "impl",
@@ -28667,7 +28941,7 @@
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
           "impl",
@@ -28685,10 +28959,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (8 cells); document <status> judged as _elements",
         "fact_count": 85,
         "marker_count": 86,
-        "processed_hash": "e1e0b273b23624e46d9f6c30cd1b008e11e0163b2ed4d2b2c1692b10619bb158",
+        "processed_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
         "summary": {
-          "confirmed": 76,
-          "drift": 2,
+          "confirmed": 78,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -28987,9 +29261,10 @@
             ]
           },
           "fp-storage-note": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-024 (ledgered in B): '§2.7 closes with storage/granularity open (§5)' while §5 records BOTH resolved 2026-07-15 (RES-FP-STORAGE header storage, RES-GRANULARITY per-package)"
+              "F-024 (ledgered in B): '§2.7 closes with storage/granularity open (§5)' while §5 records BOTH resolved 2026-07-15 (RES-FP-STORAGE header storage, RES-GRANULARITY per-package)",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "DIRTY-SUBGRAPH": {
@@ -29047,9 +29322,10 @@
             ]
           },
           "TEST-MUTATION-FUZZ": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-024 extended (c4d2): the proptest mutation-fuzz shipped AFTER the §6 deferral — boot/hybrid/fuzz.rs header reads 'Property-based fuzzing of the hybrid boot graph (PROP-038 §3, DEF-5)' with proptest random DAGs; the unit's spec/done aged behind its own DEF-5 landing"
+              "F-024 extended (c4d2): the proptest mutation-fuzz shipped AFTER the §6 deferral — boot/hybrid/fuzz.rs header reads 'Property-based fuzzing of the hybrid boot graph (PROP-038 §3, DEF-5)' with proptest random DAGs; the unit's spec/done aged behind its own DEF-5 landing",
+              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
             ]
           },
           "TEST-GOLDEN-INVARIANTS": {
@@ -29162,7 +29438,7 @@
           }
         },
         "verified_at": "2026-07-25T14:37:13Z",
-        "verify_batch": "c4d2-workspace-rest"
+        "verify_batch": "c4d2-workspace-rest + d2d"
       }
     }
   }

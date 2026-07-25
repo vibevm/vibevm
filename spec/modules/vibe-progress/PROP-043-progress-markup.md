@@ -1,13 +1,16 @@
 # PROP-043 — Progress Control: inline status markup and the `vibe progress` tool {#root}
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="contract ratified 2026-07-24; implementation underway (campaign Phase A)"/>
+<status stage="impl" state="done" action="continue" actionstage="impl" comment="contract ratified 2026-07-24; the §5 tool ships (all seven subcommands); the campaign it governs is in Phase D — the open tail is the §6 evidence join and the parity items of F-046"/>
 
 ##self-uri `spec://vibevm/modules/vibe-progress/PROP-043` @spec/done
 
-##status-line **Status:** RATIFIED 2026-07-24 (owner, in session — «ратифицирую PROP-043»).
-The markup language, the tool surface, and the data contracts below are binding;
-implementation is underway (spec-actualization campaign, Phase A). Sections
-marked *(provisional)* are held for the implementation task. @impl/work
+##status-line **Status:** RATIFIED 2026-07-24 (owner, in session — «ратифицирую PROP-043»)
+and **IMPLEMENTED**: the markup language, the tool surface and the data contracts
+below are binding, and the §5 tool ships with all seven subcommands (19 specmap
+`implements` edges). Its first consumer — the spec-actualization campaign — is in
+**Phase D** (stitching); no *(provisional)* sections remain. The known gaps are
+tracked as parity items, not as unfinished specification: the §6 evidence join
+and the fact-grain specmap consumption. @impl/done
 
 ##related **Depends on / relates to** (all as *external companions* — see the
 separability law, §2): the `addressable-specs` flow (anchors, `spec://` URIs),

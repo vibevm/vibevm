@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T15:42:00Z",
+ "updated_at": "2026-07-25T17:58:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -43,18 +43,18 @@
    "from": "spec/common/PROP-019-version-manager.md",
    "to": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says proposed, but the VVM is implemented (install records / origin / source_path consumed by PROP-025 v1 IMPLEMENTED; the vvm was also ported to TS in vibevm-term per the WAL)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says proposed, but the VVM is implemented (install records / origin / source_path consumed by PROP-025 v1 IMPLEMENTED; the vvm was also ported to TS in vibevm-term per the WAL). || RESOLVED d2a 2026-07-25: PROP-019 status line reads IMPLEMENTED with the specmap coverage cited."
   },
   {
    "id": "F-006",
    "from": "spec/common/PROP-024-code-bearing-packages.md",
    "to": "spec/boot/INDEX.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says proposed, but code-bearing packages are live: the rust/typescript ai-native stacks ship crates consumed via vibe bin exec (PROP-025), exactly what this PROP proposes."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says proposed, but code-bearing packages are live: the rust/typescript ai-native stacks ship crates consumed via vibe bin exec (PROP-025), exactly what this PROP proposes. || RESOLVED d2d 2026-07-25: PROP-024 status line reads IMPLEMENTED - the vendored toolchain is what this very session boots on."
   },
   {
    "id": "F-007",
@@ -70,27 +70,27 @@
    "from": "spec/modules/vibe-cli/PROP-036-package-tree.md",
    "to": "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says DRAFT requirements, but PACKAGE-TREE-PLAN is EXECUTED 2026-07-15 against this contract."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says DRAFT requirements, but PACKAGE-TREE-PLAN is EXECUTED 2026-07-15 against this contract. || RESOLVED d2a 2026-07-25: PROP-036 status line reads IMPLEMENTED (PACKAGE-TREE-PLAN executed); the separate code-side clap lie stays F-036 for Phase E."
   },
   {
    "id": "F-009",
    "from": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
    "to": "legacy-spec/terraforms/TREE-TUI-PLAN-v0.2.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says DRAFT, but TREE-TUI-PLAN v0.2 is EXECUTED 2026-07-16 (P0-P10) against this contract; only the owner visual sign-off (MT-02) is open."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says DRAFT, but TREE-TUI-PLAN v0.2 is EXECUTED 2026-07-16 (P0-P10) against this contract; only the owner visual sign-off (MT-02) is open. || RESOLVED d2a 2026-07-25: PROP-037 status line reads IMPLEMENTED (TREE-TUI-PLAN v0.2 executed); the MT-02 visual sign-off stays open as a manual-tier item."
   },
   {
    "id": "F-010",
    "from": "spec/modules/vibe-settings/PROP-040-settings.md",
    "to": "legacy-spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-040 says DRAFT and SETTINGS-SYSTEM-IMPL-PLAN says PLANNED, yet crates/vibe-settings exists in the tree and SETTINGS-UI-PLAN (EXECUTED) built atop 'the settings system (PROP-040, Shag 2)'. The pair cannot both be right; PROP-041 (DRAFT vs executed SETTINGS-UI-PLAN) and PROP-039 (DRAFT vs crates/vibe-actions) share the pattern."
+   "status": "resolved",
+   "wave": 2,
+   "note": "PROP-040 says DRAFT and SETTINGS-SYSTEM-IMPL-PLAN says PLANNED, yet crates/vibe-settings exists in the tree and SETTINGS-UI-PLAN (EXECUTED) built atop 'the settings system (PROP-040, Shag 2)'. The pair cannot both be right; PROP-041 (DRAFT vs executed SETTINGS-UI-PLAN) and PROP-039 (DRAFT vs crates/vibe-actions) share the pattern. || RESOLVED d2a 2026-07-25: PROP-040 status line reads IMPLEMENTED, its help citation quoted; the paired PROP-041 and PROP-039 headers closed in the same batch."
   },
   {
    "id": "F-011",
@@ -115,9 +115,9 @@
    "from": "spec/common/PROP-018-agentic-standalone-modes.md",
    "to": "crates/vibe-mcp/src/agentic.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says proposed 2026-06-16, but the S4 MVP is implemented: vibe agentic explain / vibe command / the [[skill]] section / the MCP agentic_explain tool all exist in the tree (found during B1 markup)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says proposed 2026-06-16, but the S4 MVP is implemented: vibe agentic explain / vibe command / the [[skill]] section / the MCP agentic_explain tool all exist in the tree (found during B1 markup). || RESOLVED d2a 2026-07-25: PROP-018 status line records the S4 MVP as implemented; S6 stays parked."
   },
   {
    "id": "F-014",
@@ -142,9 +142,9 @@
    "from": "spec/modules/README.md",
    "to": "spec/modules/**",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "The module index stops at PROP-012 (2026-05-22 era): vibe-mcp/, vibe-cli/, vibe-settings/, vibe-actions/, vibe-progress/ and PROPs 015-043 are absent. Inline **Status:** mentions inside index rows predate later work (PROP-008 'DRAFT' vs fqdn-default shipped in M1.19; PROP-005 'implemented'; PROP-003 'design proposal'; PROP-007/009/011/012 'DRAFT') - each row needs Phase C adjudication, the rewrite is Phase D material. Document marker carries action=drift."
+   "status": "resolved",
+   "wave": 2,
+   "note": "The module index stops at PROP-012 (2026-05-22 era): vibe-mcp/, vibe-cli/, vibe-settings/, vibe-actions/, vibe-progress/ and PROPs 015-043 are absent. Inline **Status:** mentions inside index rows predate later work (PROP-008 'DRAFT' vs fqdn-default shipped in M1.19; PROP-005 'implemented'; PROP-003 'design proposal'; PROP-007/009/011/012 'DRAFT') - each row needs Phase C adjudication, the rewrite is Phase D material. Document marker carries action=drift. || RESOLVED d2d 2026-07-25: the six stale inline Status claims refreshed AND the index completed to the live tree - nine module dirs, every PROP through 043, 26 new rows."
   },
   {
    "id": "F-017",
@@ -169,27 +169,27 @@
    "from": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
    "to": "crates/vibe-cli/src/commands/prefs/tui/",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says 'DRAFT - requirements, 2026-07-16', but the prefs TUI ships (commands/prefs/tui/** with form lifecycle, provenance edit, controls) - the SETTINGS-UI-PLAN executed against this contract. F-013/F-018 class. Note also: this doc pre-dates the fact grammar with owner-minted per-REQ {#anchor}s; the ## fact anchors reuse those exact ids (one name, two notations) - do not rename either side (anchors immutable)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says 'DRAFT - requirements, 2026-07-16', but the prefs TUI ships (commands/prefs/tui/** with form lifecycle, provenance edit, controls) - the SETTINGS-UI-PLAN executed against this contract. F-013/F-018 class. Note also: this doc pre-dates the fact grammar with owner-minted per-REQ {#anchor}s; the ## fact anchors reuse those exact ids (one name, two notations) - do not rename either side (anchors immutable). || RESOLVED d2a 2026-07-25: PROP-041 status line reads IMPLEMENTED (SETTINGS-UI-PLAN executed, F4 opens it)."
   },
   {
    "id": "F-020",
    "from": "spec/modules/vibe-progress/OWNER-GUIDE.md",
    "to": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
    "type": "missing-support",
-   "status": "open",
-   "wave": 0,
-   "note": "S1 of the owner guide predates the fact amendment: the placement vocabulary lists only document/section/paragraph/fragment - no list items, no table cells, no ##<ID> fact anchors, no anchored-when-marked law (PROP-043 s3.8 items 4-6, s3.9). The owner's daily reading of markers now misses half the grammar. Guide update is Phase D/G material; doc marker carries action=drift."
+   "status": "resolved",
+   "wave": 2,
+   "note": "S1 of the owner guide predates the fact amendment: the placement vocabulary lists only document/section/paragraph/fragment - no list items, no table cells, no ##<ID> fact anchors, no anchored-when-marked law (PROP-043 s3.8 items 4-6, s3.9). The owner's daily reading of markers now misses half the grammar. Guide update is Phase D/G material; doc marker carries action=drift. || RESOLVED d2d 2026-07-25: the owner guide gains the two missing placements, the fact-anchor row with anchored-when-marked, the preamble-less nuance on document vs section, and tasks/ in the four survivors."
   },
   {
    "id": "F-021",
    "from": "spec/modules/vibe-actions/PROP-039-action-system.md",
    "to": "crates/vibe-actions/",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says 'DRAFT - requirements, 2026-07-15', but crates/vibe-actions exists in the workspace (the action system shipped at least in part; the vibe tree TUI and prefs UI consume it). F-013/F-018/F-019 class; Phase C adjudicates REQ-by-REQ."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says 'DRAFT - requirements, 2026-07-15', but crates/vibe-actions exists in the workspace (the action system shipped at least in part; the vibe tree TUI and prefs UI consume it). F-013/F-018/F-019 class; Phase C adjudicates REQ-by-REQ. || RESOLVED d2a 2026-07-25: PROP-039 status line reads IMPLEMENTED and both AIUI rows re-based on the shipped surface (aiui.rs + vibe aiui state)."
   },
   {
    "id": "F-022",
@@ -205,108 +205,108 @@
    "from": "spec/modules/vibe-cli/PROP-036-package-tree.md",
    "to": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
    "type": "missing-support",
-   "status": "open",
-   "wave": 0,
-   "note": "S2.13 cites PROP-043 as the home of the VibeTree.exe / Start-menu GUI launcher, but PROP-043 is Progress Control (inline status markup) and carries no launcher content - a dangling forward reference, likely a number reused after the draft was written (2026-07-15 predates the 2026-07-24 PROP-043 ratification). Phase C: locate the real launcher home (or mint one) and repoint."
+   "status": "resolved",
+   "wave": 2,
+   "note": "S2.13 cites PROP-043 as the home of the VibeTree.exe / Start-menu GUI launcher, but PROP-043 is Progress Control (inline status markup) and carries no launcher content - a dangling forward reference, likely a number reused after the draft was written (2026-07-15 predates the 2026-07-24 PROP-043 ratification). Phase C: locate the real launcher home (or mint one) and repoint. || RESOLVED d2a 2026-07-25: repointed to the vibevm-term products repo (PROP-019 STEP-VIBE-ONLY) - the launchers left the host tree with vibeterm/vibeframe; owner confirmed the separation in session."
   },
   {
    "id": "F-024",
    "from": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md",
    "to": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "Internal: s2.7 closes with -Fingerprint storage location and granularity are open (s5)- but s5 records both RESOLVED 2026-07-15 (Q3 header storage, Q4 per-package granularity). The s2.7 tail predates the Phase-0 resolution and was never updated. Phase C/D: drop or rewrite the stale sentence. EXTENDED (c4d2): TEST-MUTATION-FUZZ also aged - boot/hybrid/fuzz.rs ships the proptest DEF-5 sweep the §6 history still records as deferred."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Internal: s2.7 closes with -Fingerprint storage location and granularity are open (s5)- but s5 records both RESOLVED 2026-07-15 (Q3 header storage, Q4 per-package granularity). The s2.7 tail predates the Phase-0 resolution and was never updated. Phase C/D: drop or rewrite the stale sentence. EXTENDED (c4d2): TEST-MUTATION-FUZZ also aged - boot/hybrid/fuzz.rs ships the proptest DEF-5 sweep the §6 history still records as deferred. || RESOLVED d2d 2026-07-25: PROP-038 §2.7 records the §5 resolutions and TEST-MUTATION-FUZZ records the shipped proptest sweep."
   },
   {
    "id": "F-025",
    "from": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
    "to": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "Internal: the Milestone line still reads -design proposal; targets a new M1.18 ... Not implementation-locked- while the Status line (updated 2026-06-12) says IMPLEMENTED across M1.18+M1.19. The milestone phrasing predates shipping and was never refreshed. Phase C/D: reword the milestone line."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Internal: the Milestone line still reads -design proposal; targets a new M1.18 ... Not implementation-locked- while the Status line (updated 2026-06-12) says IMPLEMENTED across M1.18+M1.19. The milestone phrasing predates shipping and was never refreshed. Phase C/D: reword the milestone line. || RESOLVED d2a 2026-07-25: PROP-008 milestone line reconciled with its IMPLEMENTED status."
   },
   {
    "id": "F-026",
    "from": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
    "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "Internal: the Milestone line reads -design proposal ... Not implementation-locked- and the Status line opens DRAFT, while the same Status line and s7 record M1.18 phases 1-7 SHIPPED 2026-05-22 (only phase 8 is v1.5 scope). Same stale-header class as F-025. Phase C/D: reword milestone+status opening."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Internal: the Milestone line reads -design proposal ... Not implementation-locked- and the Status line opens DRAFT, while the same Status line and s7 record M1.18 phases 1-7 SHIPPED 2026-05-22 (only phase 8 is v1.5 scope). Same stale-header class as F-025. Phase C/D: reword milestone+status opening. || RESOLVED d2a 2026-07-25: PROP-009 milestone + status lines reconciled; SURF-SHOW-EFFECTIVE re-marked to the shipped concatenation form."
   },
   {
    "id": "F-027",
    "from": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
    "to": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "Internal: the Status line reads -accepted, implementation in progress (2026-06-14)- while s6 (same date) declares -the port is COMPLETE, resolvo is the default production solver- with only far-backlog reverse weak-deps waiting. The header was never refreshed after the port landed. Same stale-header class as F-025/F-026. Phase C/D: reword the status line."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Internal: the Status line reads -accepted, implementation in progress (2026-06-14)- while s6 (same date) declares -the port is COMPLETE, resolvo is the default production solver- with only far-backlog reverse weak-deps waiting. The header was never refreshed after the port landed. Same stale-header class as F-025/F-026. Phase C/D: reword the status line. || RESOLVED d2a 2026-07-25: PROP-017 status line records the completed port and the shipped production default."
   },
   {
    "id": "F-028",
    "from": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
    "to": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "Internal: the Status line reads -DESIGN, provisional 2026-07-14 ... not implementation-locked- while s17 records s5-s13 SHIPPED as the vibe-spec crate (2026-07-15), the link-type rename shipped (07-16), and normal+static compiled end to end (07-20). Only the structural/JIT loader (s13) and link tables (s10) remain pending. Same stale-header class as F-025..F-027. Phase C/D: reword the status line."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Internal: the Status line reads -DESIGN, provisional 2026-07-14 ... not implementation-locked- while s17 records s5-s13 SHIPPED as the vibe-spec crate (2026-07-15), the link-type rename shipped (07-16), and normal+static compiled end to end (07-20). Only the structural/JIT loader (s13) and link tables (s10) remain pending. Same stale-header class as F-025..F-027. Phase C/D: reword the status line. || RESOLVED d2a 2026-07-25: PROP-035 status line records the three shipping events of S17 and names the S13/S10 remainder."
   },
   {
    "id": "F-029",
    "from": "spec/modules/vibe-workspace/PROP-007-workspace.md",
    "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "The Status line and s9.3 still call workspace-aware vibe install -the remaining piece- / -deferred-, but PROP-009 M1.18 Phase 5 shipped exactly that (workspace-aware install/build, 2026-05-22, one day after PROP-007 s8 was written). s6 q3 records the PROP-009 resolution, s9.3 does not. Phase C/D: refresh the status line and s9.3."
+   "status": "resolved",
+   "wave": 2,
+   "note": "The Status line and s9.3 still call workspace-aware vibe install -the remaining piece- / -deferred-, but PROP-009 M1.18 Phase 5 shipped exactly that (workspace-aware install/build, 2026-05-22, one day after PROP-007 s8 was written). s6 q3 records the PROP-009 resolution, s9.3 does not. Phase C/D: refresh the status line and s9.3. || RESOLVED d2a 2026-07-25: PROP-007 status/milestone lines and the S9.3 deferral record the M1.18 resolution."
   },
   {
    "id": "F-030",
    "from": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
    "to": "crates/vibe-resolver/src/features.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line and closing note still say -design proposal, not yet implementation-locked- while the vocabulary ships: features.rs (dep:/weak ?//exclusive groups), activation.rs (all probes; if_os reserved via recorded deviates), conditional.rs (+ fixpoint_model), manifest/i18n.rs + vibe-actions/i18n.rs, vibe-check i18n_coverage/subskill_structure/features_graph/activation_conflict, lockfile meta+package fields (solver/language_chain/active_features/virtual_capabilities/features/subskills_active/describes), show features/subskills CLI. Engine sections superseded by PROP-017. Same stale-header family as F-024..F-029; document marker updated to impl/done at the B2 re-mark. Unshipped details stay spec/done: pin_preferences (deviates in vibe-resolver lib.rs), VIBE_LANGUAGE env, dotted-key field translations (2.7.4), --all-languages, vibe review scoring, outdated --upstream, the whole LLM emission engine (vibe-llm pending, vibe-mcp tools.rs header)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line and closing note still say -design proposal, not yet implementation-locked- while the vocabulary ships: features.rs (dep:/weak ?//exclusive groups), activation.rs (all probes; if_os reserved via recorded deviates), conditional.rs (+ fixpoint_model), manifest/i18n.rs + vibe-actions/i18n.rs, vibe-check i18n_coverage/subskill_structure/features_graph/activation_conflict, lockfile meta+package fields (solver/language_chain/active_features/virtual_capabilities/features/subskills_active/describes), show features/subskills CLI. Engine sections superseded by PROP-017. Same stale-header family as F-024..F-029; document marker updated to impl/done at the B2 re-mark. Unshipped details stay spec/done: pin_preferences (deviates in vibe-resolver lib.rs), VIBE_LANGUAGE env, dotted-key field translations (2.7.4), --all-languages, vibe review scoring, outdated --upstream, the whole LLM emission engine (vibe-llm pending, vibe-mcp tools.rs header). || RESOLVED d2c 2026-07-25: PROP-003 status line records the shipped vocabulary and points the engine question at PROP-017."
   },
   {
    "id": "F-031",
    "from": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
    "to": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "Internal r2 leftovers: (1) the 2.8 consolidated fence still shows r1 syntax __exclusive = [[...]] and a double-underscore __internal-helper while 2.4 (r2) replaced the sigil with named [features.exclusive] groups and a single _ visibility prefix; (2) 4.3 says -already covered in 2.5.3- but the packages-only rationale moved to 2.5.4 when r2 inserted the LLM-virtual-caps section; (3) 2.7.5/2.9 examples carry language/language_fallback and schema_version = 3 while the shipped shape is language_chain and schema v5 (v3 was the PROP-003 bump per lockfile.rs), and the active_features example uses kind:name/feature while the shipped grain is group/name/feature. Phase C/D dedup material; no semantic edits in Phase B."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Internal r2 leftovers: (1) the 2.8 consolidated fence still shows r1 syntax __exclusive = [[...]] and a double-underscore __internal-helper while 2.4 (r2) replaced the sigil with named [features.exclusive] groups and a single _ visibility prefix; (2) 4.3 says -already covered in 2.5.3- but the packages-only rationale moved to 2.5.4 when r2 inserted the LLM-virtual-caps section; (3) 2.7.5/2.9 examples carry language/language_fallback and schema_version = 3 while the shipped shape is language_chain and schema v5 (v3 was the PROP-003 bump per lockfile.rs), and the active_features example uses kind:name/feature while the shipped grain is group/name/feature. Phase C/D dedup material; no semantic edits in Phase B. || RESOLVED d2c 2026-07-25: the r2 leftovers corrected in place - the __exclusive sigil, the §2.5.3/§2.5.4 misref, and the language_chain shape."
   },
   {
    "id": "F-032",
    "from": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
    "to": "crates/vibe-registry/src/lib.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "F-024 stale-header family + internal nits: (1) Status line says -accepted 2026-04-24- only, while the whole contract shipped (M1.1-revision, M1.6, M1.13 git-source, M1.14 auth, redirect) and the section text itself records GitHubCreator-primary 2026-04-29 / M1.19 fqdn default; (2) all 14 Phase A acceptance checkboxes in s5 remain [ ] though every item is long green; (3) s2.8/s5 call the impl -ResolvoSolver- while the shipped cell is ResolvoDepSolver (PROP-017 s2); (4) s2.2.1 token-env row claims -symmetric with the publish-side VIBEVM_PUBLISH_TOKEN_<HOST> already specified in s2.10- but s2.10 specifies a host-agnostic VIBEVM_PUBLISH_TOKEN env + per-host token FILES, no per-host env var. Phase C/D sweep material; no semantic edits in Phase B."
+   "status": "resolved",
+   "wave": 2,
+   "note": "F-024 stale-header family + internal nits: (1) Status line says -accepted 2026-04-24- only, while the whole contract shipped (M1.1-revision, M1.6, M1.13 git-source, M1.14 auth, redirect) and the section text itself records GitHubCreator-primary 2026-04-29 / M1.19 fqdn default; (2) all 14 Phase A acceptance checkboxes in s5 remain [ ] though every item is long green; (3) s2.8/s5 call the impl -ResolvoSolver- while the shipped cell is ResolvoDepSolver (PROP-017 s2); (4) s2.2.1 token-env row claims -symmetric with the publish-side VIBEVM_PUBLISH_TOKEN_<HOST> already specified in s2.10- but s2.10 specifies a host-agnostic VIBEVM_PUBLISH_TOKEN env + per-host token FILES, no per-host env var. Phase C/D sweep material; no semantic edits in Phase B. || RESOLVED d2d 2026-07-25: PROP-002 nits closed - the qualified cache path, the shipped half of the mirror chain, and the two promised-absent surfaces named as unbuilt."
   },
   {
    "id": "F-033",
    "from": "spec/design/loading-and-boot-model.md",
    "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "Two internal nits in the design record: (1) s6 working syntax reads link = -static- | -static- | -dynamic- - the first alternative should be -inline- (P4 names inline/static/dynamic); (2) the Companion line and s10 pointer still call PROP-009 -forthcoming- while M1.18 phases 1-7 shipped 2026-05-22 (the design record predates the contract landing - F-026 already tracks PROP-009's own stale lines). Lore-doc corrections, Phase C/D material."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Two internal nits in the design record: (1) s6 working syntax reads link = -static- | -static- | -dynamic- - the first alternative should be -inline- (P4 names inline/static/dynamic); (2) the Companion line and s10 pointer still call PROP-009 -forthcoming- while M1.18 phases 1-7 shipped 2026-05-22 (the design record predates the contract landing - F-026 already tracks PROP-009's own stale lines). Lore-doc corrections, Phase C/D material. || RESOLVED d2b 2026-07-25: the design record gains a rename note, the static|static|dynamic typo is fixed, and the forthcoming PROP-009 references read shipped."
   },
   {
    "id": "F-034",
    "from": "spec/design/action-system.md",
    "to": "spec/modules/vibe-actions/PROP-039-action-system.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Future-tense staleness in the lore doc: the genre line calls PROP-039 -forthcoming- and s10 says -PROP-039 will carry one granular addressable REQ per Delta- while the contract file exists (marked in B2) and crates/vibe-actions ships (action.rs, context.rs, i18n.rs). Same family as F-033's -forthcoming- PROP-009 refs. Lore correction, Phase C/D."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Future-tense staleness in the lore doc: the genre line calls PROP-039 -forthcoming- and s10 says -PROP-039 will carry one granular addressable REQ per Delta- while the contract file exists (marked in B2) and crates/vibe-actions ships (action.rs, context.rs, i18n.rs). Same family as F-033's -forthcoming- PROP-009 refs. Lore correction, Phase C/D. || RESOLVED d2b 2026-07-25: action-system lore re-tensed - PROP-039 written and shipped, the AIUI in-process form built, the Spec-2 TUI revision recorded as landed."
   },
   {
    "id": "F-035",
@@ -331,54 +331,54 @@
    "from": "spec/manual-tests/MT-01-vibe-tree.md",
    "to": "crates/vibe-cli/src/commands/tree/tui/goldens/base.snap.txt",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "MT-01 steps 2/6/7/8/9 describe the pre-revision TUI keymap (n order, x mode, t swap, [ ] tabs, q quit, footer text). Shipped surface: F1 search / F2 sort / F3 mode / F4 settings / F6 copy, Shift+arrows tabs, Esc + Really-quit confirm. Re-author the MT against PROP-037 v0.2 + the action keymap. C verdicts: 5 drift EXPs (c1)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "MT-01 steps 2/6/7/8/9 describe the pre-revision TUI keymap (n order, x mode, t swap, [ ] tabs, q quit, footer text). Shipped surface: F1 search / F2 sort / F3 mode / F4 settings / F6 copy, Shift+arrows tabs, Esc + Really-quit confirm. Re-author the MT against PROP-037 v0.2 + the action keymap. C verdicts: 5 drift EXPs (c1). || RESOLVED d2e 2026-07-25: MT-01 steps 2/6/7/8/9 re-authored against the shipped Spec-2 keymap (F2 sort menu, F3 mode menu, Shift+arrows, Esc + Really-quit confirm, F4 in the footer). The MT-01 run itself still needs a human; an agent may pre-run but never records the pass."
   },
   {
    "id": "F-038",
    "from": "spec/manual-tests/MT-02-vibe-tree-tui.md",
    "to": "crates/vibe-cli/src/commands/tree/tui/goldens/base.snap.txt",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "MT-02 S1-FOOTER quote omits F4 settings and says q quit (shipped: Esc quit + confirm); STEP-9 parenthetical -once a picker lands- is superseded by the F4 settings menu. Small re-wording; the rest of MT-02 verified clean (22/23 confirmed). Found by C c1."
+   "status": "resolved",
+   "wave": 2,
+   "note": "MT-02 S1-FOOTER quote omits F4 settings and says q quit (shipped: Esc quit + confirm); STEP-9 parenthetical -once a picker lands- is superseded by the F4 settings menu. Small re-wording; the rest of MT-02 verified clean (22/23 confirmed). Found by C c1. || RESOLVED d2e 2026-07-25: the S1-FOOTER quote now matches the shipped footer (F4 settings restored, Esc quit, Shift+arrows for tabs) and the once-a-picker-lands parenthetical points at the F4 menu."
   },
   {
    "id": "F-039",
    "from": "spec/design/loading-and-boot-model.md",
    "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Lore vs shipped PROP-009 grammar: the design records three inclusion types inline/static/dynamic (default static) while the shipped manifest field is link = static|dynamic (default dynamic; design-inline became link=static, the STATIC.md lane). Plus PROP-009 called forthcoming twice (companion-line, ptr) and the SS6 lead has the literal typo static|static|dynamic. Correct the lore per spec-genres (the PROP wins). 8 drift verdicts in c2."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Lore vs shipped PROP-009 grammar: the design records three inclusion types inline/static/dynamic (default static) while the shipped manifest field is link = static|dynamic (default dynamic; design-inline became link=static, the STATIC.md lane). Plus PROP-009 called forthcoming twice (companion-line, ptr) and the SS6 lead has the literal typo static|static|dynamic. Correct the lore per spec-genres (the PROP wins). 8 drift verdicts in c2. || RESOLVED d2b 2026-07-25: the lore keeps its 2026-05-21 vocabulary as a dated capture and glosses each row with the shipped name (inline -> link=static, static -> link=dynamic); the contract stays the single source."
   },
   {
    "id": "F-040",
    "from": "spec/design/workspace-and-qualified-naming.md",
    "to": "ROADMAP.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "ptr-roadmap names M1.18 (qualified naming); the ROADMAP ships M1.18 = Loading model (PROP-009) and M1.19 = Qualified naming (PROP-008). The milestone number shifted after the 2026-05-20 capture. One-line fix."
+   "status": "resolved",
+   "wave": 2,
+   "note": "ptr-roadmap names M1.18 (qualified naming); the ROADMAP ships M1.18 = Loading model (PROP-009) and M1.19 = Qualified naming (PROP-008). The milestone number shifted after the 2026-05-20 capture. One-line fix. || RESOLVED d2b 2026-07-25: the ROADMAP pointer names M1.19 for qualified naming and explains the shift."
   },
   {
    "id": "F-041",
    "from": "spec/design/tui-visual-language.md",
    "to": "crates/vibe-cli/src/commands/tree/tui/theme/glyphs.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Aged present-tense in the FULL lore: glyph-lead calls ASCII the current scaffolding and the SS2 Today column reads as current state while the Tier-3 targets shipped (glyphs.rs, goldens, MT-02); SS8 When SS2.2 carries the anchors - all five anchors exist. Reword to historical (captured-at) framing. F-024 family. 2 drift verdicts in c2."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Aged present-tense in the FULL lore: glyph-lead calls ASCII the current scaffolding and the SS2 Today column reads as current state while the Tier-3 targets shipped (glyphs.rs, goldens, MT-02); SS8 When SS2.2 carries the anchors - all five anchors exist. Reword to historical (captured-at) framing. F-024 family. 2 drift verdicts in c2. || RESOLVED d2b 2026-07-25: the glyph table is framed as the 2026-07-16 capture with the targets recorded as shipped; the conditional S2.2 pointer reads as fact."
   },
   {
    "id": "F-042",
    "from": "spec/common/PROP-028-package-families.md",
    "to": "packages/org.vibevm.ai-native/",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Family roster aged: family-standings says core-ai-native 0.7.0 while packages/ ships v0.8.0, and the go-ai-native family (aggregator v0.1.0 + -lang + -mcp) is in force but absent from SS2.2/SS2.3. Also letter-vs-spirit: aggregators now carry LICENSE.md from the UPL relicense wave; ROLE-AGGREGATOR says vibe.toml + README and nothing else. One roster refresh fixes all three. Found by C c3a."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Family roster aged: family-standings says core-ai-native 0.7.0 while packages/ ships v0.8.0, and the go-ai-native family (aggregator v0.1.0 + -lang + -mcp) is in force but absent from SS2.2/SS2.3. Also letter-vs-spirit: aggregators now carry LICENSE.md from the UPL relicense wave; ROLE-AGGREGATOR says vibe.toml + README and nothing else. One roster refresh fixes all three. Found by C c3a. || RESOLVED d2d 2026-07-25: the family roster names go 0.1.0 and core-ai-native 0.8.0."
   },
   {
    "id": "F-043",
@@ -394,18 +394,18 @@
    "from": "spec/common/PROP-024-code-bearing-packages.md",
    "to": "packages/org.vibevm.ai-native/core-ai-native/",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-024 aged behind its own SS2.6 deferral firing: the TS pilot shipped, so the deferred engine split EXECUTED - core-ai-native now authors the neutral engines (conform/specmap/specmark/mcp cores) vendored byte-identically by each -lang/-mcp, so CORE-STAYS-PROMPT-ONLY and OOS-TS-CHECKER are false as present-state; plus the related line cites the vanished vibedeps/flow-core-ai-native/0.6.0 slot (only 0.7.0 exists). One SS2.6/related refresh fixes all. 4 drift verdicts in c3d (5th is the F-006 header)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "PROP-024 aged behind its own SS2.6 deferral firing: the TS pilot shipped, so the deferred engine split EXECUTED - core-ai-native now authors the neutral engines (conform/specmap/specmark/mcp cores) vendored byte-identically by each -lang/-mcp, so CORE-STAYS-PROMPT-ONLY and OOS-TS-CHECKER are false as present-state; plus the related line cites the vanished vibedeps/flow-core-ai-native/0.6.0 slot (only 0.7.0 exists). One SS2.6/related refresh fixes all. 4 drift verdicts in c3d (5th is the F-006 header). || RESOLVED d2d 2026-07-25: PROP-024 records the fired §2.6 deferral - core-ai-native authors the neutral engines, the TS checker shipped, and the dead 0.6.0 vibedeps links repoint to 0.7.0."
   },
   {
    "id": "F-045",
    "from": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
    "to": "campaigns/progress-2026-08/run/state/campaign.json",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-043's own status aged behind the campaign it governs: ##status-line says 'implementation is underway (spec-actualization campaign, Phase A)' and 'Sections marked (provisional) are held' while the journal-derived phase lane reads C, the S5 tool is fully shipped (19 specmap implements edges; all 7 subcommands live), and zero (provisional) sections remain (grep = 1 hit, the sentence itself); the document marker comment 'campaign Phase A' aged the same way. One status-refresh fixes the file."
+   "status": "resolved",
+   "wave": 2,
+   "note": "PROP-043's own status aged behind the campaign it governs: ##status-line says 'implementation is underway (spec-actualization campaign, Phase A)' and 'Sections marked (provisional) are held' while the journal-derived phase lane reads C, the S5 tool is fully shipped (19 specmap implements edges; all 7 subcommands live), and zero (provisional) sections remain (grep = 1 hit, the sentence itself); the document marker comment 'campaign Phase A' aged the same way. One status-refresh fixes the file. || RESOLVED d2f 2026-07-25: the status line and the document marker record RATIFIED + IMPLEMENTED, the phase lane as D, and no remaining (provisional) sections; the two real gaps are named as F-046 parity items."
   },
   {
    "id": "F-046",
@@ -430,45 +430,45 @@
    "from": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
    "to": "crates/vibe-cli + crates/vibe-registry",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-002 present-state nits, one precision sweep: (a) --trust-mirror flag shipped nowhere (TRUST-MIRROR-HATCH, PBP-MIRROR-CHAIN cite it; only --trust-redirect exists, cli/registry.rs:226); (b) GS-EXACTLY-ONE-REF names MissingRef/ConflictingRefs - shipped as reason-strings on a shared parse error (semantics exact, deps.rs:160-166); (c) SOURCE-KIND-VALUES lists registry|git|override - PROP-007 added 'path' (LOCK-V4), PROP-030 added 'embedded'; a forward-ref would help; (d) vibe list --overrides promised (OVERRIDE-SEMANTICS, ROW-CMP-LIST) but no overrides flag exists in the CLI; (e) GS-CACHE-SLOT literal path shows kind-name era - live slot is packages/<group>.<name>/clone (M1.19). Fix = one wording/impl sweep, owner picks flag-vs-demote per item. EXTENDED (c4c): (f) SOLVER-IDENTITY-FIELD claims lockfile.meta.solver = 'resolvo-<ver>' records the solver identity - the field does not exist in the live lock (0 hits) and PROP-017 §8 admits it awaits a schema bump; the c4b confirmed verdict was corrected to drift."
+   "status": "resolved",
+   "wave": 2,
+   "note": "PROP-002 present-state nits, one precision sweep: (a) --trust-mirror flag shipped nowhere (TRUST-MIRROR-HATCH, PBP-MIRROR-CHAIN cite it; only --trust-redirect exists, cli/registry.rs:226); (b) GS-EXACTLY-ONE-REF names MissingRef/ConflictingRefs - shipped as reason-strings on a shared parse error (semantics exact, deps.rs:160-166); (c) SOURCE-KIND-VALUES lists registry|git|override - PROP-007 added 'path' (LOCK-V4), PROP-030 added 'embedded'; a forward-ref would help; (d) vibe list --overrides promised (OVERRIDE-SEMANTICS, ROW-CMP-LIST) but no overrides flag exists in the CLI; (e) GS-CACHE-SLOT literal path shows kind-name era - live slot is packages/<group>.<name>/clone (M1.19). Fix = one wording/impl sweep, owner picks flag-vs-demote per item. EXTENDED (c4c): (f) SOLVER-IDENTITY-FIELD claims lockfile.meta.solver = 'resolvo-<ver>' records the solver identity - the field does not exist in the live lock (0 hits) and PROP-017 §8 admits it awaits a schema bump; the c4b confirmed verdict was corrected to drift. || RESOLVED d2d 2026-07-25: every promised-absent surface (--trust-mirror, vibe list --overrides, lockfile [meta].solver) re-marked spec/done and named as unbuilt at the point of the claim."
   },
   {
    "id": "F-049",
    "from": "spec/modules/vibe-registry/PROP-001-git-backend.md",
    "to": "crates/vibe-registry/src/git_backend/shell.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-001 touch-ups, one pass: (a) mechanics-in-readme says mechanics live in the module README - crates/vibe-registry has no README.md (they live in lib.rs module docs + spec-citing error strings); (b) NO-OFFLINE-YET ('No --offline flag yet', in the NOT-SUPERSEDED set) aged - --offline shipped via PROP-002 §2.2.2.1 with url_is_local; (c) OPEN-GIT-BINARY-PATH parking-lot entry resolved by shipped VIBE_GIT_BINARY (shell.rs:61-63 comment cites 'PROP-001 §6')."
+   "status": "resolved",
+   "wave": 2,
+   "note": "PROP-001 touch-ups, one pass: (a) mechanics-in-readme says mechanics live in the module README - crates/vibe-registry has no README.md (they live in lib.rs module docs + spec-citing error strings); (b) NO-OFFLINE-YET ('No --offline flag yet', in the NOT-SUPERSEDED set) aged - --offline shipped via PROP-002 §2.2.2.1 with url_is_local; (c) OPEN-GIT-BINARY-PATH parking-lot entry resolved by shipped VIBE_GIT_BINARY (shell.rs:61-63 comment cites 'PROP-001 §6'). || RESOLVED d2d 2026-07-25: PROP-001 touch-ups - mechanics live in module docs not a README, --offline recorded as shipped, the VIBE_GIT_BINARY parking-lot entry marked resolved."
   },
   {
    "id": "F-050",
    "from": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
    "to": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
    "type": "contradiction",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-003's solver-era tail sits OUTSIDE the §2.2 supersede marker and aged behind PROP-017: §2.1 SOLVER-TWO-IMPLS/SOLVER-SELECTOR still promise 'SatDepSolver becomes the default', a '[meta].solver' lockfile selection key (never shipped; 0 hits in the live lock) and '--solver <naive|sat>' (shipped: naive|sat|resolvo, default resolvo); §2.11 MIG-DEFAULT-SAT and §6 PE-DEFAULT-FLIP say the default flipped to sat (it flipped to resolvo); §2.10 CLI-UPDATE-FEATURES promises 'vibe update --features' which does not exist (update --help has no such flag). One sweep: extend the supersede marker over the §2.1 default-clause + selector, correct MIG/PE rows, and either wire update --features or demote it."
+   "status": "resolved",
+   "wave": 2,
+   "note": "PROP-003's solver-era tail sits OUTSIDE the §2.2 supersede marker and aged behind PROP-017: §2.1 SOLVER-TWO-IMPLS/SOLVER-SELECTOR still promise 'SatDepSolver becomes the default', a '[meta].solver' lockfile selection key (never shipped; 0 hits in the live lock) and '--solver <naive|sat>' (shipped: naive|sat|resolvo, default resolvo); §2.11 MIG-DEFAULT-SAT and §6 PE-DEFAULT-FLIP say the default flipped to sat (it flipped to resolvo); §2.10 CLI-UPDATE-FEATURES promises 'vibe update --features' which does not exist (update --help has no such flag). One sweep: extend the supersede marker over the §2.1 default-clause + selector, correct MIG/PE rows, and either wire update --features or demote it. || RESOLVED d2c 2026-07-25: the solver tail corrected clause by clause instead of widening the §2.2 marker."
   },
   {
    "id": "F-051",
    "from": "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md",
    "to": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-034's status line still reads 'DRAFT — Not implementation-locked' while its semantics shipped under the renamed terms (static-transitive on LinkType; dedup/topo/tie-break emission live in bootgen; the repo's own STATIC.md is the §3 redbook case) and PROP-035 §12/PROP-038 absorbed it as their emission layer. The file's rename-note and document marker already diagnose this — only the status line lags. One header touch-up."
+   "status": "resolved",
+   "wave": 2,
+   "note": "PROP-034's status line still reads 'DRAFT — Not implementation-locked' while its semantics shipped under the renamed terms (static-transitive on LinkType; dedup/topo/tie-break emission live in bootgen; the repo's own STATIC.md is the §3 redbook case) and PROP-035 §12/PROP-038 absorbed it as their emission layer. The file's rename-note and document marker already diagnose this — only the status line lags. One header touch-up. || RESOLVED d2a 2026-07-25: PROP-034 status line reads IMPLEMENTED under renamed terms, pointing at the rename note."
   },
   {
    "id": "F-052",
    "from": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
    "to": "spec/modules/vibe-cli + spec/modules/vibe-actions",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "The cli/actions cluster's DRAFT-era headers over shipped systems, one sweep: PROP-036/PROP-037/PROP-039 status lines all read 'DRAFT — requirements' while their plans executed (PACKAGE-TREE / TREE-TUI v0.2 / the vibe-actions crate with its Spec-2 TUI consumer). PROP-036's §2.11 sketch keys (q-quit, n-order, x/t/TAB-[]-modes, F fold-all) are superseded by PROP-037 Spec 2's shipped F-key scheme (F3 menu, F2 sort, Esc+confirm, Shift+arrows) — mark the section superseded or rewrite to cite §Spec-2. PROP-039's AIUI rows ('designed-for; not built now' + the §13 non-goal) aged behind the shipped vibe aiui state/list_actions/invoke (aiui.rs; CLI help cites §11.2/§11.3). Related code-side lie already ledgered: F-036 (--plain clap text)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "The cli/actions cluster's DRAFT-era headers over shipped systems, one sweep: PROP-036/PROP-037/PROP-039 status lines all read 'DRAFT — requirements' while their plans executed (PACKAGE-TREE / TREE-TUI v0.2 / the vibe-actions crate with its Spec-2 TUI consumer). PROP-036's §2.11 sketch keys (q-quit, n-order, x/t/TAB-[]-modes, F fold-all) are superseded by PROP-037 Spec 2's shipped F-key scheme (F3 menu, F2 sort, Esc+confirm, Shift+arrows) — mark the section superseded or rewrite to cite §Spec-2. PROP-039's AIUI rows ('designed-for; not built now' + the §13 non-goal) aged behind the shipped vibe aiui state/list_actions/invoke (aiui.rs; CLI help cites §11.2/§11.3). Related code-side lie already ledgered: F-036 (--plain clap text). || RESOLVED d2a 2026-07-25: the cli/actions DRAFT-era headers (PROP-036/037/039) all read IMPLEMENTED; the S2.11 keymap supersession is tracked with the MT re-authoring (F-037/F-038). || d2a completion 2026-07-25: the S2.11 keymap tail closed too - the section now cites PROP-037 Spec 2 instead of restating keys, per the single-source law."
   },
   {
    "id": "F-053",
@@ -484,9 +484,9 @@
    "from": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
    "to": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Registry-rest small nits, one touch-up pass: (a) PROP-008's milestone line still reads 'design proposal ... Not implementation-locked' one line above its IMPLEMENTED status; (b) PROP-010's motivation pair aged — 'There is no --offline mode / every install walks the network / no way to resolve against what I already have' fell to the shipped --offline (PROP-002 §2.2.2.1), the embedded/local registries (PROP-030) and PROP-011's lockfile-respecting freshness skip; the PROP-010 store itself stays honestly DRAFT (ROADMAP M1.20)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Registry-rest small nits, one touch-up pass: (a) PROP-008's milestone line still reads 'design proposal ... Not implementation-locked' one line above its IMPLEMENTED status; (b) PROP-010's motivation pair aged — 'There is no --offline mode / every install walks the network / no way to resolve against what I already have' fell to the shipped --offline (PROP-002 §2.2.2.1), the embedded/local registries (PROP-030) and PROP-011's lockfile-respecting freshness skip; the PROP-010 store itself stays honestly DRAFT (ROADMAP M1.20). || RESOLVED d2d 2026-07-25: PROP-008 milestone line (d2a) and PROP-010 motivation pair both reconciled with the shipped --offline and the freshness skip."
   },
   {
    "id": "F-055",

@@ -2,7 +2,7 @@
 
 <status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A, B, L and C closed; Phase D (stitching) opened by the owner 2026-07-25, wave d1 landed"/>
 
-**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — wave d1 landed 2026-07-25 (212 of 311 drift rows closed; the tree measures 97.7 % confirmed) · next: wave d2 · vibevm-specific · first consumer of PROP-043 (Progress Control)**
+**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — waves d1 + d2 landed 2026-07-25 (302 of 311 drift rows closed; the tree measures 99.7 % confirmed; 42 of 55 findings resolved) · next: the two escalations (F-046 wire-or-demote, F-035 user-owned boot file), then Phase E · vibevm-specific · first consumer of PROP-043 (Progress Control)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -1129,6 +1129,63 @@ read-only, no auth.
   49 open).** `progress check` 0 throughout. Next: wave d2 over the
   mid-size families (F-052, F-046, F-050/F-031/F-030, F-039/F-033,
   F-016, F-032/F-048).
+
+- **2026-07-25 · wave d2 (a…f) — the ledger empties to nine rows, and the
+  spec tree measures 99.7 % true.** Six sub-batches, 85 rows, 30 files.
+  **d2a — the stale-header family (22 rows, 13 files):** every
+  "DRAFT — requirements" over a shipped crate rewritten to the shipped
+  truth *with the surface cited* (PROP-036/037/039/040/041/034/017/035/
+  009/007/008/018/019). Where a header pair contradicted itself —
+  PROP-007/008/009 each carrying "design proposal, not
+  implementation-locked" one line above a status recording shipped
+  milestones — the milestone line moved. Two facts were re-based rather
+  than softened: PROP-039's "AIUI not built now" non-goal (built:
+  `aiui.rs` + `vibe aiui state`) and PROP-007 §9.3's deferral (resolved
+  by PROP-009 §2.7 + M1.18 Phase 5). PROP-036 §2.11 was fixed **by
+  deletion**: it restated the keymap PROP-037 owns, so the keys are gone
+  and the section cites the contract — the single-source law is what
+  makes that the fix. Its §2.13 launcher misref (F-023) repointed to the
+  `vibevm-term` products repo, where the launchers actually went.
+  **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the
+  contract per spec-genres. The vocabulary drift was handled
+  *deliberately differently*: the loading-model record is a dated
+  2026-05-21 capture, so rewriting it into today's names would destroy
+  the record of what was decided — it keeps its own words and gains a
+  rename note plus a per-row shipped-name gloss. The literal
+  `"static" | "static" | "dynamic"` typo is just a typo, and is fixed.
+  **d2c — PROP-003's solver tail (11 rows):** corrected clause by clause
+  rather than by widening the §2.2 supersede block, so a reader landing
+  on any single anchor gets the truth without hunting for a marker
+  elsewhere; `[meta].solver` was never wired at all, and PROP-017 §8
+  plus the live lockfile confirm it. **d2d — index, registry, families,
+  owner guide (29 rows, 8 files):** the module index had stopped in May,
+  so five module directories and every PROP after 012 were invisible —
+  26 rows added, each carrying the status Phase C verified. **Four
+  promised-absent surfaces now say so** (`--trust-mirror`,
+  `vibe list --overrides`, lockfile `[meta].solver`,
+  `vibe update --features`): re-marked `spec/done` and named as unbuilt
+  at the point of the claim. Three moved the other way (PROP-001's
+  `VIBE_GIT_BINARY` parking-lot entry, PROP-038's two open notes) and
+  PROP-024 recorded the §2.6 deferral that *fired* — the TypeScript
+  pilot was the second language, and core-ai-native now authors the
+  neutral engines. **d2e — MT-01/MT-02 re-authored (6 rows):** the tests
+  walked a human through `n`/`x`/`t`/`Tab`/`q`, none of which exist; the
+  steps now match the shipped F-key surface. The **run status did not
+  move** — an agent may pre-run, only a person signs off, so MT-02 and
+  MT-03 stay unsigned and `spec/WAL.md` now names them (the paired fix
+  that made `MT-WAL-NAMES` true). **d2f — PROP-043's own status (2
+  rows).** *Method:* the wave minted **31 new anchors** (a supersession
+  pointer, a rename note, 26 index rows, 3 guide placements), each
+  sealed with its own verdict so the every-marker-carries-a-verdict
+  invariant survives Phase D. **Ledger: 4 474 confirmed / 9 drift / 3
+  unverifiable — 99.7 % true, from 93.0 % at the Phase C gate. Findings
+  42 of 55 resolved.** `progress check` 0 throughout; the floor is red
+  at exactly one test, the environmental F-055 recorded at the Phase C
+  close (proven unrelated: `VIBE_SETTINGS` pointed at an empty dir turns
+  it green). **The nine survivors are both escalations:** F-046's eight
+  PROP-043 parity rows (the owner picks wire-or-demote per item) and
+  F-035's single row in `spec/boot/00-core.md`, a user-owned file the
+  boot contract says may only be marked additively.
 
 ## 10. Deferrals {#deferrals}
 
