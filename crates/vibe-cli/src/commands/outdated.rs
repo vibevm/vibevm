@@ -1,7 +1,7 @@
 //! `vibe outdated` — show which installed packages have newer
 //! versions available in their configured registry.
 //!
-//! Spec: [PROP-003 §M1.10](../../../../spec/research/PROP-004-tessl-comparative-research.md#outdated)
+//! Spec: [PROP-004 §2.20 (archived)](../../../../legacy-spec/research/PROP-004-tessl-comparative-research.md#outdated)
 //! and [ROADMAP §M1.10](../../../../ROADMAP.md).
 //!
 //! Read-only: walks the lockfile, asks the resolver

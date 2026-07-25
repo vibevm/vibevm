@@ -11,7 +11,7 @@ vocabulary (PROP-035): two link types, `static` and `dynamic`. @spec/work
 (`STATIC.md` / `INDEX.md`), [PROP-034](../vibe-workspace/PROP-034-transitive-links-boot-graph.md)
 (`static-transitive`), [PROP-035](../vibe-workspace/PROP-035-spec-compiler.md)
 (`@spec` in-place uses, `STATIC.md` markers), [PROP-002 §lockfile](../vibe-registry/PROP-002-decentralized-registry.md)
-(the resolved graph). Plan: [`PACKAGE-TREE-PLAN-v0.1`](../../terraforms/PACKAGE-TREE-PLAN-v0.1.md). @spec/done
+(the resolved graph). Plan: [`PACKAGE-TREE-PLAN-v0.1`](../../../legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md). @spec/done
 
 ##non-goal-line **Non-goal (deferred):** the runtime "what the agent actually loaded" skill and a
 GUI client — a future `tool:org.vibevm.core/package-tree` (§7). @spec/done

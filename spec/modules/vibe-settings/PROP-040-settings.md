@@ -23,7 +23,7 @@ flows. @spec/done
 - ##GRANULAR-ADDRESSABLE This contract is deliberately **granular and addressable** (owner directive): every feature is its own
   `{#anchor}` REQ cited by the code via `specmark`. A REQ is the unit of work. @spec/done
 - ##delta-mapping Each Δ from the study
-(`spec/research/settings-system-vscode-idea.md` §7) maps to one or more REQs here. @spec/done
+(`legacy-spec/research/settings-system-vscode-idea.md` §7) maps to one or more REQs here. @spec/done
 
 ---
 

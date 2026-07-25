@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T08:59:20Z",
+  "updated_at": "2026-07-25T09:00:47Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -248,7 +248,7 @@
       "issue_count": 0
     },
     "spec/common/PROP-031-algorithmic-refactoring.md": {
-      "content_hash": "f143c2a7aac7bd170611961bef829711e0e696008ea24a325827e4f1449ec48d",
+      "content_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
       "rollup": {
         "explicit": [
           "spec",
@@ -554,7 +554,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-036-package-tree.md": {
-      "content_hash": "cfedc0fe64762fe173e2764b04a719cd575a627798f83fceb969ef1b086ab0f1",
+      "content_hash": "67480b27a8500df18f9e107e671c093dd93925e10043f8a15b98bc0e95b8f11e",
       "rollup": {
         "explicit": [
           "spec",
@@ -577,7 +577,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-037-tree-tui.md": {
-      "content_hash": "dcb2c5adb0e6d535d7042643b2f9d6bb5bc4451c7ef088933f996cabe6e9824b",
+      "content_hash": "01832edf352063501e4507c17d1936afd53a72c47de94ddc5bc848018167fc01",
       "rollup": {
         "explicit": [
           "spec",
@@ -623,7 +623,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "f241a0c2b84da7f2a743b09766741a8db03eae6e82b5b430f9f7198a89f22b4e",
+      "content_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
       "rollup": {
         "explicit": [
           "impl",
@@ -991,7 +991,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md": {
-      "content_hash": "a4b5c9844d0f8bea8112bfee0c795640a84e500cf82c963bd84cffc48ddd473c",
+      "content_hash": "6f8c0fbdfbf05539fbd27e75a09ee32f327bd8b8e47a918efb76035347c3e080",
       "rollup": {
         "explicit": [
           "impl",
@@ -1037,7 +1037,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-settings/PROP-040-settings.md": {
-      "content_hash": "8eeeb3a8cdb6687782ab0e068d4295a8b40b8a4fda683d0ea2d3c5c09c7d54f9",
+      "content_hash": "f385ba43ac2e32adc49f104541c9f657cb2588f13d5f4e9e214a0ebcf92650f1",
       "rollup": {
         "explicit": [
           "spec",

@@ -14,8 +14,8 @@ a full application contract. @spec/work
 the `PackageTree` model this app renders); **[PROP-039](../vibe-actions/PROP-039-action-system.md)
 (the `vibe-actions` action system this TUI is built on — §13)** + its design-doc
 [`spec/design/action-system.md`](../../design/action-system.md); [core-ai-native
-discipline](`spec://org.vibevm.ai-native/core-ai-native`) (§11). Plan:
-`spec/terraforms/TREE-TUI-PLAN-v0.1.md`. @spec/done
+discipline](`spec://org.vibevm.ai-native/core-ai-native`) (§11). Plan (archived):
+`legacy-spec/terraforms/TREE-TUI-PLAN-v0.1.md`. @spec/done
 
 ##language-line **Language:** the shipped UI is **English** (§1.6); the **i18n mechanism ships**
 (PROP-039 §8, §13.4) with English the only mandatory-complete locale — no
