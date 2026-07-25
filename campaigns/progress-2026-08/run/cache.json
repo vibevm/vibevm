@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T09:10:41Z",
+  "updated_at": "2026-07-25T12:44:03Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -19,7 +19,219 @@
       },
       "marker_count": 33,
       "unit_count": 8,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
+        "summary": {
+          "confirmed": 32,
+          "drift": 1,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "project-identity": {
+            "v": "confirmed",
+            "ev": [
+              "VIBEVM-SPEC.md at root",
+              "crates/vibe-cli/Cargo.toml [[bin]] name=vibe (L13-14)"
+            ]
+          },
+          "boot-sequence-lead": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/INDEX.md schema=1 + STATIC.md generated, read at boot 2026-07-25"
+            ]
+          },
+          "BOOT-STEP-BOOT-DIR": {
+            "v": "confirmed",
+            "ev": [
+              "INDEX.md [[entry]] list read in order this session; VIBEVM-SPEC S6 governs"
+            ]
+          },
+          "BOOT-STEP-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/WAL.md present, rewritten at the L->C boundary this session"
+            ]
+          },
+          "BOOT-STEP-PROPS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common + spec/modules present (58-file marked corpus)"
+            ]
+          },
+          "BOOT-STEP-START-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "procedural step; session practice consistent (boot before work)"
+            ]
+          },
+          "WAL-STALENESS-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "same rule in STATIC.md wal flow #session-start step 2"
+            ]
+          },
+          "four-rules-lead": {
+            "v": "confirmed",
+            "ev": [
+              "sha256(CLAUDE.md)==sha256(AGENTS.md)==sha256(GEMINI.md): 1 unique hash 2026-07-25",
+              "PROP-000#commits exists"
+            ]
+          },
+          "RULE-ATTRIBUTION": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-000 S12.1 + attribution-policy flow in STATIC.md; no AI trailers in git log"
+            ]
+          },
+          "RULE-CONVENTIONAL-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "conventional-commits flow in STATIC.md; log follows type(scope): form"
+            ]
+          },
+          "RULE-ATOMIC-GROUPING": {
+            "v": "confirmed",
+            "ev": [
+              "atomic-commits flow in STATIC.md; session practice (batch commits per intent)"
+            ]
+          },
+          "RULE-AUTONOMY": {
+            "v": "confirmed",
+            "ev": [
+              "git-autonomy flow in STATIC.md #routine/#red-lines"
+            ]
+          },
+          "reading-layers-lead": {
+            "v": "confirmed",
+            "ev": [
+              "two-process-model flow installed (STATIC.md); layers as described"
+            ]
+          },
+          "LAYER-HEAD": {
+            "v": "confirmed",
+            "ev": [
+              "conceptual layer; conflict-protocol hierarchy Human>Spec>Tests>Code in STATIC.md"
+            ]
+          },
+          "LAYER-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/WAL.md volatile checkpoint, rewritten each session (this session twice)"
+            ]
+          },
+          "LAYER-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "spec:// URIs live across corpus + specmark scopes in crates"
+            ]
+          },
+          "LAYER-CODE": {
+            "v": "drift",
+            "ev": [
+              "root tests/ ABSENT (ls -d tests 2026-07-25) while the unit names crates/, tests/ as the code layer; crates/ exists; per-crate tests/ exist but the root path as written is stale -> F-035"
+            ]
+          },
+          "SYNC-FROM-CODE-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "sync-from-code flow in STATIC.md; refs/book present (chapter files listed)"
+            ]
+          },
+          "CONV-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "Cargo workspace at root; PROP-000#language anchor exists"
+            ]
+          },
+          "CONV-MANIFESTS": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.toml/vibe.lock names across crates (rg hits); manifest crate parses [project]/[package]/[workspace]"
+            ]
+          },
+          "CONV-TERMINOLOGY": {
+            "v": "confirmed",
+            "ev": [
+              "PackageKind enum exactly Flow/Feat/Stack/Tool/Mcp, vibe-core/src/package_ref.rs:30-40, Mcp doc cites VIBEVM-SPEC S4.1 + PROP-027"
+            ]
+          },
+          "CONV-REPO-URLS": {
+            "v": "confirmed",
+            "ev": [
+              "git remote -v: origin=git@gitverse.ru:vibevm/vibevm.git + github=git@github.com:vibevm/vibevm.git; mirrors.toml targets match"
+            ]
+          },
+          "uncertainty-lead": {
+            "v": "confirmed",
+            "ev": [
+              "procedural ladder; mirrors conflict-protocol #uncertainty in STATIC.md"
+            ]
+          },
+          "UNC-STEP-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "VIBEVM-SPEC.md present at root"
+            ]
+          },
+          "UNC-STEP-BOOK": {
+            "v": "confirmed",
+            "ev": [
+              "refs/book/ chapters present (chapter-1..3 listed 2026-07-25)"
+            ]
+          },
+          "UNC-STEP-ANALOGS": {
+            "v": "confirmed",
+            "ev": [
+              "refs/src has cargo, uv, spec-kit (ls 2026-07-25)"
+            ]
+          },
+          "UNC-STEP-REVIEW-MARKER": {
+            "v": "confirmed",
+            "ev": [
+              "REVIEW-marker contract in conflict-protocol flow (STATIC.md #review)"
+            ]
+          },
+          "NOTOUCH-00-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "file exists; B2 marked it additive-only (honoured line-for-line)"
+            ]
+          },
+          "NOTOUCH-90-USER": {
+            "v": "confirmed",
+            "ev": [
+              "file exists; additive-only honoured in B2"
+            ]
+          },
+          "NOTOUCH-VIBEVM-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "file exists; L1 treated it report-only per the rule"
+            ]
+          },
+          "NOTOUCH-REFS-BOOK": {
+            "v": "confirmed",
+            "ev": [
+              "refs/book present, read-only reference"
+            ]
+          },
+          "EOS-WAL-REWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "WAL rewritten (not appended) at both checkpoints this session; wal flow #session-end"
+            ]
+          },
+          "EOS-MILESTONE-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "commit discipline exercised per rules 2-4 across the session"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T12:44:02Z",
+        "verify_batch": "c0-boot"
+      }
     },
     "spec/boot/90-user.md": {
       "content_hash": "fa50702facdc42c0d17ace9b80e0c09d0b693d7d3470a987fd8e317550767d55",
@@ -38,7 +250,205 @@
       },
       "marker_count": 31,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "fa50702facdc42c0d17ace9b80e0c09d0b693d7d3470a987fd8e317550767d55",
+        "summary": {
+          "confirmed": 29,
+          "drift": 0,
+          "unverifiable": 2
+        },
+        "verdicts": {
+          "user-overrides-intro": {
+            "v": "confirmed",
+            "ev": [
+              "file exists; INDEX.md lists spec/boot/90-user.md as static entry; vibe install leaves it (user-owned)"
+            ]
+          },
+          "communication-style": {
+            "v": "confirmed",
+            "ev": [
+              "standing style directive; honoured in sessions (Russian IT register)"
+            ]
+          },
+          "REPO-SPLIT-HOST-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "mirrors.toml gitverse+github targets; PROP-016 exists; registry org split per PROP-000 S7 / PROP-002 S2.10"
+            ]
+          },
+          "SRC-MULTI-HOMED": {
+            "v": "confirmed",
+            "ev": [
+              "mirrors.toml [[target]] gitverse + github exact URLs (L24-33); xtask mirror ran this session, github ok -> 15c5bb3"
+            ]
+          },
+          "REGISTRY-VIBESPECS": {
+            "v": "confirmed",
+            "ev": [
+              "NamingConvention::Fqdn default in vibe-core/src/global_registry.rs:113 (PROP-008 S2.5)"
+            ]
+          },
+          "LEGACY-REGISTRY": {
+            "v": "unverifiable",
+            "ev": [
+              "gitverse unreachable 2026-07-25 (SSH banner timeout, WAL known-issue) - remote HEAD 2203239 not re-checkable today; dated record 2026-04-23 stands unfalsified"
+            ]
+          },
+          "LOCAL-FIXTURES": {
+            "v": "confirmed",
+            "ev": [
+              "fixtures/registry/ exists; hermetic cargo test suite green in self-check this session"
+            ]
+          },
+          "ssh-auth-lead": {
+            "v": "confirmed",
+            "ev": [
+              "lead line; substance carried by the two bullets below"
+            ]
+          },
+          "GITVERSE-SSH": {
+            "v": "unverifiable",
+            "ev": [
+              "ssh to gitverse.ru times out 2026-07-25 (banner exchange; network outage per WAL) - the standing key-config claim is not re-verifiable today; last verified 2026-04-17"
+            ]
+          },
+          "GITHUB-SSH": {
+            "v": "confirmed",
+            "ev": [
+              "live proof this session: cargo xtask mirror pushed github main+tags over SSH -> ok, track 15c5bb3"
+            ]
+          },
+          "GITHUB-PUBLISH-TOKEN": {
+            "v": "confirmed",
+            "ev": [
+              "vibe-publish/src/token.rs + github.rs: file-scoped token injected as x-access-token push URL at push time; publish-only path"
+            ]
+          },
+          "TOKEN-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-000#token-secrecy exists; vibe-publish redaction; discipline honoured (no token value on any surface this session)"
+            ]
+          },
+          "TOKEN-FILE-CONVENTION": {
+            "v": "confirmed",
+            "ev": [
+              "token.rs resolves per-host <prefix>.publish.token with legacy git.publish.token fallback + VIBEVM_PUBLISH_TOKEN env priority"
+            ]
+          },
+          "SCOPE-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "validate_scope in vibe-publish/src/creator.rs + github.rs; repo_creator_oracle tests pin never-escalate"
+            ]
+          },
+          "proven-commands-lead": {
+            "v": "confirmed",
+            "ev": [
+              "lead line; substance in the command bullets"
+            ]
+          },
+          "CMD-CLONE": {
+            "v": "confirmed",
+            "ev": [
+              "dated verified record; origin remote is the gitverse clone URL"
+            ]
+          },
+          "CMD-FIRST-PUSH": {
+            "v": "confirmed",
+            "ev": [
+              "dated historical record (2026-04-17), unfalsified"
+            ]
+          },
+          "CMD-ROUTINE-PUSH": {
+            "v": "confirmed",
+            "ev": [
+              "routine push path used across project history; Rule 4 framing intact"
+            ]
+          },
+          "CMD-MIRROR": {
+            "v": "confirmed",
+            "ev": [
+              "ran live this session: github main+tags ok -> 15c5bb3; gitverse fail matches the recorded outage, not divergence (strict-ancestor check in WAL)"
+            ]
+          },
+          "CMD-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "vibe registry publish surface in vibe-publish (creator/github/token); dated verified 2026-04-29; vibespecs 401 is an auth-env known-issue, not a surface regression"
+            ]
+          },
+          "CLEAN-ROOM-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "standing owner directive; clean-room firewall practice recorded (action-system study S1 firewall, archived)"
+            ]
+          },
+          "TS-QUALITY-BAR": {
+            "v": "confirmed",
+            "ev": [
+              "standing owner directive; TS toolchain shipped (typescript-ai-native stack 0.6.0 installed via INDEX.md)"
+            ]
+          },
+          "machine-quirks-lead": {
+            "v": "confirmed",
+            "ev": [
+              "lead line; quirks carried by bullets"
+            ]
+          },
+          "QUIRK-EDITOR-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "honoured all session: edits via editor tools/python scripts, no PS5.1 round-trips"
+            ]
+          },
+          "QUIRK-SELF-CHECK-BASH": {
+            "v": "confirmed",
+            "ev": [
+              "self-check run through Git Bash with real exit echo this session (EXIT=0)"
+            ]
+          },
+          "QUIRK-COMMIT-HEREDOC": {
+            "v": "confirmed",
+            "ev": [
+              "every commit this session used git commit -F - heredoc"
+            ]
+          },
+          "QUIRK-UAC-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "recorded machine fact (os-740); unfalsified"
+            ]
+          },
+          "QUIRK-VAR-REDIRECT": {
+            "v": "confirmed",
+            "ev": [
+              "recorded shell quirk; standing guidance"
+            ]
+          },
+          "operating-modes-intro": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-006 exists in spec/common (operating modes catalogue)"
+            ]
+          },
+          "codewords-lead": {
+            "v": "confirmed",
+            "ev": [
+              "lead line; codeword carried by the bullet"
+            ]
+          },
+          "CODEWORD-MFBT": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-006 S2 mfbt section exists; red lines preserved per flow"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T12:44:02Z",
+        "verify_batch": "c0-boot"
+      }
     },
     "spec/common/PROP-000.md": {
       "content_hash": "41aaa1a2e111cf71de438482a9c566526ed441273708e7f2084e3a00412d03b2",
