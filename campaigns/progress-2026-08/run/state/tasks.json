@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T02:40:00Z",
+ "updated_at": "2026-07-26T12:45:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -16,7 +16,7 @@
   },
   {
    "id": "DRIFT-003",
-   "title": "campaign phase hardcoded 'A' in the progress adapter",
+   "title": "campaign phase hardcoded \"A\" in the progress adapter",
    "executor": "opus",
    "status": "done"
   },
@@ -31,6 +31,114 @@
    "title": "spec compiler learns fact inheritance R1-R4",
    "executor": "opus",
    "status": "done"
+  },
+  {
+   "id": "DRIFT-006",
+   "title": "the evidence provider reaches the report",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-007",
+   "title": "progress check verifies that a fold was lossless",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-008",
+   "title": "campaign.json carries the gate panel",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-009",
+   "title": "baseline invalidation gets its other two rules",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-010",
+   "title": "the subcommands take the incremental path",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-011",
+   "title": "a blockquote can carry a fact anchor",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-012",
+   "title": "the e2e harness stops drinking the developer's settings",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-013",
+   "title": "--plain's help stops describing a Phase 2 that shipped",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-014",
+   "title": "three deviate reasons stop denying the shipped resolver",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-015",
+   "title": "the progress adapter goes back under its file budget",
+   "executor": "opus",
+   "status": "superseded"
+  },
+  {
+   "id": "DRIFT-016",
+   "title": "the irreplaceable stays in git, the acceleration leaves the repo",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-017",
+   "title": "a run that changes nothing writes nothing",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-018",
+   "title": "the last two test files stop touching the real user home",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-019",
+   "title": "three module docs stop describing the pre-port world",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-020",
+   "title": "test isolation stops being a convention",
+   "executor": "opus",
+   "status": "queued"
+  },
+  {
+   "id": "DRIFT-021",
+   "title": "the legacy ~/.vibevm read leg goes away",
+   "executor": "opus",
+   "status": "done"
+  },
+  {
+   "id": "DRIFT-022",
+   "title": "the [env] promotion stops being able to set anything",
+   "executor": "opus",
+   "status": "ready"
+  },
+  {
+   "id": "DRIFT-023",
+   "title": "the baseline gets a writer, and §6 becomes runnable",
+   "executor": "opus",
+   "status": "ready"
   }
  ]
 }

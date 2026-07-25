@@ -1187,6 +1187,86 @@ read-only, no auth.
   F-035's single row in `spec/boot/00-core.md`, a user-owned file the
   boot contract says may only be marked additively.
 
+- **2026-07-25/26 · d2g, d2h, and the parity row that needed no ruling —
+  PHASE D CLOSED at seven rows.** Both escalations the d2 wave handed the
+  owner resolved without widening anything. **F-046's `BASELINE-RECORD`**
+  turned out not to be a wire-or-demote question at all: `baseline.rs`'s
+  `BaselineUnit` carries §7.3's fields one for one, with load/store and the
+  `rescan` CLI live — shipped under a spec marker, the pattern this phase
+  had been closing all day, so it closed the same way and the owner's list
+  shrank by one before he had to read it (`0064fd4a`). **F-035's single row
+  in `spec/boot/00-core.md`** moved under the owner's explicit ruling, which
+  is the only way that file may be touched: `LAYER-CODE` named a root
+  `tests/` directory that has never existed, and now names each crate's own.
+  **d2g/d2h took the archive** (`f6c17f92`): six findings pointed into
+  `legacy-spec/`, and the tempting answer was to close them as out of scope —
+  nothing in the living corpus cites the archive normatively, so its stale
+  lines mislead no build. The owner ruled otherwise and the reason holds up:
+  a cold reader who lands in the archive directly reads "PLANNED · not
+  started" on a campaign that finished weeks ago, or opens TREE-TUI-PLAN
+  v0.1 with no hint that v0.2 superseded and executed it. Four plans now say
+  EXECUTED and one SUPERSEDED, each carrying **ARCHIVE — do not execute**
+  and each keeping its original line verbatim, so the record of what it once
+  claimed survives. PROP-026 took the same treatment on the live side — its
+  document marker had recorded the wave-6 supersession since the markup
+  pass, but the prose still named `vibe-tcg`, a crate deleted whole; the
+  status line now says so and points at the PROP-027 family servers that
+  carry the grammar. **Ledger at the Phase D exit: 4 476 confirmed / 7 drift
+  / 3 unverifiable — 99.8 % true, from 93.0 % at the Phase C gate. Phase D
+  closed 304 of the 311 rows it opened with.** The seven survivors were all
+  one shape — *the spec promises a behaviour the code has not built* — which
+  is Phase E's material by construction rather than anything stitching could
+  honestly fix. `progress check` 0 throughout.
+
+- **2026-07-25/26 · PHASE E — the queue drained, and the last drift rows
+  close by being built.** Tasks DRIFT-006…022 opened; **fourteen executed**
+  (006–014, 016–019, 021), **DRIFT-015 superseded** before it ran, and two
+  (DRIFT-020, DRIFT-022) stood queued at the phase's close — 022 on an owner
+  letter, 020 on a go. Landed: the specmap evidence join with its report
+  column; the lossless-fold check at warning severity (`EXPLICIT-BEATS`
+  blesses a divergence a document cannot distinguish from a lying fold); the
+  gate panel in `campaign.json`, which the campaign then dogfooded on
+  itself; baseline invalidation's two missing rules; blockquote fact
+  anchors; the incremental parse path; the `--plain` and resolver-doc
+  corrections; two `#[spec(deviates)]` reasons that turned out never to have
+  been deviations; the cache split; the no-op-write skip; and the removal of
+  the legacy `~/.vibevm` read leg. **Ledger: 4 486 confirmed / 1 drift / 3
+  unverifiable of 4 490 — 99.9 % true. Findings 61 of 64 resolved.** The one
+  surviving drift row (`FACT-GRAIN-EVIDENCE`) cannot close in this
+  repository at all: it waits on `rust-ai-native-lang` v0.8.0 re-vendoring
+  the fact-aware specmap engine, which is wave 2's Phase A2. Four new
+  anchors were minted (PROP-042's four `--view` verbs), each sealed with its
+  own verdict.
+
+  *What is worth keeping from this phase is not the count.* **Four
+  executors volunteered evidence against their own work.** Two successive
+  measurements each corrected the previous one's headline — DRIFT-010's
+  ×1.44–2.06 speed-up was a *debug* profile, and in release the parse is
+  10.3 ms against 7.5 ms of payload serde; DRIFT-017 then corrected *that*,
+  because the writes were ~14 % of a warm run rather than the bulk, since
+  comparing requires serialising and only write+fsync are saved. The next
+  performance lever is the serialisation, not the IO. Two others refused to
+  absorb adjacent fixes they had found and filed them instead. **The one
+  that mattered most went the other way entirely:** F-057 was filed as a
+  stray cache directory and turned out to be a credential-precedence leg —
+  `vibe search` resolves a GitHub token through four legs and the fourth is
+  a file in the settings dir the test could not reach, so an un-isolated run
+  attached the real publish token to its outbound request. Measured, not
+  inferred, against a loopback listener recording header *names and lengths
+  only*: 47 bytes of `Authorization` before the fix, none after. The
+  investigation closed with no rotation needed — exactly one test reaches
+  that path and it points `api_base` at 127.0.0.1. **F-055, F-056 and F-057
+  were one forgotten discipline caught three times by accident**, which is
+  what DRIFT-020 exists to convert into a gate. Two lessons cost real time
+  and are now Constraints in the WAL: **a gate never seen to go red is not
+  known to work** (two executors ran positive controls before trusting a
+  green result), and **delegated work is committed on the completion
+  notification, never on a filled-in task journal** — executors write §9 as
+  they go, and committing on it captured an intermediate state and left the
+  tree conform-red for twenty minutes. **The floor ends the phase green with
+  no `VIBE_SETTINGS` override** — F-055 genuinely fixed rather than worked
+  around, verified again at this session's open.
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
