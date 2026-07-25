@@ -955,6 +955,32 @@ read-only, no auth.
   2 759 / 4 944 — 2 669 confirmed / 87 drift / 3 unverifiable;
   findings 50 (next free F-051).**
 
+- **2026-07-25 · c4d2 — the workspace tail closes; the honesty law meets
+  its densest case.** PROP-011/012/038/034/020/022/025 (482 markers):
+  **474 units — 393 confirmed / 81 drift / 0 unverifiable.** The
+  headline is the pair everyone saw coming: **PROP-020 (41 drift) and
+  PROP-022 (37 drift) are whole shipped systems under "proposed"
+  headers** — `hooks.rs` implements the entire install-hooks contract
+  (phases, Git-Bash-first Windows selection, `DEFAULT_ALLOWED_GROUPS`
+  with org.vibevm, the non-interactive refuse, the env contract, both
+  test seams) and the materialization system ships wholesale (the
+  `Materialization` enum with doctests, hardlink/in-place through
+  vibe-install, submodule snapshot-embedding, the destructive guard) —
+  while the B-phase, marking wording-faithfully, left the text's own
+  spec/done in place. Each file is ONE F-018 re-mark sweep (note
+  extended), the same shape as PROP-000's F-043 twelve. Against that:
+  **PROP-011, PROP-012 and PROP-025 verify clean — 227/227 confirmed**,
+  the campaign's first zero-drift files, all three honestly-marked
+  shipped contracts (the freshness oracle, the `<vibevm>` block engine
+  whose canonical text lives in this repo's own CLAUDE.md, and the
+  `vibe bin` family whose help text matches §4 verbatim). PROP-038
+  adds two F-024 rows (the §2.7 open-note its own §5 resolves, and
+  `fuzz.rs` shipping the very DEF-5 its history still defers);
+  PROP-034 takes a new **F-051** for a DRAFT status line the file's
+  own rename-note already outgrew. **Running tally: 3 233 / 4 944 —
+  3 062 confirmed / 168 drift / 3 unverifiable; findings 51 (next
+  free F-052).**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

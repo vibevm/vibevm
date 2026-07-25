@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T14:22:25Z",
+ "updated_at": "2026-07-25T14:37:13Z",
  "findings": [
   {
    "id": "F-001",
@@ -162,7 +162,7 @@
    "type": "reality-mismatch",
    "status": "open",
    "wave": 0,
-   "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D."
+   "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D. EXTENDED (c4d2): the same proposed-header-over-shipped-system pattern covers PROP-022 wholesale (Materialization enum + is_in_place doctests in vibe-core; hardlink/in-place machinery + materialise_in_place seam + in-place incremental git-fetch in vibe-install; submodule snapshot-embedding in git_package_registry/fetch.rs; destructive guard in commands/uninstall.rs) and PROP-020's whole body (hooks.rs full runner: phases, Git-Bash-first Windows selection, DEFAULT_ALLOWED_GROUPS org.vibevm, TrustDecision non-interactive refuse, env contract, seams). Both files re-mark spec/done -> impl/done in one sweep with their header fixes."
   },
   {
    "id": "F-019",
@@ -216,7 +216,7 @@
    "type": "contradiction",
    "status": "open",
    "wave": 0,
-   "note": "Internal: s2.7 closes with -Fingerprint storage location and granularity are open (s5)- but s5 records both RESOLVED 2026-07-15 (Q3 header storage, Q4 per-package granularity). The s2.7 tail predates the Phase-0 resolution and was never updated. Phase C/D: drop or rewrite the stale sentence."
+   "note": "Internal: s2.7 closes with -Fingerprint storage location and granularity are open (s5)- but s5 records both RESOLVED 2026-07-15 (Q3 header storage, Q4 per-package granularity). The s2.7 tail predates the Phase-0 resolution and was never updated. Phase C/D: drop or rewrite the stale sentence. EXTENDED (c4d2): TEST-MUTATION-FUZZ also aged - boot/hybrid/fuzz.rs ships the proptest DEF-5 sweep the §6 history still records as deferred."
   },
   {
    "id": "F-025",
@@ -451,6 +451,15 @@
    "status": "open",
    "wave": 0,
    "note": "PROP-003's solver-era tail sits OUTSIDE the §2.2 supersede marker and aged behind PROP-017: §2.1 SOLVER-TWO-IMPLS/SOLVER-SELECTOR still promise 'SatDepSolver becomes the default', a '[meta].solver' lockfile selection key (never shipped; 0 hits in the live lock) and '--solver <naive|sat>' (shipped: naive|sat|resolvo, default resolvo); §2.11 MIG-DEFAULT-SAT and §6 PE-DEFAULT-FLIP say the default flipped to sat (it flipped to resolvo); §2.10 CLI-UPDATE-FEATURES promises 'vibe update --features' which does not exist (update --help has no such flag). One sweep: extend the supersede marker over the §2.1 default-clause + selector, correct MIG/PE rows, and either wire update --features or demote it."
+  },
+  {
+   "id": "F-051",
+   "from": "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md",
+   "to": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-034's status line still reads 'DRAFT — Not implementation-locked' while its semantics shipped under the renamed terms (static-transitive on LinkType; dedup/topo/tie-break emission live in bootgen; the repo's own STATIC.md is the §3 redbook case) and PROP-035 §12/PROP-038 absorbed it as their emission layer. The file's rename-note and document marker already diagnose this — only the status line lags. One header touch-up."
   }
  ]
 }
