@@ -22,7 +22,7 @@
 | DRIFT-018 | the last two test files stop touching the real user home | opus | done |
 | DRIFT-019 | three module docs stop describing the pre-port world | opus | done |
 | DRIFT-020 | test isolation stops being a convention | opus | queued |
-| DRIFT-021 | the legacy `~/.vibevm` read leg goes away | opus | queued |
+| DRIFT-021 | the legacy `~/.vibevm` read leg goes away | opus | done |
 | DRIFT-022 | the `[env]` promotion stops being able to set anything | opus | queued (owner picks (a) or (b) first) |
 
 DRIFT-006…011 are Phase E, opened by the owner's 2026-07-25 ruling on the

@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T00:45:00Z",
+ "updated_at": "2026-07-26T01:10:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -559,6 +559,24 @@
    "status": "resolved",
    "wave": 2,
    "note": "SECURITY-RELEVANT, owner decision needed. F-057 was filed as a stray cache directory; it is more than that. search.rs:427 calls vibe_publish::token::load_token_for_host(\"github.com\"), whose 4th precedence leg is <settings-dir>/github.publish.token - present on this machine. The full-scan test clears legs 2-3 by env but could not reach leg 4, so an un-isolated run attached the real publish token to its outbound request. Measured against a loopback listener recording header NAMES AND LENGTH ONLY, never the value: pre-fix the request carried an Authorization header of 47 bytes (Bearer + a 40-char token); under UserScratch there is no Authorization header at all. DRIFT-018 closed the leg. TWO THINGS REMAIN FOR THE OWNER: (a) whether the token ever reached a real host rather than a fixture endpoint - if any of these tests ever pointed at a live github.com, the secrets-hygiene rule is rotate first, investigate second; (b) residue on disk - ~/.vibe/search-cache/primary/ and secondary/ hold three JSON files dated 2026-05-06 whose payloads are verbatim cli_search.rs mock fixtures. Left in place deliberately: deleting the developer's files is not an executor's call. || INVESTIGATED AND CLOSED 2026-07-26 by the reviewer, on the owner asking for a code answer rather than a guess: NO ROTATION NEEDED - the token never left the machine. Proof by code path, not inference. search.rs:426 loads the token only AFTER detect_github_org(&reg.url) succeeds, and the request then goes to `api_base`, i.e. whatever VIBEVM_GITHUB_API_BASE says. Exactly one test reaches that path with a github.com registry - search_full_scan_finds_matching_packages_in_github_org (cli_search.rs:614) - and it sets VIBEVM_GITHUB_API_BASE to a 127.0.0.1 mock (:663) and removes both publish-token env legs. The other two --full-scan tests use a gitverse registry, which detect_github_org REJECTS before the token is loaded. The remaining fixture hosts are example.invalid (the reserved never-resolves TLD). So the 47-byte Authorization header DRIFT-018 measured went to the loopback mock, not to github.com. The defect was real and is fixed - a test that can pick up a live credential is one env-var default away from sending it somewhere real - but no exposure occurred. The github.com/vibespecs and gitverse.ru/vibespecs strings in the fixtures are registry URLs (the spec storage the owner named), used only to parse an org name. Residue in ~/.vibe/search-cache/ (three mock-fixture JSONs from 2026-05-06) still awaits the owner; it is his file to delete."
+  },
+  {
+   "id": "F-063",
+   "from": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+   "to": "crates/vibe-publish/src/token.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 2,
+   "note": "SECURITY-ADJACENT SPEC DRIFT, needs a sync-from-code diff with owner approval. The normative token-precedence list UNDER-describes the code, and has since before DRIFT-021. PROP-002 ##PUB-TOKEN-LOADING lists three sources with `VIBEVM_PUBLISH_TOKEN` first; the code has a HIGHER leg the spec omits entirely - `VIBEVM_PUBLISH_TOKEN_<HOST>` (token.rs:7-11), so the documented first entry is not first. The same error is in spec/boot/90-user.md ##TOKEN-FILE-CONVENTION, which states outright that VIBEVM_PUBLISH_TOKEN is 'высший приоритет'. That file is USER-OWNED (00-core NOTOUCH-90-USER), so it is the owner's edit, not a session's. Found by DRIFT-021 while looking for the opposite defect: it expected the removal to leave the spec over-describing the code, and instead the removal moved the code TOWARD the spec - the gap was three legs and is now one."
+  },
+  {
+   "id": "F-064",
+   "from": "crates/vibe-core/src/user_config.rs",
+   "to": "crates/vibe-core/src/settings.rs",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "The natural DRIFT-021 sequel, surfaced and deliberately not taken. user_config.rs:285 legacy_xdg_config_path(), read at :168, is a SECOND config home resolved from $XDG_CONFIG_HOME / %APPDATA% / $HOME - which $VIBE_SETTINGS does not relocate either. So an isolated run can still read the operator's real config.toml through it. Config rather than a credential, which is why it is a lower-severity sibling of the leg DRIFT-021 removed; and DRIFT-021's §5 forbade touching other precedence legs, so it was left. Same shape, same fix: delete the leg, keep one home. Note the invariant test DRIFT-021 added to settings.rs (every_accessor_is_rooted_in_the_one_settings_dir) does not cover user_config.rs, so it would not catch this."
   }
  ]
 }
