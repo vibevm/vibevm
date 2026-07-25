@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T14:37:14Z",
+  "updated_at": "2026-07-25T14:44:27Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -9122,7 +9122,334 @@
       "facts": 51,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 51,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 51,
+        "marker_count": 52,
+        "processed_hash": "4e3fffdbd12fa1f8d185feaad93058eb7a7a33e1360ddbc6445ff40151729128",
+        "summary": {
+          "confirmed": 49,
+          "drift": 3,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-052: 'DRAFT — requirements ... for a NEW crate' — crates/vibe-actions exists (address/action/context/invoke/keymap/i18n/gate/aiui modules) and the Spec-2 TUI runs on it as its first consumer"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "header-meta accurate (design doc + clean-room study links live at their legacy-spec homes; Spec-2 consumer named)"
+            ]
+          },
+          "language-note": {
+            "v": "confirmed",
+            "ev": [
+              "header-meta accurate (design doc + clean-room study links live at their legacy-spec homes; Spec-2 consumer named)"
+            ]
+          },
+          "granular-directive": {
+            "v": "confirmed",
+            "ev": [
+              "header-meta accurate (design doc + clean-room study links live at their legacy-spec homes; Spec-2 consumer named)"
+            ]
+          },
+          "req-unit-of-work": {
+            "v": "confirmed",
+            "ev": [
+              "header-meta accurate (design doc + clean-room study links live at their legacy-spec homes; Spec-2 consumer named)"
+            ]
+          },
+          "delta-mapping": {
+            "v": "confirmed",
+            "ev": [
+              "header-meta accurate (design doc + clean-room study links live at their legacy-spec homes; Spec-2 consumer named)"
+            ]
+          },
+          "ACTIONS-CRATE-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "no-render-dep": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "ADDRESS-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "address-parse": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "ADDRESS-UNIQUENESS": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "ACTION-FIELDS-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "SNAPSHOT-IMMUTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "PRESENTATION-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "REGISTRY-COLLISION-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "registry-override": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "REFERENTIAL-INTEGRITY": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "REGISTRY-ENUMERABLE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "PARAM-SCHEMA-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "PARAM-VALIDATION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "CONTEXT-TYPEMAP": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "ENABLEMENT-PURE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "CONTEXT-INTROSPECTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "INVOKE-PRIMARY": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "CAPABILITY-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "I18N-ADDRESS-KEYED": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "RESOLVED-LABEL": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "I18N-FALLBACK-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "LEGIBILITY-GATE-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "the action-core laws: the crate ships the module map 1:1 (address.rs, action.rs, context.rs, invoke.rs, keymap.rs, i18n.rs, gate.rs legibility, aiui.rs) and the Spec-2 TUI runs on it as first consumer; per-REQ affirmation rides the crate's own conform/specmap gates — no contradiction found against any law here"
+            ]
+          },
+          "KEYMAP-BINDINGS-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "KEYMAP-RESOLVER-PURE": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "KEYMAP-CONFLICTS-SURFACED": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "se-acceptance": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "SE-PROVIDER-TRAIT": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "SE-ENGINE-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "SE-RANKING-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "SE-PROVIDERS-SHIP": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "SE-RENDERER-NORMALIZED": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "SE-TABS-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "SURFACE-TRAIT-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "MODEL-VIEW-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "AIUI-REFERENCE": {
+            "v": "drift",
+            "ev": [
+              "F-052 (the F-017/F-034-sharpened row): 'designed-for; NOT BUILT NOW' is false as present-state — vibe-actions/src/aiui.rs ships list_actions + invoke and `vibe aiui state` projects the ModelView live (CLI --help cites PROP-039 §11.2/§11.3)"
+            ]
+          },
+          "AI-NATIVE-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "FLOOR-GATES-TWO": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "ng-aiui-not-built": {
+            "v": "drift",
+            "ev": [
+              "F-052: same evidence — the AIUI surface IS built (vibe aiui render/state + aiui.rs); this non-goal aged behind its own delivery"
+            ]
+          },
+          "ng-other-surfaces": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "ng-ml-reranker": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "ng-locales": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "decision-records-home": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "decision-bindings-summary": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "review-points-resolved": {
+            "v": "confirmed",
+            "ev": [
+              "keymap/SE/surfaces/discipline/non-goals: SE shipped in the TUI (three providers, Spec-2 §7.3); ModelView serialisable (vibe aiui state prints it); other-surface + ML-reranker + locale non-goals honestly absent; §14 decision records present"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: 'status line says DRAFT; crates/vibe-actions exists'"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:44:25Z",
+        "verify_batch": "c4e-cli-actions"
+      }
     },
     {
       "path": "spec/modules/vibe-cli/PROP-036-package-tree.md",
@@ -9139,7 +9466,502 @@
       "facts": 79,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 79,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 79,
+        "marker_count": 80,
+        "processed_hash": "67480b27a8500df18f9e107e671c093dd93925e10043f8a15b98bc0e95b8f11e",
+        "summary": {
+          "confirmed": 74,
+          "drift": 6,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-052: 'DRAFT — requirements' over an executed plan — the analyzer ships (tree --json validated against the shipped package-tree.schema.v1.json per its own --help; -t live; the PACKAGE-TREE-PLAN executed per the B0 note); the clap --plain text still claiming 'TUI is Phase 2 / plain regardless' is the separately-ledgered F-036 code-side lie"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "header links live; the analyzer governs a shipped command (tree --help matches: read-only, --json schema-validated, --plain fallback, three surfaces)"
+            ]
+          },
+          "non-goal-line": {
+            "v": "confirmed",
+            "ev": [
+              "header links live; the analyzer governs a shipped command (tree --help matches: read-only, --json schema-validated, --plain fallback, three surfaces)"
+            ]
+          },
+          "boot-composition": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "visibility-gap": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "TREE-ANSWER": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "TREE-READ-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "TREE-INPUTS": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "output-surfaces-lead": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "OUT-TUI": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "OUT-JSON": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "OUT-PLAIN": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "NO-TUI-UNDER-FLAGS": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "CLI-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "command contract live: read-only analyzer, --path workspace discovery, --json/--plain never launch the TUI, Tree(TreeArgs) with global flags only"
+            ]
+          },
+          "ROW-PER-PACKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "COL-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "COL-LOAD": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "COL-TRANSITIVE": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "COL-CONDITION": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "COL-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "checkbox-cluster": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "DETAIL-ON-DEMAND": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "EFFECTIVE-FROM-ARTIFACTS": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "LOAD-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "LOAD-DYNAMIC": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "LOAD-NONE": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "DECISION-ARTIFACTS-CANONICAL": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "decision-artifacts-why": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "decision-artifacts-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "decision-artifacts-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "TRANSITIVE-FLAG-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "TRANSITIVE-DECLARER": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "CONDITION-FLAG-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "WHEN-FORCES-DYNAMIC": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "CONDITION-DETAIL-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "STATIC-SIZE-INDICATOR": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "static-size-purpose": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "JSON-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "JSON-ENVELOPE": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "JSON-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "JSON-NO-DISPLAY-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "JSON-SCHEMA-HOME": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "STATIC-DECOMPILE": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "EMBED-SPANS": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "DEDICATED-DECOMPILER": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "INPLACE-COLLECTION": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "BARE-SPEC-SKIPPED": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "inplace-oos": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "DIAG-NON-FATAL": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "DIAG-STALE-ARTIFACTS": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "DIAG-ROOT-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "DIAG-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "row/flag/JSON/decompiler contract verified: load read from committed artifacts (decision record complete with revisit), T/C/S semantics per PROP-034/009, STATIC size in status line, JSON schema_version 1 at crates/vibe-cli/resources/package-tree.schema.v1.json (shipped file), the dedicated vibe:static decompiler distinct from vibe_spec::decompile, @spec collection via Directives::parse, non-fatal diagnostics (stale-artifacts + root-drift)"
+            ]
+          },
+          "TUI-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "TUI-NAVIGATION": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "TUI-FOLDING": {
+            "v": "drift",
+            "ev": [
+              "F-052: Space-fold shipped, but the whole-tree 'F' fold is absent from the Spec-2 contract and its action catalogue (PROP-037 §13.5 has fold.toggle only)"
+            ]
+          },
+          "TUI-DETAIL": {
+            "v": "drift",
+            "ev": [
+              "F-052: '`q` quits' is the pre-Spec-2 era — shipped quit is Esc + confirm dialog (PROP-037 §7.4; the c1 MT sweep pinned the same aging in MT-01/-02 as F-037/F-038)"
+            ]
+          },
+          "TUI-ORDERING": {
+            "v": "drift",
+            "ev": [
+              "F-052: the bare 'n' ordering key is the pre-Spec-2 era — shipped ordering lives in the F2 sort menu (PROP-037 §7.2, which 'replaces any bare mode-cycle key')"
+            ]
+          },
+          "TUI-DISPLAY-MODES": {
+            "v": "drift",
+            "ev": [
+              "F-052: the 'x' cycle / 't' swap / 'TAB'+'[',']' tab keys are the pre-Spec-2 era — shipped modes are chosen from the F3 menu and tabs switch with Shift+arrows (PROP-037 §4.4/§5.3)"
+            ]
+          },
+          "TUI-STATUS-LINE": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "TUI-FALLBACK": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "dag-diamonds": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "DAG-RENDERING": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "DAG-FLAT-COLLAPSE": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "project-needed": {
+            "v": "drift",
+            "ev": [
+              "F-023 (ledgered in B): cites PROP-043 as the home of the VibeTree.exe / Start-menu GUI launcher — PROP-043 is Progress Control (inline status markup) and carries no launcher content; a dangling cross-ref"
+            ]
+          },
+          "RESOLUTION-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "RES-GIVEN-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "RES-LAST-PROJECT": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "RES-FOLDER-PICKER": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "console-fallback": {
+            "v": "confirmed",
+            "ev": [
+              "TUI sketch section: the surviving rows (tty default, ↑↓/←→ navigation, status line, fallback) match Spec 2; the four superseded key rows are the F-052 drifts above; §2.13 resolution order live (-t flag, last-project L1 setting, folder picker; the launcher misref is F-023)"
+            ]
+          },
+          "CANONICAL-PARSERS": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "SRC-GRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "SRC-LINKS": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "SRC-LANES": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "SRC-CROSS-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "SRC-INPLACE": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "NG-RUNTIME-SKILL": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "NG-GUI-CLIENT": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "NG-SPEC-VALIDATION": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "NG-MUTATION": {
+            "v": "confirmed",
+            "ev": [
+              "data sources = canonical parsers (Lockfile/Requires/artifacts/EffectiveBoot/Directives — no reimplemented readers); non-goals hold (no runtime skill, no GUI client, no validation, no mutation)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: the comment names the gap ('status line says DRAFT; PACKAGE-TREE-PLAN executed against it')"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:44:25Z",
+        "verify_batch": "c4e-cli-actions"
+      }
     },
     {
       "path": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
@@ -9156,7 +9978,682 @@
       "facts": 136,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 109,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (27 cells); document <status> judged as _elements",
+        "fact_count": 136,
+        "marker_count": 137,
+        "processed_hash": "01832edf352063501e4507c17d1936afd53a72c47de94ddc5bc848018167fc01",
+        "summary": {
+          "confirmed": 109,
+          "drift": 1,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-052: 'DRAFT — requirements' over the shipped application — TREE-TUI-PLAN v0.2 executed (B0 note); c2 verified the visual language byte-exact (Rosé Pine hexes, PAD_X/PAD_Y/GUTTER, detect_tier literal) and c1 verified the shipped F-key map this Spec-2 text defines"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "header: Spec-2 revision record accurate (Surface on vibe-actions, SE promoted, i18n real); granular-addressable directive held (every REQ anchored)"
+            ]
+          },
+          "language-line": {
+            "v": "confirmed",
+            "ev": [
+              "header: Spec-2 revision record accurate (Surface on vibe-actions, SE promoted, i18n real); granular-addressable directive held (every REQ anchored)"
+            ]
+          },
+          "GRANULAR-ADDRESSABLE": {
+            "v": "confirmed",
+            "ev": [
+              "header: Spec-2 revision record accurate (Surface on vibe-actions, SE promoted, i18n real); granular-addressable directive held (every REQ anchored)"
+            ]
+          },
+          "layers-intro": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "LAYERING-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "FOUR-LAYERS": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "LAYER-BACKEND": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "LAYER-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "LAYER-VIEW": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "LAYER-CONTROLLER": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "MVC-CYCLE": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "BACKEND-BOUNDARY-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "MODEL-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "VIEW-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "CONTROLLER-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "I18N-READY-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "architecture layers + boundary + model/view/controller + i18n-ready: the shipped crate layout follows it (c2 verified the theme seam; model logic terminal-free)"
+            ]
+          },
+          "component-library-intro": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "COMPONENT-STRATEGY": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "THEME-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "visual-language-note": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "PALETTE-TOKENS-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "FIVE-PALETTES": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "PALETTE-IS-LIGHT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "GLYPH-CONSTANTS": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "NO-ASCII-SEMANTIC": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "FOUR-TIERS": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "TIER-DETECTION": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "TIER-PROJECTION": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "WINDOW-AESTHETICS-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "SPACING-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "PAD-CONSTANTS": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "GUTTER-CONSTANT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "RHYTHM-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "spacing-lore-note": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "WINDOW-COMPONENT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "MENU-COMPONENT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "BUTTON-COMPONENT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "GROUP-COMPONENT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "RADIO-GROUP-COMPONENT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "TEXT-FIELD-COMPONENT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "CARD-COMPONENT": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "COMING-SOON-MODAL": {
+            "v": "confirmed",
+            "ev": [
+              "component library verified where machine-checkable: palette tokens + five palettes byte-equal (c2: rose_pine.rs/catppuccin.rs hexes), glyph vocabulary + tiers (detect_tier literal match, Tier-3 default), PAD_X=2/PAD_Y=1/GUTTER=1 exact, window/menu/button/group/radio/textfield/card/coming-soon components in the ui:: facade"
+            ]
+          },
+          "tree-abstraction-intro": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "TREE-WIDGET-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "FILTER-PIPELINE": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "THREE-SHAPES": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "SHAPE-MEMBERS-ROOTS": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "SHAPE-LOAD-FOREST": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "SHAPE-PRUNED": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "shapes-validate": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "THREE-MODES": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "MODE-TREE-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "MODE-SUBTABLES-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "MODE-TABS-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "MODE-SELECT-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "tree widget + pipeline + three shapes + three modes: goldens exercised via the render plane (PROP-042); modes chosen from F3 per Spec 2"
+            ]
+          },
+          "KEYMAP-REGISTRY-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "keymap registry + F-key scheme + footer two-row law + tree keys + focus groups: the shipped map c1 pinned (F1 search/F2 sort/F3 mode/F4 prefs/F6 copy, ↑F6, Shift+arrows tabs, Esc quit-confirm)"
+            ]
+          },
+          "F-KEY-SCHEME": {
+            "v": "confirmed",
+            "ev": [
+              "keymap registry + F-key scheme + footer two-row law + tree keys + focus groups: the shipped map c1 pinned (F1 search/F2 sort/F3 mode/F4 prefs/F6 copy, ↑F6, Shift+arrows tabs, Esc quit-confirm)"
+            ]
+          },
+          "FOOTER-TWO-ROWS": {
+            "v": "confirmed",
+            "ev": [
+              "keymap registry + F-key scheme + footer two-row law + tree keys + focus groups: the shipped map c1 pinned (F1 search/F2 sort/F3 mode/F4 prefs/F6 copy, ↑F6, Shift+arrows tabs, Esc quit-confirm)"
+            ]
+          },
+          "TREE-KEYS-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "keymap registry + F-key scheme + footer two-row law + tree keys + focus groups: the shipped map c1 pinned (F1 search/F2 sort/F3 mode/F4 prefs/F6 copy, ↑F6, Shift+arrows tabs, Esc quit-confirm)"
+            ]
+          },
+          "FOCUS-GROUPS-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "keymap registry + F-key scheme + footer two-row law + tree keys + focus groups: the shipped map c1 pinned (F1 search/F2 sort/F3 mode/F4 prefs/F6 copy, ↑F6, Shift+arrows tabs, Esc quit-confirm)"
+            ]
+          },
+          "FOCUS-MARKED": {
+            "v": "confirmed",
+            "ev": [
+              "keymap registry + F-key scheme + footer two-row law + tree keys + focus groups: the shipped map c1 pinned (F1 search/F2 sort/F3 mode/F4 prefs/F6 copy, ↑F6, Shift+arrows tabs, Esc quit-confirm)"
+            ]
+          },
+          "MODAL-STACK-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "F3-MODE-MENU-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "F2-SORT-MENU-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "sort-tree-tabs": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "sort-subtables": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "F1-SEARCH-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "PROVIDER-PACKAGES": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "PROVIDER-CARDS": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "PROVIDER-ACTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "SEARCH-ENGINE-NOTES": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "QUIT-CONFIRM-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "modal stack + menus/dialogs + Search Everywhere three providers + quit-confirm: Spec-2 shipped surface (SE supersedes the ComingSoon stub as recorded)"
+            ]
+          },
+          "DETAIL-CARD-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "detail card + settings persistence (~/.vibe/tree/ JSON, atomic, fallback-to-defaults)"
+            ]
+          },
+          "card-paper": {
+            "v": "confirmed",
+            "ev": [
+              "detail card + settings persistence (~/.vibe/tree/ JSON, atomic, fallback-to-defaults)"
+            ]
+          },
+          "card-headers": {
+            "v": "confirmed",
+            "ev": [
+              "detail card + settings persistence (~/.vibe/tree/ JSON, atomic, fallback-to-defaults)"
+            ]
+          },
+          "card-close": {
+            "v": "confirmed",
+            "ev": [
+              "detail card + settings persistence (~/.vibe/tree/ JSON, atomic, fallback-to-defaults)"
+            ]
+          },
+          "CARD-WRAP-COPY": {
+            "v": "confirmed",
+            "ev": [
+              "detail card + settings persistence (~/.vibe/tree/ JSON, atomic, fallback-to-defaults)"
+            ]
+          },
+          "card-esc": {
+            "v": "confirmed",
+            "ev": [
+              "detail card + settings persistence (~/.vibe/tree/ JSON, atomic, fallback-to-defaults)"
+            ]
+          },
+          "SETTINGS-PERSISTENCE": {
+            "v": "confirmed",
+            "ev": [
+              "detail card + settings persistence (~/.vibe/tree/ JSON, atomic, fallback-to-defaults)"
+            ]
+          },
+          "COPY-PROVIDERS-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "copy system: F6 direct + ↑F6 settings modal + markdown real serialization + PNG reserved behind ComingSoon + clipboard/file destinations"
+            ]
+          },
+          "COPY-FLOW-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "copy system: F6 direct + ↑F6 settings modal + markdown real serialization + PNG reserved behind ComingSoon + clipboard/file destinations"
+            ]
+          },
+          "MARKDOWN-EXPORT-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "copy system: F6 direct + ↑F6 settings modal + markdown real serialization + PNG reserved behind ComingSoon + clipboard/file destinations"
+            ]
+          },
+          "PNG-RESERVED": {
+            "v": "confirmed",
+            "ev": [
+              "copy system: F6 direct + ↑F6 settings modal + markdown real serialization + PNG reserved behind ComingSoon + clipboard/file destinations"
+            ]
+          },
+          "COPY-DEST-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "copy system: F6 direct + ↑F6 settings modal + markdown real serialization + PNG reserved behind ComingSoon + clipboard/file destinations"
+            ]
+          },
+          "DISCIPLINE-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "discipline REQ + non-goals hold (no non-English catalogues, PNG reserved, AIUI is PROP-039's, no settings screen beyond menus, --json/--plain remain PROP-036's)"
+            ]
+          },
+          "NG-LOCALIZATION": {
+            "v": "confirmed",
+            "ev": [
+              "discipline REQ + non-goals hold (no non-English catalogues, PNG reserved, AIUI is PROP-039's, no settings screen beyond menus, --json/--plain remain PROP-036's)"
+            ]
+          },
+          "NG-PNG": {
+            "v": "confirmed",
+            "ev": [
+              "discipline REQ + non-goals hold (no non-English catalogues, PNG reserved, AIUI is PROP-039's, no settings screen beyond menus, --json/--plain remain PROP-036's)"
+            ]
+          },
+          "NG-AIUI": {
+            "v": "confirmed",
+            "ev": [
+              "discipline REQ + non-goals hold (no non-English catalogues, PNG reserved, AIUI is PROP-039's, no settings screen beyond menus, --json/--plain remain PROP-036's)"
+            ]
+          },
+          "NG-PLANTUML": {
+            "v": "confirmed",
+            "ev": [
+              "discipline REQ + non-goals hold (no non-English catalogues, PNG reserved, AIUI is PROP-039's, no settings screen beyond menus, --json/--plain remain PROP-036's)"
+            ]
+          },
+          "NG-SETTINGS-UI": {
+            "v": "confirmed",
+            "ev": [
+              "discipline REQ + non-goals hold (no non-English catalogues, PNG reserved, AIUI is PROP-039's, no settings screen beyond menus, --json/--plain remain PROP-036's)"
+            ]
+          },
+          "NG-NON-TTY": {
+            "v": "confirmed",
+            "ev": [
+              "discipline REQ + non-goals hold (no non-English catalogues, PNG reserved, AIUI is PROP-039's, no settings screen beyond menus, --json/--plain remain PROP-036's)"
+            ]
+          },
+          "action-system-intro": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "AS-SURFACE-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "AS-ACTIONS-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "AS-KEYMAP-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "AS-I18N-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ACTION-CATALOGUE-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-SEARCH": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-SORT": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-MODE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-COPY": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-COPY-SETTINGS": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-FOLD": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-CARD": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-TABS": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "ROW-ACT-QUIT": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "CATALOGUE-ENUMERABLE": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "AS-BOUNDARY-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "the action-system adaptation: TUI as Surface, commands as addressed actions (the §13.5 catalogue = the shipped F-key map), keymap binds addresses, i18n address-keyed real, boundary law — the vibe-actions crate modules mirror this 1:1"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: names both the DRAFT lag and the executed TREE-TUI-PLAN v0.2"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:44:25Z",
+        "verify_batch": "c4e-cli-actions"
+      }
     },
     {
       "path": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
@@ -9173,7 +10670,370 @@
       "facts": 57,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 57,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 57,
+        "marker_count": 58,
+        "processed_hash": "7596a650dc2fe0df8f2cabe306065050401686d4a5ec3953b276453ce13d5548",
+        "summary": {
+          "confirmed": 58,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "header ACTIVE v0.1 accurate; cross-repo vibeterm/term-common pointers well-formed (products repo split as stated)"
+            ]
+          },
+          "PROP-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "header ACTIVE v0.1 accurate; cross-repo vibeterm/term-common pointers well-formed (products repo split as stated)"
+            ]
+          },
+          "other-planes": {
+            "v": "confirmed",
+            "ev": [
+              "header ACTIVE v0.1 accurate; cross-repo vibeterm/term-common pointers well-formed (products repo split as stated)"
+            ]
+          },
+          "HEADLESS-RENDER": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "NO-TERMINAL": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "RENDER-DETERMINISTIC": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "SNAPSHOT-PINNING": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "SIDE-EFFECT-KEYS-REFUSED": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "OBSERVES-NOT-ACTS": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "SNAPSHOT-FORMATS": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "FMT-TEXT": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "FMT-CELLS": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "FMT-LOSSLESS": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "BLANK-TRIM": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "KEY-SCRIPT-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "UNKNOWN-KEY-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "RENDER-PLANE-EVENTS": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "TERMINAL-PLANE-ENCODING": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "VT-UNRELIABLE-WINDOWS": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "SCRIPT-PLANE-IDENTICAL": {
+            "v": "confirmed",
+            "ev": [
+              "render plane + snapshot contract + key script verified: all seven verbs live in aiui --help with matching semantics (render deterministic/refuses F4-F6, text/cells formats, win32-input-mode note)"
+            ]
+          },
+          "AIUI-FAMILY": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "RENDER-VERB-SEMANTICS": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "RENDER-READ-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "TERMINAL-VERBS": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "VERB-OPEN": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "VERB-SEND": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "VERB-SNAPSHOT": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "VERB-WAIT": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "VERB-CLOSE": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "SESSION-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "MODEL-VERB": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "STATE-SEMANTICS": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "STATE-READ-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "STATE-PURE": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "CONTROL-LOOPBACK": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "DISCOVERY-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "BEARER-TOKEN": {
+            "v": "confirmed",
+            "ev": [
+              "aiui CLI surface live verb-for-verb (render/state/open/send/snapshot/wait/close; state cites PROP-039 §11.2/§11.3 in its own help); loopback+token control transport; stale-session guard"
+            ]
+          },
+          "STALE-SESSION-GUARD": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "state-governance": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "TERM-LAUNCHER": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "SHELL-DETECTION": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "EXEC-OVERRIDE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "APP-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "TIER-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "TIER-PACKAGED-INSTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "TIER-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "PACKAGED-VS-DEV": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "RESOLUTION-FAILURE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "VIBETERM-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "IN-PLACE-UPGRADE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "ICON-SWAP": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "ICON-PLATFORM-GAP": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "OSC-DISCARDED": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "NEVER-USER-SETTINGS": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "NEVER-SIDE-EFFECT-KEYS": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "NEVER-INVENT-CONTENT": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "NEVER-INTERACTIVE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe term launcher + app resolution tiers + in-place upgrade + icon OSC 7773 protocol + Never rows — contract matches the shipped surface (term/tree -t live; VIBETERM env upgrade path)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "accurate: ACTIVE v0.1 — all seven aiui verbs + vibe term live; F-017 (scrollbar code-ahead) is a missing-support row, not a marker lie"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:44:25Z",
+        "verify_batch": "c4e-cli-actions"
+      }
     },
     {
       "path": "spec/modules/vibe-index/PROP-005-package-index.md",

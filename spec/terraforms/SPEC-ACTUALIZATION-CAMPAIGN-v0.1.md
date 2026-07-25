@@ -981,6 +981,30 @@ read-only, no auth.
   3 062 confirmed / 168 drift / 3 unverifiable; findings 51 (next
   free F-052).**
 
+- **2026-07-25 · c4e — the cli/actions cluster verified; Spec 2 is the
+  reality, DRAFT is the costume.** PROP-037 + PROP-036 + PROP-042 +
+  PROP-039 (327 markers): **300 units — 290 confirmed / 10 drift / 0
+  unverifiable.** One new family, **F-052**: all three contract headers
+  still read "DRAFT — requirements" while their plans executed
+  (PACKAGE-TREE, TREE-TUI v0.2, and the `vibe-actions` crate whose
+  first consumer — the Spec-2 TUI — is the shipped `vibe tree`);
+  PROP-036's §2.11 sketch keys (`q` quit, `n` order, `x`/`t`/`TAB`
+  modes, `F` fold-all) are superseded by Spec 2's F-key scheme exactly
+  as the c1 manual-test sweep found from the other side (F-037/F-038);
+  and PROP-039's AIUI rows ("designed-for; **not built now**") aged
+  behind their own delivery — `vibe aiui state` prints the §11.2
+  ModelView and cites the section in its `--help`. F-023 lands as
+  judged (the §2.13 launcher misref into Progress-Control's PROP-043).
+  **PROP-042 verifies clean 58/58 — the fourth zero-drift file**: an
+  ACTIVE header over all seven `aiui` verbs live verb-for-verb, the
+  `vibe term` launcher, and the icon-swap OSC. The evidence base was
+  half-built already: c2's byte-equal palettes / `detect_tier` /
+  spacing constants and c1's shipped-keymap findings carried §2.2 and
+  §5 wholesale. **Running tally: 3 533 / 4 944 — 3 352 confirmed /
+  178 drift / 3 unverifiable; findings 52 (next free F-053). Remaining:
+  c4f only** — vibe-mcp ×3, vibe-index PROP-005, vibe-settings ×2, and
+  the vibe-registry rest (008/010/030/021/023/README), 957 markers.
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

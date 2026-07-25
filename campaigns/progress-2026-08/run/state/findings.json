@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T14:37:13Z",
+ "updated_at": "2026-07-25T14:44:25Z",
  "findings": [
   {
    "id": "F-001",
@@ -460,6 +460,15 @@
    "status": "open",
    "wave": 0,
    "note": "PROP-034's status line still reads 'DRAFT — Not implementation-locked' while its semantics shipped under the renamed terms (static-transitive on LinkType; dedup/topo/tie-break emission live in bootgen; the repo's own STATIC.md is the §3 redbook case) and PROP-035 §12/PROP-038 absorbed it as their emission layer. The file's rename-note and document marker already diagnose this — only the status line lags. One header touch-up."
+  },
+  {
+   "id": "F-052",
+   "from": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
+   "to": "spec/modules/vibe-cli + spec/modules/vibe-actions",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "The cli/actions cluster's DRAFT-era headers over shipped systems, one sweep: PROP-036/PROP-037/PROP-039 status lines all read 'DRAFT — requirements' while their plans executed (PACKAGE-TREE / TREE-TUI v0.2 / the vibe-actions crate with its Spec-2 TUI consumer). PROP-036's §2.11 sketch keys (q-quit, n-order, x/t/TAB-[]-modes, F fold-all) are superseded by PROP-037 Spec 2's shipped F-key scheme (F3 menu, F2 sort, Esc+confirm, Shift+arrows) — mark the section superseded or rewrite to cite §Spec-2. PROP-039's AIUI rows ('designed-for; not built now' + the §13 non-goal) aged behind the shipped vibe aiui state/list_actions/invoke (aiui.rs; CLI help cites §11.2/§11.3). Related code-side lie already ledgered: F-036 (--plain clap text)."
   }
  ]
 }
