@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T18:10:53Z",
+  "updated_at": "2026-07-25T18:38:13Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
@@ -14857,8 +14857,8 @@
         "marker_count": 159,
         "processed_hash": "f5f58f90b59b20a575fa2f14ab213ab75cf6e8aa7f277021095001bf99fe5655",
         "summary": {
-          "confirmed": 139,
-          "drift": 6,
+          "confirmed": 143,
+          "drift": 2,
           "unverifiable": 0
         },
         "verdicts": {
@@ -15476,15 +15476,17 @@
             ]
           },
           "CMD-CHECK": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(c): 'lossless folds' check absent - grep fold|lossless over progress-core+adapter = 0 (POST-CAMPAIGN-FOLD itself honestly spec/done); the other listed checks + --exhaustive verified live this session (vocab hints, well-formedness, placement, shorthand, foreign-grammar, exit codes)"
+              "F-046(c): 'lossless folds' check absent - grep fold|lossless over progress-core+adapter = 0 (POST-CAMPAIGN-FOLD itself honestly spec/done); the other listed checks + --exhaustive verified live this session (vocab hints, well-formedness, placement, shorthand, foreign-grammar, exit codes)",
+              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
             ]
           },
           "CMD-REPORT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(e): evidence column absent - grep evidence in report.rs = 0; the rest verified live: --view done|todo|qa|remove|doc, --audience, per-file+project rollups, explicit-vs-computed, xml/md/json forms"
+              "F-046(e): evidence column absent - grep evidence in report.rs = 0; the rest verified live: --view done|todo|qa|remove|doc, --audience, per-file+project rollups, explicit-vs-computed, xml/md/json forms",
+              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
             ]
           },
           "CMD-MIRROR": {
@@ -15518,9 +15520,10 @@
             ]
           },
           "EVIDENCE-SPECMAP": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(a): EvidenceProvider referenced nowhere outside progress-core (adapter imports baseline,cache,journal,report,rollup,scope,state,weave - not evidence); no specmap join anywhere in the report path"
+              "F-046(a): EvidenceProvider referenced nowhere outside progress-core (adapter imports baseline,cache,journal,report,rollup,scope,state,weave - not evidence); no specmap join anywhere in the report path",
+              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
             ]
           },
           "EVIDENCE-MISMATCH-FLAGS": {
@@ -15580,9 +15583,10 @@
             ]
           },
           "BASELINE-INVALIDATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(f): partially shipped while spec/done - hash-changed=>suspect and marker-diverged-outside-campaign flag implemented (baseline.rs rescan, RescanClass New/Changed/CarriedForward); named-crates-commits invalidation and the random control sample NOT implemented (crates: vec![] constant)"
+              "F-046(f): partially shipped while spec/done - hash-changed=>suspect and marker-diverged-outside-campaign flag implemented (baseline.rs rescan, RescanClass New/Changed/CarriedForward); named-crates-commits invalidation and the random control sample NOT implemented (crates: vec![] constant)",
+              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
             ]
           },
           "ZONE-LAYOUT": {

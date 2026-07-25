@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T19:11:00Z",
+ "updated_at": "2026-07-25T20:07:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -412,9 +412,9 @@
    "from": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
    "to": "crates/progress-core + crates/vibe-cli/src/commands/progress.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Marker-vs-implementation parity family, both directions: impl/done over unshipped fragments - (a) EVIDENCE-SPECMAP: EvidenceProvider wired nowhere outside progress-core, no specmap join in report; (b) FACT-GRAIN-EVIDENCE: 0 fact units/edges in host specmap.json, consumed stack engine v0.7.0 predates the amendment (PROP-014 v0.8.0 S2.1 exists authored-side; awaits stack re-mint); (c) CMD-CHECK lists 'lossless folds' - no fold code anywhere; (d) STATE-FILES: campaign.json has no 'gates' field; (e) CMD-REPORT evidence column absent; (g) TOOL-INCREMENTAL: every run re-parses the full tree, Cache::is_current unused outside tests. AND spec/done under shipped code - (f) S7.3: BaselineUnit matches the record field-for-field, rescan CLI live with hash-suspect + marker-diverged (named-crates + control-sample still unimplemented). One Phase E DRIFT task (wire evidence/folds/gates/incremental + promote S7.3 markers) or one sync-from-code demotion sweep closes the family. || 2026-07-25 owner ruled WIRE on all seven rows (not demote). Routed to Phase E as DRIFT-006/007/008/009/010. BASELINE-RECORD closed in d2f as a plain re-mark; STATE-FILES closed by DRIFT-008. Five rows remain, each with a queued task."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Marker-vs-implementation parity family, both directions: impl/done over unshipped fragments - (a) EVIDENCE-SPECMAP: EvidenceProvider wired nowhere outside progress-core, no specmap join in report; (b) FACT-GRAIN-EVIDENCE: 0 fact units/edges in host specmap.json, consumed stack engine v0.7.0 predates the amendment (PROP-014 v0.8.0 S2.1 exists authored-side; awaits stack re-mint); (c) CMD-CHECK lists 'lossless folds' - no fold code anywhere; (d) STATE-FILES: campaign.json has no 'gates' field; (e) CMD-REPORT evidence column absent; (g) TOOL-INCREMENTAL: every run re-parses the full tree, Cache::is_current unused outside tests. AND spec/done under shipped code - (f) S7.3: BaselineUnit matches the record field-for-field, rescan CLI live with hash-suspect + marker-diverged (named-crates + control-sample still unimplemented). One Phase E DRIFT task (wire evidence/folds/gates/incremental + promote S7.3 markers) or one sync-from-code demotion sweep closes the family. || 2026-07-25 owner ruled WIRE on all seven rows (not demote). Routed to Phase E as DRIFT-006/007/008/009/010. BASELINE-RECORD closed in d2f as a plain re-mark; STATE-FILES closed by DRIFT-008. Five rows remain, each with a queued task. || RESOLVED 2026-07-25 by the Phase E batch: all seven parity rows wired per the owner ruling. DRIFT-006 (EVIDENCE-SPECMAP + CMD-REPORT), DRIFT-007 (CMD-CHECK, warning severity per the EXPLICIT-BEATS ruling), DRIFT-008 (STATE-FILES), DRIFT-009 (BASELINE-INVALIDATION); BASELINE-RECORD was a plain re-mark in d2f. TOOL-INCREMENTAL stays open as DRIFT-010."
   },
   {
    "id": "F-047",
