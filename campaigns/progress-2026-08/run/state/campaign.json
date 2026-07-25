@@ -1,39 +1,13 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T20:37:59Z",
+  "updated_at": "2026-07-25T22:32:58Z",
   "campaign_id": "progress-2026-08",
   "phase": "E",
   "wave": 0,
   "counters": {
     "files": 58,
-    "facts": 4915,
+    "facts": 4917,
     "unmarked": 0,
     "issues": 0
-  },
-  "gates": [
-    {
-      "name": "floor",
-      "status": "green",
-      "ran_at": "2026-07-25T20:37:59Z",
-      "detail": "all green exit 0, no override, real ~/.vibe in place"
-    },
-    {
-      "name": "check",
-      "status": "green",
-      "ran_at": "2026-07-25T18:10:43Z",
-      "detail": "progress check: clean, 58 files, 0 warnings"
-    },
-    {
-      "name": "specmap",
-      "status": "green",
-      "ran_at": "2026-07-25T18:38:14Z",
-      "detail": "ratchet 37 gated orphans host-side, unmoved"
-    },
-    {
-      "name": "conform",
-      "status": "green",
-      "ran_at": "2026-07-25T19:24:11Z",
-      "detail": "0 findings, 0 new (fact store cleared, 524 files re-extracted)"
-    }
-  ]
+  }
 }

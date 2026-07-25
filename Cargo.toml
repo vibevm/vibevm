@@ -21,6 +21,7 @@ members = [
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
+    "crates/vibe-test-support",
     "crates/vibe-wire",
     "crates/vibe-workspace",
     "xtask",
@@ -41,6 +42,7 @@ default-members = [
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
+    "crates/vibe-test-support",
     "crates/vibe-wire",
     "crates/vibe-workspace",
 ]
@@ -73,6 +75,9 @@ vibe-mcp = { path = "crates/vibe-mcp", version = "0.1.0-dev" }
 vibe-check = { path = "crates/vibe-check", version = "0.1.0-dev" }
 vibe-publish = { path = "crates/vibe-publish", version = "0.1.0-dev" }
 vibe-spec = { path = "crates/vibe-spec", version = "0.1.0-dev" }
+# Test-only: linking it isolates the test process's per-user settings home
+# before the first `#[test]` runs (DRIFT-020). Consume as a dev-dependency.
+vibe-test-support = { path = "crates/vibe-test-support", version = "0.1.0-dev" }
 vibe-wire = { path = "crates/vibe-wire", version = "0.1.0-dev" }
 vibe-workspace = { path = "crates/vibe-workspace", version = "0.1.0-dev" }
 

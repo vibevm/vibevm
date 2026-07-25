@@ -21,7 +21,6 @@
 //!   gated    — `INDEX.md` entry carrying `when = "os:…"`     → dynamic / when-forced
 //!   orphan   — in neither boot lane                          → none / none
 
-use assert_cmd::Command;
 use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -153,7 +152,7 @@ fn write_fixture(root: &Path) {
 
 /// Run `vibe tree --json --path <root>` and parse stdout.
 fn run_tree_json(root: &Path) -> Value {
-    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
+    let mut cmd = vibe_test_support::vibe();
     cmd.arg("tree").arg("--json").arg("--path").arg(root);
     let assert = cmd.assert().success();
     let stdout = String::from_utf8(assert.get_output().stdout.clone()).expect("utf-8 stdout");

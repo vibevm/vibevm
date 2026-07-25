@@ -7,7 +7,7 @@ use assert_cmd::Command;
 use specmark::verifies;
 
 fn cmd() -> Command {
-    Command::cargo_bin("vibe-index").expect("vibe-index binary built")
+    vibe_test_support::cargo_bin("vibe-index")
 }
 
 fn init_at(dir: &Path) {

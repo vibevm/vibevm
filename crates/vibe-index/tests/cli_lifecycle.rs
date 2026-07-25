@@ -7,7 +7,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 
 fn cmd() -> Command {
-    Command::cargo_bin("vibe-index").expect("vibe-index binary built")
+    vibe_test_support::cargo_bin("vibe-index")
 }
 
 #[test]

@@ -45,3 +45,6 @@ flate2 = "1"
 [dev-dependencies]
 assert_cmd = { workspace = true }
 predicates = { workspace = true }
+# Linking this isolates the test process's per-user settings home before the
+# first `#[test]` runs, so a bare `cargo_bin` child cannot reach `~/.vibe`.
+vibe-test-support = { workspace = true }

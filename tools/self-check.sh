@@ -34,6 +34,15 @@
 #                                          frontends), so no discipline code
 #                                          drifts untagged (PROP-014).
 #
+# Wrapped around all of it: the user-home tripwire. The real per-user
+# settings home (`~/.vibe`, or `$VIBE_SETTINGS`) is hashed path-by-path
+# before the first step, and compared twice — right after the workspace
+# tests, and again after the last package suite. Any change fails the
+# floor and names the paths. That home carries the operator's publish
+# tokens and API keys; a test that touches it is a bug in the test
+# (DRIFT-020), and three findings in a row were caught by accident
+# rather than by a gate. Hash-and-path only — never contents.
+#
 # Each step prints a short header. On the first failure the script exits
 # non-zero; later steps are skipped (no "fix the next thing while broken"
 # slog). Pass `--keep-going` to run all steps even if earlier ones fail.
@@ -82,12 +91,36 @@ run_step() {
 
 OVERALL=0
 
+# 0. Baseline the operator's real per-user settings home, before anything
+# builds or runs. Taken unconditionally and cheaply (a hash per path); the
+# comparisons happen after the test steps below. A home that cannot be
+# resolved or read makes the tripwire a no-op, never a false red — the gate
+# must not become the thing that blocks work.
+TRIPWIRE="tools/user-home-tripwire.sh"
+USER_HOME_SNAPSHOT="$(mktemp 2>/dev/null || echo '')"
+if [ -n "$USER_HOME_SNAPSHOT" ]; then
+  trap 'rm -f "$USER_HOME_SNAPSHOT"' EXIT
+  bash "$TRIPWIRE" snapshot "$USER_HOME_SNAPSHOT" || true
+else
+  echo "self-check: WARNING — no temp file for the user-home tripwire; skipping it" >&2
+fi
+
+check_user_home() {
+  [ -n "$USER_HOME_SNAPSHOT" ] || return 0
+  bash "$TRIPWIRE" compare "$USER_HOME_SNAPSHOT"
+}
+
 # 1. Formatting. The cheapest invariant — no compilation — so it runs
 # first and fails fast, before the multi-minute test / clippy steps.
 run_step "cargo fmt --all --check" cargo fmt --all --check || OVERALL=$?
 
 # 2. Tests.
 run_step "cargo test --workspace" cargo test --workspace --quiet || OVERALL=$?
+
+# 2b. The tripwire, immediately after the suite that is most likely to trip
+# it. Separate from the later sweep so a failure points at the workspace
+# tests specifically rather than at "something in this run".
+run_step "user-home tripwire (after cargo test --workspace)" check_user_home || OVERALL=$?
 
 # 3. Clippy as errors.
 run_step "cargo clippy --workspace --all-targets -- -D warnings" \
@@ -186,6 +219,12 @@ run_step "rust-ai-native-specmap --gate (typescript-ai-native-mcp pkg self-trace
 # arg/keymap helpers, `vitest` for the vibeterm engine cells) live there now.
 # The host's self-check no longer runs them — the vibevm-term repo carries
 # its own floor.
+
+# 12. The tripwire again, over the whole run. Steps 7-10 run four more test
+# suites (the authored engines, the Rust stack, both mcp packages) against
+# the same baseline from step 0, and each of them is a `cargo test` that
+# could reach the real settings home just as easily.
+run_step "user-home tripwire (whole run)" check_user_home || OVERALL=$?
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then

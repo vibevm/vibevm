@@ -20,7 +20,7 @@ use specmark::verifies;
 use tokio::net::TcpListener;
 
 fn cmd() -> AssertCommand {
-    AssertCommand::cargo_bin("vibe-index").expect("vibe-index binary built")
+    vibe_test_support::cargo_bin("vibe-index")
 }
 
 fn git_available() -> bool {

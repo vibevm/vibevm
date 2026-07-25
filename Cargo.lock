@@ -3908,6 +3908,7 @@ dependencies = [
  "vibe-resolver",
  "vibe-settings",
  "vibe-spec",
+ "vibe-test-support",
  "vibe-wire",
  "vibe-workspace",
  "walkdir",
@@ -3967,6 +3968,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "vibe-core",
+ "vibe-test-support",
  "walkdir",
 ]
 
@@ -4087,6 +4089,15 @@ name = "vibe-spec"
 version = "0.1.0-dev"
 dependencies = [
  "thiserror 2.0.18",
+]
+
+[[package]]
+name = "vibe-test-support"
+version = "0.1.0-dev"
+dependencies = [
+ "assert_cmd",
+ "tempfile",
+ "vibe-core",
 ]
 
 [[package]]

@@ -136,3 +136,144 @@ Budget signal: past ~10 files, stop and return.
 
 - queued 2026-07-26 (Fable), on the owner's ruling. He did not ask for a
   convention; he asked for something he does not have to trust.
+
+- implemented 2026-07-26. Both layers landed; both controls run and
+  reverted. Details below.
+
+### Layer 1 — what was built
+
+`crates/vibe-test-support` is the new dev-dependency crate. It carries
+`UserScratch` and `vibe()` verbatim from `crates/vibe-cli/tests/common/mod.rs`
+(doc comment and all — it holds the F-055/F-056/F-057 history), plus
+`cargo_bin(name)` for the non-`vibe` binaries, plus `isolated_home()`.
+`common/mod.rs` now `pub use`s the two moved names, so the six already-converted
+`vibe-cli` files are untouched.
+
+The initialiser is a hand-rolled platform constructor in
+`crates/vibe-test-support/src/isolate.rs` — a `#[used] static` of type
+`extern "C" fn()` placed in `.CRT$XCU` (MSVC), `__DATA,__mod_init_func`
+(Mach-O) or `.init_array` (ELF); the mechanism the `ctor` crate packages,
+inlined rather than depended on. It points `VIBE_SETTINGS`,
+`VIBE_REGISTRY_CACHE` and `VIBEVM_SEARCH_CACHE_DIR` at
+`<temp>/vibevm-test-homes/p<pid>-<nanos>/…`.
+
+**A lazy `isolate()` from the helpers was considered and rejected, and the
+reason is the interesting one:** libtest runs test bodies on many threads, and
+`std::env::set_var` while another thread reads the environment is precisely the
+unsoundness that made those functions `unsafe` in edition 2024. A constructor
+runs single-threaded before `main`, which is the one moment the mutation is
+sound. So the crate deliberately has **no** runtime env-mutation entry point.
+`rust-ai-native-env-audit::EnvGuard` cannot serve here either: it restores on
+drop and holds a process-wide lock, both wrong for an isolation that must
+outlive the call and never block a test. `vibe-test-support` is therefore
+registered in `conform.toml` as the second `audit_crates` entry, with that
+reasoning recorded inline.
+
+**Linkage is the whole opt-in/opt-out.** The constructor fires in any test
+binary that *references* the crate; `cli_live_e2e.rs` simply does not, and now
+carries the reason at its `cargo_bin` site. There is no env escape hatch to get
+wrong. Verified empirically that a bare `pub use` is enough:
+`cli_workspace_publish.rs` names only `mod common`, never `UserScratch`, and
+still minted a per-process home.
+
+### The layer-1 positive control (§6), verbatim
+
+A temporary `crates/vibe-cli/tests/drift020_control.rs` ran `vibe init` through
+a bare `assert_cmd::Command::cargo_bin("vibe")` — no `UserScratch`, no `.env()`
+— in a binary that links the support crate:
+
+```
+CONTROL isolated_home  = C:\Users\olegc\AppData\Local\Temp\vibevm-test-homes\p60240-1785018230646799400\settings
+CONTROL real home      = C:\Users\olegc\.vibe
+CONTROL VIBE_SETTINGS  = Ok("C:\\Users\\olegc\\AppData\\Local\\Temp\\vibevm-test-homes\\p60240-1785018230646799400\\settings")
+CONTROL isolated home BEFORE init = []
+CONTROL real home BEFORE init: 265 paths
+CONTROL isolated home AFTER init  = ["config.toml", "registry.toml"]
+CONTROL real home AFTER init: 265 paths
+CONTROL real home NEW paths = []
+```
+
+The un-isolated child wrote **two** files, and both landed in the temp home.
+A matching negative control in a binary that references nothing from the crate
+(`drift020_control_neg.rs`) reported all three variables `Err(NotPresent)`,
+so the isolation came from the constructor and not from an ambient value.
+Both files deleted after the run.
+
+A permanent regression guard replaced them: the unit test
+`isolate::tests::the_constructor_ran_before_this_test_body`. The constructor is
+the one silently-breakable part of layer 1 — a toolchain change that stopped
+honouring `#[used]` in a section would drop it and nothing else would notice.
+
+### Layer 2 — the tripwire
+
+`tools/user-home-tripwire.sh` (`snapshot` / `compare`) resolves the settings
+home exactly as `vibe_core::settings::settings_dir()` does, then records one
+line per path: `dir <rel>`, `link <rel>`, `file <rel> <sha256>`. Directories are
+included so a minted-but-empty registry-cache bucket still counts as movement.
+It emits hash and path only, never contents. `tools/self-check.sh` snapshots
+once at step 0 and compares twice — step 2b (right after `cargo test
+--workspace`, so a failure points at the workspace suite specifically) and step
+12 (after the four package suites in steps 7-10). Unresolvable or unreadable
+home ⇒ warning and pass; absent home ⇒ "trivially green", both by construction.
+
+### The layer-2 positive control (§6), verbatim
+
+A temporary `drift020_tripwire_control.rs` — deliberately in a binary linking
+nothing from `vibe-test-support`, so it resolved the real home the way
+production does — wrote one byte to `~/.vibe/drift020-tripwire-control`.
+`bash tools/self-check.sh` then exited **1** at the new step:
+
+```
+=== user-home tripwire (after cargo test --workspace) ===
+user-home tripwire: FIRED — the real per-user settings home changed during this run.
+  home: /c/Users/olegc/.vibe
+  paths that moved (+ appeared, - vanished, ~ contents changed):
+    + file drift020-tripwire-control
+  What this means: something in this run read-modified-wrote the operator's
+  real settings home instead of an isolated one. That home carries publish
+  tokens and API keys; a test must never touch it.
+  What to do:
+    1. Find the test. `crates/vibe-test-support` isolates a test process at
+       load time — a test binary that links it cannot reach the real home.
+       A binary that does NOT link it is the likely culprit.
+    2. Route it through `vibe_test_support::UserScratch` (or add
+       `use vibe_test_support as _;` so the load-time isolator links in).
+    3. Restore whatever moved by hand if it mattered, then re-run.
+  This gate is not advisory. Do not add an exception list without recording
+  why the path legitimately moves (§4 of DRIFT-020: none are known).
+self-check: `user-home tripwire (after cargo test --workspace)` failed (exit 1)
+```
+
+Reverted: the test file and the byte it wrote are both gone, and the real home
+compares byte-identical against the snapshot taken before any of this work
+began.
+
+### Findings
+
+- **No path legitimately moves during a run.** Measured before any change: a
+  full `cargo test --workspace` left the real `~/.vibe` unchanged (compare
+  exit 0). So the tripwire ships with **no exception list**, which §4 asked to
+  confirm rather than assume. `~/.vibe/aiui/` was the one candidate — it is
+  vibeterm's live control-session discovery dir — and it did not move.
+- **§3's measurements all hold**, with one number to correct: the home records
+  **265** paths here, not the 266 §4.4 cites from DRIFT-018 (that figure was a
+  hand count on a different day; nothing is wrong with either). The four
+  credential files and the ten bare `cargo_bin` files were exactly as stated.
+- **`vibe init` writes `registry.toml` too, not just `config.toml`.** §3 and the
+  `UserScratch` doc frame F-056 around `config.toml`/`last_author`; the control
+  shows a bare `vibe init` also seeds a default `registry.toml` (the write
+  `VIBE_NO_DEFAULT_REGISTRY=1` suppresses). On a machine with no `registry.toml`
+  yet, a forgotten-isolation `vibe init` would have created the operator's
+  global registry list as a side effect of a test. That is a second F-055-shaped
+  hazard from the same call.
+- **Nine other crates have `tests/` dirs** (`progress-core`, `vibe-check`,
+  `vibe-install`, `vibe-mcp`, `vibe-publish`, `vibe-registry`, `vibe-resolver`,
+  `vibe-settings`, `vibe-spec`). None spawns a binary and none names a
+  settings-home path today, so none was given the dev-dependency — deliberately
+  out of scope per §8, and layer 2 covers them regardless. If one ever calls
+  `vibe_core::settings::settings_dir()` and writes, the tripwire catches it and
+  the fix is one dev-dependency line.
+- **The per-process homes are not dropped**, because a constructor has no drop
+  point. `prune_stale` collects siblings older than six hours on the way in
+  instead. Worth knowing before someone finds ~19 directories per full test run
+  under `<temp>/vibevm-test-homes/` and files a bug.

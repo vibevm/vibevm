@@ -9,130 +9,21 @@
 //! for the hermetic git-backed walks.
 //!
 //! Each test binary compiles its own copy of this module and uses only a
-//! subset of the helpers, so dead-code analysis is silenced for the module
-//! as a whole.
-#![allow(dead_code)]
+//! subset of the helpers, so dead-code analysis — and, for the
+//! re-exported `vibe-test-support` names, unused-import analysis — is
+//! silenced for the module as a whole.
+#![allow(dead_code, unused_imports)]
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use assert_cmd::Command;
-
-pub fn vibe() -> Command {
-    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
-    // Suppress the global-registry seeding so tests don't pollute the real
-    // `~/.vibe/registry.toml` or pick up real-world registries that change
-    // the resolution/cache shape they assert against.
-    //
-    // NOTE: this only stops the CLI from *writing* a fresh `registry.toml`
-    // on a machine that has none. It does nothing about one that already
-    // exists — for that, build commands through [`UserScratch::vibe`].
-    cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
-    cmd
-}
-
-/// A scratch stand-in for the per-user state a `vibe` subprocess reads out
-/// of the developer's home directory. One per test: it owns its temp tree,
-/// so it dies with the test and no two tests ever share one.
-///
-/// # All three environment variables are load-bearing — do not delete any
-///
-/// * **`VIBE_SETTINGS`** relocates the whole per-user settings dir
-///   (`~/.vibe`) verbatim, and the file that matters is `registry.toml`:
-///   its `[[registry]]` entries are *merged* into every resolution
-///   (PROP-002 §2.2.2 `#global-config`, via `merge_effective`). A developer
-///   who has real global registries therefore resolves against more
-///   registries — and mints more clone-cache buckets — than the test ever
-///   declared, so a hermetic assertion goes red on their machine and
-///   nowhere else. That was F-055: `assert_eq!(clone_dirs.len(), 1)` in
-///   `cli_pkg_cycle.rs` saw three buckets the moment a real
-///   `~/.vibe/registry.toml` appeared. The same dir also carries
-///   `config.toml` (`[init] last_author`) and `settings.toml`, so `vibe
-///   init` stops picking up the developer's name too. That was F-056:
-///   every `vibe init` in `cli_init.rs` resolved its author out of the
-///   developer's real `config.toml` (`prompts.rs` `--author` →
-///   `init.last_author` → `detect_git_author()`), and on a machine where
-///   `last_author` is *unset* while `git config user.name` is set — a
-///   fresh checkout, or CI — the run wrote the detected name straight
-///   back into it.
-/// * **`VIBE_REGISTRY_CACHE`** pins the git clone cache at a path the test
-///   knows by name so it can read the bucket layout back. `VIBE_SETTINGS`
-///   alone would already move the cache (to `<settings>/registries`), but
-///   only this makes the location the test's to assert on.
-/// * **`VIBEVM_SEARCH_CACHE_DIR`** does the same for the `vibe search`
-///   result cache. `VIBE_SETTINGS` alone likewise already moves it (to
-///   `<settings>/search-cache`, via `vibe_core::settings::search_cache_dir`),
-///   but the cache-hit/TTL tests read the bucket layout back by name, so
-///   the location has to be the test's. That was F-057: four bare
-///   `vibe()` sites in `cli_search.rs` cached into the developer's real
-///   `~/.vibe/search-cache/`, where one test run's entries outlive the
-///   test and seed the next one.
-///
-/// Never point any of them at the real home: a test that *reads* real
-/// user state is as broken as one that writes it.
-pub struct UserScratch {
-    /// Owns the temp tree; dropping it removes `settings`, `cache` and
-    /// `search_cache`.
-    _root: tempfile::TempDir,
-    /// `$VIBE_SETTINGS` — stands in for `~/.vibe`. Starts empty; a test
-    /// that deliberately exercises global settings seeds a fixture here.
-    pub settings: PathBuf,
-    /// `$VIBE_REGISTRY_CACHE` — the per-package git clone cache root.
-    pub cache: PathBuf,
-    /// `$VIBEVM_SEARCH_CACHE_DIR` — the `vibe search` result cache root.
-    pub search_cache: PathBuf,
-}
-
-impl UserScratch {
-    /// A fresh, empty per-user scratch home.
-    pub fn new() -> Self {
-        let root = tempfile::tempdir().expect("scratch user home");
-        let settings = root.path().join("settings");
-        let cache = root.path().join("cache");
-        let search_cache = root.path().join("search-cache");
-        fs::create_dir_all(&settings).unwrap();
-        fs::create_dir_all(&cache).unwrap();
-        fs::create_dir_all(&search_cache).unwrap();
-        Self {
-            _root: root,
-            settings,
-            cache,
-            search_cache,
-        }
-    }
-
-    /// A `vibe` command that reads this scratch instead of the developer's
-    /// home. Every `Command` a resolution/cache/registry test builds must
-    /// come from here rather than from the bare [`vibe`].
-    pub fn vibe(&self) -> Command {
-        let mut cmd = vibe();
-        cmd.env(vibe_core::settings::SETTINGS_DIR_ENV, &self.settings);
-        cmd.env("VIBE_REGISTRY_CACHE", &self.cache);
-        // `vibe_registry::search::cache::CACHE_ROOT_ENV` — spelled out
-        // rather than imported because `vibe-registry` is not a
-        // dev-dependency of this crate, same as `VIBE_REGISTRY_CACHE`
-        // above.
-        cmd.env("VIBEVM_SEARCH_CACHE_DIR", &self.search_cache);
-        cmd
-    }
-
-    /// `vibe init` under this scratch — the isolated counterpart of the
-    /// free [`init_project`].
-    pub fn init_project(&self, dir: &Path) {
-        self.vibe()
-            .arg("init")
-            .arg("--path")
-            .arg(dir)
-            .assert()
-            .success();
-    }
-}
-
-impl Default for UserScratch {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+/// `vibe()` and `UserScratch` moved into `vibe-test-support` (DRIFT-020) so
+/// `vibe-index`'s test binaries can reach them too, and — the point of the
+/// move — so that *linking* that crate isolates this test process's settings
+/// home before the first `#[test]` runs. Re-exported under their old names:
+/// the callers here are unchanged, and the `use common::UserScratch` sites
+/// keep working.
+pub use vibe_test_support::{UserScratch, vibe};
 
 /// The `fixtures/registry/` directory at the repo root holds the
 /// hermetic fixture registry the non-`wal` e2e tests run against.

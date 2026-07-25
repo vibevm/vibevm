@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T12:45:00Z",
+ "updated_at": "2026-07-26T13:30:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -120,7 +120,7 @@
    "id": "DRIFT-020",
    "title": "test isolation stops being a convention",
    "executor": "opus",
-   "status": "queued"
+   "status": "done"
   },
   {
    "id": "DRIFT-021",

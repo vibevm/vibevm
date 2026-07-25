@@ -21,7 +21,7 @@
 | DRIFT-017 | a run that changes nothing writes nothing | opus | done |
 | DRIFT-018 | the last two test files stop touching the real user home | opus | done |
 | DRIFT-019 | three module docs stop describing the pre-port world | opus | done |
-| DRIFT-020 | test isolation stops being a convention | opus | queued |
+| DRIFT-020 | test isolation stops being a convention | opus | done |
 | DRIFT-021 | the legacy `~/.vibevm` read leg goes away | opus | done |
 | DRIFT-022 | the `[env]` promotion stops being able to set anything | opus | ready (owner picked (a): allowlist) |
 | DRIFT-023 | the baseline gets a writer, and §6 becomes runnable | opus | ready |

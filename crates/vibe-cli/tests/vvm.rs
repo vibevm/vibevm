@@ -1,7 +1,8 @@
 //! Integration tests for `vibe self` (PROP-019), driven through the real
 //! binary. The install root is pinned inside a temp dir via
 //! `VIBEVM_INSTALL_ROOT`, so nothing here ever touches the developer's
-//! real `~/opt` (PROP-019 §2.4).
+//! real `~/opt` (PROP-019 §2.4), and the settings home is pinned away
+//! from `~/.vibe` by linking `vibe-test-support` (DRIFT-020).
 
 use std::path::Path;
 use std::process::Command as Sys;
@@ -12,7 +13,7 @@ use tempfile::TempDir;
 /// A `vibe` invocation with the install root pinned to `base` and no
 /// ambient `VIBEVM_HOME` leaking in.
 fn vibe(base: &Path) -> Command {
-    let mut cmd = Command::cargo_bin("vibe").unwrap();
+    let mut cmd = vibe_test_support::vibe();
     cmd.env("VIBEVM_INSTALL_ROOT", base)
         .env_remove("VIBEVM_HOME");
     cmd

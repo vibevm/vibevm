@@ -26,7 +26,7 @@ const SUBCOMMANDS: &[&str] = &[
 ];
 
 fn cmd() -> Command {
-    Command::cargo_bin("vibe-index").expect("vibe-index binary built")
+    vibe_test_support::cargo_bin("vibe-index")
 }
 
 #[test]

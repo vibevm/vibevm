@@ -18,10 +18,19 @@ registry_file = "crates/vibe-cli/src/registry.rs"
 registry_gated_crate = "vibe-cli"
 
 # Designated audit crates — exempt wholesale from the unsafe and ambient-env
-# gates. Empty now that rust-ai-native-env-audit (the env-mutation audit home)
-# relocated into stack:org.vibevm.ai-native/rust-ai-native-lang (PROP-024) and is no longer scanned here; the
-# remaining vibevm unsafe sites carry fn-grain #[spec(deviates)] testimony.
-audit_crates = []
+# gates. rust-ai-native-env-audit (the env-mutation audit home) relocated into
+# stack:org.vibevm.ai-native/rust-ai-native-lang (PROP-024) and is no longer
+# scanned here; the remaining vibevm unsafe sites carry fn-grain
+# #[spec(deviates)] testimony.
+#
+# vibe-test-support is the second audit home, and the narrowest one: a single
+# pre-`main` constructor that repoints $VIBE_SETTINGS at a temp dir so no test
+# can reach the operator's real `~/.vibe` (DRIFT-020). It cannot use
+# rust-ai-native-env-audit's EnvGuard — that guard RESTORES on drop and holds a
+# process-wide lock, both wrong for an isolation that must outlive the call and
+# never block a test. The mutation is sound for one reason only, recorded at the
+# call site: a platform constructor runs single-threaded before `main`.
+audit_crates = ["vibe-test-support"]
 
 # The per-file line budget (GUIDE-AI-NATIVE-RUST §2).
 max_file_lines = 600
@@ -109,6 +118,10 @@ reason = "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3
 [[exempt]]
 crate = "xtask"
 reason = "internal developer tooling — panics are acceptable at the developer's own console; stays exempt on the record (CONVERT-PLAN Phase 5, 5.3)"
+
+[[exempt]]
+crate = "vibe-test-support"
+reason = "test-only support crate — consumed exclusively as a dev-dependency, ships in no binary; the Class-F/G seam and REQ-edge gates describe a product surface it does not have (DRIFT-020)"
 
 [[exempt]]
 crate = "vibe-spec"

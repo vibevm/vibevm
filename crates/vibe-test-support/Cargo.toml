@@ -1,0 +1,20 @@
+[package]
+name = "vibe-test-support"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Test-only isolation of the per-user vibevm settings home, shared across the workspace's test binaries"
+
+[lib]
+name = "vibe_test_support"
+path = "src/lib.rs"
+
+[dependencies]
+assert_cmd = { workspace = true }
+tempfile = { workspace = true }
+vibe-core = { workspace = true }

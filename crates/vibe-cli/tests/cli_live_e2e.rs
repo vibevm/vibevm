@@ -61,6 +61,15 @@ const TEST_REGISTRY_GITVERSE_NAME: &str = "vibespecstest3";
 /// be assumed public, and SSH is the documented operator path.
 const TEST_REGISTRY_GITVERSE_URL: &str = "git@gitverse.ru:vibespecstest3";
 
+/// DELIBERATELY NOT ISOLATED — the one `cargo_bin` site in the workspace
+/// that reads the operator's real `~/.vibe`, and the reason this binary
+/// does not link `vibe-test-support` (whose load-time constructor would
+/// repoint `$VIBE_SETTINGS` at a temp dir). These tests reach live hosts
+/// with the operator's real credentials and SSH identity; isolating them
+/// would not make them safe, it would make them fail. They are `#[ignore]`d
+/// so `cargo test --workspace` never runs them, and they only ever read
+/// that state — an `install` into a temp project, never a write to the
+/// settings home. Do not "fix" this call site (DRIFT-020 §4.3).
 fn vibe() -> Command {
     let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
     cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");

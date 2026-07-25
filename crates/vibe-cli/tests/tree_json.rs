@@ -9,7 +9,6 @@
 
 use std::path::PathBuf;
 
-use assert_cmd::Command;
 use serde_json::Value;
 
 /// The vibevm workspace root — two parents up from this crate's manifest dir.
@@ -31,7 +30,7 @@ fn schema() -> Value {
 
 /// Run `vibe tree --json --path <root>` and return the parsed stdout.
 fn run_tree_json(root: &std::path::Path) -> Value {
-    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
+    let mut cmd = vibe_test_support::vibe();
     cmd.arg("tree").arg("--json").arg("--path").arg(root);
     let assert = cmd.assert().success();
     let stdout = String::from_utf8(assert.get_output().stdout.clone()).expect("utf-8 stdout");
