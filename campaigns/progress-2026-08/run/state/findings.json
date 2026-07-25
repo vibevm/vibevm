@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T13:32:18Z",
+ "updated_at": "2026-07-25T14:01:39Z",
  "findings": [
   {
    "id": "F-001",
@@ -397,6 +397,24 @@
    "status": "open",
    "wave": 0,
    "note": "PROP-024 aged behind its own SS2.6 deferral firing: the TS pilot shipped, so the deferred engine split EXECUTED - core-ai-native now authors the neutral engines (conform/specmap/specmark/mcp cores) vendored byte-identically by each -lang/-mcp, so CORE-STAYS-PROMPT-ONLY and OOS-TS-CHECKER are false as present-state; plus the related line cites the vanished vibedeps/flow-core-ai-native/0.6.0 slot (only 0.7.0 exists). One SS2.6/related refresh fixes all. 4 drift verdicts in c3d (5th is the F-006 header)."
+  },
+  {
+   "id": "F-045",
+   "from": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+   "to": "campaigns/progress-2026-08/run/state/campaign.json",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-043's own status aged behind the campaign it governs: ##status-line says 'implementation is underway (spec-actualization campaign, Phase A)' and 'Sections marked (provisional) are held' while the journal-derived phase lane reads C, the S5 tool is fully shipped (19 specmap implements edges; all 7 subcommands live), and zero (provisional) sections remain (grep = 1 hit, the sentence itself); the document marker comment 'campaign Phase A' aged the same way. One status-refresh fixes the file."
+  },
+  {
+   "id": "F-046",
+   "from": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+   "to": "crates/progress-core + crates/vibe-cli/src/commands/progress.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Marker-vs-implementation parity family, both directions: impl/done over unshipped fragments - (a) EVIDENCE-SPECMAP: EvidenceProvider wired nowhere outside progress-core, no specmap join in report; (b) FACT-GRAIN-EVIDENCE: 0 fact units/edges in host specmap.json, consumed stack engine v0.7.0 predates the amendment (PROP-014 v0.8.0 S2.1 exists authored-side; awaits stack re-mint); (c) CMD-CHECK lists 'lossless folds' - no fold code anywhere; (d) STATE-FILES: campaign.json has no 'gates' field; (e) CMD-REPORT evidence column absent; (g) TOOL-INCREMENTAL: every run re-parses the full tree, Cache::is_current unused outside tests. AND spec/done under shipped code - (f) S7.3: BaselineUnit matches the record field-for-field, rescan CLI live with hash-suspect + marker-diverged (named-crates + control-sample still unimplemented). One Phase E DRIFT task (wire evidence/folds/gates/incremental + promote S7.3 markers) or one sync-from-code demotion sweep closes the family."
   }
  ]
 }

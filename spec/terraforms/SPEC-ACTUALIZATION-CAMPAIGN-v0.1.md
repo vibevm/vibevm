@@ -830,6 +830,38 @@ read-only, no auth.
   design ✓ common ✓ (23 of 58 files). Remaining: the modules cluster
   (35 files, 3 300 markers — the specmap-richest).**
 
+- **2026-07-25 · c4a — the modules cluster opens on the campaign's own
+  contract; the tool that runs this phase verifies itself.** vibe-progress
+  family: PROP-043 + OWNER-GUIDE + templates ×3 — **250 units (245 anchors
+  + 5 element bundles): 236 confirmed / 14 drift / 0 unverifiable.**
+  PROP-043's ten drifts split two ways. **F-045** — the file's own status
+  aged behind the campaign it governs: the status-line still says
+  "implementation underway (Phase A)" and holds *(provisional)* sections
+  that no longer exist (grep = 1, the sentence itself), while the phase
+  lane reads C and §5 is fully shipped (19 implements edges; all seven
+  subcommands + every documented flag verified live this session).
+  **F-046** — a marker-vs-implementation parity family in *both*
+  directions: impl/done over unshipped fragments (EvidenceProvider wired
+  nowhere outside the core — the adapter imports everything but
+  `evidence`; 0 fact units/edges in host specmap.json — the consumed
+  stack engine v0.7.0 predates the fact amendment, PROP-014 v0.8.0 §2.1
+  exists authored-side awaiting the re-mint; CMD-CHECK's "lossless
+  folds" matches zero code; campaign.json carries no `gates` field; the
+  report has no evidence column; `Cache::is_current` is dead outside its
+  own tests — every run re-parses the tree), and spec/done under shipped
+  code (§7.3: `BaselineUnit` matches the record field-for-field, rescan
+  live with hash-suspect + marker-diverged; named-crates and the control
+  sample honestly missing). OWNER-GUIDE's four drifts are all one F-020
+  refresh sweep (4-of-6 placements, the preamble-less amendment missed
+  twice, FOUR-SURVIVORS omits `tasks/`). The templates confirm wholesale:
+  impl-task exercised 5/5 (DRIFT-005 checked field-for-field), spec-task
+  correctly awaits Phase D, harvest-card consistent with its empty
+  `harvest/`. Method note for the batch map: coverage now reads from
+  `progress mirror`'s ParsedDoc (authoritative fence-aware parse) — the
+  raw-grep extractor over-counts code-span shorthands. **Running tally:
+  1 648 / 4 944 — 1 589 confirmed / 56 drift / 3 unverifiable; findings
+  46 (next free F-047).**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

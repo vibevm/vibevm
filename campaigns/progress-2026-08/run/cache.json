@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T13:32:21Z",
+  "updated_at": "2026-07-25T14:01:50Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -9473,7 +9473,359 @@
       },
       "marker_count": 67,
       "unit_count": 9,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 55,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (11 cells); document <status> judged as _elements",
+        "fact_count": 66,
+        "marker_count": 67,
+        "processed_hash": "f71c17197992b09dae40fe5fa42a653d072c1e8bc03081b1a3b6d3dfa3e1a5e9",
+        "summary": {
+          "confirmed": 52,
+          "drift": 4,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "guide-purpose": {
+            "v": "confirmed",
+            "ev": [
+              "links live: PROP-043 sibling file; campaign plan at spec/terraforms/ (the owner carve-out kept it there - ../../terraforms resolves); Russian register consistent with the audience"
+            ]
+          },
+          "guide-scope": {
+            "v": "confirmed",
+            "ev": [
+              "links live: PROP-043 sibling file; campaign plan at spec/terraforms/ (the owner carve-out kept it there - ../../terraforms resolves); Russian register consistent with the audience"
+            ]
+          },
+          "guide-language": {
+            "v": "confirmed",
+            "ev": [
+              "links live: PROP-043 sibling file; campaign plan at spec/terraforms/ (the owner carve-out kept it there - ../../terraforms resolves); Russian register consistent with the audience"
+            ]
+          },
+          "marker-reading": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "shorthand-examples": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "vocab-lead": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "ST-IDEA": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "ST-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "ST-IMPL": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "ST-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "ST-DOC": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "ST-FREEZE": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "ST-UNKNOWN": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "SS-PLAN": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "SS-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "SS-DONE": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "SS-HOLD": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "optional-fields-lead": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "FIELD-ACTION": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "FIELD-ACTIONSTAGE": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "FIELD-AUDIENCE": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "FIELD-COMMENT-REF": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "placement-lead": {
+            "v": "drift",
+            "ev": [
+              "F-020: guide §1 predates the fact amendment - lists 4 placements where the contract has 6 (PROP-043 §3.8: + list items item 4, table cells item 5) and says nothing of ##<ID> fact anchors / anchored-when-marked"
+            ]
+          },
+          "PLACE-DOCUMENT": {
+            "v": "drift",
+            "ev": [
+              "F-020: 'до первого заголовка' misses the pilot amendment - in a preamble-less file (this repo's standard shape) the DOCUMENT marker sits right after the first heading (PROP-043 §3.8 item 1; markers.rs implements exactly that)"
+            ]
+          },
+          "PLACE-SECTION": {
+            "v": "drift",
+            "ev": [
+              "F-020: 'сразу после заголовка = секция' is wrong for a preamble-less file's FIRST heading - that position is the document marker (PROP-043 §3.8 items 1-2; markers.rs 'items 1-2 combined')"
+            ]
+          },
+          "PLACE-PARAGRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "PLACE-FRAGMENT": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "STANDALONE-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "vocab tables match model.rs enums + PROP-043 §3.3-§3.6 exactly (freeze cycle incl unfreeze-by-remark, unknown as triage, action/actionstage/audience/comment+ref semantics); standalone-between-paragraphs is IssueCode::Stranded"
+            ]
+          },
+          "HYGIENE-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "commands verified live this session: check / report --md / --view todo|qa|remove / --view doc --audience user / weave --digest all exist with exactly these flags; hygiene rule = PROP-043 §10 EDIT-UPDATES-MARKER (spec/done there; the gate-panel line here sits in a fence, not a unit)"
+            ]
+          },
+          "tool-guards": {
+            "v": "confirmed",
+            "ev": [
+              "commands verified live this session: check / report --md / --view todo|qa|remove / --view doc --audience user / weave --digest all exist with exactly these flags; hygiene rule = PROP-043 §10 EDIT-UPDATES-MARKER (spec/done there; the gate-panel line here sits in a fence, not a unit)"
+            ]
+          },
+          "campaign-home": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "guide-side-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "DASH-RESUME": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "DASH-CORPUS": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "DASH-STITCHING": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "DASH-TASKS": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "DASH-READ-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "dash-terminology": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/progress-2026-08/ live; dashboard index.html sections #resume/#corpus/#stitching/#tasks match the four screens; #fresh.stale yellow staleness badge (index.html:19); serve.mjs header: 'Read-only by law: computes nothing, parses no Markdown, writes nothing. Localhost only.'"
+            ]
+          },
+          "OWNER-A": {
+            "v": "confirmed",
+            "ev": [
+              "owner roles match plan §5 stage gates: A ratified in session (LOG), B diff-review (owner read batch diffs), C = watch X/Y/Z (this tally), D escalations-only (two-waves law), E acceptance after Fable review (DRIFT loop 5/5), F three plans, G guide proofread; sync-from-code owner-approval law cited correctly"
+            ]
+          },
+          "OWNER-B": {
+            "v": "confirmed",
+            "ev": [
+              "owner roles match plan §5 stage gates: A ratified in session (LOG), B diff-review (owner read batch diffs), C = watch X/Y/Z (this tally), D escalations-only (two-waves law), E acceptance after Fable review (DRIFT loop 5/5), F three plans, G guide proofread; sync-from-code owner-approval law cited correctly"
+            ]
+          },
+          "OWNER-C": {
+            "v": "confirmed",
+            "ev": [
+              "owner roles match plan §5 stage gates: A ratified in session (LOG), B diff-review (owner read batch diffs), C = watch X/Y/Z (this tally), D escalations-only (two-waves law), E acceptance after Fable review (DRIFT loop 5/5), F three plans, G guide proofread; sync-from-code owner-approval law cited correctly"
+            ]
+          },
+          "OWNER-D": {
+            "v": "confirmed",
+            "ev": [
+              "owner roles match plan §5 stage gates: A ratified in session (LOG), B diff-review (owner read batch diffs), C = watch X/Y/Z (this tally), D escalations-only (two-waves law), E acceptance after Fable review (DRIFT loop 5/5), F three plans, G guide proofread; sync-from-code owner-approval law cited correctly"
+            ]
+          },
+          "OWNER-E": {
+            "v": "confirmed",
+            "ev": [
+              "owner roles match plan §5 stage gates: A ratified in session (LOG), B diff-review (owner read batch diffs), C = watch X/Y/Z (this tally), D escalations-only (two-waves law), E acceptance after Fable review (DRIFT loop 5/5), F three plans, G guide proofread; sync-from-code owner-approval law cited correctly"
+            ]
+          },
+          "OWNER-F": {
+            "v": "confirmed",
+            "ev": [
+              "owner roles match plan §5 stage gates: A ratified in session (LOG), B diff-review (owner read batch diffs), C = watch X/Y/Z (this tally), D escalations-only (two-waves law), E acceptance after Fable review (DRIFT loop 5/5), F three plans, G guide proofread; sync-from-code owner-approval law cited correctly"
+            ]
+          },
+          "OWNER-G": {
+            "v": "confirmed",
+            "ev": [
+              "owner roles match plan §5 stage gates: A ratified in session (LOG), B diff-review (owner read batch diffs), C = watch X/Y/Z (this tally), D escalations-only (two-waves law), E acceptance after Fable review (DRIFT loop 5/5), F three plans, G guide proofread; sync-from-code owner-approval law cited correctly"
+            ]
+          },
+          "crash-recovery": {
+            "v": "confirmed",
+            "ev": [
+              "crash recovery proven live: this very session resumed from run/RESUME.md; journal.rs render_resume prescribes 'git restore the files it touched, then redo the step'; max-loss-one-step held at the 2026-07-24 power cut (LOG: one open step, edits verified, no redo); rescan triage = RescanClass New/Changed/CarriedForward + marker_diverged flag, O(delta) via baseline"
+            ]
+          },
+          "RESUME-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "crash recovery proven live: this very session resumed from run/RESUME.md; journal.rs render_resume prescribes 'git restore the files it touched, then redo the step'; max-loss-one-step held at the 2026-07-24 power cut (LOG: one open step, edits verified, no redo); rescan triage = RescanClass New/Changed/CarriedForward + marker_diverged flag, O(delta) via baseline"
+            ]
+          },
+          "MAX-LOSS-ONE-STEP": {
+            "v": "confirmed",
+            "ev": [
+              "crash recovery proven live: this very session resumed from run/RESUME.md; journal.rs render_resume prescribes 'git restore the files it touched, then redo the step'; max-loss-one-step held at the 2026-07-24 power cut (LOG: one open step, edits verified, no redo); rescan triage = RescanClass New/Changed/CarriedForward + marker_diverged flag, O(delta) via baseline"
+            ]
+          },
+          "RESCAN-TRIAGE": {
+            "v": "confirmed",
+            "ev": [
+              "crash recovery proven live: this very session resumed from run/RESUME.md; journal.rs render_resume prescribes 'git restore the files it touched, then redo the step'; max-loss-one-step held at the 2026-07-24 power cut (LOG: one open step, edits verified, no redo); rescan triage = RescanClass New/Changed/CarriedForward + marker_diverged flag, O(delta) via baseline"
+            ]
+          },
+          "FOUR-SURVIVORS": {
+            "v": "drift",
+            "ev": [
+              "contradicts §7.4: the four surviving zone parts are baseline.json+deferrals.md+harvest/+tasks/ (ZONE-LAYOUT/ZONE-LIFETIMES); the guide omits tasks/ and adds 'сами маркеры' (markers do survive but are corpus, not zone); same guide-refresh sweep as F-020"
+            ]
+          },
+          "ERASURE-SAFE": {
+            "v": "confirmed",
+            "ev": [
+              "crash recovery proven live: this very session resumed from run/RESUME.md; journal.rs render_resume prescribes 'git restore the files it touched, then redo the step'; max-loss-one-step held at the 2026-07-24 power cut (LOG: one open step, edits verified, no redo); rescan triage = RescanClass New/Changed/CarriedForward + marker_diverged flag, O(delta) via baseline"
+            ]
+          },
+          "EMERG-DISPUTED-MARKER": {
+            "v": "confirmed",
+            "ev": [
+              "emergency rows consistent with the contract: markers are state-layer (owner edits always legal), check false-positives are tool bugs by §5, dashboard is projection (truth = state/*.json < markers, regen via scan), abandon-safe = batch commits + RESUME (this campaign paused/resumed across sessions repeatedly)"
+            ]
+          },
+          "EMERG-TOOL-FALSE-POSITIVE": {
+            "v": "confirmed",
+            "ev": [
+              "emergency rows consistent with the contract: markers are state-layer (owner edits always legal), check false-positives are tool bugs by §5, dashboard is projection (truth = state/*.json < markers, regen via scan), abandon-safe = batch commits + RESUME (this campaign paused/resumed across sessions repeatedly)"
+            ]
+          },
+          "EMERG-DASHBOARD-WEIRD": {
+            "v": "confirmed",
+            "ev": [
+              "emergency rows consistent with the contract: markers are state-layer (owner edits always legal), check false-positives are tool bugs by §5, dashboard is projection (truth = state/*.json < markers, regen via scan), abandon-safe = batch commits + RESUME (this campaign paused/resumed across sessions repeatedly)"
+            ]
+          },
+          "EMERG-ABANDON-SAFE": {
+            "v": "confirmed",
+            "ev": [
+              "emergency rows consistent with the contract: markers are state-layer (owner edits always legal), check false-positives are tool bugs by §5, dashboard is projection (truth = state/*.json < markers, regen via scan), abandon-safe = batch commits + RESUME (this campaign paused/resumed across sessions repeatedly)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: doc/done + action=drift + F-020 comment matches reality (the guide IS drifted and says so); genre 'guide, не контракт' correct"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:01:39Z",
+        "verify_batch": "c4a-vibe-progress"
+      }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
       "content_hash": "94599d1831de9db493690b4b4dc52a3af2e7b78ad60f3fbf3b451183f0305b85",
@@ -9496,7 +9848,893 @@
       },
       "marker_count": 159,
       "unit_count": 27,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 144,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
+        "fact_count": 158,
+        "marker_count": 159,
+        "processed_hash": "94599d1831de9db493690b4b4dc52a3af2e7b78ad60f3fbf3b451183f0305b85",
+        "summary": {
+          "confirmed": 135,
+          "drift": 10,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "self-uri": {
+            "v": "confirmed",
+            "ev": [
+              "verified against progress-core sources + live CLI this session"
+            ]
+          },
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-045: 'implementation is underway (campaign Phase A)' vs live campaign.json phase=C; grep '(provisional)' = 1 hit (only this sentence - zero provisional sections remain); the §5 tool is fully shipped (19 specmap implements edges, all 7 subcommands live)"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "verified against progress-core sources + live CLI this session"
+            ]
+          },
+          "memory-accumulated": {
+            "v": "confirmed",
+            "ev": [
+              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+            ]
+          },
+          "status-lines-freeform": {
+            "v": "confirmed",
+            "ev": [
+              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+            ]
+          },
+          "needs-lead": {
+            "v": "confirmed",
+            "ev": [
+              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+            ]
+          },
+          "NEED-MARKUP": {
+            "v": "confirmed",
+            "ev": [
+              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+            ]
+          },
+          "NEED-TOOL": {
+            "v": "confirmed",
+            "ev": [
+              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+            ]
+          },
+          "NEED-CAMPAIGN-SUBSTRATE": {
+            "v": "confirmed",
+            "ev": [
+              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+            ]
+          },
+          "KNOWLEDGE-IN-SOURCES": {
+            "v": "confirmed",
+            "ev": [
+              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+            ]
+          },
+          "SEPARABILITY-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
+            ]
+          },
+          "SEP-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
+            ]
+          },
+          "SEP-ADAPTER": {
+            "v": "confirmed",
+            "ev": [
+              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
+            ]
+          },
+          "SEP-NON-COLLISION": {
+            "v": "confirmed",
+            "ev": [
+              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
+            ]
+          },
+          "SEP-SELF-CONTAINED-SPECS": {
+            "v": "confirmed",
+            "ev": [
+              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
+            ]
+          },
+          "SEP-NEVER": {
+            "v": "confirmed",
+            "ev": [
+              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
+            ]
+          },
+          "STATUS-ELEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "POINT-SELF-CLOSING": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "FRAGMENT-WRAPPER": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "FENCE-AWARE": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "DECISION-ELEMENT-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "element-name-why": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "element-name-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "element-name-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
+            ]
+          },
+          "ROW-ATTR-STAGE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "ROW-ATTR-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "ROW-ATTR-ACTION": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "ROW-ATTR-ACTIONSTAGE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "ROW-ATTR-AUDIENCE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "ROW-ATTR-COMMENT": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "ROW-ATTR-REF": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "VOCAB-CLOSED": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "VOCAB-AMENDMENT-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "MULTI-MARKERS": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+            ]
+          },
+          "STAGE-IDEA": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STAGE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STAGE-IMPL": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STAGE-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STAGE-DOC": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STAGE-FREEZE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STAGE-UNKNOWN": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "DECISION-FREEZE-STAGE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "freeze-why": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "freeze-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "freeze-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STAGE-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "ORDER-NOT-PROCESS": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
+            ]
+          },
+          "STATE-PLAN": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs State{Plan,Work,Done,Hold} exact"
+            ]
+          },
+          "STATE-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs State{Plan,Work,Done,Hold} exact"
+            ]
+          },
+          "STATE-DONE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs State{Plan,Work,Done,Hold} exact"
+            ]
+          },
+          "STATE-HOLD": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs State{Plan,Work,Done,Hold} exact"
+            ]
+          },
+          "ACTION-CONTINUE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
+            ]
+          },
+          "ACTION-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
+            ]
+          },
+          "ACTION-REWORK": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
+            ]
+          },
+          "ACTION-REMOVE": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
+            ]
+          },
+          "ACTIONSTAGE-NARROWS": {
+            "v": "confirmed",
+            "ev": [
+              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
+            ]
+          },
+          "AUDIENCE-VALUES": {
+            "v": "confirmed",
+            "ev": [
+              "Audience{User,Author,Dev} + CSV (element.rs:186); dev default; --view doc + --audience live in report CLI (doc-TOC use itself honestly spec/done)"
+            ]
+          },
+          "AUDIENCE-DOC-USE": {
+            "v": "confirmed",
+            "ev": [
+              "Audience{User,Author,Dev} + CSV (element.rs:186); dev default; --view doc + --audience live in report CLI (doc-TOC use itself honestly spec/done)"
+            ]
+          },
+          "SHORTHAND-FORMS": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
+            ]
+          },
+          "SHORTHAND-FULL": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
+            ]
+          },
+          "SHORTHAND-BARE": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
+            ]
+          },
+          "SHORTHAND-DISAMBIGUATION": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
+            ]
+          },
+          "SHORTHAND-STANDALONE": {
+            "v": "confirmed",
+            "ev": [
+              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
+            ]
+          },
+          "placement-lead": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "PLACE-DOCUMENT": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "PLACE-SECTION": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "PLACE-PARAGRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "PLACE-LIST-ITEM": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "FACT-ANCHOR-SYNTAX": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "FACT-ID-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "ANCHORED-WHEN-MARKED": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "ANCHOR-MARKER-POSITIONS": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "DECISION-TWO-REGISTERS": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "registers-why": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "registers-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "registers-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "TABLE-ADDRESSING": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "table-positional-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "CELLS-ANCHOR-EXEMPT": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "PLACE-TABLE-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "PLACE-FRAGMENT": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "NO-ORPHAN-MARKER": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "SECTION-SPAN": {
+            "v": "confirmed",
+            "ev": [
+              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
+            ]
+          },
+          "MAINTENANCE-GRAIN": {
+            "v": "confirmed",
+            "ev": [
+              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
+            ]
+          },
+          "CAMPAIGN-GRAIN": {
+            "v": "confirmed",
+            "ev": [
+              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
+            ]
+          },
+          "COUNTABLE-UNITS": {
+            "v": "confirmed",
+            "ev": [
+              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
+            ]
+          },
+          "DECONSTRUCTION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
+            ]
+          },
+          "INLINE-FRAGMENT": {
+            "v": "confirmed",
+            "ev": [
+              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
+            ]
+          },
+          "FORM-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
+            ]
+          },
+          "POST-CAMPAIGN-FOLD": {
+            "v": "confirmed",
+            "ev": [
+              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
+            ]
+          },
+          "ROLLUP-DOWNWARD": {
+            "v": "confirmed",
+            "ev": [
+              "rollup.rs: explicit and computed side by side, computed = worst-of via rollup_key min, explicit wins (test explicit_beats_computed_and_worst_of_wins); doc-grain rollup + rollup_project"
+            ]
+          },
+          "ROLLUP-UPWARD": {
+            "v": "confirmed",
+            "ev": [
+              "rollup.rs: explicit and computed side by side, computed = worst-of via rollup_key min, explicit wins (test explicit_beats_computed_and_worst_of_wins); doc-grain rollup + rollup_project"
+            ]
+          },
+          "EXPLICIT-BEATS": {
+            "v": "confirmed",
+            "ev": [
+              "rollup.rs: explicit and computed side by side, computed = worst-of via rollup_key min, explicit wins (test explicit_beats_computed_and_worst_of_wins); doc-grain rollup + rollup_project"
+            ]
+          },
+          "CONFIG-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
+            ]
+          },
+          "INCLUDE-STYLE": {
+            "v": "confirmed",
+            "ev": [
+              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
+            ]
+          },
+          "DEFAULT-EXCLUDES": {
+            "v": "confirmed",
+            "ev": [
+              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
+            ]
+          },
+          "excludes-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
+            ]
+          },
+          "NESTED-OWNS-SUBTREE": {
+            "v": "confirmed",
+            "ev": [
+              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
+            ]
+          },
+          "TOOL-ADAPTER": {
+            "v": "confirmed",
+            "ev": [
+              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+            ]
+          },
+          "TOOL-OUTPUT-FORMS": {
+            "v": "confirmed",
+            "ev": [
+              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+            ]
+          },
+          "TOOL-INCREMENTAL": {
+            "v": "drift",
+            "ev": [
+              "F-046(g): adapter ground() re-parses every observed file per run ('Parse without touching any cache', commands/progress.rs:48); Cache::is_current exists but is called only by its own unit test and doctest - no subcommand takes the incremental path"
+            ]
+          },
+          "CMD-SCAN": {
+            "v": "confirmed",
+            "ev": [
+              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+            ]
+          },
+          "CMD-CHECK": {
+            "v": "drift",
+            "ev": [
+              "F-046(c): 'lossless folds' check absent - grep fold|lossless over progress-core+adapter = 0 (POST-CAMPAIGN-FOLD itself honestly spec/done); the other listed checks + --exhaustive verified live this session (vocab hints, well-formedness, placement, shorthand, foreign-grammar, exit codes)"
+            ]
+          },
+          "CMD-REPORT": {
+            "v": "drift",
+            "ev": [
+              "F-046(e): evidence column absent - grep evidence in report.rs = 0; the rest verified live: --view done|todo|qa|remove|doc, --audience, per-file+project rollups, explicit-vs-computed, xml/md/json forms"
+            ]
+          },
+          "CMD-MIRROR": {
+            "v": "confirmed",
+            "ev": [
+              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+            ]
+          },
+          "CMD-WEAVE": {
+            "v": "confirmed",
+            "ev": [
+              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+            ]
+          },
+          "CMD-RESCAN": {
+            "v": "confirmed",
+            "ev": [
+              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+            ]
+          },
+          "CMD-RESUME": {
+            "v": "confirmed",
+            "ev": [
+              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+            ]
+          },
+          "EVIDENCE-SEAM": {
+            "v": "confirmed",
+            "ev": [
+              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
+            ]
+          },
+          "EVIDENCE-SPECMAP": {
+            "v": "drift",
+            "ev": [
+              "F-046(a): EvidenceProvider referenced nowhere outside progress-core (adapter imports baseline,cache,journal,report,rollup,scope,state,weave - not evidence); no specmap join anywhere in the report path"
+            ]
+          },
+          "EVIDENCE-MISMATCH-FLAGS": {
+            "v": "confirmed",
+            "ev": [
+              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
+            ]
+          },
+          "EVIDENCE-OPTIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
+            ]
+          },
+          "VERDICTS-NOT-IN-MARKUP": {
+            "v": "confirmed",
+            "ev": [
+              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
+            ]
+          },
+          "FACT-GRAIN-EVIDENCE": {
+            "v": "drift",
+            "ev": [
+              "F-046(b): host specmap.json carries 0 fact-anchor units and 0 edges into them (checked live); consumed engine = stack rust-ai-native-lang v0.7.0, pre-amendment (grep fact/## in its specmap crate = 0); PROP-014 v0.8.0 §2.1 fact units exist authored-side - consumption awaits the stack re-mint"
+            ]
+          },
+          "DATA-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "CACHE-RECORD": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "STATE-FILES": {
+            "v": "drift",
+            "ev": [
+              "F-046(d): live campaign.json fields = schema/updated_at/campaign_id/phase/wave/counters - no 'gates' field (grep gates in state.rs = 0); the five files themselves exist and feed the dashboard"
+            ]
+          },
+          "DASHBOARD-READS-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "BASELINE-RECORD": {
+            "v": "drift",
+            "ev": [
+              "F-046(f): shipped while marked spec/done - baseline.rs BaselineUnit{addr,unit_hash,verdict,evidence,verified_at,crates,marker} matches §7.3 field-for-field; Baseline::load/store + rescan CLI live (--baseline required)"
+            ]
+          },
+          "BASELINE-INVALIDATION": {
+            "v": "drift",
+            "ev": [
+              "F-046(f): partially shipped while spec/done - hash-changed=>suspect and marker-diverged-outside-campaign flag implemented (baseline.rs rescan, RescanClass New/Changed/CarriedForward); named-crates-commits invalidation and the random control sample NOT implemented (crates: vec![] constant)"
+            ]
+          },
+          "ZONE-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "ZONE-EXCLUDED": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "ZONE-LIFETIMES": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "PROCESS-LAW-ELSEWHERE": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "ERASURE-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "BASELINE-ACCELERATION": {
+            "v": "confirmed",
+            "ev": [
+              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
+            ]
+          },
+          "PARSE-MARKDOWN-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
+            ]
+          },
+          "PARSE-COUNTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
+            ]
+          },
+          "PARSE-FACT-ANCHORS": {
+            "v": "confirmed",
+            "ev": [
+              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
+            ]
+          },
+          "PARSE-XML-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
+            ]
+          },
+          "PARSE-FOREIGN-OPAQUE": {
+            "v": "confirmed",
+            "ev": [
+              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
+            ]
+          },
+          "EVERY-GENRE-IN-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "progress.toml scope spans contracts+design+manual-tests+boot (58 files, every genre); B0 converted 73 legacy status lines mechanically to document markers"
+            ]
+          },
+          "GENRE-TERMINALS": {
+            "v": "confirmed",
+            "ev": [
+              "progress.toml scope spans contracts+design+manual-tests+boot (58 files, every genre); B0 converted 73 legacy status lines mechanically to document markers"
+            ]
+          },
+          "maintenance-lead": {
+            "v": "confirmed",
+            "ev": [
+              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
+            ]
+          },
+          "EDIT-UPDATES-MARKER": {
+            "v": "confirmed",
+            "ev": [
+              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
+            ]
+          },
+          "TASK-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
+            ]
+          },
+          "FREEZE-NEEDS-EVIDENCE": {
+            "v": "confirmed",
+            "ev": [
+              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
+            ]
+          },
+          "DOC-COVERAGE-RATCHET": {
+            "v": "confirmed",
+            "ev": [
+              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
+            ]
+          },
+          "PERIODIC-REVERIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
+            ]
+          },
+          "FUT-XML-STORAGE": {
+            "v": "confirmed",
+            "ev": [
+              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
+            ]
+          },
+          "FUT-SECOND-WAVE": {
+            "v": "confirmed",
+            "ev": [
+              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
+            ]
+          },
+          "FUT-EXTRACTION": {
+            "v": "confirmed",
+            "ev": [
+              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
+            ]
+          },
+          "FUT-DASHBOARD": {
+            "v": "confirmed",
+            "ev": [
+              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
+            ]
+          },
+          "DASHBOARD-TERM": {
+            "v": "confirmed",
+            "ev": [
+              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
+            ]
+          },
+          "_elements": {
+            "v": "drift",
+            "ev": [
+              "F-045: document marker comment 'implementation underway (campaign Phase A)' aged - the journal-derived phase lane reads C and the §5 tool is shipped; the marker value spec/done+continue/impl itself is defensible"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:01:39Z",
+        "verify_batch": "c4a-vibe-progress"
+      }
     },
     "spec/modules/vibe-progress/templates/harvest-card.md": {
       "content_hash": "f854794e0ca29a21b4874a7d28b8f9a9565545ebe6b391b45e60eabf9fea4baf",
@@ -9519,7 +10757,83 @@
       },
       "marker_count": 10,
       "unit_count": 1,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 9,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 9,
+        "marker_count": 10,
+        "processed_hash": "f854794e0ca29a21b4874a7d28b8f9a9565545ebe6b391b45e60eabf9fea4baf",
+        "summary": {
+          "confirmed": 10,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "CARD-ONE-PROMISE": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "CARD-WRITTEN-HOT": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "FIELD-UNIT": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "FIELD-AUDIENCE": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "FIELD-PROMISE": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "FIELD-PROVEN-EXAMPLE": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "FIELD-GOTCHAS": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "FIELD-STABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "FIELD-VERDICT-REF": {
+            "v": "confirmed",
+            "ev": [
+              "format rules coherent as the genre contract (one promise, hot capture, proven-example fixture law, stability gate); template committed and in force; no cards yet (harvest/ empty) - consistent with spec/done"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "template in force as format spec; harvest/ empty - no cards written yet (hot-capture is C/G material), consistent with spec/done"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:01:39Z",
+        "verify_batch": "c4a-vibe-progress"
+      }
     },
     "spec/modules/vibe-progress/templates/impl-task.md": {
       "content_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
@@ -9542,7 +10856,161 @@
       },
       "marker_count": 23,
       "unit_count": 10,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 22,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 22,
+        "marker_count": 23,
+        "processed_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
+        "summary": {
+          "confirmed": 23,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-legend": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "goal-format": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "CONTRACT-VERBATIM": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "CONTRACT-LIST-ALL": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "PREMATURE-RETURN": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "current-evidence": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "cs-what-exists": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "cs-what-missing": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "BEHAVIOR-EXHAUSTIVE": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "behavior-edges": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "bd-not-touch": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "bd-construction-sites": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "BD-NEVER-EDIT-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "ACCEPTANCE-EXECUTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "acc-new-tests": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "acc-cli-scenario": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "ACC-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "ACC-UPDATE-MARKERS": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "analogies-format": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "STOP-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "BUDGET-SIGNAL": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "log-format": {
+            "v": "confirmed",
+            "ev": [
+              "exercised 5/5: DRIFT-001..005 written from this template, all through the no-return loop (plan §5-E 5/5); DRIFT-005 verified field-for-field; rules match the repo laws (conform R-001 boundary idiom, #[spec(implements)] discipline, stop-rule = uncertainty protocol, markers-on-exit = PROP-043 §10)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "'in force since Phase A' verified: tasks/DRIFT-001..005 all written from it; DRIFT-005 checked field-for-field (Status/Executor/Reviewer/Cluster/Unit-stability present)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:01:39Z",
+        "verify_batch": "c4a-vibe-progress"
+      }
     },
     "spec/modules/vibe-progress/templates/spec-task.md": {
       "content_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
@@ -9565,7 +11033,119 @@
       },
       "marker_count": 16,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 15,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 15,
+        "marker_count": 16,
+        "processed_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
+        "summary": {
+          "confirmed": 16,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-legend": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "goal-format": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "obligations-source": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "RULE-GENRE-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "RULE-ANCHORS-IMMUTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "RULE-SINGLE-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "RULE-REALITY-MISMATCH-FLOW": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "RULE-NO-SILENT-REPAIRS": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "RULE-UPDATE-MARKERS": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "ACC-CHECK-GREEN": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "ACC-OBLIGATIONS-RESOLVED": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "ACC-NO-NEW-CONTRADICTION": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "ACC-MARKERS-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "STOP-TWO-WAVES": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "log-format": {
+            "v": "confirmed",
+            "ev": [
+              "ready for Phase D (not opened - zero instances correct); rules verified against the flows: genre-first = spec-genres core rule, anchors-immutable+tombstone = addressable-specs #never, single-source law, reality-mismatch via sync-from-code owner approval, two-waves escalation = plan §5-D convergence law; acceptance gates cite live tooling (progress check green)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "template ready; zero SPEC-NNN instances is correct - Phase D not opened; fenced example is the prescribed task-file marker"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:01:39Z",
+        "verify_batch": "c4a-vibe-progress"
+      }
     },
     "spec/modules/vibe-registry/PROP-001-git-backend.md": {
       "content_hash": "a7965e9d25d4b9a70f0297007a274ed3eca248059ef014e26afff8c3b51625af",
