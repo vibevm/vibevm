@@ -1,7 +1,8 @@
 # The vibevm Action System — design & architecture {#root}
 
 ##genre-line **Genre:** design (lore) — non-binding rationale and architecture. The normative contract is
-**Spec 1 = PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`, forthcoming); this document
+**Spec 1 = PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`, written and implemented — the
+`vibe-actions` crate ships); this document
 explains *why* the system is shaped as it is and *how* the pieces fit. It is derived, behind the
 clean-room firewall, from the study
 [`action-systems-vscode-idea.md`](../../legacy-spec/research/action-systems-vscode-idea.md) (the design
@@ -231,8 +232,10 @@ and invokes a found action in place.** @doc/done
 
 ## 7. The AIUI surface — the reference {#aiui}
 
-##aiui-lead Not built now; designed-for. The headless surface exposes, over the same core, a small programmatic
-protocol (in-process API first; a JSON-RPC / MCP binding later, aligning with vibevm's MCP surface): @doc/done
+##aiui-lead Built in its in-process form. The headless surface exposes, over the same core, a small programmatic
+protocol (the in-process API ships in `vibe-actions/src/aiui.rs` — `list_actions` and `invoke` — with
+`vibe aiui state` projecting the model; a JSON-RPC / MCP binding is the remaining adapter, aligning with
+vibevm's MCP surface): @doc/done
 - ##AIUI-LIST-ACTIONS **`list_actions(filter?) -> [{address, name, description, params, enabled, reason}]`** — enumerate
   the registry with live enablement (the enumeration + pure enablement the core already provides). @doc/done
 - ##AIUI-INVOKE **`invoke(address, args) -> Result`** — the same `invoke` the keymap calls. @doc/done
@@ -257,8 +260,9 @@ registry key resolves in `en`. @doc/done
 
 ## 9. Mapping to `vibe tree` (Spec 2 preview) {#vibe-tree}
 
-##VIBE-TREE-MAPPING Spec 2 revises [PROP-037](../modules/vibe-cli/PROP-037-tree-tui.md) so the TUI sits on this crate:
-every TUI command becomes an **Action** with an address in group `vibe.tree` (e.g.
+##VIBE-TREE-MAPPING Spec 2 revised [PROP-037](../modules/vibe-cli/PROP-037-tree-tui.md) so the TUI sits on this crate,
+and that revision **landed** — `keymap_bridge.rs`, action dispatch and the F1 Search Everywhere all ship:
+every TUI command is an **Action** with an address in group `vibe.tree` (e.g.
 `action://vibe.tree/copy.markdown`, `action://vibe.tree/sort`, `action://vibe.tree/mode.set`), a
 name + description (feeding both the footer/menus and Search Everywhere), a typed param schema, and a
 typed enablement over a `TreeCtx` snapshot. The F-key map (PROP-037 §5) becomes a `keymap` binding
@@ -270,7 +274,7 @@ reserved stub to a shipped feature. @doc/done
 
 ## 10. What Spec 1 ratifies {#contract-pointer}
 
-##CONTRACT-POINTER PROP-039 will carry one granular addressable REQ per Δ (Δ1–Δ16), organised by the §2 modules, each
+##CONTRACT-POINTER PROP-039 carries one granular addressable REQ per Δ (Δ1–Δ16), organised by the §2 modules, each
 cited by the code via `specmark`. The human-legibility gate (D7) and the enumerable-registry golden
 (Δ12) are floor gates. This design-doc is the lore that explains those REQs; the two-way links are
 kept per spec-genres. No open owner-decisions remain (RP1–RP5 resolved,

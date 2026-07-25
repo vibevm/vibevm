@@ -42,8 +42,10 @@ truecolor→256→16 / rounded→unicode→ASCII; windows and modals that read a
 
 ## 2. Glyph vocabulary {#glyph-vocabulary}
 
-##glyph-lead Every glyph is a constant on the `Theme`, never a hardcoded string at a call site. The current
-ASCII scaffolding → the target vocabulary: @doc/done
+##glyph-lead Every glyph is a constant on the `Theme`, never a hardcoded string at a call site. The table below
+is the **2026-07-16 capture**: the ASCII scaffolding of the day → the target vocabulary. The targets
+shipped (`theme/glyphs.rs`, the TUI goldens, MT-02), so read the "Today" column as history, not as
+current state: @doc/done
 
 | Purpose | Today | Tier 3 target | Tier 0 (ASCII) |
 |---|---|---|---|
@@ -200,7 +202,7 @@ image raster when the terminal advertises support. Reserved, not built (PROP-037
 
 ## 8. What becomes normative in PROP-037 §2.2
 
-##normative-pointer When §2.2 carries the anchors: `#palette-tokens` (the role set + the five canonical palettes),
+##normative-pointer §2.2 carries the anchors — all five exist: `#palette-tokens` (the role set + the five canonical palettes),
 `#glyph-vocabulary` (the replacement table + the "no ASCII in the primary UI" rule),
 `#rendering-tiers` (the tier table + the pure `detect_tier` + the projection law), `#window-aesthetics`
 (the window composition + "a window is not a fallback"), `#spacing` (interior padding, the group

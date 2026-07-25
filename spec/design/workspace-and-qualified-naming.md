@@ -187,4 +187,4 @@ PUBLISH — splits into separate repos:
 - ##ptr-prop-008 [PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md) — qualified naming (the contract). @doc/done
 - ##ptr-prop-002 [PROP-002](../modules/vibe-registry/PROP-002-decentralized-registry.md) — identity, registry, the per-registry-identity rejection (§3.4). @doc/done
 - ##ptr-prop-005 [PROP-005](../modules/vibe-index/PROP-005-package-index.md) — the index; a prerequisite for short-name resolution. @doc/done
-- ##ptr-roadmap [`ROADMAP.md`](../../ROADMAP.md) — milestones M1.17 (workspace), M1.18 (qualified naming), and the M3+ registry-explorer entry. @doc/done
+- ##ptr-roadmap [`ROADMAP.md`](../../ROADMAP.md) — milestones M1.17 (workspace), M1.19 (qualified naming — the number shifted after this session was captured; M1.18 went to the loading model), and the M3+ registry-explorer entry. @doc/done

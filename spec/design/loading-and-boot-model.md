@@ -2,7 +2,9 @@
 
 <status stage="doc" state="done" comment="B0 2026-07-24: non-normative design record, captured 2026-05-21 in an owner session"/>
 
-##companion-line **Companion to:** PROP-009 (loading model — forthcoming, [`spec/modules/vibe-workspace/PROP-009-loading-model.md`](../modules/vibe-workspace/PROP-009-loading-model.md)). @doc/done
+##companion-line **Companion to:** [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md) (the loading model — **shipped**, M1.18 phases 1–7, 2026-05-22). @doc/done
+
+##rename-note **Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. Read `inline` as **`link = "static"`** (the verbatim `STATIC.md` lane), the design's `static` as **`link = "dynamic"`** (the default, a by-reference `INDEX.md` read), and the design's `dynamic` as a **`dynamic` entry carrying a `when`**. The default moved with the names: design-`static` was the default and its shipped counterpart `dynamic` is. See [PROP-009 §2.4](../modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types), which is normative. @doc/done
 ##status-line **Status:** non-normative design record. Captured 2026-05-21 in an owner design session. @doc/done
 ##authority-line **Authority:** the PROP is the contract. If this document and PROP-009 disagree, the PROP wins. @doc/done
 
@@ -19,7 +21,7 @@ into which member's `spec/` does its content land? @doc/done
 directory: it is a redesign of vibevm's entire **loading model** — how a dependency's
 content is materialised, how the boot sequence is composed across a workspace
 hierarchy, and how an AI agent consumes it at session start. This document records
-the *why* and the fork-by-fork reasoning; **PROP-009** will be the contract. @doc/done
+the *why* and the fork-by-fork reasoning; **PROP-009** is the contract, and it shipped. @doc/done
 
 ##workspace-arc-continuity It belongs to the workspace arc and continues
 [`workspace-and-qualified-naming.md`](workspace-and-qualified-naming.md). @doc/done
@@ -109,7 +111,9 @@ the zero-dependency cross-agent property that is the whole point of VIBEVM-SPEC 
 
 ##P4-THREE-INCLUSION-TYPES **P4 — Three inclusion types: `inline`, `static`, `dynamic`.** Declared per dependency
 in the consumer's `vibe.toml`; default `static`. They are the points on the linker
-spectrum (§6). @doc/done
+spectrum (§6). *(As shipped after the 2026-07-16 rename: two types, `link = "static" | "dynamic"`,
+default `dynamic`, with the third case expressed as a `dynamic` entry carrying a `when` — see the
+rename note above.)* @doc/done
 
 ---
 
@@ -161,14 +165,15 @@ build") are two views it emits. @doc/done
 
 ## 6. The three inclusion types — the refined Fork-1 answer in detail
 
-##inclusion-types-lead Each dependency in a consumer's `vibe.toml` carries an inclusion type (working syntax:
-`link = "static" | "static" | "dynamic"`); the default is `static`. At `vibe install`
+##inclusion-types-lead Each dependency in a consumer's `vibe.toml` carries an inclusion type (working syntax
+of this session: `link = "inline" | "static" | "dynamic"`); the default was `static`. At `vibe install`
 time, for each entry-point node `vibe` generates: @doc/done
 
 - ##GEN-STATIC-MD **`STATIC.md`** — the verbatim concatenation of every `static`-typed contribution in
   the node's effective boot, in priority order. Read first; one read; maximum attention
   weight. The emergency lane — used sparingly, for top-level skills and critical
-  disciplines. Generated only when the node has inline contributions. @doc/done
+  disciplines. Generated only when the node has inline contributions (shipped name:
+  `static` contributions, carried by the `vibe:static` markers inside `STATIC.md`). @doc/done
 - ##GEN-INDEX-MD **`INDEX.md`** — the ordered, resolved manifest of the rest of the boot sequence.
   `static` entries appear as resolved file paths the agent reads directly (a flat,
   parallelisable loop). `dynamic` entries appear as INCLUDE pointers the agent resolves
@@ -179,8 +184,8 @@ time, for each entry-point node `vibe` generates: @doc/done
 
 | Type | Reads at boot | Content on disk | Use |
 |---|---|---|---|
-| ##ROW-COST-INLINE `inline` @doc/done | ~1 (already in `STATIC.md`) @doc/done | duplicated (bounded — few items) @doc/done | critical disciplines, top-level skills @doc/done |
-| ##ROW-COST-STATIC `static` @doc/done | 1 + N (N parallelisable) @doc/done | lives once @doc/done | the default — ordinary dependencies @doc/done |
+| ##ROW-COST-INLINE `inline` (ships as `link = "static"`) @doc/done | ~1 (already in `STATIC.md`) @doc/done | duplicated (bounded — few items) @doc/done | critical disciplines, top-level skills @doc/done |
+| ##ROW-COST-STATIC `static` (ships as `link = "dynamic"`) @doc/done | 1 + N (N parallelisable) @doc/done | lives once @doc/done | the default — ordinary dependencies @doc/done |
 | ##ROW-COST-DYNAMIC `dynamic` @doc/done | 1 + N + graph-walk @doc/done | lives once @doc/done | conditional / context-gated boot @doc/done |
 
 ##dynamic-is-lazy-pull `dynamic` is, mechanically, the subskill `lazy-pull` delivery mode (PROP-003 §2.5) —
@@ -241,7 +246,7 @@ the loading model generalises subskill delivery rather than inventing a parallel
 
 ## 10. Pointers
 
-- ##ptr-prop-009 PROP-009 (forthcoming) — [`spec/modules/vibe-workspace/PROP-009-loading-model.md`](../modules/vibe-workspace/PROP-009-loading-model.md) — the contract. @doc/done
+- ##ptr-prop-009 [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md) — the contract; shipped M1.18. @doc/done
 - ##ptr-prop-007 [PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) — the workspace data model; §6 q3 is the question this answers. @doc/done
 - ##ptr-workspace-naming [`workspace-and-qualified-naming.md`](workspace-and-qualified-naming.md) — the preceding design session. @doc/done
 - ##ptr-vibevm-spec [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) — §6 (boot directory model), §4.2 (layout), §4.6 (effective spec), §13.1 (mirror layout). @doc/done
