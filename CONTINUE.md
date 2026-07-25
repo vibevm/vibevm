@@ -1,179 +1,184 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written 2026-07-25 (session end: Phase L executed and closed; Phase C
-opened and 4 of 5 clusters verified — `spec/common` closed 12/12; the
-modules cluster is the remaining work). `spec/WAL.md` is the canonical
-living state and supersedes this snapshot wherever they diverge._
+_Written 2026-07-25 (session end: **Phase C COMPLETE** — the modules
+cluster verified in ten batches c4a…c4f3; exit gate green; the corpus
+measured). `spec/WAL.md` is the canonical living state and supersedes
+this snapshot wherever they diverge._
 
 ## TL;DR
 
 Progress-Control campaign (PROP-043, plan
-`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`): **Phase L
-(legacy relocation) executed and closed in one session** — 26
-gate-binding citation sites repointed in 4 batches, 35 files `git mv`'d
-to root `legacy-spec/` (the campaign plan carve-out honoured), exit
-gate green (greps zero, `check --exhaustive` 0, floor real exit 0).
-**Phase C (verification) is IN FLIGHT**: the verify loop is proven and
-conventions are durable in the plan LOG §9; **1 398 / 4 944 units
-carry verdicts — 1 353 confirmed / 42 drift / 3 unverifiable;
-findings 44** (F-035…F-044 new this session). Verified clusters:
-boot ✓ manual-tests ✓ design ✓ common ✓ (23 of 58 files). **Remaining:
-the modules cluster — 35 files, 3 300 markers** (the specmap-richest:
-626 edges). GitHub synced through `9baa7fa6`; GitVerse SSH still down
-(strict ancestor; plain re-fan on recovery, never `--force`).
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`): **Phase C
+(verification) is COMPLETE and its exit gate is green** — 58/58 files
+carry campaign maps, **4 944/4 944 markers carry verdicts**. **The
+first measured actuality level of the spec tree: 4 455 units judged =
+4 141 confirmed / 311 drift / 3 unverifiable (93.0 % / 7.0 % /
+0.07 %). Findings: 55** (F-001…F-055; this session minted F-045…F-055,
+extended F-018/F-024/F-047/F-048). The §5-C prediction confirmed
+**mirrored**: drift concentrates in Status lines that promised *less*
+than the tree delivers (shipped-under-proposed families), while
+honestly-updated headers rode to **eight zero-drift files**
+(PROP-011/012/025/042/015/026/027/005). GitHub synced through
+`242085d4`; GitVerse SSH still down (strict ancestor; plain re-fan on
+recovery, never `--force`). **The campaign holds at the C→D boundary:
+opening Phase D (stitching) is the owner's call** (plan §5 entry law);
+the phase lane in the journal stays `C` until that ruling lands as a
+`phase` event.
+
+## The blocker (owner decision)
+
+**Open Phase D or not — nothing else is blocked.** Phase D's entry law
+(plan §5): *"Entry: C verdicts exist for the cluster"* — satisfied
+corpus-wide. The plan requires the owner's explicit call before the
+next phase opens (the resume-boundary law). Secondary question for the
+owner: did you create `~/.vibe/registry.toml` today at 15:37 (vibespecs
++ vibespecs-gitverse)? It is what turned the floor red post-gate
+(F-055, see Findings below) — if it wasn't you, that's worth a look.
 
 ## How to start the next session (exact)
 
-Открой сессию фразой вида:
+**Option A — the owner opens Phase D** (paste as the first message):
 
 > Продолжаем спец-актуализационную кампанию (PROP-043). Прочитай
-> CONTINUE.md, затем campaigns/progress-2026-08/run/RESUME.md и хвост
-> LOG §9 плана. **Продолжай Phase C — кластер modules** (батчи c4a…):
-> вердикты по конвенциям LOG §9, Fable без fractality; opus5 — только
-> если расчёт delegation-rules это оправдает.
+> CONTINUE.md, затем spec/WAL.md, план §5 Phase D и хвост LOG §9.
+> **Открываю Phase D (stitching)** — запиши phase-событие `D` в журнал
+> и работай волнами по §5-D: family-свипы по ледеру (55 строк —
+> `run/state/findings.json`), `reality-mismatch` — строго через
+> sync-from-code (спек-диффы мне на аппрув ДО применения), пары без
+> сходимости две волны — эскалация мне. Fable без fractality; opus5 —
+> только если расчёт delegation-rules это оправдает.
 
-Then the executor does, in order:
+**Option B — restore context first, decide after** (report-then-wait):
 
-1. Boot per `CLAUDE.md`; read this file, `run/RESUME.md`, the plan §5
-   Phase C + the LOG §9 tail (the c0…c3d entries carry the conventions
-   and the running tally).
-2. Journal `step-start` for the first batch (`c4a-…`; the phase lane
-   already reads `C` — no new phase event needed).
-3. Work the batches per the proven loop below; commit per batch;
-   `cargo xtask mirror` at checkpoints (github must go ok; gitverse
-   fails while its SSH is down — expected).
-4. Exit gate for C (plan §5): 100 % of markers carry verdicts; the
-   X/Y/Z summary lands in the LOG. **Ask the owner before opening
-   Phase D.**
+> ВОССТАНОВИ СЕССИЮ
 
-## The C verify loop (proven; follow verbatim)
+Then the executor (Option A) does, in order:
 
-Per batch: journal `step-start` → Read the file(s) IN FULL → run
-targeted machine checks (specmap join, greps, CLI `--help`, file
-existence; every check lands in the ev strings) → write a
-verdict-writer script into the scratchpad → run → `progress scan`
-(preserves campaign maps — verified) + `progress check` (stays 0) →
-journal `step-done` with X/Y/Z → LOG §9 running-tally entry → commit
-(campaign `run/` included) → mirror at checkpoints.
+1. Boot per `CLAUDE.md`; read this file, `spec/WAL.md`, plan §5
+   Phase D + the LOG §9 tail (the ten c4-entries + the exit-gate
+   boundary entry carry all conventions).
+2. Append the phase event to the journal:
+   `{"kind":"phase","value":"D","ts":"<UTC>"}` (append-only, LF
+   newline; then `vibe progress scan` so `campaign.json`/RESUME
+   re-derive the lane).
+3. Journal `step-start` for wave 1 (`d1-<slug>`), work SPEC-task
+   sweeps per §5-D, commit per topic, `cargo xtask mirror` at
+   checkpoints (github ok; gitverse fails while SSH is down —
+   expected).
+4. Phase D mechanics (plan §5): obligation types `contradiction ·
+   duplication · missing-support · terminology · relocation ·
+   reality-mismatch`; waves until the ledger is empty or a pair
+   stalls two waves (→ owner escalation); `reality-mismatch` resolves
+   via the sync-from-code flow — **owner approves every spec diff
+   before it is applied**; templates in
+   `spec/modules/vibe-progress/templates/spec-task.md`.
 
-**Verdict storage (PROP-043 §7.1/§7.5):** per-file `campaign` map in
-`campaigns/progress-2026-08/run/cache.json`:
+## The Phase D work-map (what the ledger looks like)
 
-```json
-"campaign": {"verify_batch": "c4a-…", "verified_at": "<UTC>",
-  "processed_hash": "<content_hash>", "anchors_judged": N,
-  "fact_count": N, "marker_count": N,
-  "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
-  "verdicts": {"<ANCHOR>": {"v": "confirmed|drift|unverifiable", "ev": ["…"]}, "_elements": {…}},
-  "summary": {"confirmed": X, "drift": Y, "unverifiable": Z}}
-```
+~15 family rows cover ~80 % of the 311 drift verdicts. The big sweeps,
+each a one-file (or one-cluster) re-mark + header fix:
 
-Load cache.json with python (`json.load`), mutate, dump with
-`ensure_ascii=False, indent=1` + trailing newline. NEVER rebuild the
-file from scratch — other files' campaign maps must survive.
+| Family | Scope | Shape |
+|---|---|---|
+| F-018 | PROP-020/021/022/023 (bridge four) — 137 rows | proposed→IMPLEMENTED headers + spec/done→impl/done re-mark |
+| F-053 | PROP-030 — 63 rows | same shape (embedded registry ships wholesale) |
+| F-052 | PROP-036/037/039 headers + 036 §2.11 keymap tail + 039 AIUI rows | DRAFT→shipped + supersede-mark §2.11 |
+| F-043 | PROP-000 — six aged spots | one foundation refresh |
+| F-046 | PROP-043 §5–§7 parity (both directions) | wire-or-demote (owner picks per item) |
+| F-050 | PROP-003 solver tail outside the §2.2 supersede marker | extend marker + fix MIG/PE rows |
+| F-016/F-020/F-026/F-028/F-029/F-010/F-019/F-054/F-051 | single-file header/index touch-ups | small sweeps |
+| F-024 | PROP-038 internal (§2.7 note + fuzz deferral) | two-line fix |
+| F-039/F-040/F-041/F-034/F-037/F-038 | design-doc tense + MT keymap era | re-author (MT rows need human sign-off after) |
 
-**The anchor extractor** (pairs `##ID` with its `@stage/state`; count
-== per-file coverage, asserted against exceptions):
+Code-side rows route to **Phase E** (Opus DRIFT tasks), queue currently
+EMPTY: F-036 (`--plain` clap lie), F-047 (three stale deviates denying
+the shipped ResolvoDepSolver — naive.rs:32, sat.rs:174, lib.rs:288-296),
+F-048 (`--trust-mirror` / `vibe list --overrides` promised-absent),
+F-055 (e2e harness must pin `VIBE_SETTINGS`), F-017 (aiui scrollbar
+code-ahead).
 
-```python
-MARK = re.compile(r'@(?P<stage>[a-z]+)/(?P<state>[a-z]+)\b')
-ANCH = re.compile(r'##(?P<id>[A-Za-z][A-Za-z0-9._-]*)')
-def extract(path):
-    out, cur = [], None
-    for line in io.open(path, encoding='utf-8').read().splitlines():
-        a, m = ANCH.search(line), MARK.search(line)
-        if a and m: out.append(a.group('id')); cur = None
-        elif a: cur = a.group('id')
-        elif m and cur: out.append(cur); cur = None
-    return out
-```
+## Non-obvious findings from this session (keep in mind)
 
-**The specmap join** (rebuild each session — the scratchpad dies):
-index `specmap.json` `spec_units` by `uri`→`(file, anchor)`, then fold
-`edges` (verb ∈ implements/verifies/deviates + `file:line` refs) into
-`file → anchor → {counts, refs}`. ~20 lines of python; the c3-era
-version lived at scratchpad `c_specmap_join.py`.
-
-**Verdict semantics by stage (the honesty law):**
-
-- `impl/done` → needs PRESENCE evidence (edges, code, live runs);
-- `spec/done` → needs ABSENCE (shipped-but-still-marked-spec = the
-  stale-header drift; honest design proposals grep-verify their
-  "schedules nothing" claims);
-- `doc/done` → must not contradict the contract/shipped reality
-  (aged present-tense = drift);
-- dated historical records confirm unless falsified; present-state
-  claims blocked by the GitVerse outage go `unverifiable`, never
-  "probably fine";
-- verdicts NEVER in markup; wording changes forbidden.
-
-**Grep pitfalls (paid for):** `grep -c` counts LINES, not occurrences
-(labels+targets double up on one line — count with `s.count()` in
-python and assert); rg's `-r` flag REPLACES match text in output
-(never use it as "recursive"); literal backtick paths and dotted forms
-(`` `spec/x/…` ``, `spec.research`) are invisible to relative-link
-patterns — sweep word-level too; use lookbehind `(?<!legacy-)` when
-grepping for `spec/(terraforms|research|neworder|discipline)/`.
-
-**Findings:** before minting a new row, grep
-`run/state/findings.json` for the file — the B-phase already ledgered
-many stale headers (known: F-005 PROP-019, F-006 PROP-024, F-013
-PROP-018, F-018 PROP-020; F-016 modules/README, F-020 OWNER-GUIDE are
-pre-existing rows the c4 batches will cite). Next free id: **F-045**.
-Family rows > per-unit rows (one sweepable fix per file/theme).
-
-## The modules batch map (35 files, 3 300 markers; suggested order)
-
-| Batch | Files | Markers | Notes |
-|---|---|---|---|
-| c4a | vibe-progress: PROP-043 (159, 19 edges), OWNER-GUIDE (67), templates ×3 (49) | 275 | The campaign's own contract — lived-experience evidence; F-020 pending on OWNER-GUIDE |
-| c4b | vibe-registry core: PROP-002 (360, **110 edges**), PROP-001 (93, 9) | 453 | The evidence-richest file in the corpus |
-| c4c | vibe-resolver: PROP-003 (314, 60), PROP-017 (106, 9) | 420 | PROP-003's F-031 internal-r2 rows pending |
-| c4d | vibe-workspace ×9: PROP-007 (147, 39), PROP-009 (104), PROP-035 (135), PROP-011 (97), PROP-012 (84), PROP-038 (86), PROP-034 (66), PROP-022 (53), PROP-020 (50), PROP-025 (46) | 768+100 | PROP-020's F-018 header; PROP-034 superseded-by-038 arc |
-| c4e | vibe-cli + vibe-actions: PROP-037 (137, **64 edges**), PROP-036 (80, 14), PROP-042 (58, 17), PROP-039 (52, 18) | 327 | TUI evidence already gathered in c1/c2 (goldens, keymaps, theme) |
-| c4f | vibe-mcp ×3 (188), vibe-index PROP-005 (279, **91 edges**), vibe-settings ×2 (118), vibe-registry rest: PROP-008 (100), PROP-010 (93), PROP-030 (76), PROP-021 (38), PROP-023 (46), README (19) | 957 | Split further as needed (2–3 commits) |
-
-Get the live list + edge counts any time:
-
-```bash
-python -c "import json,io,collections; c=json.load(io.open('campaigns/progress-2026-08/run/cache.json',encoding='utf-8')); [print(p, r['marker_count']) for p,r in sorted(c['files'].items()) if p.startswith('spec/modules')]"
-```
+- **Coverage counts come from `vibe progress mirror`'s ParsedDoc**
+  (authoritative fence-aware parse) — the CONTINUE-recipe raw-grep
+  extractor over-counts code-span shorthands (`@test/plan` inside
+  backticks). Coverage identity per file:
+  `anchors_with_id + marked_cells_without_id + document_elements ==
+  marker_count`. `run/mirror/` is ephemeral — regenerate at will,
+  delete after.
+- **Verdict conventions held all phase** (cache campaign maps only;
+  impl/done ⇒ presence, spec/done ⇒ absence, doc/done ⇒
+  no-contradiction; family rows > per-unit rows; never rebuild
+  cache.json from scratch — load-and-merge, `ensure_ascii=False,
+  indent=1` + trailing newline).
+- **Journal appends need `newline='\n'`** in python `io.open` — plain
+  text-mode append writes CRLF on Windows (git normalizes, but keep it
+  clean).
+- **The floor-red post-gate was environmental** (F-055): a
+  `~/.vibe/registry.toml` appeared 2026-07-25 15:37 and
+  `cli_pkg_cycle::install_from_git_registry` does not isolate the
+  settings chokepoint — proven by `VIBE_SETTINGS=<empty tmp>` turning
+  it green. Docs-only campaign commits are unrelated. Until F-055 is
+  fixed, `self-check` on this machine is red at that one test; judge
+  floor claims accordingly (and remember: REAL exit codes, never
+  `| tail`-piped).
+- **One verdict was corrected mid-phase** (c4b SOLVER-IDENTITY-FIELD
+  confirm → drift in c4c) — the correction pattern is: fix the cache
+  verdict via load-and-merge, extend the finding note, record it in
+  the LOG entry of the correcting batch.
+- **resolvo IS the production default** (`registry.rs:117
+  unwrap_or("resolvo")`) — do not trust the three in-code deviates
+  that say otherwise (F-047).
 
 ## State
 
-- Branch `main`; **GitHub synced through `9baa7fa6`**; working tree
-  clean (untracked `.zcode/` only). Journal fully closed (last:
-  `c3d-common-tail` step-done); phase lane reads **C**.
+- Branch `main`; **GitHub synced through `242085d4`**; working tree
+  clean (untracked `.zcode/` only). Journal closed (last:
+  `c4f3-index` step-done + the `floor-red-postgate` note); phase lane
+  reads **C**.
 - `progress check` = **0 errors** (must stay 0); scan: 58 files,
   4 944 markers, 4 880 facts, 0 unmarked.
-- **C tally: 1 398 units = 1 353 C / 42 D / 3 U; findings 44** (next
-  id F-045). Drift profile: "the spec aged behind its own success" —
-  fired triggers (UPL relicense F-043, engine split F-044), executed
-  deferrals, proposed-era headers over shipped systems (F-005/006/013),
-  MT keymap era (F-037/038), stale clap help (F-036, Phase E DRIFT
-  candidate). Honest design proposals pass clean.
+- **Findings 55** (next free id **F-056**), all in
+  `campaigns/progress-2026-08/run/state/findings.json`.
 - **GitVerse SSH down** all 2026-07-25 (banner-exchange timeout;
   strict ancestor verified via HTTPS). Plain `cargo xtask mirror`
   re-fan on recovery; NEVER `--force`.
-- specmap ratchet: 37 gated orphans host-side (re-based at `f311f429`;
-  gate passes, 0 suspects).
+- specmap ratchet: 37 gated orphans host-side (re-based at
+  `f311f429`; gate passes, 0 suspects).
+- vibespecs 401 on this machine — redbook/rust-ai-native resolve via
+  vibe-embedded; consuming lockfiles carry `source_kind = "embedded"`.
 
 ## Standing decisions in force (unchanged unless noted)
 
 Fact-exhaustive granularity (PROP-043 §3.9); anchored-when-marked; two
-registers; scope 58 files (include-only); phase order B → L → C (L
-CLOSED 2026-07-25); the campaign plan stays in `spec/terraforms/`
-(owner reversal — §6 recurrence consumes it in place); `legacy-spec/`
-is an archive — never cited normatively from corpus/crates (WAL
-constraint); **no fractality for this campaign** (Fable =
-markup/porting/verification/review; Opus = DRIFT coding, queue EMPTY);
-coder-tier engine pin `claude-opus-5`; campaign zone excluded from
-scan; verdicts live in cache campaign maps, never markup; the four
-CLAUDE.md rules bind every executor. Amend only unpushed commits.
+registers; scope 58 files (include-only); phase order B → L → C → D
+(B/L/C CLOSED 2026-07-25); the campaign plan stays in
+`spec/terraforms/` (owner reversal — §6 recurrence consumes it in
+place); `legacy-spec/` is an archive — never cited normatively;
+**no fractality for this campaign** (Fable = markup/verification/
+stitching-review; Opus = DRIFT coding, queue EMPTY); coder-tier engine
+pin `claude-opus-5` (`.claude/agents/opus5.md`); campaign zone excluded
+from scan; verdicts live in cache campaign maps, never markup;
+`reality-mismatch` closes only through sync-from-code with owner
+approval; the four CLAUDE.md rules bind every executor. Amend only
+unpushed commits.
 
 ## Recent commits (newest first)
 
 ```
+242085d4 docs(spec): post-gate floor red root-caused — the test drinks user state
+ddf7c0ca docs(spec): Phase C closes — the spec tree measures 93.0% true
+5aa5ba86 docs(spec): Phase C c4f2 — mcp and settings; the cleanest batch yet
+727f6840 docs(spec): Phase C c4f1 — the registry rest; PROP-030 takes the crown
+74025dd9 docs(spec): Phase C c4e — Spec 2 is the reality, DRAFT is the costume
+26a72e28 docs(wal): mid-session checkpoint — modules cluster past half (c4a…c4d2)
+dcfa6301 docs(spec): Phase C c4d2 — the workspace tail; honesty at its densest
+c325d333 docs(spec): Phase C c4d1 — the loading model verifies as lived reality
+7392fbdd docs(spec): Phase C c4c — the resolver pair verified; a c4b verdict falls
+09327502 docs(spec): Phase C c4b — the registry core holds; resolvo is real
+baffe617 docs(spec): Phase C c4a — the campaign's contract verifies itself
+3b10a37b docs(wal): session-end checkpoint — L closed, C mid-flight at c3d
+4cf97e35 docs(continue): cold-resume checkpoint — Phase C modules handoff
 9baa7fa6 docs(spec): Phase C c3d — the common tail verified; spec/common closes 12/12
 f82582f7 docs(spec): Phase C — LOG records the c3b and c3c boundaries
 3d237c7d docs(spec): Phase C c3c — the proposed-era pair confirms on shipped evidence
@@ -186,29 +191,38 @@ f311f429 chore(specmap): regenerate the canonical index after the relocation
 70f3cbdd docs(spec): Phase L lands — the legacy dirs leave the spec tree
 1ec6a27c docs(spec): Phase L batch 4 — the last corpus and crate refs go archive-form
 9514e8fb docs(spec): Phase L batch 3 — modules index, MCP and hybrid contracts repoint
-f8f347d8 docs(spec): Phase L batch 2 — action + settings contracts drop research refs
-83346e78 docs(spec): Phase L batch 1 — design cluster repoints to the archive
 ```
 
 ## Repository map (top level)
 
 - `spec/` — the living corpus (boot authored pair, common 12,
-  modules 35, design 6, manual-tests 3; all marked, 23 verified) +
-  `WAL.md` + the campaign plan in `spec/terraforms/` (sole file).
+  modules 35, design 6, manual-tests 3; **all 58 verified**) +
+  `WAL.md` + the campaign plan in `spec/terraforms/` (sole live file
+  there).
 - `legacy-spec/` — the archive (terraforms 25 / research 8 /
   neworder 1 / discipline 1); zero normative inbound refs.
-- `crates/` — the workspace (17 crates); `campaigns/progress-2026-08/`
-  — journal, state (findings 44), cache with verdict maps, RESUME.
-- `tools/self-check.sh` (the floor), `tools/progress-dashboard/`.
+- `crates/` — the workspace (17 crates; progress-core + the vibe-cli
+  adapter run the campaign tooling).
+- `campaigns/progress-2026-08/` — journal (closed), state (findings
+  55), cache with the FULL corpus verdict maps (load-bearing!),
+  RESUME.md; `run/mirror/` deleted (ephemeral).
+- `tools/self-check.sh` (the floor; currently red at ONE test —
+  F-055, environmental), `tools/progress-dashboard/`.
 - `specmap.json` — regenerate via `cargo xtask specmap`.
 
 ## Quick start
 
 ```bash
-bash tools/self-check.sh                                  # the floor (REAL exit code)
+bash tools/self-check.sh                                  # floor (REAL exit; F-055 red expected until fixed)
 cargo run -q -p vibe-cli --bin vibe -- progress check     # markup gate (must be 0)
 cargo run -q -p vibe-cli --bin vibe -- progress scan      # refresh state (preserves campaign maps)
 cargo run -q -p vibe-cli --bin vibe -- progress resume    # regenerate RESUME.md
-node tools/progress-dashboard/serve.mjs                   # dashboard
+node tools/progress-dashboard/serve.mjs                   # dashboard (X/Y/Z per file)
 GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o BatchMode=yes" cargo xtask mirror
+```
+
+Verdict-читалка (сводка по файлу из cache):
+
+```bash
+python -c "import json,io; c=json.load(io.open('campaigns/progress-2026-08/run/cache.json',encoding='utf-8')); r=c['files']['spec/modules/vibe-registry/PROP-030-embedded-registry.md']['campaign']; print(r['summary']); [print(k,v['v']) for k,v in list(r['verdicts'].items())[:10]]"
 ```
