@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T15:04:23Z",
+ "updated_at": "2026-07-25T15:42:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -61,9 +61,9 @@
    "from": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
    "to": "spec/WAL.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says proposed (2026-07-13), but the WAL records PROP-030 S3.3 project-packages auto-discovery landed (12 commits, dc45b24) and the R-001 conform gate guards the shipped EmbeddedProvider composition root."
+   "status": "resolved",
+   "wave": 1,
+   "note": "Status line says proposed (2026-07-13), but the WAL records PROP-030 S3.3 project-packages auto-discovery landed (12 commits, dc45b24) and the R-001 conform gate guards the shipped EmbeddedProvider composition root. || RESOLVED d1 2026-07-25: PROP-030 status line rewritten to IMPLEMENTED with the shipped-surface citation; 63 facts re-marked."
   },
   {
    "id": "F-008",
@@ -124,9 +124,9 @@
    "from": "spec/common/PROP-000.md",
    "to": "LICENSE.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-000 S3 License still describes the proprietary-EULA posture with UPL as a future intent, but the repository relicensed to UPL-1.0 on 2026-07-12 (MT-05 run, host LICENSE.md swapped; the CLAUDE.md license ledger records it). The S3 text, its 'When to revisit' trigger, and the publish=false rationale need the sync-from-code pass (owner approves spec diffs)."
+   "status": "resolved",
+   "wave": 1,
+   "note": "PROP-000 S3 License still describes the proprietary-EULA posture with UPL as a future intent, but the repository relicensed to UPL-1.0 on 2026-07-12 (MT-05 run, host LICENSE.md swapped; the CLAUDE.md license ledger records it). The S3 text, its 'When to revisit' trigger, and the publish=false rationale need the sync-from-code pass (owner approves spec diffs). || RESOLVED d1 2026-07-25: PROP-000 3 relicensed to UPL-1.0 in the record (owner confirmed in session), the spent revisit trigger re-issued, publish=false rationale left standing as still true."
   },
   {
    "id": "F-015",
@@ -160,9 +160,9 @@
    "from": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
    "to": "crates/vibe-install/src/apply.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D. EXTENDED (c4d2): the same proposed-header-over-shipped-system pattern covers PROP-022 wholesale (Materialization enum + is_in_place doctests in vibe-core; hardlink/in-place machinery + materialise_in_place seam + in-place incremental git-fetch in vibe-install; submodule snapshot-embedding in git_package_registry/fetch.rs; destructive guard in commands/uninstall.rs) and PROP-020's whole body (hooks.rs full runner: phases, Git-Bash-first Windows selection, DEFAULT_ALLOWED_GROUPS org.vibevm, TrustDecision non-interactive refuse, env contract, seams). Both files re-mark spec/done -> impl/done in one sweep with their header fixes. EXTENDED (c4f1): the family covers all FOUR bridge specs - PROP-021 (submodule machinery live: recurse clone/update, snapshot embedding in fetch.rs, in-place native) and PROP-023 (the [package].bridge flag parses at vibe-core package.rs:117, default false, with doctest) join PROP-020/PROP-022."
+   "status": "resolved",
+   "wave": 1,
+   "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D. EXTENDED (c4d2): the same proposed-header-over-shipped-system pattern covers PROP-022 wholesale (Materialization enum + is_in_place doctests in vibe-core; hardlink/in-place machinery + materialise_in_place seam + in-place incremental git-fetch in vibe-install; submodule snapshot-embedding in git_package_registry/fetch.rs; destructive guard in commands/uninstall.rs) and PROP-020's whole body (hooks.rs full runner: phases, Git-Bash-first Windows selection, DEFAULT_ALLOWED_GROUPS org.vibevm, TrustDecision non-interactive refuse, env contract, seams). Both files re-mark spec/done -> impl/done in one sweep with their header fixes. EXTENDED (c4f1): the family covers all FOUR bridge specs - PROP-021 (submodule machinery live: recurse clone/update, snapshot embedding in fetch.rs, in-place native) and PROP-023 (the [package].bridge flag parses at vibe-core package.rs:117, default false, with doctest) join PROP-020/PROP-022. || RESOLVED d1 2026-07-25: all four bridge specs (PROP-020/021/022/023) carry IMPLEMENTED headers and impl/done facts; 137 rows closed."
   },
   {
    "id": "F-019",
@@ -385,9 +385,9 @@
    "from": "spec/common/PROP-000.md",
    "to": "LICENSE.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "The foundation aged in six spots, one sweep fixes all: SS3 still records the proprietary EULA (UPL-1.0 relicense happened 2026-07-12, the LICENSE-REVISIT trigger fired - rewrite the record per decision-records); SS4 lists the retired vibe-package.toml; SS6 records pre-qualified identity and four kinds while SSInvariants INV-VOCABULARY in the same file correctly lists five (internal inconsistency, r2-leftover class); SS7 calls GitVerse the source-of-truth (PROP-016 supersedes: no primary) and pins NamingConvention::KindName (Fqdn default since M1.19); SS14 MT-WAL-NAMES practice lapsed (pending MT sign-offs unnamed in the WAL); SS18 claims the resolver implements semantic LLM-reviewed conflicts (heuristic shipped, LLM lane pending). 12 drift verdicts in c3b."
+   "status": "resolved",
+   "wave": 1,
+   "note": "The foundation aged in six spots, one sweep fixes all: SS3 still records the proprietary EULA (UPL-1.0 relicense happened 2026-07-12, the LICENSE-REVISIT trigger fired - rewrite the record per decision-records); SS4 lists the retired vibe-package.toml; SS6 records pre-qualified identity and four kinds while SSInvariants INV-VOCABULARY in the same file correctly lists five (internal inconsistency, r2-leftover class); SS7 calls GitVerse the source-of-truth (PROP-016 supersedes: no primary) and pins NamingConvention::KindName (Fqdn default since M1.19); SS14 MT-WAL-NAMES practice lapsed (pending MT sign-offs unnamed in the WAL); SS18 claims the resolver implements semantic LLM-reviewed conflicts (heuristic shipped, LLM lane pending). 12 drift verdicts in c3b. || RESOLVED d1 2026-07-25: the foundation refreshed in twelve spots plus the spent licence trigger (verdict correction over c3b)."
   },
   {
    "id": "F-044",
@@ -475,9 +475,9 @@
    "from": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
    "to": "crates/vibe-cli/src/registry.rs",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "PROP-030 ships wholesale under a bare 'proposed (2026-07-13)' status line: the embedded registry is this machine's daily resolution mode (WAL constraints cite §5 CI-off gate split + §3.3 project-local as standing law; R-001 pins the sanctioned constructor site; --prefer-embedded/--no-prefer-embedded/--offline/--embedded-short-circuit/--prefer-local all live in install --help; source_kind=embedded trips the reproducibility guard in consuming lockfiles). One re-mark sweep (spec/done -> impl/done) with the header fix, same F-018 shape."
+   "status": "resolved",
+   "wave": 1,
+   "note": "PROP-030 ships wholesale under a bare 'proposed (2026-07-13)' status line: the embedded registry is this machine's daily resolution mode (WAL constraints cite §5 CI-off gate split + §3.3 project-local as standing law; R-001 pins the sanctioned constructor site; --prefer-embedded/--no-prefer-embedded/--offline/--embedded-short-circuit/--prefer-local all live in install --help; source_kind=embedded trips the reproducibility guard in consuming lockfiles). One re-mark sweep (spec/done -> impl/done) with the header fix, same F-018 shape. || RESOLVED d1 2026-07-25: PROP-030 closed as one sweep, 63 rows."
   },
   {
    "id": "F-054",

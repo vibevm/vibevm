@@ -1,8 +1,8 @@
 # Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree {#root}
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A, B, and L closed (L relocated the legacy dirs to legacy-spec/ 2026-07-25); Phase C (verification) awaits the owner's opening call"/>
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A, B, L and C closed; Phase D (stitching) opened by the owner 2026-07-25, wave d1 landed"/>
 
-**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`; corpus + crates reference-free modulo this plan's own carve-out; `check --exhaustive` clean + floor green) · next: Phase C (verification) awaits the owner's opening call · vibevm-specific · first consumer of PROP-043 (Progress Control)**
+**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — wave d1 landed 2026-07-25 (212 of 311 drift rows closed; the tree measures 97.7 % confirmed) · next: wave d2 · vibevm-specific · first consumer of PROP-043 (Progress Control)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -1087,6 +1087,48 @@ read-only, no auth.
   Ledgered as **F-055** (Phase E: the e2e harness pins
   `VIBE_SETTINGS` to a tempdir — the never-touch-real-user-state law,
   applied inbound). Findings close the phase at **55**.
+
+- **2026-07-25 · PHASE D OPENED (owner call) · wave d1 — the
+  shipped-under-proposed families fall in one sweep.** The owner opened
+  stitching («Открываю Phase D»); the `phase` event `D` is in the journal
+  and the lane re-derives from it. Wave 1 took the two biggest families —
+  **F-053** (PROP-030, 63 rows) and **F-018** (the bridge four
+  PROP-020/021/022/023, 137 rows) — plus **F-043** (PROP-000, 12 rows):
+  **212 of 311 drift rows closed in one wave (68 %)**. Every row was a
+  `reality-mismatch`, so the whole wave ran through **sync-from-code**:
+  the diffs were drafted, surfaced to the owner, and applied only on his
+  approval («Правь и продолжай дальше»), which also settled the licence
+  question in the owner's own words — «Лицензия теперь UPL, на самом
+  деле». Mechanics: the 191 pure re-marks were **scripted off the C-phase
+  verdict map** (`@spec/done → @impl/done` on exactly the anchors judged
+  `drift`, dry-run first, `progress check` after) — no model touched them;
+  the 9 prose units (5 status lines, 4 document elements) and PROP-000's
+  13 facts were authored by hand. The five new status lines cite the
+  shipped surface rather than asserting it: `HooksDecl` + `hooks.rs`
+  runner + apply wiring; the `Materialization` enum with its doctests and
+  the destructive guard; `--recurse-submodules` + snapshot embedding +
+  `resolved_commit`; `[package].bridge` with its doctest and the three
+  composed mechanisms; the R-001 sanctioned constructor site with §4's
+  knobs in `install --help`. What did **not** move is the honest half:
+  in all five files the surviving `spec/done` rows are exactly
+  `related` / motivation / `REJ-*` / `OOS-*` / the `D1–D5` decision
+  records — facts that never become `impl`. PROP-000 took twelve authored
+  fixes (UPL-1.0 with an explicit repository scope; `vibe-package.toml`
+  retired; qualified identity and the fifth kind `mcp`; uniqueness by
+  `(group, name)`; the multi-homed PROP-016 posture replacing
+  "GitVerse = source of truth"; fqdn repo naming) **plus a verdict
+  correction** in the c4b→c4c pattern: `LICENSE-REVISIT` was swept up in
+  c3b's file-level confirm although its trigger had fired on 2026-07-12 —
+  re-issued per the decision-records flow with two fresh conditions. One
+  paired edit landed outside the corpus: `spec/WAL.md` regained the
+  outstanding-manual-runs line (MT-02, MT-03) that `MT-WAL-NAMES`
+  requires, which is what made that fact true again rather than merely
+  reworded. **Ledger: 4 353 confirmed / 99 drift / 3 unverifiable = the
+  tree measures 97.7 % true, up from 93.0 % at the Phase C gate.
+  Findings resolved: F-007, F-014, F-018, F-043, F-053 (6 of 55 closed;
+  49 open).** `progress check` 0 throughout. Next: wave d2 over the
+  mid-size families (F-052, F-046, F-050/F-031/F-030, F-039/F-033,
+  F-016, F-032/F-048).
 
 ## 10. Deferrals {#deferrals}
 
