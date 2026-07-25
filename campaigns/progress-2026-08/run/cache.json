@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T14:22:26Z",
+  "updated_at": "2026-07-25T14:28:15Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -15991,7 +15991,749 @@
       },
       "marker_count": 147,
       "unit_count": 24,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 120,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (26 cells); document <status> judged as _elements",
+        "fact_count": 146,
+        "marker_count": 147,
+        "processed_hash": "76c71fc0b7e17802600eb876ec42935f3a850518016ace9af15b7306f6787163",
+        "summary": {
+          "confirmed": 117,
+          "drift": 4,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "milestone-line": {
+            "v": "drift",
+            "ev": [
+              "F-029: 'design proposal ... Not implementation-locked' over M1.17 Phases 1-5 shipped 2026-05-21 (this file's own §8/§9) and the install piece shipped in M1.18"
+            ]
+          },
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-029 (ledgered in B): 'Workspace-aware vibe install is the remaining piece' aged — PROP-009 §2.7 subsumed it and M1.18 Phase 5 SHIPPED it (vibe-install/plan.rs:101 + apply.rs:114 call Workspace::discover; unified resolve live)"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "header: related/design-rationale links live (design doc verified c2; PROP-008/005/009 exist); owner sanction historical (VIBEVM-SPEC edits landed in M1.17/M1.18 phases)"
+            ]
+          },
+          "design-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "header: related/design-rationale links live (design doc verified c2; PROP-008/005/009 exist); owner sanction historical (VIBEVM-SPEC edits landed in M1.17/M1.18 phases)"
+            ]
+          },
+          "OWNER-SANCTION": {
+            "v": "confirmed",
+            "ev": [
+              "header: related/design-rationale links live (design doc verified c2; PROP-008/005/009 exist); owner sanction historical (VIBEVM-SPEC edits landed in M1.17/M1.18 phases)"
+            ]
+          },
+          "two-roles-lead": {
+            "v": "confirmed",
+            "ev": [
+              "motivation historical-accurate: the two-manifest era ended exactly as §2.2 decided (vibe-package.toml retired — M1.17 Phase 1 deleted the type; fixtures renamed); owner request and prior art dated records"
+            ]
+          },
+          "role-consumer": {
+            "v": "confirmed",
+            "ev": [
+              "motivation historical-accurate: the two-manifest era ended exactly as §2.2 decided (vibe-package.toml retired — M1.17 Phase 1 deleted the type; fixtures renamed); owner request and prior art dated records"
+            ]
+          },
+          "role-artifact": {
+            "v": "confirmed",
+            "ev": [
+              "motivation historical-accurate: the two-manifest era ended exactly as §2.2 decided (vibe-package.toml retired — M1.17 Phase 1 deleted the type; fixtures renamed); owner request and prior art dated records"
+            ]
+          },
+          "no-composition": {
+            "v": "confirmed",
+            "ev": [
+              "motivation historical-accurate: the two-manifest era ended exactly as §2.2 decided (vibe-package.toml retired — M1.17 Phase 1 deleted the type; fixtures renamed); owner request and prior art dated records"
+            ]
+          },
+          "OWNER-REQUEST": {
+            "v": "confirmed",
+            "ev": [
+              "motivation historical-accurate: the two-manifest era ended exactly as §2.2 decided (vibe-package.toml retired — M1.17 Phase 1 deleted the type; fixtures renamed); owner request and prior art dated records"
+            ]
+          },
+          "prior-art": {
+            "v": "confirmed",
+            "ev": [
+              "motivation historical-accurate: the two-manifest era ended exactly as §2.2 decided (vibe-package.toml retired — M1.17 Phase 1 deleted the type; fixtures renamed); owner request and prior art dated records"
+            ]
+          },
+          "workspace-axis": {
+            "v": "confirmed",
+            "ev": [
+              "motivation historical-accurate: the two-manifest era ended exactly as §2.2 decided (vibe-package.toml retired — M1.17 Phase 1 deleted the type; fixtures renamed); owner request and prior art dated records"
+            ]
+          },
+          "req-workspace-section": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "WORKSPACE-TABLE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "MEMBERS-PATHS": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "MEMBER-IS-NODE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "EXPLICIT-MEMBERSHIP": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "req-unified-manifest": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "ONE-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "section-roles-lead": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "ROW-SECTION-PACKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "ROW-SECTION-PROJECT": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "ROW-SECTION-WORKSPACE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "ROW-SECTION-CONSUMER": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "PACKAGE-XOR-PROJECT": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "WORKSPACE-COMPOSES": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "one-file-why": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "one-file-secondary": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "MIGRATION-CONSEQUENCE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "req-nesting": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "NESTED-WORKSPACES": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "nesting-principle-lead": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "NESTING-PRINCIPLE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "ROOT-DISCOVERY": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "STANDALONE-NODE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "EXPLICIT-NESTING": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "nesting-cost": {
+            "v": "confirmed",
+            "ev": [
+              "workspace model live: [workspace] members+glob parse (WorkspaceSection in document.rs), one-vibe.toml role-by-sections (Manifest::validate enforces [project]⊕[package]), nested workspaces with absolute-root law (Workspace::discover walks to topmost, NestingCycle guarded), explicit membership"
+            ]
+          },
+          "req-lockfile": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "ONE-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "UNIFIED-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "COMMAND-BUBBLING": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "req-path-source": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "PATH-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "DUAL-FORM": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "PATH-PRIORITY": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "PATH-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "PATH-OUTSIDE": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile + path-source live: one vibe.lock at the absolute root (this repo's own layout), command bubbling (plan.rs:101 discover), PathPackageDep + dual-form {path,version} (package.rs), priority override>path>git>registry (multi_registry_resolver dispatch verified c4b-era), SourceKind::Path with workspace-relative source_url (live lock carries path-source entries exactly so)"
+            ]
+          },
+          "req-versions": {
+            "v": "confirmed",
+            "ev": [
+              "version placeholders live: [workspace.versions] + version.var (VarRegistryDep in package.rs; bottom-up matryoshka resolution in vibe-workspace finalize pass); version={workspace=true} honestly spec/done (deferred — §6 q4/§9.3 record why: no source table specified)"
+            ]
+          },
+          "VERSION-PLACEHOLDERS": {
+            "v": "confirmed",
+            "ev": [
+              "version placeholders live: [workspace.versions] + version.var (VarRegistryDep in package.rs; bottom-up matryoshka resolution in vibe-workspace finalize pass); version={workspace=true} honestly spec/done (deferred — §6 q4/§9.3 record why: no source table specified)"
+            ]
+          },
+          "MATRYOSHKA-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "version placeholders live: [workspace.versions] + version.var (VarRegistryDep in package.rs; bottom-up matryoshka resolution in vibe-workspace finalize pass); version={workspace=true} honestly spec/done (deferred — §6 q4/§9.3 record why: no source table specified)"
+            ]
+          },
+          "VERSION-INHERITANCE": {
+            "v": "confirmed",
+            "ev": [
+              "version placeholders live: [workspace.versions] + version.var (VarRegistryDep in package.rs; bottom-up matryoshka resolution in vibe-workspace finalize pass); version={workspace=true} honestly spec/done (deferred — §6 q4/§9.3 record why: no source table specified)"
+            ]
+          },
+          "workspace-dependencies-noted": {
+            "v": "confirmed",
+            "ev": [
+              "version placeholders live: [workspace.versions] + version.var (VarRegistryDep in package.rs; bottom-up matryoshka resolution in vibe-workspace finalize pass); version={workspace=true} honestly spec/done (deferred — §6 q4/§9.3 record why: no source table specified)"
+            ]
+          },
+          "req-selective-publish": {
+            "v": "confirmed",
+            "ev": [
+              "selective publish live: PublishPosture on [package] (package.rs:103-104), topological member walk, non-atomic stop-on-first-failure (publish.rs); extremes both supported"
+            ]
+          },
+          "PUBLISH-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "selective publish live: PublishPosture on [package] (package.rs:103-104), topological member walk, non-atomic stop-on-first-failure (publish.rs); extremes both supported"
+            ]
+          },
+          "PUBLISH-TOPOLOGICAL": {
+            "v": "confirmed",
+            "ev": [
+              "selective publish live: PublishPosture on [package] (package.rs:103-104), topological member walk, non-atomic stop-on-first-failure (publish.rs); extremes both supported"
+            ]
+          },
+          "PUBLISH-NOT-ATOMIC": {
+            "v": "confirmed",
+            "ev": [
+              "selective publish live: PublishPosture on [package] (package.rs:103-104), topological member walk, non-atomic stop-on-first-failure (publish.rs); extremes both supported"
+            ]
+          },
+          "PUBLISH-EXTREMES": {
+            "v": "confirmed",
+            "ev": [
+              "selective publish live: PublishPosture on [package] (package.rs:103-104), topological member walk, non-atomic stop-on-first-failure (publish.rs); extremes both supported"
+            ]
+          },
+          "req-published-repos": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "ONE-SOURCE-TREE": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "COPY-NOT-MOVE": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "PUBLISHED-REPO-TERM": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "ORIGIN-MARKER": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "SIGNALLING-LAYERS": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "ROW-SIGNAL-README": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "ROW-SIGNAL-DESCRIPTION": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "ROW-SIGNAL-ISSUES": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "ROW-SIGNAL-PR-TEMPLATE": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "ROW-SIGNAL-ARCHIVE": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "PUBLISHED-REPOS-TOGGLE": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "FLAT-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "SUBTREE-EXCISION": {
+            "v": "confirmed",
+            "ev": [
+              "published-repo model live: one source tree + content-copy publish (vibe workspace publish staging; M1.17-workspace-publish-smoke.md exists), [origin] marker (OriginSection in document.rs with upstream/path/generated_by), README banner + PR-template STOP + description signalling (Phase 5 record); issues-disable + archive + published_repos toggle honestly spec/done (§9.3 deferred polish)"
+            ]
+          },
+          "req-root-package": {
+            "v": "confirmed",
+            "ev": [
+              "root-as-package: [workspace]+[package] composition allowed by Manifest::validate (cargo-style)"
+            ]
+          },
+          "ROOT-PUBLISHABLE": {
+            "v": "confirmed",
+            "ev": [
+              "root-as-package: [workspace]+[package] composition allowed by Manifest::validate (cargo-style)"
+            ]
+          },
+          "design-surface": {
+            "v": "confirmed",
+            "ev": [
+              "surface: workspace publish CLI live; -p member flag; vibe-workspace crate exists (the §3 either/or resolved to a new crate); LOCK-V4 historical (v4 was real; v5 superseded at M1.19 per PROP-008 — chain documented)"
+            ]
+          },
+          "SURF-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "surface: workspace publish CLI live; -p member flag; vibe-workspace crate exists (the §3 either/or resolved to a new crate); LOCK-V4 historical (v4 was real; v5 superseded at M1.19 per PROP-008 — chain documented)"
+            ]
+          },
+          "SURF-BUBBLE": {
+            "v": "confirmed",
+            "ev": [
+              "surface: workspace publish CLI live; -p member flag; vibe-workspace crate exists (the §3 either/or resolved to a new crate); LOCK-V4 historical (v4 was real; v5 superseded at M1.19 per PROP-008 — chain documented)"
+            ]
+          },
+          "SURF-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "surface: workspace publish CLI live; -p member flag; vibe-workspace crate exists (the §3 either/or resolved to a new crate); LOCK-V4 historical (v4 was real; v5 superseded at M1.19 per PROP-008 — chain documented)"
+            ]
+          },
+          "LOCK-V4": {
+            "v": "confirmed",
+            "ev": [
+              "surface: workspace publish CLI live; -p member flag; vibe-workspace crate exists (the §3 either/or resolved to a new crate); LOCK-V4 historical (v4 was real; v5 superseded at M1.19 per PROP-008 — chain documented)"
+            ]
+          },
+          "design-vs-subskills": {
+            "v": "confirmed",
+            "ev": [
+              "member-vs-subskill table accurate (both objects verified live: members this repo, subskills c4c)"
+            ]
+          },
+          "easy-to-confuse": {
+            "v": "confirmed",
+            "ev": [
+              "member-vs-subskill table accurate (both objects verified live: members this repo, subskills c4c)"
+            ]
+          },
+          "ROW-VS-WHAT": {
+            "v": "confirmed",
+            "ev": [
+              "member-vs-subskill table accurate (both objects verified live: members this repo, subskills c4c)"
+            ]
+          },
+          "ROW-VS-VERSIONING": {
+            "v": "confirmed",
+            "ev": [
+              "member-vs-subskill table accurate (both objects verified live: members this repo, subskills c4c)"
+            ]
+          },
+          "ROW-VS-PUBLICATION": {
+            "v": "confirmed",
+            "ev": [
+              "member-vs-subskill table accurate (both objects verified live: members this repo, subskills c4c)"
+            ]
+          },
+          "ROW-VS-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "member-vs-subskill table accurate (both objects verified live: members this repo, subskills c4c)"
+            ]
+          },
+          "MEMBER-VS-SUBSKILL": {
+            "v": "confirmed",
+            "ev": [
+              "member-vs-subskill table accurate (both objects verified live: members this repo, subskills c4c)"
+            ]
+          },
+          "REJ-PER-MEMBER-LOCKS": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no per-member locks (one root lock live), one file (two-file era deleted), flat layout recommended, non-atomic publish shipped as decided"
+            ]
+          },
+          "REJ-TWO-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no per-member locks (one root lock live), one file (two-file era deleted), flat layout recommended, non-atomic publish shipped as decided"
+            ]
+          },
+          "REJ-PHYSICAL-NESTING": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no per-member locks (one root lock live), one file (two-file era deleted), flat layout recommended, non-atomic publish shipped as decided"
+            ]
+          },
+          "REJ-ATOMIC-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no per-member locks (one root lock live), one file (two-file era deleted), flat layout recommended, non-atomic publish shipped as decided"
+            ]
+          },
+          "resolved-lead": {
+            "v": "confirmed",
+            "ev": [
+              "open questions: q1/q2 resolved-as-recorded (origin fields + path shape match shipped code); q3 carries its own '→ Resolved by PROP-009' note (accurate); q4/q5 genuinely open (no [workspace.package].version table, no [workspace.dependencies])"
+            ]
+          },
+          "RES-ORIGIN-FIELDS": {
+            "v": "confirmed",
+            "ev": [
+              "open questions: q1/q2 resolved-as-recorded (origin fields + path shape match shipped code); q3 carries its own '→ Resolved by PROP-009' note (accurate); q4/q5 genuinely open (no [workspace.package].version table, no [workspace.dependencies])"
+            ]
+          },
+          "RES-LOCK-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "open questions: q1/q2 resolved-as-recorded (origin fields + path shape match shipped code); q3 carries its own '→ Resolved by PROP-009' note (accurate); q4/q5 genuinely open (no [workspace.package].version table, no [workspace.dependencies])"
+            ]
+          },
+          "open-lead": {
+            "v": "confirmed",
+            "ev": [
+              "open questions: q1/q2 resolved-as-recorded (origin fields + path shape match shipped code); q3 carries its own '→ Resolved by PROP-009' note (accurate); q4/q5 genuinely open (no [workspace.package].version table, no [workspace.dependencies])"
+            ]
+          },
+          "OPEN-WORKSPACE-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "open questions: q1/q2 resolved-as-recorded (origin fields + path shape match shipped code); q3 carries its own '→ Resolved by PROP-009' note (accurate); q4/q5 genuinely open (no [workspace.package].version table, no [workspace.dependencies])"
+            ]
+          },
+          "OPEN-VERSION-INHERITANCE": {
+            "v": "confirmed",
+            "ev": [
+              "open questions: q1/q2 resolved-as-recorded (origin fields + path shape match shipped code); q3 carries its own '→ Resolved by PROP-009' note (accurate); q4/q5 genuinely open (no [workspace.package].version table, no [workspace.dependencies])"
+            ]
+          },
+          "OPEN-WORKSPACE-DEPS": {
+            "v": "confirmed",
+            "ev": [
+              "open questions: q1/q2 resolved-as-recorded (origin fields + path shape match shipped code); q3 carries its own '→ Resolved by PROP-009' note (accurate); q4/q5 genuinely open (no [workspace.package].version table, no [workspace.dependencies])"
+            ]
+          },
+          "phase-plan": {
+            "v": "confirmed",
+            "ev": [
+              "phase plan + history: dated records accurate (PROP-007 first, then PROP-005/PROP-008 — the shipped order; M1.17 phases 1-5 record matches git history)"
+            ]
+          },
+          "spec-edits-note": {
+            "v": "confirmed",
+            "ev": [
+              "phase plan + history: dated records accurate (PROP-007 first, then PROP-005/PROP-008 — the shipped order; M1.17 phases 1-5 record matches git history)"
+            ]
+          },
+          "HISTORY-DRAFT-1": {
+            "v": "confirmed",
+            "ev": [
+              "phase plan + history: dated records accurate (PROP-007 first, then PROP-005/PROP-008 — the shipped order; M1.17 phases 1-5 record matches git history)"
+            ]
+          },
+          "HISTORY-PHASES-1-5": {
+            "v": "confirmed",
+            "ev": [
+              "phase plan + history: dated records accurate (PROP-007 first, then PROP-005/PROP-008 — the shipped order; M1.17 phases 1-5 record matches git history)"
+            ]
+          },
+          "impl-record-intro": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-PHASE-1": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-PHASE-2": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-PHASE-3": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-PHASE-4": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-PHASE-5": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-PHASE-6": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-HARD-BREAK": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-Q2-RESOLVED": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-Q1-RESOLVED": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-VAR-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "DEF-WORKSPACE-INSTALL": {
+            "v": "drift",
+            "ev": [
+              "F-029: §9.3 still says 'what is unwired is vibe install discovering the workspace' — it is wired (Workspace::discover in the install plan and apply paths since M1.18); the deferral record aged behind its own resolution"
+            ]
+          },
+          "DEF-VERSION-INHERITANCE": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "DEF-SIGNALLING-POLISH": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "MAP-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "MAP-WORKSPACE": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "MAP-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "MAP-CLI": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "MAP-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "IMPL-GATES": {
+            "v": "confirmed",
+            "ev": [
+              "implementation record §9: non-normative record verified against the tree — Manifest type (document.rs), vibe-workspace crate (discover/load/NestingCycle/rel_path), PathPackageDep + lockfile v4-era (superseded by v5 at M1.19; the 'rejects other than 4' sentence is the v4-era record), [workspace.versions] finalize + parent link, staged publish, docs phase; hard-break decision historical; UAC os-740 quirk matches the boot-resident machine fact; DEF rows: install row is the F-029 drift above, version-inheritance + signalling-polish genuinely deferred"
+            ]
+          },
+          "_elements": {
+            "v": "drift",
+            "ev": [
+              "F-029: the marker comment repeats the aged claim — 'workspace-aware install is the remaining piece (S6, S8)' — while M1.18 shipped it; impl/work is stale for a PROP whose every phase (1-5 + the install piece via PROP-009) landed"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:28:14Z",
+        "verify_batch": "c4d1-workspace-big3"
+      }
     },
     "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
       "content_hash": "06b5556e9223b24992a54891cda76a4eeace0780ce1edacb2beb3acb178c5e14",
@@ -16014,7 +16756,647 @@
       },
       "marker_count": 104,
       "unit_count": 20,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 103,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 103,
+        "marker_count": 104,
+        "processed_hash": "06b5556e9223b24992a54891cda76a4eeace0780ce1edacb2beb3acb178c5e14",
+        "summary": {
+          "confirmed": 101,
+          "drift": 3,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "milestone-line": {
+            "v": "drift",
+            "ev": [
+              "F-026 (ledgered in B): 'design proposal ... Not implementation-locked' while §7 records Phases 1-7 shipped 2026-05-22"
+            ]
+          },
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-026: opens DRAFT while the same line records phases 1-7 shipped — the internal contradiction the B-phase ledgered; live proof surrounds this session (STATIC.md/INDEX.md booted it)"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "header: related links live; design rationale = loading-and-boot-model.md (c2-verified, F-039 there); owner sanction §5.8 recorded resolved"
+            ]
+          },
+          "design-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "header: related links live; design rationale = loading-and-boot-model.md (c2-verified, F-039 there); owner sanction §5.8 recorded resolved"
+            ]
+          },
+          "OWNER-SANCTION": {
+            "v": "confirmed",
+            "ev": [
+              "header: related links live; design rationale = loading-and-boot-model.md (c2-verified, F-039 there); owner sanction §5.8 recorded resolved"
+            ]
+          },
+          "open-question-origin": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the PROP-007 q3 origin story accurate; INCLUDE-RULE is the shipped law (vibe install writes only vibedeps/ + generated artifacts — never authored spec/)"
+            ]
+          },
+          "not-a-directory-choice": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the PROP-007 q3 origin story accurate; INCLUDE-RULE is the shipped law (vibe install writes only vibedeps/ + generated artifacts — never authored spec/)"
+            ]
+          },
+          "workspace-shape": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the PROP-007 q3 origin story accurate; INCLUDE-RULE is the shipped law (vibe install writes only vibedeps/ + generated artifacts — never authored spec/)"
+            ]
+          },
+          "MODEL-REPLACED": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the PROP-007 q3 origin story accurate; INCLUDE-RULE is the shipped law (vibe install writes only vibedeps/ + generated artifacts — never authored spec/)"
+            ]
+          },
+          "INCLUDE-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the PROP-007 q3 origin story accurate; INCLUDE-RULE is the shipped law (vibe install writes only vibedeps/ + generated artifacts — never authored spec/)"
+            ]
+          },
+          "linker-frame": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the PROP-007 q3 origin story accurate; INCLUDE-RULE is the shipped law (vibe install writes only vibedeps/ + generated artifacts — never authored spec/)"
+            ]
+          },
+          "TWO-TREES": {
+            "v": "confirmed",
+            "ev": [
+              "two trees LIVE in this very repo: authored spec/ + committed vibedeps/ (this session booted from vibedeps/flow-*/ paths); slot layout <kind>-<name>/<version>/ verified on disk; mirror layout retired ([writes] absent from every manifest in tree)"
+            ]
+          },
+          "TREE-AUTHORED": {
+            "v": "confirmed",
+            "ev": [
+              "two trees LIVE in this very repo: authored spec/ + committed vibedeps/ (this session booted from vibedeps/flow-*/ paths); slot layout <kind>-<name>/<version>/ verified on disk; mirror layout retired ([writes] absent from every manifest in tree)"
+            ]
+          },
+          "TREE-VIBEDEPS": {
+            "v": "confirmed",
+            "ev": [
+              "two trees LIVE in this very repo: authored spec/ + committed vibedeps/ (this session booted from vibedeps/flow-*/ paths); slot layout <kind>-<name>/<version>/ verified on disk; mirror layout retired ([writes] absent from every manifest in tree)"
+            ]
+          },
+          "VIBEDEPS-COMMITTED": {
+            "v": "confirmed",
+            "ev": [
+              "two trees LIVE in this very repo: authored spec/ + committed vibedeps/ (this session booted from vibedeps/flow-*/ paths); slot layout <kind>-<name>/<version>/ verified on disk; mirror layout retired ([writes] absent from every manifest in tree)"
+            ]
+          },
+          "MIRROR-RETIRED": {
+            "v": "confirmed",
+            "ev": [
+              "two trees LIVE in this very repo: authored spec/ + committed vibedeps/ (this session booted from vibedeps/flow-*/ paths); slot layout <kind>-<name>/<version>/ verified on disk; mirror layout retired ([writes] absent from every manifest in tree)"
+            ]
+          },
+          "WRITES-RETIRED-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "two trees LIVE in this very repo: authored spec/ + committed vibedeps/ (this session booted from vibedeps/flow-*/ paths); slot layout <kind>-<name>/<version>/ verified on disk; mirror layout retired ([writes] absent from every manifest in tree)"
+            ]
+          },
+          "EFFECTIVE-BOOT": {
+            "v": "confirmed",
+            "ev": [
+              "effective boot computed per node: foundation→own→deps→user-override composition live (the INDEX.md this session read lists 00-core then vibedeps flows then 90-user — exactly the computed order)"
+            ]
+          },
+          "FOUNDATION-DOWN": {
+            "v": "confirmed",
+            "ev": [
+              "effective boot computed per node: foundation→own→deps→user-override composition live (the INDEX.md this session read lists 00-core then vibedeps flows then 90-user — exactly the computed order)"
+            ]
+          },
+          "DEPS-UP": {
+            "v": "confirmed",
+            "ev": [
+              "effective boot computed per node: foundation→own→deps→user-override composition live (the INDEX.md this session read lists 00-core then vibedeps flows then 90-user — exactly the computed order)"
+            ]
+          },
+          "MATRYOSHKA-SCOPES": {
+            "v": "confirmed",
+            "ev": [
+              "effective boot computed per node: foundation→own→deps→user-override composition live (the INDEX.md this session read lists 00-core then vibedeps flows then 90-user — exactly the computed order)"
+            ]
+          },
+          "COMPUTED-NOT-COPIED": {
+            "v": "confirmed",
+            "ev": [
+              "effective boot computed per node: foundation→own→deps→user-override composition live (the INDEX.md this session read lists 00-core then vibedeps flows then 90-user — exactly the computed order)"
+            ]
+          },
+          "ARTIFACTS-PAIR": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "ARTIFACT-STATIC-MD": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "ARTIFACT-INDEX-MD": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "ARTIFACTS-GENERATED": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "AUTHORED-ALONGSIDE": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "SESSION-START-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "PURE-FILE-READING": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "REDIRECT-MANAGED-BLOCK": {
+            "v": "confirmed",
+            "ev": [
+              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+            ]
+          },
+          "INCLUSION-TYPES": {
+            "v": "confirmed",
+            "ev": [
+              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+            ]
+          },
+          "LINK-DYNAMIC": {
+            "v": "confirmed",
+            "ev": [
+              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+            ]
+          },
+          "LINK-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+            ]
+          },
+          "LINKING-SPECTRUM": {
+            "v": "confirmed",
+            "ev": [
+              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+            ]
+          },
+          "SUGGESTED-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+            ]
+          },
+          "WHEN-FORCES-DYNAMIC": {
+            "v": "confirmed",
+            "ev": [
+              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+            ]
+          },
+          "NN-RETIRED": {
+            "v": "confirmed",
+            "ev": [
+              "ordering live: NN- prefix retired (generated INDEX carries vibedeps paths with package-internal names; BootCategory foundation/flow/stack/user-override in package.rs:397-404); BootSnippetConflict/NumericConflict GONE (grep = 0); reserved names honoured (00-core/90-user at the ends of the live INDEX)"
+            ]
+          },
+          "CATEGORY-NOT-NUMBER": {
+            "v": "confirmed",
+            "ev": [
+              "ordering live: NN- prefix retired (generated INDEX carries vibedeps paths with package-internal names; BootCategory foundation/flow/stack/user-override in package.rs:397-404); BootSnippetConflict/NumericConflict GONE (grep = 0); reserved names honoured (00-core/90-user at the ends of the live INDEX)"
+            ]
+          },
+          "CATEGORY-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "ordering live: NN- prefix retired (generated INDEX carries vibedeps paths with package-internal names; BootCategory foundation/flow/stack/user-override in package.rs:397-404); BootSnippetConflict/NumericConflict GONE (grep = 0); reserved names honoured (00-core/90-user at the ends of the live INDEX)"
+            ]
+          },
+          "NO-PREFIX-COLLISIONS": {
+            "v": "confirmed",
+            "ev": [
+              "ordering live: NN- prefix retired (generated INDEX carries vibedeps paths with package-internal names; BootCategory foundation/flow/stack/user-override in package.rs:397-404); BootSnippetConflict/NumericConflict GONE (grep = 0); reserved names honoured (00-core/90-user at the ends of the live INDEX)"
+            ]
+          },
+          "RESERVED-NAMES": {
+            "v": "confirmed",
+            "ev": [
+              "ordering live: NN- prefix retired (generated INDEX carries vibedeps paths with package-internal names; BootCategory foundation/flow/stack/user-override in package.rs:397-404); BootSnippetConflict/NumericConflict GONE (grep = 0); reserved names honoured (00-core/90-user at the ends of the live INDEX)"
+            ]
+          },
+          "schema-decision-lead": {
+            "v": "confirmed",
+            "ev": [
+              "schema shipped: link field on requires entries, [boot_snippet] category+source+when (package.rs tests exercise category='user-override'), [writes] removed (0 manifests carry it), [boot] table minimal, lock bump assessed (v4 era)"
+            ]
+          },
+          "SCHEMA-LINK-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "schema shipped: link field on requires entries, [boot_snippet] category+source+when (package.rs tests exercise category='user-override'), [writes] removed (0 manifests carry it), [boot] table minimal, lock bump assessed (v4 era)"
+            ]
+          },
+          "SCHEMA-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "schema shipped: link field on requires entries, [boot_snippet] category+source+when (package.rs tests exercise category='user-override'), [writes] removed (0 manifests carry it), [boot] table minimal, lock bump assessed (v4 era)"
+            ]
+          },
+          "SCHEMA-WRITES-REMOVED": {
+            "v": "confirmed",
+            "ev": [
+              "schema shipped: link field on requires entries, [boot_snippet] category+source+when (package.rs tests exercise category='user-override'), [writes] removed (0 manifests carry it), [boot] table minimal, lock bump assessed (v4 era)"
+            ]
+          },
+          "SCHEMA-BOOT-TABLE": {
+            "v": "confirmed",
+            "ev": [
+              "schema shipped: link field on requires entries, [boot_snippet] category+source+when (package.rs tests exercise category='user-override'), [writes] removed (0 manifests carry it), [boot] table minimal, lock bump assessed (v4 era)"
+            ]
+          },
+          "SCHEMA-LOCK-BUMP": {
+            "v": "confirmed",
+            "ev": [
+              "schema shipped: link field on requires entries, [boot_snippet] category+source+when (package.rs tests exercise category='user-override'), [writes] removed (0 manifests carry it), [boot] table minimal, lock bump assessed (v4 era)"
+            ]
+          },
+          "WORKSPACE-AWARE": {
+            "v": "confirmed",
+            "ev": [
+              "workspace-aware install LIVE: plan.rs:101 Workspace::discover + unified resolve over every member's [requires]; apply.rs:112-114 re-discover for boot regen; -p scoping; degenerate single-package path (this repo IS one and installs fine)"
+            ]
+          },
+          "INSTALL-UNIFIED": {
+            "v": "confirmed",
+            "ev": [
+              "workspace-aware install LIVE: plan.rs:101 Workspace::discover + unified resolve over every member's [requires]; apply.rs:112-114 re-discover for boot regen; -p scoping; degenerate single-package path (this repo IS one and installs fine)"
+            ]
+          },
+          "PLAN-UNIT": {
+            "v": "confirmed",
+            "ev": [
+              "workspace-aware install LIVE: plan.rs:101 Workspace::discover + unified resolve over every member's [requires]; apply.rs:112-114 re-discover for boot regen; -p scoping; degenerate single-package path (this repo IS one and installs fine)"
+            ]
+          },
+          "SCOPE-FLAG": {
+            "v": "confirmed",
+            "ev": [
+              "workspace-aware install LIVE: plan.rs:101 Workspace::discover + unified resolve over every member's [requires]; apply.rs:112-114 re-discover for boot regen; -p scoping; degenerate single-package path (this repo IS one and installs fine)"
+            ]
+          },
+          "DEGENERATE-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "workspace-aware install LIVE: plan.rs:101 Workspace::discover + unified resolve over every member's [requires]; apply.rs:112-114 re-discover for boot regen; -p scoping; degenerate single-package path (this repo IS one and installs fine)"
+            ]
+          },
+          "ENGINE-TWO-PROJECTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "computed-view engine: boot view live (boot_artifacts.rs + normal.rs); effective-spec ENGINE projection honestly v1.5 (VIEW-EFFECTIVE-SPEC spec/done — the simple show effective exists, see the SURF row drift; the engine-backed shape pending)"
+            ]
+          },
+          "VIEW-BOOT": {
+            "v": "confirmed",
+            "ev": [
+              "computed-view engine: boot view live (boot_artifacts.rs + normal.rs); effective-spec ENGINE projection honestly v1.5 (VIEW-EFFECTIVE-SPEC spec/done — the simple show effective exists, see the SURF row drift; the engine-backed shape pending)"
+            ]
+          },
+          "VIEW-EFFECTIVE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "computed-view engine: boot view live (boot_artifacts.rs + normal.rs); effective-spec ENGINE projection honestly v1.5 (VIEW-EFFECTIVE-SPEC spec/done — the simple show effective exists, see the SURF row drift; the engine-backed shape pending)"
+            ]
+          },
+          "BOTH-DETERMINISTIC": {
+            "v": "confirmed",
+            "ev": [
+              "computed-view engine: boot view live (boot_artifacts.rs + normal.rs); effective-spec ENGINE projection honestly v1.5 (VIEW-EFFECTIVE-SPEC spec/done — the simple show effective exists, see the SURF row drift; the engine-backed shape pending)"
+            ]
+          },
+          "V15-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "computed-view engine: boot view live (boot_artifacts.rs + normal.rs); effective-spec ENGINE projection honestly v1.5 (VIEW-EFFECTIVE-SPEC spec/done — the simple show effective exists, see the SURF row drift; the engine-backed shape pending)"
+            ]
+          },
+          "UNIFORM-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "uniform model: every project a degenerate workspace (discover's universal entry — PROP-007 Phase 2 record); self-migration executed (this repo runs the model)"
+            ]
+          },
+          "ONE-CODE-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "uniform model: every project a degenerate workspace (discover's universal entry — PROP-007 Phase 2 record); self-migration executed (this repo runs the model)"
+            ]
+          },
+          "EVERYONE-MIGRATES": {
+            "v": "confirmed",
+            "ev": [
+              "uniform model: every project a degenerate workspace (discover's universal entry — PROP-007 Phase 2 record); self-migration executed (this repo runs the model)"
+            ]
+          },
+          "SELF-MIGRATION": {
+            "v": "confirmed",
+            "ev": [
+              "uniform model: every project a degenerate workspace (discover's universal entry — PROP-007 Phase 2 record); self-migration executed (this repo runs the model)"
+            ]
+          },
+          "REINSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "reinstall live: CLI help cites 'PROP-009 §2.10' verbatim; ancestors regen + --force refetch semantics in help; published-copy regeneration in workspace publish (Phase 6)"
+            ]
+          },
+          "REINSTALL-ANCESTORS": {
+            "v": "confirmed",
+            "ev": [
+              "reinstall live: CLI help cites 'PROP-009 §2.10' verbatim; ancestors regen + --force refetch semantics in help; published-copy regeneration in workspace publish (Phase 6)"
+            ]
+          },
+          "REINSTALL-NO-FORCE": {
+            "v": "confirmed",
+            "ev": [
+              "reinstall live: CLI help cites 'PROP-009 §2.10' verbatim; ancestors regen + --force refetch semantics in help; published-copy regeneration in workspace publish (Phase 6)"
+            ]
+          },
+          "REINSTALL-FORCE": {
+            "v": "confirmed",
+            "ev": [
+              "reinstall live: CLI help cites 'PROP-009 §2.10' verbatim; ancestors regen + --force refetch semantics in help; published-copy regeneration in workspace publish (Phase 6)"
+            ]
+          },
+          "reinstall-purpose": {
+            "v": "confirmed",
+            "ev": [
+              "reinstall live: CLI help cites 'PROP-009 §2.10' verbatim; ancestors regen + --force refetch semantics in help; published-copy regeneration in workspace publish (Phase 6)"
+            ]
+          },
+          "PUBLISH-REGEN": {
+            "v": "confirmed",
+            "ev": [
+              "reinstall live: CLI help cites 'PROP-009 §2.10' verbatim; ancestors regen + --force refetch semantics in help; published-copy regeneration in workspace publish (Phase 6)"
+            ]
+          },
+          "publish-dangling-why": {
+            "v": "confirmed",
+            "ev": [
+              "reinstall live: CLI help cites 'PROP-009 §2.10' verbatim; ancestors regen + --force refetch semantics in help; published-copy regeneration in workspace publish (Phase 6)"
+            ]
+          },
+          "SURF-INSTALL-BUILD": {
+            "v": "confirmed",
+            "ev": [
+              "surface: install/build/reinstall/workspace-publish all live; engine landed inside vibe-workspace (boot_artifacts) — the either/or resolved"
+            ]
+          },
+          "SURF-REINSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "surface: install/build/reinstall/workspace-publish all live; engine landed inside vibe-workspace (boot_artifacts) — the either/or resolved"
+            ]
+          },
+          "SURF-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "surface: install/build/reinstall/workspace-publish all live; engine landed inside vibe-workspace (boot_artifacts) — the either/or resolved"
+            ]
+          },
+          "SURF-SHOW-EFFECTIVE": {
+            "v": "drift",
+            "ev": [
+              "shipped-but-spec/done: `vibe show effective` EXISTS (show --help: 'Print the effective spec — every spec/boot file plus every installed package's files_written, concatenated with spec:// provenance headers') — the simple concatenation form; the §2.8 engine-backed projection stays v1.5, but the command itself is live; same refresh sweep as F-026"
+            ]
+          },
+          "SURF-ENGINE-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "surface: install/build/reinstall/workspace-publish all live; engine landed inside vibe-workspace (boot_artifacts) — the either/or resolved"
+            ]
+          },
+          "MIGRATION-ONCE": {
+            "v": "confirmed",
+            "ev": [
+              "migration executed: this repository migrated (M1.18); no shim (hard break per M1.17 precedent)"
+            ]
+          },
+          "NO-SHIM": {
+            "v": "confirmed",
+            "ev": [
+              "migration executed: this repository migrated (M1.18); no shim (hard break per M1.17 precedent)"
+            ]
+          },
+          "vibevm-migrated": {
+            "v": "confirmed",
+            "ev": [
+              "migration executed: this repository migrated (M1.18); no shim (hard break per M1.17 precedent)"
+            ]
+          },
+          "resolved-lead": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-VIBEDEPS": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-REINSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-INDEX-TOML": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-WRITES-RETIRED": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-ACTIVATION-VOCAB": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-BOOT-TABLE": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-V15-VIEW": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "deferred-lead": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "RES-SPEC-SANCTION": {
+            "v": "confirmed",
+            "ev": [
+              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+            ]
+          },
+          "REJ-BUBBLE-UP": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no bubbling into root boot, no run-vibe boot (pure file-reading law kept), no physical copying (computed), vibedeps committed not gitignored"
+            ]
+          },
+          "REJ-RUN-VIBE": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no bubbling into root boot, no run-vibe boot (pure file-reading law kept), no physical copying (computed), vibedeps committed not gitignored"
+            ]
+          },
+          "REJ-PHYSICAL-COPY": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no bubbling into root boot, no run-vibe boot (pure file-reading law kept), no physical copying (computed), vibedeps committed not gitignored"
+            ]
+          },
+          "REJ-GITIGNORED-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives hold: no bubbling into root boot, no run-vibe boot (pure file-reading law kept), no physical copying (computed), vibedeps committed not gitignored"
+            ]
+          },
+          "phases-lead": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-1-SCHEMA": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-2-MATERIALISATION": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-3-ENGINE": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-4-ARTIFACTS": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-5-WORKSPACE-AWARE": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-6-REINSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-7-MIGRATION": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "PHASE-8-EFFECTIVE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "phases 1-7 shipped as recorded (this batch verified schema/materialisation/engine/artifacts/workspace-aware/reinstall/migration in code); phase 8 honestly impl/plan"
+            ]
+          },
+          "HISTORY-DRAFT-1": {
+            "v": "confirmed",
+            "ev": [
+              "history: dated records accurate; the when-site entry matches shipped [boot_snippet].when + if_os reservation (activation.rs deviates recorded — B2)"
+            ]
+          },
+          "HISTORY-DRAFT-2": {
+            "v": "confirmed",
+            "ev": [
+              "history: dated records accurate; the when-site entry matches shipped [boot_snippet].when + if_os reservation (activation.rs deviates recorded — B2)"
+            ]
+          },
+          "HISTORY-PHASE-7": {
+            "v": "confirmed",
+            "ev": [
+              "history: dated records accurate; the when-site entry matches shipped [boot_snippet].when + if_os reservation (activation.rs deviates recorded — B2)"
+            ]
+          },
+          "HISTORY-WHEN-SITE": {
+            "v": "confirmed",
+            "ev": [
+              "history: dated records accurate; the when-site entry matches shipped [boot_snippet].when + if_os reservation (activation.rs deviates recorded — B2)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: the comment NAMES the gap ('status line says DRAFT; M1.18 phases 1-7 shipped; phase 8 v1.5 scope') — impl/work defensible while phase 8 stays open"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:28:14Z",
+        "verify_batch": "c4d1-workspace-big3"
+      }
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
       "content_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
@@ -16175,7 +17557,833 @@
       },
       "marker_count": 135,
       "unit_count": 22,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 134,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 134,
+        "marker_count": 135,
+        "processed_hash": "0ee4da4274c7a8bfa58b58d35d7a3c5c92fbb3c9c726359b240e5b6bb38d275f",
+        "summary": {
+          "confirmed": 133,
+          "drift": 2,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-028 (ledgered in B): 'DESIGN — provisional ... not implementation-locked' while §17 records §5-§13 SHIPPED as vibe-spec (2026-07-15), the link-type rename (07-16), and normal+static compiled end-to-end (07-20)"
+            ]
+          },
+          "frame-established": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "predecessors-limits": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "gaps-lead": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "GAP-PREPROCESSOR": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "GAP-RESOLVER": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "GAP-SECTION-GRAIN": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "context-budget-stake": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "TWO-MODE-COMPILER": {
+            "v": "confirmed",
+            "ev": [
+              "motivation: the three gaps were real and §5-§13 closed them (vibe-spec shipped 2026-07-15 per §17; directives/router/section-grain all live below); context-budget stake is design prose"
+            ]
+          },
+          "ONE-SEMANTICS-TWO-EXECUTORS": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "MODE-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "MODE-STRUCTURAL": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "EQUIVALENCE-INVARIANT": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "DIFF-TEST-DEFERRED": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "contract-lead": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "EXEC-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "EXEC-STRUCTURAL": {
+            "v": "confirmed",
+            "ev": [
+              "two modes: static executor SHIPPED and authoritative (compile_static in vibe-spec/lib.rs; render_static in bootgen); structural loader honestly spec/done pending (HISTORY-NORMAL-STATIC: 'normal + dynamic still pending; only the static (AOT) executor honours the format so far'); equivalence invariant recorded, diff-testing deferred §16"
+            ]
+          },
+          "FORMAT-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "formats live: PackageFormat in package.rs:155 (default simple — the 2026-07-15 owner flip recorded in §17); normal opt-in tree-shaking (compile_normal_entry seeds at the contract address)"
+            ]
+          },
+          "FORMAT-SIMPLE": {
+            "v": "confirmed",
+            "ev": [
+              "formats live: PackageFormat in package.rs:155 (default simple — the 2026-07-15 owner flip recorded in §17); normal opt-in tree-shaking (compile_normal_entry seeds at the contract address)"
+            ]
+          },
+          "FORMAT-NORMAL": {
+            "v": "confirmed",
+            "ev": [
+              "formats live: PackageFormat in package.rs:155 (default simple — the 2026-07-15 owner flip recorded in §17); normal opt-in tree-shaking (compile_normal_entry seeds at the contract address)"
+            ]
+          },
+          "SIMPLE-DEFAULT-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "formats live: PackageFormat in package.rs:155 (default simple — the 2026-07-15 owner flip recorded in §17); normal opt-in tree-shaking (compile_normal_entry seeds at the contract address)"
+            ]
+          },
+          "fail-safe-argument": {
+            "v": "confirmed",
+            "ev": [
+              "formats live: PackageFormat in package.rs:155 (default simple — the 2026-07-15 owner flip recorded in §17); normal opt-in tree-shaking (compile_normal_entry seeds at the contract address)"
+            ]
+          },
+          "migration-non-event": {
+            "v": "confirmed",
+            "ev": [
+              "formats live: PackageFormat in package.rs:155 (default simple — the 2026-07-15 owner flip recorded in §17); normal opt-in tree-shaking (compile_normal_entry seeds at the contract address)"
+            ]
+          },
+          "hpp-cpp-inspiration": {
+            "v": "confirmed",
+            "ev": [
+              "contract/source split: the shipped merge machinery (vibe-spec/merge.rs) implements exactly this; #source hand-drawn edges; link-tables give-back honestly spec/work (§10 provisional)"
+            ]
+          },
+          "DIR-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "contract/source split: the shipped merge machinery (vibe-spec/merge.rs) implements exactly this; #source hand-drawn edges; link-tables give-back honestly spec/work (§10 provisional)"
+            ]
+          },
+          "DIR-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "contract/source split: the shipped merge machinery (vibe-spec/merge.rs) implements exactly this; #source hand-drawn edges; link-tables give-back honestly spec/work (§10 provisional)"
+            ]
+          },
+          "SOURCE-HACK": {
+            "v": "confirmed",
+            "ev": [
+              "contract/source split: the shipped merge machinery (vibe-spec/merge.rs) implements exactly this; #source hand-drawn edges; link-tables give-back honestly spec/work (§10 provisional)"
+            ]
+          },
+          "link-tables-give-back": {
+            "v": "confirmed",
+            "ev": [
+              "contract/source split: the shipped merge machinery (vibe-spec/merge.rs) implements exactly this; #source hand-drawn edges; link-tables give-back honestly spec/work (§10 provisional)"
+            ]
+          },
+          "CONTRACT-IS-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "contract/source split: the shipped merge machinery (vibe-spec/merge.rs) implements exactly this; #source hand-drawn edges; link-tables give-back honestly spec/work (§10 provisional)"
+            ]
+          },
+          "DOCUMENT-IR": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "IR-NODE": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "IR-MD-FRONTEND": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "IR-FACT-LEAVES": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "IR-XML-FUTURE": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "IR-ADDRESS-DEPTH": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "granularity-rules-lead": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "USE-ANCESTOR-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "EMBED-EXACT-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "ANCESTOR-PARAMETER": {
+            "v": "confirmed",
+            "ev": [
+              "document IR live: doctree.rs (headings by level, {#anchor} ids, body-span law); NodeKind::Fact leaves (DRIFT-005 — gate.rs merged-view uniqueness); dotted tree-path addressing; XML frontend honestly future; #use ancestor rule + #embed exact rule in the shipped resolver"
+            ]
+          },
+          "FORMAT-CHOICE": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "UNIFIED-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "URI-JOINER": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "URI-VERSION-OPTIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "URI-TREE-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "URI-REVISION-PIN": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "THE-ROUTER": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "ROUTER-DOC-ID": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "ROUTER-VIBEDEPS": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "ROUTER-VERSION": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "ROUTER-DETERMINISM": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "ROUTER-EXTENDS-SPECMAP": {
+            "v": "confirmed",
+            "ev": [
+              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+            ]
+          },
+          "DIRECTIVE-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "DIRECTIVE-MANIFEST-AGREE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "DIRECTIVES-FIRST-LOADED": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "EMBED-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "EMBED-FIRES": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "EMBED-MODE-INDEPENDENT": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "EMBED-CONTRACT-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "EMBED-UNRESTRICTED": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "EMBED-PURPOSE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "USE-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "use-problem": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "USE-TREE-SHAKING": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "USE-STRUCTURAL": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "USE-INLINE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "USE-GRANULARITY": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "USE-CONTRACT-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "SOURCE-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "merge-algorithm-lead": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "MERGE-CONTRACT-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "MERGE-SOURCE-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "MERGE-BOTH": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "MERGE-REPLACE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "MERGE-ADD": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "MERGE-DEFAULT-ADD": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "fact-inheritance-lead": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "FACT-SECTION-FATE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "FACT-OVERRIDE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "FACT-MERGED-UNIQUENESS": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "in-place-lead": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "AT-SPEC-MANDATORY": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "BARE-SPEC-DISCRETIONARY": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "READ-ONCE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "IN-PLACE-RESOLUTION-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "READ-SET": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "read-set-boot-instruction": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "read-set-records-existence": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "READ-SET-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "read-set-floor": {
+            "v": "confirmed",
+            "ev": [
+              "directives live: #embed fires at materialization + must fully expand in STATIC (expand_embeds guarded — §17 'render_inline runs expand_embeds, guarded'); #use tree-shaking (normal packages enter only when used — compile_normal_entry); #source merge :replace/:add default-add (merge.rs:11-32 literal); fact inheritance three clauses (merge.rs doc: per-fact override within :add, :replace supersedes, DuplicateId gate with the heading-repeat precision from the DRIFT-005 review); @spec sigil + read-set honestly spec/done (structural-mode floor, pending loader)"
+            ]
+          },
+          "pipeline-lead": {
+            "v": "confirmed",
+            "ev": [
+              "pipeline: parse→use-graph→source-merge→embed-expand→emit with topological order + stable tie-break (PROP-034 §2.3 emission reused); shipped in vibe-spec/bootgen"
+            ]
+          },
+          "PIPE-PARSE": {
+            "v": "confirmed",
+            "ev": [
+              "pipeline: parse→use-graph→source-merge→embed-expand→emit with topological order + stable tie-break (PROP-034 §2.3 emission reused); shipped in vibe-spec/bootgen"
+            ]
+          },
+          "PIPE-USE-GRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "pipeline: parse→use-graph→source-merge→embed-expand→emit with topological order + stable tie-break (PROP-034 §2.3 emission reused); shipped in vibe-spec/bootgen"
+            ]
+          },
+          "PIPE-SOURCE-MERGE": {
+            "v": "confirmed",
+            "ev": [
+              "pipeline: parse→use-graph→source-merge→embed-expand→emit with topological order + stable tie-break (PROP-034 §2.3 emission reused); shipped in vibe-spec/bootgen"
+            ]
+          },
+          "PIPE-EMBED-EXPAND": {
+            "v": "confirmed",
+            "ev": [
+              "pipeline: parse→use-graph→source-merge→embed-expand→emit with topological order + stable tie-break (PROP-034 §2.3 emission reused); shipped in vibe-spec/bootgen"
+            ]
+          },
+          "PIPE-EMIT": {
+            "v": "confirmed",
+            "ev": [
+              "pipeline: parse→use-graph→source-merge→embed-expand→emit with topological order + stable tie-break (PROP-034 §2.3 emission reused); shipped in vibe-spec/bootgen"
+            ]
+          },
+          "PIPE-DETERMINISM": {
+            "v": "confirmed",
+            "ev": [
+              "pipeline: parse→use-graph→source-merge→embed-expand→emit with topological order + stable tie-break (PROP-034 §2.3 emission reused); shipped in vibe-spec/bootgen"
+            ]
+          },
+          "cycles-intuition": {
+            "v": "confirmed",
+            "ev": [
+              "cycles: embed cycle = hard error with named path (guard in embed.rs); contract-level use cycles legal, source-body cycles error; no-deadlock invariant recorded"
+            ]
+          },
+          "EMBED-CYCLE-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "cycles: embed cycle = hard error with named path (guard in embed.rs); contract-level use cycles legal, source-body cycles error; no-deadlock invariant recorded"
+            ]
+          },
+          "USE-CYCLE-ALLOWED": {
+            "v": "confirmed",
+            "ev": [
+              "cycles: embed cycle = hard error with named path (guard in embed.rs); contract-level use cycles legal, source-body cycles error; no-deadlock invariant recorded"
+            ]
+          },
+          "USE-BODY-CYCLE-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "cycles: embed cycle = hard error with named path (guard in embed.rs); contract-level use cycles legal, source-body cycles error; no-deadlock invariant recorded"
+            ]
+          },
+          "NO-DEADLOCK-INVARIANT": {
+            "v": "confirmed",
+            "ev": [
+              "cycles: embed cycle = hard error with named path (guard in embed.rs); contract-level use cycles legal, source-body cycles error; no-deadlock invariant recorded"
+            ]
+          },
+          "LINK-TABLE-ANALOGY": {
+            "v": "confirmed",
+            "ev": [
+              "link tables §10: honestly provisional spec/work throughout (no table files shipped; specmap remains the only index)"
+            ]
+          },
+          "link-tables-build-lead": {
+            "v": "confirmed",
+            "ev": [
+              "link tables §10: honestly provisional spec/work throughout (no table files shipped; specmap remains the only index)"
+            ]
+          },
+          "TABLE-ANCHOR-INDEX": {
+            "v": "confirmed",
+            "ev": [
+              "link tables §10: honestly provisional spec/work throughout (no table files shipped; specmap remains the only index)"
+            ]
+          },
+          "TABLE-CONTRACT-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "link tables §10: honestly provisional spec/work throughout (no table files shipped; specmap remains the only index)"
+            ]
+          },
+          "TABLE-USE-GRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "link tables §10: honestly provisional spec/work throughout (no table files shipped; specmap remains the only index)"
+            ]
+          },
+          "link-tables-persist": {
+            "v": "confirmed",
+            "ev": [
+              "link tables §10: honestly provisional spec/work throughout (no table files shipped; specmap remains the only index)"
+            ]
+          },
+          "OPEN-CLOSE-MARKERS": {
+            "v": "confirmed",
+            "ev": [
+              "markers: open/close path comments live — the real STATIC.md this session read carries '<!-- vibe:static … -->' block markers per package; reversibility by construction"
+            ]
+          },
+          "STATIC-REVERSIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "markers: open/close path comments live — the real STATIC.md this session read carries '<!-- vibe:static … -->' block markers per package; reversibility by construction"
+            ]
+          },
+          "STATIC-TRANSITIVE-FOLD": {
+            "v": "confirmed",
+            "ev": [
+              "transitive static: static-transitive on LinkType (§17 2026-07-15 entry: 'transitive-inline landed on LinkType', renamed 07-16); PROP-034 as emission layer; variants reserved honestly"
+            ]
+          },
+          "transitive-safety": {
+            "v": "confirmed",
+            "ev": [
+              "transitive static: static-transitive on LinkType (§17 2026-07-15 entry: 'transitive-inline landed on LinkType', renamed 07-16); PROP-034 as emission layer; variants reserved honestly"
+            ]
+          },
+          "EMISSION-LAYER": {
+            "v": "confirmed",
+            "ev": [
+              "transitive static: static-transitive on LinkType (§17 2026-07-15 entry: 'transitive-inline landed on LinkType', renamed 07-16); PROP-034 as emission layer; variants reserved honestly"
+            ]
+          },
+          "transitive-variants-reserved": {
+            "v": "confirmed",
+            "ev": [
+              "transitive static: static-transitive on LinkType (§17 2026-07-15 entry: 'transitive-inline landed on LinkType', renamed 07-16); PROP-034 as emission layer; variants reserved honestly"
+            ]
+          },
+          "LOADER-LLM-EXECUTED": {
+            "v": "confirmed",
+            "ev": [
+              "structural loader honestly unshipped (spec/done): no first-loaded directive instructions in live projects yet — consistent with HISTORY-NORMAL-STATIC 'still pending'"
+            ]
+          },
+          "LOADER-FIRST-EVERYWHERE": {
+            "v": "confirmed",
+            "ev": [
+              "structural loader honestly unshipped (spec/done): no first-loaded directive instructions in live projects yet — consistent with HISTORY-NORMAL-STATIC 'still pending'"
+            ]
+          },
+          "LOADER-BROKEN-WITHOUT": {
+            "v": "confirmed",
+            "ev": [
+              "structural loader honestly unshipped (spec/done): no first-loaded directive instructions in live projects yet — consistent with HISTORY-NORMAL-STATIC 'still pending'"
+            ]
+          },
+          "inline-tooling-note": {
+            "v": "confirmed",
+            "ev": [
+              "structural loader honestly unshipped (spec/done): no first-loaded directive instructions in live projects yet — consistent with HISTORY-NORMAL-STATIC 'still pending'"
+            ]
+          },
+          "FUTURE-ALGORITHMIC-AGENTS": {
+            "v": "confirmed",
+            "ev": [
+              "future algorithmic agents: design-for-determinism recorded; nothing to falsify"
+            ]
+          },
+          "DESIGN-FOR-DETERMINISTIC": {
+            "v": "confirmed",
+            "ev": [
+              "future algorithmic agents: design-for-determinism recorded; nothing to falsify"
+            ]
+          },
+          "migration-lead": {
+            "v": "confirmed",
+            "ev": [
+              "migration: demo-corpus-first executed (fixtures exercise the compiler — vibe-spec tests); gradual + vibevm-last posture holds (host packages still simple; no flag-day)"
+            ]
+          },
+          "MIG-DEMO-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "migration: demo-corpus-first executed (fixtures exercise the compiler — vibe-spec tests); gradual + vibevm-last posture holds (host packages still simple; no flag-day)"
+            ]
+          },
+          "MIG-GRADUAL": {
+            "v": "confirmed",
+            "ev": [
+              "migration: demo-corpus-first executed (fixtures exercise the compiler — vibe-spec tests); gradual + vibevm-last posture holds (host packages still simple; no flag-day)"
+            ]
+          },
+          "MIG-VIBEVM-LAST": {
+            "v": "confirmed",
+            "ev": [
+              "migration: demo-corpus-first executed (fixtures exercise the compiler — vibe-spec tests); gradual + vibevm-last posture holds (host packages still simple; no flag-day)"
+            ]
+          },
+          "OPEN-EQUIVALENCE": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open: equivalence testing deferred, read-set compaction floor, XML frontend, closure explosion, link tables timing, no-access-control confirmation, dynamic-transitive reserved"
+            ]
+          },
+          "OPEN-READ-SET-COMPACTION": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open: equivalence testing deferred, read-set compaction floor, XML frontend, closure explosion, link tables timing, no-access-control confirmation, dynamic-transitive reserved"
+            ]
+          },
+          "OPEN-XML-FRONTEND": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open: equivalence testing deferred, read-set compaction floor, XML frontend, closure explosion, link tables timing, no-access-control confirmation, dynamic-transitive reserved"
+            ]
+          },
+          "OPEN-CLOSURE-EXPLOSION": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open: equivalence testing deferred, read-set compaction floor, XML frontend, closure explosion, link tables timing, no-access-control confirmation, dynamic-transitive reserved"
+            ]
+          },
+          "OPEN-LINK-TABLES": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open: equivalence testing deferred, read-set compaction floor, XML frontend, closure explosion, link tables timing, no-access-control confirmation, dynamic-transitive reserved"
+            ]
+          },
+          "OPEN-NO-ACCESS-CONTROL": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open: equivalence testing deferred, read-set compaction floor, XML frontend, closure explosion, link tables timing, no-access-control confirmation, dynamic-transitive reserved"
+            ]
+          },
+          "OPEN-DYNAMIC-TRANSITIVE": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open: equivalence testing deferred, read-set compaction floor, XML frontend, closure explosion, link tables timing, no-access-control confirmation, dynamic-transitive reserved"
+            ]
+          },
+          "HISTORY-DRAFTED": {
+            "v": "confirmed",
+            "ev": [
+              "version history: four dated entries verified against the tree (vibe-spec crate + bootgen wiring; the LinkType rename names live under the new terms — grep Static,/Dynamic, in package.rs; compile_normal_entry + PackageFormat threading; the link×format eager resolution recorded)"
+            ]
+          },
+          "HISTORY-IMPLEMENTED": {
+            "v": "confirmed",
+            "ev": [
+              "version history: four dated entries verified against the tree (vibe-spec crate + bootgen wiring; the LinkType rename names live under the new terms — grep Static,/Dynamic, in package.rs; compile_normal_entry + PackageFormat threading; the link×format eager resolution recorded)"
+            ]
+          },
+          "HISTORY-RENAME": {
+            "v": "confirmed",
+            "ev": [
+              "version history: four dated entries verified against the tree (vibe-spec crate + bootgen wiring; the LinkType rename names live under the new terms — grep Static,/Dynamic, in package.rs; compile_normal_entry + PackageFormat threading; the link×format eager resolution recorded)"
+            ]
+          },
+          "HISTORY-NORMAL-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "version history: four dated entries verified against the tree (vibe-spec crate + bootgen wiring; the LinkType rename names live under the new terms — grep Static,/Dynamic, in package.rs; compile_normal_entry + PackageFormat threading; the link×format eager resolution recorded)"
+            ]
+          },
+          "_elements": {
+            "v": "drift",
+            "ev": [
+              "F-028: the marker repeats the status-line's claim (spec/work 'DESIGN provisional; not implementation-locked') without diagnosing it — while §17 records the compiler shipped three times over (vibe-spec, rename, normal+static AOT)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:28:14Z",
+        "verify_batch": "c4d1-workspace-big3"
+      }
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
       "content_hash": "e1e0b273b23624e46d9f6c30cd1b008e11e0163b2ed4d2b2c1692b10619bb158",

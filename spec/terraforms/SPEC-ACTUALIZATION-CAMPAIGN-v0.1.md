@@ -929,6 +929,32 @@ read-only, no auth.
   confirmed / 78 drift / 3 unverifiable; findings 50 (next free
   F-051).**
 
+- **2026-07-25 · c4d1 — the workspace big three verified; the loading
+  model is the session itself.** PROP-007 + PROP-009 + PROP-035 (386
+  markers): **360 units — 351 confirmed / 9 drift / 0 unverifiable —
+  and zero new findings**: every drift row lands on ledger entries the
+  B-phase already minted. PROP-007's four are all **F-029** — the
+  status/milestone lines, §9.3's deferral record, and the document
+  marker still call workspace-aware `vibe install` "the remaining
+  piece" while M1.18 shipped it (`Workspace::discover` live at
+  plan.rs:101 and apply.rs:114). PROP-009's three: the **F-026** DRAFT
+  header pair, plus `SURF-SHOW-EFFECTIVE` caught shipped-but-spec/done
+  (`vibe show effective` exists in its simple concatenation form; the
+  §2.8 engine projection honestly stays v1.5). PROP-035's two are the
+  **F-028** DESIGN-provisional pair over a §17 that records the
+  compiler shipping three times (vibe-spec 07-15, the link-type rename
+  07-16, normal+static AOT 07-20). The confirmations needed no
+  reconstruction — the model under test booted this very session:
+  STATIC.md read first, the TOML INDEX.md with its `[[entry]]` grammar,
+  committed `vibedeps/`, `when = "os:*"` in the renderer, BootCategory
+  ordering with the conflict errors deleted, `vibe reinstall` citing
+  §2.10 from its own `--help`, and the vibe-spec pipeline (doctree
+  fact leaves, `:add`/`:replace` with per-fact override and the
+  merged-view DuplicateId gate, embed cycle guards, `PackageFormat`
+  simple-by-default) exactly where §5–§13 put it. **Running tally:
+  2 759 / 4 944 — 2 669 confirmed / 87 drift / 3 unverifiable;
+  findings 50 (next free F-051).**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
