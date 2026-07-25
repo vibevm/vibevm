@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T13:25:30Z",
+ "updated_at": "2026-07-25T13:32:18Z",
  "findings": [
   {
    "id": "F-001",
@@ -388,6 +388,15 @@
    "status": "open",
    "wave": 0,
    "note": "The foundation aged in six spots, one sweep fixes all: SS3 still records the proprietary EULA (UPL-1.0 relicense happened 2026-07-12, the LICENSE-REVISIT trigger fired - rewrite the record per decision-records); SS4 lists the retired vibe-package.toml; SS6 records pre-qualified identity and four kinds while SSInvariants INV-VOCABULARY in the same file correctly lists five (internal inconsistency, r2-leftover class); SS7 calls GitVerse the source-of-truth (PROP-016 supersedes: no primary) and pins NamingConvention::KindName (Fqdn default since M1.19); SS14 MT-WAL-NAMES practice lapsed (pending MT sign-offs unnamed in the WAL); SS18 claims the resolver implements semantic LLM-reviewed conflicts (heuristic shipped, LLM lane pending). 12 drift verdicts in c3b."
+  },
+  {
+   "id": "F-044",
+   "from": "spec/common/PROP-024-code-bearing-packages.md",
+   "to": "packages/org.vibevm.ai-native/core-ai-native/",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-024 aged behind its own SS2.6 deferral firing: the TS pilot shipped, so the deferred engine split EXECUTED - core-ai-native now authors the neutral engines (conform/specmap/specmark/mcp cores) vendored byte-identically by each -lang/-mcp, so CORE-STAYS-PROMPT-ONLY and OOS-TS-CHECKER are false as present-state; plus the related line cites the vanished vibedeps/flow-core-ai-native/0.6.0 slot (only 0.7.0 exists). One SS2.6/related refresh fixes all. 4 drift verdicts in c3d (5th is the F-006 header)."
   }
  ]
 }

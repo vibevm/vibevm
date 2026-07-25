@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T13:28:05Z",
+  "updated_at": "2026-07-25T13:32:21Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -4113,7 +4113,485 @@
       },
       "marker_count": 77,
       "unit_count": 16,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 76,
+        "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
+        "fact_count": 76,
+        "marker_count": 77,
+        "processed_hash": "bf748411cf54a98bf1054ae253e5c375b538bbe7df77b7146767e07df39e97ae",
+        "summary": {
+          "confirmed": 72,
+          "drift": 5,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "proposed 2026-06-27 over a fully shipped model (vendored toolchain consumed by this very session) -> F-006 (ledgered in B)"
+            ]
+          },
+          "related": {
+            "v": "drift",
+            "ev": [
+              "cites vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/... - the 0.6.0 slot no longer exists (only 0.7.0); dead links -> F-044"
+            ]
+          },
+          "SANCTION-GRANTED": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "prompt-only-today": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "machinery-hardcoded": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "install-gets-description": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "not-distributable": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "gap-consequence": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "format-cause": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "nowhere-for-code": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "identity-fights-code": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "project-shape": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "PACKAGE-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "shape-consequences": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "four-layer-fit": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "req-package-is-project": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "PKG-PROJECT-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SPEC-SUBTREE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "ROOT-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "CONS-DEV-IS-DEV": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "CONS-CHECK-UNCHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "CONS-BOOT-SAME": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "CONS-NO-CONVENTION": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "RETIRES-FLAT-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "req-shippable-tree": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SHIPPABLE-TREE-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "VIBEIGNORE-EXTENDS": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SHIPPABLE-CONSUMERS": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "WHY-SOURCE-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SOURCE-IS-SHIPPED": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "VERBATIM-PRESERVED": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "VERBATIM-HOLDS-SHIPPABLE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "DENYLIST-NOT-SELECTION": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "req-build": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "MATERIALISE-AS-TODAY": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "BUILD-CONSUMER-SIDE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "HOOK-BUILD": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "NATIVE-CONSUMER-SKIP": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "HOOK-RESET-UNAFFECTED": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "req-consume": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "OWN-WORKSPACE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "PATH-DEP-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "WORKSPACE-EXCLUDE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "PIN-ONCE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "BINARY-RUN-FORM": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SPIKE-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SPIKE-FALLBACK": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "req-bootstrap": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SELF-HOST-VENDORED": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "CLEAN-CLONE-BUILDS": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "NO-CHICKEN-EGG": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "DEV-LOOP-MUTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "req-placement": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "PLACEMENT-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "THIS-PASS-WHOLE-TOOLCHAIN": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "CORE-STAYS-PROMPT-ONLY": {
+            "v": "drift",
+            "ev": [
+              "says core-ai-native stays prompt-only until a second language needs the shared engine - the condition fired: the TS pilot shipped and core-ai-native now AUTHORS the neutral engines (core-ai-native-conform/-specmap/... in packages/core-ai-native/v0.7.0/crates; PROP-028 NAME-NEUTRAL-ENGINES) -> F-044"
+            ]
+          },
+          "DEFERRED-ENGINE-SPLIT": {
+            "v": "drift",
+            "ev": [
+              "the deferred split EXECUTED: conform-core/specmap-core neutral halves live in core-ai-native, vendored byte-identically by each -lang/-mcp (cargo xtask sync-engines) - the future-tense deferral aged -> F-044"
+            ]
+          },
+          "SURF-NO-NEW-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SURF-VIBEIGNORE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SURF-HOOKS": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "SURF-LOCK-UNAFFECTED": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "REJ-HASH-BUILD-OUTPUT": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "REJ-CONSUMER-MEMBERS": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "REJ-IN-PLACE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "REJ-CRATES-IO": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "REJ-ALLOW-LIST": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "OOS-AUTODETECT": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "OOS-SANDBOX": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "OOS-TS-CHECKER": {
+            "v": "drift",
+            "ev": [
+              "says TypeScript ships no implemented tool until a TS pilot exists - the typescript-ai-native family shipped with floor/conform/specmap engines -> F-044"
+            ]
+          },
+          "ACC-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "ACC-HASH-EXCLUDES": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "ACC-BOOT-RESOLVES": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "ACC-CLEAN-CLONE": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "ACC-EXTERNAL-CONSUMER": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "ACC-FLOOR-GREEN": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "HIST-DRAFT-1": {
+            "v": "confirmed",
+            "ev": [
+              "CONTENT VERIFIED SHIPPED (header drift F-006, ledgered in B): the SS2.4 topology is live verbatim - root Cargo.toml exclude = [packages, vibedeps] (L7) with pinned path-deps into the slot; self-check runs the vendored engines via --manifest-path exactly per BINARY-RUN-FORM; vibedeps committed (clean-clone builds, this session built from it); boot INDEX names vibedeps/<slot>/spec/boot files per ACC-BOOT-RESOLVES; shippable-tree denylist is the packaging law (PROP-022/002 consumers); the SANCTION record is dated"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "doc <status> tag mirrors the proposed-era header - carried by F-006"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:32:18Z",
+        "verify_batch": "c3d-common-tail"
+      }
     },
     "spec/common/PROP-028-package-families.md": {
       "content_hash": "43045c466884d95b85f4a121033a8f2de24737ec67876e63f9f52a90836c7842",
@@ -4610,7 +5088,473 @@
       },
       "marker_count": 96,
       "unit_count": 13,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 74,
+        "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
+        "fact_count": 94,
+        "marker_count": 96,
+        "processed_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
+        "summary": {
+          "confirmed": 75,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "companions": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "problem-lead": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PROBLEM-BY-HAND": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PROBLEM-LLM-REWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "DELEGATION-THESIS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "RENAME-IS-TOOL-CALL": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "BEACHHEAD-SCAFFOLD-I": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "BEACHHEAD-LIMITS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "EXTRACTION-DEMAND": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PROP-PURPOSE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "READ-SIDE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "WRITE-SIDE-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "COMPLETION-NOT-SUBSYSTEM": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "SUBSTRATE-FREE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "GRAPH-GENERALISED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ADDRESSABILITY-COROLLARY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "LLM-DIVISION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "LLM-JUDGEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "LLM-MUST-NOT-REWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "BOUNDARY-COMPLETION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "TYPED-COMMAND": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ECONOMIC-CONSEQUENCE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "GATED-INVARIANT-LEAD": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "OP-ATOMIC": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "OP-DETERMINISTIC": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "OP-DRY-RUNNABLE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "OP-GATED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "TRUST-PROPERTY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "THREE-TIER": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "TIER-PRODUCT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "TIER-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "TIER-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "TIER-COMPOSE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "GROWTH-BY-COMPOSITION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "WRAP-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "WRAP-CANDIDATES": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "CLEAN-ROOM": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "LICENSE-REVERIFY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ALGEBRA": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "OP-PURE-FUNCTION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "FIRST-OPERATION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ANTICIPATION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ANT-ADDRESS-EVERYTHING": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ANT-STABLE-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ANT-GRAPH-OVER-PROSE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ANT-ALGEBRA-INSTANCES": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ANT-GATE-NOW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "REJ-LLM-REWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "REJ-SIDECAR-DB": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "REJ-REIMPLEMENT-AST": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "REJ-IDE-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "REJ-DEFER-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "prior-art-lead": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PA-OPENREWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PA-RUST-ANALYZER": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PA-AST-GREP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PA-TS-MORPH": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PA-COMBY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PA-LSP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "PA-JSCODESHIFT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "DIFFERENTIATORS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "DIFF-SPEC-AWARE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "DIFF-GATED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "DIFF-LLM-PARTICIPANT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "DIFF-COMPOSE-TIERS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "open-mechanism-home": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "open-weak-tier": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "open-transactional": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "open-concurrency": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "open-undo": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "open-redirect-default": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "ratification-note": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "unexercised-removed": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: schedules no implementation and none exists (move-unit/rename-address absent from the vendored stack - grep clean 2026-07-25); the cited beachhead IS real (codemod in the rust-ai-native toolchain, codemod.rs atomic add-cell); status-line archive pointer repointed by L4 and resolves; license table candidates all permissive; clean-room rule cited correctly (90-user); six open questions genuinely open"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "status tags honest: design proposal v0.1, ratification pending, SS6 six open questions"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:32:18Z",
+        "verify_batch": "c3d-common-tail"
+      }
     },
     "spec/common/PROP-032-project-model-ide-substrate.md": {
       "content_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
@@ -4633,7 +5577,665 @@
       },
       "marker_count": 128,
       "unit_count": 16,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 106,
+        "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
+        "fact_count": 126,
+        "marker_count": 128,
+        "processed_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
+        "summary": {
+          "confirmed": 107,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "companions": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ASYMMETRY-CLAIM": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "EDGE-HARDCODED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "consequences-lead": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "NO-CODE-ADDRESS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ONE-DIRECTION-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "AMBITION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "LANGUAGE-SERVER-FRAME": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "MODEL-NAMED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CONSUMERS-INSTANTIATE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "SYMMETRY-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "GRAPH-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "PROJECTION-NOT-DEFINITION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "GRAPH-SSOT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ADDRESS-MINTED-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "FRAGILITY-LESSON": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ADDR-SPEC-NODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ADDR-CODE-NODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ADDR-PACKAGE-NODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ADDRESS-SURVIVES-RENAME": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "LOCATION-DERIVED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CODE-NODE-EXTENSION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CODE-ADDR-FORM": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CODE-LOCATION-DERIVED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "code-rules-lead": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "MINT-SPARINGLY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ID-IS-ADDRESS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "MARKER-ON-ITEM": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CARRIER-PER-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CARRIER-CONSTRAINTS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CC-ON-ITEM": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CC-SCANNABLE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "CC-STRUCTURED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ADDR-FACET-RECOMMENDATION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ASYMMETRY-REMOVED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "EDGE-AUTHORITY-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "EDGE-CODE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "EDGE-SPEC-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "EDGE-SPEC-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "EDGE-DOC-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "EDGE-CODE-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "INVERSION-RARE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "NO-SHADOW-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "INVERSION-MARKED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "THREE-OPERATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "OP-QUERY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "OP-MUTATE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "OP-RENDER": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "AGENT-PRIMARY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "TYPED-COMMANDS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "TRANSPORT-MCP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "IDE-HEADLESS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "SURFACES-PROGRESSIVE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "GUI-FIRST-INVERTS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "MODEL-IS-PRODUCT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "FREE-PROPERTIES": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "FREE-DANGLING": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "FREE-DUPLICATE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "FREE-RENAME": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "FREE-SUSPECT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "SYMMETRY-CHEAP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "SUBSTRATE-NEUTRAL": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "TIER-BASE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "TIER-SDD": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "TIER-AI-NATIVE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "DEP-INVERSION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "LEGACY-TIERS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "REOPENS-RELOCATION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "TIER-CENTER": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "layering-lead": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "OWNS-032": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "OWNS-014": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "OWNS-031": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "NO-OWN-MECHANICS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ENGINE-HOME": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ANTICIPATION-EXTENDS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ANT-ADDRESS-ALL-KINDS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ANT-MINT-DELIBERATE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ANT-EDGE-V3-ONCE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ANT-MODEL-NOT-GUI": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "REJ-LOCATION-ADDRESS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "REJ-BESPOKE-LINK": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "REJ-GUI-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "REJ-SEPARATE-NAV": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "REJ-COMPUTED-INVERSE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "prior-art-lead": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "PA-LSP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "PA-SCIP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "PA-RUSTDOC": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "PA-SPHINX": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "PA-OPENREWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "DIFFERENTIATORS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "DIFF-ONE-GRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "DIFF-AUTHORITY-TYPED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "DIFF-AGENT-CLIENT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "DIFF-GATED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "open-code-id-scheme": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "open-node-kinds": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "open-schema-v3": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "open-reverse-edges": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "decided-prop-014-grows": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "open-gui-when": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "ratification-note": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "first-step": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "unexercised-removed": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no code:// nodes, no Edge v3, no GUI - all absent as designed; specmap asymmetry claim TRUE (Edge is code->spec only, specmap.json schema 2); TRANSPORT-MCP claim consistent (rust-ai-native-mcp ships the discipline tools over MCP per PROP-027); q5 decided-in-place recorded with owner date 2026-07-13 (PROP-014 grows in place); prior-art licenses permissive; open questions 1-4,6 genuinely open"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "status tags honest: design proposal, five open + one decided-in-place recorded"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:32:18Z",
+        "verify_batch": "c3d-common-tail"
+      }
     },
     "spec/common/PROP-033-refactoring-registry.md": {
       "content_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
@@ -4656,7 +6258,431 @@
       },
       "marker_count": 83,
       "unit_count": 14,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 67,
+        "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
+        "fact_count": 81,
+        "marker_count": 83,
+        "processed_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
+        "summary": {
+          "confirmed": 68,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "companions": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PROBLEM-EXTENSIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PROBLEM-CENTRAL-ENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PROBLEM-PRECOMPILED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "MECH-PROVEN": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "MECH-DECLARE-COMPOSE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "MECH-SAME-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "CAPABILITY-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "DECL-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "DECL-FIELDS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REG-COMPOSED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REG-MIRRORS-PRECEDENT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REG-NO-RESCAN": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PRECOMPILE-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PC-RESOLVE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PC-VALIDATE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PC-COLLISIONS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PC-APPLICABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PC-WRITE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "RUNTIME-LOOKUP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PC-STABLE-UNTIL-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "KINDS-ONE-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "KIND-ALGORITHMIC": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "KIND-LLM": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "KIND-HYBRID": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "UNIFORM-CLIENT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "GATE-TRUST": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "LLM-BOUNDARY-PACKAGED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "NS-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "NS-SHORT-IDS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "NS-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "CENTER-LIBRARY": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "CLI-THIN": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "MCP-AGENT-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "CLI-NOT-CENTER": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "TIER-PLACEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "TIER-BASE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "TIER-SDD": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "TIER-AI-NATIVE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "TIER-COMPOSITION": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "ANTICIPATION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "ANT-BORN-DECLARED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "ANT-GENERATED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "ANT-NAMESPACED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REJ-RESCAN": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REJ-HARDCODED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REJ-CLI-CENTER": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REJ-OUTSIDE-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "REJ-PROBING": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "prior-art-lead": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PA-VSCODE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PA-LSP": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PA-OPENREWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "PA-CARGO": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "DIFFERENTIATORS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "DIFF-COMPOSED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "DIFF-THREE-KINDS": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "DIFF-AGENT-CONSUMER": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "DIFF-NAMESPACED": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "open-manifest-vs-cache": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "open-param-schema": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "open-llm-prompt-shipping": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "open-unified-capability": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "ratification-note": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "first-step": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "unexercised-removed": {
+            "v": "confirmed",
+            "ev": [
+              "honest design proposal verified: no [[refactoring]] table in vibe-core manifest parsing and no vibe refactor CLI (greps clean 2026-07-25) - schedules nothing and nothing shipped; the three cited precedent mechanisms ARE live (INDEX.md/PROP-009 read at boot, .mcp.json/PROP-027, bin dispatch/PROP-025); namespacing rides PROP-029 (verified c3a); four open questions genuinely open"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "status tags honest: design proposal, four open questions"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:32:18Z",
+        "verify_batch": "c3d-common-tail"
+      }
     },
     "spec/design/README.md": {
       "content_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",

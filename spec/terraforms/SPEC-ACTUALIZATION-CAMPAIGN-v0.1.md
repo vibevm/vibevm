@@ -806,6 +806,30 @@ read-only, no auth.
   43.** Remaining in common: c3d = PROP-024 / 031 / 032 / 033 (384
   markers), then the modules cluster (3 300).
 
+- **2026-07-25 · c3d — the common tail verified; `spec/common` is
+  CLOSED 12/12.** PROP-024 / 031 / 032 / 033: **327 units — 322
+  confirmed / 5 drift / 0 unverifiable.** All five drifts are
+  PROP-024's: the F-006 proposed-era header (ledgered in B) plus a new
+  family row **F-044** — the §2.6 deferral **fired**: the TypeScript
+  pilot shipped, so the deferred engine split executed and
+  `core-ai-native` now *authors* the neutral engines
+  (conform/specmap/specmark/mcp cores, vendored byte-identically per
+  PROP-028), making CORE-STAYS-PROMPT-ONLY and OOS-TS-CHECKER false as
+  present-state; the related line also cites the vanished
+  `vibedeps/flow-core-ai-native/0.6.0` slot. The §2.4 consumption
+  topology confirmed **verbatim** (root `Cargo.toml`
+  `exclude = ["packages", "vibedeps"]`; self-check drives the vendored
+  engines by `--manifest-path` exactly as BINARY-RUN-FORM specifies).
+  The three design proposals (031/032/033) verified **honest end to
+  end**: every "schedules no implementation" claim grep-verified
+  (no `move-unit`/`rename-address` in the stack, no `code://` nodes,
+  no `[[refactoring]]` manifest table, no `vibe refactor` CLI), and
+  PROP-032's decided-in-place q5 record carries its owner date.
+  **Running tally: 1 398 units — 1 353 confirmed / 42 drift / 3
+  unverifiable; findings 44. Verified clusters: boot ✓ manual-tests ✓
+  design ✓ common ✓ (23 of 58 files). Remaining: the modules cluster
+  (35 files, 3 300 markers — the specmap-richest).**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
