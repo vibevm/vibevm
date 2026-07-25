@@ -10,7 +10,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use common::{
-    git_available, init_project, make_per_package_registry, make_wal_dir_registry, run_git, vibe,
+    UserScratch, git_available, make_per_package_registry, make_wal_dir_registry, run_git,
     write_project_with_per_package_registry,
 };
 use predicates::prelude::*;
@@ -126,8 +126,9 @@ fn update_bumps_to_new_version_and_remateralises() {
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
@@ -135,7 +136,7 @@ fn update_bumps_to_new_version_and_remateralises() {
     write_project_with_per_package_registry(project.path(), &url);
 
     // Install pinned to v0.1.0 exactly.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm/wal@=0.1.0")
@@ -167,7 +168,7 @@ fn update_bumps_to_new_version_and_remateralises() {
 
     // `vibe update` re-resolves `[requires]` afresh and re-materialises
     // — the depsolver now picks v0.2.0.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("update")
         .arg("org.vibevm/wal")
@@ -216,10 +217,12 @@ fn update_bumps_to_new_version_and_remateralises() {
 
 #[test]
 fn show_effective_emits_boot_files_with_provenance() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    let assertion = vibe()
+    let assertion = user
+        .vibe()
         .arg("show")
         .arg("effective")
         .arg("--path")
@@ -250,15 +253,17 @@ fn show_effective_emits_boot_files_with_provenance() {
 fn show_effective_includes_wal_when_present() {
     // When the operator (or `org.vibevm/wal` install) put `spec/WAL.md` in
     // place, `show effective` includes it with `(wal)` provenance.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::write(
         project.path().join("spec/WAL.md"),
         "# WAL\n\n## current phase\n\nTest checkpoint.\n",
     )
     .unwrap();
 
-    let assertion = vibe()
+    let assertion = user
+        .vibe()
         .arg("show")
         .arg("effective")
         .arg("--path")
@@ -318,15 +323,16 @@ fn user_config_promotes_vibe_registry_cache_into_runtime() {
     )
     .unwrap();
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &url);
 
-    vibe()
+    user.vibe()
         .env("VIBEVM_USER_CONFIG", &user_cfg_path)
         .env_remove("VIBE_REGISTRY_CACHE")
         .arg("install")
@@ -363,8 +369,9 @@ fn show_config_user_layer_provides_default_for_unset_env() {
     // User-level config defaults VIBE_REGISTRY_CACHE; live env is
     // unset. Provenance must surface as `user-config`, value is the
     // user-config string.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     let user_cfg_dir = tempfile::tempdir().unwrap();
     let user_cfg_path = user_cfg_dir.path().join("config.toml");
@@ -377,7 +384,8 @@ VIBE_LOG = "vibe_registry=info"
     )
     .unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_USER_CONFIG", &user_cfg_path)
         .env_remove("VIBE_REGISTRY_CACHE")
         .env_remove("VIBE_LOG")
@@ -412,8 +420,9 @@ VIBE_LOG = "vibe_registry=info"
 #[test]
 fn show_config_live_env_overrides_user_config() {
     // Both layers set VIBE_REGISTRY_CACHE; the live env wins.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     let user_cfg_dir = tempfile::tempdir().unwrap();
     let user_cfg_path = user_cfg_dir.path().join("config.toml");
@@ -423,7 +432,8 @@ fn show_config_live_env_overrides_user_config() {
     )
     .unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_USER_CONFIG", &user_cfg_path)
         .env("VIBE_REGISTRY_CACHE", "/from-live-env")
         .arg("--json")
@@ -451,8 +461,9 @@ fn show_config_user_token_default_redacts_value() {
     // belongs in `~/.vibe/<host>.publish.token` per PROP-000 §20
     // — but we can't refuse to load) the value must NEVER appear in
     // output.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     let user_cfg_dir = tempfile::tempdir().unwrap();
     let user_cfg_path = user_cfg_dir.path().join("config.toml");
@@ -462,7 +473,8 @@ fn show_config_user_token_default_redacts_value() {
     )
     .unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_USER_CONFIG", &user_cfg_path)
         .env_remove("VIBEVM_PUBLISH_TOKEN")
         .arg("--json")
@@ -490,12 +502,13 @@ fn show_config_user_token_default_redacts_value() {
 
 #[test]
 fn show_config_emits_registry_block_with_provenance() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     // Add a registry so `show config` has one to emit (defaults no longer
     // land in the project vibe.toml — they live in ~/.vibe/registry.toml).
-    vibe()
+    user.vibe()
         .arg("registry")
         .arg("add")
         .arg("vibespecs")
@@ -505,7 +518,8 @@ fn show_config_emits_registry_block_with_provenance() {
         .assert()
         .success();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("show")
         .arg("config")
@@ -543,9 +557,11 @@ fn show_config_emits_registry_block_with_provenance() {
 
 #[test]
 fn check_clean_project_exits_zero_with_no_findings() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    let assertion = vibe()
+    user.init_project(project.path());
+    let assertion = user
+        .vibe()
         .arg("check")
         .arg("--path")
         .arg(project.path())
@@ -569,9 +585,11 @@ fn check_clean_project_exits_zero_with_no_findings() {
 
 #[test]
 fn check_emits_json_envelope() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    let out = vibe()
+    user.init_project(project.path());
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("check")
         .arg("--path")
@@ -607,8 +625,9 @@ fn update_keeps_pinned_version_when_constraint_excludes_newer() {
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
@@ -617,7 +636,7 @@ fn update_keeps_pinned_version_when_constraint_excludes_newer() {
 
     // Install v0.1.0 with constraint `^0.1` (admits `>=0.1.0, <0.2.0`).
     // v0.2.0 exists upstream but is excluded by the constraint.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm/wal@^0.1")
@@ -629,7 +648,7 @@ fn update_keeps_pinned_version_when_constraint_excludes_newer() {
 
     // `vibe update` re-resolves within `^0.1` and re-materialises —
     // succeeds, but the resolved version stays v0.1.0.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("update")
         .arg("org.vibevm/wal")
@@ -674,15 +693,16 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &url);
 
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -694,7 +714,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
 
     // Run `vibe registry vendor` against the freshly installed project.
     let vendor_dir = outer.path().join("vendor-output");
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("registry")
         .arg("vendor")
@@ -784,15 +804,16 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &url);
 
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -808,7 +829,7 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
     fs::write(vendor_dir.join("important.txt"), "do not delete\n").unwrap();
 
     // Without --force, vendor must refuse. Operator content survives.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("registry")
         .arg("vendor")
@@ -826,7 +847,7 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
     );
 
     // With --force, vendor proceeds and the user content is gone.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("registry")
         .arg("vendor")
@@ -958,10 +979,11 @@ fn install_with_features_records_active_features_in_lockfile() {
     let outer = tempfile::tempdir().unwrap();
     let registry = make_features_fixture_registry(outer.path());
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/feat-pkg")
         .arg("--registry")
@@ -1013,10 +1035,11 @@ fn install_with_features_records_active_features_in_lockfile() {
 fn install_no_default_features_drops_default_feature_from_lockfile() {
     let outer = tempfile::tempdir().unwrap();
     let registry = make_features_fixture_registry(outer.path());
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/feat-pkg")
         .arg("--registry")
@@ -1073,11 +1096,12 @@ fn install_no_default_features_drops_default_feature_from_lockfile() {
 
 #[test]
 fn mcp_install_writes_claude_mcp_json() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1102,11 +1126,12 @@ fn mcp_install_writes_claude_mcp_json() {
 
 #[test]
 fn mcp_install_is_idempotent() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1120,7 +1145,8 @@ fn mcp_install_is_idempotent() {
         .assert()
         .success();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1148,11 +1174,12 @@ fn mcp_install_is_idempotent() {
 
 #[test]
 fn mcp_install_dry_run_does_not_write() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".cursor")).unwrap();
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1175,12 +1202,13 @@ fn mcp_install_dry_run_does_not_write() {
 
 #[test]
 fn mcp_install_force_writes_even_without_marker() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let _ = fs::remove_file(project.path().join("CLAUDE.md"));
     let _ = fs::remove_dir_all(project.path().join(".claude"));
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1203,11 +1231,13 @@ fn mcp_install_force_writes_even_without_marker() {
 
 #[test]
 fn mcp_install_what_both_writes_skill_md_for_claude() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1248,11 +1278,12 @@ fn mcp_install_what_both_writes_skill_md_for_claude() {
 
 #[test]
 fn mcp_install_what_both_writes_skill_for_opencode() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".opencode")).unwrap();
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1281,11 +1312,13 @@ fn mcp_install_what_both_writes_skill_for_opencode() {
 
 #[test]
 fn mcp_install_what_skill_for_cursor_reports_skipped() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".cursor")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1310,11 +1343,13 @@ fn mcp_install_what_skill_for_cursor_reports_skipped() {
 
 #[test]
 fn mcp_install_what_mcp_emits_empty_skill_results() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1343,13 +1378,15 @@ fn mcp_install_what_mcp_emits_empty_skill_results() {
 
 #[test]
 fn mcp_install_auto_with_dry_run_previews_every_detected_agent() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
     fs::create_dir_all(project.path().join(".cursor")).unwrap();
     fs::create_dir_all(project.path().join(".opencode")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1411,10 +1448,12 @@ fn mcp_install_scope_user_works_without_vibe_toml() {
     // Bootstrap mode: directory has no vibe.toml, scope=user → no
     // resolve_project_root_required gate, install proceeds against
     // user-level paths. Use --dry-run so we don't touch real ~/.claude.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     // Deliberately no init_project — no vibe.toml.
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1452,8 +1491,10 @@ fn mcp_install_user_scope_mcp_entry_omits_path_arg() {
     // doesn't expose the args directly — instead, rely on the unit
     // test `user_scope_mcp_entry_omits_path_arg` for that contract
     // and just assert here that the install succeeds.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1479,8 +1520,10 @@ fn mcp_install_user_scope_mcp_entry_omits_path_arg() {
 fn mcp_install_scope_project_without_vibe_toml_errors() {
     // Inverse of bootstrap-mode test: if scope=project but vibe.toml
     // is absent, the gate must fire with a helpful message.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1513,10 +1556,12 @@ fn mcp_install_scope_project_without_vibe_toml_errors() {
 /// the JSON envelope.
 #[test]
 fn mcp_install_unattended_replaces_yes_for_provisioning_recipe() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     // No init_project — fresh user, no vibevm project on the machine.
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("--unattended")
         .arg("mcp")
@@ -1559,10 +1604,12 @@ fn mcp_install_unattended_replaces_yes_for_provisioning_recipe() {
 /// that would deadlock a script.
 #[test]
 fn mcp_install_unattended_bails_when_wizard_dimensions_missing() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--unattended")
         .arg("mcp")
         .arg("install")
@@ -1590,10 +1637,11 @@ fn mcp_install_unattended_bails_when_wizard_dimensions_missing() {
 /// package CLI surface and the MCP CLI surface.
 #[test]
 fn install_unattended_skips_confirm_like_assume_yes() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("--unattended")
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -1622,10 +1670,12 @@ fn mcp_install_scope_both_without_vibe_toml_does_user_leg_only() {
     // lands and the project-leg is silently skipped. Symmetric with
     // `vibe mcp upgrade` / `vibe mcp uninstall`. Uses --dry-run so
     // the test does not touch real user configs.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     // Deliberately no init_project — no vibe.toml.
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1682,11 +1732,13 @@ fn mcp_install_scope_both_without_vibe_toml_does_user_leg_only() {
 
 #[test]
 fn mcp_install_scope_both_writes_to_project_and_user_for_claude() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1719,10 +1771,12 @@ fn mcp_install_scope_both_writes_to_project_and_user_for_claude() {
 
 #[test]
 fn mcp_install_scope_both_collapses_to_user_for_user_only_agent() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1760,9 +1814,11 @@ fn mcp_install_scope_both_collapses_to_user_for_user_only_agent() {
 
 #[test]
 fn mcp_install_auto_conflicts_with_explicit_agent() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    let out = vibe()
+    user.init_project(project.path());
+    let out = user
+        .vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1785,11 +1841,13 @@ fn mcp_install_auto_conflicts_with_explicit_agent() {
 
 #[test]
 fn mcp_install_no_args_in_non_tty_emits_error() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1809,11 +1867,13 @@ fn mcp_install_no_args_in_non_tty_emits_error() {
 
 #[test]
 fn mcp_install_with_invoked_by_stamps_envelope() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--invoked-by")
         .arg("opencode")
         .arg("--json")
@@ -1836,11 +1896,13 @@ fn mcp_install_with_invoked_by_stamps_envelope() {
 
 #[test]
 fn mcp_upgrade_reports_not_installed_when_block_absent() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("upgrade")
@@ -1871,12 +1933,13 @@ fn mcp_upgrade_reports_not_installed_when_block_absent() {
 
 #[test]
 fn mcp_upgrade_reports_unchanged_after_fresh_install() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
     // Install fresh.
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -1891,7 +1954,8 @@ fn mcp_upgrade_reports_unchanged_after_fresh_install() {
         .success();
 
     // Upgrade should be a no-op (everything matches the shipped template).
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("upgrade")
@@ -1927,8 +1991,9 @@ fn mcp_upgrade_reports_unchanged_after_fresh_install() {
 
 #[test]
 fn mcp_upgrade_detects_drift_and_rewrites_to_current() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
     // Plant a stale vibevm block + stale SKILL.md by hand.
@@ -1942,7 +2007,8 @@ fn mcp_upgrade_detects_drift_and_rewrites_to_current() {
     fs::create_dir_all(skill_path.parent().unwrap()).unwrap();
     fs::write(&skill_path, "stale content").unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("upgrade")
@@ -1989,15 +2055,17 @@ fn mcp_upgrade_detects_drift_and_rewrites_to_current() {
 
 #[test]
 fn mcp_upgrade_dry_run_does_not_write() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
     let config_path = project.path().join(".mcp.json");
     let original = r#"{ "mcpServers": { "vibevm": { "command": "old", "args": [] } } }"#;
     fs::write(&config_path, original).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("mcp")
         .arg("upgrade")
         .arg("--path")
@@ -2017,11 +2085,13 @@ fn mcp_upgrade_dry_run_does_not_write() {
 
 #[test]
 fn mcp_upgrade_skill_only_skips_mcp_results() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("upgrade")
@@ -2046,8 +2116,10 @@ fn mcp_upgrade_skill_only_skips_mcp_results() {
 
 #[test]
 fn mcp_upgrade_scope_project_without_vibe_toml_errors() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("mcp")
         .arg("upgrade")
         .arg("--path")
@@ -2066,12 +2138,13 @@ fn mcp_upgrade_scope_project_without_vibe_toml_errors() {
 
 #[test]
 fn mcp_uninstall_removes_vibevm_block_from_claude() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
     // Install first.
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -2090,7 +2163,8 @@ fn mcp_uninstall_removes_vibevm_block_from_claude() {
     assert!(skill.is_file());
 
     // Uninstall (default --what is "both" — no flag needed).
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("uninstall")
@@ -2146,8 +2220,9 @@ fn mcp_uninstall_removes_vibevm_block_from_claude() {
 
 #[test]
 fn mcp_uninstall_preserves_foreign_keys() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
     // Plant a config with both vibevm and another server.
@@ -2164,7 +2239,7 @@ fn mcp_uninstall_preserves_foreign_keys() {
     )
     .unwrap();
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("uninstall")
         .arg("--path")
@@ -2186,10 +2261,11 @@ fn mcp_uninstall_preserves_foreign_keys() {
 
 #[test]
 fn mcp_uninstall_dry_run_does_not_delete() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -2207,7 +2283,7 @@ fn mcp_uninstall_dry_run_does_not_delete() {
     let pre_config = fs::read_to_string(&config).unwrap();
     let pre_skill = fs::read_to_string(&skill).unwrap();
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("uninstall")
         .arg("--path")
@@ -2227,11 +2303,13 @@ fn mcp_uninstall_dry_run_does_not_delete() {
 
 #[test]
 fn mcp_uninstall_reports_not_installed_when_block_absent() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("uninstall")
@@ -2256,10 +2334,11 @@ fn mcp_uninstall_reports_not_installed_when_block_absent() {
 
 #[test]
 fn mcp_uninstall_skill_only_keeps_mcp_block() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -2273,7 +2352,7 @@ fn mcp_uninstall_skill_only_keeps_mcp_block() {
         .assert()
         .success();
 
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("uninstall")
         .arg("--path")
@@ -2305,11 +2384,13 @@ fn mcp_uninstall_skill_only_keeps_mcp_block() {
 
 #[test]
 fn mcp_status_reports_per_agent_state() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("status")
@@ -2347,8 +2428,9 @@ fn mcp_status_reports_per_agent_state() {
 
 #[test]
 fn mcp_status_reports_skill_drift() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
     // Plant a stale skill file by hand.
@@ -2356,7 +2438,8 @@ fn mcp_status_reports_skill_drift() {
     fs::create_dir_all(skill_path.parent().unwrap()).unwrap();
     fs::write(&skill_path, "stale content").unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("status")
@@ -2379,12 +2462,13 @@ fn mcp_status_reports_skill_drift() {
 #[test]
 fn mcp_serve_responds_to_initialize_and_query_package() {
     let registry = workspace_root().join("fixtures").join("registry");
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     // Install the omnibus alpha package so query_package has
     // something interesting to return.
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/integration-alpha")
         .arg("--registry")
@@ -2508,10 +2592,11 @@ fn mcp_serve_responds_to_initialize_and_query_package() {
 #[test]
 fn omnibus_install_exercises_every_prop003_surface() {
     let registry = workspace_root().join("fixtures").join("registry");
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/integration-rust")
         .arg("org.vibevm/integration-alpha")
@@ -2682,10 +2767,11 @@ fn omnibus_install_exercises_every_prop003_surface() {
 #[test]
 fn omnibus_show_features_and_purls_after_install() {
     let registry = workspace_root().join("fixtures").join("registry");
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/integration-rust")
         .arg("org.vibevm/integration-alpha")
@@ -2702,7 +2788,8 @@ fn omnibus_show_features_and_purls_after_install() {
         .success();
 
     // `show features` — alpha's active feature set surfaces.
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("show")
         .arg("features")
@@ -2733,7 +2820,8 @@ fn omnibus_show_features_and_purls_after_install() {
     assert!(alpha_features.contains(&"extra-discipline"));
 
     // `show purls` — alpha's package-level `describes` PURL surfaces.
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("show")
         .arg("purls")
@@ -2755,10 +2843,11 @@ fn omnibus_show_features_and_purls_after_install() {
 #[test]
 fn omnibus_install_no_default_features_drops_default_subskill() {
     let registry = workspace_root().join("fixtures").join("registry");
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/integration-alpha")
         .arg("--registry")
@@ -2913,15 +3002,16 @@ fn install_expands_conditional_dependencies_when_predicate_matches() {
     let outer = tempfile::tempdir().unwrap();
     let (_org, registry_url) = make_conditional_deps_registry(outer.path());
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     write_project_with_per_package_registry(project.path(), &registry_url);
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
     // Install org.vibevm/rust-cli first to make `org.vibevm/rust` present in the
     // graph before dispatcher's conditional predicate evaluates.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm/rust-cli")
@@ -3087,13 +3177,14 @@ fn install_expands_cascading_conditional_dependencies() {
     let outer = tempfile::tempdir().unwrap();
     let (_org, registry_url) = make_cascading_conditional_registry(outer.path());
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     write_project_with_per_package_registry(project.path(), &registry_url);
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm/rust-cli")
@@ -3134,8 +3225,9 @@ fn conditional_dependencies_dormant_when_predicate_misses() {
     let outer = tempfile::tempdir().unwrap();
     let (_org, registry_url) = make_conditional_deps_registry(outer.path());
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     write_project_with_per_package_registry(project.path(), &registry_url);
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
@@ -3143,7 +3235,7 @@ fn conditional_dependencies_dormant_when_predicate_misses() {
     // Install dispatcher WITHOUT org.vibevm/rust-cli. The conditional
     // predicate `context(stack:rust)` doesn't match → rust-helper
     // stays dormant.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm/dispatcher")
@@ -3247,15 +3339,16 @@ fn outdated_reports_newer_version_available() {
     let outer = tempfile::tempdir().unwrap();
     let (_org, registry_url) = make_two_version_per_package_registry(outer.path());
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     write_project_with_per_package_registry(project.path(), &registry_url);
 
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
     // Install pinned to v0.1.0 explicitly.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm/test-multi@=0.1.0")
@@ -3265,7 +3358,8 @@ fn outdated_reports_newer_version_available() {
         .assert()
         .success();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("--json")
         .arg("outdated")
@@ -3295,9 +3389,10 @@ fn show_features_lists_active_features_after_install() {
     // surfaces the activation set per package.
     let outer = tempfile::tempdir().unwrap();
     let registry = make_features_fixture_registry(outer.path());
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    vibe()
+    user.init_project(project.path());
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/feat-pkg")
         .arg("--registry")
@@ -3309,7 +3404,8 @@ fn show_features_lists_active_features_after_install() {
         .arg("--assume-yes")
         .assert()
         .success();
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("show")
         .arg("features")
@@ -3378,15 +3474,16 @@ fn set_mirror_accepts_file_url_with_no_org_segment() {
     // test pins the post-fix shape: a `file:///` URL is accepted, the
     // manifest learns a new `[[mirror]]` block, and the URL is recorded
     // verbatim.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     let vendor_dir = tempfile::tempdir().unwrap();
     let abs_vendor = vendor_dir.path().to_string_lossy().replace('\\', "/");
     let mirror_url = format!("file:///{abs_vendor}");
 
     // Add a registry first (defaults no longer land in the project).
-    vibe()
+    user.vibe()
         .arg("registry")
         .arg("add")
         .arg("vibespecs")
@@ -3396,7 +3493,7 @@ fn set_mirror_accepts_file_url_with_no_org_segment() {
         .assert()
         .success();
 
-    vibe()
+    user.vibe()
         .arg("registry")
         .arg("set-mirror")
         .arg("vibespecs")
@@ -3424,11 +3521,12 @@ fn set_mirror_rejects_empty_url() {
     // intentionally narrow: non-empty after trim. Pin both the empty
     // and the whitespace-only case so a refactor that loosens the
     // check doesn't sneak through unnoticed.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     // Add a registry first (defaults no longer land in the project).
-    vibe()
+    user.vibe()
         .arg("registry")
         .arg("add")
         .arg("vibespecs")
@@ -3439,7 +3537,7 @@ fn set_mirror_rejects_empty_url() {
         .success();
 
     for bad in ["", "   "] {
-        vibe()
+        user.vibe()
             .arg("registry")
             .arg("set-mirror")
             .arg("vibespecs")
@@ -3504,8 +3602,9 @@ fn every_subcommand_renders_help() {
         &["version"],
     ];
 
+    let user = UserScratch::new();
     for path in subcommand_paths {
-        let mut cmd = vibe();
+        let mut cmd = user.vibe();
         for seg in *path {
             cmd.arg(seg);
         }
@@ -3546,8 +3645,14 @@ fn version_subcommand_matches_version_flag() {
     // `vibe version` and `vibe --version` are documented as identical
     // (see docs/commands/version.md). Drift between the two would confuse
     // any tooling that scrapes the version string.
-    let sub = vibe().arg("version").output().expect("spawn vibe version");
-    let flag = vibe()
+    let user = UserScratch::new();
+    let sub = user
+        .vibe()
+        .arg("version")
+        .output()
+        .expect("spawn vibe version");
+    let flag = user
+        .vibe()
         .arg("--version")
         .output()
         .expect("spawn vibe --version");
@@ -3573,9 +3678,10 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     // `vibe reinstall` (no `--force`) recomputes a node's boot artifacts
     // from the materialised `vibedeps/` tree already on disk — the fix
     // for a deleted or hand-edited `INDEX.md` / redirect (PROP-009 §2.10).
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    vibe()
+    user.init_project(project.path());
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -3594,7 +3700,7 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     fs::remove_file(&claude).unwrap();
 
     // `vibe reinstall` regenerates them from the intact `vibedeps/` slot.
-    vibe()
+    user.vibe()
         .arg("reinstall")
         .arg(project.path())
         .arg("--assume-yes")
@@ -3620,8 +3726,9 @@ fn reinstall_succeeds_on_a_project_with_no_dependencies() {
     // `vibe reinstall` of a project that has only authored boot and no
     // installed packages regenerates its boot artifacts from the
     // `spec/boot/` tree — an absent or empty `vibe.lock` is not an error.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     // Remove any boot artifacts a prior step produced, so the assertion
     // below proves `vibe reinstall` regenerated them.
     let index = project.path().join("spec/boot/INDEX.md");
@@ -3629,7 +3736,7 @@ fn reinstall_succeeds_on_a_project_with_no_dependencies() {
     let _ = fs::remove_file(&index);
     let _ = fs::remove_file(&claude);
 
-    vibe()
+    user.vibe()
         .arg("reinstall")
         .arg(project.path())
         .arg("--assume-yes")
@@ -3649,9 +3756,10 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
     // Without `--force`, `vibe reinstall` regenerates boot FROM the
     // materialised tree — it cannot recover a deleted `vibedeps/` slot,
     // so it stops and points at `--force` (PROP-009 §2.10).
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    vibe()
+    user.init_project(project.path());
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -3665,7 +3773,7 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
     // Delete the materialised slot — the lockfile still records org.vibevm.world/wal.
     fs::remove_dir_all(project.path().join("vibedeps/flow-wal")).unwrap();
 
-    vibe()
+    user.vibe()
         .arg("reinstall")
         .arg(project.path())
         .arg("--assume-yes")
@@ -3676,9 +3784,10 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
 
 #[test]
 fn reinstall_reports_json() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    vibe()
+    user.init_project(project.path());
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -3689,7 +3798,8 @@ fn reinstall_reports_json() {
         .assert()
         .success();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("reinstall")
         .arg(project.path())
@@ -3721,15 +3831,16 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &url);
 
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -3751,7 +3862,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
 
     // `vibe reinstall --force` re-fetches from source and overwrites the
     // slot wholesale; the lockfile-pinned version is unchanged.
-    vibe()
+    user.vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("reinstall")
         .arg(project.path())

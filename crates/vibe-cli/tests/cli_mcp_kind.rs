@@ -11,17 +11,18 @@ mod common;
 
 use std::fs;
 
-use common::{fixture_registry, init_project, vibe};
+use common::{UserScratch, fixture_registry};
 use specmark::verifies;
 
 #[test]
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#kind")]
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#exact-pin")]
 fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("mcp:org.vibevm/pin-server")
         .arg("--path")
@@ -66,7 +67,7 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
     assert!(lock.contains("name = \"pin-server\""), "{lock}");
 
     // The check gate accepts the resulting project.
-    vibe()
+    user.vibe()
         .arg("check")
         .arg("--path")
         .arg(project.path())
@@ -79,9 +80,10 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#registration")]
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#consent")]
 fn mcp_install_registers_and_uninstall_removes_package_servers() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
-    vibe()
+    user.init_project(project.path());
+    user.vibe()
         .arg("install")
         .arg("mcp:org.vibevm/pin-server")
         .arg("--path")
@@ -96,7 +98,7 @@ fn mcp_install_registers_and_uninstall_removes_package_servers() {
     // .mcp.json as a DIRECT slot-artifact launch entry (no vibe in the
     // command line), args substituted, marked vibevm-managed. The
     // org.vibevm group rides the consent allowlist.
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("install")
         .arg("--path")
@@ -143,7 +145,7 @@ fn mcp_install_registers_and_uninstall_removes_package_servers() {
 
     // Uninstall removes the managed entry AND the sidecar, leaving
     // operator-owned keys (none here beyond vibevm's own) intact.
-    vibe()
+    user.vibe()
         .arg("mcp")
         .arg("uninstall")
         .arg("--path")

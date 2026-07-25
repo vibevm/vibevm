@@ -11,9 +11,8 @@ mod common;
 use std::fs;
 
 use common::{
-    fixture_registry, git_available, init_project, make_per_package_registry,
-    make_single_package_bare_repo, make_wal_dir_registry, vibe,
-    write_project_with_per_package_registry,
+    UserScratch, fixture_registry, git_available, make_per_package_registry,
+    make_single_package_bare_repo, make_wal_dir_registry, write_project_with_per_package_registry,
 };
 use predicates::prelude::*;
 use specmark::verifies;
@@ -29,12 +28,13 @@ fn full_install_cycle() {
     // no longer any mirrored `spec/flows/<kind>/<name>/*` files in the
     // project tree, and no `NN-` boot snippet placed directly in
     // `spec/boot/`.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     // Install org.vibevm.world/wal from a directory registry seeded with
     // the real package tree (dogfood, not a fixture).
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -144,7 +144,7 @@ fn full_install_cycle() {
     );
 
     // `vibe list` reflects the install.
-    vibe()
+    user.vibe()
         .arg("list")
         .arg("--path")
         .arg(project.path())
@@ -155,7 +155,7 @@ fn full_install_cycle() {
         .stdout(predicate::str::contains("0.2.0"));
 
     // `vibe uninstall` removes the package's `vibedeps/` slot.
-    vibe()
+    user.vibe()
         .arg("uninstall")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -182,7 +182,7 @@ fn full_install_cycle() {
     assert!(lock.packages.is_empty());
 
     // `list` after uninstall shows no packages.
-    vibe()
+    user.vibe()
         .arg("list")
         .arg("--path")
         .arg(project.path())
@@ -199,10 +199,11 @@ fn full_install_cycle() {
 #[test]
 #[verifies("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 fn install_second_install_is_idempotent() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -215,7 +216,7 @@ fn install_second_install_is_idempotent() {
 
     // Second install of the same package succeeds — the slot is already
     // present for 0.2.0, so materialisation skips it (PROP-011 §2.3).
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -251,12 +252,13 @@ fn install_skips_a_present_slot_on_re_install() {
     // scan never sees it; built once and reused across both installs (a
     // second `make_wal_dir_registry` would re-copy the tree and look like
     // a change).
+    let user = UserScratch::new();
     let reg_home = tempfile::tempdir().unwrap();
     let registry = make_wal_dir_registry(reg_home.path());
-    init_project(project.path());
+    user.init_project(project.path());
 
     // First install materialises the `vibedeps/flow-wal/0.2.0` slot.
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -269,7 +271,8 @@ fn install_skips_a_present_slot_on_re_install() {
 
     // Second install — same pkgref, full pipeline — but the slot is
     // already present for the resolved version, so the copy is skipped.
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -298,10 +301,12 @@ fn install_skips_a_present_slot_on_re_install() {
 
 #[test]
 fn install_reports_json() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -346,13 +351,14 @@ fn install_skips_resolution_when_the_lockfile_is_fresh() {
     // The registry lives OUTSIDE the project so the fresh-lockfile fast
     // path is not defeated by a re-copied registry inside the project;
     // built once and reused across both installs.
+    let user = UserScratch::new();
     let reg_home = tempfile::tempdir().unwrap();
     let registry = make_wal_dir_registry(reg_home.path());
-    init_project(project.path());
+    user.init_project(project.path());
 
     // First install — the full pipeline: resolve, materialise, lock. It
     // also records `org.vibevm.world/wal` in `[requires].packages`.
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -366,7 +372,8 @@ fn install_skips_resolution_when_the_lockfile_is_fresh() {
     // Second install with no pkgref — `[requires]` carries org.vibevm.world/wal, the
     // lock is a fresh resolution of it, the slot is materialised: the
     // depsolver is skipped.
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("install")
         .arg("--path")
@@ -391,10 +398,11 @@ fn install_skips_resolution_when_the_lockfile_is_fresh() {
 
 #[test]
 fn uninstall_errors_when_package_not_installed() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("uninstall")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -412,10 +420,11 @@ fn uninstall_errors_when_package_not_installed() {
 /// up patch-compatible bumps without needing an explicit re-pin.
 #[test]
 fn install_writes_caret_pkgref_to_vibe_toml_requires() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -463,10 +472,11 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
 /// never stores a short name.
 #[test]
 fn install_resolves_bare_short_name_to_qualified() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("wal") // bare short name — no group
         .arg("--path")
@@ -505,10 +515,11 @@ fn install_resolves_bare_short_name_to_qualified() {
 /// (PROP-008 §2.6).
 #[test]
 fn install_unresolvable_short_name_fails_with_hint() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("no-such-package")
         .arg("--path")
@@ -533,10 +544,11 @@ fn install_ambiguous_short_name_fails_with_exit_code_seven() {
     for group in ["org.vibevm", "com.example"] {
         fs::create_dir_all(registry.path().join(group).join("wal").join("v0.1.0")).unwrap();
     }
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("wal")
         .arg("--path")
@@ -557,10 +569,11 @@ fn install_ambiguous_short_name_fails_with_exit_code_seven() {
 /// `finalize_pkgref_for_manifest` "preserve explicit" branch.
 #[test]
 fn install_preserves_explicit_constraint_in_vibe_toml() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal@^0.2")
         .arg("--path")
@@ -588,10 +601,11 @@ fn install_preserves_explicit_constraint_in_vibe_toml() {
 /// any constraint the CLI form carried.
 #[test]
 fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--exact")
@@ -619,8 +633,9 @@ fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
 /// reproduces its package set without re-typing every pkgref.
 #[test]
 fn install_from_manifest_uses_requires() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     // Hand-edit vibe.toml: declare org.vibevm.world/wal as a required package without
     // having installed it yet. This is the freshly-cloned-project case —
@@ -636,7 +651,7 @@ fn install_from_manifest_uses_requires() {
 
     // Run `vibe install` with no pkgref arguments — should pick up the
     // manifest declaration and install org.vibevm.world/wal.
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("--path")
         .arg(project.path())
@@ -682,10 +697,11 @@ fn install_from_manifest_uses_requires() {
 /// the two ways to declare an input list.
 #[test]
 fn install_no_args_no_manifest_no_lock_errors() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("--path")
         .arg(project.path())
@@ -704,10 +720,11 @@ fn install_no_args_no_manifest_no_lock_errors() {
 /// manifest untouched.
 #[test]
 fn uninstall_drops_pkgref_from_vibe_toml() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
-    vibe()
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -724,7 +741,7 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
     let manifest = vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
 
-    vibe()
+    user.vibe()
         .arg("uninstall")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -771,11 +788,9 @@ fn install_from_git_registry() {
 
     let outer = tempfile::tempdir().unwrap();
     let org_root = make_per_package_registry(outer.path());
-    let cache = outer.path().join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
 
     // Org URL = parent of `org.vibevm.world_wal.git`. `git+file://` prefix is
     // the Cargo / pip convention recorded in lockfiles; the resolver
@@ -787,8 +802,7 @@ fn install_from_git_registry() {
     );
     write_project_with_per_package_registry(project.path(), &url);
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--path")
@@ -829,7 +843,12 @@ fn install_from_git_registry() {
     // and a clone subdir. The registry-level meta.toml lands together with
     // freshness machinery in a follow-up — this commit only requires the
     // bucket directory itself plus the package clone.
-    let clone_dirs: Vec<_> = fs::read_dir(&cache)
+    //
+    // Counting buckets is only meaningful because `UserScratch` also pins
+    // `$VIBE_SETTINGS`: the project declares exactly one `[[registry]]`,
+    // but any registry in the developer's real `~/.vibe/registry.toml`
+    // would be merged in on top of it and mint a bucket of its own.
+    let clone_dirs: Vec<_> = fs::read_dir(&user.cache)
         .unwrap()
         .filter_map(|e| e.ok())
         .collect();
@@ -861,16 +880,13 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
     }
     let outer = tempfile::tempdir().unwrap();
     let bare = make_single_package_bare_repo(outer.path());
-    let cache = outer.path().join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!("file://{}", bare.to_string_lossy().replace('\\', "/"));
 
     // M1.15: declare git-source via CLI flags, no [[registry]] needed.
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--git")
@@ -952,18 +968,15 @@ fn install_from_git_source_with_branch_pins_lockfile_to_resolved_commit() {
     }
     let outer = tempfile::tempdir().unwrap();
     let bare = make_single_package_bare_repo(outer.path());
-    let cache = outer.path().join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!("file://{}", bare.to_string_lossy().replace('\\', "/"));
 
     // M1.15: --branch is mutable; install resolves to current HEAD,
     // lockfile pins resolved_commit, vibe install (no update) stays
     // on that commit.
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--git")
@@ -1021,15 +1034,12 @@ fn install_git_source_then_repeat_install_no_args_is_idempotent() {
     }
     let outer = tempfile::tempdir().unwrap();
     let bare = make_single_package_bare_repo(outer.path());
-    let cache = outer.path().join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!("file://{}", bare.to_string_lossy().replace('\\', "/"));
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--git")
@@ -1044,8 +1054,7 @@ fn install_git_source_then_repeat_install_no_args_is_idempotent() {
 
     // Repeat install with no arguments — re-resolves from `[requires]`
     // and re-materialises. Idempotent: succeeds without error.
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("--path")
         .arg(project.path())
@@ -1086,15 +1095,12 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
     }
     let outer = tempfile::tempdir().unwrap();
     let bare = make_single_package_bare_repo(outer.path());
-    let cache = outer.path().join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let url = format!("file://{}", bare.to_string_lossy().replace('\\', "/"));
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
         .arg("--git")
@@ -1107,8 +1113,7 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
         .assert()
         .success();
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("uninstall")
         .arg("org.vibevm.world/wal")
         .arg("--path")

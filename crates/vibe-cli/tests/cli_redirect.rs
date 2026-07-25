@@ -7,7 +7,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use common::{
-    git_available, init_project, make_redirect_stub_bare_repo, run_git, vibe,
+    UserScratch, git_available, make_redirect_stub_bare_repo, run_git,
     write_project_with_per_package_registry,
 };
 use predicates::prelude::*;
@@ -86,9 +86,6 @@ fn install_via_redirect_pass_through_tag() {
     }
     let outer = tempfile::tempdir().unwrap();
     let outer_path = outer.path();
-    let cache = outer_path.join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
     // Target lives outside the registry org, simulating an external
     // author's repo. URL form `file://...` so the resolver's git
     // archive operations work end to end.
@@ -121,16 +118,16 @@ fn install_via_redirect_pass_through_tag() {
         &["v0.1.0"],
     );
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let registry_url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &registry_url);
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/internal@^0.1")
         .arg("--path")
@@ -193,9 +190,6 @@ fn install_via_redirect_pinned_policy_uses_pinned_ref() {
     }
     let outer = tempfile::tempdir().unwrap();
     let outer_path = outer.path();
-    let cache = outer_path.join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
     // Target carries a single tag `v1.0.0` — the pinned ref the stub
     // points at. The stub also tags `v1.0.0` so the install
     // pipeline's pinned re-resolve hits the same slot; pinned policy
@@ -233,16 +227,16 @@ fn install_via_redirect_pinned_policy_uses_pinned_ref() {
         &["v1.0.0"],
     );
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let registry_url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &registry_url);
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/pinned@^1")
         .arg("--path")
@@ -272,9 +266,6 @@ fn install_via_redirect_identity_mismatch_rejected() {
     }
     let outer = tempfile::tempdir().unwrap();
     let outer_path = outer.path();
-    let cache = outer_path.join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
     // Stub is hosted at `flow-internal` slot but redirects to a target
     // whose manifest declares `org.vibevm/something-else`. Per PROP-002
     // §2.4.2 identity check, the resolver refuses the install loud.
@@ -304,16 +295,16 @@ fn install_via_redirect_identity_mismatch_rejected() {
         &["v0.1.0"],
     );
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let registry_url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &registry_url);
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/internal@^0.1")
         .arg("--path")
@@ -343,9 +334,6 @@ fn install_via_redirect_chain_rejected_at_hop_two() {
     }
     let outer = tempfile::tempdir().unwrap();
     let outer_path = outer.path();
-    let cache = outer_path.join("cache");
-    fs::create_dir_all(&cache).unwrap();
-
     // Hop 2 stub — has its own vibe-redirect.toml; the resolver should
     // refuse before reading content.
     let hop2_root = outer_path.join("hop2-host");
@@ -385,16 +373,16 @@ fn install_via_redirect_chain_rejected_at_hop_two() {
         &["v1.0.0"],
     );
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     let registry_url = format!(
         "git+file://{}",
         org_root.to_string_lossy().replace('\\', "/")
     );
     write_project_with_per_package_registry(project.path(), &registry_url);
 
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
+    user.vibe()
         .arg("install")
         .arg("org.vibevm/chain@^1")
         .arg("--path")
@@ -423,7 +411,9 @@ fn install_via_redirect_chain_rejected_at_hop_two() {
 
 #[test]
 fn redirect_update_help_lists_partial_update_flags() {
-    let out = vibe()
+    let user = UserScratch::new();
+    let out = user
+        .vibe()
         .arg("registry")
         .arg("redirect-update")
         .arg("--help")
@@ -456,8 +446,9 @@ fn redirect_update_rejects_description_and_clear_combined() {
     // Mutual-exclusion check fires FIRST in the handler, before any
     // filesystem or network work — so we can test it with an empty
     // working directory (no `vibe.toml` needed).
+    let user = UserScratch::new();
     let scratch = tempfile::tempdir().unwrap();
-    vibe()
+    user.vibe()
         .arg("registry")
         .arg("redirect-update")
         .arg("org.vibevm/wal")
@@ -474,11 +465,12 @@ fn redirect_update_rejects_description_and_clear_combined() {
 #[test]
 #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
 fn redirect_update_rejects_invalid_pkgref() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    user.init_project(project.path());
     write_project_with_per_package_registry(project.path(), "https://github.com/some-org");
 
-    vibe()
+    user.vibe()
         .arg("registry")
         .arg("redirect-update")
         .arg("not-a-pkgref")
@@ -496,8 +488,9 @@ fn redirect_update_rejects_missing_vibe_toml() {
     // Path exists but carries no `vibe.toml` — handler bails after the
     // mutual-exclusion check (passed: no `--clear-description`) with a
     // clear "no vibe.toml" hint pointing at `vibe init`.
+    let user = UserScratch::new();
     let scratch = tempfile::tempdir().unwrap();
-    vibe()
+    user.vibe()
         .arg("registry")
         .arg("redirect-update")
         .arg("org.vibevm/wal")

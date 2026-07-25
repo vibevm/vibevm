@@ -23,8 +23,90 @@ pub fn vibe() -> Command {
     // Suppress the global-registry seeding so tests don't pollute the real
     // `~/.vibe/registry.toml` or pick up real-world registries that change
     // the resolution/cache shape they assert against.
+    //
+    // NOTE: this only stops the CLI from *writing* a fresh `registry.toml`
+    // on a machine that has none. It does nothing about one that already
+    // exists — for that, build commands through [`UserScratch::vibe`].
     cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
     cmd
+}
+
+/// A scratch stand-in for the per-user state a `vibe` subprocess reads out
+/// of the developer's home directory. One per test: it owns its temp tree,
+/// so it dies with the test and no two tests ever share one.
+///
+/// # Both environment variables are load-bearing — do not delete either
+///
+/// * **`VIBE_SETTINGS`** relocates the whole per-user settings dir
+///   (`~/.vibe`) verbatim, and the file that matters is `registry.toml`:
+///   its `[[registry]]` entries are *merged* into every resolution
+///   (PROP-002 §2.2.2 `#global-config`, via `merge_effective`). A developer
+///   who has real global registries therefore resolves against more
+///   registries — and mints more clone-cache buckets — than the test ever
+///   declared, so a hermetic assertion goes red on their machine and
+///   nowhere else. That was F-055: `assert_eq!(clone_dirs.len(), 1)` in
+///   `cli_pkg_cycle.rs` saw three buckets the moment a real
+///   `~/.vibe/registry.toml` appeared. The same dir also carries
+///   `config.toml` (`[init] last_author`) and `settings.toml`, so `vibe
+///   init` stops picking up the developer's name too.
+/// * **`VIBE_REGISTRY_CACHE`** pins the git clone cache at a path the test
+///   knows by name so it can read the bucket layout back. `VIBE_SETTINGS`
+///   alone would already move the cache (to `<settings>/registries`), but
+///   only this makes the location the test's to assert on.
+///
+/// Never point either at the real home: a test that *reads* real user
+/// state is as broken as one that writes it.
+pub struct UserScratch {
+    /// Owns the temp tree; dropping it removes `settings` and `cache`.
+    _root: tempfile::TempDir,
+    /// `$VIBE_SETTINGS` — stands in for `~/.vibe`. Starts empty; a test
+    /// that deliberately exercises global settings seeds a fixture here.
+    pub settings: PathBuf,
+    /// `$VIBE_REGISTRY_CACHE` — the per-package git clone cache root.
+    pub cache: PathBuf,
+}
+
+impl UserScratch {
+    /// A fresh, empty per-user scratch home.
+    pub fn new() -> Self {
+        let root = tempfile::tempdir().expect("scratch user home");
+        let settings = root.path().join("settings");
+        let cache = root.path().join("cache");
+        fs::create_dir_all(&settings).unwrap();
+        fs::create_dir_all(&cache).unwrap();
+        Self {
+            _root: root,
+            settings,
+            cache,
+        }
+    }
+
+    /// A `vibe` command that reads this scratch instead of the developer's
+    /// home. Every `Command` a resolution/cache/registry test builds must
+    /// come from here rather than from the bare [`vibe`].
+    pub fn vibe(&self) -> Command {
+        let mut cmd = vibe();
+        cmd.env(vibe_core::settings::SETTINGS_DIR_ENV, &self.settings);
+        cmd.env("VIBE_REGISTRY_CACHE", &self.cache);
+        cmd
+    }
+
+    /// `vibe init` under this scratch — the isolated counterpart of the
+    /// free [`init_project`].
+    pub fn init_project(&self, dir: &Path) {
+        self.vibe()
+            .arg("init")
+            .arg("--path")
+            .arg(dir)
+            .assert()
+            .success();
+    }
+}
+
+impl Default for UserScratch {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 /// The `fixtures/registry/` directory at the repo root holds the
