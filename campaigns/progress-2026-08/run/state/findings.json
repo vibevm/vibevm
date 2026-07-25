@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T14:14:56Z",
+ "updated_at": "2026-07-25T14:22:25Z",
  "findings": [
   {
    "id": "F-001",
@@ -423,7 +423,7 @@
    "type": "reality-mismatch",
    "status": "open",
    "wave": 0,
-   "note": "Code-side stale deviates on PROP-002#solver: naive.rs:32 reason still claims 'no ResolvoSolver exists in tree and NaiveDepSolver is the only DepSolver impl (DBT-0011)' and sat.rs:174 claims 'adopting resolvo stays an owner decision' - while ResolvoDepSolver is the shipped PRODUCTION DEFAULT (vibe-cli/registry.rs:117 unwrap_or(\"resolvo\"), :191 constructs it; resolvo_engine/ module 'the production DepSolver cell'). The two deviates reasons aged behind the resolvo adoption they were waiting for. Phase E: rewrite or retire both #[spec(deviates)] blocks."
+   "note": "Code-side stale deviates on PROP-002#solver: naive.rs:32 reason still claims 'no ResolvoSolver exists in tree and NaiveDepSolver is the only DepSolver impl (DBT-0011)' and sat.rs:174 claims 'adopting resolvo stays an owner decision' - while ResolvoDepSolver is the shipped PRODUCTION DEFAULT (vibe-cli/registry.rs:117 unwrap_or(\"resolvo\"), :191 constructs it; resolvo_engine/ module 'the production DepSolver cell'). The two deviates reasons aged behind the resolvo adoption they were waiting for. Phase E: rewrite or retire both #[spec(deviates)] blocks. EXTENDED (c4c): a third stale reason at vibe-resolver/src/lib.rs:288-296 - the pin_preferences deviates says 'SatDepSolver is not in tree (see DBT-0011)' while the Sat cell ships in sat.rs (the deviates' core point - pin_preferences absent, pins held at the install layer per PROP-011 - remains valid)."
   },
   {
    "id": "F-048",
@@ -432,7 +432,7 @@
    "type": "reality-mismatch",
    "status": "open",
    "wave": 0,
-   "note": "PROP-002 present-state nits, one precision sweep: (a) --trust-mirror flag shipped nowhere (TRUST-MIRROR-HATCH, PBP-MIRROR-CHAIN cite it; only --trust-redirect exists, cli/registry.rs:226); (b) GS-EXACTLY-ONE-REF names MissingRef/ConflictingRefs - shipped as reason-strings on a shared parse error (semantics exact, deps.rs:160-166); (c) SOURCE-KIND-VALUES lists registry|git|override - PROP-007 added 'path' (LOCK-V4), PROP-030 added 'embedded'; a forward-ref would help; (d) vibe list --overrides promised (OVERRIDE-SEMANTICS, ROW-CMP-LIST) but no overrides flag exists in the CLI; (e) GS-CACHE-SLOT literal path shows kind-name era - live slot is packages/<group>.<name>/clone (M1.19). Fix = one wording/impl sweep, owner picks flag-vs-demote per item."
+   "note": "PROP-002 present-state nits, one precision sweep: (a) --trust-mirror flag shipped nowhere (TRUST-MIRROR-HATCH, PBP-MIRROR-CHAIN cite it; only --trust-redirect exists, cli/registry.rs:226); (b) GS-EXACTLY-ONE-REF names MissingRef/ConflictingRefs - shipped as reason-strings on a shared parse error (semantics exact, deps.rs:160-166); (c) SOURCE-KIND-VALUES lists registry|git|override - PROP-007 added 'path' (LOCK-V4), PROP-030 added 'embedded'; a forward-ref would help; (d) vibe list --overrides promised (OVERRIDE-SEMANTICS, ROW-CMP-LIST) but no overrides flag exists in the CLI; (e) GS-CACHE-SLOT literal path shows kind-name era - live slot is packages/<group>.<name>/clone (M1.19). Fix = one wording/impl sweep, owner picks flag-vs-demote per item. EXTENDED (c4c): (f) SOLVER-IDENTITY-FIELD claims lockfile.meta.solver = 'resolvo-<ver>' records the solver identity - the field does not exist in the live lock (0 hits) and PROP-017 §8 admits it awaits a schema bump; the c4b confirmed verdict was corrected to drift."
   },
   {
    "id": "F-049",
@@ -442,6 +442,15 @@
    "status": "open",
    "wave": 0,
    "note": "PROP-001 touch-ups, one pass: (a) mechanics-in-readme says mechanics live in the module README - crates/vibe-registry has no README.md (they live in lib.rs module docs + spec-citing error strings); (b) NO-OFFLINE-YET ('No --offline flag yet', in the NOT-SUPERSEDED set) aged - --offline shipped via PROP-002 §2.2.2.1 with url_is_local; (c) OPEN-GIT-BINARY-PATH parking-lot entry resolved by shipped VIBE_GIT_BINARY (shell.rs:61-63 comment cites 'PROP-001 §6')."
+  },
+  {
+   "id": "F-050",
+   "from": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+   "to": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
+   "type": "contradiction",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-003's solver-era tail sits OUTSIDE the §2.2 supersede marker and aged behind PROP-017: §2.1 SOLVER-TWO-IMPLS/SOLVER-SELECTOR still promise 'SatDepSolver becomes the default', a '[meta].solver' lockfile selection key (never shipped; 0 hits in the live lock) and '--solver <naive|sat>' (shipped: naive|sat|resolvo, default resolvo); §2.11 MIG-DEFAULT-SAT and §6 PE-DEFAULT-FLIP say the default flipped to sat (it flipped to resolvo); §2.10 CLI-UPDATE-FEATURES promises 'vibe update --features' which does not exist (update --help has no such flag). One sweep: extend the supersede marker over the §2.1 default-clause + selector, correct MIG/PE rows, and either wire update --features or demote it."
   }
  ]
 }

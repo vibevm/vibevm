@@ -898,6 +898,37 @@ read-only, no auth.
   schema 5). **Running tally: 2 027 / 4 944 — 1 960 confirmed / 64
   drift / 3 unverifiable; findings 49 (next free F-050).**
 
+- **2026-07-25 · c4c — the resolver pair verified; one c4b verdict
+  corrected.** PROP-003 (314 markers) + PROP-017 (106): **372 units —
+  359 confirmed / 13 drift / 0 unverifiable.** PROP-017 verifies almost
+  wholesale on the c4b code evidence (architecture item-for-item:
+  `SemverVersionSet` literal to the spec, NowOrNever sync adapter,
+  shared output builder, dominance oracle, capability closure
+  pre-scan); its only drift is the known **F-027** status-line
+  ("implementation in progress" + an impl/*work* document marker over
+  its own §6 "the port is COMPLETE"). PROP-003's eleven split three
+  ways: **F-030** (the design-proposal status line over a shipped
+  vocabulary), four **F-031** rows landing exactly as the B-phase
+  ledgered them (the r1 `__exclusive` fence, the §4.3→§2.5.4 misref,
+  and the `language_chain`-vs-`language`+`language_fallback` trio —
+  lockfile.rs:130 is one merged field), and a new **F-050**: the
+  solver-era tail *outside* the §2.2 supersede marker — §2.1 still
+  promises "SatDepSolver becomes the default" with a `[meta].solver`
+  selection key and a `naive|sat` CLI (shipped: `naive|sat|resolvo`,
+  default resolvo, no meta.solver field), §2.11/§6 still record a
+  sat-default flip, and `vibe update --features` was promised but
+  never wired. The same evidence trail **corrected c4b**:
+  PROP-002's SOLVER-IDENTITY-FIELD had confirmed on a section default,
+  but the live lock has no `solver` field and PROP-017 §8 says so —
+  verdict amended to drift, F-048 extended (f), and F-047 extended
+  with a third stale deviates (lib.rs:288-296 still claims
+  "SatDepSolver is not in tree" while sat.rs ships). Subskills
+  confirmed with a live wink: this session's own MCP toolbox carries
+  `read_subskill` / `materialise_subskill` — the M1.7 lazy-delivery
+  surface §2.5 designed. **Running tally: 2 399 / 4 944 — 2 318
+  confirmed / 78 drift / 3 unverifiable; findings 50 (next free
+  F-051).**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

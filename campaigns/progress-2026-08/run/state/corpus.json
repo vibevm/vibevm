@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T14:14:57Z",
+  "updated_at": "2026-07-25T14:22:26Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -11515,8 +11515,8 @@
         "marker_count": 360,
         "processed_hash": "f75f8def5bc1eed2f9548a76c15f3f18863a984a119bd3b70262ee2d1949366e",
         "summary": {
-          "confirmed": 281,
-          "drift": 5,
+          "confirmed": 280,
+          "drift": 6,
           "unverifiable": 0
         },
         "verdicts": {
@@ -12637,9 +12637,9 @@
             ]
           },
           "SOLVER-IDENTITY-FIELD": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+              "F-048(f): corrected in c4c — the claimed lockfile.meta.solver field does not exist (grep solver vibe.lock = 0 hits); PROP-017 §8 records the gap explicitly ('the lockfile [meta] block has no solver field... needs a lockfile schema-version bump'); the c4b section-default verdict was wrong"
             ]
           },
           "capability-req": {
@@ -13341,7 +13341,1774 @@
       "facts": 313,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 291,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (22 cells); document <status> judged as _elements",
+        "fact_count": 313,
+        "marker_count": 314,
+        "processed_hash": "6f8c0fbdfbf05539fbd27e75a09ee32f327bd8b8e47a918efb76035347c3e080",
+        "summary": {
+          "confirmed": 281,
+          "drift": 11,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-030 (ledgered in B): 'Design proposal — not yet implementation-locked' over a shipped system — the vocabulary (features/subskills/conditional/i18n/checks/lockfile) is live in vibe-core/vibe-install/vibe-cli and the engine question is settled by PROP-017"
+            ]
+          },
+          "revision-r2": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-delivery-modes": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-description-field": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-broadened-probes": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-llm-refactor": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-describes-purl": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-conditional-deps": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-exclusive-groups": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-activation-conflict": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "r2-inline-note": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "scope-lead": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "scope-solver": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "scope-features": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "scope-subskills": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "scope-i18n": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "why-now": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "reading-order": {
+            "v": "confirmed",
+            "ev": [
+              "header/r2-history: revision record accurate (r2 sections all exist as described); scope's four upgrades all shipped except the LLM lane (Phase F impl/plan, honest); why-now/reading-order historical"
+            ]
+          },
+          "current-surface": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "shortfalls-lead": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "SHORTFALL-DISJUNCTION": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "SHORTFALL-MONOLITH": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "SHORTFALL-LANGUAGE-LOCK": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "fourth-dimension-lead": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "SHORTFALL-LLM-ACTIVATION": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "vision-claim": {
+            "v": "confirmed",
+            "ev": [
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+            ]
+          },
+          "SOLVER-TWO-IMPLS": {
+            "v": "drift",
+            "ev": [
+              "F-050: the two impls exist (naive.rs + sat.rs Sat cell) but the default-clause aged outside the §2.2 supersede marker — 'SatDepSolver becomes the default' never happened; the default flipped to RESOLVO (registry.rs unwrap_or(\"resolvo\"), PROP-017 DONE-DEFAULT-FLIP)"
+            ]
+          },
+          "SOLVER-SELECTOR": {
+            "v": "drift",
+            "ev": [
+              "F-050: three claims aged — selection key '[meta].solver' does not exist in the live lockfile (grep solver vibe.lock = 0; PROP-017 §8 records the gap), the CLI override is --solver <naive|sat|resolvo> not <naive|sat>, and 'default after this PROP lands: sat' was superseded by resolvo"
+            ]
+          },
+          "two-impls-why": {
+            "v": "confirmed",
+            "ev": [
+              "solver-upgrade partial: both cells exist (naive.rs, sat.rs Sat) as decided; pin_preferences honestly absent WITH a recorded deviates at lib.rs:288-296 (PROP-011 Phase 3 holds pins at the install layer instead) — spec/done honest for the trait addition"
+            ]
+          },
+          "TRAIT-PIN-PREFERENCES": {
+            "v": "confirmed",
+            "ev": [
+              "solver-upgrade partial: both cells exist (naive.rs, sat.rs Sat) as decided; pin_preferences honestly absent WITH a recorded deviates at lib.rs:288-296 (PROP-011 Phase 3 holds pins at the install layer instead) — spec/done honest for the trait addition"
+            ]
+          },
+          "pin-preferences-purpose": {
+            "v": "confirmed",
+            "ev": [
+              "solver-upgrade partial: both cells exist (naive.rs, sat.rs Sat) as decided; pin_preferences honestly absent WITH a recorded deviates at lib.rs:288-296 (PROP-011 Phase 3 holds pins at the install layer instead) — spec/done honest for the trait addition"
+            ]
+          },
+          "SUPERSEDED-BY-PROP-017": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "LIBSOLV-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "license-audit": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "libsolv-why-lead": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "alt-resolvo": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "alt-pubgrub": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "alt-custom": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "ffi-surface-lead": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "ffi-build-side": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "ffi-cargo-feature": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "solver-features-lead": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-CDCL": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-WATCHED-LITERALS": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-WEAK-DEPS": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-RECOMMENDS": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-SUGGESTS": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-SUPPLEMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-ENHANCES": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-WEAK-DEPS-MAPPING": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-WEAK-DEPS-WARNING": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-PROBLEM-REPORTING": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-FAVOR-PIN": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "CAP-MULTIARCH-UNUSED": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "not-relied-lead": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "NOT-RICH-DEPS": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "NOT-MODULES": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "NOT-REPO-READERS": {
+            "v": "confirmed",
+            "ev": [
+              "libsolv engine sections: explicitly superseded by PROP-017 (the SUPERSEDED marker at §2.2 is accurate and its reasons verified — resolvo shipped, pure-Rust, no C FFI anywhere: git2/libsolv absent from Cargo); retained-as-history text stands (license audit, FFI sketch, CDCL/weak-deps capabilities all libsolv-era record at spec/done)"
+            ]
+          },
+          "FEATURES-TABLE": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "features-semantics-lead": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "cargo-keep-lead": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "KEEP-ADDITIVE": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "KEEP-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "KEEP-FEATURE-DEP": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "KEEP-OPTIONAL-DEP": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "KEEP-WEAK-FEATURE": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "KEEP-PER-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "KEEP-UNIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "cargo-drop-lead": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "DROP-DEV-BUILD": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "DROP-RESOLVER-V1": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "DROP-CFG-TRIPLE": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "vibevm-ext-lead": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "EXT-EXCLUSIVE": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "EXT-SUBSKILL-MAP": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "EXT-VISIBILITY": {
+            "v": "confirmed",
+            "ev": [
+              "features shipped and verified against crates (B2 + this batch): features.rs expand_features incl weak `dep?/feat` and named [features.exclusive] groups; --features/--no-default-features/--all-features live in install --help (exact cargo-shape); underscore-privacy enforced ('Underscore-prefixed implementation-detail features cannot be activated' — CLI help says it verbatim)"
+            ]
+          },
+          "SUBSKILLS-TREE": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "SUBSKILL-DEFINITION": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "DELIVERY-PRIMARY-AXIS": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "MODE-EAGER": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "MODE-LAZY-PUSH": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "MODE-LAZY-PULL": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "modes-tessl-mirror": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "MODES-LOCKFILE-IMPACT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "modes-why-day-one": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "MANIFEST-STRICT-SUBSET": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "DESCRIPTION-REQUIRED": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "description-length-policy": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "ACTIVATION-ANY-MATCH": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-MANUAL-FEATURE": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-PRESENT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-PROVIDES": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-COMMAND": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-OS": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-DESCRIBES-MATCH": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-IF-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CH-LLM-VIRTUAL": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "CHANNELS-OPT-IN": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "llm-r1-history": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "llm-r2-reformulation": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-STEP-INVOKE": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-STEP-QUESTION": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-STEP-EMIT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-STEP-GRAFT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-STEP-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "llm-power-identical": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-DIFF-AUDIT-POINT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-DIFF-STATIC-WINS": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-DIFF-TRANSPARENCY": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "LLM-DIFF-OPT-OUT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "split-alternative": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "RATIONALE-COHESION": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "RATIONALE-DISCOVERY": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "cargo-tessl-comparison": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "RECURSIVE-SUBSKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "DESCRIBES-ON-SUBSKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "DESCRIBES-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "DESCRIBES-LOCKFILE-RECORD": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "DESCRIBES-DRIFT-OUTDATED": {
+            "v": "confirmed",
+            "ev": [
+              "subskills shipped: vibe-core manifest/subskill.rs carries delivery (DeliveryMode eager/lazy-push/lazy-pull per §2.5.0), description-required-for-lazy law (doc-tested), the §2.5.2 probe set (if_files/if_command/if_env/if_describes_match/if_language; if_os impl/work per its recorded deviates in activation.rs — B2-verified); recursive subskills + describes PURL in schema; LockedSubskill in lockfile.rs:337-390; live proof: this session's own MCP tools read_subskill/materialise_subskill (M1.7 shipped); LLM channel honestly spec/done (Phase F plan; vibe-llm pending)"
+            ]
+          },
+          "INTERFACE-TAGS-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "interface tags shipped with the capability vocabulary (capability_ref.rs; if_provides probe); naming convention and provenance rules are authoring law consistent with §4.6's no-LLM-inference stance"
+            ]
+          },
+          "iface-differences-lead": {
+            "v": "confirmed",
+            "ev": [
+              "interface tags shipped with the capability vocabulary (capability_ref.rs; if_provides probe); naming convention and provenance rules are authoring law consistent with §4.6's no-LLM-inference stance"
+            ]
+          },
+          "IFACE-ABSTRACTION": {
+            "v": "confirmed",
+            "ev": [
+              "interface tags shipped with the capability vocabulary (capability_ref.rs; if_provides probe); naming convention and provenance rules are authoring law consistent with §4.6's no-LLM-inference stance"
+            ]
+          },
+          "IFACE-DISCOVERY": {
+            "v": "confirmed",
+            "ev": [
+              "interface tags shipped with the capability vocabulary (capability_ref.rs; if_provides probe); naming convention and provenance rules are authoring law consistent with §4.6's no-LLM-inference stance"
+            ]
+          },
+          "IFACE-NAMING": {
+            "v": "confirmed",
+            "ev": [
+              "interface tags shipped with the capability vocabulary (capability_ref.rs; if_provides probe); naming convention and provenance rules are authoring law consistent with §4.6's no-LLM-inference stance"
+            ]
+          },
+          "IFACE-PROVENANCE": {
+            "v": "confirmed",
+            "ev": [
+              "interface tags shipped with the capability vocabulary (capability_ref.rs; if_provides probe); naming convention and provenance rules are authoring law consistent with §4.6's no-LLM-inference stance"
+            ]
+          },
+          "CONDITIONAL-DEPS-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "conditional-grammar-req": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "CONDITIONAL-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "conditional-when-to-use-design": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "conditional-choice-guidance": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "conditional-fixpoint-req": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "CONDITIONAL-FIXPOINT": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "conditional-host-invariance-req": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "CONDITIONAL-HOST-INVARIANCE": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "conditional-composition-req": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "CONDITIONAL-COMPOSITION": {
+            "v": "confirmed",
+            "ev": [
+              "conditional deps shipped: conditional.rs + fixpoint post-pass (B2-verified); predicate grammar with and/or/not; composition-over-rich-probes honestly PredicateError::Unsupported with recorded deviates on the grammar edge (unit says exactly that)"
+            ]
+          },
+          "I18N-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "SIDECAR-PATTERN": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "sidecar-why-lead": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "ROW-SIDECAR": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "ROW-LANG-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "ROW-UNDERSCORE-SUFFIX": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "ROW-INLINE-TOML": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "sidecar-wins": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "fallback-chain-lead": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "FB-EXACT": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "FB-REGION": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "FB-CANONICAL": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "FB-HARD-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "I18N-CANONICAL-INVARIANT": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "i18n-prefs-lead": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "PREF-CLI-FLAG": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "PREF-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "PREF-PROJECT-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "PREF-PACKAGE-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "PREF-BUILTIN-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "i18n shipped at the file layer: manifest/i18n.rs sidecar BCP-47 resolution + fallback chain + canonical invariant (B2-verified); --language live in install --help; VIBE_LANGUAGE env honestly spec/done (unshipped); package [i18n] blocks parse"
+            ]
+          },
+          "DOTTED-KEY-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "dotted-key field translations honestly spec/done end-to-end (unshipped; the TOML-mixing correction is authoring-note prose)"
+            ]
+          },
+          "toml-mixing-correction": {
+            "v": "confirmed",
+            "ev": [
+              "dotted-key field translations honestly spec/done end-to-end (unshipped; the TOML-mixing correction is authoring-note prose)"
+            ]
+          },
+          "dotted-key-readable-form": {
+            "v": "confirmed",
+            "ev": [
+              "dotted-key field translations honestly spec/done end-to-end (unshipped; the TOML-mixing correction is authoring-note prose)"
+            ]
+          },
+          "DOTTED-KEY-PARSER": {
+            "v": "confirmed",
+            "ev": [
+              "dotted-key field translations honestly spec/done end-to-end (unshipped; the TOML-mixing correction is authoring-note prose)"
+            ]
+          },
+          "I18N-LOCKFILE-META": {
+            "v": "drift",
+            "ev": [
+              "F-031: same language_chain reality — the §2.7.5 fence (schema_version=2, language, language_fallback) matches no shipped shape (live lock: schema 5, language_chain in the schema)"
+            ]
+          },
+          "language-fallback-clearing": {
+            "v": "drift",
+            "ev": [
+              "F-031: reasoning stands but the named field `language_fallback` does not exist — the shipped chain is `language_chain` (lockfile.rs:130)"
+            ]
+          },
+          "manifest-consolidated-lead": {
+            "v": "drift",
+            "ev": [
+              "F-031 (ledgered in B): the consolidated v0.2 fence still shows r1's `__exclusive = [[...]]` sigil that r2's own §2.4 replaced with named `[features.exclusive]` groups"
+            ]
+          },
+          "SUBSKILL-MANIFEST-PER": {
+            "v": "confirmed",
+            "ev": [
+              "manifest consolidated picture: every section it pulls is live (provides/requires/requires_any/recommends/suggests/supplements/enhances/obsoletes/conflicts/features/content); deny_unknown_fields is the parser's discipline; the fence's r1 sigil is the F-031 row above"
+            ]
+          },
+          "DENY-UNKNOWN-FIELDS": {
+            "v": "confirmed",
+            "ev": [
+              "manifest consolidated picture: every section it pulls is live (provides/requires/requires_any/recommends/suggests/supplements/enhances/obsoletes/conflicts/features/content); deny_unknown_fields is the parser's discipline; the fence's r1 sigil is the F-031 row above"
+            ]
+          },
+          "lockfile-v3-lead": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v3 impact: all five additions exist in today's schema (active_features:136, virtual_capabilities:143 VirtualCapabilityRecord, subskills_active:337 LockedSubskill with delivery, per-package language:347, describes PURLs via purls surface — vibe show purls live); v3 migration historical (live schema 5)"
+            ]
+          },
+          "LF-META-LANGUAGE": {
+            "v": "drift",
+            "ev": [
+              "F-031: shipped as ONE field — lockfile.rs:124-130 `language_chain: Vec<String>` (preference + fallback merged); the spec's separate [meta].language + [meta].language_fallback pair does not exist"
+            ]
+          },
+          "LF-META-ACTIVE-FEATURES": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v3 impact: all five additions exist in today's schema (active_features:136, virtual_capabilities:143 VirtualCapabilityRecord, subskills_active:337 LockedSubskill with delivery, per-package language:347, describes PURLs via purls surface — vibe show purls live); v3 migration historical (live schema 5)"
+            ]
+          },
+          "LF-META-VIRTUAL-CAPS": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v3 impact: all five additions exist in today's schema (active_features:136, virtual_capabilities:143 VirtualCapabilityRecord, subskills_active:337 LockedSubskill with delivery, per-package language:347, describes PURLs via purls surface — vibe show purls live); v3 migration historical (live schema 5)"
+            ]
+          },
+          "LF-PKG-FEATURES-SUBSKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v3 impact: all five additions exist in today's schema (active_features:136, virtual_capabilities:143 VirtualCapabilityRecord, subskills_active:337 LockedSubskill with delivery, per-package language:347, describes PURLs via purls surface — vibe show purls live); v3 migration historical (live schema 5)"
+            ]
+          },
+          "LF-PKG-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v3 impact: all five additions exist in today's schema (active_features:136, virtual_capabilities:143 VirtualCapabilityRecord, subskills_active:337 LockedSubskill with delivery, per-package language:347, describes PURLs via purls surface — vibe show purls live); v3 migration historical (live schema 5)"
+            ]
+          },
+          "LF-DESCRIBES-PURL": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v3 impact: all five additions exist in today's schema (active_features:136, virtual_capabilities:143 VirtualCapabilityRecord, subskills_active:337 LockedSubskill with delivery, per-package language:347, describes PURLs via purls surface — vibe show purls live); v3 migration historical (live schema 5)"
+            ]
+          },
+          "SCHEMA-V3-MIGRATION": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v3 impact: all five additions exist in today's schema (active_features:136, virtual_capabilities:143 VirtualCapabilityRecord, subskills_active:337 LockedSubskill with delivery, per-package language:347, describes PURLs via purls surface — vibe show purls live); v3 migration historical (live schema 5)"
+            ]
+          },
+          "cli-new-lead": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CLI-INSTALL-FEATURES": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CLI-INSTALL-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CLI-SHOW-FEATURES": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CLI-SHOW-SUBSKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CHECK-FOUR-ENTRIES": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CHECK-I18N-COVERAGE": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CHECK-SUBSKILL-STRUCTURE": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CHECK-FEATURE-GRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CHECK-ACTIVATION-CONFLICT": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "cli-existing-lead": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CLI-UPDATE-FEATURES": {
+            "v": "drift",
+            "ev": [
+              "F-050: `vibe update --features` does not exist — update --help carries only all/json/path/quiet+global flags; install-side --features is live but update-side re-resolve was never wired"
+            ]
+          },
+          "CLI-SHOW-CONFIG-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "CLI-SHOW-EFFECTIVE-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "CLI surface live and verified this session: install --features/--no-default-features/--all-features/--language; show features/subskills/config/effective all exist (show --help snapshot); the four vibe-check entries B2-verified; show effective --all-languages honestly impl/work (unshipped)"
+            ]
+          },
+          "migration-lead": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "MIG-LIBSOLV-FFI": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "MIG-MANIFEST-PARSER": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "MIG-FEATURES": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "MIG-SUBSKILL-MAT": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "MIG-I18N": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "MIG-DEFAULT-SAT": {
+            "v": "drift",
+            "ev": [
+              "F-050: the migration step as written never executed — the default switched to resolvo (PROP-017), not sat; naive remains the fixtures path as stated"
+            ]
+          },
+          "MIG-LOCKFILE-V3": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "migration-cadence": {
+            "v": "confirmed",
+            "ev": [
+              "migration order historical: parser-first then activation then i18n landed as recorded (MIG steps 2-5,7 verified through shipped code); libsolv step honestly spec/done (never landed — resolvo instead); the sat-default step is the F-050 row"
+            ]
+          },
+          "rule-encoding-lead": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-REQUIRES": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-REQUIRES-ANY": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-PROVIDES": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-OBSOLETES": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-CONFLICTS": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-RECOMMENDS": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-SUGGESTS": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-SUPPLEMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-ENHANCES": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-EXCLUSIVE": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-FEATURE-DEP": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-WEAK-FEATURE": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-SUBSKILL-PRESENT": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ROW-ENC-SUBSKILL-PROVIDES": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "dnf5-same-encoding": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "solver-phases-lead": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "PHASE-POOL": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "PHASE-JOBS": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "PHASE-RULES": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "PHASE-SOLVE": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "PHASE-DECODE": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "PHASE-SUBSKILL-PROJECTION": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "PHASE-MATERIALISATION": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "libsolv-determinism": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "perf-envelope": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "ffi-cost": {
+            "v": "confirmed",
+            "ev": [
+              "§3 algorithm detail: libsolv-era record explicitly superseded by PROP-017 (rule encoding/phases/determinism/perf all spec/done history; determinism itself re-established for resolvo in PROP-017 §7 and pinned by solve_is_deterministic)"
+            ]
+          },
+          "rejected-lead": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "REJ-RESOLVO": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "REJ-PUBGRUB": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "REJ-PACKAGES-ONLY": {
+            "v": "drift",
+            "ev": [
+              "F-031: '(already covered in §2.5.3)' misrefs — the subskills-not-packages rationale lives at §2.5.4 {#subskill-rationale}; §2.5.3 is the LLM virtual-capabilities section"
+            ]
+          },
+          "REJ-UNDERSCORE-SUFFIX": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "REJ-LANG-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "REJ-LLM-PROVIDES": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "REJ-INLINE-I18N": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "REJ-PER-PACKAGE-SOLVER": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives stand: resolvo§4.1 explicitly kept-door-open (and PROP-017 walked through it — the record is honest history); pubgrub absent from Cargo.toml; packages-only rejected (subskills shipped); underscore/lang-dir i18n rejected (sidecar shipped); LLM-provides still not done (§4.6 holds); per-package solver still single-per-resolution"
+            ]
+          },
+          "OOS-MODULES": {
+            "v": "confirmed",
+            "ev": [
+              "out-of-scope holds: no modules/stream concept, SemVer-only, no rich boolean deps, trust models parked at PROP-002 §6, no translation tooling"
+            ]
+          },
+          "OOS-NON-SEMVER": {
+            "v": "confirmed",
+            "ev": [
+              "out-of-scope holds: no modules/stream concept, SemVer-only, no rich boolean deps, trust models parked at PROP-002 §6, no translation tooling"
+            ]
+          },
+          "OOS-RICH-DEPS": {
+            "v": "confirmed",
+            "ev": [
+              "out-of-scope holds: no modules/stream concept, SemVer-only, no rich boolean deps, trust models parked at PROP-002 §6, no translation tooling"
+            ]
+          },
+          "OOS-TRUST": {
+            "v": "confirmed",
+            "ev": [
+              "out-of-scope holds: no modules/stream concept, SemVer-only, no rich boolean deps, trust models parked at PROP-002 §6, no translation tooling"
+            ]
+          },
+          "OOS-TRANSLATION-TOOLING": {
+            "v": "confirmed",
+            "ev": [
+              "out-of-scope holds: no modules/stream concept, SemVer-only, no rich boolean deps, trust models parked at PROP-002 §6, no translation tooling"
+            ]
+          },
+          "phases-lead": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PA-FFI-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PA-SAT-IMPL": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PA-NAIVE-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PA-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PB-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PB-SOLVER-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PB-CLI-FLAGS": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PB-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PC-MANIFEST-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PC-FIELDS": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PC-MANUAL-MAPPING": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PC-CONTEXT-POST-PASS": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PC-EAGER-MATERIALISATION": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PC-SHOW-SUBSKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PC-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PD-SIDECAR": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PD-FIELD-TRANSLATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PD-LANGUAGE-FLAG": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PD-LOCKFILE-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PD-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PE-DEFAULT-FLIP": {
+            "v": "drift",
+            "ev": [
+              "F-050: 'default flips to sat' aged — the flip that shipped is to resolvo in the R-001 selection seam (PROP-017 DONE-DEFAULT-FLIP; CLI help says 'Defaults to resolvo')"
+            ]
+          },
+          "PE-NAIVE-DEMOTED": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PE-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PF-BUILD-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PF-EMISSION-REQUEST": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PF-ACTIVATION-CHANNEL": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PF-AUDIT-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PF-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "PF-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: A (libsolv) honestly spec/done — superseded by the resolvo arc; B features all impl/done verified (flags live, lockfile records); C subskills verified (manifest format/fields/post-pass/eager materialisation/show subskills; lazy modes degrade note historical — M1.7 shipped); D i18n verified (sidecar/flag/lockfile; field-translations honestly spec/done); E: naive demoted ✓, default-flip row is F-050; F LLM impl/plan honest (vibe-llm pending)"
+            ]
+          },
+          "OPEN-CROSS-PACKAGE-EXCLUSION": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-SUBSKILL-VERSIONING": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-TRANSLATION-PROVENANCE": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-IFACE-NAMESPACING": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-EMISSION-RATE-LIMIT": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-WORKSPACE-MONOREPO": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-DESCRIBES-COVERAGE": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-CONFLICT-THRESHOLD": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-ENV-FEATURES": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "OPEN-LLM-DENYLIST": {
+            "v": "confirmed",
+            "ev": [
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+            ]
+          },
+          "ref-cargo-features": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-cargo-resolver-v2": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-cargo-source": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-libsolv": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-libsolv-docs": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-dnf5": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-dnf-legacy": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-bcp47": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-toml": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-depsolver-trait": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "ref-manifest-model": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "closing-note": {
+            "v": "confirmed",
+            "ev": [
+              "references resolve: cargo/libsolv/dnf5/bcp47/toml links + refs/study paths exist; depsolver trait and manifest model paths live; tessl research at its legacy-spec home (Phase L move followed)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest: impl/done + action=continue + comment naming F-030 and the superseded engine sections — matches the shipped-vocabulary / superseded-engine reality verified this batch"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:22:25Z",
+        "verify_batch": "c4c-resolver"
+      }
     },
     {
       "path": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
@@ -13358,7 +15125,502 @@
       "facts": 105,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 79,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (26 cells); document <status> judged as _elements",
+        "fact_count": 105,
+        "marker_count": 106,
+        "processed_hash": "6c5269ed866558f5c41694bde48f8c3b18c1511171e5cb16bf3e7759ea19a62d",
+        "summary": {
+          "confirmed": 78,
+          "drift": 2,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-027 (ledgered in B): 'implementation in progress' contradicts §6 PORT-COMPLETE in the same file — and the code: ResolvoDepSolver is the shipped production default (registry.rs:117)"
+            ]
+          },
+          "SUPERSEDES-BACKEND": {
+            "v": "confirmed",
+            "ev": [
+              "header: supersession scope precise (PROP-003 §2.2/§2.3/§3.1-3.2 carry the SUPERSEDED marker; vocabulary untouched as claimed — verified live in c4c); resolvo-is-production verified (registry.rs default)"
+            ]
+          },
+          "RESOLVO-IS-PRODUCTION": {
+            "v": "confirmed",
+            "ev": [
+              "header: supersession scope precise (PROP-003 §2.2/§2.3/§3.1-3.2 carry the SUPERSEDED marker; vocabulary untouched as claimed — verified live in c4c); resolvo-is-production verified (registry.rs default)"
+            ]
+          },
+          "VOCABULARY-UNCHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "header: supersession scope precise (PROP-003 §2.2/§2.3/§3.1-3.2 carry the SUPERSEDED marker; vocabulary untouched as claimed — verified live in c4c); resolvo-is-production verified (registry.rs default)"
+            ]
+          },
+          "libsolv-first-context": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "reasons-decayed": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "deferral-reasons-lead": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "reason-age": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "reason-battle-tested": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "reason-introspection": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "structural-costs-lead": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "COST-C-FFI": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "COST-EAGER-POOL": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "COST-WINDOWS": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "NET-VERDICT": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "pubgrub-weaker": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "owner-decision": {
+            "v": "confirmed",
+            "ev": [
+              "the reversal reasoning: deferral-reasons decay + structural costs — all verifiable claims hold (resolvo 0.11 pinned, pure Rust, no C toolchain in workspace, forbid(unsafe_code) posture intact, lazy provider verified in provider.rs); owner decision recorded with date"
+            ]
+          },
+          "SEAM-STABLE": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "consumers-untouched": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "RESOLVO-DEPSOLVER": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "VIBEVM-PROVIDER": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "SEMVER-VERSION-SET": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "NOW-OR-NEVER": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "SYNC-ADAPTER": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "NO-ASYNC-RUNTIME": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "AWAIT-SHARP-EDGE": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "provider-history": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "ENUMERATION-NEEDED": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "LIST-VERSIONS-BACKING": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "SHARED-OUTPUT-BUILDER": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "CONFLICT-EXPLANATION": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "EXPLANATION-PAYOFF": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "STRUCTURED-VARIANTS-REMAIN": {
+            "v": "confirmed",
+            "ev": [
+              "architecture verified item-for-item: DepSolver seam unchanged (lib.rs:297), ResolvoDepSolver #[cell] (resolvo_engine/mod.rs 'production DepSolver cell'), VibevmResolvoProvider (provider.rs), SemverVersionSet Any/Req/None with Latest→Any (version_set.rs:16-40 literal match), NowOrNeverRuntime + sync adapter + no-async-runtime (mod.rs docs), DepProvider::list_versions enrichment, shared output builder build_resolved_graph, SolveError::Unsatisfiable"
+            ]
+          },
+          "RPM-LINEAGE": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "CONSTRAINT-CHANNELS": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "REQUIREMENT-FORMS": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "SINGLE-VERSION-AUTO": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-REQUIRES": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-PREFER-NEWEST": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-SINGLE-VERSION": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-REQUIRES-ANY": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-CAPABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-CONFLICTS": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-OBSOLETES": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-RECOMMENDS": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-SUGGESTS": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-SUPPLEMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-ENHANCES": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-FEATURES-EXCLUSIVE": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "ROW-FEATURE-UNIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "CONDITIONAL-FIXPOINT": {
+            "v": "confirmed",
+            "ev": [
+              "encoding table verified: requirements/constrains channels, sort_candidates descending (newest-first), capability closure pre-scan (resolvo_engine/capabilities.rs), conflicts/obsoletes as match-nothing/complement sets, recommends greedy post-solve + suggests never-fed (weak_deps.rs B2-verified), features above the solver (features.rs), conditional fixpoint kept"
+            ]
+          },
+          "oracle-socket": {
+            "v": "confirmed",
+            "ev": [
+              "dominance contract live: solver_properties.rs drives cells over one generated world; the four-quadrant contract incl deliberate both-fail relaxation recorded; vocabulary unit tests mirror naive/tests.rs (7 verifies c4b)"
+            ]
+          },
+          "DOM-NAIVE-SOLVES": {
+            "v": "confirmed",
+            "ev": [
+              "dominance contract live: solver_properties.rs drives cells over one generated world; the four-quadrant contract incl deliberate both-fail relaxation recorded; vocabulary unit tests mirror naive/tests.rs (7 verifies c4b)"
+            ]
+          },
+          "DOM-NAIVE-FAILS": {
+            "v": "confirmed",
+            "ev": [
+              "dominance contract live: solver_properties.rs drives cells over one generated world; the four-quadrant contract incl deliberate both-fail relaxation recorded; vocabulary unit tests mirror naive/tests.rs (7 verifies c4b)"
+            ]
+          },
+          "DOM-RESOLVO-FAILS": {
+            "v": "confirmed",
+            "ev": [
+              "dominance contract live: solver_properties.rs drives cells over one generated world; the four-quadrant contract incl deliberate both-fail relaxation recorded; vocabulary unit tests mirror naive/tests.rs (7 verifies c4b)"
+            ]
+          },
+          "DOM-BOTH-FAIL": {
+            "v": "confirmed",
+            "ev": [
+              "dominance contract live: solver_properties.rs drives cells over one generated world; the four-quadrant contract incl deliberate both-fail relaxation recorded; vocabulary unit tests mirror naive/tests.rs (7 verifies c4b)"
+            ]
+          },
+          "VOCAB-UNIT-TESTS": {
+            "v": "confirmed",
+            "ev": [
+              "dominance contract live: solver_properties.rs drives cells over one generated world; the four-quadrant contract incl deliberate both-fail relaxation recorded; vocabulary unit tests mirror naive/tests.rs (7 verifies c4b)"
+            ]
+          },
+          "SWAP-REQUIREMENT": {
+            "v": "confirmed",
+            "ev": [
+              "swap requirement: boundaries exactly as stated (everything resolvo-specific confined to the three types); GitBackend-style indirection analogy accurate"
+            ]
+          },
+          "SWAP-BOUNDARIES": {
+            "v": "confirmed",
+            "ev": [
+              "swap requirement: boundaries exactly as stated (everything resolvo-specific confined to the three types); GitBackend-style indirection analogy accurate"
+            ]
+          },
+          "swap-recipe": {
+            "v": "confirmed",
+            "ev": [
+              "swap requirement: boundaries exactly as stated (everything resolvo-specific confined to the three types); GitBackend-style indirection analogy accurate"
+            ]
+          },
+          "PORT-COMPLETE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-DOC": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-OUTPUT-BUILDER": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-ADAPTER": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-ORACLE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-VOCAB": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-ENUMERATION": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-DEFAULT-FLIP": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DONE-WEAK-FORWARD": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "BACKLOG-REVERSE": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "CELLS-STAY": {
+            "v": "confirmed",
+            "ev": [
+              "phases: every DONE row verified against shipped code (doc+supersede note, output builder+VersionEnumerator+Unsatisfiable, adapter trio, oracle, vocab, enumeration, default flip — CLI help literal 'Defaults to resolvo', weak-forward recommends/suggests); FAR-BACKLOG honestly spec/done (no reverse index, no [meta].solver — live lock 0 hits); CELLS-STAY verified (--solver naive|sat selectable)"
+            ]
+          },
+          "DETERMINISM": {
+            "v": "confirmed",
+            "ev": [
+              "determinism + performance: solve_is_deterministic pinned in solver_properties; laziness verified in provider docs (fetch-on-first-ask)"
+            ]
+          },
+          "PERFORMANCE": {
+            "v": "confirmed",
+            "ev": [
+              "determinism + performance: solve_is_deterministic pinned in solver_properties; laziness verified in provider docs (fetch-on-first-ask)"
+            ]
+          },
+          "FUTURE-CAPABILITY-INDEX": {
+            "v": "confirmed",
+            "ev": [
+              "future work honest: no capability reverse-index in registry (grep confirms), reverse weak-deps absent, [meta].solver gap RECORDED HERE — the very line that corrects PROP-002's SOLVER-IDENTITY-FIELD overclaim (c4b verdict amended this batch)"
+            ]
+          },
+          "FUTURE-REVERSE-WEAK": {
+            "v": "confirmed",
+            "ev": [
+              "future work honest: no capability reverse-index in registry (grep confirms), reverse weak-deps absent, [meta].solver gap RECORDED HERE — the very line that corrects PROP-002's SOLVER-IDENTITY-FIELD overclaim (c4b verdict amended this batch)"
+            ]
+          },
+          "ref-resolvo": {
+            "v": "confirmed",
+            "ev": [
+              "references: resolvo repo/crate/MSRV accurate (0.11 pinned); PROP-003/002/000 links live"
+            ]
+          },
+          "ref-prop-003": {
+            "v": "confirmed",
+            "ev": [
+              "references: resolvo repo/crate/MSRV accurate (0.11 pinned); PROP-003/002/000 links live"
+            ]
+          },
+          "ref-prop-002": {
+            "v": "confirmed",
+            "ev": [
+              "references: resolvo repo/crate/MSRV accurate (0.11 pinned); PROP-003/002/000 links live"
+            ]
+          },
+          "ref-prop-000": {
+            "v": "confirmed",
+            "ev": [
+              "references: resolvo repo/crate/MSRV accurate (0.11 pinned); PROP-003/002/000 links live"
+            ]
+          },
+          "_elements": {
+            "v": "drift",
+            "ev": [
+              "F-027: the marker still reads impl/WORK 'implementation in progress per status line' — while §6 PORT-COMPLETE (impl/done) and the live default (--solver defaults to resolvo) say the port finished 2026-06-14"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:22:25Z",
+        "verify_batch": "c4c-resolver"
+      }
     },
     {
       "path": "spec/modules/vibe-settings/PROP-040-settings.md",
