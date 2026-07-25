@@ -290,9 +290,13 @@ pub trait VersionEnumerator: DepProvider {
 #[spec(
     deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
     reason = "PROP-003 §2.1 adds `pin_preferences(&mut self, pins)` to this trait for \
-              minimum-churn re-resolution; the method is absent — PROP-011 Phase 3 \
-              holds pins via constraint-tightening at the install layer instead, and \
-              SatDepSolver is not in tree (see DBT-0011)"
+              minimum-churn re-resolution; the method is still absent. PROP-011 Phase 3 \
+              holds pins at the install layer instead — `freshness::hold_pins` rewrites \
+              every unchanged root to `=<locked>` before the solve — so the property \
+              ships without the trait method, at the cost of a registry walk the solver \
+              could have skipped. It stops being acceptable when a re-resolve needs \
+              preference *inside* the solve; resolvo's `sort_candidates` (PROP-017 §3) \
+              is where that would land"
 )]
 pub trait DepSolver {
     /// Resolve `roots` into a transitive [`ResolvedGraph`].

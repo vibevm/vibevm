@@ -1,5 +1,7 @@
 //! `Sat` — the `sat` DepSolver cell: chronological backtracking over
-//! version choices (DBT-0011; PROP-003 §2.8 "solver upgrade").
+//! version choices (PROP-003 §2.1 "solver upgrade"). It closed the
+//! backtracking half of DBT-0011, which the debt ledger now records as
+//! fixed.
 //!
 //! The naive solver's pinned limitation is *first-pick-wins*: when two
 //! paths constrain the same package with overlapping-but-different
@@ -22,10 +24,11 @@
 //! a finite version set, so the choice tree is finite; a hard
 //! attempt cap (`MAX_ATTEMPTS`) backstops pathological providers.
 //!
-//! `resolvo` as the primary solver (PROP-002 §2.8) remains the
-//! recorded deviation — see the `deviates` edge on the impl: this
-//! cell retires the *backtracking* half of DBT-0011 while the
-//! "industrial solver" half stays an owner option.
+//! Non-primary by design: PROP-002 §2.8's primary depsolver is
+//! resolvo, and resolvo is what ships — `--solver` defaults to it.
+//! This cell is one of the alternatives PROP-017 §6 keeps in tree and
+//! selectable, "sat as a recorded pure-Rust backtracker", beside
+//! naive's fast path.
 
 use std::collections::HashMap;
 
@@ -171,14 +174,12 @@ fn conflict_key(package: &str) -> Result<(Group, String), SolveError> {
     Ok((group, name.to_string()))
 }
 
-#[spec(
-    deviates = "spec://vibevm/modules/vibe-registry/PROP-002#solver",
-    reason = "PROP-002 §2.8 names resolvo as the primary industrial solver; this cell \
-              implements chronological backtracking natively over the unmodified \
-              DepProvider trait instead, reusing the naive cell as its branch checker. \
-              The backtracking half of DBT-0011 retires here; adopting resolvo stays \
-              an owner decision the DepSolver seam keeps open"
-)]
+/// The seam's "one impl block" (PROP-002 §2.8): chronological
+/// backtracking over version choices, natively over the unmodified
+/// `DepProvider` trait, reusing the naive cell as its branch checker so
+/// the two cells cannot drift semantically. Non-primary — resolvo is the
+/// shipped default; this is one of the cells `--solver` keeps reachable.
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
 impl<P: DepProvider> DepSolver for Sat<P> {
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         // The choice stack: each entry excludes `>= bound` for its

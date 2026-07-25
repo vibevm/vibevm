@@ -27,15 +27,19 @@ fn require_group(pkgref: &PackageRef) -> Result<&Group, SolveError> {
 }
 
 /// DFS solver over a [`DepProvider`].
+///
+/// **Non-primary by design.** PROP-002 §2.8's primary depsolver is resolvo,
+/// and resolvo is what ships — `--solver` defaults to `resolvo` at the
+/// R-001 selection seam. This cell is one of the alternatives that seam
+/// keeps selectable, kept for the two jobs the spec names it for: the
+/// small-graph fast path, and the reference cell of the differential
+/// dominance oracle (PROP-003 §2.1 "the cheapest oracle we'll ever have";
+/// PROP-017 §6 "naive and sat stay in tree"). Selecting it is choosing
+/// speed over completeness knowingly — its first-pick-wins limit is real,
+/// and `Sat` / `ResolvoDepSolver` are the cells that backtrack.
 #[cell(seam = "DepSolver", variant = "naive", flag = "solver")]
 #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
-#[spec(
-    deviates = "spec://vibevm/modules/vibe-registry/PROP-002#solver",
-    reason = "PROP-002 §2.8 decides resolvo is the PRIMARY depsolver; no ResolvoSolver \
-              exists in tree and NaiveDepSolver is the only DepSolver impl — the known \
-              SAT/resolvo upgrade debt (DBT-0011), recorded honestly until the second \
-              impl lands"
-)]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
 pub struct NaiveDepSolver<P: DepProvider> {
     provider: P,
 }
