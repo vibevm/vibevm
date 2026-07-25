@@ -4,7 +4,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#tool");
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context as _, Result, bail};
@@ -187,6 +187,26 @@ fn campaign_id(campaign: &Path) -> String {
         .unwrap_or_else(|| "campaign".into())
 }
 
+/// What a refresh did to the disk (DRIFT-017 §4.3): one entry per
+/// artifact the run could have written, `true` where it actually did.
+///
+/// A run over an unchanged tree writes none of them, and that is exactly
+/// why the tally is reported rather than assumed — a skip nobody can see
+/// is an optimisation nobody can debug.
+#[derive(Debug, Default)]
+struct Refresh {
+    campaign: Option<PathBuf>,
+    writes: BTreeMap<String, bool>,
+}
+
+impl Refresh {
+    /// How many artifacts this run wrote, and how many it left alone.
+    fn tally(&self) -> (usize, usize) {
+        let wrote = self.writes.values().filter(|w| **w).count();
+        (wrote, self.writes.len() - wrote)
+    }
+}
+
 /// Refresh cache + sidecar + state under the campaign zone from parsed
 /// docs.
 ///
@@ -194,13 +214,18 @@ fn campaign_id(campaign: &Path) -> String {
 /// records the reuse decision was made against, and the campaign fields
 /// those records carry ride through untouched (`upsert` preserves them).
 ///
+/// Every write here first asks whether it would change anything, so a run
+/// over an unchanged tree touches no file at all (DRIFT-017). What it
+/// costs is one read per artifact; what it saves is the fsync'd rewrite of
+/// several megabytes that DRIFT-010 §9 measured as the real cost of a run.
+///
 /// The two writes are deliberately unequal. `cache.json` is tracked, holds
 /// the verdicts, and a failure to write it fails the run. The sidecar is
 /// derived, lives outside the tree, and a failure to write it is a slower
 /// next run — so it goes second and says nothing either way.
-fn refresh_state(g: &mut Ground) -> Result<Option<PathBuf>> {
+fn refresh_state(g: &mut Ground) -> Result<Refresh> {
     let Some(campaign) = &g.campaign else {
-        return Ok(None);
+        return Ok(Refresh::default());
     };
     let run_dir = campaign.join("run");
     let cache_path = run_dir.join("cache.json");
@@ -220,23 +245,39 @@ fn refresh_state(g: &mut Ground) -> Result<Option<PathBuf>> {
             "vibe progress: warning: pruned out-of-scope record `{lost}` that carried campaign verdicts"
         );
     }
+    // Stamping first is safe and deliberate: the identity test ignores the
+    // `updated_at` a document carries, so the candidate may hold this
+    // run's clock while the file keeps the one it was last changed at.
     c.touch();
-    c.store(&cache_path)?;
-    g.payloads.store(g.docs.iter());
+    let mut writes = BTreeMap::new();
+    writes.insert("cache.json".to_string(), c.store(&cache_path)?);
+    writes.insert(
+        sidecar::PAYLOAD_FILE.to_string(),
+        g.payloads.store(g.docs.iter()),
+    );
     // Phase is derived from the campaign's own journal (last `phase` event
     // wins; absent ⇒ "A") — never compiled in, never parsed from Markdown.
     let phase = journal::derive_phase(&journal::read_journal(&run_dir.join("journal.jsonl"))?);
-    state::write_state(&run_dir.join("state"), &campaign_id(campaign), &phase, c)?;
-    Ok(Some(campaign.clone()))
+    writes.extend(state::write_state(
+        &run_dir.join("state"),
+        &campaign_id(campaign),
+        &phase,
+        c,
+    )?);
+    Ok(Refresh {
+        campaign: Some(campaign.clone()),
+        writes,
+    })
 }
 
 fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let mut g = ground(a)?;
-    let wrote = refresh_state(&mut g)?;
+    let refreshed = refresh_state(&mut g)?;
     let markers: usize = g.docs.iter().map(|d| d.markers.len()).sum();
     let facts: usize = g.docs.iter().map(|d| d.fact_count).sum();
     let unmarked: usize = g.docs.iter().map(|d| d.unmarked_facts.len()).sum();
     let errors: usize = g.docs.iter().map(|d| d.error_count()).sum();
+    let (wrote, skipped) = refreshed.tally();
     if ctx.is_json() {
         println!(
             "{}",
@@ -246,7 +287,11 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
                 "facts": facts,
                 "unmarked": unmarked,
                 "errors": errors,
-                "state_written": wrote.is_some(),
+                // Whether there was a campaign zone to write into at all —
+                // not whether anything moved, which is `written` below.
+                "state_written": refreshed.campaign.is_some(),
+                "written": refreshed.writes,
+                "skipped": skipped,
             })
         );
     } else {
@@ -254,8 +299,11 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
             "progress scan: {} files, {markers} markers, {unmarked}/{facts} facts unmarked, {errors} errors",
             g.docs.len()
         );
-        match wrote {
-            Some(c) => println!("  state refreshed under {}", c.join("run").display()),
+        match &refreshed.campaign {
+            Some(c) => println!(
+                "  state refreshed under {} — {wrote} written, {skipped} unchanged and skipped",
+                c.join("run").display()
+            ),
             None => println!("  (no campaign zone — state projections not written)"),
         }
     }

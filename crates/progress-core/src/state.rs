@@ -5,10 +5,11 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#state");
 
-use crate::cache::{Cache, now_utc, write_atomic};
+use crate::cache::{Cache, now_utc, write_atomic, write_if_changed};
 use anyhow::{Context as _, Result, bail};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::collections::BTreeMap;
 use std::path::Path;
 
 pub const STATE_SCHEMA: u32 = 1;
@@ -68,7 +69,17 @@ fn read_campaign(path: &Path) -> Result<CampaignState> {
 /// Write all five state files from the cache (+ passthroughs that other
 /// subsystems own: findings/tasks/docdebt are preserved when present,
 /// seeded empty when absent — the dashboard always has valid JSON to eat).
-pub fn write_state(state_dir: &Path, campaign_id: &str, phase: &str, cache: &Cache) -> Result<()> {
+///
+/// Returns one entry per projection, `true` where this call actually wrote
+/// it. A projection whose content is already on disk is left alone —
+/// untouched and unfsync'd — and says so, because a skip nobody can see is
+/// an optimisation nobody can debug (DRIFT-017 §4.3).
+pub fn write_state(
+    state_dir: &Path,
+    campaign_id: &str,
+    phase: &str,
+    cache: &Cache,
+) -> Result<BTreeMap<String, bool>> {
     let files: Vec<serde_json::Value> = cache
         .files
         .iter()
@@ -90,15 +101,19 @@ pub fn write_state(state_dir: &Path, campaign_id: &str, phase: &str, cache: &Cac
     let total_unmarked: usize = cache.files.values().map(|r| r.rollup.unmarked_facts).sum();
     let total_issues: usize = cache.files.values().map(|r| r.issue_count).sum();
 
+    let mut written = BTreeMap::new();
     let corpus = json!({
         "schema": STATE_SCHEMA,
         "updated_at": now_utc(),
         "files": files,
     });
-    write_atomic(
-        &state_dir.join("corpus.json"),
-        serde_json::to_string_pretty(&corpus)?.as_bytes(),
-    )?;
+    written.insert(
+        "corpus.json".to_string(),
+        write_if_changed(
+            &state_dir.join("corpus.json"),
+            &serde_json::to_string_pretty(&corpus)?,
+        )?,
+    );
 
     // A scan re-derives the counters; it must never erase the panel a caller
     // reported in. An unreadable projection degrades to an empty panel rather
@@ -123,10 +138,10 @@ pub fn write_state(state_dir: &Path, campaign_id: &str, phase: &str, cache: &Cac
         }),
         gates,
     };
-    write_atomic(
-        &campaign_path,
-        serde_json::to_string_pretty(&campaign)?.as_bytes(),
-    )?;
+    written.insert(
+        "campaign.json".to_string(),
+        write_if_changed(&campaign_path, &serde_json::to_string_pretty(&campaign)?)?,
+    );
 
     for (name, empty) in [
         (
@@ -142,12 +157,18 @@ pub fn write_state(state_dir: &Path, campaign_id: &str, phase: &str, cache: &Cac
             json!({"schema": STATE_SCHEMA, "updated_at": now_utc(), "cards": []}),
         ),
     ] {
+        // Seeded, never refreshed: these three belong to other subsystems,
+        // so "already there" has always meant "leave it alone" here. The
+        // skip below is the same answer arrived at the same way — an
+        // absent file is the only one this call has anything to say about.
         let p = state_dir.join(name);
-        if !p.exists() {
+        let seed = !p.exists();
+        if seed {
             write_atomic(&p, serde_json::to_string_pretty(&empty)?.as_bytes())?;
         }
+        written.insert(name.to_string(), seed);
     }
-    Ok(())
+    Ok(written)
 }
 
 /// Record one gate's verdict into `campaign.json`: the entry with the same

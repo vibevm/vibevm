@@ -11,6 +11,7 @@ use crate::sidecar::Payloads;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
+use std::ops::Range;
 use std::path::Path;
 
 /// Schema 2: the fact amendment — `DocRollup` counts facts
@@ -94,9 +95,17 @@ impl Cache {
         }
     }
 
-    pub fn store(&self, path: &Path) -> Result<()> {
+    /// Write the cache back, and say whether that was necessary.
+    ///
+    /// `false` is a run whose records — including every campaign verdict
+    /// map — are already exactly what is on disk, so nothing was written
+    /// and nothing was fsync'd (DRIFT-017 §4.1). The verdicts are safe in
+    /// that answer for the reason [`write_if_changed`] gives: identity is
+    /// decided on the serialised bytes those maps are part of, and
+    /// anything short of proof writes.
+    pub fn store(&self, path: &Path) -> Result<bool> {
         let body = serde_json::to_string_pretty(self)?;
-        write_atomic(path, body.as_bytes())
+        write_if_changed(path, &body)
     }
 
     /// True when the cached record for `path` is current for `hash`.
@@ -209,6 +218,62 @@ pub fn write_atomic(path: &Path, bytes: &[u8]) -> Result<()> {
     Ok(())
 }
 
+/// Atomic write that first asks whether it is needed: a run with nothing
+/// new to say leaves the file alone — untouched, unfsync'd, mtime and all
+/// (DRIFT-017 §4.1). Returns whether it wrote.
+///
+/// Two documents count as the same when they are byte-identical outside
+/// the top-level `updated_at` value they carry, because that stamp is not
+/// content. It records when the content last **changed**, not when the
+/// tool last looked (DRIFT-017 §4.2, reading (a)), so a run that changes
+/// nothing leaves the stamp already on disk standing — a freshness plaque
+/// that advances while nothing moved is not freshness. A document with no
+/// such stamp is compared byte for byte.
+///
+/// Every way of failing to *prove* the file already says this writes: an
+/// absent file, an unreadable one, bytes that are not UTF-8, a document
+/// that keeps its stamp somewhere this function does not look. The safe
+/// direction costs one fsync; the other loses state, and one of the files
+/// on this path holds the campaign's verdicts (DRIFT-017 §5).
+pub fn write_if_changed(path: &Path, body: &str) -> Result<bool> {
+    if std::fs::read_to_string(path).is_ok_and(|current| same_but_for_stamp(&current, body)) {
+        return Ok(false);
+    }
+    write_atomic(path, body.as_bytes())?;
+    Ok(true)
+}
+
+/// True when `current` and `body` say the same thing — everything outside
+/// the one wall clock each of them carries.
+///
+/// A side with no stamp where this crate puts one is compared whole, so
+/// the fallback is the strictest reading rather than the loosest.
+fn same_but_for_stamp(current: &str, body: &str) -> bool {
+    match (stamp_span(current), stamp_span(body)) {
+        (Some(c), Some(b)) => {
+            current[..c.start] == body[..b.start] && current[c.end..] == body[b.end..]
+        }
+        _ => current == body,
+    }
+}
+
+/// The byte range of the top-level `updated_at` **value** in a document
+/// `serde_json::to_string_pretty` produced, or `None` when there is none.
+///
+/// The needle is a newline, two spaces and the key. The pretty printer
+/// indents two spaces per level, so that sequence is a key at depth 1 and
+/// nothing else: a key one level deeper carries four spaces, and inside a
+/// string value a newline is escaped, so it cannot occur there at all.
+/// That is why this reads the bytes instead of parsing them — `corpus.json`
+/// carries the word `updated_at` inside a campaign verdict's own text, and
+/// a looser search would find it.
+fn stamp_span(json: &str) -> Option<Range<usize>> {
+    const KEY: &str = "\n  \"updated_at\": \"";
+    let start = json.find(KEY)? + KEY.len();
+    let end = start + json[start..].find('"')?;
+    Some(start..end)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -219,6 +284,68 @@ mod tests {
         let store = Payloads::load(Some(dir.to_path_buf()));
         store.store(docs.iter().copied());
         Payloads::load(Some(dir.to_path_buf()))
+    }
+
+    /// The whole of DRIFT-017's judgement call, stated on the seam that
+    /// makes it: the stamp is not content, and everything else is.
+    ///
+    /// Reading (a) — `updated_at` says when the content last *changed* —
+    /// is only true if a document that differs in nothing else is left
+    /// alone, and only safe if a document that differs anywhere else is
+    /// written. Both halves are asserted here, including the case the
+    /// live corpus actually contains: a verdict whose own text names the
+    /// field, which a looser search would mistake for the stamp.
+    #[test]
+    fn write_if_changed_skips_the_stamp_and_nothing_else() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let path = dir.path().join("campaign.json");
+        let doc = |stamp: &str, files: u32, note: &str| {
+            format!(
+                "{{\n  \"schema\": 1,\n  \"updated_at\": \"{stamp}\",\n  \"counters\": {{\n    \"files\": {files}\n  }},\n  \"note\": \"{note}\"\n}}"
+            )
+        };
+        let first = doc("2026-07-25T00:00:00Z", 58, "quiet");
+
+        // Absent ⇒ written; identical ⇒ skipped.
+        assert!(write_if_changed(&path, &first).expect("create"), "absent");
+        assert!(
+            !write_if_changed(&path, &first).expect("same"),
+            "the same bytes twice is one write"
+        );
+
+        // A later run of an unchanged corpus: only the clock moved.
+        let later = doc("2026-07-26T12:34:56Z", 58, "quiet");
+        assert!(!write_if_changed(&path, &later).expect("stamp only"));
+        let on_disk = std::fs::read_to_string(&path).expect("read");
+        assert_eq!(on_disk, first, "the old stamp stands, byte for byte");
+
+        // Content moved under the same clock ⇒ written.
+        let moved = doc("2026-07-25T00:00:00Z", 59, "quiet");
+        assert!(write_if_changed(&path, &moved).expect("content"));
+        assert_eq!(std::fs::read_to_string(&path).expect("read"), moved);
+
+        // The trap `corpus.json` sets: a verdict's own text names the
+        // field. It is a value, not the top-level key, and moving it must
+        // still count as a change.
+        let named = doc(
+            "2026-07-25T00:00:00Z",
+            59,
+            "live campaign.json has updated_at",
+        );
+        assert!(write_if_changed(&path, &named).expect("nested mention"));
+        assert!(!write_if_changed(&path, &named).expect("still identical"));
+
+        // A file this function cannot read is replaced, never trusted.
+        std::fs::write(&path, [0xff, 0xfe, 0x00]).expect("clobber");
+        assert!(write_if_changed(&path, &named).expect("not utf-8"));
+
+        // And a document with no stamp at all falls back to whole-file
+        // equality — the sidecar's case.
+        let flat = dir.path().join("payloads.json");
+        let compact = r#"{"schema":1,"docs":{}}"#;
+        assert!(write_if_changed(&flat, compact).expect("absent"));
+        assert!(!write_if_changed(&flat, compact).expect("identical"));
+        assert!(write_if_changed(&flat, r#"{"schema":1,"docs":{"a.md":1}}"#).expect("differs"));
     }
 
     #[test]

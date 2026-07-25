@@ -29,7 +29,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#erasure");
 
-use crate::cache::write_atomic;
+use crate::cache::write_if_changed;
 use crate::doc::ParsedDoc;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -228,16 +228,23 @@ impl Payloads {
         (doc.path == path && doc.content_hash == hash).then_some(doc)
     }
 
-    /// Write exactly `docs` back, replacing whatever was there.
+    /// Write exactly `docs` back, replacing whatever was there. Returns
+    /// whether that put bytes on disk.
     ///
     /// Best-effort and silent: a store that cannot be written — a
     /// read-only home, a full disk, no directory at all — is a store that
     /// will miss next run, which is a slower run and nothing else. The
-    /// hard-error path in this system is `cache.json`, and only that.
+    /// hard-error path in this system is `cache.json`, and only that. So
+    /// `false` is deliberately two answers at once, "already said that"
+    /// and "could not say it", and neither is worth telling anyone about.
+    ///
+    /// The store carries no clock, so its identity test is plain byte
+    /// equality: a run over an unchanged corpus rewrites nothing here
+    /// either (DRIFT-017 §4.1, applied one file past the six it names).
     #[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#erasure")]
-    pub fn store<'a>(&self, docs: impl IntoIterator<Item = &'a ParsedDoc>) {
+    pub fn store<'a>(&self, docs: impl IntoIterator<Item = &'a ParsedDoc>) -> bool {
         let Some(dir) = &self.dir else {
-            return;
+            return false;
         };
         let file = StoreRef {
             schema: PAYLOAD_SCHEMA,
@@ -248,8 +255,9 @@ impl Payloads {
         };
         // Compact, not pretty: nothing diffs this file — it is outside the
         // repository precisely so that no one has to.
-        if let Ok(body) = serde_json::to_string(&file) {
-            let _ = write_atomic(&dir.join(PAYLOAD_FILE), body.as_bytes());
+        match serde_json::to_string(&file) {
+            Ok(body) => write_if_changed(&dir.join(PAYLOAD_FILE), &body).unwrap_or(false),
+            Err(_) => false,
         }
     }
 }

@@ -15,6 +15,12 @@
 
 use super::*;
 
+/// DRIFT-017's own cell — whether a write happens at all, asserted on
+/// mtimes. Split out so this file stays inside the 600-line budget, and
+/// because its subject is different: everything here is about what a run
+/// *answers*, everything there about what it *touches*.
+mod writes;
+
 /// Where every fixture in this file pins its payload sidecar, relative to
 /// the fixture root.
 const FIXTURE_CACHE_DIR: &str = "payload-cache";
