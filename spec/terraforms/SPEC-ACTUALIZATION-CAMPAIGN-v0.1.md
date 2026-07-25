@@ -261,6 +261,16 @@ enough context; `returned` clusters indicate spec gaps, feeding D-waves.
 
 ### Phase F — Plans and fold {#phase-f}
 
+> **DEFERRED TO WAVE 2 — owner ruling, 2026-07-26.** Close-out measured all
+> three of this phase's views and found them empty: `freeze/plan` +
+> `freeze/work` **0**, `action="rework"` **0**, `stage="idea"` **0**,
+> `state="hold"` **1**. Phase B recorded what every fact *is* and was never
+> asked to decide what should *happen* to it, so the plans below are
+> projections of judgments the campaign never made. Building them from the
+> findings ledger instead was offered and declined; running a judgment-marking
+> pass first was offered and folded into wave 2, where it can cover the
+> `packages/` corpus in the same sweep. See §11's gap list for the measurement.
+
 Three owner plans generated from views: **release/productization**
 (freeze-candidates → showable), **improvement** (rework + disabled),
 **global idea ledger** (idea/hold). Marker density folds: agreeing sections
@@ -268,6 +278,17 @@ collapse to unit markers (lossless, `check`-verified). `vibe progress check`
 enters the standing gate panel. *Exit:* owner accepts the three plans.
 
 ### Phase G — Documentation {#phase-g}
+
+> **DEFERRED TO WAVE 2 — owner ruling, 2026-07-26.** This phase's stated input
+> does not exist: `campaigns/progress-2026-08/harvest/` is empty and
+> `docdebt.json` carries zero cards, because Phase C skipped the step that
+> would have written them ("verification runs saved as doc fixtures; harvest
+> cards written while knowledge is hot") and its exit gate did not check for
+> them. Writing the two trees from freshly captured runs was offered and
+> declined as this session's tail; narrowing to the User Guide alone was
+> offered and declined. Both trees, and the harvest pass they depend on, move
+> to wave 2 — where the Package Author Guide meets the `packages/` corpus it
+> is actually about.
 
 Two trees written **from proven behavior** (harvest cards + captured runs),
 never from spec prose: **User Guide** (audience=user) and **Package Author
@@ -1341,8 +1362,12 @@ D ≈ 3–5 days. Actual: **A on 2026-07-24, B on 07-24/25, C on 07-25, D on
 an order of magnitude fast. The honest reading is not "we beat the estimate":
 the estimate was built on human-paced reading and the work was done by
 delegated batch execution, so it was measuring the wrong quantity from the
-start. **F and G had not been opened when this REPORT was written**, so the
-"F+G ≈ 1 week overlapping E" clause is unscored, and this row is re-openable.
+start. **The "F+G ≈ 1 week overlapping E" clause is permanently unscoreable
+for wave 1**: both phases were deferred to wave 2 by owner ruling on
+2026-07-26, and not for want of time — close-out measured their inputs and
+found them absent (F's three views are empty; G's harvest directory was never
+written). A phase that cannot start because an earlier phase skipped a step is
+not evidence about a schedule.
 
 ### What the predictions did not cover, and should next time {#report-gaps}
 
@@ -1363,6 +1388,22 @@ start. **F and G had not been opened when this REPORT was written**, so the
   campaign; `tasks.json` was not, and sat 18 tasks stale until close-out. A
   projection nothing refreshes and nothing checks will drift silently — the
   dashboard read five tasks for a week.
+- **Phase F's three views are empty, because Phase B was a description pass
+  and Phase F projects from judgments.** Measured over the whole wave-1
+  corpus (4 917 facts): `freeze/plan` and `freeze/work` — **0**, so there are
+  no freeze *candidates* at all (the 9 real `freeze/done` rows are one
+  already-frozen contract, PROP-006). `stage="idea"` — **0**.
+  `action="rework"` — **0**. `state="hold"` — one inline row. The markup
+  faithfully records what each fact **is** (`impl/done`, `spec/done`,
+  `doc/done` are 4 816 of the 4 917) and never what should **happen next**,
+  because no phase ever asked anyone to decide that. §5-F's three owner plans
+  — release/productization from freeze-candidates, improvement from
+  rework + disabled, a global idea ledger from idea/hold — are therefore
+  projections of judgments the campaign never made. The forward-looking
+  knowledge wave 1 did produce went somewhere else entirely: the 66-row
+  findings ledger and `deferrals.md`. *A view is only as rich as the pass
+  that fed it; marking what exists is not the same act as deciding what to
+  do about it, and a plan that conflates them gets empty views at the end.*
 - **Phase C silently skipped one of its own steps, and Phase G pays for it.**
   §5-C's step list ends "verification runs (`command → real output`) are saved
   as doc fixtures; harvest cards written while knowledge is hot." Neither

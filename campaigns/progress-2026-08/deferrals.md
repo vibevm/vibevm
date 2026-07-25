@@ -70,7 +70,33 @@ being worked is in `tasks/INDEX.md`, not here.
   vibe-vvm / term-vvm conformance-golden; Linux/macOS install smoke;
   arbitrary user-repos design-doc; the `vibe doctor` project-local row.
 
-## 5. Predictions left unscored {#unscored}
+## 5. Two whole phases, deferred by owner ruling {#phases}
+
+Both were measured before they were deferred, and both turned out to depend on
+work an earlier phase was supposed to do and did not. Neither is "we ran out of
+time" — the inputs are not there.
+
+- **Phase F — plans and fold → wave 2.** All three of its views are empty:
+  `freeze/plan` + `freeze/work` **0** (so there are no freeze *candidates*;
+  the 9 real `freeze/done` rows are one already-frozen contract, PROP-006),
+  `action="rework"` **0**, `stage="idea"` **0**, `state="hold"` **1**. Phase B
+  recorded what each of 4 917 facts **is** and was never asked to decide what
+  should **happen** to it, so F's three owner plans project judgments the
+  campaign never made. **What wave 2 must carry:** a judgment-marking pass
+  (action / idea / freeze-candidacy) *before* F is attempted — folded into
+  wave 2 deliberately, so one sweep covers the `packages/` corpus too. Note
+  for whoever picks it up: wave 1's forward-looking knowledge does exist, it
+  just went somewhere else — the 66-row findings ledger and this file.
+
+- **Phase G — documentation → wave 2.** Its stated input does not exist:
+  `harvest/` is empty and `docdebt.json` has zero cards, because Phase C
+  skipped its own harvest step and its exit gate only checked that markers
+  carry verdicts. **What wave 2 must carry:** the harvest pass first (capture
+  `command → real output` runs while the knowledge is hot), then both trees.
+  The Package Author Guide in particular belongs there rather than here — it
+  documents the `packages/` corpus, which is wave 2's subject.
+
+## 6. Predictions left unscored {#unscored}
 
 Recorded so the REPORT's honesty survives contact with the next campaign —
 see §11 of the plan for the full scoring.
