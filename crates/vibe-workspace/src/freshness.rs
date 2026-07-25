@@ -215,7 +215,11 @@ fn stale(reason: String) -> Freshness {
 ///
 /// This *holds* the pins; it does not *skip* the registry walk. Skipping
 /// the walk for an unchanged subtree needs the depsolver's pin-preference
-/// machinery (PROP-003 §2.1), deferred with the SAT solver.
+/// machinery — `pin_preferences` on `DepSolver` (PROP-003 §2.1), once
+/// deferred "with the SAT solver". Sat shipped, resolvo shipped as the
+/// production default, and neither brought the method; the walk stays,
+/// and preference inside the solve would be resolvo's `sort_candidates`
+/// (PROP-017 §3).
 pub fn hold_pins(declared_roots: &[PackageRef], lockfile: &Lockfile) -> Vec<PackageRef> {
     declared_roots
         .iter()

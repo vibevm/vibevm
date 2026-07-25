@@ -1,17 +1,23 @@
 //! Dependency resolution for vibevm.
 //!
-//! Two traits and one implementation in this crate:
+//! Two provider traits, one consumer trait, three solver cells:
 //!
 //! - [`DepProvider`] — what the solver needs from the registry layer:
 //!   pick a concrete version for a [`PackageRef`], read the manifest at
 //!   that version. Implemented by [`MultiRegistryProvider`] for the
-//!   production path; tests provide their own.
+//!   production path; tests provide their own. [`VersionEnumerator`]
+//!   adds `list_versions` for the cells that pick among candidates
+//!   themselves (PROP-017 §2.2).
 //! - [`DepSolver`] — what consumers (the install pipeline) call:
 //!   resolve a list of root [`PackageRef`]s into a [`ResolvedGraph`]
 //!   that includes transitive deps.
-//! - [`NaiveDepSolver`] — a depth-first single-pass solver. Handles the
-//!   straight-line cases that today's fixtures and any first-cut
-//!   real-world dep graph hit. Pinned limitations:
+//! - [`ResolvoDepSolver`] — resolvo (CDCL SAT) behind that seam, and the
+//!   shipped default (`--solver` defaults to `resolvo`; PROP-017).
+//! - [`Sat`](sat::Sat) — chronological backtracking over version bounds,
+//!   with the naive solve as its branch checker.
+//! - [`NaiveDepSolver`] — a depth-first single-pass solver, kept as the
+//!   small-graph fast path and the differential oracle's reference cell
+//!   (PROP-017 §6). Pinned limitations, and why it is not the default:
 //!   - **First-pick wins.** When a package is referenced from two paths
 //!     with overlapping but different version constraints, the first
 //!     pick is taken and the second constraint is checked against it;
@@ -24,15 +30,24 @@
 //!     the first `one_of` entry that resolves, no backtracking when a
 //!     downstream conflict appears.
 //!
-//! When any of these limits start hurting real users — capability
-//! routing across packages-not-yet-seen, optimal-version-after-merging
-//! constraints, disjunction backtracking — that is the trigger for
-//! adding a `ResolvoSolver` (PROP-002 §2.8 primary). The traits are
-//! shaped so the swap is one new `impl DepSolver`, no consumer-side
-//! changes. Same `GitBackend`-style indirection PROP-001 §2.2 uses to
-//! leave the door open for `libsolv`.
+//! Those three limits were the trigger list for adding a `ResolvoSolver`
+//! (PROP-002 §2.8 primary), and **it fired**: decided 2026-06-14, port
+//! complete (PROP-017 §6). Constraint-merging and disjunction
+//! backtracking are resolvo's by construction (`[[requires_any]]` → a
+//! resolvo `Union`, PROP-017 §3); capability routing now reaches any
+//! provider in the transitive closure via [`resolvo_engine`]'s pre-scan,
+//! stronger than naive's already-seen match but still blind to a
+//! provider no package edge reaches — the one part of the trigger still
+//! live, and it now points at a registry reverse-index (PROP-017 §8),
+//! not at a solver. The swap cost what the seam promised consumer-side —
+//! one new `impl DepSolver`, no consumer, manifest, or lockfile change
+//! (PROP-017 §5) — plus one world-side enrichment,
+//! [`VersionEnumerator`]. The `GitBackend`-style indirection PROP-001
+//! §2.2 uses still holds the door open for `libsolv`, which PROP-002
+//! §2.8 keeps as the feature-gated fallback; that trigger has not fired.
 //!
-//! Spec: PROP-002 §2.8 (depsolver), §2.9 (capability vocabulary).
+//! Spec: PROP-002 §2.8 (depsolver), §2.9 (capability vocabulary);
+//! PROP-017 (the resolvo port).
 
 #![forbid(unsafe_code)]
 

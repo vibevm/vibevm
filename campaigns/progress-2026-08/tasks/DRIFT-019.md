@@ -108,3 +108,207 @@ Budget signal: past ~3 files or ~120 lines, stop and return.
 
 - queued 2026-07-25 (Fable). F-059 exists because DRIFT-014 surfaced these
   instead of quietly folding them into its own diff.
+- impl 2026-07-25 (Opus). §4.4 taken first: each of the three was read
+  against the tree before a word was written. **All three reproduce**, but
+  the third reproduces with a twist worth its own paragraph. Two files
+  touched, documentation only; no behaviour, no signature, no `#[spec]`
+  verb changed; no spec file opened for editing; §8 never fired.
+
+  **Site 1 — `crates/vibe-resolver/src/lib.rs:3`. Reproduces.** Before,
+  verbatim:
+
+  ```
+  //! Two traits and one implementation in this crate:
+  ```
+
+  After, verbatim (`lib.rs:3`):
+
+  ```
+  //! Two provider traits, one consumer trait, three solver cells:
+  ```
+
+  Verification. Three `impl DepSolver` in the crate: `naive.rs:57`
+  (`NaiveDepSolver`), `sat.rs:183` (`Sat`), `resolvo_engine/mod.rs:80`
+  (`ResolvoDepSolver`). The trait count was also wrong, which the task did
+  not claim: `lib.rs` declares **three** `pub trait`s, not two — `DepProvider`
+  (`:195`), `VersionEnumerator: DepProvider` (`:246`), `DepSolver` (`:301`).
+  Hence the split phrasing rather than "three traits and three
+  implementations": two of them face the registry world and one faces the
+  consumer, which is the distinction PROP-017 §5 `SWAP-BOUNDARIES` draws and
+  the sentence now carries it. The bullet list under the line was extended to
+  match — `ResolvoDepSolver` and `Sat` had no entry at all, and
+  `VersionEnumerator` is folded into the `DepProvider` bullet since it is a
+  supertrait of it. Naive's three pinned-limitation bullets are unchanged:
+  each was re-checked and each still holds, and `naive.rs:3` points here for
+  them.
+
+  **Site 2 — `crates/vibe-resolver/src/lib.rs:27–33`. Reproduces.** Before,
+  verbatim:
+
+  ```
+  //! When any of these limits start hurting real users — capability
+  //! routing across packages-not-yet-seen, optimal-version-after-merging
+  //! constraints, disjunction backtracking — that is the trigger for
+  //! adding a `ResolvoSolver` (PROP-002 §2.8 primary). The traits are
+  //! shaped so the swap is one new `impl DepSolver`, no consumer-side
+  //! changes. Same `GitBackend`-style indirection PROP-001 §2.2 uses to
+  //! leave the door open for `libsolv`.
+  ```
+
+  After, verbatim (`lib.rs:33–47`):
+
+  ```
+  //! Those three limits were the trigger list for adding a `ResolvoSolver`
+  //! (PROP-002 §2.8 primary), and **it fired**: decided 2026-06-14, port
+  //! complete (PROP-017 §6). Constraint-merging and disjunction
+  //! backtracking are resolvo's by construction (`[[requires_any]]` → a
+  //! resolvo `Union`, PROP-017 §3); capability routing now reaches any
+  //! provider in the transitive closure via [`resolvo_engine`]'s pre-scan,
+  //! stronger than naive's already-seen match but still blind to a
+  //! provider no package edge reaches — the one part of the trigger still
+  //! live, and it now points at a registry reverse-index (PROP-017 §8),
+  //! not at a solver. The swap cost what the seam promised consumer-side —
+  //! one new `impl DepSolver`, no consumer, manifest, or lockfile change
+  //! (PROP-017 §5) — plus one world-side enrichment,
+  //! [`VersionEnumerator`]. The `GitBackend`-style indirection PROP-001
+  //! §2.2 uses still holds the door open for `libsolv`, which PROP-002
+  //! §2.8 keeps as the feature-gated fallback; that trigger has not fired.
+  ```
+
+  **§4.2 — the trigger inventory.** The block carries five claims that read
+  as pending. Each was checked against the tree separately.
+
+  *Fired (rewritten to say what happened):*
+
+  1. **"optimal-version-after-merging constraints"** — fired. resolvo is CDCL
+     SAT; `sort_candidates` (`resolvo_engine/provider.rs:247`) orders a name's
+     solvables descending so the first solution is newest-feasible over the
+     merged constraint set, which is PROP-017 §3 `ROW-PREFER-NEWEST`.
+  2. **"disjunction backtracking"** — fired, and demonstrably.
+     `provider.rs:285–312` maps `[[requires_any]]` onto a resolvo `Union`
+     ("native OR + backtracking", PROP-017 §3 `ROW-REQUIRES-ANY`), and
+     `resolvo_engine/tests.rs:276`
+     `resolvo_disjunction_backtracks_past_conflicting_alternative` pins the
+     exact case naive dies on.
+  3. **"capability routing across packages-not-yet-seen"** — fired *in part*,
+     and the surviving part changed target, which is why the new text spends
+     three lines on it rather than one word.
+     `resolvo_engine/capabilities.rs:43` `prescan` walks the transitive
+     closure over `[requires.packages]` and `[[requires_any]]` edges across
+     every available version, indexes every `[provides]`, and a
+     `[requires.capabilities]` entry becomes a `Union` over the matching
+     providers — so a provider the solve has not yet *processed* is now
+     reachable, which naive cannot do. A provider that **no package edge
+     reaches** is still invisible. PROP-017 §8 `FUTURE-CAPABILITY-INDEX`
+     records precisely that remainder and re-uses the same words —
+     "the trigger is capability routing across packages-not-yet-seen becoming
+     load-bearing" — but now for a **registry reverse-index**, not for a
+     solver. Saying "fired" flat would have been as wrong as leaving it.
+  4. **"the swap is one new `impl DepSolver`, no consumer-side changes"** —
+     fired, and half-held, so it is recorded as a cost rather than deleted.
+     The consumer half held exactly (PROP-017 §5 `swap-recipe`: "No consumer,
+     no manifest, no lockfile change"). The world-facing half did not: a
+     candidate-choosing solver needs to see candidates, so the provider seam
+     was enriched — PROP-017 §2.2 `ENUMERATION-NEEDED`, in tree as
+     `VersionEnumerator: DepProvider` (`lib.rs:246`), which is what
+     `ResolvoDepSolver` takes as its bound (`resolvo_engine/mod.rs:80`).
+
+  *Not fired (left standing, deliberately):*
+
+  5. **"Same `GitBackend`-style indirection PROP-001 §2.2 uses to leave the
+     door open for `libsolv`"** — **accurate today**, and the only reason it
+     was re-worded at all is that it shared a sentence with claim 4. PROP-002
+     §2.8 `LIBSOLV-FALLBACK-SLOT` is live and current: "primary impl is
+     `ResolvoSolver`; a future `LibsolvSolver` (FFI to C libsolv,
+     BSD-3-Clause) drops in as a feature-gated alternative if resolvo ever
+     hits a ceiling we can't raise." No `libsolv` exists anywhere in
+     `crates/**` (the only hits are RPM/libsolv *vocabulary* references in
+     `vibe-core`'s weak-deps docs). The new text says the trigger has not
+     fired, in as many words, so a later reader is not left guessing whether
+     it was checked.
+
+  **Site 3 — `crates/vibe-workspace/src/freshness.rs:218`. Reproduces, but
+  only half of it is false — recorded because §4.4 asked.** Before, verbatim:
+
+  ```
+  /// This *holds* the pins; it does not *skip* the registry walk. Skipping
+  /// the walk for an unchanged subtree needs the depsolver's pin-preference
+  /// machinery (PROP-003 §2.1), deferred with the SAT solver.
+  ```
+
+  After, verbatim (`freshness.rs:216–222`):
+
+  ```
+  /// This *holds* the pins; it does not *skip* the registry walk. Skipping
+  /// the walk for an unchanged subtree needs the depsolver's pin-preference
+  /// machinery — `pin_preferences` on `DepSolver` (PROP-003 §2.1), once
+  /// deferred "with the SAT solver". Sat shipped, resolvo shipped as the
+  /// production default, and neither brought the method; the walk stays,
+  /// and preference inside the solve would be resolvo's `sort_candidates`
+  /// (PROP-017 §3).
+  ```
+
+  Reasoning. The *predicate* is true and stays: the machinery really is
+  absent — the shipped `DepSolver` declares `solve` and nothing else
+  (`lib.rs:301–304`), and DRIFT-014 kept the `deviates` on that trait for
+  exactly this gap. What is false is the **peg**: "deferred with the SAT
+  solver" makes the absence contingent on an event that has since happened
+  twice over — `Sat` shipped (`sat.rs:128`), then `ResolvoDepSolver` shipped
+  as the default (`vibe-cli/src/registry.rs:117` `unwrap_or("resolvo")`,
+  `:191`) — and neither brought `pin_preferences` with it. So the sentence
+  was not deleted and not merely re-dated: it now says the deferral outlived
+  its peg and names where the capability would actually land, resolvo's
+  `sort_candidates` (`resolvo_engine/provider.rs:247`), which is the same
+  landing site DRIFT-014's rewritten `deviates` reason names. §3's one-word
+  summary ("'deferred with the SAT solver', which shipped") is right about
+  the defect and understates which clause carries it.
+
+  **Numbers (§6).** `wc -l crates/vibe-resolver/src/lib.rs`: **571 → 586**,
+  14 under the 600-line budget; no split needed, so the edge case did not
+  fire. Second budget worth flagging, because the task did not know it:
+  `crates/vibe-workspace/src/freshness.rs` went **588 → 592**, only 8 under
+  the same budget — the site-3 rewrite was deliberately compressed to seven
+  lines for that reason, and the next edit to that file should expect to
+  split it. `cargo doc -p vibe-resolver --no-deps`: builds, **5 warnings
+  before and 5 after, none in the edited region** — `conditional.rs:4`
+  (unresolved `Requires`), `resolvo_engine/mod.rs:4` and `:6` and `sat.rs:14`
+  (public docs linking private items), `lib.rs:229` (redundant explicit link
+  target, pre-existing on the `VersionEnumerator` doc, shifted down 15 lines
+  by this diff). Every intra-doc link added here resolves, including
+  `[`Sat`](sat::Sat)` and `[`resolvo_engine`]`.
+
+  **Adjacent drift found, deliberately left standing** — same discipline
+  DRIFT-014 applied to these three. `crates/vibe-resolver/src/naive.rs:3–4`
+  reads "See [`crate`] module docs for the pinned limitations and **when to
+  upgrade to a SAT-style solver**." That upgrade landed twice (`Sat`, then
+  resolvo), so the pointer promises a future the same file already contradicts
+  twenty-five lines lower, in the rustdoc DRIFT-014 wrote at `naive.rs:31–39`.
+  It is F-059's shape exactly and it is not in `findings.json`; it is a
+  two-line fix and it was **not** taken, because §4.1 names three sites and
+  absorbing a fourth is what F-059 exists to prevent. Following the pointer
+  still lands a reader on correct text, so nothing is broken today.
+
+  **Gates run.** `cargo fmt --all` (clean).
+  `cargo test -p vibe-resolver -p vibe-workspace` **all green**: vibe-resolver
+  87 unit + `compile_fail` 1 + `differential_oracle` 1 + `embedded_provider` 1
+  + `fixpoint_conformance` 3 + `recommends` 3 + `solver_properties` 7 + 11
+  doctests; vibe-workspace 174 unit + 19 doctests. 0 failed on every target.
+
+  `bash tools/self-check.sh --keep-going` **exits 1 on exactly one step, not
+  this task's**: step 5 `cargo xtask conform check`, 2 new findings, both in
+  another agent's uncommitted concurrent work and both left alone per the
+  concurrency rule —
+  `crates/vibe-registry/src/git_backend/shell.rs:1` file-length 614 lines
+  (**592 at HEAD**, under budget; the working tree's +22 pushed it over) and
+  `crates/vibe-cli/src/commands/progress/tests.rs:42` no-unwrap-in-domain
+  (480 lines at HEAD → 536 in the tree; the flagged `.expect()` sits in a
+  `payload_for` helper this task never saw). Neither edited file appears in
+  the finding set, and this task's own contribution to conform is **0**.
+  Everything else is green, including the two steps that would catch a
+  mistake here — **step 2 `cargo test --workspace` and step 3 `cargo clippy
+  --workspace --all-targets -- -D warnings` both pass** — as do step 1 fmt,
+  step 4 `vibe check`, step 6 `sync-engines --check`, all four package gates
+  (core-ai-native, rust-ai-native-lang, rust-ai-native-mcp,
+  typescript-ai-native-mcp) and all four package self-traces (0 orphans each).
+  The floor was green with no override when this task started; it is green
+  again the moment the concurrent agent's two findings clear.
