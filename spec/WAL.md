@@ -1,38 +1,32 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-25 (Phase L executed and closed in session; Phase C
-awaits the owner's opening call)_
+_Updated: 2026-07-25 (session end — Phase L closed; Phase C in flight:
+4 of 5 clusters verified, spec/common closed 12/12; modules cluster
+handed to the next session)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phases A, B, and L CLOSED; Phase C
-(verification) awaits the owner's opening call.** Phase L (legacy
-relocation, owner amendment 2026-07-25) executed start-to-finish this
-session: L1 reference inventory (gate-binding set: 26 sites in 13
-corpus files + the `outdated.rs` doc comment; neworder/discipline had
-zero corpus inbound), L2 fact discovery with the verdict **every
-cited fact was already corpus-resident** — L3 ported nothing, the
-owner's new-spec grant went unused, citations dissolved into
-archive-provenance form; L4 repoints in four batches (`83346e78`
-`f8f347d8` `9514e8fb` `1ec6a27c`, incl. both `spec://vibevm/research`
-URI retirements and four word-level sites only a lookbehind/word
-sweep catches); L5 relocation `70f3cbdd` — 35 files `git mv`'d to
-root **`legacy-spec/`** (terraforms 25 / research 8 / neworder 1 /
-discipline 1), **the campaign plan carve-out honoured** (it stays at
-`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md` per the owner's
-reversal), live out-of-gate pointers (ROADMAP, docs/, terraform
-links, findings.json, discipline.lock, progress.toml) updated in the
-same commit, historical records left verbatim. `f311f429`
-regenerated the stale host specmap (absorbed B-phase drift + the
-move; ratchet green). Exit gate: reference greps zero into the four
-dirs from corpus + crates (plan carve-out aside); `check
---exhaustive` clean (58 files, 4 880 facts, 0 errors); floor
-`self-check` all green, real exit 0. Boundary entry in the plan LOG
-§9. Key laws unchanged: fact-exhaustive granularity,
-anchored-when-marked, two registers, verdicts never in markup, **no
-fractality** (Fable = markup/porting/review, Opus = DRIFT coding),
-engine pin `claude-opus-5`. Plan:
-`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`.
+**Progress Control (PROP-043) — Phase L CLOSED; Phase C (verification)
+IN FLIGHT.** The verify loop is proven and its conventions are durable
+in the plan LOG §9 (cache campaign maps `{verify_batch, processed_hash,
+verdicts{anchor→{v,ev[]}}, summary}`; verdicts never in markup; stage
+semantics: impl/done ⇒ presence, spec/done ⇒ absence, doc/done ⇒
+no-contradiction; assert-gated coverage; `_elements` for status tags).
+**Tally: 1 398 / 4 944 units — 1 353 confirmed / 42 drift / 3
+unverifiable; findings 44** (F-035…F-044 new). Verified: boot (c0),
+manual-tests (c1), design (c2), common 12/12 (c3a–c3d) = 23 of 58
+files. Drift profile settled: "the spec aged behind its own success" —
+fired triggers (UPL relicense → F-043; the §2.6 engine split → F-044),
+proposed-era headers over shipped systems (F-005/F-006/F-013), the MT
+keymap era (F-037/F-038), one code-side stale clap help (F-036, Phase
+E DRIFT candidate). Honest design proposals (031/032/033) pass clean —
+every absence claim grep-verified. **Remaining: the modules cluster
+(35 files, 3 300 markers)** — batch map + loop recipe in
+`CONTINUE.md`. Phase L record: 26 gate-binding sites repointed in 4
+batches; 35 files moved to `legacy-spec/` (plan carve-out honoured);
+specmap regenerated (`f311f429`). Key laws unchanged: no fractality
+(Fable = verification, Opus = DRIFT coding), engine pin
+`claude-opus-5`. Plan: `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`.
 
 ## Constraints — do not violate
 
@@ -46,41 +40,49 @@ engine pin `claude-opus-5`. Plan:
 - **conform R-001 gate.** `crates/vibe-cli/src/registry.rs` is the only
   sanctioned constructor site for embedded/local-composite providers.
 - **Boot pair marking.** `spec/boot/00-core.md` / `90-user.md` are
-  user-owned: mark ADDITIVELY only (anchors + markers), never re-form
-  or deconstruct their prose.
+  user-owned: mark ADDITIVELY only; never re-form their prose.
 - **legacy-spec/ is an archive.** Nothing in the living corpus or
   crates may cite into it as a normative source — archive-provenance
   pointers only; the campaign plan in `spec/terraforms/` is the one
   live file still inside a legacy-named path (owner carve-out).
+- **Cache campaign maps are load-bearing.** `run/cache.json` carries
+  the C-phase verdicts; mutate it by load-and-merge only (scan
+  preserves the maps; a from-scratch rewrite would erase them).
 
 ## Done (collapsed — see `git log`)
 
-- **Phase L (full, 2026-07-25).** Inventory → discovery (nothing to
-  port) → four repoint batches → `git mv` of 35 files to
-  `legacy-spec/` with the plan carve-out → specmap regen. Corpus and
-  crates are reference-free into the archive.
-- **Phase B (full).** 58 files, 4 880/4 880 facts marked; `check
-  --exhaustive` 0; grammar precedents complete; two scope narrowings
-  (94→59→58). Ledger: 35 findings. DRIFT-001…005 5/5 no-return.
-- Earlier: default registry migration; PROP-030 §3.3 project-packages;
-  vibevm-term Phase 2b; M1.17/M1.18/M1.19 stacks.
+- **Phase C, clusters 1–4 (2026-07-25).** c0 boot 64u (F-035
+  tests/-path drift); c1 manual-tests 67u (MT keymap era F-037/F-038 +
+  clap-help F-036); c2 design 306u (aged-tense family F-039/040/041 +
+  F-034); c3a common-small 150u (family roster F-042); c3b PROP-000
+  162u (six aged spots F-043); c3c 018+019 322u (headers F-013/F-005);
+  c3d common tail 327u (deferral-fired F-044; spec/common closed).
+- **Phase L (full, 2026-07-25).** Inventory → no-port verdict → 4
+  repoint batches → `git mv` 35 files → `legacy-spec/`; exit gate
+  green; specmap regen.
+- **Phase B (full).** 58 files, 4 880/4 880 facts marked; grammar
+  precedents complete. DRIFT-001…005 5/5 no-return.
+- Earlier: default registry migration; PROP-030 §3.3; vibevm-term
+  Phase 2b; M1.17/M1.18/M1.19.
 
 ## In progress
 
-Nothing mid-flight — every journal step closed. Phases A/B/L closed;
-Phase C opens only on the owner's word.
+Phase C mid-flight at a clean batch boundary — journal closed (last
+step `c3d-common-tail` done), no step open. The next batch is `c4a`
+(vibe-progress family) per the `CONTINUE.md` batch map.
 
 ## Next
 
-1. **Phase C (verification)** per the plan §5 — every marker gets an
-   evidence-backed verdict (machine first, judgment where machines
-   are silent; honesty enforced: not found ⇒ `unverifiable`). The
-   F-024…F-034 stale-header family is prime drift material. **Awaits
-   the owner's explicit opening call.**
-2. Then Phase D (stitching) over the ledger fixpoint.
-3. Opus queue EMPTY; candidate DRIFT material unchanged: the
-   stale-header sweep (C/D), F-016 modules README, F-020 OWNER-GUIDE,
-   F-017 aiui scrollbar, engine-family minting.
+1. **Phase C, modules cluster** — batches c4a…c4f per `CONTINUE.md`
+   (35 files, 3 300 markers; specmap join gives 626 edges — PROP-002
+   alone carries 110). Loop, conventions, and pitfalls are recorded
+   there and in LOG §9. Exit gate: 100 % markers carry verdicts;
+   X/Y/Z in the LOG; **ask the owner before opening Phase D**.
+2. Then Phase D (stitching) over the 44-row ledger — the F-024…F-044
+   families are sweep-shaped (one fix per family).
+3. Opus queue EMPTY; DRIFT candidates: F-036 (stale clap help on
+   `--plain`), the stale-header sweep, F-016 modules README, F-020
+   OWNER-GUIDE, F-017 aiui scrollbar, engine-family minting.
 
 Parked follow-ups (unchanged): vibe-vvm/term-vvm conformance-golden;
 Linux/macOS install smoke; arbitrary user-repos design-doc; `vibe
@@ -89,26 +91,21 @@ doctor` project-local row.
 ## Known issues
 
 - **GitVerse SSH link DOWN (2026-07-25).** Banner-exchange timeout —
-  network-level, not divergence: HTTPS `ls-remote` shows a strict
-  ancestor, no foreign commits. GitHub carries everything. Recovery:
-  plain `cargo xtask mirror` when SSH returns; NEVER `--force`. Bound
-  attempts with `GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o
-  BatchMode=yes"`.
+  network-level, not divergence (HTTPS `ls-remote`: strict ancestor).
+  GitHub carries everything through `9baa7fa6`. Recovery: plain
+  `cargo xtask mirror`; NEVER `--force`.
 - **vibespecs 401 on this machine** — redbook + rust-ai-native resolve
   via vibe-embedded; consuming lockfiles carry
   `source_kind = "embedded"` and trip the reproducibility guard.
-- **specmap ratchet** — 37 gated orphans host-side after the
-  2026-07-25 regen (`f311f429`; previously recorded as 34 — the regen
-  was the first since before Phase B and re-based the count). Gate
-  passes within the recorded allowance; 0 suspects.
+- **specmap ratchet** — 37 gated orphans host-side (re-based at the
+  2026-07-25 regen `f311f429`; gate passes, 0 suspects).
 
 ## Session context
 
-Phase L was executed wholesale in the 2026-07-25 session on the
-owner's recorded opening phrase. The corpus is fully marked AND
-reference-clean of the archive; the tree layout now is: living spec
-(`spec/boot common design modules manual-tests` + `WAL.md` + the
-campaign plan in `spec/terraforms/`), archive (`legacy-spec/`).
-`progress check` must stay at 0. The next session (or this one, on
-the owner's word) opens Phase C with a journal phase event per the
-DRIFT-003 lane.
+One session executed Phase L wholesale and drove Phase C through four
+of five clusters. The session boundary is a clean batch boundary: the
+journal is closed, all verdicts committed, GitHub synced. The next
+session opens with the phrase in `CONTINUE.md` §"How to start" and
+continues at c4a; the phase lane already reads C (no new phase event).
+`progress check` must stay 0; the cache's campaign maps must survive
+every write (load-and-merge only).
