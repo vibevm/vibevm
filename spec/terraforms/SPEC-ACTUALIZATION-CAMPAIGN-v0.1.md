@@ -1005,6 +1005,31 @@ read-only, no auth.
   c4f only** — vibe-mcp ×3, vibe-index PROP-005, vibe-settings ×2, and
   the vibe-registry rest (008/010/030/021/023/README), 957 markers.
 
+- **2026-07-25 · c4f1 — the registry rest; the campaign's densest drift
+  file falls.** PROP-008/010/021/023/030 + the modules README (372
+  markers): **364 units — 233 confirmed / 131 drift / 0 unverifiable.**
+  The headline: **PROP-030 takes 63 drift rows in one new family
+  (F-053)** — the embedded registry ships wholesale under a bare
+  "proposed (2026-07-13)" status line, while the WAL's own standing
+  constraints cite its §5 CI-off gate split and §3.3 project-local
+  rules as living law, all five flags sit in `install --help`, R-001
+  pins its sanctioned constructor, and this very machine resolves
+  redbook/rust-ai-native through it daily. **F-018 now covers the full
+  four-spec bridge family**: PROP-021 (24 drift — recurse clone/update
+  and snapshot embedding live in the backend) and PROP-023 (35 drift —
+  `[package].bridge` parses with its doctest) join PROP-020/022; four
+  headers, four re-mark sweeps, one family. The honest side held:
+  PROP-008 verifies 91/92 (IMPLEMENTED M1.18+M1.19, live from the
+  qualified refs in this repo's lock to exit code 7), PROP-010 91/93
+  (a genuine DRAFT the ROADMAP's M1.20 row corroborates — its only
+  drift is a motivation pair that still claims "no --offline exists",
+  F-054 with PROP-008's un-reconciled milestone line), and the modules
+  README lands its ledgered F-016 six rows exactly as the B-phase
+  wrote them. **Running tally: 3 897 / 4 944 — 3 585 confirmed / 309
+  drift / 3 unverifiable; findings 54 (next free F-055). Remaining:
+  c4f2 (vibe-mcp ×3 + vibe-settings ×2, 306 markers) and c4f3
+  (vibe-index PROP-005, 279).**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

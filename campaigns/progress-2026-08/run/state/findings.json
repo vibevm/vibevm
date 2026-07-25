@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T14:44:25Z",
+ "updated_at": "2026-07-25T14:52:12Z",
  "findings": [
   {
    "id": "F-001",
@@ -162,7 +162,7 @@
    "type": "reality-mismatch",
    "status": "open",
    "wave": 0,
-   "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D. EXTENDED (c4d2): the same proposed-header-over-shipped-system pattern covers PROP-022 wholesale (Materialization enum + is_in_place doctests in vibe-core; hardlink/in-place machinery + materialise_in_place seam + in-place incremental git-fetch in vibe-install; submodule snapshot-embedding in git_package_registry/fetch.rs; destructive guard in commands/uninstall.rs) and PROP-020's whole body (hooks.rs full runner: phases, Git-Bash-first Windows selection, DEFAULT_ALLOWED_GROUPS org.vibevm, TrustDecision non-interactive refuse, env contract, seams). Both files re-mark spec/done -> impl/done in one sweep with their header fixes."
+   "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D. EXTENDED (c4d2): the same proposed-header-over-shipped-system pattern covers PROP-022 wholesale (Materialization enum + is_in_place doctests in vibe-core; hardlink/in-place machinery + materialise_in_place seam + in-place incremental git-fetch in vibe-install; submodule snapshot-embedding in git_package_registry/fetch.rs; destructive guard in commands/uninstall.rs) and PROP-020's whole body (hooks.rs full runner: phases, Git-Bash-first Windows selection, DEFAULT_ALLOWED_GROUPS org.vibevm, TrustDecision non-interactive refuse, env contract, seams). Both files re-mark spec/done -> impl/done in one sweep with their header fixes. EXTENDED (c4f1): the family covers all FOUR bridge specs - PROP-021 (submodule machinery live: recurse clone/update, snapshot embedding in fetch.rs, in-place native) and PROP-023 (the [package].bridge flag parses at vibe-core package.rs:117, default false, with doctest) join PROP-020/PROP-022."
   },
   {
    "id": "F-019",
@@ -469,6 +469,24 @@
    "status": "open",
    "wave": 0,
    "note": "The cli/actions cluster's DRAFT-era headers over shipped systems, one sweep: PROP-036/PROP-037/PROP-039 status lines all read 'DRAFT — requirements' while their plans executed (PACKAGE-TREE / TREE-TUI v0.2 / the vibe-actions crate with its Spec-2 TUI consumer). PROP-036's §2.11 sketch keys (q-quit, n-order, x/t/TAB-[]-modes, F fold-all) are superseded by PROP-037 Spec 2's shipped F-key scheme (F3 menu, F2 sort, Esc+confirm, Shift+arrows) — mark the section superseded or rewrite to cite §Spec-2. PROP-039's AIUI rows ('designed-for; not built now' + the §13 non-goal) aged behind the shipped vibe aiui state/list_actions/invoke (aiui.rs; CLI help cites §11.2/§11.3). Related code-side lie already ledgered: F-036 (--plain clap text)."
+  },
+  {
+   "id": "F-053",
+   "from": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
+   "to": "crates/vibe-cli/src/registry.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-030 ships wholesale under a bare 'proposed (2026-07-13)' status line: the embedded registry is this machine's daily resolution mode (WAL constraints cite §5 CI-off gate split + §3.3 project-local as standing law; R-001 pins the sanctioned constructor site; --prefer-embedded/--no-prefer-embedded/--offline/--embedded-short-circuit/--prefer-local all live in install --help; source_kind=embedded trips the reproducibility guard in consuming lockfiles). One re-mark sweep (spec/done -> impl/done) with the header fix, same F-018 shape."
+  },
+  {
+   "id": "F-054",
+   "from": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+   "to": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Registry-rest small nits, one touch-up pass: (a) PROP-008's milestone line still reads 'design proposal ... Not implementation-locked' one line above its IMPLEMENTED status; (b) PROP-010's motivation pair aged — 'There is no --offline mode / every install walks the network / no way to resolve against what I already have' fell to the shipped --offline (PROP-002 §2.2.2.1), the embedded/local registries (PROP-030) and PROP-011's lockfile-respecting freshness skip; the PROP-010 store itself stays honestly DRAFT (ROADMAP M1.20)."
   }
  ]
 }
