@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T22:35:00Z",
+ "updated_at": "2026-07-25T23:20:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -322,9 +322,9 @@
    "from": "crates/vibe-cli/src/cli/inspect.rs",
    "to": "spec/modules/vibe-cli/PROP-036-package-tree.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Stale clap help on vibe tree --plain: says -The TUI is Phase 2 (PROP-036 S2.11); today output is plain regardless, so this flag is currently a no-op on a tty- while the console TUI is shipped and is the attended default (-c help text + goldens). Code-side doc fix; Phase E DRIFT candidate. Found by C c1 (2026-07-25)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Stale clap help on vibe tree --plain: says -The TUI is Phase 2 (PROP-036 S2.11); today output is plain regardless, so this flag is currently a no-op on a tty- while the console TUI is shipped and is the attended default (-c help text + goldens). Code-side doc fix; Phase E DRIFT candidate. Found by C c1 (2026-07-25). || RESOLVED by DRIFT-013 2026-07-25: the help now states the shipped behaviour with the citation repointed at #tui. Verified on a real console before being described (user_attended reads stdout, so a redirected capture would have destroyed the test), with a control proving the tty was detected. The --plain vs -c/-t precedence is stated from observation: both combinations are legal and --plain wins; no conflicts_with added. Out of scope but recorded: commands/tree/mod.rs:7 still calls the TUI Phase 2 in its module doc."
   },
   {
    "id": "F-037",
@@ -529,9 +529,18 @@
    "from": "crates/vibe-resolver/src/lib.rs",
    "to": "crates/vibe-workspace/src/freshness.rs",
    "type": "reality-mismatch",
+   "status": "resolved",
+   "wave": 2,
+   "note": "F-047's blast radius is wider than its three deviates - found by DRIFT-014 and deliberately left standing rather than absorbed silently. Three module-doc sites still describe the pre-port world: lib.rs:3 says 'Two traits and ONE implementation in this crate' (there are three); lib.rs:27-33 names 'adding a ResolvoSolver (PROP-002 S2.8 primary)' as a FUTURE trigger, three lines above a site DRIFT-014 just corrected; and vibe-workspace/src/freshness.rs:218 says a behaviour was 'deferred with the SAT solver', which shipped. Also durable for future tasks: specmark's grammar REJECTS `reason` on every verb except `deviates`, so an implements-with-a-note must put the note in rustdoc, not the attribute. Note: vibe-resolver/src/lib.rs is now 571 lines, 29 from the 600-line conform budget. || RESOLVED by DRIFT-019 2026-07-25: all three reproduced, and the first reproduced with MORE wrong than filed - the header said \"two traits and one implementation\" and the crate has three of each. The trigger list was rewritten rather than deleted (a fired trigger is why the code looks as it does) and one third of it is honestly still live: capability routing reaches the transitive closure but stays blind to a provider no package edge reaches, which now points at a registry reverse-index instead of at a solver. lib.rs 586 lines, under budget."
+  },
+  {
+   "id": "F-060",
+   "from": "crates/vibe-resolver/src/naive.rs",
+   "to": "crates/vibe-resolver/src/naive.rs",
+   "type": "contradiction",
    "status": "open",
    "wave": 2,
-   "note": "F-047's blast radius is wider than its three deviates - found by DRIFT-014 and deliberately left standing rather than absorbed silently. Three module-doc sites still describe the pre-port world: lib.rs:3 says 'Two traits and ONE implementation in this crate' (there are three); lib.rs:27-33 names 'adding a ResolvoSolver (PROP-002 S2.8 primary)' as a FUTURE trigger, three lines above a site DRIFT-014 just corrected; and vibe-workspace/src/freshness.rs:218 says a behaviour was 'deferred with the SAT solver', which shipped. Also durable for future tasks: specmark's grammar REJECTS `reason` on every verb except `deviates`, so an implements-with-a-note must put the note in rustdoc, not the attribute. Note: vibe-resolver/src/lib.rs is now 571 lines, 29 from the 600-line conform budget."
+   "note": "naive.rs:3-4 points the reader at the crate module docs for 'the pinned limitations and WHEN TO UPGRADE to a SAT-style solver'. That upgrade landed twice - sat, then resolvo as the production default - so the file contradicts itself twenty-five lines lower, in the rustdoc DRIFT-014 wrote at naive.rs:31-39. Two-line fix, F-059's shape exactly. Recorded rather than folded in: DRIFT-019's §4.1 named three sites, and absorbing a fourth silently is precisely what F-059 exists to prevent. Following the pointer still lands a reader on correct text, so this misleads only someone who stops at the pointer. Also recorded here because it has no other home: crates/vibe-workspace/src/freshness.rs is now 592 lines against the 600-line conform budget (8 of headroom) - the next edit to that file should expect to split it, and DRIFT-019 compressed its own change to seven lines for that reason."
   }
  ]
 }

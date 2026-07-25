@@ -294,21 +294,32 @@ Budget signal: past ~3 files or ~120 lines, stop and return.
   + `fixpoint_conformance` 3 + `recommends` 3 + `solver_properties` 7 + 11
   doctests; vibe-workspace 174 unit + 19 doctests. 0 failed on every target.
 
-  `bash tools/self-check.sh --keep-going` **exits 1 on exactly one step, not
-  this task's**: step 5 `cargo xtask conform check`, 2 new findings, both in
-  another agent's uncommitted concurrent work and both left alone per the
-  concurrency rule —
-  `crates/vibe-registry/src/git_backend/shell.rs:1` file-length 614 lines
-  (**592 at HEAD**, under budget; the working tree's +22 pushed it over) and
-  `crates/vibe-cli/src/commands/progress/tests.rs:42` no-unwrap-in-domain
-  (480 lines at HEAD → 536 in the tree; the flagged `.expect()` sits in a
-  `payload_for` helper this task never saw). Neither edited file appears in
-  the finding set, and this task's own contribution to conform is **0**.
-  Everything else is green, including the two steps that would catch a
-  mistake here — **step 2 `cargo test --workspace` and step 3 `cargo clippy
-  --workspace --all-targets -- -D warnings` both pass** — as do step 1 fmt,
-  step 4 `vibe check`, step 6 `sync-engines --check`, all four package gates
-  (core-ai-native, rust-ai-native-lang, rust-ai-native-mcp,
-  typescript-ai-native-mcp) and all four package self-traces (0 orphans each).
-  The floor was green with no override when this task started; it is green
-  again the moment the concurrent agent's two findings clear.
+  `cargo xtask conform check`: **0 findings, 0 frozen in baseline, 0 new** —
+  same as before this task. `bash tools/self-check.sh` (no flags, no
+  override, against the developer's real `~/.vibe/`): **all green, exit 0** —
+  all nine steps, including step 2 `cargo test --workspace` and step 3
+  `cargo clippy --workspace --all-targets -- -D warnings`, the two that would
+  catch a mistake here, plus `vibe check`, `sync-engines --check`, all four
+  package gates (core-ai-native, rust-ai-native-lang, rust-ai-native-mcp,
+  typescript-ai-native-mcp) and all four package self-traces (0 gated orphans
+  each). The floor is left exactly as it was found.
+
+  Two concurrency artefacts recorded so a reviewer reading the timestamps is
+  not puzzled; neither is this task's and neither was "fixed" here:
+
+  - An intermediate conform run reported **2 new findings**, both in another
+    agent's then-uncommitted work —
+    `crates/vibe-registry/src/git_backend/shell.rs:1` file-length 614 lines
+    (**592 at HEAD**, under budget; that agent's +22 pushed it over) and
+    `crates/vibe-cli/src/commands/progress/tests.rs:42` no-unwrap-in-domain
+    (480 at HEAD → 536 in the tree; the flagged `.expect()` sits in a
+    `payload_for` helper this task never saw). Neither edited file ever
+    appeared in the finding set. Both cleared on their own once that agent
+    landed its split (`git_backend/shell/query.rs`), and conform returned to
+    0 without anything being done to them here.
+  - One `cargo test --workspace` run died at
+    `error: linking with `link.exe` failed: exit code: 1104` on
+    `vibe-resolver` test `compile_fail` — a Windows output-file lock from a
+    concurrent cargo, the same class DRIFT-014 hit on `vibe.exe`. Per the
+    concurrency rule it was waited out, not diagnosed; the immediate retry
+    compiled and passed.
