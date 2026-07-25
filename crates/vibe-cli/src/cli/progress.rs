@@ -6,7 +6,7 @@ specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#tool");
 
 use std::path::PathBuf;
 
-use clap::{Args, Subcommand};
+use clap::{Args, Subcommand, ValueEnum};
 
 /// `vibe progress` — inline `<status>` markup: scan, validate, report,
 /// and drive the actualization campaign (PROP-043).
@@ -44,6 +44,11 @@ pub enum ProgressSubcommand {
     /// Regenerate `RESUME.md` from the campaign journal and print it —
     /// the first read of every campaign session.
     Resume(ProgressCommonArgs),
+
+    /// Record a gate's verdict into the campaign's gate panel. The
+    /// automation seam: whoever ran the real gate reports the result here,
+    /// and the dashboard reads it out of `campaign.json`.
+    Gate(ProgressGateArgs),
 }
 
 #[derive(Debug, Args)]
@@ -114,4 +119,37 @@ pub struct ProgressRescanArgs {
     /// Path to the previous campaign's `baseline.json`.
     #[arg(long)]
     pub baseline: PathBuf,
+}
+
+#[derive(Debug, Args)]
+pub struct ProgressGateArgs {
+    #[command(flatten)]
+    pub common: ProgressCommonArgs,
+
+    /// The gate's name — `floor`, `check`, `conform`, … One record per
+    /// name: recording again replaces that gate's previous verdict.
+    pub name: String,
+
+    /// The verdict the run produced.
+    #[arg(long, value_enum)]
+    pub status: GateStatusArg,
+
+    /// Free text pinned to the verdict: the failing test, the exit code,
+    /// the reason it is stale.
+    #[arg(long)]
+    pub detail: Option<String>,
+}
+
+/// The verdicts `vibe progress gate` accepts (PROP-043 §7.2). Declared
+/// here rather than in `progress-core`: the core carries no clap
+/// dependency (separability law §2). An unlisted value is a clap error,
+/// never a silently stored string.
+#[derive(Debug, Clone, Copy, ValueEnum)]
+pub enum GateStatusArg {
+    /// The gate ran and passed.
+    Green,
+    /// The gate ran and failed.
+    Red,
+    /// The gate has not been re-run since the corpus changed.
+    Stale,
 }

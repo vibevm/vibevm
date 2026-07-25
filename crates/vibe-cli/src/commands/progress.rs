@@ -14,8 +14,8 @@ use progress_core::report::View;
 use progress_core::{baseline, cache, journal, report, rollup, scope, state, weave};
 
 use crate::cli::{
-    ProgressArgs, ProgressCheckArgs, ProgressCommonArgs, ProgressReportArgs, ProgressRescanArgs,
-    ProgressSubcommand, ProgressWeaveArgs,
+    GateStatusArg, ProgressArgs, ProgressCheckArgs, ProgressCommonArgs, ProgressGateArgs,
+    ProgressReportArgs, ProgressRescanArgs, ProgressSubcommand, ProgressWeaveArgs,
 };
 use crate::output::Context;
 
@@ -28,6 +28,7 @@ pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
         ProgressSubcommand::Weave(a) => weave_cmd(ctx, &a),
         ProgressSubcommand::Rescan(a) => rescan_cmd(ctx, &a),
         ProgressSubcommand::Resume(a) => resume(ctx, &a),
+        ProgressSubcommand::Gate(a) => gate(ctx, &a),
     }
 }
 
@@ -384,6 +385,49 @@ fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     Ok(())
 }
 
+/// `vibe progress gate <name> --status <green|red|stale> [--detail …]` —
+/// record a gate's verdict into the campaign's panel.
+///
+/// The adapter never *runs* the gate: a CI step or a local script runs the
+/// real thing and reports the verdict here (PROP-043 §2 — nothing in this
+/// stack measures a floor). Deliberately skips the tree parse `ground`
+/// performs; reporting a verdict touches the campaign zone only.
+fn gate(ctx: &Context, a: &ProgressGateArgs) -> Result<()> {
+    let root = a
+        .common
+        .path
+        .canonicalize()
+        .with_context(|| format!("canonicalizing `{}`", a.common.path.display()))?;
+    let root = super::init::strip_unc_public(root);
+    let Some(campaign) = resolve_campaign(&root, a.common.campaign.as_deref()) else {
+        bail!("`vibe progress gate` needs a campaign zone (campaigns/<id>/ or --campaign)");
+    };
+    let (status, label) = match a.status {
+        GateStatusArg::Green => (state::GateStatus::Green, "green"),
+        GateStatusArg::Red => (state::GateStatus::Red, "red"),
+        GateStatusArg::Stale => (state::GateStatus::Stale, "stale"),
+    };
+    let record = state::GateRecord {
+        name: a.name.clone(),
+        status,
+        ran_at: cache::now_utc(),
+        detail: a.detail.clone(),
+    };
+    let payload = serde_json::to_string_pretty(&record)?;
+    let state_dir = campaign.join("run").join("state");
+    state::record_gate(&state_dir, record)?;
+    if ctx.is_json() {
+        println!("{payload}");
+    } else if !ctx.is_quiet() {
+        println!(
+            "progress gate: `{}` = {label} recorded in {}",
+            a.name,
+            state_dir.join("campaign.json").display()
+        );
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -464,5 +508,53 @@ mod tests {
             .map(|f| f["path"].as_str().expect("path str"))
             .collect();
         assert_eq!(paths, vec!["spec/a.md"], "corpus.json == observed set");
+    }
+
+    /// The automation seam end to end (DRIFT-008 §4.4): the subcommand
+    /// writes the record into `campaign.json`, and the scan that follows —
+    /// which rewrites the whole projection — keeps it.
+    #[test]
+    fn progress_gate_cli_records() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
+        std::fs::write(root.join("spec/a.md"), "@impl a\n").expect("write a");
+        std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
+            .expect("write cfg");
+        let campaign = root.join("campaigns").join("progress-test");
+        std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
+        let ctx = crate::output::Context::from_flags(true, false, None, true);
+        let common = || ProgressCommonArgs {
+            path: root.to_path_buf(),
+            campaign: Some(campaign.clone()),
+        };
+
+        // The panel lives in campaign.json, which a scan writes first.
+        scan(&ctx, &common()).expect("scan");
+        gate(
+            &ctx,
+            &ProgressGateArgs {
+                common: common(),
+                name: "floor".into(),
+                status: GateStatusArg::Red,
+                detail: Some("cli_pkg_cycle::install_from_git_registry (F-055)".into()),
+            },
+        )
+        .expect("gate");
+        // … and a following scan does not erase it.
+        scan(&ctx, &common()).expect("rescan");
+
+        let text = std::fs::read_to_string(campaign.join("run/state/campaign.json"))
+            .expect("read campaign.json");
+        let v: serde_json::Value = serde_json::from_str(&text).expect("parse campaign.json");
+        let gates = v["gates"].as_array().expect("gates array");
+        assert_eq!(gates.len(), 1, "one gate recorded");
+        assert_eq!(gates[0]["name"], "floor");
+        assert_eq!(gates[0]["status"], "red");
+        assert_eq!(
+            gates[0]["detail"],
+            "cli_pkg_cycle::install_from_git_registry (F-055)"
+        );
+        assert!(gates[0]["ran_at"].is_string(), "stamped with a UTC time");
     }
 }
