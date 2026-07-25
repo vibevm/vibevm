@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T12:44:03Z",
+  "updated_at": "2026-07-25T12:50:17Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -753,7 +753,186 @@
       "facts": 28,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "processed_hash": "9aa3d2ee4fded835a76d233776e602cc5312a5d82164f1a108fb9338ef923f71",
+        "summary": {
+          "confirmed": 23,
+          "drift": 5,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "purpose": {
+            "v": "confirmed",
+            "ev": [
+              "vibe tree TUI ships (tree/tui/ module tree, goldens); read-only claim consistent (help: Read-only)"
+            ]
+          },
+          "PRE-TTY": {
+            "v": "confirmed",
+            "ev": [
+              "non-tty renders plain (help + STEP-1 live run); TUI is the attended default (-c console today's default)"
+            ]
+          },
+          "PRE-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "cargo build -p vibe-cli is the standing build; bin name vibe (Cargo.toml L13-14)"
+            ]
+          },
+          "PRE-REPO-ROOT": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock + spec/boot/{STATIC,INDEX}.md present at root"
+            ]
+          },
+          "setup-no-isolation": {
+            "v": "confirmed",
+            "ev": [
+              "tree is read-only per help; no state writes claimed anywhere in PROP-036 surface"
+            ]
+          },
+          "STEP-1-MACHINE-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "both commands ran live 2026-07-25"
+            ]
+          },
+          "EXP-1-MACHINE-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "live: --json opens {ok:true, command:tree, schema_version:1} (pretty-printed form); --plain prints project:/STATIC.md: bytes,lines/columns: load T C S legend + tree rows with box glyphs; redbook static S=x row seen; rust-ai-native umbrella none row seen"
+            ]
+          },
+          "STEP-2-LAUNCH-TUI": {
+            "v": "confirmed",
+            "ev": [
+              "the TUI exists and launches on tty (goldens render full frames; -c console default)"
+            ]
+          },
+          "EXP-2-LAUNCH-TUI": {
+            "v": "drift",
+            "ev": [
+              "footer/status wording stale: shipped footer (goldens/base.snap.txt): F1 search / F2 sort / F3 mode / F4 settings / F6 copy + up-down move / left-right pan / Space fold / Enter details / Esc quit - the MT claims n order / x mode / t swap / [ ] tabs / q quit -> F-037"
+            ]
+          },
+          "STEP-3-NAVIGATE": {
+            "v": "confirmed",
+            "ev": [
+              "up/down move + left/right pan in the shipped footer"
+            ]
+          },
+          "EXP-3-NAVIGATE": {
+            "v": "confirmed",
+            "ev": [
+              "same footer; pan of the name column is the shipped left-right semantics"
+            ]
+          },
+          "STEP-4-FOLD": {
+            "v": "confirmed",
+            "ev": [
+              "Space fold in footer; fold.all action in dispatch.rs:31"
+            ]
+          },
+          "EXP-4-FOLD": {
+            "v": "confirmed",
+            "ev": [
+              "Space fold + fold.all dispatch + diamond re-occurrence leaf seen live in --plain ((*) row); the literal F key hint is the stale-keymap family -> F-037 note"
+            ]
+          },
+          "STEP-5-DETAIL-MODAL": {
+            "v": "confirmed",
+            "ev": [
+              "Enter details in footer; modal.rs + model_view.rs"
+            ]
+          },
+          "EXP-5-DETAIL-MODAL": {
+            "v": "confirmed",
+            "ev": [
+              "bordered modal overlay (modal.rs), vertical detail (model_view.rs), Esc close; key-swallow is modal-stack law (prefs/tui/input.rs doc)"
+            ]
+          },
+          "STEP-6-ORDERING": {
+            "v": "confirmed",
+            "ev": [
+              "ordering toggle exists: render.rs status line ordering label + F2 sort menu golden"
+            ]
+          },
+          "EXP-6-ORDERING": {
+            "v": "drift",
+            "ev": [
+              "the n key is gone - ordering lives in the F2 sort dialog (f2-sort-menu.snap.txt) -> F-037"
+            ]
+          },
+          "STEP-7-MODES": {
+            "v": "confirmed",
+            "ev": [
+              "display modes exist: modes.rs SubTables + Tabs (PROP-037 S4.2/S4.3)"
+            ]
+          },
+          "EXP-7-MODES": {
+            "v": "drift",
+            "ev": [
+              "the x key is gone - modes live under F3 mode menu -> F-037"
+            ]
+          },
+          "STEP-8-SWAP-TABS": {
+            "v": "confirmed",
+            "ev": [
+              "tab switching exists (Tabs mode, Shift+arrows per MT-02 S4; modes.rs)"
+            ]
+          },
+          "EXP-8-SWAP-TABS": {
+            "v": "drift",
+            "ev": [
+              "t / Tab / ] / [ bindings not in the shipped surface; tab switch is Shift+left/right -> F-037"
+            ]
+          },
+          "STEP-9-QUIT": {
+            "v": "confirmed",
+            "ev": [
+              "quitting exists (Esc + confirm dialog)"
+            ]
+          },
+          "EXP-9-QUIT": {
+            "v": "drift",
+            "ev": [
+              "q quit stale: shipped is Esc + Really quit? confirm (goldens/quit-dialog.snap.txt) -> F-037"
+            ]
+          },
+          "teardown-none": {
+            "v": "confirmed",
+            "ev": [
+              "read-only command; no teardown surface"
+            ]
+          },
+          "FAIL-STEP-NUMBER": {
+            "v": "confirmed",
+            "ev": [
+              "procedural filing rule"
+            ]
+          },
+          "FAIL-SCREENSHOT": {
+            "v": "confirmed",
+            "ev": [
+              "procedural filing rule"
+            ]
+          },
+          "FAIL-MODEL-OUTPUT": {
+            "v": "confirmed",
+            "ev": [
+              "both commands ran live this session"
+            ]
+          },
+          "FAIL-PLATFORM": {
+            "v": "confirmed",
+            "ev": [
+              "vibe --version surface exists (tool_version in json envelope)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T12:50:16Z",
+        "verify_batch": "c1-manual-tests"
+      }
     },
     {
       "path": "spec/manual-tests/MT-02-vibe-tree-tui.md",
@@ -767,7 +946,156 @@
       "facts": 23,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "processed_hash": "081ae05861ec688f4c094443d4c597271ba99f3df20bce102acb765d2387e8d2",
+        "summary": {
+          "confirmed": 22,
+          "drift": 1,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "purpose": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-037 shipped (tui module tree: theme/ palettes, ui/ components, modes, search, copy, settings); 241-test figure is a dated record at authoring"
+            ]
+          },
+          "settings-mutation-note": {
+            "v": "confirmed",
+            "ev": [
+              "vibe-settings store is the persistence layer (PROP-040 shipped); palette/tier/mode/sort/shape persist"
+            ]
+          },
+          "PRE-TTY-TRUECOLOR": {
+            "v": "confirmed",
+            "ev": [
+              "tier system in theme/ (Tier 3 truecolor default: default_theme rose-pine t3 test)"
+            ]
+          },
+          "PRE-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "standing build command"
+            ]
+          },
+          "PRE-REPO-ROOT": {
+            "v": "confirmed",
+            "ev": [
+              "repo root is the rich real tree"
+            ]
+          },
+          "STEP-1-DEFAULT-LOOK": {
+            "v": "confirmed",
+            "ev": [
+              "default theme test pins rose-pine + Tier 3 (theme/mod.rs)"
+            ]
+          },
+          "S1-GLYPHS": {
+            "v": "confirmed",
+            "ev": [
+              "glyph vocabulary module theme/glyphs.rs (fold/DAG/flag glyphs); flatten.rs + prefs page_tree.rs consume it"
+            ]
+          },
+          "S1-FOOTER": {
+            "v": "drift",
+            "ev": [
+              "the MT footer quote omits F4 settings and says q quit; shipped footer (goldens/base.snap.txt): F1 search / F2 sort / F3 mode / F4 settings / F6 copy + up-down move / left-right pan / Space fold / Enter details / Esc quit -> F-038"
+            ]
+          },
+          "S1-STATUS-LINE": {
+            "v": "confirmed",
+            "ev": [
+              "render.rs status line: ordering / display mode / STATIC.md size / package count"
+            ]
+          },
+          "STEP-2-NAVIGATION": {
+            "v": "confirmed",
+            "ev": [
+              "footer keys: up-down move, left-right pan, Space fold, Enter details"
+            ]
+          },
+          "STEP-3-DETAIL-CARD": {
+            "v": "confirmed",
+            "ev": [
+              "ui/card.rs paper panel with close affordance (x-glyph in modal.rs + ui/card.rs); wrap semantics in card"
+            ]
+          },
+          "STEP-4-MODES": {
+            "v": "confirmed",
+            "ev": [
+              "modes.rs: SubTables stacked trees per partition + Tabs with active tab; fold state shared (one Tree widget)"
+            ]
+          },
+          "STEP-5-SORT-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "F2 sort golden (f2-sort-menu.snap.txt); shape.rs pipeline; sticky menu per menu/ module"
+            ]
+          },
+          "STEP-6-SEARCH": {
+            "v": "confirmed",
+            "ev": [
+              "search/render.rs: hybrid All + per-category tab strip (pills); action rows invokable"
+            ]
+          },
+          "STEP-7-COPY": {
+            "v": "confirmed",
+            "ev": [
+              "copy/mod.rs: copied-as-Markdown flash; copy/settings.rs: PNG routes to ComingSoon (S10.4), FileDest depth-2 cascade documented in module doc"
+            ]
+          },
+          "STEP-8-QUIT-CONFIRM": {
+            "v": "confirmed",
+            "ev": [
+              "goldens/quit-dialog.snap.txt: Really quit? dialog at base Esc"
+            ]
+          },
+          "STEP-9-PALETTE": {
+            "v": "confirmed",
+            "ev": [
+              "palettes/: Frappe, Latte, Macchiato, Mocha + rose-pine (theme default); settings.toml path is the vibe-settings store; the -once a picker lands- clause is superseded by the F4 settings menu -> F-038 note"
+            ]
+          },
+          "S9-RELAUNCH": {
+            "v": "confirmed",
+            "ev": [
+              "theme resolve on launch from settings (theme/palettes resolve doc); tier override in tier system"
+            ]
+          },
+          "STEP-10-PERSISTENCE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe-settings three-level store persists mode/sort/shape (PROP-040 S8; prefs surface reads them)"
+            ]
+          },
+          "pass-criteria": {
+            "v": "confirmed",
+            "ev": [
+              "procedural pass definition"
+            ]
+          },
+          "SIGNOFF-OWNER": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely unsigned - impl/work matches reality (no sign-off recorded anywhere)"
+            ]
+          },
+          "SIGNOFF-TIER-3": {
+            "v": "confirmed",
+            "ev": [
+              "unsigned; pending matches impl/work"
+            ]
+          },
+          "SIGNOFF-DEGRADATION": {
+            "v": "confirmed",
+            "ev": [
+              "unsigned; pending matches impl/work"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T12:50:16Z",
+        "verify_batch": "c1-manual-tests"
+      }
     },
     {
       "path": "spec/manual-tests/MT-03-vibe-prefs-tui.md",
@@ -781,7 +1109,114 @@
       "facts": 16,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "processed_hash": "be2077f10ab9b5695bf870f56f7b66edc841e3868b1d8559c1e50fcb8525c1fa",
+        "summary": {
+          "confirmed": 16,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "purpose": {
+            "v": "confirmed",
+            "ev": [
+              "vibe prefs ui subcommand shipped (help lists ui - PROP-041 TUI); prefs/tui module (input.rs, page_tree.rs); 347-test figure dated at authoring"
+            ]
+          },
+          "settings-mutation-note": {
+            "v": "confirmed",
+            "ev": [
+              "writes via vibe-settings to user layers; PROP-040 store"
+            ]
+          },
+          "PRE-TTY": {
+            "v": "confirmed",
+            "ev": [
+              "TUI launches when attended (help: launches when the session is attended)"
+            ]
+          },
+          "PRE-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "standing build command"
+            ]
+          },
+          "PRE-CONTEXT": {
+            "v": "confirmed",
+            "ev": [
+              "three-layer store L1/L2/L3 per PROP-040 S8; project context adds project layers"
+            ]
+          },
+          "STEP-1-LAUNCH": {
+            "v": "confirmed",
+            "ev": [
+              "prefs ui exists; page_tree.rs renders the page hierarchy"
+            ]
+          },
+          "S1-PAGE-TREE": {
+            "v": "confirmed",
+            "ev": [
+              "page_tree.rs uses the tree visual language (glyphs import); arrow nav in input.rs"
+            ]
+          },
+          "STEP-2-EDIT-FORM": {
+            "v": "confirmed",
+            "ev": [
+              "form module: per-type fields, write-layer selector; Tab cycles layer (input.rs Tab handling in form state)"
+            ]
+          },
+          "STEP-3-APPLY-RESET": {
+            "v": "confirmed",
+            "ev": [
+              "input.rs: Char(a) apply (L281), Char(r) reset (L301); write through vibe-settings"
+            ]
+          },
+          "STEP-4-PROVENANCE": {
+            "v": "confirmed",
+            "ev": [
+              "input.rs: Char(?) provenance (L232), Char(x) clear-layer when provenance_open (L239); show-origins engine per PROP-040 S8"
+            ]
+          },
+          "STEP-5-VALIDATION-LINT": {
+            "v": "confirmed",
+            "ev": [
+              "input.rs: Char(c) lint modal (L168); schema::validate across layers (prefs check surface)"
+            ]
+          },
+          "STEP-6-SEARCH": {
+            "v": "confirmed",
+            "ev": [
+              "input.rs: Char(/) search (L209); F1 handled via F(n) route; same search engine as tree TUI"
+            ]
+          },
+          "STEP-7-ACTIONS-FOOTER": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.prefs action dispatch (input.rs doc: modal-stack + action dispatch); Esc pops modal stack"
+            ]
+          },
+          "STEP-8-THEME-SWITCH": {
+            "v": "confirmed",
+            "ev": [
+              "prefs UI built on tree TUI theme (input.rs doc header; page_tree glyphs import); palette key re-skins both"
+            ]
+          },
+          "pass-criteria": {
+            "v": "confirmed",
+            "ev": [
+              "procedural pass definition"
+            ]
+          },
+          "SIGNOFF-OWNER": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely unsigned - impl/work matches reality"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T12:50:16Z",
+        "verify_batch": "c1-manual-tests"
+      }
     },
     {
       "path": "spec/modules/README.md",

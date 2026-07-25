@@ -697,6 +697,36 @@ read-only, no auth.
   **Phase C (verification) awaits the owner's opening call** per the
   resume-boundary law.
 
+- **2026-07-25 · PHASE C OPENED — the verify loop is live; the boot pair
+  and manual-tests carry verdicts.** Mechanics fixed for the whole phase
+  (PROP-043 §7.1/§7.5): verdicts live in the cache's per-file `campaign`
+  map — `{verify_batch, verified_at, processed_hash, verdicts{anchor →
+  {v, ev[]}}, summary}` — never in markup; `scan` preserves the maps
+  (verified live) and projects them into `corpus.json` for the
+  dashboard. Verdict semantics by stage: `impl/done` ⇒ presence
+  evidence; `spec/done` ⇒ absence (shipped-but-still-marked-spec is the
+  stale-header drift); `doc/done` ⇒ no contradiction with the contract;
+  dated historical records confirm unless falsified; present-state
+  claims blocked by the GitVerse outage go `unverifiable`, never
+  "probably fine". Per-file coverage is assert-gated (extractor anchors
+  == cache `marker_count` == verdict keys). **c0-boot** (`bb337e90`):
+  64 facts — 61 confirmed / 1 drift / 2 unverifiable; the drift is real
+  (LAYER-CODE names a nonexistent root `tests/` → F-035, user-owned
+  file so the wording fix is the owner's). **c1-manual-tests:** 67
+  facts — 61 / 6 / 0; MT-01's EXP-2/6/7/8/9 describe the pre-revision
+  TUI keymap (shipped: F1…F6 menus, Shift+arrows tabs, Esc+confirm
+  quit) → F-037 re-author; MT-02's footer quote omits F4 and says
+  q-quit, its "once a picker lands" is superseded by the F4 settings
+  menu → F-038; and the sweep caught a code-side stale clap help on
+  `--plain` contradicting the shipped console-TUI default → F-036
+  (Phase E DRIFT candidate). MT-03 verified clean 16/16. **Running
+  tally: 131 / 4 944 markers judged — 122 confirmed / 7 drift / 2
+  unverifiable; findings 38.** Machine-evidence base mapped: specmap
+  carries 626 edges into `spec/modules` units and 111 into
+  `spec/common` (section grain; facts inherit their section's edges),
+  so the module cluster is the evidence-rich grind; design (6 files) →
+  common → modules is the queued order.
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

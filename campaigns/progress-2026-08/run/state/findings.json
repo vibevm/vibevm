@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T12:44:02Z",
+ "updated_at": "2026-07-25T12:50:16Z",
  "findings": [
   {
    "id": "F-001",
@@ -316,6 +316,33 @@
    "status": "open",
    "wave": 0,
    "note": "LAYER-CODE (L33) names the code layer as -everything under crates/, tests/- but no root tests/ directory exists (per-crate tests/ do). User-owned boot file: additive-only law means the owner rewords or blesses the reading -per-crate tests dirs-. Phase C verdict: drift (c0-boot)."
+  },
+  {
+   "id": "F-036",
+   "from": "crates/vibe-cli/src/cli/inspect.rs",
+   "to": "spec/modules/vibe-cli/PROP-036-package-tree.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Stale clap help on vibe tree --plain: says -The TUI is Phase 2 (PROP-036 S2.11); today output is plain regardless, so this flag is currently a no-op on a tty- while the console TUI is shipped and is the attended default (-c help text + goldens). Code-side doc fix; Phase E DRIFT candidate. Found by C c1 (2026-07-25)."
+  },
+  {
+   "id": "F-037",
+   "from": "spec/manual-tests/MT-01-vibe-tree.md",
+   "to": "crates/vibe-cli/src/commands/tree/tui/goldens/base.snap.txt",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "MT-01 steps 2/6/7/8/9 describe the pre-revision TUI keymap (n order, x mode, t swap, [ ] tabs, q quit, footer text). Shipped surface: F1 search / F2 sort / F3 mode / F4 settings / F6 copy, Shift+arrows tabs, Esc + Really-quit confirm. Re-author the MT against PROP-037 v0.2 + the action keymap. C verdicts: 5 drift EXPs (c1)."
+  },
+  {
+   "id": "F-038",
+   "from": "spec/manual-tests/MT-02-vibe-tree-tui.md",
+   "to": "crates/vibe-cli/src/commands/tree/tui/goldens/base.snap.txt",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "MT-02 S1-FOOTER quote omits F4 settings and says q quit (shipped: Esc quit + confirm); STEP-9 parenthetical -once a picker lands- is superseded by the F4 settings menu. Small re-wording; the rest of MT-02 verified clean (22/23 confirmed). Found by C c1."
   }
  ]
 }
