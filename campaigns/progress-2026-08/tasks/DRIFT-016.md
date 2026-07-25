@@ -60,17 +60,43 @@ measurement that motivated it is DRIFT-010 §9.
    `rollup`, `campaign` — everything a cold reader needs to know what was
    judged and what it was judged against. The `parsed` payload moves to a
    **sidecar store outside the repository**.
-2. **Where.** A per-repository, per-branch directory. Resolution order, first
-   hit wins:
-   - `VIBE_PROGRESS_CACHE` (env), for CI and for tests — a test that writes
-     a real user location is the defect DRIFT-012 just spent a day on;
-   - a `[progress] cache_dir` key in the project's `progress.toml`;
-   - the default: `<repo-parent>/cache/vibevm-cache-facts-<branch>/`,
-     where `<branch>` is the current git branch. The owner's example is
-     `C:\Users\olegc\git\v\cache\vibevm-cache-facts-main`.
+2. **Where.** A per-repository, per-branch directory under the tool's own
+   per-user home. Resolution order, first hit wins:
+   - a `[progress] cache_dir` key in the project's `progress.toml` — the
+     explicit escape hatch;
+   - the default:
+     **`<settings-home>/progress-cache/<repo-id>/<branch-slug>/`**, where
+     `<settings-home>` is `$VIBE_SETTINGS` or `~/.vibe`, `<repo-id>` is the
+     repository directory's name plus a short hash of its canonical path
+     (`vibevm-3f9a1c`), and `<branch-slug>` is the branch with `/` replaced
+     by `-` plus a short hash of the original.
+
+   Three reasons for that shape, and the third is the load-bearing one:
+   - **`<settings-home>`, not a sibling of the repo.** `~/.vibe/` is where
+     this tool already keeps exactly this class of data
+     (`~/.vibe/registries/<hash>/`), so there is one home to document, one
+     to clean, one to relocate. A repo's parent directory is also not
+     reliably writable — on CI it is often the workspace root.
+   - **Relocating it needs no second environment variable.** `VIBE_SETTINGS`
+     already moves the whole per-user home, so a test or CI run that sets it
+     gets the payload store moved for free. A dedicated
+     `VIBE_PROGRESS_CACHE` would be one more thing to forget — and forgetting
+     exactly that is F-055, which cost a day: the harness isolated
+     `VIBE_REGISTRY_CACHE` and not the settings chokepoint.
+   - **`<repo-id>` carries a path hash** so two clones of the same
+     repository never share a bucket, without depending on their parents
+     being distinct or writable.
+
    Branch-keying is deliberate: a different branch is a different corpus, so
-   sharing one payload store across branches would hand a reader the wrong
-   parse for the right hash.
+   one payload store across branches would hand a reader the right hash with
+   the wrong parse. The slug must survive `/` in a branch name — `feature/foo`
+   is legal and must not become a nested path.
+
+   *Owner's alternative, on the table:* a sibling-of-the-repo location,
+   `C:\Users\olegc\git\v\cache\vibevm-cache-facts-<branch>`, which trades the
+   single-home property for being findable by eye next to the repositories.
+   If the owner prefers it, only §4.2's first bullet changes; every other
+   requirement in this task is unaffected.
 3. **Losing the sidecar must be harmless and silent.** Absent directory,
    absent file, unreadable file, a payload whose `content_hash` disagrees
    with the record in git — every one of these is a cache miss that parses,
