@@ -1,8 +1,8 @@
 # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="authored 2026-07-25 on the owner's directive; awaits ratification and an opening call"/>
+<status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase A open"/>
 
-**status: AUTHORED 2026-07-25 · NOT STARTED · awaits the owner's ratification and opening call · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`)**
+**status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -160,8 +160,8 @@ share one `progress check` gate that must stay at 0.
 
 *Proposed at ratification, 2026-07-26, from what wave 1 actually cost rather
 than from what it planned. Wave 1's REPORT (§11 there) carries the evidence for
-each. These are the review's recommendations; the owner ratifies or strikes
-them individually.*
+each.* **ADOPTED IN FULL by the owner, 2026-07-26 — all six bind this campaign,
+and A1 and A4 change phases that follow, so read them before opening C.**
 
 - **A1 — every phase's exit gate enumerates that phase's own steps.** Wave 1's
   Phase C listed "harvest cards written while knowledge is hot" among its steps
@@ -265,8 +265,18 @@ The ai-native cluster runs its checkers **first**, because their output is the
 evidence for a large fraction of that namespace's facts. The world cluster
 runs the artifact-and-consumer join.
 
-*Exit gate:* 100 % of markers carry verdicts; the X/Y/Z summary recorded in
-the LOG — the first measured actuality level of the packages.
+*Exit gate (**A1 — enumerates this phase's own steps, not just its headline**):*
+**(i)** 100 % of markers carry verdicts; **(ii)** the X/Y/Z summary recorded in
+the LOG — the first measured actuality level of the packages; **(iii)** the
+§3.2 checker runs exist **as files** under `campaigns/<id>/harvest/` — floor,
+`conform`, `specmap` and the health collector over
+`packages/org.vibevm.ai-native/**`, each captured as `command → real output`;
+**(iv)** every `world` verdict records which of §3.1's three source classes it
+rests on (**A2**), and those resting on source 1 alone are counted separately
+in the summary as self-referential; **(v)** `baseline.json` written at the
+phase close (**A6**). *Wave 1 gated this phase on (i) alone, left (iii)
+undone, and its documentation phase had to be deferred for want of the
+fixtures — see that campaign's `deferrals.md` §6.*
 *Prediction, falsifiable and deliberately uncomfortable:* **`world` measures
 higher than `ai-native`.** The flows are prose contracts written once and
 rarely contradicted by anything; the ai-native packages make dozens of
@@ -308,20 +318,56 @@ to this question and may not be cited as one.**
 
 ## 6. Predictions (falsifiable, campaign-wide) {#predictions}
 
-1. `world` measures higher than `ai-native` (see Phase C).
-2. The aggregator genre (`redbook`, `rust-ai-native`, the family umbrellas)
-   needs at least one grammar amendment to PROP-043 §3.8.
+**A5 is adopted, so each prediction names the step that tests it.** Wave 1's
+prediction 1 went untested for a whole campaign because no step required the
+command that would have tested it.
+
+1. `world` measures higher than `ai-native`. **Tested by:** Phase C's exit
+   gate (ii) — the X/Y/Z summary is recorded per namespace, not just in total.
+2. The aggregator genre (`redbook`, `rust-ai-native`, `go-ai-native`,
+   `typescript-ai-native`) needs at least one grammar amendment to PROP-043
+   §3.8. **Tested by:** Phase A step 3's pilot, which includes `redbook`
+   specifically so this fires early or not at all.
 3. ≥ 1 practice the host claims to follow turns out to be specified by a
-   package but enforced nowhere — the profanation the mandate suspects,
-   found concretely.
+   package but enforced nowhere — the profanation the mandate suspects, found
+   concretely. **Tested by:** Phase F, which must answer it per practice
+   rather than in aggregate.
 4. The fact-grain specmap re-mint (Phase A2) is the single longest-lead item
-   and blocks nothing else once done.
+   and blocks nothing else once done. **Tested by:** Phase A's exit gate —
+   record the wall-clock it took and whether any other step waited on it.
 5. Cost is comparable to wave 1 in lines (28.7k vs 26.7k) despite 5× the file
-   count — packages are many small files, not few large ones.
+   count — packages are many small files, not few large ones. **Tested by:**
+   Phase B's batch LOG entries, which record files and lines per batch.
+6. **New, and the one wave 1 would have failed:** this campaign's own
+   stitching introduces **zero** new false claims, and its own verification
+   confirms zero of them. Wave 1's answer was 1 and 1 — Phase D authored a
+   `Shipped:` line for a `Baseline::store` that had never been built, and
+   Phase C had already sealed five token-precedence anchors on evidence that
+   compared one spec document with another carrying the same error.
+   **Tested by:** Phase D's exit gate re-reading every `Shipped:` claim it
+   authored against the code, not against the claim.
 
 ## 7. LOG {#log}
 
-*(empty — appended per batch / wave / phase)*
+- **2026-07-26 · RATIFIED; PHASE A OPEN.** Owner ratified in session
+  («подтверждаю»), adopting all six §4.5 amendments in full. Ratification
+  review re-measured the plan's own baseline and corrected two numbers: the
+  ai-native join target is **703** `specmark::scope!` / `#[spec(…)]` sites
+  across live version slots (781 with the superseded `core-ai-native` v0.7.0),
+  not the 247 the plan claimed — 247 is the **rust family alone**, which
+  measures 248 today, so Phase C had been budgeted at roughly a third of its
+  actual size. And **seven** of the ten packages carry `crates/`, not eight;
+  the three that do not are exactly the family umbrellas prediction 2 is
+  about. Package / file / line counts (27 + 10, 154 + 140, 17 104 + 11 629)
+  and marker state (zero) all verified accurate as authored.
+  **The adoptions changed the plan body rather than sitting in a list:**
+  Phase C's exit gate now enumerates five conditions instead of one (A1 +
+  A2 + A6), and §6's predictions each name the step that tests them (A5),
+  with a sixth added — *this campaign's stitching introduces zero new false
+  claims* — because wave 1's answer to that question was 1 and 1, and nothing
+  in wave 1 predicted it. Wave 1 closed out the same day: 4 488 confirmed /
+  1 drift / 3 unverifiable of 4 492, `baseline.json` written and round-tripped,
+  Phases F and G deferred into this campaign for want of inputs (A3).
 
 ## 8. Deferrals {#deferrals}
 
