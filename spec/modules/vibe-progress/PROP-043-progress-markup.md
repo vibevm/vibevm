@@ -418,7 +418,9 @@ campaign is active: verdict per marker (`confirmed` / `drift` /
 ### 7.3 Baseline (inter-campaign contract) {#baseline}
 
 - ##BASELINE-RECORD `baseline.json` — per unit: URI#anchor, unit content-hash at verdict time,
-  verdict, evidence refs, date, named crates, marker snapshot. @spec/done
+  verdict, evidence refs, date, named crates, marker snapshot. **Shipped:**
+  `baseline.rs`'s `BaselineUnit` carries exactly these fields, with
+  `Baseline::load` / `store` and the `rescan` CLI live. @impl/done
 - ##BASELINE-INVALIDATION Invalidation:
   unit hash changed ⇒ suspect; named crate has commits after the verdict date
   ⇒ suspect; marker diverged from snapshot without a campaign ⇒ flagged;

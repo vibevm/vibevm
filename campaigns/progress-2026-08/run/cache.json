@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T17:29:13Z",
+  "updated_at": "2026-07-25T18:10:00Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -14828,7 +14828,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "ca52d6a271737a0b26ecb649ae67827c484e22b8e1cb870b1a4e8b0ae9c75e09",
+      "content_hash": "f5f58f90b59b20a575fa2f14ab213ab75cf6e8aa7f277021095001bf99fe5655",
       "rollup": {
         "explicit": [
           "impl",
@@ -14854,10 +14854,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "ca52d6a271737a0b26ecb649ae67827c484e22b8e1cb870b1a4e8b0ae9c75e09",
+        "processed_hash": "f5f58f90b59b20a575fa2f14ab213ab75cf6e8aa7f277021095001bf99fe5655",
         "summary": {
-          "confirmed": 137,
-          "drift": 8,
+          "confirmed": 138,
+          "drift": 7,
           "unverifiable": 0
         },
         "verdicts": {
@@ -15571,9 +15571,10 @@
             ]
           },
           "BASELINE-RECORD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(f): shipped while marked spec/done - baseline.rs BaselineUnit{addr,unit_hash,verdict,evidence,verified_at,crates,marker} matches §7.3 field-for-field; Baseline::load/store + rescan CLI live (--baseline required)"
+              "F-046(f): shipped while marked spec/done - baseline.rs BaselineUnit{addr,unit_hash,verdict,evidence,verified_at,crates,marker} matches §7.3 field-for-field; Baseline::load/store + rescan CLI live (--baseline required)",
+              "D d2f 2026-07-25 (F-046 partial): BASELINE-RECORD needed no owner call - baseline.rs BaselineUnit matches §7.3 field for field with load/store and the rescan CLI live, so it is a plain shipped-under-spec re-mark, not a wire-or-demote decision"
             ]
           },
           "BASELINE-INVALIDATION": {
