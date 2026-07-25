@@ -34,7 +34,7 @@ use units::collect_units;
 pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     let mut doc = ParsedDoc {
         path: path.to_string(),
-        content_hash: hash_str(text),
+        content_hash: content_hash(text),
         ..ParsedDoc::default()
     };
     let lines: Vec<&str> = text.lines().collect();
@@ -47,7 +47,15 @@ pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     doc
 }
 
-fn hash_str(s: &str) -> String {
+/// The content identity of a text: sha256, lowercase hex (PROP-043 §7.1 —
+/// "path, content-hash, …"). Also the baseline identity of a unit body.
+///
+/// Public because a caller that wants to know whether a file changed must
+/// ask *the same question the parser answers*: this is the number
+/// [`ParsedDoc::content_hash`] carries and the number the cache's currency
+/// test compares. One definition, so a cache hit can never stand for
+/// something other than what the parse would have produced.
+pub fn content_hash(s: &str) -> String {
     let mut h = Sha256::new();
     h.update(s.as_bytes());
     format!("{:x}", h.finalize())

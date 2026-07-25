@@ -117,3 +117,66 @@ Budget signal: past ~8 files or ~600 lines, stop and return.
 ## 9. Log {#log}
 
 - queued 2026-07-25 (Fable), on the owner's ruling.
+- implemented 2026-07-25 (Opus). **Option (a)** — the record stores the
+  parse. §8 did not fire: the payload is a new `FileRecord.parsed:
+  Option<ParsedDoc>` carrying `#[serde(default,
+  skip_serializing_if = "Option::is_none")]`, which is additive in both
+  directions. A record written before it loads unchanged and reads as a
+  miss (§4's own edge case); a reader that predates it ignores the key. No
+  record is re-keyed, so `CACHE_SCHEMA` stays **2** and there is no
+  migration for the live verdict maps to survive. Verified against the
+  real thing rather than argued: the live `run/cache.json` was copied to a
+  scratch zone and scanned with the new binary — **4 486 verdicts in,
+  4 486 verdicts out, 58/58 campaign maps intact**, and the live campaign
+  files were never written to.
+- Why (a) and not (b): the record *can* round-trip a `ParsedDoc`. The only
+  two fields that do not survive the JSON are `Block::scan_text` and
+  `Fact::span`, both already `#[serde(skip)]` in the type itself — the
+  marker scanner's scratch, written and read inside `parse` and referenced
+  by nothing downstream (`run/mirror/` has been shipping `ParsedDoc`
+  without them since Phase B). That residue is named, not glossed:
+  `cache::tests::cached_doc_round_trips_the_parse` clears exactly those two
+  fields on a freshly parsed document and then asserts **whole-struct**
+  equality against what came back out of the cache, so the day someone
+  reaches for `scan_text` downstream, that test is what stops them.
+- Measured (§6), debug profile — the profile the acceptance commands use —
+  on this repository's 58 files, warm and cold **interleaved**, 12 samples
+  each, minimum reported (the box was carrying two other campaign agents;
+  the minimum is the noise-robust statistic, and interleaving cancels
+  drift):
+
+  | command | warm | cold (`--no-cache`) | speed-up |
+  | --- | --- | --- | --- |
+  | `progress scan` | 319.5 ms | 460.1 ms | ×1.44 |
+  | `progress check` | 312.3 ms | 468.3 ms | ×1.50 |
+  | `progress report --md` | 139.2 ms | 286.7 ms | ×2.06 |
+
+  The saving is a flat ~140–155 ms in all three — the parse, exactly
+  (component measurement: 58 files parse in 136.7 ms debug). `scan` wins
+  least because it pays the payload's extra JSON on both sides of the
+  comparison; `report` wins most because it only reads.
+- REVIEW — the honest ceiling on this feature. Parsing was never the
+  expensive part. Component costs on this corpus, release profile: parse
+  **10.3 ms**, while the payload's own serialize + deserialize + clone is
+  **7.5 ms**. So in release the reuse very nearly pays for itself and no
+  more; the ×1.4–×2 above is a debug-profile result. The cost side is
+  concrete: `run/cache.json` grows **2.68 MB → 5.14 MB (+92 %)** on this
+  corpus, and that file is git-tracked, so every scan commit carries the
+  larger blob (and wave 2, at ~5×, scales it the same way). What actually
+  dominates a run is the JSON of the cache and `corpus.json` plus their
+  fsync'd atomic writes, not the Markdown. If wave 2 turns out slow, the
+  next lever is **not writing** `cache.json`/`corpus.json` when nothing
+  changed — deliberately out of scope here (§5 fixes the state shapes, and
+  `updated_at` semantics would move), so it is surfaced rather than taken.
+- Also fixed in passing, because the reuse path made it reachable:
+  `Cache::default()` used to yield `schema: 0`, a value no reader means and
+  the `Ground` of a campaign-less run would have carried. It now yields
+  `CACHE_SCHEMA`, and `load`/`load_tolerant` say so once instead of three
+  times.
+- Concurrency note for the reviewer: this tree was **not** exclusive. While
+  this task ran, other agents edited `campaigns/…/DRIFT-012.md`,
+  `DRIFT-014.md`, `spec/modules/vibe-cli/PROP-042-aiui-observation.md`,
+  `specmap.json`, `crates/vibe-resolver/**` and `crates/vibe-cli/tests/**`.
+  That is why `progress scan` reports 4 979 markers where §6 predicted
+  4 975: the whole +4 is PROP-042 (58 → 62 markers), which this task never
+  touched. File count (58) and errors (0) are as §6 states.

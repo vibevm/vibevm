@@ -42,8 +42,27 @@ struct Ground {
     root: PathBuf,
     docs: Vec<ParsedDoc>,
     campaign: Option<PathBuf>,
+    /// The campaign cache, read once at the head of the run: `ground`
+    /// takes its parses out of it and `refresh_state` writes it back.
+    /// One read and one write per invocation — a second `load` here would
+    /// be a second 2 MB of JSON for the same bytes, and worse, a second
+    /// opinion about them.
+    cache: cache::Cache,
 }
 
+/// Resolve the tree, then produce one `ParsedDoc` per observed file —
+/// from the cache where the file's content hash says nothing changed,
+/// from the parser where it does not (PROP-043 §7.1, DRIFT-010 §4).
+///
+/// The file is read either way: the hash is over its bytes, so there is no
+/// version of this that trusts a timestamp. What a hit buys is the parse,
+/// not the read. `--no-cache` skips the lookup entirely and parses
+/// everything, which is what a run that must not inherit a verdict does.
+///
+/// Every subcommand grounds through here, so "all subcommands are
+/// incremental over the content-hash cache" is one function's property
+/// rather than eight — realises `TOOL-INCREMENTAL`.
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#tool")]
 fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     let root = common
         .path
@@ -51,23 +70,44 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         .with_context(|| format!("canonicalizing `{}`", common.path.display()))?;
     let root = super::init::strip_unc_public(root);
     let cfg = scope::load_config(&root)?;
-    // Parse without touching any cache: pure read of the tree.
+    let campaign = resolve_campaign(&root, common.campaign.as_deref());
+
+    // An unreadable cache is a warning and a cold run, never a failure:
+    // the cache is derived acceleration and may be deleted at any time
+    // (PROP-043 §7.5).
+    let cache = match &campaign {
+        Some(c) => {
+            let (loaded, recovered) =
+                cache::Cache::load_tolerant(&c.join("run").join("cache.json"));
+            if let Some(warning) = recovered {
+                eprintln!("vibe progress: warning: {warning}");
+            }
+            loaded
+        }
+        None => cache::Cache::default(),
+    };
+
     let files = scope::observed_files(&root, &cfg)?;
     let mut docs = Vec::new();
     for rel in files {
         let full = root.join(&rel);
         let text = std::fs::read_to_string(&full)
             .with_context(|| format!("reading {}", full.display()))?;
-        docs.push(progress_core::parse::parse_document(
-            &scope::rel_str(&rel),
-            &text,
-        ));
+        let path = scope::rel_str(&rel);
+        let hash = progress_core::parse::content_hash(&text);
+        let cached = (!common.no_cache)
+            .then(|| cache.cached_doc(&path, &hash))
+            .flatten();
+        docs.push(match cached {
+            Some(hit) => hit.clone(),
+            None => progress_core::parse::parse_document(&path, &text),
+        });
     }
-    let campaign = resolve_campaign(&root, common.campaign.as_deref());
     Ok(Ground {
         root,
         docs,
         campaign,
+        cache,
     })
 }
 
@@ -102,16 +142,17 @@ fn campaign_id(campaign: &Path) -> String {
 }
 
 /// Refresh cache + state under the campaign zone from parsed docs.
-fn refresh_state(g: &Ground) -> Result<Option<PathBuf>> {
+///
+/// Takes the cache `ground` already read — the upsert is over the same
+/// records the reuse decision was made against, and the campaign fields
+/// those records carry ride through untouched (`upsert` preserves them).
+fn refresh_state(g: &mut Ground) -> Result<Option<PathBuf>> {
     let Some(campaign) = &g.campaign else {
         return Ok(None);
     };
     let run_dir = campaign.join("run");
     let cache_path = run_dir.join("cache.json");
-    let (mut c, recovered) = cache::Cache::load_tolerant(&cache_path);
-    if let Some(warning) = recovered {
-        eprintln!("vibe progress: warning: {warning}");
-    }
+    let c = &mut g.cache;
     for doc in &g.docs {
         let r = rollup::rollup_doc(doc);
         c.upsert(doc, &r);
@@ -132,13 +173,13 @@ fn refresh_state(g: &Ground) -> Result<Option<PathBuf>> {
     // Phase is derived from the campaign's own journal (last `phase` event
     // wins; absent ⇒ "A") — never compiled in, never parsed from Markdown.
     let phase = journal::derive_phase(&journal::read_journal(&run_dir.join("journal.jsonl"))?);
-    state::write_state(&run_dir.join("state"), &campaign_id(campaign), &phase, &c)?;
+    state::write_state(&run_dir.join("state"), &campaign_id(campaign), &phase, c)?;
     Ok(Some(campaign.clone()))
 }
 
 fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
-    let g = ground(a)?;
-    let wrote = refresh_state(&g)?;
+    let mut g = ground(a)?;
+    let wrote = refresh_state(&mut g)?;
     let markers: usize = g.docs.iter().map(|d| d.markers.len()).sum();
     let facts: usize = g.docs.iter().map(|d| d.fact_count).sum();
     let unmarked: usize = g.docs.iter().map(|d| d.unmarked_facts.len()).sum();
@@ -169,7 +210,7 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
 }
 
 fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
-    let g = ground(&a.common)?;
+    let mut g = ground(&a.common)?;
     let mut errors = 0usize;
     let mut warnings = 0usize;
     for doc in &g.docs {
@@ -212,7 +253,7 @@ fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
             }
         }
     }
-    refresh_state(&g)?;
+    refresh_state(&mut g)?;
     if errors > 0 {
         bail!("progress check: {errors} error(s), {warnings} warning(s)");
     }
@@ -245,8 +286,12 @@ fn parse_audience(s: Option<&str>) -> Result<Option<Audience>> {
     }
 }
 
-fn report_cmd(ctx: &Context, a: &ProgressReportArgs) -> Result<()> {
-    let g = ground(&a.common)?;
+/// The rendered report, exactly as `report_cmd` prints it.
+///
+/// Split out from the printing so the warm/cold equality bar (DRIFT-010
+/// §4.4) can be *asserted* on the bytes a user would see, rather than on a
+/// proxy for them.
+fn report_body(g: &Ground, a: &ProgressReportArgs, json: bool) -> Result<String> {
     let view = parse_view(a.view.as_deref())?;
     let audience = parse_audience(a.audience.as_deref())?;
     // The evidence column is wired only where the index exists. A project
@@ -263,18 +308,23 @@ fn report_cmd(ctx: &Context, a: &ProgressReportArgs) -> Result<()> {
         .iter()
         .map(|d| (d.path.clone(), rollup::rollup_doc(d)))
         .collect();
-    if ctx.is_json() {
-        println!("{}", serde_json::to_string_pretty(&rows)?);
+    Ok(if json {
+        format!("{}\n", serde_json::to_string_pretty(&rows)?)
     } else if a.md {
-        print!("{}", report::render_md(&rows, &rollups));
+        report::render_md(&rows, &rollups)
     } else {
-        print!("{}", report::render_xml(&rows, &rollups));
-    }
+        report::render_xml(&rows, &rollups)
+    })
+}
+
+fn report_cmd(ctx: &Context, a: &ProgressReportArgs) -> Result<()> {
+    let g = ground(&a.common)?;
+    print!("{}", report_body(&g, a, ctx.is_json())?);
     Ok(())
 }
 
 fn mirror(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
-    let g = ground(a)?;
+    let mut g = ground(a)?;
     let Some(campaign) = &g.campaign else {
         bail!("`vibe progress mirror` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
@@ -284,7 +334,7 @@ fn mirror(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
         let body = serde_json::to_string_pretty(doc)?;
         cache::write_atomic(&dir.join(format!("{rel}.json")), body.as_bytes())?;
     }
-    refresh_state(&g)?;
+    refresh_state(&mut g)?;
     if !ctx.is_quiet() {
         println!(
             "progress mirror: {} per-file views under {}",
@@ -344,7 +394,7 @@ fn emit_weave(
 }
 
 fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
-    let g = ground(a)?;
+    let mut g = ground(a)?;
     let Some(campaign) = &g.campaign else {
         bail!("`vibe progress resume` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
@@ -371,7 +421,7 @@ fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let phase = journal::derive_phase(&events);
     let body = journal::render_resume(&campaign_id(campaign), &phase, &counters, &open, next_hint);
     journal::write_resume(&run_dir.join("RESUME.md"), &body)?;
-    refresh_state(&g)?;
+    refresh_state(&mut g)?;
     if !ctx.is_quiet() {
         print!("{body}");
     }
@@ -422,132 +472,4 @@ fn gate(ctx: &Context, a: &ProgressGateArgs) -> Result<()> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    /// A fixture campaign zone whose journal carries a hand-appended `phase`
-    /// event: `refresh_state` must derive that phase into `campaign.json`
-    /// instead of the compiled-in opening phase (DRIFT-003 §4).
-    #[test]
-    fn refresh_state_derives_phase_from_journal() {
-        let tmp = tempfile::tempdir().expect("tempdir");
-        let campaign = tmp.path().join("campaigns").join("progress-test");
-        let run = campaign.join("run");
-        std::fs::create_dir_all(&run).expect("mkdir run");
-        // The exact on-disk event the campaign executor appends by hand.
-        std::fs::write(
-            run.join("journal.jsonl"),
-            "{\"kind\":\"phase\",\"value\":\"B\",\"ts\":\"2026-07-24T00:00:00Z\"}\n",
-        )
-        .expect("write journal fixture");
-
-        let g = Ground {
-            root: tmp.path().to_path_buf(),
-            docs: Vec::new(),
-            campaign: Some(campaign.clone()),
-        };
-        refresh_state(&g).expect("refresh_state");
-
-        let text = std::fs::read_to_string(run.join("state").join("campaign.json"))
-            .expect("read campaign.json");
-        let v: serde_json::Value = serde_json::from_str(&text).expect("parse campaign.json");
-        assert_eq!(
-            v["phase"], "B",
-            "campaign.json carries the journal-derived phase"
-        );
-    }
-
-    /// The scope-narrowing prune (DRIFT-001 §4): scan a two-file tree, then
-    /// narrow `progress.toml` to a single file and rescan. `corpus.json`
-    /// must carry exactly the observed set — not the union across scans, the
-    /// stale-row defect §3 records.
-    #[test]
-    fn refresh_state_prunes_records_that_leave_scope() {
-        let tmp = tempfile::tempdir().expect("tempdir");
-        let root = tmp.path();
-        std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
-        std::fs::write(root.join("spec/a.md"), "@impl a\n").expect("write a");
-        std::fs::write(root.join("spec/b.md"), "@impl b\n").expect("write b");
-        let campaign = root.join("campaigns").join("progress-test");
-        std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
-
-        let common = ProgressCommonArgs {
-            path: root.to_path_buf(),
-            campaign: Some(campaign.clone()),
-        };
-
-        // Wide scope: both files observed and cached.
-        std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
-            .expect("write wide cfg");
-        let g = ground(&common).expect("ground wide");
-        assert_eq!(g.docs.len(), 2, "both files in scope");
-        refresh_state(&g).expect("refresh wide");
-
-        // Narrow scope: only a.md observed.
-        std::fs::write(root.join("progress.toml"), "include = [\"spec/a.md\"]\n")
-            .expect("write narrow cfg");
-        let g = ground(&common).expect("ground narrow");
-        assert_eq!(g.docs.len(), 1, "only a.md in scope");
-        refresh_state(&g).expect("refresh narrow");
-
-        // corpus.json rows equal the observed set — the b.md row is gone.
-        let corpus = campaign.join("run").join("state").join("corpus.json");
-        let text = std::fs::read_to_string(&corpus).expect("read corpus.json");
-        let v: serde_json::Value = serde_json::from_str(&text).expect("parse corpus.json");
-        let paths: Vec<&str> = v["files"]
-            .as_array()
-            .expect("files array")
-            .iter()
-            .map(|f| f["path"].as_str().expect("path str"))
-            .collect();
-        assert_eq!(paths, vec!["spec/a.md"], "corpus.json == observed set");
-    }
-
-    /// The automation seam end to end (DRIFT-008 §4.4): the subcommand
-    /// writes the record into `campaign.json`, and the scan that follows —
-    /// which rewrites the whole projection — keeps it.
-    #[test]
-    fn progress_gate_cli_records() {
-        let tmp = tempfile::tempdir().expect("tempdir");
-        let root = tmp.path();
-        std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
-        std::fs::write(root.join("spec/a.md"), "@impl a\n").expect("write a");
-        std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
-            .expect("write cfg");
-        let campaign = root.join("campaigns").join("progress-test");
-        std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
-        let ctx = crate::output::Context::from_flags(true, false, None, true);
-        let common = || ProgressCommonArgs {
-            path: root.to_path_buf(),
-            campaign: Some(campaign.clone()),
-        };
-
-        // The panel lives in campaign.json, which a scan writes first.
-        scan(&ctx, &common()).expect("scan");
-        gate(
-            &ctx,
-            &ProgressGateArgs {
-                common: common(),
-                name: "floor".into(),
-                status: GateStatusArg::Red,
-                detail: Some("cli_pkg_cycle::install_from_git_registry (F-055)".into()),
-            },
-        )
-        .expect("gate");
-        // … and a following scan does not erase it.
-        scan(&ctx, &common()).expect("rescan");
-
-        let text = std::fs::read_to_string(campaign.join("run/state/campaign.json"))
-            .expect("read campaign.json");
-        let v: serde_json::Value = serde_json::from_str(&text).expect("parse campaign.json");
-        let gates = v["gates"].as_array().expect("gates array");
-        assert_eq!(gates.len(), 1, "one gate recorded");
-        assert_eq!(gates[0]["name"], "floor");
-        assert_eq!(gates[0]["status"], "red");
-        assert_eq!(
-            gates[0]["detail"],
-            "cli_pkg_cycle::install_from_git_registry (F-055)"
-        );
-        assert!(gates[0]["ran_at"].is_string(), "stamped with a UTC time");
-    }
-}
+mod tests;

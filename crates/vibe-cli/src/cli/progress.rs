@@ -61,6 +61,17 @@ pub struct ProgressCommonArgs {
     /// under the root, when exactly one exists).
     #[arg(long)]
     pub campaign: Option<PathBuf>,
+
+    /// Distrust the cache: parse every observed file even where its
+    /// content hash says nothing changed. A verification run that must
+    /// not inherit a cached parse says so on the command line rather than
+    /// hoping (PROP-043 §7.5 — the cache is erasable acceleration). The
+    /// cache is still *written*, so the run leaves the campaign's records
+    /// and state projections exactly as a warm run would.
+    ///
+    /// `gate` parses nothing, so the flag does nothing there.
+    #[arg(long)]
+    pub no_cache: bool,
 }
 
 #[derive(Debug, Args)]

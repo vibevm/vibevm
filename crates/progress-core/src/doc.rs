@@ -125,7 +125,15 @@ pub enum IssueCode {
 }
 
 /// One fully parsed document.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+///
+/// Two `#[serde(skip)]` fields live inside — `Block::scan_text` and
+/// `Fact::span` — and they are the marker scanner's scratch: written by
+/// `parse`, read by `parse`, and by nothing downstream. Everything a
+/// consumer reads is persisted, which is what lets the cache hand a
+/// `ParsedDoc` back instead of re-parsing (PROP-043 §7.1). `PartialEq` is
+/// derived so that equality can be *asserted* rather than argued about —
+/// see `cache::tests::cached_doc_round_trips_the_parse`.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ParsedDoc {
     /// Repo-relative path, `/`-separated.
     pub path: String,

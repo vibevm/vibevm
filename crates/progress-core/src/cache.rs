@@ -14,6 +14,12 @@ use std::path::Path;
 
 /// Schema 2: the fact amendment — `DocRollup` counts facts
 /// (paragraphs + list items + table cells), not paragraphs.
+///
+/// The `parsed` payload (DRIFT-010) landed **without** a bump, and
+/// deliberately: it is additive in both directions. A schema-2 record
+/// written before it loads unchanged and simply reads as a miss, and a
+/// reader that predates it ignores the key. No record is re-keyed, so no
+/// migration exists for a live campaign's verdict maps to survive.
 pub const CACHE_SCHEMA: u32 = 2;
 
 /// One observed file's record.
@@ -28,9 +34,20 @@ pub struct FileRecord {
     /// until then.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub campaign: BTreeMap<String, serde_json::Value>,
+    /// The parse payload — the blocks, facts, units, markers and issues
+    /// this file's text produced (PROP-043 §7.1: "extracted markers with
+    /// positions"). Its presence is what makes a scan *incremental*: a
+    /// record current for the file's hash hands its `ParsedDoc` back
+    /// instead of parsing again.
+    ///
+    /// Absent on every record written before DRIFT-010, and those read as
+    /// misses — a record that cannot produce a document is never allowed
+    /// to stand in for one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parsed: Option<ParsedDoc>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Cache {
     pub schema: u32,
     pub updated_at: String,
@@ -39,13 +56,23 @@ pub struct Cache {
     pub files: BTreeMap<String, FileRecord>,
 }
 
+/// An empty cache is a *current-schema* cache: there is no state in this
+/// crate that means "schema 0", and a default that claimed one would be a
+/// forgery waiting to be stored.
+impl Default for Cache {
+    fn default() -> Self {
+        Cache {
+            schema: CACHE_SCHEMA,
+            updated_at: String::new(),
+            files: BTreeMap::new(),
+        }
+    }
+}
+
 impl Cache {
     pub fn load(path: &Path) -> Result<Cache> {
         if !path.exists() {
-            return Ok(Cache {
-                schema: CACHE_SCHEMA,
-                ..Cache::default()
-            });
+            return Ok(Cache::default());
         }
         let text =
             std::fs::read_to_string(path).with_context(|| format!("reading {}", path.display()))?;
@@ -59,10 +86,7 @@ impl Cache {
         match Cache::load(path) {
             Ok(c) => (c, None),
             Err(e) => (
-                Cache {
-                    schema: CACHE_SCHEMA,
-                    ..Cache::default()
-                },
+                Cache::default(),
                 Some(format!(
                     "cache at {} was unreadable ({e:#}); rebuilt from scratch",
                     path.display()
@@ -84,6 +108,25 @@ impl Cache {
             .unwrap_or(false)
     }
 
+    /// The cached parse for `path`, when the record is current for `hash`
+    /// **and** carries a payload that agrees with its own record.
+    ///
+    /// Everything else is a miss and the caller parses (PROP-043 §7.1,
+    /// DRIFT-010 §4): no record, a stale hash, a record written before the
+    /// payload existed, or — the case a hand-edited cache creates — a
+    /// payload whose own `path`/`content_hash` disagree with the record
+    /// filing it. The cache is allowed to be *empty*; it is never allowed
+    /// to be *wrong*.
+    #[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#cache")]
+    pub fn cached_doc(&self, path: &str, hash: &str) -> Option<&ParsedDoc> {
+        let record = self.files.get(path)?;
+        if record.content_hash != hash {
+            return None;
+        }
+        let doc = record.parsed.as_ref()?;
+        (doc.path == path && doc.content_hash == hash).then_some(doc)
+    }
+
     pub fn upsert(&mut self, doc: &ParsedDoc, rollup: &DocRollup) {
         let campaign = self
             .files
@@ -99,6 +142,7 @@ impl Cache {
                 unit_count: doc.units.len(),
                 issue_count: doc.issues.len(),
                 campaign,
+                parsed: Some(doc.clone()),
             },
         );
     }
@@ -190,6 +234,113 @@ mod tests {
         let back = Cache::load(&path).expect("load");
         assert!(back.is_current("a.md", &doc.content_hash));
         assert!(!back.is_current("a.md", "deadbeef"));
+    }
+
+    /// The payload's whole claim: what comes back out of a stored cache is
+    /// the document that went in. Asserted on the struct, not on a few
+    /// hand-picked counters — everything `ParsedDoc` persists must survive
+    /// the JSON, or a warm run is quietly answering from a different
+    /// document than a cold one.
+    ///
+    /// The two `#[serde(skip)]` fields are cleared on the freshly parsed
+    /// side before comparing, and that is the *whole* of the residue: they
+    /// are the marker scanner's scratch (`Block::scan_text` is the blanked
+    /// block text it scans, `Fact::span` indexes into it), written and read
+    /// inside `parse` and by nothing downstream. Naming them here keeps the
+    /// day someone reaches for them from being silent.
+    #[test]
+    fn cached_doc_round_trips_the_parse() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let path = dir.path().join("cache.json");
+        let text = "<status stage=\"impl\" state=\"work\"/>\n\n\
+                    # Title {#t}\n\n\
+                    ##b1 @test/plan A paragraph.\n\n\
+                    - ##i1 An item. @doc/done\n\
+                    - ##i2 Another item. @impl/hold\n\n\
+                    ```\ncode fence\n```\n\n\
+                    ##b2 <status stage=\"spec\" state=\"done\" action=\"drift\">frag</status> tail.\n";
+        let doc = crate::parse::parse_document("spec/x.md", text);
+        assert!(doc.markers.len() >= 5, "a document worth round-tripping");
+
+        let mut c = Cache::default();
+        c.upsert(&doc, &crate::rollup::rollup_doc(&doc));
+        c.store(&path).expect("store");
+        let back = Cache::load(&path).expect("load");
+
+        let got = back
+            .cached_doc("spec/x.md", &doc.content_hash)
+            .expect("payload survives the JSON");
+
+        let mut expected = doc.clone();
+        for b in &mut expected.blocks {
+            b.scan_text = String::new();
+            for f in &mut b.facts {
+                f.span = (0, 0);
+            }
+        }
+        assert_eq!(got, &expected, "the parse comes back whole");
+    }
+
+    /// Three ways to be stale, one answer: parse it. A cache is allowed to
+    /// know nothing; it is never allowed to answer for the wrong bytes.
+    #[test]
+    fn cached_doc_misses_are_misses() {
+        let doc = crate::parse::parse_document("a.md", "@impl hello\n");
+        let mut c = Cache::default();
+        c.upsert(&doc, &crate::rollup::rollup_doc(&doc));
+
+        assert!(
+            c.cached_doc("b.md", &doc.content_hash).is_none(),
+            "no record"
+        );
+        assert!(c.cached_doc("a.md", "deadbeef").is_none(), "stale hash");
+
+        // A record written before the payload existed: current for the
+        // hash, but with nothing to hand back.
+        c.files.get_mut("a.md").expect("record").parsed = None;
+        assert!(c.is_current("a.md", &doc.content_hash), "still current");
+        assert!(
+            c.cached_doc("a.md", &doc.content_hash).is_none(),
+            "a pre-payload record is a miss, not an empty document"
+        );
+
+        // A payload that disagrees with the record filing it.
+        let other = crate::parse::parse_document("a.md", "@spec other\n");
+        c.files.get_mut("a.md").expect("record").parsed = Some(other);
+        assert!(
+            c.cached_doc("a.md", &doc.content_hash).is_none(),
+            "a payload whose identity disagrees is a miss"
+        );
+    }
+
+    /// The campaign field is load-bearing (DRIFT-010 §5): re-upserting the
+    /// same file — which is what every warm run does — must carry the
+    /// verdicts forward untouched.
+    #[test]
+    fn upsert_preserves_campaign_across_a_warm_write() {
+        let doc = crate::parse::parse_document("a.md", "@impl hello\n");
+        let r = crate::rollup::rollup_doc(&doc);
+        let mut c = Cache::default();
+        c.upsert(&doc, &r);
+        c.files
+            .get_mut("a.md")
+            .expect("record")
+            .campaign
+            .insert("verdicts".into(), serde_json::json!({"x": "confirmed"}));
+
+        // The warm path: the payload comes back out and goes straight
+        // back in, exactly as `ground` + `refresh_state` do it.
+        let warm = c
+            .cached_doc("a.md", &doc.content_hash)
+            .expect("hit")
+            .clone();
+        c.upsert(&warm, &r);
+
+        assert_eq!(
+            c.files["a.md"].campaign.get("verdicts"),
+            Some(&serde_json::json!({"x": "confirmed"})),
+            "a warm rewrite keeps the verdicts"
+        );
     }
 
     #[test]

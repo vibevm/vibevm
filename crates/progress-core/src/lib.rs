@@ -39,12 +39,14 @@ pub mod weave;
 use anyhow::{Context, Result};
 use std::path::Path;
 
-/// One full scan of an observed tree: parse every in-scope file,
-/// refresh the cache incrementally, and return the parsed docs.
+/// One full scan of an observed tree: hash every in-scope file, take its
+/// parse from the cache when the record is current for those bytes, parse
+/// it when it is not, and refresh the cache either way.
 ///
-/// The cache may start empty; parsing is cheap at this corpus's scale
-/// (hundreds of files, PROP-043 §1) — the cache's economy is campaign-field
-/// preservation and change detection, not parse skipping.
+/// The cache may start empty — an empty cache is a cold scan, never an
+/// error. Reuse is decided per file by content hash alone (PROP-043 §7.1),
+/// so a warm scan and a cold one return the same documents; the cache
+/// accelerates the scan and never changes its answer.
 ///
 /// ```
 /// use progress_core::{cache::Cache, scope::ScopeConfig, scan_tree};
@@ -74,7 +76,12 @@ pub fn scan_tree(
         let full = root.join(&rel);
         let text = std::fs::read_to_string(&full)
             .with_context(|| format!("reading {}", full.display()))?;
-        let doc = parse::parse_document(&scope::rel_str(&rel), &text);
+        let path = scope::rel_str(&rel);
+        let hash = parse::content_hash(&text);
+        let doc = match cache.cached_doc(&path, &hash) {
+            Some(cached) => cached.clone(),
+            None => parse::parse_document(&path, &text),
+        };
         let r = rollup::rollup_doc(&doc);
         cache.upsert(&doc, &r);
         docs.push(doc);

@@ -2,7 +2,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#parsing");
 
-use super::hash_str;
+use super::content_hash;
 use crate::doc::{BlockKind, ParsedDoc, Unit};
 
 /// Heading units per the body-span rule (heading → next same-or-higher).
@@ -38,7 +38,7 @@ pub(super) fn collect_units(lines: &[&str], doc: &mut ParsedDoc) {
             anchor: anchor.clone(),
             line_start: *start,
             line_end: end,
-            content_hash: hash_str(&body),
+            content_hash: content_hash(&body),
         });
     }
 }
