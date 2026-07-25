@@ -2,7 +2,7 @@
 
 <status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED, M1.18 + M1.19"/>
 
-##milestone-line **Milestone:** design proposal; targets a new `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked. @spec/work
+##milestone-line **Milestone:** `M1.18` + `M1.19` ([`ROADMAP.md`](../../../ROADMAP.md)) — **shipped**, implementation-locked. (The line read "design proposal … not implementation-locked" until 2026-07-25; it had never been reconciled with the IMPLEMENTED status one line below.) @impl/done
 
 ##status-line **Status:** IMPLEMENTED — Phases 1–4 + 7 landed 2026-05-22 (M1.18, see §7); Phases 5–6 + 8 landed with M1.19 (index-backed short-name resolution at the CLI boundary — `vibe-cli::commands::short_name`; collision detection with exit code `7` — `InstallError::AmbiguousPackage`; the live-registry fqdn migration). Decision units typed at REQ grain 2026-06-12 (the depth program). @impl/done
 

@@ -1,8 +1,8 @@
 # PROP-034: Transitive inclusion links and the static boot-link graph {#root}
 
-<status stage="spec" state="work" comment="B0 2026-07-24: DRAFT 2026-07-14; body predates the 2026-07-16 link-type rename; PROP-038 supersedes its global graph"/>
+<status stage="impl" state="done" comment="C 2026-07-25: the transitive semantics shipped under the renamed terms; PROP-035 §12 / PROP-038 absorbed the graph as their emission layer; body predates the 2026-07-16 rename"/>
 
-##status-line **Status:** DRAFT — requirements, 2026-07-14 (owner-requested). Extends [PROP-009](PROP-009-loading-model.md) (the loading model). Not implementation-locked. @spec/work
+##status-line **Status: IMPLEMENTED under renamed terms** (requirements authored 2026-07-14 at the owner's request; verified against the tree 2026-07-25 by the spec-actualization campaign). `static-transitive` is live on `LinkType`, and dedup + topological ordering + tie-break emission run in `bootgen` — this repository's own `STATIC.md` is the §3 redbook closure in the flesh. [PROP-035 §12](PROP-035-spec-compiler.md) and [PROP-038](PROP-038-hybrid-boot-linking.md) absorbed the graph as their emission layer; read the `TERMINOLOGY-RENAME` note below before the body. Extends [PROP-009](PROP-009-loading-model.md) (the loading model). @impl/done
 
 ##TERMINOLOGY-RENAME **Terminology (2026-07-16):** the `inline` / `static` / `dynamic` link types this document describes were **renamed** — read `inline` as `static` (the verbatim `STATIC.md` lane), `static` as `dynamic` (the default, a by-reference read), and the old `dynamic` as a `dynamic` entry carrying a `when`; `inline-transitive` is now `static-transitive`. See PROP-009 §2.4. The body below predates the rename and keeps the old names. @spec/done
 

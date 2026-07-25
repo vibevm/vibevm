@@ -1,10 +1,10 @@
 # PROP-009: Loading model — computed boot composition and the effective spec {#root}
 
-<status stage="impl" state="work" comment="B0 2026-07-24: status line says DRAFT; M1.18 phases 1-7 shipped 2026-05-22; phase 8 (effective-spec view) is v1.5 scope"/>
+<status stage="impl" state="done" action="continue" comment="C 2026-07-25: M1.18 phases 1-7 shipped 2026-05-22 and this session booted on them; phase 8's engine-backed projection is v1.5 scope"/>
 
-##milestone-line **Milestone:** design proposal; targets a new `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked. @spec/work
+##milestone-line **Milestone:** `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)) — **shipped**, implementation-locked. @impl/done
 
-##status-line **Status:** DRAFT — requirements resolved 2026-05-21; M1.18 phases 1–7 shipped 2026-05-22. The dynamic-entry `when` gate (OS-scoped) shipped 2026-05-22 — see §8. Phase 8 (the effective-spec view) is v1.5 scope. @impl/work
+##status-line **Status: IMPLEMENTED** — requirements resolved 2026-05-21; M1.18 phases 1–7 shipped 2026-05-22, and every session of this repository boots on them (`STATIC.md` first, then the TOML `INDEX.md` with its `[[entry]]` grammar). The dynamic-entry `when` gate (OS-scoped) shipped 2026-05-22 — see §8. Phase 8's **engine-backed** effective-spec projection stays v1.5 scope; the plain `vibe show effective` concatenation is live. @impl/done
 
 ##related **Related:** [`VIBEVM-SPEC.md` §4.2 / §4.6 / §6 / §13.1](../../../VIBEVM-SPEC.md); [PROP-007](PROP-007-workspace.md) (workspace — PROP-009 answers its [§6 question 3](PROP-007-workspace.md#open)); [PROP-003 §2.5](../vibe-resolver/PROP-003-dep-evolution.md) (subskills, delivery modes, the `[activation]` vocabulary); [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (identity, registry). @spec/done
 
@@ -174,7 +174,7 @@ when = "os:windows"
 - ##SURF-INSTALL-BUILD `vibe install` / `vibe build` — workspace-aware (§2.7). @impl/done
 - ##SURF-REINSTALL `vibe reinstall` — regeneration (§2.10). @impl/done
 - ##SURF-PUBLISH `vibe workspace publish` — gains published-shape artifact regeneration (§2.11). @impl/done
-- ##SURF-SHOW-EFFECTIVE `vibe show effective` — projects the effective-spec view (§2.8). @spec/done
+- ##SURF-SHOW-EFFECTIVE `vibe show effective` — **ships** in its simple concatenation form (every `spec/boot` file plus every installed package's `files_written`, joined with `spec://` provenance headers, per its own `--help`); the §2.8 engine-backed projection stays v1.5 scope. @impl/done
 - ##SURF-ENGINE-CRATE The computed-view engine lands either as a new crate (`vibe-boot` / `vibe-view`) or inside `vibe-workspace` (which already owns discovery and the `[workspace.versions]` finalize pass) — decided at implementation time. @impl/done
 
 ---

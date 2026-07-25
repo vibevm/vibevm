@@ -1,10 +1,13 @@
 # PROP-036: `vibe tree` — the spec-tree analyzer {#root}
 
-<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT requirements 2026-07-15; PACKAGE-TREE-PLAN executed against it"/>
+<status stage="impl" state="done" comment="C 2026-07-25: PACKAGE-TREE-PLAN executed; the analyzer ships (tree --json against package-tree.schema.v1.json, -t live)"/>
 
-##status-line **Status:** DRAFT — requirements, 2026-07-15 (owner-requested). Governs the
-`vibe tree` command in `crates/vibe-cli`. Written in the post-rename link
-vocabulary (PROP-035): two link types, `static` and `dynamic`. @spec/work
+##status-line **Status: IMPLEMENTED** (requirements authored 2026-07-15 at the owner's
+request; the PACKAGE-TREE-PLAN executed against them, verified against the tree
+2026-07-25 by the spec-actualization campaign — `vibe tree --json` validates
+against the shipped `package-tree.schema.v1.json` per its own `--help`, and `-t`
+is live). Governs the `vibe tree` command in `crates/vibe-cli`. Written in the
+post-rename link vocabulary (PROP-035): two link types, `static` and `dynamic`. @impl/done
 
 ##related **Related:** [PROP-009 §2.4](../vibe-workspace/PROP-009-loading-model.md#inclusion-types)
 (the `static`/`dynamic` link types + `when`), [PROP-009 §2.3](../vibe-workspace/PROP-009-loading-model.md#artifacts)
@@ -182,18 +185,27 @@ Contract: @spec/done
 - ##TUI-NAVIGATION **Navigation:** `↑`/`↓` move the selection (the table scrolls to keep it
   visible; the selected row is highlighted); `←`/`→` pan horizontally when the
   tree is wider than the viewport. @spec/done
-- ##TUI-FOLDING **Folding:** `Space` folds/unfolds the selected node; `F` folds/unfolds the
-  whole tree. @spec/done
+- ##TUI-KEYMAP-SUPERSEDED **The key bindings sketched in this section are superseded.** This §2.11 is
+  the analyzer-era sketch; the shipped keymap is [PROP-037](PROP-037-tree-tui.md)
+  Spec 2's F-key scheme, and it is normative there — this section names the
+  *capabilities*, never the keys. @impl/done
+- ##TUI-FOLDING **Folding:** the selected node folds and unfolds (shipped as the
+  `fold.toggle` action, [PROP-037 §13.5](PROP-037-tree-tui.md#actions)). The
+  whole-tree fold sketched here was **not carried into Spec 2 and does not
+  ship** — the action catalogue has `fold.toggle` only. @impl/done
 - ##TUI-DETAIL **Detail:** `Enter` opens a modal showing the row's full detail vertically
   (name, group, version, kind, load type, transitive + why, condition full text,
   STATIC.md membership, source, content hash, dependencies, boot file);
-  `Esc` closes it; `q` quits. @spec/done
-- ##TUI-ORDERING **Ordering** (`n`, shown in the status line): **topological** (the analysis
-  order, default) ↔ **alphabetical**. @spec/done
-- ##TUI-DISPLAY-MODES **Display mode** (`x`, cycles): (a) all-together tree; (b) two stacked
+  `Esc` closes it. Quitting is `Esc` plus a confirm dialog
+  ([PROP-037 §7.4](PROP-037-tree-tui.md)), not the bare `q` this sketch assumed. @impl/done
+- ##TUI-ORDERING **Ordering** (shown in the status line): **topological** (the analysis
+  order, default) ↔ **alphabetical**. Chosen from the F2 sort menu
+  ([PROP-037 §7.2](PROP-037-tree-tui.md), which replaces any bare mode-cycle key). @impl/done
+- ##TUI-DISPLAY-MODES **Display mode:** (a) all-together tree; (b) two stacked
   sub-tables `static dependencies` / `dynamic dependencies` (a header line each);
-  (c) two tabs `Static` / `Dynamic`. `t` swaps the static/dynamic priority
-  (which comes first) in (b) and (c); `TAB` and `[` / `]` switch tabs in (c). @spec/done
+  (c) two tabs `Static` / `Dynamic`, with a swappable static/dynamic priority in
+  (b) and (c). Modes are chosen from the F3 menu and tabs switch with
+  `Shift`+arrows ([PROP-037 §4.4 / §5.3](PROP-037-tree-tui.md)). @impl/done
 - ##TUI-STATUS-LINE **Status line:** current ordering · current display mode · the `STATIC.md` size
   indicator (§2.6). @spec/done
 - ##TUI-FALLBACK **Fallback:** non-tty and `--plain` render a static ASCII tree; `--json` the
@@ -211,8 +223,11 @@ Contract: @spec/done
 ### 2.13 Project resolution — VibeTree works from anywhere {#project-resolution}
 
 ##project-needed `vibe tree` shows a project's tree, so it needs one — but a GUI launcher
-(`VibeTree.exe` / a Start-menu shortcut, PROP-043) or an arbitrary shell may sit
-outside any project. @spec/done
+(`VibeTree.exe` / a Start-menu shortcut) or an arbitrary shell may sit
+outside any project. The launchers live in the `vibevm-term` products repo with
+vibeterm and vibeframe ([PROP-019 §STEP-VIBE-ONLY](../../common/PROP-019-version-manager.md)),
+and are governed there — this host contract only specifies what `vibe tree` does
+when invoked from outside a project. @impl/done
 
 ##RESOLUTION-ORDER Resolution order for the **human** surfaces (the TUI and
 `-t`; **not** `--json`, a scripting surface resolved strictly from `--path`)

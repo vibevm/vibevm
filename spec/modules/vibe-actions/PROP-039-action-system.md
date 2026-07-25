@@ -1,9 +1,12 @@
 # PROP-039: the vibevm action system — `vibe-actions` {#root}
 
-<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT 2026-07-15; crates/vibe-actions exists; fact grain 2026-07-24"/>
+<status stage="impl" state="done" comment="C 2026-07-25: crates/vibe-actions ships (address/action/context/invoke/keymap/i18n/gate/aiui) with the Spec-2 TUI as its first consumer; fact grain 2026-07-24"/>
 
-##status-line **Status:** DRAFT — requirements, 2026-07-15 (owner-commissioned). The **contract** for a new crate
-`vibe-actions`: a frontend-agnostic, addressable, programmatically-drivable behaviour layer. @spec/done
+##status-line **Status: IMPLEMENTED** (requirements authored 2026-07-15, owner-commissioned;
+verified against the tree 2026-07-25 by the spec-actualization campaign). The **contract** for the crate
+`vibe-actions` — a frontend-agnostic, addressable, programmatically-drivable behaviour layer — which
+ships with its `address` / `action` / `context` / `invoke` / `keymap` / `i18n` / `gate` / `aiui` modules
+and runs the Spec-2 `vibe tree` TUI as its first consumer. @impl/done
 
 ##related **Related:** design-doc [`spec/design/action-system.md`](../../design/action-system.md) (the *why* +
 architecture); the clean-room study
@@ -293,14 +296,16 @@ structured state, never pixels. @spec/done
 
 ### 11.3 The headless AIUI surface {#aiui}
 
-##AIUI-REFERENCE REQ (designed-for; **not built now**). The core supports a **headless AIUI** surface offering:
+##AIUI-REFERENCE REQ (**built**; the in-process form ships). The core offers a **headless AIUI** surface:
 `list_actions(filter?)` (enumerate the registry with live enablement + reasons + params),
 `invoke(addr, args)` (the same `invoke` as §7.1), `state() -> ModelView` (§11.2), and
-`search(query, tab?)` (drive §10 programmatically). Because enablement is pure + introspectable, the
+`search(query, tab?)` (drive §10 programmatically). `vibe-actions/src/aiui.rs` implements
+`list_actions` + `invoke`, and `vibe aiui state` projects the §11.2 `ModelView` live, citing this
+section in its own `--help`. Because enablement is pure + introspectable, the
 model is serialisable, and invocation is address-based, this surface is a thin adapter with a no-op
-`present`. The architecture must keep it a thin adapter — it is **prototyped on the TUI**, and a
-future in-process API / JSON-RPC / MCP binding realises it. This is the founding AIUI goal (DO18): the
-headless surface is the **reference**; visual surfaces are projections. @spec/done
+`present`. The architecture must keep it a thin adapter — it was **prototyped on the TUI**, and the
+remaining JSON-RPC / MCP bindings are further adapters over the same surface. This is the founding
+AIUI goal (DO18): the headless surface is the **reference**; visual surfaces are projections. @impl/done
 
 ## 12. Discipline & gates {#discipline}
 
@@ -318,8 +323,10 @@ carries mandatory presentation, and is reachable by enumeration. Both are part o
 
 ## 13. Non-goals {#non-goals}
 
-- ##ng-aiui-not-built **The AIUI surface itself is not built now** (§11.3) — the architecture is designed for it; the TUI
-  is the prototype. @spec/done
+- ##ng-aiui-not-built **Superseded — the AIUI surface was built** (§11.3): this non-goal aged behind its own delivery.
+  `vibe-actions/src/aiui.rs` ships `list_actions` + `invoke` and `vibe aiui state` projects the ModelView; the TUI
+  was the prototype. What remains out of scope here is the *remote* binding (JSON-RPC / MCP), an adapter over the
+  same surface. @impl/done
 - ##ng-other-surfaces **Web / VSCode / JetBrains / Zed surfaces are not built now** — the crate is designed so they are
   additional `Surface` adapters. @spec/done
 - ##ng-ml-reranker **An ML reranker for Search Everywhere is deferred** — the ranking (§10.3) leaves the exact-match

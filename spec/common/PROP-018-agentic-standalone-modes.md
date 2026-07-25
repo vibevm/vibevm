@@ -1,12 +1,15 @@
 # PROP-018 — Agentic and standalone modes {#root}
 
-<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-16; MVP slice in S4, heavier surface parked in S6; fact grain 2026-07-24"/>
+<status stage="impl" state="done" action="continue" comment="C 2026-07-25: the §4 MVP is implemented end to end (23 implements / 8 verifies across 8 sections); §6's heavier surface stays parked; fact grain 2026-07-24"/>
 
-##status-line **Status:** proposed 2026-06-16 — owner-requested design session. The MVP
-slice this PROP authorises is named in §4; everything heavier is parked in
-§6 (far backlog). This is the spec home for vibevm's *product modes* — a
-new, cross-cutting concept, distinct from PROP-006's *session* postures
-(see §1.3). @spec/done
+##status-line **Status: the §4 MVP is IMPLEMENTED** (specified 2026-06-16 in an
+owner-requested design session; verified against the tree 2026-07-25 by the
+spec-actualization campaign — `vibe agentic explain`, `vibe command`, the
+`[[skill]]` section and the `agentic_explain` MCP tool are all live, with 23
+specmap `implements` and 8 `verifies` edges across eight sections). Everything
+heavier stays parked in §6 (far backlog). This is the spec home for vibevm's
+*product modes* — a cross-cutting concept, distinct from PROP-006's *session*
+postures (see §1.3). @impl/done
 
 ##related **Related:** [PROP-015](../modules/vibe-mcp/PROP-015-mcp-integration.md)
 (the MCP server + agent-integration machinery — the `Agent` enum, the

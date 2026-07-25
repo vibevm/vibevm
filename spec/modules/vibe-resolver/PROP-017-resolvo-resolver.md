@@ -1,11 +1,13 @@
 # PROP-017 — Resolvo as the production resolver {#prop-017}
 
-<status stage="impl" state="work" comment="B0 2026-07-24: accepted; implementation in progress per status line"/>
+<status stage="impl" state="done" comment="C 2026-07-25: the port is complete per §6 and ResolvoDepSolver is the shipped production default (registry.rs:117)"/>
 
-##status-line **Status.** Design proposal — accepted, implementation in progress (owner
-decision, 2026-06-14). Companion to [PROP-003](PROP-003-dep-evolution.md)
+##status-line **Status.** Design proposal accepted (owner decision, 2026-06-14) and
+**the port is COMPLETE** — `ResolvoDepSolver` is the shipped production default
+(`crates/vibe-cli/src/registry.rs:117`, `--solver` defaults to `resolvo`), as §6
+records. Only the far-backlog reverse weak-deps remain. Companion to [PROP-003](PROP-003-dep-evolution.md)
 (dependency-model evolution) and [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md)
-(registry / depsolver seam). @impl/work
+(registry / depsolver seam). @impl/done
 
 - ##SUPERSEDES-BACKEND **Supersedes.** The solver-*backend* decision of [PROP-003 §2.2](PROP-003-dep-evolution.md#solver-backend)
   (libsolv via thin FFI) and the libsolv-specific algorithm detail of

@@ -1,8 +1,11 @@
 # PROP-019 — VibeVM Version Manager (VVM) {#root}
 
-<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-17, revised to v2 the same day; fact grain 2026-07-24"/>
+<status stage="impl" state="done" comment="C 2026-07-25: the vvm is implemented across the whole verb set with dense implements/verifies coverage; fact grain 2026-07-24"/>
 
-##status-line **Status:** proposed 2026-06-17 — owner-requested design session; **revised
+##status-line **Status: IMPLEMENTED** (specified 2026-06-17 in an owner-requested design
+session and verified against the tree 2026-07-25 by the spec-actualization
+campaign — the vvm ships across the whole verb set, with dense specmap
+`implements` / `verifies` coverage); **revised
 to v2 the same day** after the owner found two architectural flaws in v1
 (see §9): (a) making `$VIBEVM_HOME` the single source of truth forced a
 console reload on every switch/reinstall, and (b) replacing the running
@@ -12,7 +15,7 @@ file + `current_exe()` ground truth (env demoted to advisory), the *whole
 distribution directory* as the immutable unit of install/switch, content-
 cheap diff-copy between instances, sources held *by reference* (never
 copied), and a new `vibe vars` reconciliation command. §9 records every
-decision and the questions explored to reach them. @spec/done
+decision and the questions explored to reach them. @impl/done
 
 ##related **Related:** [PROP-018](PROP-018-agentic-standalone-modes.md) (VVM is a
 second *standalone-mode* citizen after `vibe skill` — pure algorithm, no

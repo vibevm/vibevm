@@ -1,12 +1,15 @@
 # PROP-040: the vibevm settings system — application/user preferences (`vibe-settings`) {#root}
 
-<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT 2026-07-16; crates/vibe-settings exists"/>
+<status stage="impl" state="done" comment="C 2026-07-25: crates/vibe-settings ships and vibe prefs serves the §8 surface, its help citing this PROP verbatim"/>
 
-##status-line **Status:** DRAFT — requirements, 2026-07-16 (owner-commissioned). The **contract** for a new crate
+##status-line **Status: IMPLEMENTED** (requirements authored 2026-07-16, owner-commissioned;
+verified against the tree 2026-07-25 by the spec-actualization campaign — `crates/vibe-settings`
+ships and `vibe prefs` serves the §8 surface, its `--help` citing "PROP-040 §8" verbatim).
+The **contract** for the crate
 `vibe-settings`: a three-level, schema-first, introspectable store for **application/user
 preferences** (Vibe Tree UI — palettes, glyphs, rendering tier, display mode, sort, tree shape, fold
 state, future fonts/sizes; future vibe-app prefs) — programmatically drivable, **AIUI-ready** (surface
-not built, §14). @spec/work
+not built, §14). @impl/done
 
 ##related **Related:** meta-plan
 [`legacy-spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`](../../../legacy-spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md);

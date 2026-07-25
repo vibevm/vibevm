@@ -1,11 +1,14 @@
 # PROP-041: the vibevm settings UI — the `vibe prefs` TUI surface (`vibe-settings-ui`) {#root}
 
-<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT 2026-07-16; SETTINGS-UI-PLAN executed against it; fact grain 2026-07-24"/>
+<status stage="impl" state="done" comment="C 2026-07-25: SETTINGS-UI-PLAN executed; the prefs TUI ships under commands/prefs/tui/ and PROP-037's F4 opens it by name; fact grain 2026-07-24"/>
 
-##status-line **Status:** DRAFT — requirements, 2026-07-16 (owner-commissioned). The **contract** for the TUI surface
+##status-line **Status: IMPLEMENTED** (requirements authored 2026-07-16, owner-commissioned; the
+SETTINGS-UI-PLAN executed against them, verified against the tree 2026-07-25 by the spec-actualization
+campaign — `commands/prefs/tui/**` ships the form lifecycle, the provenance edit and the controls, and
+PROP-037's F4 opens it by name). The **contract** for the TUI surface
 that lets a user **view and edit** the application/user preferences of [PROP-040](PROP-040-settings.md):
 a settings tree, per-type edit forms, a provenance ("where does this value come from?") view, validation
-feedback, and search — built on the `vibe tree` TUI (PROP-037) and drivable headless (AIUI-ready). @spec/done
+feedback, and search — built on the `vibe tree` TUI (PROP-037) and drivable headless (AIUI-ready). @impl/done
 
 ##related **Related:** [PROP-040](PROP-040-settings.md) (the settings system — the data layer this renders);
 [PROP-037](../vibe-cli/PROP-037-tree-tui.md) (the `vibe tree` TUI — component library + theme this is

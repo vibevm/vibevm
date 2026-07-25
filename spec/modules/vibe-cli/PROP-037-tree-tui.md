@@ -1,14 +1,17 @@
 # PROP-037: `vibe tree` — the interactive TUI application {#root}
 
-<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT, revised to Spec 2 2026-07-15; TREE-TUI-PLAN v0.2 executed against it"/>
+<status stage="impl" state="done" comment="C 2026-07-25: TREE-TUI-PLAN v0.2 executed; the visual language verified byte-exact and the F-key map verified shipped"/>
 
-##status-line **Status:** DRAFT — requirements, 2026-07-15 (owner-commissioned); **revised
+##status-line **Status: IMPLEMENTED** (requirements authored 2026-07-15, owner-commissioned;
+TREE-TUI-PLAN v0.2 executed against them, verified against the tree 2026-07-25
+by the spec-actualization campaign — the visual language matches byte for byte
+and the shipped F-key map is the one this Spec 2 text defines); **revised
 2026-07-15 (Spec 2)** onto the action system: the TUI is a `Surface` on
 `vibe-actions` (PROP-039), every command is an addressed action (§13), Search
 Everywhere (§7.3) is promoted from a stub to a shipped feature, and the i18n
 mechanism (§1.6) is now real. Extends
 [PROP-036 §2.11](PROP-036-package-tree.md#tui) (the analyzer's TUI sketch) into
-a full application contract. @spec/work
+a full application contract. @impl/done
 
 ##related **Related:** [PROP-036](PROP-036-package-tree.md) (the `vibe tree` analyzer +
 the `PackageTree` model this app renders); **[PROP-039](../vibe-actions/PROP-039-action-system.md)
