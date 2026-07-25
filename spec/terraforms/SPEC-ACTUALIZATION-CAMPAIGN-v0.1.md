@@ -1,8 +1,8 @@
 # Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree {#root}
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A and B closed (B exit gate green 2026-07-25); Phase L (legacy relocation) awaits the owner's opening call"/>
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A, B, and L closed (L relocated the legacy dirs to legacy-spec/ 2026-07-25); Phase C (verification) awaits the owner's opening call"/>
 
-**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked; `check --exhaustive` clean + floor green) · next: Phase L (legacy relocation → `legacy-spec/`) awaits the owner's opening call, then C · vibevm-specific · first consumer of PROP-043 (Progress Control)**
+**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`; corpus + crates reference-free modulo this plan's own carve-out; `check --exhaustive` clean + floor green) · next: Phase C (verification) awaits the owner's opening call · vibevm-specific · first consumer of PROP-043 (Progress Control)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -655,6 +655,47 @@ read-only, no auth.
   cold-resume recipe and the recommended opening phrase by which the
   owner opens Phase L explicitly (the phase event lands in the journal
   only then, per the DRIFT-003 phase lane).
+
+- **2026-07-25 · PHASE L EXECUTED AND CLOSED — the legacy dirs are out
+  of the spec tree.** Opened on the owner's recorded phrase (journal
+  phase event `L` + `l1-inventory`). **L1 (inventory):** gate-binding
+  set = 26 sites in 13 corpus files + 1 crates doc comment
+  (`outdated.rs`); `spec/neworder` and `spec/discipline` had **zero**
+  corpus inbound; out-of-gate referrers classified into live docs
+  (ROADMAP, docs/), historical reports (terraform/), campaign zone,
+  and an explicit leave-list (packages vendored comments, neworder2
+  baselines, AUDIT quote, closed debt-ledger row DBT-0016,
+  VIBEVM-SPEC — no real refs). **L2 (fact discovery) verdict: every
+  cited fact was already corpus-resident** — the RP1
+  rejected-alternative at design/action-system.md §4 D1, the ten
+  design decisions, the DO1–DO18/Δ1–Δ16 sets restated in place, the
+  settings deltas named inline, the campaign histories in PROP-038 §6
+  / PROP-027 / PROP-036 — so **L3 ported nothing and the owner's
+  new-spec grant went unused**; every citation dissolved into
+  archive-provenance form instead (the honest inverse of the plan's
+  port-then-repoint expectation, recorded here as the L2→L3 finding).
+  **L4 (repoints):** four batch commits `83346e78` `f8f347d8`
+  `9514e8fb` `1ec6a27c` — 26 sites incl. both `spec://vibevm/research`
+  URI retirements, plus **four word-level sites the path greps could
+  not see** (PROP-031 status-line, PROP-037 plan pointer, PROP-040
+  delta-mapping, PROP-041 `spec.research` §3.7): the literal-backtick
+  and dotted forms needed a lookbehind/word sweep — a reusable lesson
+  for the §6 recurrence. Scope stayed 58 files (no new files → no
+  `progress.toml` growth). **L5 (relocation):** `70f3cbdd` — 35 files
+  `git mv`'d (terraforms 25, research 8, neworder 1, discipline 1) to
+  root `legacy-spec/`, the campaign plan carve-out honoured; live
+  out-of-gate pointers followed in the same commit (ROADMAP 15
+  occurrences, docs/ 8, terraform 2 links, findings.json 11 paths,
+  discipline.lock recipe, progress.toml comment); historical prose,
+  quoted URIs, the closed debt row, and the pre-broken PLAYBOOK link
+  stayed verbatim — records are not rewritten. `f311f429` regenerated
+  the stale host specmap (absorbed B-phase drift + the move; ratchet
+  37 gated orphans within allowance, 0 suspects). **Exit gate:** the
+  reference greps read zero into the four dirs from corpus + crates
+  (plan carve-out aside); `check --exhaustive` clean (58 files, 4 880
+  facts, 0 errors); floor `self-check` all green, real exit 0.
+  **Phase C (verification) awaits the owner's opening call** per the
+  resume-boundary law.
 
 ## 10. Deferrals {#deferrals}
 
