@@ -21,6 +21,10 @@ use crate::cli::{
 };
 use crate::output::Context;
 
+/// The writer half of the baseline: the campaign's fact-grain verdicts
+/// projected onto §7.3's unit-grain record (DRIFT-023).
+mod baseline;
+
 /// The rescan half — the only part of the adapter that knows this tree is a
 /// git checkout (PROP-043 §7.3).
 mod rescan;
@@ -33,6 +37,7 @@ pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
         ProgressSubcommand::Mirror(a) => mirror(ctx, &a),
         ProgressSubcommand::Weave(a) => weave_cmd(ctx, &a),
         ProgressSubcommand::Rescan(a) => rescan::rescan_cmd(ctx, &a),
+        ProgressSubcommand::Baseline(a) => baseline::baseline_cmd(ctx, &a),
         ProgressSubcommand::Resume(a) => resume(ctx, &a),
         ProgressSubcommand::Gate(a) => gate(ctx, &a),
     }
@@ -49,6 +54,13 @@ struct Ground {
     /// per invocation — a second `load` here would be a second megabyte of
     /// JSON for the same bytes, and worse, a second opinion about them.
     cache: cache::Cache,
+    /// The warning `load_tolerant` produced when the cache on disk could
+    /// not be read and this run is proceeding on an empty one. Every
+    /// subcommand prints it; `baseline` additionally **refuses** to run,
+    /// because a baseline projected from a cache that failed to load is
+    /// not an empty baseline — it is a truncated one, and it reads as
+    /// knowledge (DRIFT-023 §4.3).
+    cache_warning: Option<String>,
     /// The parse-payload sidecar, outside the repository (DRIFT-016).
     /// Read alongside the cache and written alongside it; every way of not
     /// having it is an empty store, so a run whose bucket was never
@@ -82,16 +94,16 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     // An unreadable cache is a warning and a cold run, never a failure:
     // the cache is derived acceleration and may be deleted at any time
     // (PROP-043 §7.5).
-    let cache = match &campaign {
+    let (cache, cache_warning) = match &campaign {
         Some(c) => {
             let (loaded, recovered) =
                 cache::Cache::load_tolerant(&c.join("run").join("cache.json"));
-            if let Some(warning) = recovered {
+            if let Some(warning) = &recovered {
                 eprintln!("vibe progress: warning: {warning}");
             }
-            loaded
+            (loaded, recovered)
         }
-        None => cache::Cache::default(),
+        None => (cache::Cache::default(), None),
     };
     // The payload store is pure acceleration and lives outside the tree,
     // so it has no warning to print and no failure to report: an absent
@@ -120,6 +132,7 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         docs,
         campaign,
         cache,
+        cache_warning,
         payloads,
     })
 }

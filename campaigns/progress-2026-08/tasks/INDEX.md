@@ -24,7 +24,7 @@
 | DRIFT-020 | test isolation stops being a convention | opus | done |
 | DRIFT-021 | the legacy `~/.vibevm` read leg goes away | opus | done |
 | DRIFT-022 | the `[env]` promotion stops being able to set anything | opus | done |
-| DRIFT-023 | the baseline gets a writer, and §6 becomes runnable | opus | ready |
+| DRIFT-023 | the baseline gets a writer, and §6 becomes runnable | opus | done |
 
 DRIFT-006…011 are Phase E, opened by the owner's 2026-07-25 ruling on the
 seven F-046 parity rows (wire, not demote) plus F-015. They close the last

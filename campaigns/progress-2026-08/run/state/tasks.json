@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T14:15:00Z",
+ "updated_at": "2026-07-26T15:00:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -138,7 +138,7 @@
    "id": "DRIFT-023",
    "title": "the baseline gets a writer, and §6 becomes runnable",
    "executor": "opus",
-   "status": "ready"
+   "status": "done"
   }
  ]
 }

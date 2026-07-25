@@ -13,11 +13,18 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#baseline");
 
-use crate::doc::ParsedDoc;
+use crate::doc::{ParsedDoc, Unit};
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
+
+/// The fact → unit projection that fills a baseline, and the writer that
+/// puts it on disk. Split into its own file so this one keeps the reader
+/// (`rescan`) whole and inside the file-length budget; the two halves
+/// share [`governing_marker`] rather than each resolving markers their
+/// own way (DRIFT-023 §4.1).
+pub mod project;
 
 pub const BASELINE_SCHEMA: u32 = 1;
 
@@ -217,6 +224,42 @@ pub fn unit_addr(doc: &ParsedDoc, unit_idx: usize) -> String {
     }
 }
 
+/// The marker governing `unit`, formatted `"{stage}/{state}"`: the first
+/// `Section` marker standing inside the unit's body span, and the
+/// document marker where there is none.
+///
+/// One function, called from both sides of the baseline — the projection
+/// that snapshots the marker ([`project`]) and the rescan that compares
+/// against the snapshot. Two implementations of this rule that agree
+/// today drift apart the first time either is touched, and the symptom is
+/// silent: every unit reports `marker_diverged` forever while the text it
+/// stands for never moved (DRIFT-023 §4.1.5).
+///
+/// ```
+/// use progress_core::baseline::governing_marker;
+/// use progress_core::parse::parse_document;
+///
+/// // (few source lines: a doctest line may not begin with `#`)
+/// let doc = parse_document("a.md", "<status stage=\"impl\" state=\"work\"/>\n\n# One {#one}\n\n\
+///      <status stage=\"spec\" state=\"done\"/>\n\nBody.\n\n# Two {#two}\n\nBody.\n");
+/// // The section marker standing under the first heading governs it …
+/// assert_eq!(governing_marker(&doc, &doc.units[0]).as_deref(), Some("spec/done"));
+/// // … and a section with none falls back to the document marker.
+/// assert_eq!(governing_marker(&doc, &doc.units[1]).as_deref(), Some("impl/work"));
+/// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#baseline")]
+pub fn governing_marker(doc: &ParsedDoc, unit: &Unit) -> Option<String> {
+    doc.markers
+        .iter()
+        .find(|m| {
+            m.granularity == crate::model::Granularity::Section
+                && m.line >= unit.line_start
+                && m.line <= unit.line_end
+        })
+        .or_else(|| doc.document_marker())
+        .map(|m| format!("{}/{}", m.stage, m.state))
+}
+
 /// Compare parsed docs against a baseline, applying all four §7.3 rules.
 ///
 /// ```
@@ -235,9 +278,6 @@ pub fn rescan<'a>(
 ) -> Vec<RescanRow> {
     let mut rows = Vec::new();
     for doc in docs {
-        let doc_marker = doc
-            .document_marker()
-            .map(|m| format!("{}/{}", m.stage, m.state));
         for (i, u) in doc.units.iter().enumerate() {
             let addr = unit_addr(doc, i);
             match baseline.units.get(&addr) {
@@ -255,19 +295,9 @@ pub fn rescan<'a>(
                 }),
                 Some(b) => {
                     // Unit text unchanged: did the governing marker move?
-                    // Section markers are attached by line ranges; the
-                    // document marker is the coarse fallback snapshot.
-                    let current = doc
-                        .markers
-                        .iter()
-                        .filter(|m| {
-                            m.granularity == crate::model::Granularity::Section
-                                && m.line >= u.line_start
-                                && m.line <= u.line_end
-                        })
-                        .map(|m| format!("{}/{}", m.stage, m.state))
-                        .next()
-                        .or_else(|| doc_marker.clone());
+                    // Resolved by the same function that snapshotted it,
+                    // so the two sides cannot drift apart (§4.1.5).
+                    let current = governing_marker(doc, u);
                     let diverged = match (&b.marker, &current) {
                         (Some(snap), Some(cur)) => snap != cur,
                         _ => false,

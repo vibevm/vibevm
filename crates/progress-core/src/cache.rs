@@ -257,7 +257,7 @@ fn same_but_for_stamp(current: &str, body: &str) -> bool {
     }
 }
 
-/// The byte range of the top-level `updated_at` **value** in a document
+/// The byte range of the top-level wall-clock **value** in a document
 /// `serde_json::to_string_pretty` produced, or `None` when there is none.
 ///
 /// The needle is a newline, two spaces and the key. The pretty printer
@@ -267,11 +267,21 @@ fn same_but_for_stamp(current: &str, body: &str) -> bool {
 /// That is why this reads the bytes instead of parsing them — `corpus.json`
 /// carries the word `updated_at` inside a campaign verdict's own text, and
 /// a looser search would find it.
+///
+/// Two keys name that clock in this crate: `updated_at` on the cache and
+/// the state projections, `written_at` on the baseline (DRIFT-023 §4.2).
+/// They mean one thing under two names — when the content behind them
+/// last moved — so both are recognised here. A writer that knew only the
+/// first would rewrite a byte-identical baseline on every run, which is
+/// exactly the fsync DRIFT-017 exists to skip.
 fn stamp_span(json: &str) -> Option<Range<usize>> {
-    const KEY: &str = "\n  \"updated_at\": \"";
-    let start = json.find(KEY)? + KEY.len();
-    let end = start + json[start..].find('"')?;
-    Some(start..end)
+    ["\n  \"updated_at\": \"", "\n  \"written_at\": \""]
+        .into_iter()
+        .find_map(|key| {
+            let start = json.find(key)? + key.len();
+            let end = start + json[start..].find('"')?;
+            Some(start..end)
+        })
 }
 
 #[cfg(test)]

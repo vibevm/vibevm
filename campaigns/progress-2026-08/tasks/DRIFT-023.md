@@ -202,3 +202,87 @@ Budget signal: past ~6 files, stop and return.
   as F-065 an hour earlier: the spec claimed a writer that was never built,
   and the claim was authored by this campaign's own Phase D — the `store` in
   view belonged to a different type in the same crate.
+
+- built 2026-07-26. `§3`'s numbers all held: `Baseline::store` did not exist,
+  the eight subcommands were the eight named, and nothing in the tree could
+  produce the file `rescan --baseline` consumes. **The loop now runs end to
+  end.**
+
+  **Shipped.** `progress-core`: `baseline::governing_marker` — the marker
+  resolution lifted out of `rescan` verbatim and now called from both sides
+  (§4.1.5); `baseline::project` (new file) — the fact → unit projection and
+  `Baseline::store`; `cache::stamp_span` widened to recognise the baseline's
+  `written_at` beside `updated_at`, so DRIFT-017's no-op-write skip covers
+  this artifact too. `vibe-cli`: `progress baseline [--out]`, and `Ground`
+  now keeps the cache's load warning so this one verb can **refuse** rather
+  than write a truncated baseline. `rescan`'s six tests are untouched and
+  green.
+
+  **The projection, as implemented.** A judged fact rolls up into *every*
+  unit whose body span carries it, nested subsections included — a unit's
+  identity is the hash of its whole span, so a verdict riding on that hash
+  has to answer for everything inside it. Worst wins on
+  `drift > unverifiable > confirmed`, and a verdict string this code does
+  not model outranks all three rather than being swallowed by a neighbouring
+  `confirmed`. Evidence is the union in document order, deduplicated, built
+  through `BaselineUnit::new` so `crates` is derived. Nothing else is
+  invented: a unit no judged fact reaches is omitted and counted, a file
+  with no `verified_at` has its units omitted and is named, an address two
+  units claim is reported, and a verdict key that names no fact anchor is
+  reported.
+
+  **The spec text this makes true** — `PROP-043` §7.3, for the reviewer's
+  sync pass, quoted verbatim as it stands today:
+
+  > - ##BASELINE-RECORD `baseline.json` — per unit: URI#anchor, unit content-hash at verdict time,
+  >   verdict, evidence refs, date, named crates, marker snapshot. **Shipped:**
+  >   `baseline.rs`'s `BaselineUnit` carries exactly these fields, with
+  >   `Baseline::load` / `store` and the `rescan` CLI live. @impl/done
+
+  The `store` half of that sentence is now true of `Baseline` rather than of
+  `Cache`. The line still says nothing about the `baseline` subcommand or
+  about where the verdicts come from — §5's CMD list is one command short of
+  the shipped tool.
+
+  **The round trip (§6), verbatim.** `progress baseline` → 920 units
+  written, **0 omitted**, 914 confirmed / 2 drift / 4 unverifiable; 58
+  verdict keys unresolved (53 per-file `_elements` bundles + 5 anchors that
+  sit mid-block, all five `confirmed`, and each of their units is judged by
+  the block's own first anchor, so no unit lost its coverage).
+  `rescan --baseline campaigns/progress-2026-08/baseline.json
+  --control-rate 0` on the unchanged tree:
+
+  > 0 new, 1 changed (suspect), 919 carried-forward, 0 control-sample
+  > Changed spec/boot/00-core.md#L1  [crate `vibe-cli` moved after the verdict]
+
+  `marker_diverged` is **false on all 920 rows**. The one non-carried row is
+  not a writer/reader disagreement: `crate_moved` is only ever set on the
+  branch where the hashes already matched, so that unit's hash and marker
+  both agreed — it is invalidation rule 2 firing correctly, because the unit
+  cites `crates/vibe-cli/Cargo.toml` and `crates/vibe-cli` last moved
+  2026-07-25T22:56Z, after that file's `verified_at` of 2026-07-25T12:44Z.
+  No tolerance was added for it (§8); the row is the rule working.
+
+  **Negative control.** One word edited inside `PROP-043`'s §7.3 body: that
+  unit turns `changed`, and with it exactly its two ancestors (`#data`,
+  `#root`) whose hashes cover it — `#cache`, `#state`, `#campaign-zone` and
+  `#erasure` all carry forward. Restored byte-for-byte (sha256 verified) and
+  the run goes back to 919/1.
+
+  **Determinism control.** A second `progress baseline` over the unchanged
+  campaign reports `unchanged, nothing written`; the file's mtime (ns) and
+  sha256 are identical across the two runs.
+
+  **Not absorbed, deliberately.** (a) §4.3's "journal the step like the
+  other campaign verbs" — *no* verb journals today (`start_step` /
+  `done_step` have no caller outside their own tests), `journal.jsonl` is
+  tracked, and appending on every run would dirty `git diff` and break §6's
+  own determinism control. The campaign's steps stay journaled by whoever
+  runs them. (b) Three files (`MT-02`, `PROP-026`, `PROP-002`) moved after
+  their verdicts were formed — their `processed_hash` is not what this run
+  parsed — so their units carry forward a judgment formed against different
+  text. §4.1.2 fixes the hash as the current one, so they are projected as
+  written and **reported** (a warning per file, and `stale` in `--json`)
+  rather than filtered out: filtering would be a rule §4.1 does not have.
+  Re-verify those three, or refresh their maps, before close-out seals this
+  baseline.

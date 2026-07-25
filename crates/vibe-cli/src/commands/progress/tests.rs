@@ -21,6 +21,11 @@ use super::*;
 /// *answers*, everything there about what it *touches*.
 mod writes;
 
+/// DRIFT-023's own cell — the baseline round trip through the two
+/// subcommands that make the §6 recurrence a loop: write it, read it
+/// back, and watch a single edited unit turn suspect.
+mod baseline;
+
 /// Where every fixture in this file pins its payload sidecar, relative to
 /// the fixture root.
 const FIXTURE_CACHE_DIR: &str = "payload-cache";
@@ -76,6 +81,7 @@ fn refresh_state_derives_phase_from_journal() {
         docs: Vec::new(),
         campaign: Some(campaign.clone()),
         cache: cache::Cache::load_tolerant(&run.join("cache.json")).0,
+        cache_warning: None,
         payloads: sidecar::Payloads::load(Some(tmp.path().join(FIXTURE_CACHE_DIR))),
     };
     refresh_state(&mut g).expect("refresh_state");

@@ -41,6 +41,11 @@ pub enum ProgressSubcommand {
     /// new / changed (suspect) / carried-forward units.
     Rescan(ProgressRescanArgs),
 
+    /// Write `baseline.json` from the campaign's own verdicts — the
+    /// artifact the next campaign's `rescan` consumes. Reads the cache;
+    /// verifies nothing and invents no verdict.
+    Baseline(ProgressBaselineArgs),
+
     /// Regenerate `RESUME.md` from the campaign journal and print it —
     /// the first read of every campaign session.
     Resume(ProgressCommonArgs),
@@ -142,6 +147,18 @@ pub struct ProgressRescanArgs {
         value_parser = parse_control_rate,
     )]
     pub control_rate: f64,
+}
+
+#[derive(Debug, Args)]
+pub struct ProgressBaselineArgs {
+    #[command(flatten)]
+    pub common: ProgressCommonArgs,
+
+    /// Where to write the baseline (default: `<campaign zone>/baseline.json`
+    /// — the path §7.4's zone layout fixes and the next campaign's
+    /// `rescan --baseline` reads).
+    #[arg(long)]
+    pub out: Option<PathBuf>,
 }
 
 /// `--control-rate` takes a fraction in `0.0..=1.0`; anything else is a
