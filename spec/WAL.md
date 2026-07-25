@@ -1,32 +1,43 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-26 (session end — **Phases D and E driven end to end**:
-the drift ledger fell from 311 rows to 1, twelve DRIFT tasks executed,
-and the floor is green with no workaround for the first time)_
+_Updated: 2026-07-26 (**wave 1 closed out**: the task queue drained, the
+baseline artifact exists for the first time, F and G deferred by owner
+ruling, and wave 2's plan reviewed for ratification)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phase E; the queue is drained.** The spec
-tree measured 93.0 % true at the Phase C gate and now measures **4 486
-confirmed / 1 drift / 3 unverifiable of 4 490 = 99.9 %**. Findings **61
-of 64 resolved**. The single remaining drift row
+**Progress Control (PROP-043) — wave 1 CLOSED OUT.** The spec tree
+measures **4 488 confirmed / 1 drift / 3 unverifiable of 4 492 = 99.9 %**.
+Findings **61 of 67 resolved**. The single remaining drift row
 (`FACT-GRAIN-EVIDENCE`) cannot close here: it waits on
 `rust-ai-native-lang` v0.8.0 re-vendoring the fact-aware specmap engine,
 which is wave 2's Phase A2.
 
-**`bash tools/self-check.sh` exits 0 against the real `~/.vibe/` with no
-`VIBE_SETTINGS` override** — F-055 is genuinely fixed rather than worked
-around. Gate panel in `campaign.json`: floor / check / specmap / conform
-all green.
+**The task queue is empty.** DRIFT-020, 022 and 023 all landed and were
+reviewed diff-by-diff. `bash tools/self-check.sh` exits 0 against the real
+`~/.vibe/` — now carrying the user-home tripwire — and `progress check`,
+`conform check` and the specmap ratchet are all green at HEAD.
 
-**Parked on the owner, nothing else blocked:** (1) DRIFT-022 needs a
-letter — (a) allowlist `VIBE_*`/`VIBEVM_*` for the `[env]` promotion, or
-(b) remove it; (2) DRIFT-020 is ready to run and needs only a go;
-(3) F-063 needs a sync-from-code diff plus one edit only the owner may
-make. **Phases F and G were never opened, and close-out has not started** —
-`baseline.json`, deferrals, and the REPORT against §8's six predictions.
-Wave 2 is planned and unratified:
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`.
+**Close-out is complete.** `campaigns/progress-2026-08/baseline.json`
+exists (920 units; 914 confirmed / 2 drift / 4 unverifiable) and
+round-trips clean: `rescan` against it reports 919 carried-forward, 0 new,
+and 1 changed that is the named-crate invalidation rule firing correctly.
+`deferrals.md` is written. The REPORT is filled against all six §8
+predictions — four confirmed, one confirmed only because close-out went
+and measured it, one falsified in the favourable direction.
+
+**Phases F and G were deferred to wave 2 by owner ruling**, and not for
+time: close-out measured their inputs and found them absent. F's three
+views are empty (`freeze/plan` 0, `action="rework"` 0, `stage="idea"` 0)
+because Phase B recorded what facts *are* and was never asked what should
+*happen* to them. G's `harvest/` is empty because Phase C skipped its own
+harvest step and its exit gate did not check for it.
+
+**Wave 2 is reviewed and awaits the owner's ratification call:**
+`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`, now carrying
+§4.5 — six proposed amendments from wave 1's close-out, plus two corrected
+baseline numbers (the ai-native join target is **703** specmark sites, not
+the 247 the plan claimed — that figure was the rust family alone).
 
 Key laws unchanged: no fractality (Fable = judgment and ALL review,
 Opus = DRIFT execution), engine pin `claude-opus-5`, `reality-mismatch`
@@ -103,64 +114,90 @@ closes only through sync-from-code with owner approval.
   settings, registry cache and search cache together. DRIFT-021 then
   removed the leg no isolation could reach — and found a third read path
   nobody had measured, carrying the vibeterm control-server token.
+- **Wave 1 close-out (2026-07-26).** DRIFT-020 made test isolation a
+  guarantee rather than a convention — a pre-`main` constructor in the new
+  `vibe-test-support` crate, so linkage alone isolates a test process, plus
+  a floor tripwire that hashes the real `~/.vibe` and fails if anything
+  moved. Both mechanisms were made to fire before either was trusted.
+  DRIFT-022 bounded the `[env]` promotion to `VIBE_*`/`VIBEVM_*` on the
+  owner's letter (a). DRIFT-023 built `Baseline::store` and
+  `vibe progress baseline` — the writer PROP-043 §7.3 had claimed for
+  months and nobody had ever built (F-065), which meant §6's monthly
+  recurrence had never run end to end. F-063's PROP-002 half landed under
+  sync-from-code; PROP-043 gained the two commands it was short (`gate`,
+  undocumented since DRIFT-008, and `baseline`). Three new findings filed
+  (F-065, F-066, F-067). The plan's §9 LOG regained the entries Phase D
+  and Phase E never wrote, and the §11 REPORT was scored against all six
+  predictions.
 - Earlier: Phase C (2026-07-25, 93.0 % measured), Phase L, Phase B,
   M1.17/M1.18/M1.19.
 
 ## In progress
 
-Nothing running. Two tasks are queued: **DRIFT-020** (test isolation as a
-guarantee — ready, needs only a go) and **DRIFT-022** (the `[env]`
-promotion — refuses to start until the owner picks (a) allowlist or
-(b) remove).
+Nothing running; the task queue is empty and the tree is clean.
 
 ## Next
 
-1. **Answer DRIFT-022's letter** and **release DRIFT-020.** Both close
-   F-061 between them.
-2. **F-063 — a sync-from-code diff for the token precedence.** Both
-   `PROP-002` `##PUB-TOKEN-LOADING` and `spec/boot/90-user.md`
-   `##TOKEN-FILE-CONVENTION` name `VIBEVM_PUBLISH_TOKEN` as the highest
-   precedence; `VIBEVM_PUBLISH_TOKEN_<HOST>` sits above it. The
-   `90-user.md` edit is the owner's — that file is user-owned.
-3. **Close wave 1 out.** `baseline.json`, the deferrals file, and the
-   REPORT against §8's six predictions — four are already checkable, and
-   prediction 3 (≥60 % of IMPLEMENTED claims confirm; ≤10 % unverifiable)
-   is comfortably met at 99.9 % / 0.07 %.
-4. **Phases F and G were never opened.** F: three owner plans generated
-   from views (release/productization, improvement, global idea ledger).
-   G: the User Guide and Package Author Guide, written from proven
-   behaviour rather than spec prose.
-5. **Wave 2 awaits ratification** —
-   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`, 37 packages
-   / 294 files. Its Phase A2 (re-mint `rust-ai-native-lang` v0.8.0) is
-   what unblocks wave 1's last drift row.
-
-Parked follow-ups (unchanged): vibe-vvm/term-vvm conformance-golden;
-Linux/macOS install smoke; arbitrary user-repos design-doc; `vibe doctor`
-project-local row.
+1. **Push.** 13 commits from this session are unpushed —
+   `github/main` still sits at `e7851a0e`. GitVerse (`origin`) is 125
+   behind and its SSH link has been down since 2026-07-25. Recovery is a
+   plain `cargo xtask mirror`; **never** `--force`.
+2. **Ratify wave 2, or strike its amendments.** The plan carries §4.5's
+   six proposals; each is the owner's to take or drop. A1 is the one that
+   matters most — the plan today repeats wave 1's exact defect, gating
+   Phase C on verdicts while its own §3.2 step says the checker runs are
+   captured as doc fixtures.
+3. **F-063's owner half.** `spec/boot/90-user.md`
+   `##TOKEN-FILE-CONVENTION` still names `VIBEVM_PUBLISH_TOKEN` as the
+   highest-precedence token source; `VIBEVM_PUBLISH_TOKEN_<HOST>` outranks
+   it. The PROP-002 half landed. That file is user-owned — no session may
+   edit it, and the corrected line is in `deferrals.md` §1.
+4. **Re-verify two files before trusting anything downstream** —
+   `MT-02-vibe-tree-tui.md` and `PROP-026-tcg-tool-family.md` carry
+   verdicts formed against text Phase D changed afterwards.
+   `vibe progress baseline` names both on every run. Minutes of work.
+5. **Open tails now in `campaigns/progress-2026-08/deferrals.md`**, which
+   is the authoritative list: F-064 (the second config home), F-065's
+   spec half is closed but F-066 (the spec still names the old config
+   home) and F-067 (the staleness signal inverts) are open, MT-02/MT-03
+   await a human sign-off, and Phases F and G are wave 2's to carry.
 
 ## Known issues
 
-- **GitVerse SSH link DOWN all of 2026-07-25/26.** Banner-exchange
-  timeout — network-level, not divergence. GitHub carries everything
-  through `97c26bf6`. Recovery: plain `cargo xtask mirror`; NEVER
-  `--force`.
-- **F-063 — the documented token precedence is wrong** in a
-  security-relevant way (see Next 2).
+- **GitVerse SSH link DOWN since 2026-07-25.** Banner-exchange timeout —
+  network-level, not divergence. Recovery: plain `cargo xtask mirror`;
+  NEVER `--force`. **GitHub is also behind**: 13 commits unpushed.
 - **F-064 — a second config home** (`legacy_xdg_config_path()`,
   `user_config.rs:285`) that `$VIBE_SETTINGS` does not relocate. Same
   shape as the leg DRIFT-021 removed, one severity lower.
+- **F-066 — `VIBEVM-SPEC.md` §9.5 still names `~/.config/vibe/config.toml`**
+  as the user-level config. That path is only a migration fallback now.
+  Close it with F-064, or after: once F-064 deletes the leg, the spec
+  line names a path that does not exist.
+- **F-067 — the staleness signal inverts.** `processed_hash` is only
+  written by a real verify batch, and this campaign sealed verdicts by
+  hand throughout, so `progress baseline`'s warning fires on the files
+  with the *freshest* verdicts. Cleared by hand for PROP-002/PROP-043;
+  standing for MT-02/PROP-026, which genuinely need re-verifying.
 - **vibespecs 401 on this machine** — redbook + rust-ai-native resolve
   via vibe-embedded; consuming lockfiles carry `source_kind = "embedded"`.
 - **specmap ratchet** — 37 gated orphans host-side, unmoved.
 
 ## Session context
 
-One session ran Phase D and Phase E end to end: twelve DRIFT tasks
-dispatched to Opus, every diff reviewed before it was committed, and the
-ledger taken from 311 open rows to 1. The lasting lessons are in the
-Constraints above — the three substring false positives, the two
-measurements that corrected each other, and the reviewer error of
-committing a worker's output on journal evidence rather than on its
-completion. The floor is green plainly for the first time, which is the
-one fact a cold reader should verify first.
+The session that closed wave 1 out. Three DRIFT tasks dispatched and
+reviewed diff-by-diff, and the review caught what mattered each time: the
+tripwire's home resolution had to mirror `home_dir()` exactly or it would
+guard the wrong directory, and the baseline's marker snapshot had to be
+resolved by the *same* code path `rescan` compares against or every row
+would report `marker_diverged` forever.
+
+The lasting lesson is in the REPORT's gap list rather than in the ledger.
+**The campaign's own corrections introduced drift, and its own verification
+confirmed it.** Phase D authored a `Shipped:` line claiming a
+`Baseline::store` that had never existed — the `store` in view belonged to
+`Cache`, a different type in the same crate — and Phase C had earlier
+sealed five token-precedence anchors `confirmed` on evidence that compared
+one spec document against another carrying the identical error. Both were
+found by going to the code, and both are now predictions wave 2 should make
+about itself rather than surprises it rediscovers.
