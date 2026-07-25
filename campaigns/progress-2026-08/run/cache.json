@@ -1,9 +1,9 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T18:10:00Z",
+  "updated_at": "2026-07-25T17:35:31Z",
   "files": {
     "spec/boot/00-core.md": {
-      "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
+      "content_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
       "rollup": {
         "computed": [
           "impl",
@@ -21,10 +21,10 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
+        "processed_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
         "summary": {
-          "confirmed": 32,
-          "drift": 1,
+          "confirmed": 33,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -127,9 +127,10 @@
             ]
           },
           "LAYER-CODE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "root tests/ ABSENT (ls -d tests 2026-07-25) while the unit names crates/, tests/ as the code layer; crates/ exists; per-crate tests/ exist but the root path as written is stale -> F-035"
+              "root tests/ ABSENT (ls -d tests 2026-07-25) while the unit names crates/, tests/ as the code layer; crates/ exists; per-crate tests/ exist but the root path as written is stale -> F-035",
+              "D d2g 2026-07-25 (F-035 closed, OWNER RULING in session): LAYER-CODE reworded to 'everything under crates/, including each crate's own tests/' - the owner chose the per-crate reading over blessing the old one. User-owned boot file touched only on that ruling"
             ]
           },
           "SYNC-FROM-CODE-PATH": {
@@ -230,7 +231,7 @@
           }
         },
         "verified_at": "2026-07-25T12:44:02Z",
-        "verify_batch": "c0-boot"
+        "verify_batch": "c0-boot + d2g"
       }
     },
     "spec/boot/90-user.md": {
@@ -13723,7 +13724,7 @@
       }
     },
     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md": {
-      "content_hash": "a377614449431b183a0b964819de4ba5e94e3accd45da81f5cf9f2349f353894",
+      "content_hash": "a2efd8745749be8707ad93362bc3ff557ffbebff33f939b2dc85ccfb9b642abb",
       "rollup": {
         "explicit": [
           "impl",

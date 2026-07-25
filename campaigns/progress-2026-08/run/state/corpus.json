@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T17:31:20Z",
+  "updated_at": "2026-07-25T17:35:31Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -15,10 +15,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
+        "processed_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
         "summary": {
-          "confirmed": 32,
-          "drift": 1,
+          "confirmed": 33,
+          "drift": 0,
           "unverifiable": 0
         },
         "verdicts": {
@@ -121,9 +121,10 @@
             ]
           },
           "LAYER-CODE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "root tests/ ABSENT (ls -d tests 2026-07-25) while the unit names crates/, tests/ as the code layer; crates/ exists; per-crate tests/ exist but the root path as written is stale -> F-035"
+              "root tests/ ABSENT (ls -d tests 2026-07-25) while the unit names crates/, tests/ as the code layer; crates/ exists; per-crate tests/ exist but the root path as written is stale -> F-035",
+              "D d2g 2026-07-25 (F-035 closed, OWNER RULING in session): LAYER-CODE reworded to 'everything under crates/, including each crate's own tests/' - the owner chose the per-crate reading over blessing the old one. User-owned boot file touched only on that ruling"
             ]
           },
           "SYNC-FROM-CODE-PATH": {
@@ -224,7 +225,7 @@
           }
         },
         "verified_at": "2026-07-25T12:44:02Z",
-        "verify_batch": "c0-boot"
+        "verify_batch": "c0-boot + d2g"
       }
     },
     {
@@ -14622,10 +14623,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "ca52d6a271737a0b26ecb649ae67827c484e22b8e1cb870b1a4e8b0ae9c75e09",
+        "processed_hash": "f5f58f90b59b20a575fa2f14ab213ab75cf6e8aa7f277021095001bf99fe5655",
         "summary": {
-          "confirmed": 137,
-          "drift": 8,
+          "confirmed": 138,
+          "drift": 7,
           "unverifiable": 0
         },
         "verdicts": {
@@ -15339,9 +15340,10 @@
             ]
           },
           "BASELINE-RECORD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(f): shipped while marked spec/done - baseline.rs BaselineUnit{addr,unit_hash,verdict,evidence,verified_at,crates,marker} matches §7.3 field-for-field; Baseline::load/store + rescan CLI live (--baseline required)"
+              "F-046(f): shipped while marked spec/done - baseline.rs BaselineUnit{addr,unit_hash,verdict,evidence,verified_at,crates,marker} matches §7.3 field-for-field; Baseline::load/store + rescan CLI live (--baseline required)",
+              "D d2f 2026-07-25 (F-046 partial): BASELINE-RECORD needed no owner call - baseline.rs BaselineUnit matches §7.3 field for field with load/store and the rescan CLI live, so it is a plain shipped-under-spec re-mark, not a wire-or-demote decision"
             ]
           },
           "BASELINE-INVALIDATION": {

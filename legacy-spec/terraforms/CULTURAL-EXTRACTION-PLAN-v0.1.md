@@ -2,7 +2,7 @@
 
 <status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says EXECUTABLE, awaiting /goal launch"/>
 
-**status: EXECUTABLE · launch under `/goal` and walk away · pauses cleanly at the 80% context frame and resumes via `восстанови сессию` · the *bootstrap* refactoring of `REFACTORING-ENGINE-META-PLAN` — it precedes the engine and generates its requirements from lived experience**
+**status: EXECUTED · ARCHIVE — do not execute.** The extraction happened: the redbook 0.2.0 boot lane ships the cultural-extraction wave (`dev-runtime-docs`, `wal-specspaces`). The line was never closed at the time and is corrected here by the spec-actualization campaign (2026-07-25). Original: *EXECUTABLE · launch under `/goal` and walk away · pauses cleanly at the 80% context frame and resumes via `восстанови сессию` · the *bootstrap* refactoring of `REFACTORING-ENGINE-META-PLAN` — it precedes the engine and generates its requirements from lived experience**
 
 > **How to run this.** You (the executing model) are launched under `/goal` with this file as your operating manual. Boot the normal way first (`CLAUDE.md` → `spec/boot/INDEX.md` → its files → `spec/WAL.md` → `CONTINUE.md`), then read this whole file, then execute §2's lifecycle in order. You run **autonomously**: no human is watching mid-run, so there are no "confirm you understood" checkpoints — instead you do the one-time comprehension check in §1.4. The only interruptions are session restarts at the 80% context frame (§5). **The boot prompt must ALWAYS resolve** — between restarts much can change, and a session that cannot boot cannot resume.
 

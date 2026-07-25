@@ -1,42 +1,42 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T17:58:00Z",
+ "updated_at": "2026-07-25T18:35:00Z",
  "findings": [
   {
    "id": "F-001",
    "from": "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md",
    "to": "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says PLANNED / not started, but DEFERRALS-CLOSEOUT closes 'every S10 deferral of the Self-Sufficiency campaign' and PROP-025 records 'v1 IMPLEMENTED (the deferrals-closeout campaign)' - the campaign evidently ran to completion; the line was never closed out."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says PLANNED / not started, but DEFERRALS-CLOSEOUT closes 'every S10 deferral of the Self-Sufficiency campaign' and PROP-025 records 'v1 IMPLEMENTED (the deferrals-closeout campaign)' - the campaign evidently ran to completion; the line was never closed out. || RESOLVED d2h 2026-07-25 (owner ruled: fix the archive too): SELF-SUFFICIENCY-PLAN status reads EXECUTED + ARCHIVE-do-not-execute, with the original line kept verbatim."
   },
   {
    "id": "F-002",
    "from": "legacy-spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
    "to": "spec/WAL.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says EXECUTING (2026-07-20); WAL records the default-registry migration landed 2026-07-23 (~/.vibe/registry.toml, ensure_default_global_registry). Plan finished, line never closed."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says EXECUTING (2026-07-20); WAL records the default-registry migration landed 2026-07-23 (~/.vibe/registry.toml, ensure_default_global_registry). Plan finished, line never closed. || RESOLVED d2h 2026-07-25: SETTINGS-HOME plan reads EXECUTED (finished 2026-07-23) + ARCHIVE-do-not-execute."
   },
   {
    "id": "F-003",
    "from": "legacy-spec/terraforms/CONVERT-PLAN-v0.1.md",
    "to": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says AUTHORED / NOT STARTED, but PROP-015 calls itself 'the retroactive spec home the CONVERT-PLAN v0.1 S7 endgame opened' - the plan reached its endgame."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says AUTHORED / NOT STARTED, but PROP-015 calls itself 'the retroactive spec home the CONVERT-PLAN v0.1 S7 endgame opened' - the plan reached its endgame. || RESOLVED d2h 2026-07-25: CONVERT-PLAN reads EXECUTED to its §7 endgame + ARCHIVE-do-not-execute."
   },
   {
    "id": "F-004",
    "from": "legacy-spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md",
    "to": "spec/boot/STATIC.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Status line says EXECUTABLE / awaiting launch, but the redbook 0.2.0 boot lane already ships the cultural-extraction wave (dev-runtime-docs, wal-specspaces) - the extraction evidently happened."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Status line says EXECUTABLE / awaiting launch, but the redbook 0.2.0 boot lane already ships the cultural-extraction wave (dev-runtime-docs, wal-specspaces) - the extraction evidently happened. || RESOLVED d2h 2026-07-25: CULTURAL-EXTRACTION-PLAN reads EXECUTED + ARCHIVE-do-not-execute (the redbook 0.2.0 boot lane ships the wave)."
   },
   {
    "id": "F-005",
@@ -97,18 +97,18 @@
    "from": "legacy-spec/terraforms/TREE-TUI-PLAN-v0.1.md",
    "to": "legacy-spec/terraforms/TREE-TUI-PLAN-v0.2.md",
    "type": "missing-support",
-   "status": "open",
-   "wave": 0,
-   "note": "v0.2 declares 'Supersedes TREE-TUI-PLAN-v0.1.md'; v0.1's own status line still says PLANNED and carries no superseded notice - a cold reader of v0.1 alone could start executing it."
+   "status": "resolved",
+   "wave": 2,
+   "note": "v0.2 declares 'Supersedes TREE-TUI-PLAN-v0.1.md'; v0.1's own status line still says PLANNED and carries no superseded notice - a cold reader of v0.1 alone could start executing it. || RESOLVED d2h 2026-07-25: TREE-TUI-PLAN v0.1 now carries the superseded notice pointing at v0.2, so a cold reader landing there alone cannot start executing it."
   },
   {
    "id": "F-012",
    "from": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
    "to": "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md",
    "type": "missing-support",
-   "status": "open",
-   "wave": 0,
-   "note": "MCP-SOVEREIGNTY wave 6 deleted vibe-tcg whole and recorded 'PROP-026 superseded in topology, grammar kept normative'; PROP-026's own status line still says 'Module: vibe-tcg (new)' with no superseded notice."
+   "status": "resolved",
+   "wave": 2,
+   "note": "MCP-SOVEREIGNTY wave 6 deleted vibe-tcg whole and recorded 'PROP-026 superseded in topology, grammar kept normative'; PROP-026's own status line still says 'Module: vibe-tcg (new)' with no superseded notice. || RESOLVED d2h 2026-07-25: PROP-026 status line carries the superseded-in-topology notice - the vibe-tcg crate is gone, the grammar stays normative through the PROP-027 family servers."
   },
   {
    "id": "F-013",
@@ -313,9 +313,9 @@
    "from": "spec/boot/00-core.md",
    "to": "tests/",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "LAYER-CODE (L33) names the code layer as -everything under crates/, tests/- but no root tests/ directory exists (per-crate tests/ do). User-owned boot file: additive-only law means the owner rewords or blesses the reading -per-crate tests dirs-. Phase C verdict: drift (c0-boot)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "LAYER-CODE (L33) names the code layer as -everything under crates/, tests/- but no root tests/ directory exists (per-crate tests/ do). User-owned boot file: additive-only law means the owner rewords or blesses the reading -per-crate tests dirs-. Phase C verdict: drift (c0-boot). || RESOLVED d2g 2026-07-25 (owner ruling in session): LAYER-CODE reworded to name each crate’s own tests/ rather than a root tests/ that never existed."
   },
   {
    "id": "F-036",

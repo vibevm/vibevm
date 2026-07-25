@@ -1,8 +1,8 @@
 # TREE-TUI-PLAN v0.1 — the `vibe tree` TUI as a real application
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED; TREE-TUI-PLAN-v0.2 declares itself the successor"/>
+<status stage="spec" state="done" comment="D d2h 2026-07-25: superseded notice added; v0.2 is the successor that executed"/>
 
-_Status: PLANNED · written against tree `6473ecb` · cold-executable: every phase
+_Status: **SUPERSEDED by [TREE-TUI-PLAN v0.2](TREE-TUI-PLAN-v0.2.md) · ARCHIVE — do not execute.** v0.2 declares itself this plan's successor and is the one that executed (2026-07-16, phases P0–P10); v0.1 never carried the superseded notice, so a cold reader landing here alone could have started executing it. Corrected by the spec-actualization campaign (2026-07-25). Original: PLANNED · written against tree `6473ecb` · cold-executable: every phase
 ends with `bash tools/self-check.sh` green; any phase boundary is a safe stop.
 The **contract** is [PROP-037](../modules/vibe-cli/PROP-037-tree-tui.md); this
 plan is the recipe that executes it, phase by phase, each phase citing the

@@ -2,7 +2,7 @@
 
 <status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says AUTHORED 2026-06-12, NOT STARTED"/>
 
-**status: AUTHORED 2026-06-12 · NOT STARTED · vibevm-specific · the full-depth conversion queue behind the 2026-06-12 audit**
+**status: EXECUTED to its §7 endgame · ARCHIVE — do not execute.** PROP-015 calls itself "the retroactive spec home the CONVERT-PLAN v0.1 §7 endgame opened", so the plan reached that endgame; the line was never closed at the time and is corrected here by the spec-actualization campaign (2026-07-25). Original: *AUTHORED 2026-06-12 · NOT STARTED · vibevm-specific · the full-depth conversion queue behind the 2026-06-12 audit*
 
 *Origin: the same-day full-depth audit (post-SHRINK-v0.2) found the codebase split into
 three maturity strata. **Stratum A — discipline by spirit**: vibe-resolver (41 `#[spec]`,

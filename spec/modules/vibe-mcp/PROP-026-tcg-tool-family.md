@@ -7,8 +7,12 @@ accepted the same day, with the §3 portability amendment); implemented
 by its Phase 4. History: 2026-07-07 (same day, AGENTIC-TCG-RUST-PLAN
 v0.1) — the §2 promise cashed: `language: "rust"` lands as an enum
 value dispatching to the rust stack's `rust-ai-native-tcg` relay; no new tools,
-no schema shape change.** Module: `vibe-tcg` (new) + `vibe-mcp`
-(adapter) + `vibe-workspace` (binary resolution). @impl/done
+no schema shape change. **Superseded in topology** (MCP-SOVEREIGNTY wave 6):
+the standalone `vibe-tcg` crate was deleted whole and the tool grammar below
+stays **normative**, now served by the per-family MCP servers of
+[PROP-027](PROP-027-mcp-packages.md).** Module: `vibe-mcp`
+(adapter) + `vibe-workspace` (binary resolution); the `vibe-tcg` crate this
+contract was written against no longer exists. @impl/done
 
 ##related **Related:** [PROP-015](PROP-015-mcp-integration.md) (the MCP server
 this family is first mounted on), [PROP-018](../../common/PROP-018-agentic-standalone-modes.md)

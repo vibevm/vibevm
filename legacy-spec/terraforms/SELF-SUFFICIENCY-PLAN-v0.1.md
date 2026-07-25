@@ -2,7 +2,7 @@
 
 <status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED, not started"/>
 
-**status: PLANNED · not started · the convergence of two audits (package self-sufficiency + operational-procedure detachment) · executes in a fresh session from cold context**
+**status: EXECUTED · ARCHIVE — do not execute.** This plan ran to completion: DEFERRALS-CLOSEOUT-PLAN closes "every §10 deferral of the Self-Sufficiency campaign", and PROP-025 records "v1 IMPLEMENTED (the deferrals-closeout campaign)". The line below was never closed out at the time; it is corrected here by the spec-actualization campaign (2026-07-25). Original: *PLANNED · not started · the convergence of two audits (package self-sufficiency + operational-procedure detachment) · executes in a fresh session from cold context*
 
 > **Read-first / boot.** This plan is written to be executed cold. Boot the
 > normal way first (`CLAUDE.md` → `spec/boot/INDEX.md` → its files →
