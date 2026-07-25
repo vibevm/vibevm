@@ -773,6 +773,39 @@ read-only, no auth.
   (PROP-000, 018, 019, 024, 031, 032, 033 — 868 markers; specmap-rich
   on 018/019) → the modules cluster (3 300 markers).
 
+- **2026-07-25 · c3b — PROP-000 verified: the foundation aged in six
+  spots (the densest drift file of the phase).** 162 units — **149
+  confirmed / 12 drift / 1 unverifiable**, all twelve drifts one
+  family row **F-043**: §3 still records the proprietary EULA though
+  its own revisit trigger fired (UPL-1.0 relicense 2026-07-12, MT-05);
+  §4 lists the retired `vibe-package.toml`; §6 records pre-qualified
+  identity and **four** kinds while the same file's INV-VOCABULARY
+  correctly lists five (internal r2-leftover-class inconsistency); §7
+  calls GitVerse "the source-of-truth" against PROP-016's no-primary
+  model and pins `KindName` against the Fqdn default; §14's
+  WAL-names-the-runs practice lapsed; §18 claims LLM-reviewed semantic
+  conflicts whose LLM lane is pending. Hard confirms: all seven §2
+  crates exist, the §15 prune of PROP-001 was **executed** (its
+  ARG-PRUNED cites §15 back), schemas/ + vibe-wire/generated
+  committed, resolvo pinned, both guides exist. The unverifiable is
+  the GitVerse-network-bound legacy-registry claim (same verdict as
+  c0's twin).
+- **2026-07-25 · c3c — PROP-018 + PROP-019 confirm wholesale on
+  implementation evidence.** 322 units — **320 confirmed / 2 drift**,
+  both drifts the same shape and both already ledgered in Phase B: a
+  proposed-era status line over a fully shipped system (**F-013**
+  agentic modes, **F-005** vvm). Beneath the headers the content
+  carries the densest machine evidence of the phase: the agentic
+  relay/skill/affinity/transports/explain sections hold 23 implements
+  / 8 verifies into `vibe-mcp`/`vibe-cli` (the `vibe agentic` +
+  `vibe command` verbs run live in this very session), and the vvm's
+  twelve sections map 1:1 onto `commands/vvm/` exactly as §3 placed
+  them (37 implements / 38 verifies; `relocate` alone carries seven).
+  Far-backlog sections verified genuinely unbuilt. **Running tally:
+  1 071 units — 1 031 confirmed / 37 drift / 3 unverifiable; findings
+  43.** Remaining in common: c3d = PROP-024 / 031 / 032 / 033 (384
+  markers), then the modules cluster (3 300).
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
