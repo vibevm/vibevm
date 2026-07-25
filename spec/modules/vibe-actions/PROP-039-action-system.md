@@ -7,11 +7,11 @@
 
 ##related **Related:** design-doc [`spec/design/action-system.md`](../../design/action-system.md) (the *why* +
 architecture); the clean-room study
-[`spec/research/action-systems-vscode-idea.md`](../../research/action-systems-vscode-idea.md)
+[`legacy-spec/research/action-systems-vscode-idea.md`](../../../legacy-spec/research/action-systems-vscode-idea.md)
 (obligations DO1–DO18, deltas Δ1–Δ16); [PROP-037](../vibe-cli/PROP-037-tree-tui.md) (the `vibe tree`
 TUI — the first consumer, revised by Spec 2); the `qualified-naming` and `addressable-specs` flows
 (the address discipline this extends to behaviour). Mandate + acceptance:
-[`spec://vibevm/research/ACTION-SYSTEM-RESEARCH-PLAN#mandate`](../../research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate). @spec/done
+[`legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate`](../../../legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate). @spec/done
 
 ##language-note **Language:** the shipped UI is English; a real i18n mechanism ships (§8) with English the default,
 mandatory-complete locale. @spec/done
@@ -340,4 +340,4 @@ carries mandatory presentation, and is reachable by enumeration. Both are part o
   renderer (§10.5, D8); the pure 3-state keymap resolver (§9.2, D9); one commensurable recency-weighted
   ranker (§10.3, D10). @spec/done
 - ##review-points-resolved All owner review points RP1–RP5 are resolved
-  (`spec://vibevm/research/ACTION-SYSTEM-RESEARCH-PLAN#review-points`). @spec/done
+  (`legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#review-points`). @spec/done

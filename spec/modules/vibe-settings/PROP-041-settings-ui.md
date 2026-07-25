@@ -11,7 +11,7 @@ feedback, and search — built on the `vibe tree` TUI (PROP-037) and drivable he
 [PROP-037](../vibe-cli/PROP-037-tree-tui.md) (the `vibe tree` TUI — component library + theme this is
 built on); the visual-language design-doc
 [`spec/design/tui-visual-language.md`](../../design/tui-visual-language.md); the clean-room study
-[`spec/research/settings-system-vscode-idea.md`](../../research/settings-system-vscode-idea.md) (§3.7
+[`legacy-spec/research/settings-system-vscode-idea.md`](../../../legacy-spec/research/settings-system-vscode-idea.md) (§3.7
 Configurable EP, §3.9 introspection); the `addressable-specs` and `managed-blocks` flows. @spec/done
 
 - ##granular-directive This contract is deliberately **granular and addressable** (owner directive): every feature is its own
@@ -130,7 +130,7 @@ PROP-040 §6) — a flat list of every warning across L1/L2/L3, jump-to-field. @
 
 ## 7. Search {#search}
 
-##settings-search REQ {#settings-search} (Δ-15; `spec.research` §3.7). A search (the `vibe-actions` Search Everywhere
+##settings-search REQ {#settings-search} (Δ-15; the archived settings study §3.7). A search (the `vibe-actions` Search Everywhere
 engine, PROP-039 §10 — the same engine the `vibe tree` TUI uses) finds settings by **key, display name,
 description, and synonyms**. Selecting a result opens the owning page with that field focused. The
 search index is built from the page registry (§2) so a new page is searchable with no extra wiring. @spec/done

@@ -9,8 +9,8 @@ state, future fonts/sizes; future vibe-app prefs) — programmatically drivable,
 not built, §14). @spec/work
 
 ##related **Related:** meta-plan
-[`spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`](../../terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md);
-clean-room study [`spec/research/settings-system-vscode-idea.md`](../../research/settings-system-vscode-idea.md)
+[`legacy-spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`](../../../legacy-spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md);
+clean-room study [`legacy-spec/research/settings-system-vscode-idea.md`](../../../legacy-spec/research/settings-system-vscode-idea.md)
 (deltas D-01..D-16); [PROP-037 §9](../vibe-cli/PROP-037-tree-tui.md#settings) (the `vibe tree` TUI —
 first consumer; its ad-hoc `~/.vibe/tree` is subsumed); [PROP-041](PROP-041-settings-ui.md) (the TUI
 settings surface); the `addressable-specs`, `qualified-naming`, `decision-records`, and `secrets-hygiene`

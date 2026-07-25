@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T08:56:41Z",
+  "updated_at": "2026-07-25T08:58:45Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -531,7 +531,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-actions/PROP-039-action-system.md": {
-      "content_hash": "7682c7401442ea513a7932c554c072a8599e3d3a1cf74dc7431f37a520fe3270",
+      "content_hash": "4e3fffdbd12fa1f8d185feaad93058eb7a7a33e1360ddbc6445ff40151729128",
       "rollup": {
         "explicit": [
           "spec",
@@ -1037,7 +1037,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-settings/PROP-040-settings.md": {
-      "content_hash": "5e119bdeabfc338f8814fbacd8dfe2eb3cfdb65d54b1e6407bfc239073020127",
+      "content_hash": "8eeeb3a8cdb6687782ab0e068d4295a8b40b8a4fda683d0ea2d3c5c09c7d54f9",
       "rollup": {
         "explicit": [
           "spec",
@@ -1060,7 +1060,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-settings/PROP-041-settings-ui.md": {
-      "content_hash": "a359b802405cad0f180d1a2ae7263494f0f7f3ecd432ed529c9de16edf9369c1",
+      "content_hash": "9780b59a46286ba504bf436949d044d5816cc8e5727a09b9bbbe90f930ff0531",
       "rollup": {
         "explicit": [
           "spec",
