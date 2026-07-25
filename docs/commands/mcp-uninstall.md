@@ -2,7 +2,7 @@
 
 Mirror of [`vibe mcp install`](mcp-install.md): same scope axis (project / user / both), same agent filter, same `--config-only` / `--skill-only` toggle. Drops the `vibevm` key from each agent's MCP config (foreign keys preserved) and deletes the SKILL.md file (and parent `vibevm/` skill subdir if it becomes empty).
 
-Spec: [PROP-004 §5.1](../../spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 5).
+Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 5).
 
 ## Usage
 

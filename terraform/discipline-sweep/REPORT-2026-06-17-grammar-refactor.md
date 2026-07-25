@@ -1,7 +1,7 @@
 # Discipline Sweep — grammar refactor of the new features (RAID REPORT)
 
 _Run 2026-06-17, branch `main`. One RAID run of the standing
-[`DISCIPLINE-SWEEP-v0.1`](../../spec/terraforms/DISCIPLINE-SWEEP-v0.1.md),
+[`DISCIPLINE-SWEEP-v0.1`](../../legacy-spec/terraforms/DISCIPLINE-SWEEP-v0.1.md),
 sweeping the two newest features — the VVM (`vibe man`, PROP-019) and the
 agentic / skill surface (PROP-018) — deeper into the AI-Native Discipline.
 Base tip `47dbd2a` (P0–P2, the prior checkpoint); this run landed P3–P6 on

@@ -4,8 +4,8 @@
   "findings": [
     {
       "id": "F-001",
-      "from": "spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md",
-      "to": "spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md",
+      "from": "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md",
+      "to": "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md",
       "type": "reality-mismatch",
       "status": "open",
       "wave": 0,
@@ -13,7 +13,7 @@
     },
     {
       "id": "F-002",
-      "from": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "from": "legacy-spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
       "to": "spec/WAL.md",
       "type": "reality-mismatch",
       "status": "open",
@@ -22,7 +22,7 @@
     },
     {
       "id": "F-003",
-      "from": "spec/terraforms/CONVERT-PLAN-v0.1.md",
+      "from": "legacy-spec/terraforms/CONVERT-PLAN-v0.1.md",
       "to": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "type": "reality-mismatch",
       "status": "open",
@@ -31,7 +31,7 @@
     },
     {
       "id": "F-004",
-      "from": "spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md",
+      "from": "legacy-spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md",
       "to": "spec/boot/STATIC.md",
       "type": "reality-mismatch",
       "status": "open",
@@ -68,7 +68,7 @@
     {
       "id": "F-008",
       "from": "spec/modules/vibe-cli/PROP-036-package-tree.md",
-      "to": "spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md",
+      "to": "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md",
       "type": "reality-mismatch",
       "status": "open",
       "wave": 0,
@@ -77,7 +77,7 @@
     {
       "id": "F-009",
       "from": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
-      "to": "spec/terraforms/TREE-TUI-PLAN-v0.2.md",
+      "to": "legacy-spec/terraforms/TREE-TUI-PLAN-v0.2.md",
       "type": "reality-mismatch",
       "status": "open",
       "wave": 0,
@@ -86,7 +86,7 @@
     {
       "id": "F-010",
       "from": "spec/modules/vibe-settings/PROP-040-settings.md",
-      "to": "spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md",
+      "to": "legacy-spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md",
       "type": "contradiction",
       "status": "open",
       "wave": 0,
@@ -94,8 +94,8 @@
     },
     {
       "id": "F-011",
-      "from": "spec/terraforms/TREE-TUI-PLAN-v0.1.md",
-      "to": "spec/terraforms/TREE-TUI-PLAN-v0.2.md",
+      "from": "legacy-spec/terraforms/TREE-TUI-PLAN-v0.1.md",
+      "to": "legacy-spec/terraforms/TREE-TUI-PLAN-v0.2.md",
       "type": "missing-support",
       "status": "open",
       "wave": 0,
@@ -104,7 +104,7 @@
     {
       "id": "F-012",
       "from": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
-      "to": "spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md",
+      "to": "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md",
       "type": "missing-support",
       "status": "open",
       "wave": 0,

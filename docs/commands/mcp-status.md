@@ -2,7 +2,7 @@
 
 Read-only counterpart of [`vibe mcp install`](mcp-install.md) + [`vibe mcp upgrade`](mcp-upgrade.md). Walks every supported agent (Claude Code, Claude Desktop, Cursor, OpenCode, Codex) across both project and user scopes, works out what `install` / `upgrade` would do, and reports per-(agent × scope) MCP-config status AND SKILL.md drift status without touching disk. Useful as a CI gate to catch config drift, or as a one-shot probe to see which agents this project + machine combination would integrate with.
 
-Spec: [PROP-004 §5.1](../../spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 2 + 4).
+Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 2 + 4).
 
 ## Usage
 

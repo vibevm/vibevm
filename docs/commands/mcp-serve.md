@@ -2,7 +2,7 @@
 
 Runs the JSON-RPC 2.0 server for the [Model Context Protocol](https://modelcontextprotocol.io) over stdio. Coding agents (Claude Code, Claude Desktop, Cursor, OpenCode, Codex) pick it up via their MCP config — see [`vibe mcp install`](mcp-install.md) — and can then query the project's lockfile and active subskill content live, without restarting the agent on every `vibe install`.
 
-Spec: [PROP-004 §5.1](../../spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slices 1–3).
+Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slices 1–3).
 
 ## Usage
 

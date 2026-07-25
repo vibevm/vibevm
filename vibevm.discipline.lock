@@ -6,7 +6,7 @@
 # "discipline package in effect" component.
 #
 # Regenerate by re-running the install recipe in
-# `spec/neworder/README.md` and copying the resulting `vibe.lock`
+# `legacy-spec/neworder/README.md` and copying the resulting `vibe.lock`
 # hashes here. Hand edits outside that flow are a defect.
 
 schema = 1

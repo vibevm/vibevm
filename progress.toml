@@ -10,15 +10,16 @@
 # session-end — markup cannot live in it. The authored boot snippets
 # (00-core, 90-user) are NOT generated (user-owned; vibe never writes
 # them) and stay observed via `spec/boot/[0-9]*.md`.
-# `spec/terraforms/`, `spec/research/`, `spec/neworder/` are OUT of scope
-# (owner ruling 2026-07-25, in session): long-executed refactoring plans
-# and research studies — historical records, not living contracts; the
-# campaign does not mark or verify them. Re-add a glob here if one of
-# them is ever promoted back to living-contract status.
-# `spec/discipline/` is OUT of scope (owner ruling 2026-07-25, second in
-# session): the Discipline is part of the ai-native packages now; the
-# directory itself relocates to `legacy-spec/` in Phase L once its
-# inbound references are inventoried and ported.
+# The legacy dirs (terraforms, research, neworder, discipline) left the
+# spec tree for root `legacy-spec/` in Phase L (relocated 2026-07-25,
+# per the owner rulings of the same day): long-executed refactoring
+# plans, research studies, and the superseded Discipline copy —
+# historical records, not living contracts; the campaign does not mark
+# or verify them. The one carve-out is the active campaign plan, which
+# stays at `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`
+# (owner ruling: the §6 monthly recurrence consumes it in place).
+# Re-add a glob here if an archived doc is ever promoted back to
+# living-contract status.
 # §4 is include-only by design, so exclusions are expressed by
 # enumeration; a new spec/ subtree or top-level spec doc must be added
 # here explicitly — review at batch boundaries.

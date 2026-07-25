@@ -1,6 +1,6 @@
 # terraform/adopt-v0.3/REPORT.md — the Discipline v0.2 adoption, close-out report
 
-_The exit artifact of [`TERRAFORM-PLAN-v0.3`](../../spec/terraforms/TERRAFORM-PLAN-v0.3.md)
+_The exit artifact of [`TERRAFORM-PLAN-v0.3`](../../legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md)
 (plan §5, criterion 4) and the input to **Discipline v0.3** — modeled
 on the prior terraform's [`REPORT.md`](../REPORT.md). Everything here
 is backed by [`LOG.md`](LOG.md) (the raid-grained account) and

@@ -40,7 +40,7 @@
 > covers SAT solver via libsolv, cargo-style features, vibevm-native
 > subskills, BCP-47 i18n. New milestones M1.7–M1.11 and M2.7–M2.10
 > derive from
-> [PROP-004 Tessl comparative research](spec/research/PROP-004-tessl-comparative-research.md):
+> [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):
 > `vibe-mcp` (Claude-native context provider) leads the bunch.
 
 This document is the long-form version of `VIBEVM-SPEC.md` §11 (staging
@@ -342,7 +342,7 @@ multi-source story to production quality.
 
 **Thesis.** Today vibevm only writes files into the project tree; the agent reads everything that happens to be there. To position vibevm as a *Claude-native* package manager, it must speak Model Context Protocol so the agent can query packages, capabilities, and subskills on demand — like Tessl's `query_library_docs`, but built around vibevm's decentralised content-hashed primitives.
 
-Source: [PROP-004 §5.1](spec/research/PROP-004-tessl-comparative-research.md#mcp-server). Targets [`https://modelcontextprotocol.io`](https://modelcontextprotocol.io).
+Source: [PROP-004 §5.1](legacy-spec/research/PROP-004-tessl-comparative-research.md#mcp-server). Targets [`https://modelcontextprotocol.io`](https://modelcontextprotocol.io).
 
 **Scope (slices 1–5 shipped).**
 
@@ -365,7 +365,7 @@ Source: [PROP-004 §5.1](spec/research/PROP-004-tessl-comparative-research.md#mc
 
 **Thesis.** vibevm has `vibe check` (binary findings, structural). It has no quality score, no LLM-judge component, no aggregate "this package is 87% production-ready" surface. Tessl ships exactly that and ties it to publish gates. Static portion is buildable today without LLM.
 
-Source: [PROP-004 §5.2](spec/research/PROP-004-tessl-comparative-research.md#quality-evaluation).
+Source: [PROP-004 §5.2](legacy-spec/research/PROP-004-tessl-comparative-research.md#quality-evaluation).
 
 **Scope (static portion only).**
 
@@ -383,7 +383,7 @@ LLM-judge mode and `--optimize` auto-edit loop land in M2.7 once `vibe-llm` is r
 
 **Thesis.** Tessl's headline marketing — "version-matched documentation for 10K+ packages" — rides on a single field: `describes = "pkg:pypi/fastapi@0.116.1"`. We need the equivalent so vibevm packages can declare which external library they're authored against.
 
-Source: [PROP-004 §5.3](spec/research/PROP-004-tessl-comparative-research.md#purl-describes). Targets the [Package URL spec](https://github.com/package-url/purl-spec).
+Source: [PROP-004 §5.3](legacy-spec/research/PROP-004-tessl-comparative-research.md#purl-describes). Targets the [Package URL spec](https://github.com/package-url/purl-spec).
 
 **Scope.**
 
@@ -398,7 +398,7 @@ Source: [PROP-004 §5.3](spec/research/PROP-004-tessl-comparative-research.md#pu
 
 **Thesis.** Trivial UX win that scales with adoption. Cargo / npm / dnf all have it. We don't.
 
-Source: [PROP-004 §5.13](spec/research/PROP-004-tessl-comparative-research.md#outdated).
+Source: [PROP-004 §5.13](legacy-spec/research/PROP-004-tessl-comparative-research.md#outdated).
 
 **Scope.**
 
@@ -412,7 +412,7 @@ Source: [PROP-004 §5.13](spec/research/PROP-004-tessl-comparative-research.md#o
 
 **Thesis.** Tessl's `tessl init` detects which coding agent is in use and writes appropriate config. We currently write all three (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`) regardless. With M1.7 in flight, agent detection becomes load-bearing — different agents need different MCP-config files.
 
-Source: [PROP-004 §5.7](spec/research/PROP-004-tessl-comparative-research.md#agent-auto-detect).
+Source: [PROP-004 §5.7](legacy-spec/research/PROP-004-tessl-comparative-research.md#agent-auto-detect).
 
 **Scope (effectively closed alongside M1.7 slices 2 + 4).**
 
@@ -680,7 +680,7 @@ deleted — the vibevm-on-vibevm operational cycle is broken.
 **Thesis.** PROP-026's central bet — the tcg family scales by language
 VALUE, not by parallel tool families — cashed on its second language,
 the project's primary one. The campaign
-(spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md, owner-accepted with
+(legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md, owner-accepted with
 amendments the same day) ships: `rust-ai-native-tcg-bridge` (the LSP
 client seam over the CONSUMER's own rust-analyzer — rustup-resolved,
 capability-gated, overlays via LSP document law, pull diagnostics,
@@ -710,7 +710,7 @@ commissioned.
 agent APIs never expose logits; `vibe-llm` is an M0 stub) — but most of
 the mask's value is information, feedback latency, and generation-time
 discipline, all deliverable TODAY as tools the agent consults. The
-campaign (spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md, owner-accepted
+campaign (legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md, owner-accepted
 with amendments 2026-07-07) ships: the `tools/ts-oracle` language-
 service oracle (overlays, NDJSON duplex) in the TS stack, the
 `typescript-ai-native-tcg-bridge` + `typescript-ai-native-tcg` slot binary (discipline
@@ -901,7 +901,7 @@ depends on adoption signals." Treat M2 as a rolling quality bar.
 
 **Thesis.** Once `vibe-llm` exists (M1.5.1), the static review surface from M1.8 grows two LLM-driven extensions: a judge for the implementation and activation axes, and a `--optimize` auto-edit loop analogous to Tessl's. Plus per-model A/B comparison (`--agents=<m1>,<m2>`).
 
-Source: [PROP-004 §5.2](spec/research/PROP-004-tessl-comparative-research.md#quality-evaluation) (LLM-judge portion), [§5.6](spec/research/PROP-004-tessl-comparative-research.md#multi-model).
+Source: [PROP-004 §5.2](legacy-spec/research/PROP-004-tessl-comparative-research.md#quality-evaluation) (LLM-judge portion), [§5.6](legacy-spec/research/PROP-004-tessl-comparative-research.md#multi-model).
 
 **Estimated effort.** 2 weekends on top of M1.5.1 + M1.8.
 
@@ -909,7 +909,7 @@ Source: [PROP-004 §5.2](spec/research/PROP-004-tessl-comparative-research.md#qu
 
 **Thesis.** PROP-003 r2 already lands the three delivery modes (eager / lazy-push / lazy-pull) in the manifest schema and the lockfile from day one — so they don't require a v3-to-v4 lockfile migration later. What M2.8 covers is the **runtime side**: making lazy-push and lazy-pull actually do something, by plumbing them through `vibe-mcp` (M1.7) so the agent sees content at the right moment.
 
-Source: [PROP-003 §2.5.0](spec/modules/vibe-resolver/PROP-003-dep-evolution.md#delivery-modes), [PROP-004 §5.4](spec/research/PROP-004-tessl-comparative-research.md#three-modes).
+Source: [PROP-003 §2.5.0](spec/modules/vibe-resolver/PROP-003-dep-evolution.md#delivery-modes), [PROP-004 §5.4](legacy-spec/research/PROP-004-tessl-comparative-research.md#three-modes).
 
 **Scope.**
 
@@ -924,7 +924,7 @@ Source: [PROP-003 §2.5.0](spec/modules/vibe-resolver/PROP-003-dep-evolution.md#
 
 **Thesis.** Tessl's most architecturally distinctive primitive: scenarios generated from a project's actual git history, not synthetic tests. Once `vibe-eval` exists (M1.8) and `vibe-llm` is real (M1.5.1), `vibe scenario generate <repo> --commits=<...>` reads diffs, generates `task.md` + `criteria.json` + `scenario.json` triples, runs them as evals.
 
-Source: [PROP-004 §5.5](spec/research/PROP-004-tessl-comparative-research.md#codebase-readiness).
+Source: [PROP-004 §5.5](legacy-spec/research/PROP-004-tessl-comparative-research.md#codebase-readiness).
 
 **Scope.**
 
@@ -939,7 +939,7 @@ Source: [PROP-004 §5.5](spec/research/PROP-004-tessl-comparative-research.md#co
 
 **Thesis.** With ~3 packages today, `vibe install` is fine; with 100+ it won't be. Tessl ships `tessl search` as a registry-side feature; vibevm's decentralised model needs an index to make search tractable at scale.
 
-Source: [PROP-004 §5.12](spec/research/PROP-004-tessl-comparative-research.md#search), [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md).
+Source: [PROP-004 §5.12](legacy-spec/research/PROP-004-tessl-comparative-research.md#search), [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md).
 
 **Shipped.**
 
@@ -984,7 +984,7 @@ M2 decisions keep these futures open rather than foreclosing them.
 
 **Thesis.** Standard package-manager security (CVE feeds, dependency-vulnerability scanners) doesn't fit vibevm's surface — packages are spec-content, not arbitrary code. The threat surface is *prompt injection / capability misrepresentation / data-exfiltration via subtle wording*. Needs a research slice to define the threat model before any scanner can be built.
 
-Source: [PROP-004 §5.9](spec/research/PROP-004-tessl-comparative-research.md#security).
+Source: [PROP-004 §5.9](legacy-spec/research/PROP-004-tessl-comparative-research.md#security).
 
 Not action-eligible. Park as research; revisit when adoption surfaces real threats.
 
@@ -1038,7 +1038,7 @@ waits, so a future session can pick it up without archaeology.
   lifecycle. The v0.1 agentic line deliberately spawns the CONSUMER's
   own rust-analyzer over LSP instead (consumer-toolchain posture, tiny
   dependency surface, weekly-release API churn avoided) — see
-  [AGENTIC-TCG-RUST-PLAN-v0.1 D1](spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md).
+  [AGENTIC-TCG-RUST-PLAN-v0.1 D1](legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md).
   The embedding is «сильно-сильно позже»: it re-enters planning only
   when the oracle's answer quality is limited by what LSP can express,
   and it costs pinning our own r-a version against the consumer's

@@ -4,7 +4,7 @@ Scans known per-agent MCP-config files and SKILL.md paths, compares the on-disk 
 
 Use after upgrading vibevm itself (`cargo install --path crates/vibe-cli`, new release, etc.) to pull the new SKILL.md body or wire-shape into agents that already had vibevm wired.
 
-Spec: [PROP-004 §5.1](../../spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 5).
+Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 5).
 
 ## Usage
 

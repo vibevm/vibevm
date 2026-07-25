@@ -266,5 +266,5 @@ When a vibevm release ships, run this guide top-to-bottom against a clean sandbo
 - [`docs/commands/mcp-status.md`](../commands/mcp-status.md) — read-only drift report.
 - [`docs/commands/mcp-serve.md`](../commands/mcp-serve.md) — server wire format.
 - [`crates/vibe-cli/src/commands/skill_template.md`](../../crates/vibe-cli/src/commands/skill_template.md) — the SKILL.md body the binary ships (two-state).
-- [`spec/research/PROP-004-tessl-comparative-research.md`](../../spec/research/PROP-004-tessl-comparative-research.md) §5.1 — design rationale for MCP integration.
+- [`legacy-spec/research/PROP-004-tessl-comparative-research.md`](../../legacy-spec/research/PROP-004-tessl-comparative-research.md) §5.1 — design rationale for MCP integration.
 - [`spec/WAL.md`](../../spec/WAL.md) — slice-4 + slice-5 checkpoints.

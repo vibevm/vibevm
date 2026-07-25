@@ -2,7 +2,7 @@
 
 Detects supported coding agents on this machine + the current project, writes the per-agent MCP server configuration, and (optionally) installs the `vibevm` SKILL.md instructing the agent how to use vibevm. Idempotent — already-correct configs surface as `unchanged`.
 
-Spec: [PROP-004 §5.1](../../spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slices 4 + 5).
+Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slices 4 + 5).
 
 ## Two scopes — project vs user
 

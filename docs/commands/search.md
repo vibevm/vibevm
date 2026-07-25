@@ -4,7 +4,7 @@ Search every `[[registry]]` configured in `vibe.toml` for packages whose name, d
 
 `vibe search` consults each registry's optional **package index** ([PROP-005](../../spec/modules/vibe-index/PROP-005-package-index.md)) — a per-org metadata service that ships separately from the registry itself. Without an index URL configured for a registry, that registry is reported as `registries_unconfigured` in the envelope and silently skipped. Without an index there is nothing fast to query — naive `git ls-remote`-shape enumeration across an org of 100+ packages would be unacceptably slow, so the search command refuses to do that. Operators that want search either run their own [`vibe-index`](../../crates/vibe-index/) instance or wait for one to land at the upstream org.
 
-Spec: [ROADMAP §M2.10](../../ROADMAP.md), [PROP-005 §2.10](../../spec/modules/vibe-index/PROP-005-package-index.md#index-routes), [PROP-004 §5.12](../../spec/research/PROP-004-tessl-comparative-research.md#search).
+Spec: [ROADMAP §M2.10](../../ROADMAP.md), [PROP-005 §2.10](../../spec/modules/vibe-index/PROP-005-package-index.md#index-routes), [PROP-004 §5.12](../../legacy-spec/research/PROP-004-tessl-comparative-research.md#search).
 
 ## Usage
 
