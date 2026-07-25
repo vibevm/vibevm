@@ -233,7 +233,27 @@ and A1 and A4 change phases that follow, so read them before opening C.**
    corpus is 1.8× the host in facts while being only 1.07× in lines, so
    prediction 5's "comparable cost" reads right on lines and light on facts.
    `progress check` **0** across both corpora.
-2. **Close the fact-grain specmap gap first.** `core-ai-native` **v0.8.0**
+2. **DEFERRED — owner ruling 2026-07-26: «не перевыпускай пакет, сделаем это
+   потом».** The re-mint does not happen in this session, so **Phase C cannot
+   open**: its evidence join needs fact anchors, and the engine the host
+   consumes cannot see them. Phase A's exit gate is correspondingly
+   **partially unreachable** — the `specmap.json` clause below waits on this
+   step, and Phase A closes on its other two clauses only. Diagnosis confirmed
+   verbatim before deferring: `is_valid_fact_id` exists **only** in
+   `core-ai-native/v0.8.0`; `vibe.lock` pins `core-ai-native@=0.7.0` and
+   `rust-ai-native-lang@=0.7.0`; `cargo xtask sync-engines --check` is green
+   (33 pairs, 6 sync sets), so nothing has drifted — the gap is a version, not
+   a divergence. Three things must be settled when it is taken up, and all
+   three are the owner's: publishing is a Rule 4 red line; the host resolves
+   these packages from a **second, stale working copy**
+   (`file:///C:/Users/olegc/gits/vibevm/…`, last commit `c112f6f`), so a
+   re-mint in this copy is invisible to the host until the resolve is
+   repointed; and the network registries 401 on this machine. *A local
+   repoint + lockfile bump would very likely avoid publishing altogether —
+   publication is only needed for external consumers.* The original step
+   follows, unchanged, for whoever takes it up:
+
+   **Close the fact-grain specmap gap first.** `core-ai-native` **v0.8.0**
    carries the fact-aware engine (`mdspec.rs` uses `is_valid_fact_id`);
    `rust-ai-native-lang` **v0.7.0** vendors the **v0.7.0** engine, which
    predates the amendment, and that is the version the host consumes. Re-mint
@@ -382,6 +402,24 @@ command that would have tested it.
   in wave 1 predicted it. Wave 1 closed out the same day: 4 488 confirmed /
   1 drift / 3 unverifiable of 4 492, `baseline.json` written and round-tripped,
   Phases F and G deferred into this campaign for want of inputs (A3).
+
+- **2026-07-26 · Phase A step 1 CLOSED; step 2 DEFERRED by owner ruling.**
+  Scope widened, zone `campaigns/packages-2026-09/` created and seeded.
+  **Observed: 344 files (58 host + 286 packages), 13 916 facts, 8 997
+  unmarked; `progress check` 0 across both corpora.** The step's purpose was
+  to confirm a number and the number was wrong — 286 package files, not the
+  294 §1 claimed; the eight are extractor test fixtures dropped by
+  `DEFAULT_EXCLUDES`' always-on `fixtures` rule, correctly, since one of each
+  clean/dirty pair is deliberately malformed. **Step 2 (the v0.8.0 re-mint)
+  deferred** — «не перевыпускай пакет, сделаем это потом» — which means
+  **Phase C cannot open** and Phase A's `specmap.json` exit clause is
+  unreachable; the full statement, including the three things that must be
+  settled and the local-repoint resolution that would avoid publishing
+  altogether, is in the campaign's `deferrals.md#engine`. Two facts recorded
+  in passing: `sync-engines --check` is green across 33 pairs (nothing has
+  drifted — the gap is a version), and **with two campaign zones present a
+  bare `vibe progress` command silently drops to ad-hoc mode and stops
+  writing state**, so every command now needs an explicit `--campaign`.
 
 ## 8. Deferrals {#deferrals}
 
