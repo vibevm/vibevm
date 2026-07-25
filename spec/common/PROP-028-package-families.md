@@ -80,10 +80,11 @@ the aggregator holds its members equal. @impl/done
   `rust-ai-native-lang`, `rust-ai-native-mcp`, and the aggregator are all 0.7.0. @impl/done
 - ##MIRROR-PAIRWISE The `-mcp` member's version-mirroring of `-lang` (PROP-027 §2.3) is the pairwise
   case of this whole-family law. @impl/done
-- ##family-standings The families currently stand at: rust
-  **0.7.0**, typescript **0.6.0**, and the shared foundation core-ai-native
-  **0.7.0** — a foundation is not in any one family's unison, it bumps on its own
-  content and every family widens its `^` floor to meet it. @impl/done
+- ##family-standings The families currently stand at: rust **0.7.0**, typescript
+  **0.6.0**, go **0.1.0** (the aggregator plus its `-lang` and `-mcp` members), and
+  the shared foundation core-ai-native **0.8.0** — a foundation is not in any one
+  family's unison, it bumps on its own content and every family widens its `^`
+  floor to meet it. @impl/done
 
 ### 2.3 The families in force {#families}
 

@@ -16,8 +16,8 @@
 
 - ##cache-exists vibevm already keeps a registry cache (`VIBEVM_REGISTRY_CACHE` / `vibe_registry::default_cache_root()`): registry repositories are cloned there, and `vibe install` / `vibe update` fetch through it. @spec/done
 - ##cache-incidental But the cache is an *implementation detail* — an opaque download accelerator, not a deliberate, inspectable, first-class store. @spec/done
-- ##no-offline-mode There is no `--offline` mode: every `vibe install` / `vibe update` that re-resolves walks the network ([PROP-009](../vibe-workspace/PROP-009-loading-model.md) established that `vibe install` always re-resolves). @spec/done
-- ##no-local-resolve A developer behind an air-gap, on a slow link, or simply wanting fast deterministic iteration has no way to say *resolve against what I already have*. @spec/done
+- ##no-offline-mode *(The motivation as captured; both halves have since been answered.)* There was no `--offline` mode: every `vibe install` / `vibe update` that re-resolved walked the network, and `vibe install` always re-resolved. `--offline` shipped with [PROP-002 §2.2.2.1](PROP-002-decentralized-registry.md), and PROP-011's freshness skip ended the unconditional re-resolve. @spec/done
+- ##no-local-resolve A developer behind an air-gap, on a slow link, or simply wanting fast deterministic iteration had no way to say *resolve against what I already have*. `--offline`, the embedded and project-local registries (PROP-030) and the lockfile-respecting install now say exactly that; what this PROP still adds is the **machine-global accretive store** behind them. @spec/done
 
 - ##maven-model The model is the Maven `~/.m2` repository: a **machine-global, accretive package store** that resolution can run against with no network. vibevm adapts it. @spec/done
 - ##consumers-already-offline The crucial adaptation is that vibevm already commits `vibedeps/` (PROP-009 §2.1) — so a *consumer* of a project is already fully offline: a fresh clone boots and reads its spec corpus with no `vibe install` at all. @spec/done

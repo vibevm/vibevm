@@ -118,7 +118,7 @@ fp(P) = hash(
 - ##FP-STATIC-FLIP Any change **inside** a static zone — content, version, edge set, **or a `link`-type switch** (which resolution does **not** see, §2.8) — flips `fp` up the continuous static chain to the first dynamic break. @impl/done
 - ##FP-SOFT-TRANSITION The soft-hoist term makes a **single→multi static-use transition** (a new consumer statically links `L`, so `L` must now hoist) flip `fp` for the affected units — the nonlocal invalidation soft costs, made explicit so tests target it (§3). @impl/done
 
-##fp-storage-note Fingerprint storage location and granularity are open (§5). @spec/work
+##fp-storage-note Fingerprint storage location and granularity were open here; §5 resolved both on 2026-07-15 — header storage (`RES-FP-STORAGE`) and per-package granularity (`RES-GRANULARITY`). @impl/done
 
 ### 2.8 Incremental regeneration — the dirty subgraph {#incremental}
 
@@ -143,7 +143,7 @@ fp(P) = hash(
 ##TEST-CENTRAL-RISK This system's central risk is **losing or failing to regenerate a dependency** when the graph changes. The contract: @impl/done
 
 - ##TEST-DIFFERENTIAL-ORACLE **The differential oracle is mandatory and central.** `incremental_regen(any mutation sequence)` MUST equal `full_regen_from_scratch()`, byte-for-byte. Full regeneration is the reference semantics (it cannot silently drop anything); incremental must match it. This is the AI-Native Rust differential-oracle idiom applied to bootgen. @impl/done
-- ##TEST-MUTATION-FUZZ **Property-based mutation fuzzing.** Generate random DAGs (packages + edges with random link modes), apply random sequences of `add-edge` / `remove-edge` / `change-link` / `bump-version` / `edit-content`, assert `incremental == full` after each. Targets the combinatorial "forgot to regenerate in a rare topology" — including the §2.7 nonlocal soft invalidation. @spec/done
+- ##TEST-MUTATION-FUZZ **Property-based mutation fuzzing.** Generate random DAGs (packages + edges with random link modes), apply random sequences of `add-edge` / `remove-edge` / `change-link` / `bump-version` / `edit-content`, assert `incremental == full` after each. Targets the combinatorial "forgot to regenerate in a rare topology" — including the §2.7 nonlocal soft invalidation. **Shipped:** `boot/hybrid/fuzz.rs` runs the proptest sweep and names this DEF-5 in its own header. @impl/done
 - ##TEST-GOLDEN-INVARIANTS **Invariants as characterization goldens:** *no-loss / reachability* (units reachable through `STATIC.md`+`INDEX.md` == resolved closure; nothing dropped, nothing dangling); *completeness* (every static child is compiled in; every dynamic child is a reference, not compiled); *no-stale* (recomputed `fp` == stored `fp` for every unit); *boundary isolation* (a mutation behind a dynamic edge does not change the parent unit's `STATIC.md`); *idempotency* (a no-op `vibe install` recompiles nothing, zero git diff); *dedup-at-read* (the read-set reads a duplicated/hoisted package once). @impl/done
 - ##TEST-CHECK-INTEGRITY **`vibe check` boot-graph integrity.** The existing `vibe-check` `boot_directory` check gains a boot-graph pass: fingerprints current, reachability complete — so "did everything regenerate?" is answerable in CI and by hand. @impl/done
 

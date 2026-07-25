@@ -47,7 +47,7 @@
 - ##EFF-MIRROR-SUBSTITUTION a compromised mirror cannot silently substitute content — the mismatch triggers hard fail before any write; @impl/done
 - ##EFF-FORCE-PUSH-CAUGHT a force-pushed tag upstream is caught by the same machinery on the next install. @impl/done
 
-##TRUST-MIRROR-HATCH Escape hatch for legitimate mirror-vs-upstream divergence (e.g. during an upstream outage): `--trust-mirror` flag on `vibe install` / `vibe update`. Never silent; always operator-initiated. @impl/done
+##TRUST-MIRROR-HATCH Escape hatch for legitimate mirror-vs-upstream divergence (e.g. during an upstream outage): a `--trust-mirror` flag on `vibe install` / `vibe update`. Never silent; always operator-initiated. **Specified, not shipped** — the CLI carries `--trust-redirect` (a different hatch, for redirect chains) and no mirror equivalent; an operator hitting mirror divergence today has no flag. @spec/done
 
 ### 2.2 Registry model: `[[registry]]` array, priority-ordered {#registry-model}
 
@@ -202,7 +202,7 @@ ref        = "my-fix-branch"                # tag, branch, or commit
 reason     = "awaiting upstream PR #42"     # surfaces in `vibe list --overrides`
 ```
 
-##OVERRIDE-SEMANTICS The resolver short-circuits: it does not consult `[[registry]]` for this pkgref at all; it fetches directly from the given URL at the given ref. Content hash is still pinned in the lockfile and verified on each install — an override does not relax integrity. The lockfile records `overridden = true` on that entry; `vibe list` gains an `--overrides` flag. @impl/done
+##OVERRIDE-SEMANTICS The resolver short-circuits: it does not consult `[[registry]]` for this pkgref at all; it fetches directly from the given URL at the given ref. Content hash is still pinned in the lockfile and verified on each install — an override does not relax integrity. The lockfile records `overridden = true` on that entry. A `vibe list --overrides` flag is specified here and **not shipped** — the lockfile field is the only surface today. @impl/done
 
 ##override-analogues This is the vibevm analogue of Cargo's `[patch]` and Go's `replace`. Same shape, same use case: pinning a fork during an in-flight upstream PR, emergency hotfixes, internal forks of public packages. @spec/done
 
@@ -287,7 +287,7 @@ reason     = "awaiting upstream PR #42"     # surfaces in `vibe list --overrides
 
 ##GS-TOKEN-DISCIPLINE The token-discipline contract from §2.2.1 (read once, in-memory, scrubbed from `.git/config` after bootstrap) applies identically to git-source. @impl/done
 
-##GS-CACHE-SLOT **Cache layout.** Same as registry-resolved (§2.6), keyed by canonical URL hash. A git-source pointing at `https://github.com/me/flow-internal` lives at `~/.vibe/registries/<sha256(canonical-url)>/packages/flow-internal/clone/`. Multiple git-source declarations across different consumer projects pointing at the same URL share the same cache slot. @impl/done
+##GS-CACHE-SLOT **Cache layout.** Same as registry-resolved (§2.6), keyed by canonical URL hash. A git-source pointing at `https://github.com/me/flow-internal` lives at `~/.vibe/registries/<sha256(canonical-url)>/packages/<group>.<name>/clone/` — the qualified form since M1.19 (this line originally showed the earlier kind-name path `packages/flow-internal/clone/`). Multiple git-source declarations across different consumer projects pointing at the same URL share the same cache slot. @impl/done
 
 ##GS-LOCKFILE-SOURCE-KIND **Lockfile schema.** A new `source_kind` field per `[[package]]` makes the resolution path explicit: @impl/done
 
@@ -317,7 +317,7 @@ overridden      = false
 | ##ROW-CMP-PAIRS Pairs with @impl/done | A bare `[requires.packages]` entry? No — git-source IS the declaration @impl/done | A `[requires.packages]` entry — override patches it @impl/done |
 | ##ROW-CMP-LOCKFILE Lockfile marker @impl/done | `source_kind = "git"` @impl/done | `source_kind = "override"`, `overridden = true` @impl/done |
 | ##ROW-CMP-LIFETIME Typical lifetime @impl/done | Long-lived (project's normal architecture) @impl/done | Short-lived (awaiting upstream PR / hotfix) @impl/done |
-| ##ROW-CMP-LIST `vibe list --overrides` @impl/done | Not surfaced (it is a normal dependency) @impl/done | Surfaced @impl/done |
+| ##ROW-CMP-LIST `vibe list --overrides` (specified, not shipped) @spec/done | Not surfaced (it is a normal dependency) @impl/done | Surfaced via the lockfile's `overridden` field @impl/done |
 | ##ROW-CMP-REMOVAL Removal @impl/done | `vibe uninstall <pkgref>` drops the entry @impl/done | Drop the `[[override]]` block; the underlying dependency comes back @impl/done |
 
 ##GS-AND-OVERRIDE-COMPOSE A project may use both: declare `flow:internal` through `[requires.packages]` git-source (the architecture), and override `flow:wal` through `[[override]]` while waiting for an upstream fix (the patch). The override always wins. @impl/done
@@ -545,7 +545,7 @@ overridden      = false
 
 ##LIBSOLV-FALLBACK-SLOT **libsolv as explicit fallback.** A `DepSolver` trait in the new `vibe-resolver` crate mirrors the PROP-001 §2.2 `GitBackend` pattern: primary impl is `ResolvoSolver`; a future `LibsolvSolver` (FFI to C libsolv, BSD-3-Clause) drops in as a feature-gated alternative if resolvo ever hits a ceiling we can't raise. Swap cost: one impl block, one factory line. PROP-000 §15 (dep-weight not an argument) removes the size-based objection; PROP-000 §18 explicitly contemplates the switch if complexity demands. @impl/done
 
-##SOLVER-IDENTITY-FIELD The `lockfile.meta.solver = "resolvo-<ver>"` field records the solver identity so a future lockfile produced by `libsolv` is distinguishable, and a lockfile produced by an older resolvo can be re-verified by the same solver version when integrity investigation matters. @impl/done
+##SOLVER-IDENTITY-FIELD A `lockfile.meta.solver = "resolvo-<ver>"` field would record the solver identity so a lockfile produced by a different engine is distinguishable, and one produced by an older resolvo can be re-verified by the same version when integrity investigation matters. **Specified, not shipped:** the live `[meta]` block has no `solver` key, and [PROP-017 §8](../vibe-resolver/PROP-017-resolvo-resolver.md) records the gap — adding it needs a lockfile schema bump. @spec/done
 
 ### 2.9 Capability-based deps: `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]` {#capability}
 
@@ -716,7 +716,7 @@ overridden      = false
 ##phase-b-preview-lead Pinned here so Phase A does not accidentally foreclose any of these options: @impl/done
 
 - ##PBP-MULTI-LIVE Real multi-registry: a second live `[[registry]]` exercised end-to-end; priority ordering verified in smoke-test. @impl/done
-- ##PBP-MIRROR-CHAIN Mirror fallback chain: second live mirror URL; integrity hard-fail; `--trust-mirror` escape hatch. @impl/done
+- ##PBP-MIRROR-CHAIN Mirror fallback chain: the second-live-mirror URL and the integrity hard-fail both ship (the fallback loop in `git_package_registry/fetch.rs`, `fetch_with_expected_hash`, the M1.6 mirror-vendor smoke); the `--trust-mirror` escape hatch does not. @impl/done
 - ##PBP-VENDOR `vibe vendor [--out <dir>]`: generates a local mirror directory, usable as `file://` `[[mirror]]`. @impl/done
 - ##PBP-CLI-SURFACE CLI management surface: `vibe registry add / list / remove / set-mirror / status`. @impl/done
 - ##PBP-PUBLISH-ADAPTERS Publish adapters: GitHub, Gitea, Forgejo on adopter demand — one new `RepoCreator` impl per host. @impl/done

@@ -2,12 +2,14 @@
 
 <status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-27, owner-directed; fact grain 2026-07-24"/>
 
-##status-line **Status:** proposed 2026-06-27 — owner-directed. Makes a vibe package able to
+##status-line **Status: IMPLEMENTED** (proposed 2026-06-27, owner-directed; verified against
+the tree 2026-07-25 by the spec-actualization campaign — this very session boots on a
+vendored toolchain delivered exactly this way). Makes a vibe package able to
 ship runnable code, not only prompt content, so the discipline's verification
 tools (the conform checker, the specmap/specmark traceability engine) can live
 *inside* the discipline packages instead of being hardcoded in the vibevm
 workspace. A consumer who installs `stack:org.vibevm.ai-native/rust-ai-native-lang` then has
-the working checkers, not a prose description of them. @spec/done
+the working checkers, not a prose description of them. @impl/done
 
 ##related **Related:** [PROP-002 §2.1](../modules/vibe-registry/PROP-002-decentralized-registry.md#identity)
 (content-hash identity — re-scoped here to the shippable tree),
@@ -19,8 +21,8 @@ the working checkers, not a prose description of them. @spec/done
 package source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.md)
 (the `post-install` build hook), [PROP-022 §2.2](../modules/vibe-workspace/PROP-022-materialization-modes.md#snapshot)
 (the snapshot copy — re-scoped here), the discipline mechanism specs
-[ENGINE-CONFORM](../../vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
-[PROP-014](../../vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
+[ENGINE-CONFORM](../../vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
+[PROP-014](../../vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
 (the tools that relocate; the specs themselves now ship in
 `flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…`). @spec/done
 
@@ -241,16 +243,20 @@ L4 (implemented checkers) ships in the package whose language they check. @spec/
   in `stack:org.vibevm.ai-native/rust-ai-native-lang`. Its centre of gravity is Rust, and
   shipping the toolchain whole avoids carving language-neutral cores out under
   time pressure. @spec/done
-- ##CORE-STAYS-PROMPT-ONLY `flow:org.vibevm.ai-native/core-ai-native` stays **prompt-only** (manifesto, card
-  format, scaffold catalog, RAID, appendix) until a second language actually
-  needs the shared engine. @spec/done
+- ##CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:org.vibevm.ai-native/core-ai-native` was to stay
+  **prompt-only** (manifesto, card format, scaffold catalog, RAID, appendix) until a
+  second language actually needed the shared engine. The TypeScript pilot shipped, so
+  core-ai-native now **authors the neutral engines** (conform / specmap / specmark / mcp
+  cores), which each `-lang` and `-mcp` package vendors byte-identically. @impl/done
 - ##DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral conform engine (`conform-core`)
   is a genuine L1 artifact — a future `conform-frontend-typescript` would reuse
   it unchanged. Extracting `conform-core` up into `discipline-core` is a clean
   follow-up, taken when the first non-Rust pilot needs it (YAGNI until then).
   Likewise the neutral half of `specmap-core` (markdown parse, index, ledger,
   test-gate) versus its Rust `rscan` frontend. The end state is symmetric; the
-  ordering is driven by real second-language demand, not built speculatively. @spec/done
+  ordering is driven by real second-language demand, not built speculatively.
+  **Executed** — the TypeScript pilot was that demand, and the neutral halves now live
+  in core-ai-native, vendored into each family by `cargo xtask sync-engines`. @impl/done
 
 ---
 
@@ -302,9 +308,10 @@ L4 (implemented checkers) ships in the package whose language they check. @spec/
   does not infer `cargo` vs `npm`. @spec/done
 - ##OOS-SANDBOX **Sandboxing the build hook** — inherits PROP-020 §4's posture (hooks run with
   the user's privileges; trust is the allow-list + consent). @spec/done
-- ##OOS-TS-CHECKER **The TypeScript checker implementation** — TypeScript ships no implemented
-  tool in vibevm to relocate; its cards keep `specified` checker statuses until
-  a TS pilot exists (§2.6 deferral). @spec/done
+- ##OOS-TS-CHECKER **Out of scope when written; since delivered.** TypeScript shipped no
+  implemented tool to relocate, so its cards kept `specified` checker statuses until a
+  TS pilot existed (§2.6 deferral). The `typescript-ai-native` family shipped with its
+  floor, conform and specmap engines — the deferral is closed. @impl/done
 
 ---
 

@@ -46,7 +46,9 @@ repository hosted on GitVerse (default
 
 ##mechanics-in-readme This PROP records the architectural decisions. The mechanics
 (`Registry` trait surface, error variants, wire-level command lines)
-live in the module's README as they land. @spec/done
+live in the crate's module documentation — `lib.rs` doc comments and the error
+strings that cite `spec://` anchors — not in a README; `crates/vibe-registry`
+has none. @impl/done
 
 ---
 
@@ -230,9 +232,10 @@ regardless of age. @impl/done
 one working session, long enough to amortise network round-trips over
 a burst of installs. Revisit once real usage arrives. @spec/done
 
-##NO-OFFLINE-YET **No `--offline` flag yet.** If the network is down during an implicit
-update, the pull fails and the install fails with a clear message.
-True offline-first mode is M2 polish. @impl/done
+##NO-OFFLINE-YET **Superseded — `--offline` shipped.** This recorded the M1 state: a
+network failure during an implicit update failed the install with a clear
+message. Offline resolution landed with [PROP-002 §2.2.2.1](PROP-002-decentralized-registry.md)
+(`url_is_local`) and the PROP-030 flag, and is live in `vibe install --help`. @impl/done
 
 ### 2.6 Lockfile `source_uri` format {#source-uri}
 
@@ -370,10 +373,10 @@ milestone is shippable. @impl/done
 
 ##parking-lot-lead None blocking. Parking lot: @spec/work
 
-- ##OPEN-GIT-BINARY-PATH Should we expose `ShellGit::git_binary: PathBuf` for users who have
-  git outside `PATH`? Probably yes, via an env var (`VIBE_GIT_BINARY`)
-  rather than a CLI flag, to keep the CLI surface stable. Defer to
-  first user request. @spec/work
+- ##OPEN-GIT-BINARY-PATH **Resolved — shipped as proposed.** The `VIBE_GIT_BINARY`
+  PATH override lives in `git_backend/shell.rs` and its comment cites §6 of this
+  PROP; the env-var form was chosen over a CLI flag exactly to keep the CLI
+  surface stable. @impl/done
 - ##OPEN-CACHE-LOCK Does the registry cache need a lock file against concurrent `vibe`
   invocations? Probably yes for M2; a crash mid-clone leaves a
   half-populated `clone/`. For M1, document the behaviour ("if a
