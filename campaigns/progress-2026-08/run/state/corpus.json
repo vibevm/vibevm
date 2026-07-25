@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T13:05:26Z",
+  "updated_at": "2026-07-25T13:25:31Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -453,7 +453,994 @@
       "facts": 161,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 161,
+        "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
+        "fact_count": 161,
+        "marker_count": 162,
+        "processed_hash": "41aaa1a2e111cf71de438482a9c566526ed441273708e7f2084e3a00412d03b2",
+        "summary": {
+          "confirmed": 149,
+          "drift": 12,
+          "unverifiable": 1
+        },
+        "verdicts": {
+          "DOC-PINS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "ASSUME-TRUE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "AMEND-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "SOURCE-AUTHORITY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "SPEC-WINS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "LANG-RUST": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "LANG-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MSRV-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MSRV-M0": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "LANG-REVISIT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "WORKSPACE-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CRATE-CLI": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CRATE-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CRATE-GRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CRATE-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CRATE-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CRATE-LLM": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CRATE-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "BUILD-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "BINARY-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "LICENSE-EULA": {
+            "v": "drift",
+            "ev": [
+              "says vibevm ships under a proprietary EULA with LICENSE.md placeholder terms; the root LICENSE.md is UPL-1.0 since 2026-07-12 (MT-05 dogfood relicense; CLAUDE.md license-state ledger) -> F-043"
+            ]
+          },
+          "NO-CRATES-IO": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "LICENSE-OWNER-CALL": {
+            "v": "drift",
+            "ev": [
+              "says relicense intent not final, vibevm stays proprietary until then - the LICENSE-REVISIT trigger FIRED and the UPL relicense happened -> F-043"
+            ]
+          },
+          "LICENSE-SPEC-DEFERS": {
+            "v": "drift",
+            "ev": [
+              "says the owner's choice is this proprietary EULA - the choice is UPL-1.0 now -> F-043"
+            ]
+          },
+          "DEPS-PERMISSIVE-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "COPYLEFT-FORBIDDEN": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PROPRIETARY-TIGHTENS": {
+            "v": "drift",
+            "ev": [
+              "premise (the proprietary license of vibevm itself) no longer holds; the permissive-only law itself stands unchanged in DEPS-PERMISSIVE-ONLY -> F-043"
+            ]
+          },
+          "LICENSE-REVISIT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MANIFEST-TOML": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "files-lead": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "FILE-VIBE-TOML": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "FILE-PACKAGE-TOML": {
+            "v": "drift",
+            "ev": [
+              "vibe-package.toml is retired (workspace fork 7e: one vibe.toml for everything; 00-core CONV-MANIFESTS) yet listed here as a living manifest -> F-043"
+            ]
+          },
+          "FILE-LOCK": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TOML-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "LAYOUT-PER-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "SPEC-DIR-FIXED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "VIBE-DIR-IGNORED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REFS-SRC-IGNORED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "IDENTITY-FORM": {
+            "v": "drift",
+            "ev": [
+              "identity is qualified since M1.19: [<kind>:]<group>/<name>@<version> with (group,name) unique (PROP-008 SS2.2); the unqualified form here predates it -> F-043"
+            ]
+          },
+          "KIND-SET": {
+            "v": "drift",
+            "ev": [
+              "lists four kinds; the register has five - mcp shipped with PROP-027 (and the SSInvariants INV-VOCABULARY in THIS file correctly lists five: internal inconsistency) -> F-043"
+            ]
+          },
+          "NAME-VERSION-RULES": {
+            "v": "drift",
+            "ev": [
+              "name unique within kind - superseded: unique within group (PROP-008) -> F-043"
+            ]
+          },
+          "constraint-forms-lead": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CF-LATEST": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CF-EXACT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CF-RANGE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REG-M0": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REG-M1": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REG-BACKEND-PIN": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INIT-DEFAULT-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "DEFAULT-RATIONALE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "URL-SSOT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "SPLIT-HOST-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "HOST-SOURCE-GITVERSE": {
+            "v": "drift",
+            "ev": [
+              "calls GitVerse the source-of-truth repository; PROP-016 (2026-06-14) supersedes: multi-homed, no host primary, mainline is the maintainer's local main -> F-043"
+            ]
+          },
+          "HOST-REGISTRY-GITHUB": {
+            "v": "drift",
+            "ev": [
+              "says per-package repos are <kind>-<name> per NamingConvention::KindName; Fqdn (<group>_<name>) is the default since M1.19 and legacy flow-* repos are archived (90-user REGISTRY-VIBESPECS, global_registry.rs:113) -> F-043"
+            ]
+          },
+          "REG-MIGRATION-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REG-GITHUB-WORKS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REG-HASH-STABLE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "HOST-LEGACY-READONLY": {
+            "v": "unverifiable",
+            "ev": [
+              "present-state claim (kept readable, HEAD 2203239) not re-checkable while the GitVerse network outage lasts (WAL known-issue); the dated record stands unfalsified - same verdict as 90-user LEGACY-REGISTRY in c0"
+            ]
+          },
+          "CACHE-REGISTRIES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CACHE-PACKAGES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "GRAPH-BUILTIN-NODES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "RUNNER-SEQUENTIAL": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TYPED-VALUES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "WORKFLOWS-QUERIES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CONFLICT-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "OBS-TRACING": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "OBS-OUTPUT-MODES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "OBS-EXIT-CODES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PLATFORMS-TRIO": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PATH-HANDLING": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CASING-RULES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "DEV-ON-WINDOWS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "CI-MATRIX-M2": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "GIT-PRACTICES-FAMILY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "GP-ATTRIBUTION": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "GP-CONVENTIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "GP-ATOMICITY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "GP-AUTONOMY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MIRROR-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "NO-TARGET-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "mirror-example": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "BOOT-SNIPPET-EXCEPTION": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MIRROR-WHY-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MIRROR-WHY-READABLE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MIRROR-PINNED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INSTALL-RELIES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-LOCATION": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-FLOW-POINTER": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-HERMETIC-SUITE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-LAST-MILE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-ISOLATION": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-GIT-BASH": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "mt-when-lead": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-WHEN-TAGGING": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-WHEN-CHANGES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-WHEN-REPRO": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "MT-WAL-NAMES": {
+            "v": "drift",
+            "ev": [
+              "the current WAL names no outstanding manual runs while MT-02/MT-03 sign-offs are genuinely pending (impl/work) - the naming practice lapsed in the campaign-era WAL -> F-043"
+            ]
+          },
+          "DEP-WEIGHT-NOT-FACTOR": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PICK-STRONGEST": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "WHY-PRECEDENT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "WHY-DEBT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "reject-reasons-lead": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REJECT-LICENSE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REJECT-ABANDONED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REJECT-SECURITY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "REJECT-ERGONOMICS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TOO-HEAVY-NOT-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "READMISSIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PROP-001-PRUNE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "JTD-SSOT": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "JTD-CODEGEN": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "NO-DUPLICATION": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "JTD-WHY-SKEW": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "JTD-OVER-JSONSCHEMA": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "JTD-IN-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "JTD-OUT-OF-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "toolchain-lead": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TC-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TC-SCHEMAS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TC-GENERATED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TC-REGEN": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TC-AGENT-SETS-UP": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TC-RUNAS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PROD-QUALITY-DAY-ONE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "FORMATS-BIND": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PRINCIPAL-LENS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "LENS-NOT-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "prod-consequences-lead": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PC-PREFER-DESIGNED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PC-EXTENSION-POINTS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PC-REVERSIBILITY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "PC-FIX-LATER-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "RPM-CLASS-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "RICH-DEPS-DAY-ONE": {
+            "v": "drift",
+            "ev": [
+              "the resolver actually implements ... semantic (LLM-reviewed) conflicts overshoots: the heuristic static mode shipped (PROP-003 CHECK-ACTIVATION-CONFLICT) but the LLM lane is pending with vibe-llm the emission engine unbuilt (PROP-003 B2 record); the other listed dimensions are shipped per PROP-017/PROP-003 -> F-043"
+            ]
+          },
+          "WIDER-THAN-RPM": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "UNDERSHOOT-COST": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "RESOLVER-RESOLVO": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "RESOLVER-LIBSOLV-FALLBACK": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "RESOLVER-PUBGRUB-REJECTED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "SETUP-DOCS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "DOC-DEV-GUIDE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "DOC-RUNTIME-GUIDE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "SETUP-DOCS-FLOW": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "req-token-secrecy": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TOKEN-SURFACE-SECRET": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "token-bindings-lead": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TS-NEVER-PRINTED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TS-NEVER-PERSISTED": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TS-BOUNDARIES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TS-ADAPTER-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "BLAST-RADIUS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "ROTATE-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "TOKEN-PINNED-WHERE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INVARIANTS-STOP-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INV-VOCABULARY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INV-SPEC-DIR": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INV-USER-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INV-ATOMIC-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INV-DOGFOOD": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INV-HUMAN-AUTHORSHIP": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "INV-TOKEN-SECRECY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "doc status tag consistent (foundational decisions in force; fact grain 2026-07-24)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:25:30Z",
+        "verify_batch": "c3b-prop-000"
+      }
     },
     {
       "path": "spec/common/PROP-006-operating-modes.md",

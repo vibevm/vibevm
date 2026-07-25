@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T13:05:25Z",
+ "updated_at": "2026-07-25T13:25:30Z",
  "findings": [
   {
    "id": "F-001",
@@ -379,6 +379,15 @@
    "status": "open",
    "wave": 0,
    "note": "Family roster aged: family-standings says core-ai-native 0.7.0 while packages/ ships v0.8.0, and the go-ai-native family (aggregator v0.1.0 + -lang + -mcp) is in force but absent from SS2.2/SS2.3. Also letter-vs-spirit: aggregators now carry LICENSE.md from the UPL relicense wave; ROLE-AGGREGATOR says vibe.toml + README and nothing else. One roster refresh fixes all three. Found by C c3a."
+  },
+  {
+   "id": "F-043",
+   "from": "spec/common/PROP-000.md",
+   "to": "LICENSE.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "The foundation aged in six spots, one sweep fixes all: SS3 still records the proprietary EULA (UPL-1.0 relicense happened 2026-07-12, the LICENSE-REVISIT trigger fired - rewrite the record per decision-records); SS4 lists the retired vibe-package.toml; SS6 records pre-qualified identity and four kinds while SSInvariants INV-VOCABULARY in the same file correctly lists five (internal inconsistency, r2-leftover class); SS7 calls GitVerse the source-of-truth (PROP-016 supersedes: no primary) and pins NamingConvention::KindName (Fqdn default since M1.19); SS14 MT-WAL-NAMES practice lapsed (pending MT sign-offs unnamed in the WAL); SS18 claims the resolver implements semantic LLM-reviewed conflicts (heuristic shipped, LLM lane pending). 12 drift verdicts in c3b."
   }
  ]
 }
