@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T14:52:12Z",
+ "updated_at": "2026-07-25T15:04:23Z",
  "findings": [
   {
    "id": "F-001",
@@ -487,6 +487,15 @@
    "status": "open",
    "wave": 0,
    "note": "Registry-rest small nits, one touch-up pass: (a) PROP-008's milestone line still reads 'design proposal ... Not implementation-locked' one line above its IMPLEMENTED status; (b) PROP-010's motivation pair aged — 'There is no --offline mode / every install walks the network / no way to resolve against what I already have' fell to the shipped --offline (PROP-002 §2.2.2.1), the embedded/local registries (PROP-030) and PROP-011's lockfile-respecting freshness skip; the PROP-010 store itself stays honestly DRAFT (ROADMAP M1.20)."
+  },
+  {
+   "id": "F-055",
+   "from": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
+   "to": "crates/vibe-core/src/settings.rs",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 0,
+   "note": "Test-isolation defect, caught by the phase-close floor run: install_from_git_registry isolates VIBE_REGISTRY_CACHE but NOT the settings chokepoint, so a real ~/.vibe/registry.toml (present on this machine since 2026-07-25 15:37, carrying vibespecs + vibespecs-gitverse) merges into the test resolver and produces a second cache bucket - the one-bucket assert at cli_pkg_cycle.rs:836 fails and the floor goes red. PROVEN: the same test passes with VIBE_SETTINGS pointed at an empty dir. The campaign touched no code (docs-only batches); the red is environmental. Phase E: the vibe() test harness (and any sibling e2e that resolves registries) must pin VIBE_SETTINGS to a tempdir - the same never-touch-real-user-state law the manual-tests flow states, applied inbound."
   }
  ]
 }

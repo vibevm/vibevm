@@ -10,7 +10,7 @@ is measured at 93.0 % confirmed; Phase D awaits the owner's call)_
 phase lane stays C until the owner opens Phase D (§5 entry law).**
 **Final tally: 4 455 units judged — 4 141 confirmed / 311 drift / 3
 unverifiable = 93.0 % / 7.0 % / 0.07 % — the first measured actuality
-level of the spec tree. Findings 54** (F-001…F-054; this session
+level of the spec tree. Findings 55** (F-001…F-054; this session
 minted F-045…F-054 and extended F-018/F-024/F-047/F-048 across ten
 batches c4a…c4f3). The §5-C prediction confirmed **mirrored**: drift
 concentrates in Status lines that promised *less* than the tree

@@ -1073,6 +1073,21 @@ read-only, no auth.
   the 311 rows. **Phase C is complete; the phase lane stays C — Phase
   D opens only on the owner's call, per the §5 entry law.**
 
+- **2026-07-25 · post-gate floor note — one red, root-caused, ledgered
+  (F-055).** The phase-close `self-check` run went red on
+  `cli_pkg_cycle::install_from_git_registry` ("expected one registry
+  cache bucket"). Root-caused and **proven** in-session: a
+  `~/.vibe/registry.toml` appeared on this machine today (15:37,
+  vibespecs + vibespecs-gitverse), and the test isolates
+  `VIBE_REGISTRY_CACHE` but **not the settings chokepoint**, so the
+  global registries merge into the "hermetic" resolver and mint a
+  second cache bucket. With `VIBE_SETTINGS` pointed at an empty dir
+  the same test passes. The campaign's commits are docs-only and
+  unrelated; the campaign's own gate (`progress check`) stays 0.
+  Ledgered as **F-055** (Phase E: the e2e harness pins
+  `VIBE_SETTINGS` to a tempdir — the never-touch-real-user-state law,
+  applied inbound). Findings close the phase at **55**.
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
