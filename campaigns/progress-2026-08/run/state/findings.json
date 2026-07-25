@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T14:01:39Z",
+ "updated_at": "2026-07-25T14:14:56Z",
  "findings": [
   {
    "id": "F-001",
@@ -415,6 +415,33 @@
    "status": "open",
    "wave": 0,
    "note": "Marker-vs-implementation parity family, both directions: impl/done over unshipped fragments - (a) EVIDENCE-SPECMAP: EvidenceProvider wired nowhere outside progress-core, no specmap join in report; (b) FACT-GRAIN-EVIDENCE: 0 fact units/edges in host specmap.json, consumed stack engine v0.7.0 predates the amendment (PROP-014 v0.8.0 S2.1 exists authored-side; awaits stack re-mint); (c) CMD-CHECK lists 'lossless folds' - no fold code anywhere; (d) STATE-FILES: campaign.json has no 'gates' field; (e) CMD-REPORT evidence column absent; (g) TOOL-INCREMENTAL: every run re-parses the full tree, Cache::is_current unused outside tests. AND spec/done under shipped code - (f) S7.3: BaselineUnit matches the record field-for-field, rescan CLI live with hash-suspect + marker-diverged (named-crates + control-sample still unimplemented). One Phase E DRIFT task (wire evidence/folds/gates/incremental + promote S7.3 markers) or one sync-from-code demotion sweep closes the family."
+  },
+  {
+   "id": "F-047",
+   "from": "crates/vibe-resolver/src/naive.rs",
+   "to": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Code-side stale deviates on PROP-002#solver: naive.rs:32 reason still claims 'no ResolvoSolver exists in tree and NaiveDepSolver is the only DepSolver impl (DBT-0011)' and sat.rs:174 claims 'adopting resolvo stays an owner decision' - while ResolvoDepSolver is the shipped PRODUCTION DEFAULT (vibe-cli/registry.rs:117 unwrap_or(\"resolvo\"), :191 constructs it; resolvo_engine/ module 'the production DepSolver cell'). The two deviates reasons aged behind the resolvo adoption they were waiting for. Phase E: rewrite or retire both #[spec(deviates)] blocks."
+  },
+  {
+   "id": "F-048",
+   "from": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+   "to": "crates/vibe-cli + crates/vibe-registry",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-002 present-state nits, one precision sweep: (a) --trust-mirror flag shipped nowhere (TRUST-MIRROR-HATCH, PBP-MIRROR-CHAIN cite it; only --trust-redirect exists, cli/registry.rs:226); (b) GS-EXACTLY-ONE-REF names MissingRef/ConflictingRefs - shipped as reason-strings on a shared parse error (semantics exact, deps.rs:160-166); (c) SOURCE-KIND-VALUES lists registry|git|override - PROP-007 added 'path' (LOCK-V4), PROP-030 added 'embedded'; a forward-ref would help; (d) vibe list --overrides promised (OVERRIDE-SEMANTICS, ROW-CMP-LIST) but no overrides flag exists in the CLI; (e) GS-CACHE-SLOT literal path shows kind-name era - live slot is packages/<group>.<name>/clone (M1.19). Fix = one wording/impl sweep, owner picks flag-vs-demote per item."
+  },
+  {
+   "id": "F-049",
+   "from": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+   "to": "crates/vibe-registry/src/git_backend/shell.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-001 touch-ups, one pass: (a) mechanics-in-readme says mechanics live in the module README - crates/vibe-registry has no README.md (they live in lib.rs module docs + spec-citing error strings); (b) NO-OFFLINE-YET ('No --offline flag yet', in the NOT-SUPERSEDED set) aged - --offline shipped via PROP-002 §2.2.2.1 with url_is_local; (c) OPEN-GIT-BINARY-PATH parking-lot entry resolved by shipped VIBE_GIT_BINARY (shell.rs:61-63 comment cites 'PROP-001 §6')."
   }
  ]
 }

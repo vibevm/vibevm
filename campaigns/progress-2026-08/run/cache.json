@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T14:01:50Z",
+  "updated_at": "2026-07-25T14:14:57Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -11168,7 +11168,581 @@
       },
       "marker_count": 93,
       "unit_count": 20,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 92,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 92,
+        "marker_count": 93,
+        "processed_hash": "a7965e9d25d4b9a70f0297007a274ed3eca248059ef014e26afff8c3b51625af",
+        "summary": {
+          "confirmed": 90,
+          "drift": 3,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "milestone-line": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "supersedes-line": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "superseded-lead": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "SUP-REGISTRY-TRAIT": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "SUP-CACHE-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "SUP-SOURCE-URI": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "NOT-SUPERSEDED": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "ARG-PRUNED": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "remaining-args": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "revisit-narrowed": {
+            "v": "confirmed",
+            "ev": [
+              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+            ]
+          },
+          "m0-state": {
+            "v": "confirmed",
+            "ev": [
+              "M0→M1 history + goals: all five requirements shipped and still live (clone/pull cache, LocalRegistry preserved, SSH auth via system git, cross-platform, zero native deps)"
+            ]
+          },
+          "M1-GOAL": {
+            "v": "confirmed",
+            "ev": [
+              "M0→M1 history + goals: all five requirements shipped and still live (clone/pull cache, LocalRegistry preserved, SSH auth via system git, cross-platform, zero native deps)"
+            ]
+          },
+          "REQ-CLONE-PULL": {
+            "v": "confirmed",
+            "ev": [
+              "M0→M1 history + goals: all five requirements shipped and still live (clone/pull cache, LocalRegistry preserved, SSH auth via system git, cross-platform, zero native deps)"
+            ]
+          },
+          "REQ-PRESERVE-LOCAL": {
+            "v": "confirmed",
+            "ev": [
+              "M0→M1 history + goals: all five requirements shipped and still live (clone/pull cache, LocalRegistry preserved, SSH auth via system git, cross-platform, zero native deps)"
+            ]
+          },
+          "REQ-SSH-AUTH": {
+            "v": "confirmed",
+            "ev": [
+              "M0→M1 history + goals: all five requirements shipped and still live (clone/pull cache, LocalRegistry preserved, SSH auth via system git, cross-platform, zero native deps)"
+            ]
+          },
+          "REQ-CROSS-PLATFORM": {
+            "v": "confirmed",
+            "ev": [
+              "M0→M1 history + goals: all five requirements shipped and still live (clone/pull cache, LocalRegistry preserved, SSH auth via system git, cross-platform, zero native deps)"
+            ]
+          },
+          "REQ-FOOTPRINT": {
+            "v": "confirmed",
+            "ev": [
+              "M0→M1 history + goals: all five requirements shipped and still live (clone/pull cache, LocalRegistry preserved, SSH auth via system git, cross-platform, zero native deps)"
+            ]
+          },
+          "mechanics-in-readme": {
+            "v": "drift",
+            "ev": [
+              "F-049(a): `crates/vibe-registry/README.md` does not exist — the mechanics live in lib.rs//module doc comments and in error strings that cite spec:// anchors, not in a README"
+            ]
+          },
+          "SHELL-OUT": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "backend-why-lead": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "WHY-SSH-WINDOWS": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "WHY-FOOTPRINT": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "WHY-DEBUGGABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "WHY-NO-PROGRAMMATIC": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "WHY-LICENSING": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "risks-lead": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "RISK-GIT-IN-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "RISK-STDERR-PARSING": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "revisit-lead": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "revisit-sparse": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "revisit-object-reads": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "revisit-credential-store": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "revisit-bundling": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "REVISIT-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "backend decision live: shell-out via std::process::Command (shell.rs), LC_ALL=C/LANG=C on every spawn (:6, :382), preflight git --version cached in OnceLock (:44,:69), actionable NotInstalled error; risks accepted as written; revisit conditions genuinely un-hit (no git2 anywhere: 0 hits in Cargo.toml)"
+            ]
+          },
+          "GITBACKEND-TRAIT": {
+            "v": "confirmed",
+            "ev": [
+              "GitBackend trait exact: bootstrap/update signatures live (git_backend/mod.rs:172,176 match the spec's fenced code verbatim), bootstrap-name rationale (std collision) holds, no mock impl exported — tests drive ShellGit against bare tempdir fixtures (tests.rs/tests_pure.rs)"
+            ]
+          },
+          "METHOD-NAME-NOTE": {
+            "v": "confirmed",
+            "ev": [
+              "GitBackend trait exact: bootstrap/update signatures live (git_backend/mod.rs:172,176 match the spec's fenced code verbatim), bootstrap-name rationale (std collision) holds, no mock impl exported — tests drive ShellGit against bare tempdir fixtures (tests.rs/tests_pure.rs)"
+            ]
+          },
+          "WHY-NARROW": {
+            "v": "confirmed",
+            "ev": [
+              "GitBackend trait exact: bootstrap/update signatures live (git_backend/mod.rs:172,176 match the spec's fenced code verbatim), bootstrap-name rationale (std collision) holds, no mock impl exported — tests drive ShellGit against bare tempdir fixtures (tests.rs/tests_pure.rs)"
+            ]
+          },
+          "implementations-lead": {
+            "v": "confirmed",
+            "ev": [
+              "GitBackend trait exact: bootstrap/update signatures live (git_backend/mod.rs:172,176 match the spec's fenced code verbatim), bootstrap-name rationale (std collision) holds, no mock impl exported — tests drive ShellGit against bare tempdir fixtures (tests.rs/tests_pure.rs)"
+            ]
+          },
+          "IMPL-SHELLGIT": {
+            "v": "confirmed",
+            "ev": [
+              "GitBackend trait exact: bootstrap/update signatures live (git_backend/mod.rs:172,176 match the spec's fenced code verbatim), bootstrap-name rationale (std collision) holds, no mock impl exported — tests drive ShellGit against bare tempdir fixtures (tests.rs/tests_pure.rs)"
+            ]
+          },
+          "IMPL-LIBGIT2-RESERVED": {
+            "v": "confirmed",
+            "ev": [
+              "GitBackend trait exact: bootstrap/update signatures live (git_backend/mod.rs:172,176 match the spec's fenced code verbatim), bootstrap-name rationale (std collision) holds, no mock impl exported — tests drive ShellGit against bare tempdir fixtures (tests.rs/tests_pure.rs)"
+            ]
+          },
+          "NO-MOCK": {
+            "v": "confirmed",
+            "ev": [
+              "GitBackend trait exact: bootstrap/update signatures live (git_backend/mod.rs:172,176 match the spec's fenced code verbatim), bootstrap-name rationale (std collision) holds, no mock impl exported — tests drive ShellGit against bare tempdir fixtures (tests.rs/tests_pure.rs)"
+            ]
+          },
+          "REGISTRY-TRAIT": {
+            "v": "confirmed",
+            "ev": [
+              "registry-trait superseded as recorded: GitPackageRegistry+MultiRegistryResolver are the per-package path; GitRegistry survives only as the legacy monorepo-shape reader (git_registry.rs:53, legacy comment :230) — 'retired from the primary path' holds; selection rule --registry-wins live"
+            ]
+          },
+          "CONSUMERS-UNCHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "registry-trait superseded as recorded: GitPackageRegistry+MultiRegistryResolver are the per-package path; GitRegistry survives only as the legacy monorepo-shape reader (git_registry.rs:53, legacy comment :230) — 'retired from the primary path' holds; selection rule --registry-wins live"
+            ]
+          },
+          "SELECTION-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "registry-trait superseded as recorded: GitPackageRegistry+MultiRegistryResolver are the per-package path; GitRegistry survives only as the legacy monorepo-shape reader (git_registry.rs:53, legacy comment :230) — 'retired from the primary path' holds; selection rule --registry-wins live"
+            ]
+          },
+          "CACHE-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "LAYOUT-HASH": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "LAYOUT-NORMALIZED-URL": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "LAYOUT-META": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "LAYOUT-CLONE-DELEGATE": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "PER-PROJECT-CACHE-UNCHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "FRESHNESS-TTL": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "ttl-why": {
+            "v": "confirmed",
+            "ev": [
+              "cache layout superseded (per-package form verified in c4b §2.6); freshness TTL live: DEFAULT_FRESHNESS_SECS=3600 with 'vibe registry sync' force path (CLI verified); NO-OFFLINE-YET aged → F-049b"
+            ]
+          },
+          "NO-OFFLINE-YET": {
+            "v": "drift",
+            "ev": [
+              "F-049(b): aged — `--offline` IS shipped (PROP-002 §2.2.2.1 OFFLINE-LOCAL-ONLY impl/done; vibe_core::url_is_local live with a truth-table test at global_registry.rs:464); this §2.5 line still says 'No --offline flag yet' and sits in the NOT-SUPERSEDED set"
+            ]
+          },
+          "SOURCE-URI-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "source_uri format superseded exactly as the arc records (v2+ lockfile fields replace the #fragment form; live lock carries the field form)"
+            ]
+          },
+          "fragment-note": {
+            "v": "confirmed",
+            "ev": [
+              "source_uri format superseded exactly as the arc records (v2+ lockfile fields replace the #fragment form; live lock carries the field form)"
+            ]
+          },
+          "scheme-prefix-why": {
+            "v": "confirmed",
+            "ev": [
+              "source_uri format superseded exactly as the arc records (v2+ lockfile fields replace the #fragment form; live lock carries the field form)"
+            ]
+          },
+          "NO-WINDOW-FLAG": {
+            "v": "confirmed",
+            "ev": [
+              "Windows UX live: CREATE_NO_WINDOW on every spawn (shell.rs module doc :8), LC_ALL=C stderr keying, classify substrings (Permission denied/Could not resolve/not found) in classify_stderr_message, catch-all with raw stderr attached"
+            ]
+          },
+          "no-window-why": {
+            "v": "confirmed",
+            "ev": [
+              "Windows UX live: CREATE_NO_WINDOW on every spawn (shell.rs module doc :8), LC_ALL=C stderr keying, classify substrings (Permission denied/Could not resolve/not found) in classify_stderr_message, catch-all with raw stderr attached"
+            ]
+          },
+          "LOCALE-STDERR": {
+            "v": "confirmed",
+            "ev": [
+              "Windows UX live: CREATE_NO_WINDOW on every spawn (shell.rs module doc :8), LC_ALL=C stderr keying, classify substrings (Permission denied/Could not resolve/not found) in classify_stderr_message, catch-all with raw stderr attached"
+            ]
+          },
+          "CLASS-EXIT-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "Windows UX live: CREATE_NO_WINDOW on every spawn (shell.rs module doc :8), LC_ALL=C stderr keying, classify substrings (Permission denied/Could not resolve/not found) in classify_stderr_message, catch-all with raw stderr attached"
+            ]
+          },
+          "CLASS-STDERR-SUBSTRINGS": {
+            "v": "confirmed",
+            "ev": [
+              "Windows UX live: CREATE_NO_WINDOW on every spawn (shell.rs module doc :8), LC_ALL=C stderr keying, classify substrings (Permission denied/Could not resolve/not found) in classify_stderr_message, catch-all with raw stderr attached"
+            ]
+          },
+          "CATCH-ALL": {
+            "v": "confirmed",
+            "ev": [
+              "Windows UX live: CREATE_NO_WINDOW on every spawn (shell.rs module doc :8), LC_ALL=C stderr keying, classify substrings (Permission denied/Could not resolve/not found) in classify_stderr_message, catch-all with raw stderr attached"
+            ]
+          },
+          "REJ-GIT2": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified: no git2 (0 Cargo hits), no hybrid backend, no sparse clone, cache is per-user not per-project (~/.vibe/registries), no vendored git binary"
+            ]
+          },
+          "REJ-HYBRID": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified: no git2 (0 Cargo hits), no hybrid backend, no sparse clone, cache is per-user not per-project (~/.vibe/registries), no vendored git binary"
+            ]
+          },
+          "REJ-SPARSE": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified: no git2 (0 Cargo hits), no hybrid backend, no sparse clone, cache is per-user not per-project (~/.vibe/registries), no vendored git binary"
+            ]
+          },
+          "REJ-PROJECT-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified: no git2 (0 Cargo hits), no hybrid backend, no sparse clone, cache is per-user not per-project (~/.vibe/registries), no vendored git binary"
+            ]
+          },
+          "REJ-VENDORING": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified: no git2 (0 Cargo hits), no hybrid backend, no sparse clone, cache is per-user not per-project (~/.vibe/registries), no vendored git binary"
+            ]
+          },
+          "OOS-HTTPS-AUTH": {
+            "v": "confirmed",
+            "ev": [
+              "M1.1 out-of-scope list: dated historical — HTTPS-auth/publish/multi-registry/offline all arrived in LATER slices exactly as an M1.1 OOS list predicts; LLM review and progress UI still absent"
+            ]
+          },
+          "OOS-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "M1.1 out-of-scope list: dated historical — HTTPS-auth/publish/multi-registry/offline all arrived in LATER slices exactly as an M1.1 OOS list predicts; LLM review and progress UI still absent"
+            ]
+          },
+          "OOS-LLM-REVIEW": {
+            "v": "confirmed",
+            "ev": [
+              "M1.1 out-of-scope list: dated historical — HTTPS-auth/publish/multi-registry/offline all arrived in LATER slices exactly as an M1.1 OOS list predicts; LLM review and progress UI still absent"
+            ]
+          },
+          "OOS-PROGRESS-UI": {
+            "v": "confirmed",
+            "ev": [
+              "M1.1 out-of-scope list: dated historical — HTTPS-auth/publish/multi-registry/offline all arrived in LATER slices exactly as an M1.1 OOS list predicts; LLM review and progress UI still absent"
+            ]
+          },
+          "OOS-MULTI-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "M1.1 out-of-scope list: dated historical — HTTPS-auth/publish/multi-registry/offline all arrived in LATER slices exactly as an M1.1 OOS list predicts; LLM review and progress UI still absent"
+            ]
+          },
+          "OOS-OFFLINE": {
+            "v": "confirmed",
+            "ev": [
+              "M1.1 out-of-scope list: dated historical — HTTPS-auth/publish/multi-registry/offline all arrived in LATER slices exactly as an M1.1 OOS list predicts; LLM review and progress UI still absent"
+            ]
+          },
+          "acceptance-lead": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-REGISTRY-TRAIT": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-GITBACKEND": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-PREFLIGHT": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-BOOTSTRAP-UPDATE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-CACHE-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-META-TIMESTAMP": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-FRESHNESS": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-E2E-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-MANUAL-SMOKE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-SYNC-FORCE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-NO-WINDOW": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-TESTS-GREEN": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "ACC-CLIPPY": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance historical and checked [x]: every box verified shippable 2026-04-22 (77 tests then); the machinery it names is still live today (Registry trait, ShellGit, preflight OnceLock, cache path, meta.toml timestamps, TTL semantics incl >= at TTL=0, CREATE_NO_WINDOW); M1.1-git-registry-smoke.md exists in manual-tests/"
+            ]
+          },
+          "parking-lot-lead": {
+            "v": "confirmed",
+            "ev": [
+              "parking lot: cache-lock question genuinely open (no lock machinery in registry_cache.rs; crash-mid-clone doc'd behaviour); git-binary question RESOLVED by shipped code → F-049c"
+            ]
+          },
+          "OPEN-GIT-BINARY-PATH": {
+            "v": "drift",
+            "ev": [
+              "F-049(c): the parked question is resolved by shipped code — `VIBE_GIT_BINARY` PATH-override lives at git_backend/shell.rs:61-63 and its comment cites 'PROP-001 §6'; the parking-lot entry ('defer to first user request') aged behind its own implementation"
+            ]
+          },
+          "OPEN-CACHE-LOCK": {
+            "v": "confirmed",
+            "ev": [
+              "parking lot: cache-lock question genuinely open (no lock machinery in registry_cache.rs; crash-mid-clone doc'd behaviour); git-binary question RESOLVED by shipped code → F-049c"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "accurate: accepted and shipped 2026-04-22, partially superseded by PROP-002 — the superseded-parts block matches PROP-002's supersedes-line item for item"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:14:56Z",
+        "verify_batch": "c4b-registry-core"
+      }
     },
     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
       "content_hash": "f75f8def5bc1eed2f9548a76c15f3f18863a984a119bd3b70262ee2d1949366e",
@@ -11191,7 +11765,1739 @@
       },
       "marker_count": 360,
       "unit_count": 35,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 285,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (74 cells); document <status> judged as _elements",
+        "fact_count": 359,
+        "marker_count": 360,
+        "processed_hash": "f75f8def5bc1eed2f9548a76c15f3f18863a984a119bd3b70262ee2d1949366e",
+        "summary": {
+          "confirmed": 281,
+          "drift": 5,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "milestone-line": {
+            "v": "confirmed",
+            "ev": [
+              "header block: milestone/status lines match ROADMAP M1.1-revision; supersedes list mirrors PROP-001's superseded-parts block item-for-item; F-032 (status-line aged, unchecked boxes) already ledgered in B and named by the document marker"
+            ]
+          },
+          "m1-monorepo-state": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "wrong-shape-verdict": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "nix-failure-pattern": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "nix-mistakes": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "shipped-shape-lead": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "SHAPE-OWN-REPO": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "SHAPE-REGISTRY-ARRAY": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "SHAPE-CONTENT-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "SHAPE-PLAIN-GIT-URL": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "impl-phases-lead": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "PHASE-A-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "PHASE-B-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "motivation verified as history + shipped shape: per-package repos live (vibespecs org, fqdn repo names), [[registry]] array + [[mirror]] + [[override]] all parsed (manifest/project.rs, 20 implements edges into #registry-model), plain-git-URL grammar (no host shorthands anywhere in tree), content identity via ContentHash + provenance newtypes"
+            ]
+          },
+          "identity-req": {
+            "v": "confirmed",
+            "ev": [
+              "identity live: fetch_with_expected_hash layers the content-hash check (fetch.rs:98,385-405 'source served content with unexpected content_hash'), provenance.rs newtypes keep SourceUrl informational citing §2.7; PROP-024 shippable-tree re-scope verified in c4a-era evidence (c3d); --trust-mirror gap ledgered separately (F-048)"
+            ]
+          },
+          "IDENTITY-TUPLE": {
+            "v": "confirmed",
+            "ev": [
+              "identity live: fetch_with_expected_hash layers the content-hash check (fetch.rs:98,385-405 'source served content with unexpected content_hash'), provenance.rs newtypes keep SourceUrl informational citing §2.7; PROP-024 shippable-tree re-scope verified in c4a-era evidence (c3d); --trust-mirror gap ledgered separately (F-048)"
+            ]
+          },
+          "IDENTITY-CONSEQUENCE": {
+            "v": "confirmed",
+            "ev": [
+              "identity live: fetch_with_expected_hash layers the content-hash check (fetch.rs:98,385-405 'source served content with unexpected content_hash'), provenance.rs newtypes keep SourceUrl informational citing §2.7; PROP-024 shippable-tree re-scope verified in c4a-era evidence (c3d); --trust-mirror gap ledgered separately (F-048)"
+            ]
+          },
+          "EFF-LOCKFILE-STABLE": {
+            "v": "confirmed",
+            "ev": [
+              "identity live: fetch_with_expected_hash layers the content-hash check (fetch.rs:98,385-405 'source served content with unexpected content_hash'), provenance.rs newtypes keep SourceUrl informational citing §2.7; PROP-024 shippable-tree re-scope verified in c4a-era evidence (c3d); --trust-mirror gap ledgered separately (F-048)"
+            ]
+          },
+          "EFF-MIRROR-SUBSTITUTION": {
+            "v": "confirmed",
+            "ev": [
+              "identity live: fetch_with_expected_hash layers the content-hash check (fetch.rs:98,385-405 'source served content with unexpected content_hash'), provenance.rs newtypes keep SourceUrl informational citing §2.7; PROP-024 shippable-tree re-scope verified in c4a-era evidence (c3d); --trust-mirror gap ledgered separately (F-048)"
+            ]
+          },
+          "EFF-FORCE-PUSH-CAUGHT": {
+            "v": "confirmed",
+            "ev": [
+              "identity live: fetch_with_expected_hash layers the content-hash check (fetch.rs:98,385-405 'source served content with unexpected content_hash'), provenance.rs newtypes keep SourceUrl informational citing §2.7; PROP-024 shippable-tree re-scope verified in c4a-era evidence (c3d); --trust-mirror gap ledgered separately (F-048)"
+            ]
+          },
+          "TRUST-MIRROR-HATCH": {
+            "v": "drift",
+            "ev": [
+              "F-048(a): `--trust-mirror` shipped nowhere — grep trust over the whole CLI finds only `--trust-redirect` (cli/registry.rs:226) and the vvm group-trust; the mirror escape hatch this unit promises does not exist"
+            ]
+          },
+          "registry-model-req": {
+            "v": "confirmed",
+            "ev": [
+              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+            ]
+          },
+          "REGISTRY-ARRAY": {
+            "v": "confirmed",
+            "ev": [
+              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+            ]
+          },
+          "REG-FIELD-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+            ]
+          },
+          "REG-FIELD-URL": {
+            "v": "confirmed",
+            "ev": [
+              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+            ]
+          },
+          "REG-FIELD-REF": {
+            "v": "confirmed",
+            "ev": [
+              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+            ]
+          },
+          "REG-FIELD-NAMING": {
+            "v": "confirmed",
+            "ev": [
+              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+            ]
+          },
+          "REGISTRY-WALK-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+            ]
+          },
+          "registry-auth-req": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "AUTH-REGIMES": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-AUTH-NONE": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-AUTH-TOKEN-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-AUTH-CREDENTIAL-HELPER": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-AUTH-SSH": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "TOKEN-ENV-DEFAULTING": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "TOKEN-NEVER-ON-DISK": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "SILENCING-BY-REGIME": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "SIL-NONE": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "SIL-TOKEN-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "SIL-CREDENTIAL-HELPER": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "SIL-SSH": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "UNATTENDED-ADDS-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-MTX-NONE": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-MTX-TOKEN-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-MTX-CREDENTIAL-HELPER": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "ROW-MTX-SSH": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "NONE-DEFAULT-SAFE": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "AUTH-MIGRATION": {
+            "v": "confirmed",
+            "ev": [
+              "auth regimes live: apply_common_env(force_silence) resets credential.helper/core.askPass/GIT_ASKPASS + GCM_INTERACTIVE=Never (shell.rs:353-382); regime-aware silencing incl unconditional-for-none (shell.rs:36 comment); auth.rs derive_default_token_env_name implements the host-derive rule; 3 verifies in tests_pure (143,153,199); 401-as-UnknownPackage walk verified — the very machinery this repo's own vibespecs-401 workaround exercises daily (WAL known-issue)"
+            ]
+          },
+          "global-config-req": {
+            "v": "confirmed",
+            "ev": [
+              "global config + offline + enabled all live by exact names: vibe_core::global_registry::merge_effective (:290, project-first dedupe), url_is_local (:346 + truth-table test :464), settings::registry_config_path (settings.rs:85); enabled filter at the single resolver-construction point (multi_registry_resolver/mod.rs:297-301, comment cites §2.2.3)"
+            ]
+          },
+          "GLOBAL-REGISTRY-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "global config + offline + enabled all live by exact names: vibe_core::global_registry::merge_effective (:290, project-first dedupe), url_is_local (:346 + truth-table test :464), settings::registry_config_path (settings.rs:85); enabled filter at the single resolver-construction point (multi_registry_resolver/mod.rs:297-301, comment cites §2.2.3)"
+            ]
+          },
+          "MERGE-PROJECT-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "global config + offline + enabled all live by exact names: vibe_core::global_registry::merge_effective (:290, project-first dedupe), url_is_local (:346 + truth-table test :464), settings::registry_config_path (settings.rs:85); enabled filter at the single resolver-construction point (multi_registry_resolver/mod.rs:297-301, comment cites §2.2.3)"
+            ]
+          },
+          "offline-local-req": {
+            "v": "confirmed",
+            "ev": [
+              "global config + offline + enabled all live by exact names: vibe_core::global_registry::merge_effective (:290, project-first dedupe), url_is_local (:346 + truth-table test :464), settings::registry_config_path (settings.rs:85); enabled filter at the single resolver-construction point (multi_registry_resolver/mod.rs:297-301, comment cites §2.2.3)"
+            ]
+          },
+          "OFFLINE-LOCAL-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "global config + offline + enabled all live by exact names: vibe_core::global_registry::merge_effective (:290, project-first dedupe), url_is_local (:346 + truth-table test :464), settings::registry_config_path (settings.rs:85); enabled filter at the single resolver-construction point (multi_registry_resolver/mod.rs:297-301, comment cites §2.2.3)"
+            ]
+          },
+          "enabled-req": {
+            "v": "confirmed",
+            "ev": [
+              "global config + offline + enabled all live by exact names: vibe_core::global_registry::merge_effective (:290, project-first dedupe), url_is_local (:346 + truth-table test :464), settings::registry_config_path (settings.rs:85); enabled filter at the single resolver-construction point (multi_registry_resolver/mod.rs:297-301, comment cites §2.2.3)"
+            ]
+          },
+          "ENABLED-FLAG": {
+            "v": "confirmed",
+            "ev": [
+              "global config + offline + enabled all live by exact names: vibe_core::global_registry::merge_effective (:290, project-first dedupe), url_is_local (:346 + truth-table test :464), settings::registry_config_path (settings.rs:85); enabled filter at the single resolver-construction point (multi_registry_resolver/mod.rs:297-301, comment cites §2.2.3)"
+            ]
+          },
+          "mirror-req": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "MIRROR-LAYER": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "MIR-PRIORITY-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "MIR-CANONICAL-FALLTHROUGH": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "MIR-CANONICAL-IN-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "MIRROR-INTEGRITY-MANDATORY": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "mirror-staging": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "failure-discriminator-req": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "discriminator-motivation": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "REGISTRY-WALK-SEMANTICS": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "AUTH-AWARE-401": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "MIRROR-WALK-SEMANTICS": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "discriminator-why-split": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "DISCRIMINATOR-UX": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "DISCRIMINATOR-IMPL": {
+            "v": "confirmed",
+            "ev": [
+              "mirror + discriminator live: mirror priority loop with debug-log fall-through (fetch.rs:122-147 'fetch served by mirror'/'mirror fetch failed; trying next'); canonical-URL-only lockfile (provenance.rs); classify_stderr_message in git_backend/shell.rs; RegistryError variants cite #failure-discriminator in their error strings (error.rs); 1 verify in walk/tests.rs; M1.6-mirror-vendor-smoke.md exists"
+            ]
+          },
+          "override-req": {
+            "v": "confirmed",
+            "ev": [
+              "override short-circuit live (multi_registry_resolver/sources.rs 2 edges; resolution order verified); lockfile overridden field in live schema; --overrides flag gap ledgered (F-048d)"
+            ]
+          },
+          "OVERRIDE-SHORT-CIRCUIT": {
+            "v": "confirmed",
+            "ev": [
+              "override short-circuit live (multi_registry_resolver/sources.rs 2 edges; resolution order verified); lockfile overridden field in live schema; --overrides flag gap ledgered (F-048d)"
+            ]
+          },
+          "OVERRIDE-SEMANTICS": {
+            "v": "drift",
+            "ev": [
+              "F-048(d): short-circuit + lockfile `overridden` field live (multi_registry_resolver/sources.rs; lockfile schema), but the promised `vibe list --overrides` flag exists nowhere in the CLI (grep overrides over cli/ = 0)"
+            ]
+          },
+          "override-analogues": {
+            "v": "confirmed",
+            "ev": [
+              "override short-circuit live (multi_registry_resolver/sources.rs 2 edges; resolution order verified); lockfile overridden field in live schema; --overrides flag gap ledgered (F-048d)"
+            ]
+          },
+          "git-source-req": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GIT-SOURCE-DECL": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-USE-PRIVATE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-USE-FORK": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-USE-CROSS-ORG": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-WIRE-FORM": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "gs-grammar-lead": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-GS-VERSION": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-GS-GIT": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-GS-TAG": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-GS-REV": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-GS-BRANCH": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-GS-AUTH": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-GS-TOKEN-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-EXACTLY-ONE-REF": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-RESOLUTION-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "RES-ORDER-OVERRIDE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "RES-ORDER-GIT-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "RES-ORDER-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "res-order-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-IDENTITY-VERIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-MUTABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-AUTH-EXPLICIT": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-AUTH-VIA-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-AUTH-PER-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-TOKEN-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-CACHE-SLOT": {
+            "v": "drift",
+            "ev": [
+              "F-048(e): the slot principle is live but the unit's literal path aged — shipped layout is `<hash>/packages/<group>.<name>/clone/` (git_package_registry/mod.rs:24,420-427, the M1.19 qualified-naming form), not `packages/flow-internal/clone` kind-name form"
+            ]
+          },
+          "GS-LOCKFILE-SOURCE-KIND": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "SOURCE-KIND-VALUES": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-TRANSITIVES": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "gs-vs-override-lead": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-CMP-ROLE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-CMP-PAIRS": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-CMP-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-CMP-LIFETIME": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "ROW-CMP-LIST": {
+            "v": "drift",
+            "ev": [
+              "F-048(d): the comparison row's 'Surfaced' claim rests on `vibe list --overrides`, which is not shipped"
+            ]
+          },
+          "ROW-CMP-REMOVAL": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-AND-OVERRIDE-COMPOSE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-ARRAY-MIGRATION": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "GS-SLICE-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "git-source live end-to-end: manifest table-form (package.rs + deps.rs + wire.rs, 8 implements), exactly-one-of tag/rev/branch enforced with tests ('requires exactly one of', deps.rs:160-166,351-358 — semantics exact, spec's MissingRef/ConflictingRefs names shipped as reason-strings, noted F-048b), 3 verifies in cli_pkg_cycle.rs (947,856,1016), M1.15-git-source-smoke.md exists; source_kind chain documented onward: v3 here → v4 PROP-007 §LOCK-V4 (path) → v5 PROP-008 (group)"
+            ]
+          },
+          "redirect-req": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-STUB": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "redirect-analogues": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-MARKER-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "redirect-grammar-lead": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-RD-TARGET-URL": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-RD-REF-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-RD-PINNED-REF": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-RD-AUTH": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-RD-TOKEN-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-RD-DESCRIPTION": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-RESOLVER-FLOW": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-STEP-PROBE-PACKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-STEP-PROBE-REDIRECT": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-STEP-PARSE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-REF-PASS-THROUGH": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-REF-PINNED": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-STEP-AUTH": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-STEP-REENTER": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-STEP-HOP-LIMIT": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-TAG-VISIBILITY": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-VERSION-GATING": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-SYNC-HELPER": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "redirect-trust-lead": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-TRUST-CONTENT-HASH": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-TRUST-FLAG": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-TRUST-DESCRIPTION": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-TRUST-SIGNED-FUTURE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-LOCKFILE-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "VIA-REDIRECT-DIAGNOSTIC": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-AUTH-LAYERS": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-AUTH-STUB": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "RD-AUTH-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-TOKEN-PLUMBING": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "redirect-comparison-lead": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-MECH-DIRECT": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-MECH-STUB": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-MECH-MIRROR": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-MECH-OVERRIDE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "ROW-MECH-GIT-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "STUB-VS-MIRROR-AXIS": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-CLI": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-CLI-SEMANTICS": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "REDIRECT-SLICE-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "redirect live wholesale: redirect_follow.rs implements probe order (vibe-package.toml then vibe-redirect.toml) + hop-limit guard; manifest/redirect.rs carries AmbiguousStub law; CLI redirect / redirect-sync / redirect-update shipped with --trust-redirect (cli/registry.rs:77,177,189,226); 12 implements + 8 verifies (cli_redirect.rs ×6); M1.16-redirect-smoke.md exists"
+            ]
+          },
+          "layout-req": {
+            "v": "confirmed",
+            "ev": [
+              "layout live: per-package flat repos with v-tags (live vibespecs registry consumed by this very machine); integrity per §2.1 via fetch_with_expected_hash"
+            ]
+          },
+          "FLAT-LAYOUT": {
+            "v": "confirmed",
+            "ev": [
+              "layout live: per-package flat repos with v-tags (live vibespecs registry consumed by this very machine); integrity per §2.1 via fetch_with_expected_hash"
+            ]
+          },
+          "LAYOUT-TAG-VERSION": {
+            "v": "confirmed",
+            "ev": [
+              "layout live: per-package flat repos with v-tags (live vibespecs registry consumed by this very machine); integrity per §2.1 via fetch_with_expected_hash"
+            ]
+          },
+          "LAYOUT-NO-SUBDIRS": {
+            "v": "confirmed",
+            "ev": [
+              "layout live: per-package flat repos with v-tags (live vibespecs registry consumed by this very machine); integrity per §2.1 via fetch_with_expected_hash"
+            ]
+          },
+          "LAYOUT-TAG-INTEGRITY": {
+            "v": "confirmed",
+            "ev": [
+              "layout live: per-package flat repos with v-tags (live vibespecs registry consumed by this very machine); integrity per §2.1 via fetch_with_expected_hash"
+            ]
+          },
+          "layout-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "layout live: per-package flat repos with v-tags (live vibespecs registry consumed by this very machine); integrity per §2.1 via fetch_with_expected_hash"
+            ]
+          },
+          "cache-req": {
+            "v": "confirmed",
+            "ev": [
+              "cache live: registry_cache.rs DEFAULT_FRESHNESS_SECS=3600 ('Default freshness TTL: 1 hour'); canonical-root + lazy per-pkgref clone (git_package_registry/mod.rs:24 path comment; fetch on demand); GS-CACHE-SLOT literal-path aging ledgered F-048e"
+            ]
+          },
+          "CACHE-CANONICAL-ROOT": {
+            "v": "confirmed",
+            "ev": [
+              "cache live: registry_cache.rs DEFAULT_FRESHNESS_SECS=3600 ('Default freshness TTL: 1 hour'); canonical-root + lazy per-pkgref clone (git_package_registry/mod.rs:24 path comment; fetch on demand); GS-CACHE-SLOT literal-path aging ledgered F-048e"
+            ]
+          },
+          "CACHE-HASH-KEY": {
+            "v": "confirmed",
+            "ev": [
+              "cache live: registry_cache.rs DEFAULT_FRESHNESS_SECS=3600 ('Default freshness TTL: 1 hour'); canonical-root + lazy per-pkgref clone (git_package_registry/mod.rs:24 path comment; fetch on demand); GS-CACHE-SLOT literal-path aging ledgered F-048e"
+            ]
+          },
+          "CACHE-OUTER-META": {
+            "v": "confirmed",
+            "ev": [
+              "cache live: registry_cache.rs DEFAULT_FRESHNESS_SECS=3600 ('Default freshness TTL: 1 hour'); canonical-root + lazy per-pkgref clone (git_package_registry/mod.rs:24 path comment; fetch on demand); GS-CACHE-SLOT literal-path aging ledgered F-048e"
+            ]
+          },
+          "CACHE-INNER-META": {
+            "v": "confirmed",
+            "ev": [
+              "cache live: registry_cache.rs DEFAULT_FRESHNESS_SECS=3600 ('Default freshness TTL: 1 hour'); canonical-root + lazy per-pkgref clone (git_package_registry/mod.rs:24 path comment; fetch on demand); GS-CACHE-SLOT literal-path aging ledgered F-048e"
+            ]
+          },
+          "CACHE-LAZY-FETCH": {
+            "v": "confirmed",
+            "ev": [
+              "cache live: registry_cache.rs DEFAULT_FRESHNESS_SECS=3600 ('Default freshness TTL: 1 hour'); canonical-root + lazy per-pkgref clone (git_package_registry/mod.rs:24 path comment; fetch on demand); GS-CACHE-SLOT literal-path aging ledgered F-048e"
+            ]
+          },
+          "CACHE-TTL": {
+            "v": "confirmed",
+            "ev": [
+              "cache live: registry_cache.rs DEFAULT_FRESHNESS_SECS=3600 ('Default freshness TTL: 1 hour'); canonical-root + lazy per-pkgref clone (git_package_registry/mod.rs:24 path comment; fetch on demand); GS-CACHE-SLOT literal-path aging ledgered F-048e"
+            ]
+          },
+          "lockfile-req": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v2 record shape live in today's vibe.lock (fields present + group; schema chain fully documented: v2 here → v3 §2.4.1 → v4 PROP-007 → v5 PROP-008; live schema_version=5, 36 source_kind entries); lockfile.rs 6 implements + 2 verifies; root_dependencies live in this repo's lock; v1 migration historical"
+            ]
+          },
+          "LOCKFILE-V2": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v2 record shape live in today's vibe.lock (fields present + group; schema chain fully documented: v2 here → v3 §2.4.1 → v4 PROP-007 → v5 PROP-008; live schema_version=5, 36 source_kind entries); lockfile.rs 6 implements + 2 verifies; root_dependencies live in this repo's lock; v1 migration historical"
+            ]
+          },
+          "LF-V1-MIGRATION": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v2 record shape live in today's vibe.lock (fields present + group; schema chain fully documented: v2 here → v3 §2.4.1 → v4 PROP-007 → v5 PROP-008; live schema_version=5, 36 source_kind entries); lockfile.rs 6 implements + 2 verifies; root_dependencies live in this repo's lock; v1 migration historical"
+            ]
+          },
+          "LF-ROOT-DEPENDENCIES": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v2 record shape live in today's vibe.lock (fields present + group; schema chain fully documented: v2 here → v3 §2.4.1 → v4 PROP-007 → v5 PROP-008; live schema_version=5, 36 source_kind entries); lockfile.rs 6 implements + 2 verifies; root_dependencies live in this repo's lock; v1 migration historical"
+            ]
+          },
+          "LF-REQUIRES-SEEDING": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v2 record shape live in today's vibe.lock (fields present + group; schema chain fully documented: v2 here → v3 §2.4.1 → v4 PROP-007 → v5 PROP-008; live schema_version=5, 36 source_kind entries); lockfile.rs 6 implements + 2 verifies; root_dependencies live in this repo's lock; v1 migration historical"
+            ]
+          },
+          "LF-RESOLVED-DEPS": {
+            "v": "confirmed",
+            "ev": [
+              "lockfile v2 record shape live in today's vibe.lock (fields present + group; schema chain fully documented: v2 here → v3 §2.4.1 → v4 PROP-007 → v5 PROP-008; live schema_version=5, 36 source_kind entries); lockfile.rs 6 implements + 2 verifies; root_dependencies live in this repo's lock; v1 migration historical"
+            ]
+          },
+          "solver-req": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "RESOLVO-PRIMARY": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "RSV-FEATURE-COMPLETE": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "RSV-RUST-NATIVE": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "RSV-PRODUCTION-SCALE": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "NOT-PUBGRUB": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "LIBSOLV-FALLBACK-SLOT": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "SOLVER-IDENTITY-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "solver: ResolvoDepSolver IS the shipped production default — vibe-cli/registry.rs:117 `unwrap_or(\"resolvo\")`, :191 constructs it; resolvo 0.11 workspace-pinned; DepSolver trait (lib.rs:297) with naive+sat as selectable fallbacks; differential oracle verifies; the two stale in-code deviates reasons ledgered F-047 (code-side, not this spec's drift)"
+            ]
+          },
+          "capability-req": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "CAPABILITY-VOCABULARY": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "CAP-PROVIDES": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "CAP-REQUIRES-PACKAGES": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "CAP-REQUIRES-CAPABILITIES": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "CAP-REQUIRES-ANY": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "CAP-OBSOLETES": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "CAP-CONFLICTS": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "LEGACY-COMPACT-MIGRATION": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "SOLVER-SEMANTIC": {
+            "v": "confirmed",
+            "ev": [
+              "capability vocabulary live: capability_ref.rs + manifest/package/capabilities.rs + weak_deps.rs (4 implements), 7 verifies in naive/tests.rs incl virtual-package and disjunction cases; legacy compact form migration in wire.rs"
+            ]
+          },
+          "publish-req": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUBLISH-UTILITY": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "publish-architecture-lead": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-REPO-CREATOR": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-HOST-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-REPO-EXISTS": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-CREATE-REPO": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-PUSH-URL": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "pub-impls-lead": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-GITVERSE-CREATOR": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-GITHUB-CREATOR": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-ADAPTERS-ADDITIVE": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-ADAPTER-SELECTION": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-TOKEN-LOADING": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "TOK-ENV-VAR": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "TOK-PER-HOST-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "TOK-LEGACY-FALLBACK": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "tok-files-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "TOKEN-SECRECY-INVARIANT": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUB-ERROR-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "ERR-401-403": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "ERR-PUSH-DENIED": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "ERR-TAG-EXISTS": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "ERR-ORG-NETWORK": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "ERR-UNSUPPORTED-HOST": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "PUBLISH-NEVER-RULES": {
+            "v": "confirmed",
+            "ev": [
+              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+            ]
+          },
+          "jtd-req": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "JTD-WIRE-CONTRACTS": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "jtd-layout-lead": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "JTD-VENDORED-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "JTD-SCHEMAS-DIR": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "JTD-WIRE-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "JTD-XTASK-CODEGEN": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "JTD-NOT-FOR-CONFIGS": {
+            "v": "confirmed",
+            "ev": [
+              "jtd live: schemas/ committed, vibe-wire/src/generated committed (verified c3b), tools/jtd-codegen/ vendored (ls confirms), xtask codegen exists; manifests stay TOML/serde"
+            ]
+          },
+          "perf-req": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "PROVIDER-ADAPTER": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "PERF-LIST-TAGS": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "PERF-FETCH-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "PERF-IN-MEMORY-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "PERF-RAYON-FANOUT": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "PERF-CLONE-ONCE": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "PERF-RESOLVE-CACHE-FUTURE": {
+            "v": "confirmed",
+            "ev": [
+              "perf strategy live: ShellGit::list_tags via ls-remote (shell.rs:205), fetch_file_at_ref via git archive (:232); resolvo provider is lazy with candidates memo (resolvo_engine/provider.rs:214); clone only on committed fetch (construction: versions/manifests never clone); rayon honestly absent (spec/done unit; grep rayon in registry+resolver Cargo = 0); resolve-graph cache honestly future (spec/done)"
+            ]
+          },
+          "REJ-LIBSOLV-PRIMARY": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "REJ-PUBGRUB": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "REJ-REGISTRY-UNION": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "REJ-PER-REGISTRY-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "REJ-URL-SHORTHANDS": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "REJ-CENTRAL-INDEX": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "REJ-WEAK-DEPS-V1": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "REJ-HTTPS-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "rejected alternatives verified as absences: pubgrub 0 hits in Cargo.toml; no registry union (first-match walk in code); no per-registry identity (ContentHash identity live); no URL shorthands anywhere; no central index; weak-deps arrived later via PROP-003 (features.rs) exactly as 'not rejected forever' allowed; HTTPS-only rejected — both ssh and https live"
+            ]
+          },
+          "OOS-REGISTRY-UX": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "OOS-MULTI-LIVE": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "OOS-MIRROR-CHAIN": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "OOS-VENDOR": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "OOS-PUBLISH-ADAPTERS": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "OOS-SIGNED": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "OOS-LLM-REVIEW": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "OOS-OFFLINE": {
+            "v": "confirmed",
+            "ev": [
+              "Phase A out-of-scope list: dated historical record — every listed item that later shipped (registry UX, vendor, offline, multi-live) shipped in its OWN slice (M1.6+), which is what an OOS-for-Phase-A list predicts; signed/LLM-review still absent as stated"
+            ]
+          },
+          "acceptance-lead": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-SPEC-DOCS": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-JTD": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-CAPABILITY-PARSE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-REGISTRY-PARSE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-LOCKFILE-V2": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-RESOLVER-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-GIT-PACKAGE-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-CONTENT-HASH": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-TRANSITIVE-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-PUBLISH-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-FIXTURES": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-DEMO-PACKAGES": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-MANUAL-SMOKE": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "ACC-WORKSPACE-GREEN": {
+            "v": "confirmed",
+            "ev": [
+              "acceptance facts verified individually: jtd vendored + schemas seeded; capability parse live; registry array parse live; lockfile v2→v5 chain; vibe-resolver crate + DepSolver + virtual/disjunction tests; GitPackageRegistry + MultiRegistryResolver + list_tags + fetch_file_at_ref; content-hash hard-fail; transitive install (cli_pkg_cycle); vibe-publish + RepoCreator + GitVerseCreator; fixtures/registry/ live; three demo packages published 2026-04-29 (historical); manual-tests/M1.5-gate-v2-per-package-smoke.md exists; workspace green = today's floor. Unchecked boxes = F-032 (form, ledgered)"
+            ]
+          },
+          "phase-b-preview-lead": {
+            "v": "confirmed",
+            "ev": [
+              "Phase B preview mostly landed: vendor CLI live; registry add/list/remove/set-mirror live (+ `test` covering the previewed `status` role); publish adapters GitHub+GitVerse+direct-git; multi-live + mirror-chain historical (M1.6 smoke); resolve-cache and attestation honestly spec/done; the trust-mirror gap is F-048a"
+            ]
+          },
+          "PBP-MULTI-LIVE": {
+            "v": "confirmed",
+            "ev": [
+              "Phase B preview mostly landed: vendor CLI live; registry add/list/remove/set-mirror live (+ `test` covering the previewed `status` role); publish adapters GitHub+GitVerse+direct-git; multi-live + mirror-chain historical (M1.6 smoke); resolve-cache and attestation honestly spec/done; the trust-mirror gap is F-048a"
+            ]
+          },
+          "PBP-MIRROR-CHAIN": {
+            "v": "drift",
+            "ev": [
+              "F-048(a): two of three shipped (mirror fallback loop live in git_package_registry/fetch.rs:122-147; integrity hard-fail via fetch_with_expected_hash:385-405; M1.6-mirror-vendor-smoke.md exists) — the third item, the `--trust-mirror` escape hatch, does not exist"
+            ]
+          },
+          "PBP-VENDOR": {
+            "v": "confirmed",
+            "ev": [
+              "Phase B preview mostly landed: vendor CLI live; registry add/list/remove/set-mirror live (+ `test` covering the previewed `status` role); publish adapters GitHub+GitVerse+direct-git; multi-live + mirror-chain historical (M1.6 smoke); resolve-cache and attestation honestly spec/done; the trust-mirror gap is F-048a"
+            ]
+          },
+          "PBP-CLI-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "Phase B preview mostly landed: vendor CLI live; registry add/list/remove/set-mirror live (+ `test` covering the previewed `status` role); publish adapters GitHub+GitVerse+direct-git; multi-live + mirror-chain historical (M1.6 smoke); resolve-cache and attestation honestly spec/done; the trust-mirror gap is F-048a"
+            ]
+          },
+          "PBP-PUBLISH-ADAPTERS": {
+            "v": "confirmed",
+            "ev": [
+              "Phase B preview mostly landed: vendor CLI live; registry add/list/remove/set-mirror live (+ `test` covering the previewed `status` role); publish adapters GitHub+GitVerse+direct-git; multi-live + mirror-chain historical (M1.6 smoke); resolve-cache and attestation honestly spec/done; the trust-mirror gap is F-048a"
+            ]
+          },
+          "PBP-RESOLVE-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "Phase B preview mostly landed: vendor CLI live; registry add/list/remove/set-mirror live (+ `test` covering the previewed `status` role); publish adapters GitHub+GitVerse+direct-git; multi-live + mirror-chain historical (M1.6 smoke); resolve-cache and attestation honestly spec/done; the trust-mirror gap is F-048a"
+            ]
+          },
+          "PBP-ATTESTATION": {
+            "v": "confirmed",
+            "ev": [
+              "Phase B preview mostly landed: vendor CLI live; registry add/list/remove/set-mirror live (+ `test` covering the previewed `status` role); publish adapters GitHub+GitVerse+direct-git; multi-live + mirror-chain historical (M1.6 smoke); resolve-cache and attestation honestly spec/done; the trust-mirror gap is F-048a"
+            ]
+          },
+          "open-lead": {
+            "v": "confirmed",
+            "ev": [
+              "open questions verified genuinely open: [[registry]] ref parsed-but-unconsumed (REG-FIELD-REF states it; no consumer in tree); no cross-registry hash cache; no naming templates; no --verify-solver flag; jtd-codegen vendored per plan, Windows ergonomics still an open judgement"
+            ]
+          },
+          "OPEN-REGISTRY-META-REF": {
+            "v": "confirmed",
+            "ev": [
+              "open questions verified genuinely open: [[registry]] ref parsed-but-unconsumed (REG-FIELD-REF states it; no consumer in tree); no cross-registry hash cache; no naming templates; no --verify-solver flag; jtd-codegen vendored per plan, Windows ergonomics still an open judgement"
+            ]
+          },
+          "OPEN-CROSS-REGISTRY-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "open questions verified genuinely open: [[registry]] ref parsed-but-unconsumed (REG-FIELD-REF states it; no consumer in tree); no cross-registry hash cache; no naming templates; no --verify-solver flag; jtd-codegen vendored per plan, Windows ergonomics still an open judgement"
+            ]
+          },
+          "OPEN-NAMING-TEMPLATES": {
+            "v": "confirmed",
+            "ev": [
+              "open questions verified genuinely open: [[registry]] ref parsed-but-unconsumed (REG-FIELD-REF states it; no consumer in tree); no cross-registry hash cache; no naming templates; no --verify-solver flag; jtd-codegen vendored per plan, Windows ergonomics still an open judgement"
+            ]
+          },
+          "OPEN-VERIFY-SOLVER": {
+            "v": "confirmed",
+            "ev": [
+              "open questions verified genuinely open: [[registry]] ref parsed-but-unconsumed (REG-FIELD-REF states it; no consumer in tree); no cross-registry hash cache; no naming templates; no --verify-solver flag; jtd-codegen vendored per plan, Windows ergonomics still an open judgement"
+            ]
+          },
+          "OPEN-JTD-WINDOWS": {
+            "v": "confirmed",
+            "ev": [
+              "open questions verified genuinely open: [[registry]] ref parsed-but-unconsumed (REG-FIELD-REF states it; no consumer in tree); no cross-registry hash cache; no naming templates; no --verify-solver flag; jtd-codegen vendored per plan, Windows ergonomics still an open judgement"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: impl/done + comment naming F-032 (status line accepted-only, Phase A boxes unchecked) matches reality — the registry contract IS shipped (M1.1-rev + M1.6 + M1.13/M1.14 slices all verified live this batch)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:14:56Z",
+        "verify_batch": "c4b-registry-core"
+      }
     },
     "spec/modules/vibe-registry/PROP-008-qualified-naming.md": {
       "content_hash": "765e66d00310b7af2845490e9633f321d87695af78bf71a219aaa06e3c475e49",

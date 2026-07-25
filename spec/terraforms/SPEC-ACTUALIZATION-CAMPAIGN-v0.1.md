@@ -862,6 +862,42 @@ read-only, no auth.
   1 648 / 4 944 — 1 589 confirmed / 56 drift / 3 unverifiable; findings
   46 (next free F-047).**
 
+- **2026-07-25 · c4b — the registry core verified; the evidence-richest
+  file confirms at 98 %.** PROP-002 (360 markers, 110 specmap edges) +
+  PROP-001 (93): **379 units — 371 confirmed / 8 drift / 0
+  unverifiable.** The headline confirmation: **RESOLVO-PRIMARY holds on
+  live evidence** — `ResolvoDepSolver` is the shipped production
+  default (`registry.rs unwrap_or("resolvo")`, resolvo_engine = "the
+  production DepSolver cell"), and the §2.8 fallback-seam story
+  (naive + sat as selectable cells behind `DepSolver`) is exactly what
+  shipped. That same check exposed **F-047 (code-side)**: the two
+  `#[spec(deviates)]` reasons in `naive.rs`/`sat.rs` still claim "no
+  ResolvoSolver exists in tree" / "adopting resolvo stays an owner
+  decision" — they aged behind the very adoption they awaited. The
+  spec-side drift splits into two touch-up families: **F-048**
+  (PROP-002 precision: `--trust-mirror` promised twice and shipped
+  nowhere — only `--trust-redirect` exists; `vibe list --overrides`
+  promised twice and absent; the git-source ref errors ship as
+  reason-strings, not the named `MissingRef`/`ConflictingRefs`;
+  `source_kind` grew `path`/`embedded` in PROP-007/030; the cache-slot
+  example still shows the kind-name era against the live
+  `packages/<group>.<name>/clone`) and **F-049** (PROP-001: no crate
+  README behind `mechanics-in-readme`; `NO-OFFLINE-YET` aged behind the
+  shipped `--offline`; the git-binary parking-lot entry resolved by the
+  shipped `VIBE_GIT_BINARY` whose comment cites §6 back). Everything
+  else confirms on dense machine evidence: the redirect subsystem
+  wholesale (12 implements / 8 verifies, three CLI verbs, hop-limit
+  guard, `--trust-redirect` at cli/registry.rs:226), the auth-silencing
+  matrix (`apply_common_env` + regime-aware force_silence + 3
+  tests_pure verifies), `merge_effective` / `url_is_local` /
+  `registry_config_path` live under their exact spec names, the
+  `enabled` filter at the R-001 construction point, the mirror
+  fall-through loop, token redaction tests under the exact names the
+  spec cites, and the lockfile schema chain v2→v3→v4→v5 documented
+  end-to-end across PROP-002 → PROP-007 → PROP-008 (live lock:
+  schema 5). **Running tally: 2 027 / 4 944 — 1 960 confirmed / 64
+  drift / 3 unverifiable; findings 49 (next free F-050).**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
