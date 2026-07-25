@@ -59,7 +59,16 @@ closes only through sync-from-code with owner approval.
   verdict there.
 - **Never trust a substring match about a data file.** `"parsed"`,
   `"verdicts"` and `updated_at` each read as present when they were not,
-  in one day. Walk the structure or anchor on bytes.
+  in one day. Walk the structure or anchor on bytes. **It struck a third
+  time in code**, and inside the campaign's own correction: PROP-043 §7.3
+  was made to claim `Baseline::load / store` because a `store` existed —
+  on `Cache`, a different type in the same crate (F-065).
+- **Do not run a real `vibe` command while `tools/self-check.sh` is
+  running.** The floor now snapshots the real `~/.vibe` before it builds
+  and compares after the test steps (DRIFT-020's tripwire). `vibe progress
+  scan` writes into `~/.vibe/progress-cache/`, so a concurrent scan turns
+  the floor red — correctly, by the gate's own definition, but confusingly.
+  Sequence them: scan first, then the floor.
 - **Commit delegated work on the completion notification**, never on a
   filled-in task journal — executors write §9 as they go.
 - **Outstanding manual runs (owner sign-off pending):** MT-02

@@ -1273,4 +1273,105 @@ read-only, no auth.
 
 ## 11. REPORT (filled at close-out against §8) {#report}
 
-*(empty)*
+_Filled 2026-07-26. Scored against §8 as written, not as one would like it to
+read. Where a prediction is scored against a number the campaign itself moved,
+the number used is the one from **before** the phase that moved it — otherwise
+the campaign grades its own homework._
+
+**1. Wave-1 full weave fits ≤2 shards of a 1M window (digest fits trivially).**
+— **CONFIRMED, with room to spare — but only because close-out went and
+measured it.** `progress weave --max-tokens 1000000` over the 58-file wave-1
+corpus emits **1 shard, 1 138 441 bytes** (≈ 300 k tokens at prose-markdown
+density — roughly a third of the window, so the sharder never had to split).
+`weave --digest` is **200 454 bytes**, ≈ 6 % of a 1M window: "trivially" is
+right.
+
+The prediction is confirmed and the process around it is not. **No LOG entry
+records a `weave` run at any point in wave 1** — Phase B worked from per-file
+mirrors instead, so nothing in the plan's own steps ever exercised the
+command, and the number above was produced at close-out purely to fill this
+row. *A prediction that no step of the plan forces you to run is one you will
+reach the end of the campaign without having tested.* Wave 2 should either
+wire the prediction to a step or drop it.
+
+**2. The exhaustive counter catches ≥1 genuinely skipped paragraph that review
+alone would have missed.** — **CONFIRMED, more than once.** The sharpest case
+is a grammar trap no reader would have seen: a wrapped prose line whose
+continuation opens with `+ ` parses as a phantom list item, and the counter
+caught both occurrences in PROP-019 instantly. The pilot produced a second,
+independent catch — `spec/design/README`'s index was incomplete, found by the
+count rather than by reading it. The B-phase LOG scored this prediction in
+passing at the time, which is the only reason it is cleanly citable now.
+
+**3. ≥60 % of `IMPLEMENTED/SHIPPED` claims confirm without drift; ≤10 % of all
+units end `unverifiable`.** — **CONFIRMED, both clauses, with wide margin.**
+Scored at the **Phase C exit gate**, before any stitching: **93.0 % confirmed**,
+311 drift rows of the 4 455 facts then counted (7.0 %), **3 unverifiable =
+0.07 %** against a 10 % ceiling. (The corpus reached 4 490 only later, as
+Phase D and Phase E minted anchors for facts the tree had gained.) The post-stitch figure of 99.9 % is *not* the answer to this
+prediction — stitching corrected the drift, it did not verify it away, and
+quoting it here would be circular.
+
+**4. Stitching converges in ≤3 waves with ≤2 owner escalations.** —
+**CONFIRMED; comfortable on waves, exactly at the bound on escalations.** Two
+waves, not three: **d1** and **d2**, the latter run in eight sub-batches
+(a–h). Exactly **two escalations**, both genuine and both resolved — F-046's
+PROP-043 parity rows (wire-or-demote, per item) and F-035's single row in
+`spec/boot/00-core.md`, a user-owned file. One row that had been sitting in
+the escalation pile turned out not to need a ruling at all
+(`BASELINE-RECORD`), which is worth reading as a warning rather than a win:
+it was returned to the owner's desk because nobody had checked the code, and
+when someone did, the answer was already there. It was also — see prediction 6's
+note and F-065 — checked wrongly.
+
+**5. ≥80 % of DRIFT tasks land without a `returned` round-trip.** —
+**CONFIRMED at 100 %.** Of the twenty-two DRIFT tasks authored in wave 1, none
+was ever set to `returned`. DRIFT-015 is the one non-landing, and it was
+**superseded** before it ran rather than returned — the conform finding it
+targeted had been resolved another way. The margin is large enough to be worth
+distrusting slightly: the template is genuinely carrying enough context, but
+four executors also *volunteered* adjacent findings rather than returning, so
+some of what a `returned` status would have measured shows up in the findings
+ledger instead (F-057, F-061, F-063, F-064 all arrived this way).
+
+**6. The month budget holds.** — **FALSIFIED, in the favourable direction, and
+only partly scoreable.** Predicted: A ≈ days, B ≈ 1–1.5 weeks, C ≈ 1 week,
+D ≈ 3–5 days. Actual: **A on 2026-07-24, B on 07-24/25, C on 07-25, D on
+07-25/26, E on 07-25/26** — a month of plan executed in **three days**, roughly
+an order of magnitude fast. The honest reading is not "we beat the estimate":
+the estimate was built on human-paced reading and the work was done by
+delegated batch execution, so it was measuring the wrong quantity from the
+start. **F and G had not been opened when this REPORT was written**, so the
+"F+G ≈ 1 week overlapping E" clause is unscored, and this row is re-openable.
+
+### What the predictions did not cover, and should next time {#report-gaps}
+
+- **Nothing predicted the campaign's own corrections would introduce drift.**
+  F-065 is the case: Phase D authored a `Shipped:` line claiming a
+  `Baseline::store` that has never existed, and the verification pass then
+  confirmed the row on it. A wave-2 prediction should name this directly —
+  *stitching introduces ≥0 new false claims* is a falsifiable statement, and
+  wave 1's answer to it is **1**.
+- **Verification cross-checked document against document at least once.** The
+  five token-precedence anchors in PROP-002 were sealed `confirmed` on the
+  evidence "token loader 3-source order matches 90-user boot facts" — another
+  spec file, carrying the identical error. That is how F-063 survived Phase C
+  with a green verdict. Evidence that cites only spec prose is not evidence;
+  wave 2 should gate on evidence strings resolving to code.
+- **Three state projections are seeded and never refreshed** (`findings.json`,
+  `tasks.json`, `docdebt.json`). `findings.json` was maintained by hand all
+  campaign; `tasks.json` was not, and sat 18 tasks stale until close-out. A
+  projection nothing refreshes and nothing checks will drift silently — the
+  dashboard read five tasks for a week.
+- **Phase C silently skipped one of its own steps, and Phase G pays for it.**
+  §5-C's step list ends "verification runs (`command → real output`) are saved
+  as doc fixtures; harvest cards written while knowledge is hot." Neither
+  happened: `campaigns/progress-2026-08/harvest/` is **empty** and
+  `docdebt.json` carries **zero cards**. Phase C's *exit gate* only checks that
+  every marker carries a verdict, so the omission cost nothing at the time and
+  was invisible until Phase G came to consume it. Phase G's definition — "two
+  trees written **from proven behaviour** (harvest cards + captured runs),
+  never from spec prose" — therefore has no input, and must either capture the
+  runs afresh or admit it is writing from something else. *A phase whose exit
+  gate does not check its own steps will skip the ones nothing downstream
+  fails on — until something downstream does.*
