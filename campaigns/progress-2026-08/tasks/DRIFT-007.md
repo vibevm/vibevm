@@ -115,3 +115,44 @@ Budget signal: past ~5 files or ~350 lines, stop and return.
 ## 9. Log {#log}
 
 - queued 2026-07-25 (Fable), on the owner's ruling.
+- implemented 2026-07-25 (Opus). `fold_check` + `FoldIssue` / `FoldLoss` in
+  `crates/progress-core/src/rollup.rs`; wired into the `check` path of
+  `crates/vibe-cli/src/commands/progress.rs` as an `Error`-severity class
+  on the existing exit code. Six tests, the four §6 ones plus transitivity
+  and the section-only-attribute case. `vibe progress check` on this
+  repository: **clean, exit 0** — the new class fires nowhere on the live
+  corpus (verified separately that it does fire on a synthetic lossy fold).
+- §8 stop rule — **not triggered**. §4's relation does not contradict
+  `spec://vibevm/modules/vibe-progress/PROP-043#rollup`: it never fires on
+  the mixed/divergent case that `##EXPLICIT-BEATS` calls "information, not
+  noise", and its agreement precondition is `##POST-CAMPAIGN-FOLD`'s own
+  wording ("a section whose units agree collapses to one unit marker …
+  mixed sections stay fact-marked"). Residual tension worth the reviewer's
+  eye: `##EXPLICIT-BEATS` blesses an explicit marker that diverges from its
+  children, and this check now errors on one narrow such case — a section
+  marker whose units **all agree** on a pair the section marker does not
+  carry. That is the only configuration in which §3.9's lossless-fold duty
+  can have teeth at all, so it was kept.
+- **Question for the reviewer (§6 vs §4).** §6's `fold_losing_state_is_caught`
+  sketch — "the same section [three `impl/done` units] where one unit is
+  `spec/done`" — is a *disagreeing* section, which §4.1's precondition and
+  §4.4's silence rule make unreachable; it is also indistinguishable from
+  §6's `disagreeing_section_is_not_a_fold` ("units with mixed stages …
+  yield no issue"). §4 was taken as governing (it is the Required-behavior
+  section, and it is what PROP-043 §3.9 says), so the test was written on an
+  agreeing set: one `spec/done` unit under an `impl/done` section marker →
+  exactly one issue naming that unit and `state`, as §6 demands of the
+  observable. A `// REVIEW:` marker sits at the gate in `rollup.rs`
+  (`fold_check`). Dropping the precondition to satisfy §6's fixture
+  literally was measured against the corpus first: it fires on three
+  legitimate mixed sections — PROP-031 §6, PROP-032 §7, PROP-033 §7, nine
+  units in total whose `spec/done` standing differs from their section's
+  `spec/work` (open questions beside ratification notes) — which §3.9
+  declares correct markup. Reviewer's call.
+- Live-corpus survey behind that number (the whole basis of the 0): the
+  observed tree carries **11** section-level markers — `PROP-006#mfbt`,
+  the open-questions sections of PROP-013 / PROP-016 / PROP-028 / PROP-031 /
+  PROP-032 / PROP-033, and four in `spec/design/README.md`. Three are exact
+  folds (units agree and match), four are agreeing sections whose marker
+  adds a `comment` the units lack (not a loss — the test is one-directional),
+  and four are mixed sections that §4.4 silences.

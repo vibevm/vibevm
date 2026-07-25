@@ -3871,6 +3871,7 @@ dependencies = [
  "chrono",
  "clap",
  "console",
+ "core-ai-native-specmap",
  "core-ai-native-specmark",
  "dialoguer",
  "dirs",

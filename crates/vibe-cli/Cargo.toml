@@ -30,6 +30,9 @@ vibe-mcp.workspace = true
 vibe-settings.workspace = true
 vibe-wire.workspace = true
 vibe-spec.workspace = true
+# `vibe progress report`'s evidence column reads the committed traceability
+# index through the engine's own wire model — one parser for specmap.json.
+specmap-core.workspace = true
 semver.workspace = true
 anyhow.workspace = true
 arboard.workspace = true

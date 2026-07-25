@@ -122,3 +122,34 @@ Budget signal: past ~6 files or ~450 lines, stop and return.
 ## 9. Log {#log}
 
 - queued 2026-07-25 (Fable), on the owner's ruling.
+- implemented 2026-07-25 (Opus). §8 checked first and **not** triggered:
+  PROP-043 §7.3 says "plus a small random control sample" and fixes no rate,
+  so the 5 % default and the minimum-1 rule concretise the contract rather
+  than contradicting it. No `<!-- REVIEW -->` marker was needed.
+- **Schema version unchanged (§5).** `crates` was already a declared field
+  carrying `#[serde(default, skip_serializing_if = "Vec::is_empty")]`;
+  populating it adds no field and changes no reader's contract, so
+  `BASELINE_SCHEMA` stays `1`. Nothing about `BaselineUnit`'s existing
+  fields moved.
+- **Four classes, not five.** The named-crate rule promotes a unit into the
+  existing `Changed` (= suspect) class rather than minting a fourth suspect
+  flavour — §4.4 asks for exactly four classes and §4.3 adds only
+  `ControlSample`. So the report can still say *why*, `RescanRow` gained
+  `crate_moved: Option<String>` naming the crate that moved; it is omitted
+  from the JSON when absent, so the existing row shape is unchanged.
+- **"State projection" (§4.4) read as rescan's existing `--json` row
+  projection.** `rescan` has no state file of its own under `run/state/`,
+  and inventing one was out of scope; the rows already carry `class`, which
+  now takes four values (`new` / `changed` / `carried-forward` /
+  `control-sample`). No campaign state file was written.
+- **Git-unavailable vs crate-gone are distinguished by an up-front probe.**
+  Without it, a baseline vendored into a non-checkout would read as *every*
+  named crate having vanished and re-verify the whole corpus. One
+  `git log -1 -- .` decides: it fails ⇒ the rule is skipped wholesale with a
+  single warning line; it succeeds ⇒ a named crate missing from disk is
+  `CrateState::Gone` ⇒ suspect.
+- **Timestamps are compared as instants, not strings.** `git log --format=%cI`
+  emits an offset (`+03:00`), so a lexical compare would misjudge a commit
+  made an hour *before* a `…Z` verdict as newer. Both sides go through
+  `chrono::DateTime::parse_from_rfc3339`; an unparseable stamp on either
+  side skips the rule for that unit rather than failing it.

@@ -119,6 +119,31 @@ pub struct ProgressRescanArgs {
     /// Path to the previous campaign's `baseline.json`.
     #[arg(long)]
     pub baseline: PathBuf,
+
+    /// Share of the carried-forward units re-verified anyway — the §7.3
+    /// control sample, because code-side invalidation is deliberately
+    /// coarse. `0` disables it; the draw is seeded from the baseline's own
+    /// content, so a rescan is reproducible and reviewable.
+    #[arg(
+        long,
+        value_name = "0.0..=1.0",
+        default_value_t = progress_core::baseline::DEFAULT_CONTROL_RATE,
+        value_parser = parse_control_rate,
+    )]
+    pub control_rate: f64,
+}
+
+/// `--control-rate` takes a fraction in `0.0..=1.0`; anything else is a
+/// clap error at the boundary, never a silently clamped sample size.
+fn parse_control_rate(s: &str) -> Result<f64, String> {
+    let rate: f64 = s
+        .parse()
+        .map_err(|_| format!("`{s}` is not a number (expected a fraction in 0.0..=1.0)"))?;
+    if (0.0..=1.0).contains(&rate) {
+        Ok(rate)
+    } else {
+        Err(format!("`{s}` is outside 0.0..=1.0"))
+    }
 }
 
 #[derive(Debug, Args)]

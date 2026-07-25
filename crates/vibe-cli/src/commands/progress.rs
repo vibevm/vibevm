@@ -9,15 +9,20 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context as _, Result, bail};
 use progress_core::doc::{ParsedDoc, Severity};
+use progress_core::evidence::{EvidenceProvider, NoEvidence};
 use progress_core::model::Audience;
 use progress_core::report::View;
-use progress_core::{baseline, cache, journal, report, rollup, scope, state, weave};
+use progress_core::{cache, journal, report, rollup, scope, state, weave};
 
 use crate::cli::{
     GateStatusArg, ProgressArgs, ProgressCheckArgs, ProgressCommonArgs, ProgressGateArgs,
-    ProgressReportArgs, ProgressRescanArgs, ProgressSubcommand, ProgressWeaveArgs,
+    ProgressReportArgs, ProgressSubcommand, ProgressWeaveArgs,
 };
 use crate::output::Context;
+
+/// The rescan half — the only part of the adapter that knows this tree is a
+/// git checkout (PROP-043 §7.3).
+mod rescan;
 
 pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
     match args.command {
@@ -26,7 +31,7 @@ pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
         ProgressSubcommand::Report(a) => report_cmd(ctx, &a),
         ProgressSubcommand::Mirror(a) => mirror(ctx, &a),
         ProgressSubcommand::Weave(a) => weave_cmd(ctx, &a),
-        ProgressSubcommand::Rescan(a) => rescan_cmd(ctx, &a),
+        ProgressSubcommand::Rescan(a) => rescan::rescan_cmd(ctx, &a),
         ProgressSubcommand::Resume(a) => resume(ctx, &a),
         ProgressSubcommand::Gate(a) => gate(ctx, &a),
     }
@@ -180,6 +185,20 @@ fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
                 );
             }
         }
+        // Lossless folds (PROP-043 §3.9 `POST-CAMPAIGN-FOLD`): a section
+        // marker that collapses agreeing units must carry everything they
+        // carried. Reported at **warning** severity, not error: a document
+        // cannot distinguish a lying fold from the deliberate explicit
+        // marker `#rollup`'s `EXPLICIT-BEATS` blesses ("a divergence is
+        // information, not noise"), so this surfaces the case without
+        // failing a gate on legitimate markup. Phase F's folder, which knows
+        // it is asserting a fold, runs `fold_check` as a fatal pre-flight.
+        for f in rollup::fold_check(doc) {
+            warnings += 1;
+            if !ctx.is_quiet() {
+                println!("{}:{}: Warning [FoldLossy] {f}", doc.path, f.line);
+            }
+        }
         if a.exhaustive {
             for &(bi, fi) in &doc.unmarked_facts {
                 errors += 1;
@@ -230,7 +249,15 @@ fn report_cmd(ctx: &Context, a: &ProgressReportArgs) -> Result<()> {
     let g = ground(&a.common)?;
     let view = parse_view(a.view.as_deref())?;
     let audience = parse_audience(a.audience.as_deref())?;
-    let rows = report::rows(g.docs.iter(), view, audience);
+    // The evidence column is wired only where the index exists. A project
+    // without `specmap.json` reports exactly as before and says nothing
+    // about it — a missing index is not an error (PROP-043 §6).
+    let specmap = super::progress_evidence::SpecmapEvidence::load(&g.root)?;
+    let provider: &dyn EvidenceProvider = match &specmap {
+        Some(s) => s,
+        None => &NoEvidence,
+    };
+    let rows = report::rows(g.docs.iter(), view, audience, provider);
     let rollups: Vec<(String, rollup::DocRollup)> = g
         .docs
         .iter()
@@ -311,40 +338,6 @@ fn emit_weave(
                     dir.display()
                 );
             }
-        }
-    }
-    Ok(())
-}
-
-fn rescan_cmd(ctx: &Context, a: &ProgressRescanArgs) -> Result<()> {
-    let g = ground(&a.common)?;
-    let base = baseline::Baseline::load(&a.baseline)?;
-    let rows = baseline::rescan(g.docs.iter(), &base);
-    if ctx.is_json() {
-        println!("{}", serde_json::to_string_pretty(&rows)?);
-        return Ok(());
-    }
-    let count = |c: &baseline::RescanClass| rows.iter().filter(|r| r.class == *c).count();
-    println!(
-        "progress rescan vs {}: {} new, {} changed (suspect), {} carried-forward",
-        a.baseline.display(),
-        count(&baseline::RescanClass::New),
-        count(&baseline::RescanClass::Changed),
-        count(&baseline::RescanClass::CarriedForward),
-    );
-    for r in &rows {
-        match r.class {
-            baseline::RescanClass::CarriedForward if !r.marker_diverged => {}
-            _ => println!(
-                "  {:?} {}{}",
-                r.class,
-                r.addr,
-                if r.marker_diverged {
-                    "  [marker changed outside a campaign]"
-                } else {
-                    ""
-                }
-            ),
         }
     }
     Ok(())

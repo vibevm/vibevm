@@ -110,6 +110,21 @@ impl ShellGit {
         Err(classify_failure(args, &output))
     }
 
+    /// Timestamp of the last commit touching `pathspec`, RFC-3339
+    /// (`git log -1 --format=%cI -- <pathspec>`), resolved with `repo` as
+    /// the working directory — so `pathspec` is read relative to it.
+    ///
+    /// `Ok(None)` is "that path has no history here"; an `Err` is "git
+    /// could not answer at all" — no binary, no repository, an unborn
+    /// branch. A caller asking only *did this code move* treats both as
+    /// "unknown, skip", never as a failure.
+    pub fn last_commit_iso(&self, repo: &Path, pathspec: &str) -> Result<Option<String>, GitError> {
+        self.preflight()?;
+        let output = self.run(&["log", "-1", "--format=%cI", "--", pathspec], Some(repo))?;
+        let stamp = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        Ok(if stamp.is_empty() { None } else { Some(stamp) })
+    }
+
     /// Like [`Self::run`] but returns the raw [`Output`] on non-zero exit
     /// without classifying it. Used by callers that need to look at
     /// stdout / stderr together (e.g. `fetch_file_at_ref` distinguishing

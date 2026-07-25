@@ -130,3 +130,22 @@ Budget signal: past ~8 files or ~500 lines, stop and return — mis-scoped.
 ## 9. Log {#log}
 
 - queued 2026-07-25 (Fable), on the owner's ruling «Исправь, должен джойнить».
+- implemented 2026-07-25. §8 did **not** fire: `specmap.json` schema 2 carries
+  `edges[].uri` in the exact `spec://…#anchor` form (verified against the
+  committed index). Landed: `Row.evidence` / `Row.mismatch` + the
+  `&dyn EvidenceProvider` parameter on `rows()`, the evidence column in all
+  three render forms, and `SpecmapEvidence` in
+  `crates/vibe-cli/src/commands/progress_evidence.rs`, wired into `report`
+  only. Two points §4 left open, decided and flagged for review: (a) the core
+  hands the provider the unit address it owns (`<file>#<anchor>`, via
+  `baseline::unit_addr`), and the provider reaches the canonical URI through
+  the index's **own** `spec_units` file ↔ uri table — a join on index data,
+  not a normalisation rule; edge matching stays exact on the full URI string.
+  (b) §6's `mismatch_is_flagged` names an `impl/done` marker, but the built
+  seam's `mismatch()` flags only `test/done` with 0 `verifies` and `freeze`
+  with 0 `implements` — the test covers the real rules and pins `impl/done`
+  as unflagged rather than redesigning the seam.
+- note 2026-07-25: the new `#[spec]` tag leaves the committed `specmap.json`
+  one edge stale. Deliberately **not** regenerated — two other tasks were
+  editing the same tree, and `cargo xtask specmap` would have captured their
+  in-flight state. Run it once the batch lands.
