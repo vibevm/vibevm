@@ -1,13 +1,18 @@
 # PROP-021 — Submodule sources {#root}
 
-<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-24; one of the four bridge-packages specs; fact grain 2026-07-24"/>
+<status stage="impl" state="done" comment="C 2026-07-25: submodule sources ship (recurse clone/update + snapshot embedding + in-place native); motivation, rejected and out-of-scope facts stay spec-stage; fact grain 2026-07-24"/>
 
-##status-line **Status:** proposed 2026-06-24 — owner-requested design session. One of four
+##status-line **Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
+session; verified against the tree 2026-07-25 by the spec-actualization
+campaign). The git backend clones with `--recurse-submodules` and runs
+`submodule update --init --recursive`, snapshot embedding lands in
+`git_package_registry/fetch.rs`, the in-place native form rides the PROP-022
+machinery, and `resolved_commit` carries lockfile reproducibility. One of four
 orthogonal specs from the bridge-packages design (siblings:
 [PROP-020](../vibe-workspace/PROP-020-install-hooks.md) install hooks,
 [PROP-022](../vibe-workspace/PROP-022-materialization-modes.md) materialization
 modes, [PROP-023](PROP-023-bridge-packages.md) bridge packages). Submodules
-serve any package that wants to embed another repository — not only bridges. @spec/done
+serve any package that wants to embed another repository — not only bridges. @impl/done
 
 ##related **Related:** [PROP-001](PROP-001-git-backend.md) (the git backend whose clone
 gains `--recurse-submodules`), [PROP-002](PROP-002-decentralized-registry.md)
@@ -31,7 +36,7 @@ the future dependency-declared form would extend). @spec/done
 - ##submodule-broken The submodule case does **not** — vibevm's clone is a bare
   `git clone --branch <ref>` ([PROP-001](PROP-001-git-backend.md)) with no
   `--recurse-submodules`, and the `.git`-stripping materialise copies the empty
-  submodule stub. The referenced content silently never arrives. @spec/done
+  submodule stub. The referenced content silently never arrives. @impl/done
 
 - ##forcing-case-bridges The forcing case is bridge packages ([PROP-023](PROP-023-bridge-packages.md)),
   where a maintainer submodules the upstream repo they steward. @spec/done
@@ -44,35 +49,35 @@ the future dependency-declared form would extend). @spec/done
 when it updates the package, and makes the submodule content available wherever
 the package is materialised — embedded into the snapshot for the
 copy-based modes, or living natively for `in-place`
-([PROP-022](../vibe-workspace/PROP-022-materialization-modes.md)). @spec/done
+([PROP-022](../vibe-workspace/PROP-022-materialization-modes.md)). @impl/done
 
 ## 2. Decisions {#decisions}
 
 ### 2.1 Fetch and update recurse into submodules {#fetch}
 
-##req-fetch `req r1` @spec/done
+##req-fetch `req r1` @impl/done
 
-##RECURSE-LEAD The git backend's bootstrap and update recurse: @spec/done
+##RECURSE-LEAD The git backend's bootstrap and update recurse: @impl/done
 
 - ##BOOTSTRAP-RECURSE **Bootstrap** — `git clone --recurse-submodules --branch <ref> -- <url>
   <dest>`. The clone lands in the live-git cache
   ([PROP-010](PROP-010-local-package-cache.md)) with submodule working trees
-  populated. @spec/done
+  populated. @impl/done
 - ##UPDATE-RECURSE **Update** — after the existing `fetch --prune --tags` + `reset --hard
   <ref>`, run `git submodule update --init --recursive` so the gitlink commits
   the new superproject ref points at are checked out. (A removed submodule is
-  pruned by the reset; a moved one re-inits.) @spec/done
+  pruned by the reset; a moved one re-inits.) @impl/done
 
 ##APPLIES-BOTH-CLONES This applies identically to the registry cache clone and to an `in-place`
-slot clone ([PROP-022 §2.4](../vibe-workspace/PROP-022-materialization-modes.md#in-place)). @spec/done
+slot clone ([PROP-022 §2.4](../vibe-workspace/PROP-022-materialization-modes.md#in-place)). @impl/done
 
 ### 2.2 Submodule is an abstract embedded source — git now, dependency later {#source-abstraction}
 
-##req-source-abstraction `req r1` @spec/done
+##req-source-abstraction `req r1` @impl/done
 
 ##EMBEDDED-SOURCE-MODEL A submodule is modelled as an **embedded source**: content that lives at a
 subpath of the package and is resolved from elsewhere. There are two
-declaration forms: @spec/done
+declaration forms: @impl/done
 
 - ##FORM-GIT-NATIVE **git-native** (`.gitmodules`) — the only form **implemented now**. vibevm
   reads no `.gitmodules` itself; git does, via §2.1. @impl/done
@@ -86,32 +91,32 @@ declaration forms: @spec/done
 ##NOT-A-PACKAGE Either way, the embedded repo is **not** a second vibevm package: it is git
 content, never entered into the dependency resolver
 ([PROP-002](PROP-002-decentralized-registry.md): one git repo = one package;
-the submodule is part of *this* package's content, not a node). @spec/done
+the submodule is part of *this* package's content, not a node). @impl/done
 
 ### 2.3 Snapshot materialisation embeds the submodule content {#snapshot-embedding}
 
-##req-snapshot-embedding `req r1` @spec/done
+##req-snapshot-embedding `req r1` @impl/done
 
 ##MODE-DEPENDENT How submodule content reaches the slot depends on the materialization mode
-([PROP-022](../vibe-workspace/PROP-022-materialization-modes.md)): @spec/done
+([PROP-022](../vibe-workspace/PROP-022-materialization-modes.md)): @impl/done
 
 - ##EMBED-SNAPSHOT **`snapshot` / `hardlink`** — the submodule's checked-out working tree is
   copied into the slot as ordinary files; nested `.git` directories and gitlink
   pointers are stripped (the same exclusion the top-level `.git` already gets).
   The submodule content is thus **vendored into the snapshot** and participates
-  in the package `content_hash`. @spec/done
+  in the package `content_hash`. @impl/done
 - ##EMBED-IN-PLACE **`in-place`** — nothing is copied; the submodule lives natively inside the
-  slot's own git checkout, managed by git (§2.1). @spec/done
+  slot's own git checkout, managed by git (§2.1). @impl/done
 
 ### 2.4 The lockfile pins submodule state via the superproject commit {#lock}
 
-##req-lock `req r1` @spec/done
+##req-lock `req r1` @impl/done
 
 - ##LOCK-VIA-SUPERPROJECT Reproducibility rides on the package's `resolved_commit` already recorded in
   the lockfile: a superproject commit fixes the exact gitlink commit of every
   submodule, so a re-clone at `resolved_commit` with `--recurse-submodules`
   reconstructs byte-identical submodule content. No new lockfile field is
-  required for the git-native form. @spec/done
+  required for the git-native form. @impl/done
 - ##future-per-sub-pins Explicit per-submodule pins are a possible
   future refinement, tied to the dependency-declared form of §2.2. @spec/done
 
@@ -144,12 +149,12 @@ the submodule is part of *this* package's content, not a node). @spec/done
 
 - ##ACC-CLONE-POPULATED A package whose repo declares a submodule is cloned with its submodule
   working tree populated; `update` re-checks-out submodule content for the new
-  superproject ref. @spec/done
+  superproject ref. @impl/done
 - ##ACC-SNAPSHOT-FILES Under `snapshot`/`hardlink`, submodule content appears in the slot as plain
-  files with no nested `.git`; it contributes to `content_hash`. @spec/done
-- ##ACC-IN-PLACE-NATIVE Under `in-place`, the submodule lives natively in the slot's git checkout. @spec/done
+  files with no nested `.git`; it contributes to `content_hash`. @impl/done
+- ##ACC-IN-PLACE-NATIVE Under `in-place`, the submodule lives natively in the slot's git checkout. @impl/done
 - ##ACC-LOCK-REPRODUCES Re-cloning at the lockfile's `resolved_commit` reconstructs identical
-  submodule content with no extra lockfile field. @spec/done
+  submodule content with no extra lockfile field. @impl/done
 - ##ACC-VENDORED-UNCHANGED A vendored ("git in git") package needs none of this — it is plain files and
-  installs unchanged. @spec/done
-- ##ACC-FLOOR-GREEN Full `self-check.sh` green; conform 0/0/0; specmap clean. @spec/done
+  installs unchanged. @impl/done
+- ##ACC-FLOOR-GREEN Full `self-check.sh` green; conform 0/0/0; specmap clean. @impl/done

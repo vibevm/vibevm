@@ -1,10 +1,17 @@
 # PROP-030 — The embedded registry {#root}
 
-<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: status line says proposed 2026-07-13"/>
+<status stage="impl" state="done" comment="C 2026-07-25: the embedded registry ships wholesale; motivation and decision facts stay spec-stage; fact grain 2026-07-24"/>
 
 ##self-uri `spec://vibevm/modules/vibe-registry/PROP-030` @spec/done
 
-##status-line **Status:** proposed (2026-07-13). @spec/done
+##status-line **Status: IMPLEMENTED** (specified 2026-07-13; verified against the tree
+2026-07-25 by the spec-actualization campaign). The embedded registry is this
+repository's normal resolution mode: the origin seam (§3.2) and the
+project-local rules (§3.3) are live in
+[`crates/vibe-cli/src/registry.rs`](../../../crates/vibe-cli/src/registry.rs) —
+the R-001 sanctioned constructor site — every §4 knob is in
+`vibe install --help`, §5's CI-off gate split is standing WAL law, and
+`source_kind = "embedded"` lockfiles are produced here daily. @impl/done
 
 ##depends-on **Depends on:** [PROP-002](PROP-002-decentralized-registry.md) (registry walk,
 `source_kind`), [PROP-019](../../common/PROP-019-version-manager.md) (VVM install
@@ -25,48 +32,48 @@ records, `origin`, `source_path`), [PROP-009](../vibe-workspace/PROP-009-loading
 
 ##AMBIENT-DEFAULT This PROP makes the in-tree `packages/` of a source-installed `vibe` an
 **ambient default registry** — resolved automatically, with zero configuration
-in the consuming project. @spec/done
+in the consuming project. @impl/done
 
 ### 1.1 Two audiences, opposite precedence {#audiences}
 
-##central-fact-lead The central design fact — **normative, recorded here at the owner's request**: @spec/done
+##central-fact-lead The central design fact — **normative, recorded here at the owner's request**: @impl/done
 
 - ##AUDIENCE-DEVELOPER **The vibevm developer** runs a `vibe` built from a source tree and is
   *developing vibevm on vibevm*. Their embedded `packages/` is the **source of
   truth**: on a coordinate clash with a network package, **embedded wins**. You
   are testing your local edits; a published copy of the same `(group, name,
-  version)` must not silently shadow them. @spec/done
+  version)` must not silently shadow them. @impl/done
 - ##AUDIENCE-END-USER **The end user** (a future distribution of vibevm) is *consuming* vibevm.
   Any packages bundled with a distribution are a **fall-through**: declared /
-  published registries win, and the bundle only fills gaps (offline defaults). @spec/done
+  published registries win, and the bundle only fills gaps (offline defaults). @impl/done
 
 - ##ORIGIN-SELECTS The same mechanism, opposite precedence, selected by **who you are** — which
-  `vibe` already knows from the active install's `origin`. @spec/done
+  `vibe` already knows from the active install's `origin`. @impl/done
 - ##INVERSION-REASON This developer↔user
-  inversion is the reason the precedence is not a single fixed rule. @spec/done
+  inversion is the reason the precedence is not a single fixed rule. @impl/done
 
 ## 2. The embedded registry {#registry}
 
 ##EMBEDDED-DEF An **embedded registry** is a local-directory registry ([PROP-002](PROP-002-decentralized-registry.md#local),
 the M0 `LocalRegistry` shape — `packages/<group>/<name>/<version>/`) that `vibe`
-derives from its **own active install**, not from the consuming project: @spec/done
+derives from its **own active install**, not from the consuming project: @impl/done
 
 1. ##DERIVE-READ-RECORD `vibe` reads its active VVM install record (`~/opt/vibevm/state.toml`, the
-   record whose slot holds `current_exe`). @spec/done
+   record whose slot holds `current_exe`). @impl/done
 2. ##DERIVE-SOURCE-PATH If that record has `origin = "external"` and a `source_path`, and
-   `<source_path>/packages` exists, that directory is the embedded registry. @spec/done
+   `<source_path>/packages` exists, that directory is the embedded registry. @impl/done
 3. ##DERIVE-INJECT It is injected into resolution for **every** project automatically. The
    project's `vibe.toml` is never read for it and never written — the default is
-   ambient, carried by the `vibe` binary, not the project. @spec/done
+   ambient, carried by the `vibe` binary, not the project. @impl/done
 
 - ##ACTIVE-REPOINTS Because it is derived from the **active** install, `vibe self use <instance>`
-  re-points the embedded registry at *that* instance's `source_path`. @spec/done
+  re-points the embedded registry at *that* instance's `source_path`. @impl/done
 - ##PER-CHECKOUT Two source
   checkouts installed side by side each carry their own embedded registry;
-  switching the active version switches the default. @spec/done
+  switching the active version switches the default. @impl/done
 
 - ##MANAGED-NO-EMBEDDED A `managed`-origin install (no source tree) has no embedded registry from a
-  source path. @spec/done
+  source path. @impl/done
 - ##DISTRIBUTION-SEAM A future distribution that bundles packages names its bundle
   location through the same seam (§3.2), at end-user precedence. @spec/done
 
@@ -74,85 +81,85 @@ derives from its **own active install**, not from the consuming project: @spec/d
 
 ##EXPLICIT-ABOVE Resolution keeps PROP-002's explicit-source short-circuits **above** the
 embedded registry — an explicit per-dependency source or pin is always
-deliberate and always wins: @spec/done
+deliberate and always wins: @impl/done
 
 ```
 [[override]]  >  path-source  >  git-source  >  ⟨registry layer⟩
 ```
 
 ##REGISTRY-LAYER-POSITION The embedded registry enters the **⟨registry layer⟩**, and its position there
-is the developer↔user inversion: @spec/done
+is the developer↔user inversion: @impl/done
 
 - ##PRECEDENCE-DEVELOPER **`origin = "external"` (developer) — embedded FIRST:**
   `embedded > declared [[registry]] walk`. On a coordinate clash, the embedded
-  copy wins. This is the vibevm-on-vibevm case (§1.1). @spec/done
+  copy wins. This is the vibevm-on-vibevm case (§1.1). @impl/done
 - ##PRECEDENCE-END-USER **distribution / end-user — embedded LAST:**
-  `declared [[registry]] walk > embedded`. The bundle is a fall-through. @spec/done
+  `declared [[registry]] walk > embedded`. The bundle is a fall-through. @impl/done
 
 ##NO-REGISTRY-LIFT If the project declares **no** `[[registry]]` at all and an embedded registry is
 available, resolution uses the embedded registry instead of failing — the
 `build_install_resolver` "no registry configured" bail (PROP-002) is lifted when
-an embedded registry is present. @spec/done
+an embedded registry is present. @impl/done
 
 ### 3.1 The knob {#knob}
 
-- ##KNOB-FLAGS `--prefer-embedded` / `--no-prefer-embedded` selects the position explicitly. @spec/done
+- ##KNOB-FLAGS `--prefer-embedded` / `--no-prefer-embedded` selects the position explicitly. @impl/done
 - ##KNOB-DEFAULT Its **default follows the install origin**: on for `origin = "external"`, off for
-  a distribution. @spec/done
+  a distribution. @impl/done
 - ##KNOB-SUPPRESS `--no-default-registry` (env `VIBE_NO_DEFAULT_REGISTRY=1`)
-  suppresses the embedded registry entirely for a command. @spec/done
+  suppresses the embedded registry entirely for a command. @impl/done
 - ##KNOB-EXPLICIT-SHADOW An explicit
   `--registry <path>` still shadows everything (PROP-002 M0 exclusivity),
-  unchanged. @spec/done
+  unchanged. @impl/done
 
-##ENUM-NETWORK-DEFAULT **Enumeration reaches the network by default; two flags opt out.** @spec/done
+##ENUM-NETWORK-DEFAULT **Enumeration reaches the network by default; two flags opt out.** @impl/done
 
 - ##enum-precedence-vs-fetch Precedence
   (above) governs which side *wins* a coordinate and which side a package is
   *fetched* from — the fetch path is first-served (embedded-first stops at the
-  embedded copy). @spec/done
+  embedded copy). @impl/done
 - ##ENUM-UNION But **version enumeration** (the candidate set the solver picks
   from) **unions across embedded *and* declared** by default, so the solver can
   see a newer published version even for a package the embedded registry already
-  carries. @spec/done
+  carries. @impl/done
 - ##ENUM-UNION-WHY That union is deliberate — it keeps a source developer from silently
   pinning stale versions — but it means a declared network `[[registry]]` is
   contacted (a `git ls-remote`) even when the embedded registry could answer
-  alone. @spec/done
+  alone. @impl/done
 
-##enum-flags-lead Two opt-in flags trade that freshness check for zero network: @spec/done
+##enum-flags-lead Two opt-in flags trade that freshness check for zero network: @impl/done
 
 - ##FLAG-OFFLINE **`--offline`** — resolve strictly offline: the declared network walk is not
   opened at all, so the embedded registry (plus explicit `--registry` / path /
   git sources) answers alone. No git host is contacted; a coordinate absent
   locally fails **without a single network request** (and thus without any
   credential prompt). With no embedded registry and no `--registry`, the command
-  bails with an actionable message rather than silently resolving nothing. @spec/done
+  bails with an actionable message rather than silently resolving nothing. @impl/done
 - ##FLAG-EMBEDDED-SHORT-CIRCUIT **`--embedded-short-circuit`** — keep the declared walk available, but
   short-circuit version enumeration at the embedded registry for any coordinate
   it serves: the network is reached **only** for packages the embedded registry
   lacks. A fully-embedded dependency graph resolves with zero network access
   (no enumeration round-trip, no credential prompt), while a genuinely missing
   package is still fetched from the network. Implies embedded-first precedence;
-  mutually exclusive with `--no-prefer-embedded`. @spec/done
+  mutually exclusive with `--no-prefer-embedded`. @impl/done
 
 - ##FLAGS-NOT-DEFAULT Neither flag is the default: a bare `vibe install` still unions embedded with the
-  declared walk. @spec/done
+  declared walk. @impl/done
 - ##PUBLIC-NO-PROMPT Note the interaction with PROP-002 §2.2.1 — a public
   (`auth = "none"`) registry now silences credential prompts unconditionally, so
   even the default union path never raises a login dialog for a missing public
-  package; the two flags above additionally spare the network round-trip itself. @spec/done
+  package; the two flags above additionally spare the network round-trip itself. @impl/done
 
 ### 3.2 Terminology — `embedded` vs `local` {#terminology}
 
 ##TERM-EMBEDDED **`embedded`** names packages that ship *inside vibevm itself* — the in-tree
 `packages/` of a source build, or a distribution's bundle. The flag is
-`--prefer-embedded`; the lock `source_kind` is `embedded` (§4). @spec/done
+`--prefer-embedded`; the lock `source_kind` is `embedded` (§4). @impl/done
 
 ##TERM-LOCAL **`local`** names packages that ship *inside the current project* — the
 in-tree `<project_root>/packages/` of any vibe project (§3.3). The flag is
 `--prefer-local` / `--no-prefer-local`; the lock `source_kind` is `local`
-(§4). @spec/done
+(§4). @impl/done
 
 ##TERM-LOCAL-HISTORY Originally reserved (see §9 D2 historical text) for a broader
 "user-own-repos" feature, the name now lands for the narrower
@@ -166,121 +173,121 @@ expansion under a different name. @spec/done
   `resolve_project_root`) gets that directory auto-opened as a `LocalRegistry`
   and composed into the local-registry family alongside the vibe-embedded
   registry. No `[[registry]]` block, no `--registry <path>`, no
-  `~/.vibe/registry.toml` machine entry needed. @spec/done
+  `~/.vibe/registry.toml` machine entry needed. @impl/done
 - ##LOCAL-ORIGIN-INDEPENDENT REQ. Project-local discovery is **independent of the running vibe's install
   origin**. Unlike vibe-embedded (§2), it works from a `cargo run`, a test
   binary, a distribution install, and a source install alike — every kind of
   `vibe` invocation that targets a project with a `packages/` directory
   discovers it. The feature exists for the downstream consumer's project, not
-  for the tool. @spec/done
+  for the tool. @impl/done
 - ##LOCAL-FAMILY-ORDER REQ. The local family is ordered **project-local first**, then
   vibe-embedded, so a developer's own in-tree packages win a clash inside the
   family (the project is the source of truth for its own deps). This ordering
   is internal to the `LocalCompositeProvider`; against the declared
   `[[registry]]` walk, the family as a whole composes at the existing
-  `EmbeddedPrecedence` (§3). @spec/done
+  `EmbeddedPrecedence` (§3). @impl/done
 - ##LOCAL-CI-GATE REQ. The CI-off gate (`CI` / `VIBE_NO_DEFAULT_REGISTRY`, §5) does **NOT**
   suppress project-local — it is per-project and portable (every checkout
   carries the same `packages/`), so a project-local lock is reproducible
   across machines and CI. The gate continues to suppress the vibe-embedded
-  half (the machine-local one). @spec/done
+  half (the machine-local one). @impl/done
 - ##LOCAL-NO-PREFER-FLAG REQ. `--no-prefer-local` suppresses project-packages discovery for one
   command (use when a project's `packages/` is stale, broken, or deliberately
   bypassed). It does NOT suppress vibe-embedded — `--no-default-registry`
   remains the knob for that. `--prefer-local` is the explicit affirmation of
   the default (project-local wins the local family); mutually exclusive with
-  `--no-prefer-local`. @spec/done
+  `--no-prefer-local`. @impl/done
 - ##LOCAL-SOURCE-KIND REQ. A package resolved from project-local records `source_kind = "local"`
   in `vibe.lock` (§4) — distinct from `embedded`. Unlike `embedded`, it is
   **portable** and the reproducibility guard (§5) does NOT warn on it: every
-  checkout of the project resolves the same `packages/` to the same content. @spec/done
+  checkout of the project resolves the same `packages/` to the same content. @impl/done
 
 ## 4. The lock {#lock}
 
 ##LOCK-EMBEDDED A package resolved from the embedded registry records `source_kind = "embedded"`
 in `vibe.lock` (a [PROP-002](PROP-002-decentralized-registry.md) `SourceKind`
 variant beside `registry` / `git` / `override` / `path`). Its `source_url` is the
-`file://` path into `<source_path>/packages`. @spec/done
+`file://` path into `<source_path>/packages`. @impl/done
 
 ##LOCK-LOCAL A package resolved from project-local (§3.3) records `source_kind = "local"`
 (another `SourceKind` variant). Its `source_url` is the `file://` path into
-`<project_root>/packages`. @spec/done
+`<project_root>/packages`. @impl/done
 
 - ##LOCK-GUARD-KEY `source_kind = "embedded"` is the marker the reproducibility guard keys on (§5):
   it says "this entry resolved from a machine-local, source-install-derived
-  directory," which a different machine — a teammate, CI — cannot reproduce. @spec/done
+  directory," which a different machine — a teammate, CI — cannot reproduce. @impl/done
 - ##LOCK-LOCAL-PORTABLE `source_kind = "local"` is portable (per-project, §3.3) and the guard does NOT
-  key on it. @spec/done
+  key on it. @impl/done
 
 ## 5. Reproducibility guard {#guard}
 
 - ##machine-local-problem A `file://<source_path>/packages/...` entry (the vibe-embedded registry, §2) is
-  **machine-local**: a checkout on another box, or CI, has no such path. @spec/done
+  **machine-local**: a checkout on another box, or CI, has no such path. @impl/done
 - ##unguarded-risk Left
   unguarded, an embedded-resolved lock committed to a shared repo breaks for
-  everyone else. @spec/done
+  everyone else. @impl/done
 
-##guard-strength-lead The guard, at the **warn + CI-off** strength the owner chose: @spec/done
+##guard-strength-lead The guard, at the **warn + CI-off** strength the owner chose: @impl/done
 
 - ##GUARD-CI-OFF **CI-off.** In `--frozen` (and any non-interactive CI resolution), the
   vibe-embedded registry is **disabled by default** — CI must resolve from
   declared registries (and, since §3.3, project-local), so a machine-local lock
   cannot silently pass there. Project-local is NOT suppressed by this gate — it
-  is per-project and portable. @spec/done
+  is per-project and portable. @impl/done
 - ##GUARD-WARN **Warn.** `vibe check` **warns** (does not fail) when the lock carries any
   `source_kind = "embedded"` entry: "this lockfile depends on the embedded
   registry of a source install and is not portable; publish or vendor these
   packages before sharing the lock." A `source_kind = "local"` entry is
-  portable and does NOT warn. @spec/done
+  portable and does NOT warn. @impl/done
 
 - ##GUARD-SCOPE This keeps the embedded-registry convenience strictly a **developer-machine**
   affordance and stops a non-portable lock from leaking into a shared commit
-  unnoticed. @spec/done
+  unnoticed. @impl/done
 - ##LOCAL-PORTABLE-COUNTERPART Project-local (§3.3) is the *portable* counterpart — it has the same
-  convenience without the portability caveat. @spec/done
+  convenience without the portability caveat. @impl/done
 
 ## 6. Discoverability {#doctor}
 
-##AMBIENT-VISIBLE The embedded registry is ambient but never silent: @spec/done
+##AMBIENT-VISIBLE The embedded registry is ambient but never silent: @impl/done
 
 - ##DOCTOR-REPORTS `vibe doctor` reports it: `embedded registry: <source_path>/packages (active
   install #<n>, origin external, precedence first)` — or `none` for a
-  distribution / managed install. @spec/done
+  distribution / managed install. @impl/done
 - ##RESOLUTION-NAMES Resolution output names the source when a package resolves from it ("resolved
-  `org.vibevm.world/wal` from the embedded registry"). @spec/done
+  `org.vibevm.world/wal` from the embedded registry"). @impl/done
 
 ## 7. Implementation hooks {#impl}
 
-##impl-hooks-lead Grounded in the current tree: @spec/done
+##impl-hooks-lead Grounded in the current tree: @impl/done
 
 - ##HOOK-ORIGIN-STORE **Origin + source path:** `~/opt/vibevm/state.toml` already records each
   install's `origin` and `source_path`; the active record is `store.active()`
   (`crates/vibe-cli/src/commands/vvm/mod.rs`). Reuse that store to discover the
-  embedded path. @spec/done
+  embedded path. @impl/done
 - ##HOOK-INJECTION **Injection point:** `build_install_resolver`
   (`crates/vibe-cli/src/commands/install/resolver.rs`). After the explicit
   `--registry` branch, resolve the embedded registry (unless suppressed) and
   compose it with the declared `MultiRegistryResolver` at the origin-selected
-  precedence; lift the empty-`[[registry]]` bail when embedded is present. @spec/done
+  precedence; lift the empty-`[[registry]]` bail when embedded is present. @impl/done
 - ##HOOK-LOCK **Lock:** add `SourceKind::Embedded`
-  (`crates/vibe-core/src/manifest/lockfile.rs`); tag embedded-resolved entries. @spec/done
+  (`crates/vibe-core/src/manifest/lockfile.rs`); tag embedded-resolved entries. @impl/done
 - ##HOOK-GUARD **Guard:** thread a `frozen` flag into resolver construction to drop the
   embedded registry in CI; add the `vibe check` warning on `Embedded` lock
-  entries. @spec/done
+  entries. @impl/done
 - ##HOOK-SHARED-RESOLVER The same composition serves `vibe install`, `update`, and `outdated` (they
-  share `MultiRegistryResolver::open`). @spec/done
+  share `MultiRegistryResolver::open`). @impl/done
 
 ## 8. Edge cases {#edges}
 
 - ##EDGE-SOURCE-DELETED **Source tree deleted / moved:** `<source_path>/packages` missing → the
   embedded registry is skipped with a `vibe doctor` warning; resolution falls
-  back to declared registries. @spec/done
+  back to declared registries. @impl/done
 - ##EDGE-NON-VIBEVM **Non-vibevm packages:** the embedded registry only answers for coordinates it
   actually contains; anything else falls through to declared registries as
-  usual, regardless of precedence. @spec/done
+  usual, regardless of precedence. @impl/done
 - ##EDGE-HOST-SELF **The host vibevm project itself:** with an embedded registry active, the host
   can drop `--registry packages/` from its own dev workflow — its own `packages/`
-  becomes the embedded default (full self-dogfood). @spec/done
+  becomes the embedded default (full self-dogfood). @impl/done
 
 ## 9. Decisions {#decisions}
 
