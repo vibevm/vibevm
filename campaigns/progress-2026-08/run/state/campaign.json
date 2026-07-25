@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T19:56:59Z",
+  "updated_at": "2026-07-25T20:37:59Z",
   "campaign_id": "progress-2026-08",
   "phase": "E",
   "wave": 0,
@@ -14,8 +14,8 @@
     {
       "name": "floor",
       "status": "green",
-      "ran_at": "2026-07-25T19:24:10Z",
-      "detail": "self-check all green, exit 0, NO VIBE_SETTINGS override - F-055 closed"
+      "ran_at": "2026-07-25T20:37:59Z",
+      "detail": "all green exit 0, no override, real ~/.vibe in place"
     },
     {
       "name": "check",
