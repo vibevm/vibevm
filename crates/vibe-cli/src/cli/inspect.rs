@@ -82,9 +82,11 @@ pub struct TreeArgs {
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 
-    /// Force the plain ASCII tree instead of the interactive TUI. The TUI
-    /// is Phase 2 (PROP-036 §2.11); today output is plain regardless, so
-    /// this flag is currently a no-op on a tty.
+    /// Force the plain ASCII tree instead of the interactive TUI — on a tty
+    /// as well as off it (PROP-036 §2.11: `--plain` and a non-tty both render
+    /// the static tree; neither enters interactive mode). Legal together with
+    /// `-c`/`-t` and wins over both, so `--plain -t` prints the tree here
+    /// rather than opening vibeterm.
     #[arg(long)]
     pub plain: bool,
 
