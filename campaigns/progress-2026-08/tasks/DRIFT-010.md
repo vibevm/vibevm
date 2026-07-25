@@ -180,3 +180,42 @@ Budget signal: past ~8 files or ~600 lines, stop and return.
   That is why `progress scan` reports 4 979 markers where §6 predicted
   4 975: the whole +4 is PROP-042 (58 → 62 markers), which this task never
   touched. File count (58) and errors (0) are as §6 states.
+- The live cache has since been upgraded in place (by whoever ran the scan
+  that landed with the commit, not by this task, which only ever pointed
+  `--campaign` at a scratch copy). Re-checked afterwards on the real file:
+  schema still **2**, 58/58 records carrying payloads, 58/58 campaign maps,
+  **4 490** verdicts — up by the four that PROP-042's own edit added, and
+  down by none. `run/cache.json` on disk is 5 142 927 bytes, the +92 %
+  predicted above.
+- The floor caught a real defect in this change and it is fixed: the tests
+  pushed `crates/vibe-cli/src/commands/progress.rs` to 897 lines, over the
+  600-line budget, so `cargo xtask conform check` went red on
+  `file-length`. Split along the seam the file already used for `rescan` —
+  the test module is now `crates/vibe-cli/src/commands/progress/tests.rs`
+  (`#[cfg(test)] mod tests;`), leaving the adapter at 475 lines and the
+  tests at 480. The same gate then caught `.expect()` in the fixture
+  helper, which the inline module had hidden: `incremental_fixture` now
+  returns `std::io::Result<()>` and each `#[test]` decides to panic, which
+  is the rule's actual point rather than a way around it.
+- Tests added, all of them mutation-checked rather than merely green
+  (payload made lossy → `warm_and_cold_agree` fails on `corpus.json`,
+  `…_on_every_rendering` on `mirror`, `cached_doc_round_trips_the_parse`
+  on the struct; record-hash check removed → `edited_file_is_reparsed`
+  fails; payload-identity check removed → `cached_doc_misses_are_misses`
+  fails):
+  - `progress-core`: `cached_doc_round_trips_the_parse`,
+    `cached_doc_misses_are_misses`,
+    `upsert_preserves_campaign_across_a_warm_write`.
+  - `vibe-cli`: `warm_and_cold_agree` (§6's four, plus the assertion that
+    the warm run really is served from the cache),
+    `warm_and_cold_agree_on_every_rendering` (mirror + XML + JSON + weave
+    digest — §4.4 says *every* subcommand, and `mirror` serialises whole
+    documents, so it is the sharpest available statement of fidelity),
+    `edited_file_is_reparsed`, `campaign_map_survives_incremental`,
+    `no_cache_flag_forces_full_parse`.
+- Not done here, deliberately: `specmap.json` is **not** regenerated, so
+  the two new `#[specmark::spec]` tags (`ground`, `Cache::cached_doc`) are
+  not in the index yet. Another agent was mid-edit on that file throughout
+  this task and regeneration is its own `chore(specmap)` commit in this
+  repo's habit — clobbering live work to land a generated artifact is not a
+  trade this task gets to make.

@@ -142,8 +142,11 @@ fn progress_gate_cli_records() {
 /// document and section markers, an anchored paragraph, list items, a
 /// table with marked cells, a fenced block that must stay unscanned,
 /// and a wrapper fragment.
-fn incremental_fixture(root: &Path) {
-    std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
+///
+/// Propagates instead of panicking — the decision to fail the run belongs
+/// to the `#[test]` that called it, not to a helper.
+fn incremental_fixture(root: &Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(root.join("spec"))?;
     std::fs::write(
         root.join("spec/a.md"),
         "<status stage=\"impl\" state=\"work\"/>\n\n\
@@ -154,8 +157,7 @@ fn incremental_fixture(root: &Path) {
          ```\n@spec/done inside a fence is not a marker\n```\n\n\
          ##a4 A tail with <status stage=\"spec\" state=\"done\" \
          action=\"drift\">a fragment</status> in it.\n",
-    )
-    .expect("write a");
+    )?;
     std::fs::write(
         root.join("spec/b.md"),
         "# Beta {#beta}\n\n\
@@ -164,11 +166,9 @@ fn incremental_fixture(root: &Path) {
          | h1 | h2 |\n\
          | --- | --- |\n\
          | ##b2 cell one @impl/done | ##b3 cell two @impl/work |\n",
-    )
-    .expect("write b");
-    std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
-        .expect("write cfg");
-    std::fs::create_dir_all(root.join("campaigns/progress-test/run")).expect("mkdir run");
+    )?;
+    std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")?;
+    std::fs::create_dir_all(root.join("campaigns/progress-test/run"))
 }
 
 fn args(root: &Path, no_cache: bool) -> ProgressCommonArgs {
@@ -179,10 +179,10 @@ fn args(root: &Path, no_cache: bool) -> ProgressCommonArgs {
     }
 }
 
-fn report_args(root: &Path, no_cache: bool) -> ProgressReportArgs {
+fn report_args(root: &Path, no_cache: bool, md: bool) -> ProgressReportArgs {
     ProgressReportArgs {
         common: args(root, no_cache),
-        md: true,
+        md,
         view: None,
         audience: None,
     }
@@ -223,7 +223,7 @@ fn read_state(root: &Path, name: &str) -> String {
 fn warm_and_cold_agree() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    incremental_fixture(root);
+    incremental_fixture(root).expect("fixture tree");
     let ctx = crate::output::Context::from_flags(true, false, None, true);
 
     scan(&ctx, &args(root, false)).expect("cold scan");
@@ -231,7 +231,7 @@ fn warm_and_cold_agree() {
     let cold_campaign = read_state(root, "campaign.json");
     let cold_report = report_body(
         &ground(&args(root, false)).expect("cold ground"),
-        &report_args(root, false),
+        &report_args(root, false, true),
         false,
     )
     .expect("cold report");
@@ -259,7 +259,7 @@ fn warm_and_cold_agree() {
     );
     let warm_report = report_body(
         &ground(&args(root, false)).expect("warm ground"),
-        &report_args(root, false),
+        &report_args(root, false, true),
         false,
     )
     .expect("warm report");
@@ -270,6 +270,58 @@ fn warm_and_cold_agree() {
     );
 }
 
+/// §4.4 says *every* subcommand, so the renderings that put a whole
+/// `ParsedDoc` on disk are compared too, not just the report table.
+/// `mirror` is the sharpest of them: it serialises each document in full,
+/// so a warm mirror equalling a cold one is the round-trip fidelity claim
+/// stated in bytes a reviewer can diff.
+#[test]
+fn warm_and_cold_agree_on_every_rendering() {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let root = tmp.path();
+    incremental_fixture(root).expect("fixture tree");
+    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let mirror_dir = root.join("campaigns/progress-test/run/mirror");
+
+    let read_mirror = || -> Vec<(String, String)> {
+        let mut out: Vec<(String, String)> = std::fs::read_dir(&mirror_dir)
+            .expect("mirror dir")
+            .map(|e| {
+                let p = e.expect("entry").path();
+                let name = p.file_name().expect("name").to_string_lossy().into_owned();
+                (name, std::fs::read_to_string(&p).expect("read mirror file"))
+            })
+            .collect();
+        out.sort();
+        out
+    };
+
+    // Cold: nothing cached yet, so every document is freshly parsed.
+    mirror(&ctx, &args(root, true)).expect("cold mirror");
+    let cold_mirror = read_mirror();
+    let cold = ground(&args(root, true)).expect("cold ground");
+    let cold_xml = report_body(&cold, &report_args(root, true, false), false).expect("cold xml");
+    let cold_json = report_body(&cold, &report_args(root, true, false), true).expect("cold json");
+    let cold_digest = weave::weave_digest(cold.docs.iter());
+    assert_eq!(cold_mirror.len(), 2, "a mirror worth comparing");
+
+    // Warm: the same renderings, now built from reconstructed documents.
+    mirror(&ctx, &args(root, false)).expect("warm mirror");
+    let warm = ground(&args(root, false)).expect("warm ground");
+    assert_eq!(read_mirror(), cold_mirror, "mirror");
+    assert_eq!(
+        report_body(&warm, &report_args(root, false, false), false).expect("warm xml"),
+        cold_xml,
+        "report --xml"
+    );
+    assert_eq!(
+        report_body(&warm, &report_args(root, false, false), true).expect("warm json"),
+        cold_json,
+        "report --json"
+    );
+    assert_eq!(weave::weave_digest(warm.docs.iter()), cold_digest, "weave");
+}
+
 /// Reuse is keyed on content, so an edit must land and only that file's
 /// row may move. The record's `parsed` payload is compared too — a
 /// stale payload behind a fresh hash is exactly the failure the
@@ -278,7 +330,7 @@ fn warm_and_cold_agree() {
 fn edited_file_is_reparsed() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    incremental_fixture(root);
+    incremental_fixture(root).expect("fixture tree");
     let ctx = crate::output::Context::from_flags(true, false, None, true);
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
@@ -330,7 +382,7 @@ fn edited_file_is_reparsed() {
 fn campaign_map_survives_incremental() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    incremental_fixture(root);
+    incremental_fixture(root).expect("fixture tree");
     let ctx = crate::output::Context::from_flags(true, false, None, true);
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
@@ -368,7 +420,7 @@ fn campaign_map_survives_incremental() {
 fn no_cache_flag_forces_full_parse() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    incremental_fixture(root);
+    incremental_fixture(root).expect("fixture tree");
     let ctx = crate::output::Context::from_flags(true, false, None, true);
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
