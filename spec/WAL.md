@@ -89,7 +89,12 @@ closes only through sync-from-code with owner approval.
 ## Done (collapsed — see `git log`)
 
 - **Phase D — stitching, complete (2026-07-25/26).** Waves d1 and
-  d2a–d2h closed **310 of 311 drift rows** across 36 files. d1 took the
+  d2a–d2h closed **304 of 311 drift rows** across 36 files. *(This line
+  read "310 of 311" until close-out reconstructed the §9 LOG from the
+  verdict map: Phase D ended at 7 open rows, and the last 6 were closed by
+  Phase E — by building the behaviour the spec already promised, not by
+  stitching prose. The two phases are separated precisely so that
+  distinction survives.)* d1 took the
   shipped-under-proposed families in one sweep (F-053 PROP-030's 63 rows;
   F-018's bridge four, 137; F-043's PROP-000 twelve) — 191 of those were
   scripted straight off the C-phase verdict map, since a deterministic
