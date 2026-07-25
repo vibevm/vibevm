@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T21:35:00Z",
+ "updated_at": "2026-07-25T22:35:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -421,9 +421,9 @@
    "from": "crates/vibe-resolver/src/naive.rs",
    "to": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Code-side stale deviates on PROP-002#solver: naive.rs:32 reason still claims 'no ResolvoSolver exists in tree and NaiveDepSolver is the only DepSolver impl (DBT-0011)' and sat.rs:174 claims 'adopting resolvo stays an owner decision' - while ResolvoDepSolver is the shipped PRODUCTION DEFAULT (vibe-cli/registry.rs:117 unwrap_or(\"resolvo\"), :191 constructs it; resolvo_engine/ module 'the production DepSolver cell'). The two deviates reasons aged behind the resolvo adoption they were waiting for. Phase E: rewrite or retire both #[spec(deviates)] blocks. EXTENDED (c4c): a third stale reason at vibe-resolver/src/lib.rs:288-296 - the pin_preferences deviates says 'SatDepSolver is not in tree (see DBT-0011)' while the Sat cell ships in sat.rs (the deviates' core point - pin_preferences absent, pins held at the install layer per PROP-011 - remains valid)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Code-side stale deviates on PROP-002#solver: naive.rs:32 reason still claims 'no ResolvoSolver exists in tree and NaiveDepSolver is the only DepSolver impl (DBT-0011)' and sat.rs:174 claims 'adopting resolvo stays an owner decision' - while ResolvoDepSolver is the shipped PRODUCTION DEFAULT (vibe-cli/registry.rs:117 unwrap_or(\"resolvo\"), :191 constructs it; resolvo_engine/ module 'the production DepSolver cell'). The two deviates reasons aged behind the resolvo adoption they were waiting for. Phase E: rewrite or retire both #[spec(deviates)] blocks. EXTENDED (c4c): a third stale reason at vibe-resolver/src/lib.rs:288-296 - the pin_preferences deviates says 'SatDepSolver is not in tree (see DBT-0011)' while the Sat cell ships in sat.rs (the deviates' core point - pin_preferences absent, pins held at the install layer per PROP-011 - remains valid). || RESOLVED by DRIFT-014 2026-07-25: two deviates removed (the contract sanctions naive and sat by name, so they were never deviations) and one reworded; deviates 14->12, implements 662->664, ratchet unmoved. The wider blast radius it surfaced is F-059."
   },
   {
    "id": "F-048",
@@ -504,7 +504,7 @@
    "type": "missing-support",
    "status": "open",
    "wave": 2,
-   "note": "Test-isolation defect, OUTBOUND and worse than F-055: all 11 tests in cli_init.rs call `vibe init`, which writes `last_author` back into the REAL ~/.vibe/config.toml (commands/init/mod.rs:177 -> prompts.rs:128-137 maybe_save_author -> user_config.save()). The manual-tests law - never let a test touch real user state - is broken in the writing direction on every run. Not red today (the tests assert on the project manifest, not on resolution), so it leaks silently. cli_init.rs has its own local vibe() builder at :10-16 and needs the UserScratch treatment DRIFT-012 gave the other four files. Found by DRIFT-012 while fixing F-055; deliberately left for its own task per the budget signal."
+   "note": "Test-isolation defect in cli_init.rs, CORRECTED 2026-07-25 after the owner asked which side leaks. Production behaviour is CORRECT and out of scope: `vibe init` remembering last_author is the feature, and nothing in the command should change. The defect is test-side and has two halves of different severity. (a) READING - unconditional and live: all 11 tests in cli_init.rs isolate nothing but VIBE_NO_DEFAULT_REGISTRY (their local vibe() builder at :10-16), so the non-interactive author resolves out of the developer's REAL ~/.vibe/config.toml via prompts.rs:99-110 (--author -> user_config.init.last_author -> detect_git_author). Their behaviour depends on the machine - the same class that let cli_mcp_kind pass all day by accident. (b) WRITING - real but CONDITIONAL, not every-run as first reported: maybe_save_author (init/mod.rs:178) is called outside the `if interactive` branch so it runs every time, but prompts.rs:132 writes only when the computed author differs from the stored one. On this machine last_author is already set, so the tests read it, it matches, and nothing is written. On a fresh machine or in CI - last_author unset, `git config user.name` set - the first test run DOES write it into the real user config. Fix: give cli_init.rs the UserScratch treatment DRIFT-012 gave the other four files. Found by DRIFT-012, left for its own task per the budget signal."
   },
   {
    "id": "F-057",
@@ -520,9 +520,9 @@
    "from": "crates/vibe-cli/src/commands/progress.rs",
    "to": "discipline://rust-ai-native-lang/guide#surface-form",
    "type": "reality-mismatch",
-   "status": "open",
+   "status": "resolved",
    "wave": 2,
-   "note": "Floor regression raised by the Phase E batch: commands/progress.rs reached 892 lines against the 600-line file budget, so `cargo xtask conform check` reports 1 NEW file-length finding and self-check exits 1. The adapter absorbed the gate subcommand (DRIFT-008), the evidence provider selection (DRIFT-006), the fold-check wiring (DRIFT-007) and the incremental ground() (DRIFT-010) in one day. Precedent for the fix: DRIFT-002 split progress-core/parse.rs for exactly this, and DRIFT-009 already moved rescan into commands/progress/rescan.rs - the same module dir takes the rest."
+   "note": "Floor regression raised by the Phase E batch: commands/progress.rs reached 892 lines against the 600-line file budget, so `cargo xtask conform check` reports 1 NEW file-length finding and self-check exits 1. The adapter absorbed the gate subcommand (DRIFT-008), the evidence provider selection (DRIFT-006), the fold-check wiring (DRIFT-007) and the incremental ground() (DRIFT-010) in one day. Precedent for the fix: DRIFT-002 split progress-core/parse.rs for exactly this, and DRIFT-009 already moved rescan into commands/progress/rescan.rs - the same module dir takes the rest. || RESOLVED 2026-07-25 by DRIFT-010 itself, before DRIFT-015 was even written: the executor hit its own budget violation and split along the seam rescan already used (adapter 475, tests 480). CORRECTION to the finding as filed: the 897-line file existed only inside that task working tree - git log shows no committed revision of progress.rs ever exceeded 560 lines. What the intermediate commit DID leave red was different: 5 no-unwrap-in-domain findings from the fixture helper, verified both ways (5 without the fix, 0 with) and fixed in 440cc6ef. DRIFT-015 stood down without touching a source file and proved the gate could fire before trusting its silence."
   },
   {
    "id": "F-059",

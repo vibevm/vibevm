@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T19:05:44Z",
+  "updated_at": "2026-07-25T19:24:31Z",
   "campaign_id": "progress-2026-08",
   "phase": "E",
   "wave": 0,
@@ -14,8 +14,8 @@
     {
       "name": "floor",
       "status": "green",
-      "ran_at": "2026-07-25T18:38:13Z",
-      "detail": "self-check exit 0 isolated; F-055 is the only un-isolated red"
+      "ran_at": "2026-07-25T19:24:10Z",
+      "detail": "self-check all green, exit 0, NO VIBE_SETTINGS override - F-055 closed"
     },
     {
       "name": "check",
@@ -28,6 +28,12 @@
       "status": "green",
       "ran_at": "2026-07-25T18:38:14Z",
       "detail": "ratchet 37 gated orphans host-side, unmoved"
+    },
+    {
+      "name": "conform",
+      "status": "green",
+      "ran_at": "2026-07-25T19:24:11Z",
+      "detail": "0 findings, 0 new (fact store cleared, 524 files re-extracted)"
     }
   ]
 }

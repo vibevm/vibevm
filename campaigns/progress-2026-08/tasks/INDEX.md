@@ -11,11 +11,12 @@
 | DRIFT-007 | `progress check` verifies that a fold was lossless | opus | done |
 | DRIFT-008 | `campaign.json` carries the gate panel | opus | done |
 | DRIFT-009 | baseline invalidation gets its other two rules | opus | done |
-| DRIFT-010 | the subcommands take the incremental path | opus | queued |
+| DRIFT-010 | the subcommands take the incremental path | opus | done |
 | DRIFT-011 | a blockquote can carry a fact anchor | opus | done |
-| DRIFT-012 | the e2e harness stops drinking the developer's settings | opus | queued |
+| DRIFT-012 | the e2e harness stops drinking the developer's settings | opus | done |
 | DRIFT-013 | `--plain`'s help stops describing a Phase 2 that shipped | opus | queued |
-| DRIFT-014 | three deviate reasons stop denying the shipped resolver | opus | queued |
+| DRIFT-014 | three deviate reasons stop denying the shipped resolver | opus | done |
+| DRIFT-015 | the progress adapter goes back under its file budget | opus | superseded |
 
 DRIFT-006…011 are Phase E, opened by the owner's 2026-07-25 ruling on the
 seven F-046 parity rows (wire, not demote) plus F-015. They close the last
