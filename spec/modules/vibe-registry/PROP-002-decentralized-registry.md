@@ -587,11 +587,14 @@ overridden      = false
 
 ##PUB-ADAPTER-SELECTION **Adapter selection.** The CLI picks an adapter from the registry URL's host segment. `github.com` (or any subdomain) → `GitHubCreator`; `gitverse.ru` → `GitVerseCreator`; unknown hosts surface a clean error pointing at PROP-002 §2.10 rather than guessing a Gitea-compatible shape that may not match the host's actual API. @impl/done
 
-##PUB-TOKEN-LOADING **Token loading.** The publish token loader (`crate::token::load_token(host)`) iterates these sources in order, returning the first non-empty value: @impl/done
+##PUB-TOKEN-LOADING **Token loading.** The publish token loader (`crate::token::load_token(host)` → `load_token_for_host`) iterates these sources in order, returning the first non-empty value: @impl/done
 
-1. ##TOK-ENV-VAR `VIBEVM_PUBLISH_TOKEN` environment variable (host-agnostic; useful for CI). @impl/done
-2. ##TOK-PER-HOST-FILE `~/.vibe/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host (`github` for `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`). @impl/done
-3. ##TOK-LEGACY-FALLBACK `~/.vibe/git.publish.token` — legacy host-agnostic fallback. @impl/done
+1. ##TOK-HOST-ENV-VAR `VIBEVM_PUBLISH_TOKEN_<HOST>` environment variable — host-specific, and the **highest-precedence source**. The suffix is the uppercased first label of the host (`VIBEVM_PUBLISH_TOKEN_GITHUB` for `github.com`, `VIBEVM_PUBLISH_TOKEN_GITVERSE` for `gitverse.ru`); non-alphanumerics fold to `_` so the name stays a valid POSIX identifier. Lets CI hold tokens for several hosts in the same environment without one host-agnostic variable clobbering them all. @impl/done
+2. ##TOK-ENV-VAR `VIBEVM_PUBLISH_TOKEN` environment variable — legacy host-agnostic form, kept so setups that already export it keep working without a rename. **Outranked by the host-specific variable above**; the host-specific form is preferred in new setups. @impl/done
+3. ##TOK-PER-HOST-FILE `<settings-dir>/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host (`github` for `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`). @impl/done
+4. ##TOK-LEGACY-FALLBACK `<settings-dir>/git.publish.token` — legacy host-agnostic fallback. @impl/done
+
+##TOK-SETTINGS-DIR Both file legs hang off the one settings dir — `~/.vibe`, or `$VIBE_SETTINGS` when it is set — so a single variable relocates every on-disk credential read together, and an isolated run cannot reach the operator's real token file. The pre-consolidation config dir supplied two further legs until 2026-07-26; those reads were removed precisely because `$VIBE_SETTINGS` deliberately did not relocate that directory. @impl/done
 
 ##tok-files-rationale The per-host file lets the operator hold tokens for several hosts simultaneously without juggling env vars. The legacy fallback covers the GitVerse-only era and keeps existing setups working. @spec/done
 

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T19:56:59Z",
+  "updated_at": "2026-07-25T22:32:58Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
@@ -16782,7 +16782,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
-      "content_hash": "f5c514b8d0991dca95e32ec2c75fff66652552a710a0cce133542163f6490fb3",
+      "content_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
       "rollup": {
         "explicit": [
           "impl",
@@ -16796,11 +16796,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 360,
-        "fact_count": 359,
+        "marker_count": 362,
+        "fact_count": 361,
         "unmarked_facts": 0
       },
-      "marker_count": 360,
+      "marker_count": 362,
       "unit_count": 35,
       "issue_count": 0,
       "campaign": {
@@ -18089,31 +18089,31 @@
           "PUB-TOKEN-LOADING": {
             "v": "confirmed",
             "ev": [
-              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+              "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
             ]
           },
           "TOK-ENV-VAR": {
             "v": "confirmed",
             "ev": [
-              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+              "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
             ]
           },
           "TOK-PER-HOST-FILE": {
             "v": "confirmed",
             "ev": [
-              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+              "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
             ]
           },
           "TOK-LEGACY-FALLBACK": {
             "v": "confirmed",
             "ev": [
-              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+              "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
             ]
           },
           "tok-files-rationale": {
             "v": "confirmed",
             "ev": [
-              "publish live: vibe-publish 7 modules (lib/creator/direct_git/git_publish/github/gitverse/orchestrator all specmap-tagged); token loader 3-source order matches 90-user boot facts; redaction tests exist under the exact cited names (token.rs:305 debug_redacts_value, :314 display_redacts_value); GitVerse degradation note historical-verified 2026-04-26; live publishes proven 2026-04-29 + M1.19 era (vibespecs org populated)"
+              "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
             ]
           },
           "TOKEN-SECRECY-INVARIANT": {
@@ -18536,9 +18536,21 @@
             "ev": [
               "honest self-diagnosis: impl/done + comment naming F-032 (status line accepted-only, Phase A boxes unchecked) matches reality — the registry contract IS shipped (M1.1-rev + M1.6 + M1.13/M1.14 slices all verified live this batch)"
             ]
+          },
+          "TOK-HOST-ENV-VAR": {
+            "v": "confirmed",
+            "ev": [
+              "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
+            ]
+          },
+          "TOK-SETTINGS-DIR": {
+            "v": "confirmed",
+            "ev": [
+              "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:14:56Z",
+        "verified_at": "2026-07-26T12:30:00Z",
         "verify_batch": "c4b-registry-core + d2d"
       }
     },
