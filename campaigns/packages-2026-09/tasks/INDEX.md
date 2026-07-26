@@ -2,6 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
+| MARKUP-B9 | `spec-genres` + `wal` + `addressable-specs` | opus | dispatched — 17 files, 577 units; predicts 0 / 2 589 / ≈797 |
 | MARKUP-B8 | `discovery-prompt` + `decision-records` | opus | **done** — 366 units, **0 unmarked** (a first); ×1.28 measured; rulings 34–38 locked; F-097 |
 | MARKUP-B7 | `rust-ai-native-lang` v0.7.0 | opus | **done** — 544 of 546 units over 18 files; all 3 predictions held; ruling 33 locked |
 | DRIFT-037 | a skill's frontmatter stops being mistaken for prose | opus | **done** — F-092 closed; −9 exactly, three stacks reach 0; §2 review point still owner's |

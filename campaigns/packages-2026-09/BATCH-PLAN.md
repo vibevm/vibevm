@@ -76,7 +76,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B6~~ | `typescript-ai-native-lang` — **DONE**, 581 units (×1.72) | 18 | 338 |
 | ~~B7~~ | `rust-ai-native-lang` — **DONE**, 546 units (×1.75) | 18 | 312 |
 | ~~B8~~ | `discovery-prompt` + `decision-records` — **DONE**, 366 units (×1.28), **0 unmarked** | 8 | 286 |
-| B9 | `spec-genres` + `wal` + `addressable-specs` | 17 | 578 |
+| B9 | `spec-genres` + `wal` + `addressable-specs` | 17 | 577 |
 | B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | 16 | 488 |
 | B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | 15 | 451 |
 | B12 | `campaign-plans` + `two-process-model` + `operating-modes` | 15 | 403 |
