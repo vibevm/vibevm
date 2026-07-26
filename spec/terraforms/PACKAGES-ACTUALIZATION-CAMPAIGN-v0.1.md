@@ -233,13 +233,27 @@ and A1 and A4 change phases that follow, so read them before opening C.**
    corpus is 1.8× the host in facts while being only 1.07× in lines, so
    prediction 5's "comparable cost" reads right on lines and light on facts.
    `progress check` **0** across both corpora.
-2. **DEFERRED — owner ruling 2026-07-26: «не перевыпускай пакет, сделаем это
-   потом».** The re-mint does not happen in this session, so **Phase C cannot
-   open**: its evidence join needs fact anchors, and the engine the host
-   consumes cannot see them. Phase A's exit gate is correspondingly
-   **partially unreachable** — the `specmap.json` clause below waits on this
-   step, and Phase A closes on its other two clauses only. Diagnosis confirmed
-   verbatim before deferring: `is_valid_fact_id` exists **only** in
+2. **DEFERRED as a re-mint — and then it turned out no re-mint was needed.**
+   *Owner ruling 2026-07-26: «не перевыпускай пакет, сделаем это потом»; then,
+   on the version sweep: «просто обнови все до самой свежей версии».* The
+   second instruction closed the gap the first had deferred. **The blocker was
+   a caret, not a release:** all three `-lang` stacks required
+   `core-ai-native '^0.7'` while the current version is 0.8.0, and on a 0.x
+   version that caret means `>=0.7.0 <0.8.0` — it excluded the very version
+   everything needed, which is why the lockfile pinned 0.7.0. Fixed in place
+   (three pins → `^0.8`, `sync-engines.toml`'s three source roots → v0.8.0,
+   engines re-vendored) with **no new version slot and no publication**.
+   **So `specmap.json` now carries fact units and fact-grain edges, this
+   phase's exit gate is fully reachable, and Phase C is not blocked.**
+   Measured before/after, edge targets classified by the source bytes:
+   1 041 → 5 267 spec units; fact-targeting edges **0 → 65**; unresolved
+   **77 → 12**, because 65 of those "dangling" edges were correct code tags
+   the unit-grain engine could not see. Wave 1's last drift row
+   (`FACT-GRAIN-EVIDENCE`) closed on this. Cost: v0.8.0 adds `Fact::GoUnsafe`
+   and two exhaustive matches in the rust stack had to learn it.
+   *Still outstanding, and still the owner's:* whether the `-lang` slots
+   should eventually be re-minted so a v0.7.0 slot stops carrying 0.8.0
+   engines. Diagnosis kept for that day: `is_valid_fact_id` exists **only** in
    `core-ai-native/v0.8.0`; `vibe.lock` pins `core-ai-native@=0.7.0` and
    `rust-ai-native-lang@=0.7.0`; `cargo xtask sync-engines --check` is green
    (33 pairs, 6 sync sets), so nothing has drifted — the gap is a version, not
@@ -452,6 +466,27 @@ command that would have tested it.
   *Finding ids continue wave 1's sequence (F-068 onward) rather than restarting
   — findings cross wave boundaries (F-064…F-067 are wave-2 work) and one
   namespace is worth more than a tidy reset.*
+
+- **2026-07-26 · pilot markup — the aggregator is marked, and the genre
+  question turns out to belong to Phase C, not Phase B.** `rust-ai-native`'s
+  README carries its document marker and six fact anchors (`AGG-ROLE`, three
+  `AGG-MEMBER-*`, `AGG-HOW-TO-REQUIRE`, `AGG-FRONT-DOOR`); the closing
+  paragraph was split in two, a sense-preserving re-split this phase allows,
+  because "how to require it" and "where the front door is" are two facts.
+  `progress check` clean over all 344 files. **F-069 does not block markup:**
+  a marker records a fact's *stage and state*, and "can this document be the
+  source of truth for a fact about another package?" is a question about its
+  **verdict** — so the delegating-anchor gap is Phase C's to answer and Phase
+  B proceeds at full speed. Worth knowing before someone stalls a whole phase
+  on it.
+  **F-070 — and `--exhaustive` immediately found something wave 1 could not
+  have.** The counter reports **8 992 unmarked paragraphs**, of which **264
+  sit in 33 `LICENSE.md` files** — the same UPL-1.0 text once per version
+  slot. Marking them would mint 264 fact anchors on someone else's words, 33
+  times over. `DEFAULT_EXCLUDES` already drops `refs` (third-party) and
+  `fixtures` (not a contract) always-on; `LICENSE.md` is the same category and
+  belongs there, which is a code change because §4 is include-only by design.
+  Until it lands, **Phase B's exit gate cannot be reached honestly.**
 
 ## 8. Deferrals {#deferrals}
 

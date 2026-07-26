@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T16:00:00Z",
+ "updated_at": "2026-07-26T18:00:00Z",
  "findings": [
   {
    "id": "F-068",
@@ -19,6 +19,15 @@
    "status": "open",
    "wave": 2,
    "note": "PREDICTION 2 CONFIRMED AT THE PILOT, and concretely. The plan predicted the aggregator genre would need at least one grammar amendment to PROP-043 3.8. The umbrella packages are content-minimal by design (PROP-028): rust-ai-native carries a 19-line README and a manifest, and THREE OF ITS FOUR SUBSTANTIVE FACTS ARE ABOUT OTHER PACKAGES - what rust-ai-native-lang ships (GUIDE, cards, toolchain), what rust-ai-native-mcp serves, that core-ai-native arrives transitively. Marking those `@impl/done` here asserts, in this document, something this document cannot be the source of truth for: the truth conditions live in another package, and when that package changes nothing here notices. Wave 1 never hit this because a host PROP owns its own subject matter. The grammar needs a way to say `this fact is ABOUT <other unit>` - a borrowed or delegating anchor whose verdict is derived from the owning unit's rather than asserted independently, so a stale aggregator is detected by the owner moving rather than by someone re-reading the aggregator. Until that exists, the honest fallback is to mark such facts `unverifiable` in the aggregator and verify them where they live."
+  },
+  {
+   "id": "F-070",
+   "from": "progress.toml",
+   "to": "crates/progress-core/src/scope.rs",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "THE EXHAUSTIVE COUNTER DEMANDS FACT MARKUP ON VERBATIM LICENCE BOILERPLATE. Measured at the Phase A pilot 2026-07-26: `progress check --exhaustive` reports 8 992 unmarked paragraphs across the widened scope, and 264 of them (3%) live in 33 LICENSE.md files - the same UPL-1.0 text copied once per package version slot. Marking them would mint ~264 fact anchors on someone else's words, 33 times over, and every one of them would be a fact this project is not the author or the source of truth for. Wave 1 never hit this because spec/ carries no LICENSE files. The precedent already exists and points the right way: DEFAULT_EXCLUDES (scope.rs:11-20) already drops `refs` as third-party and `fixtures` as not-a-contract, always-on and even under an explicit include. LICENSE.md is the same category. FIX DIRECTION: add it to DEFAULT_EXCLUDES rather than to progress.toml - section 4 is include-only BY DESIGN ('exclusions are expressed by enumeration'), so there is no config-side way to express this and it needs a small code change plus a test. Until then the Phase B exit gate (`check --exhaustive` green over both corpora) cannot be reached honestly: either 264 boilerplate paragraphs get marked, or the gate stays red for a reason nobody should have to re-derive."
   }
  ]
 }

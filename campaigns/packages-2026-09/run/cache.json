@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T23:48:03Z",
+  "updated_at": "2026-07-26T00:42:29Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md": {
       "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
@@ -1169,13 +1169,25 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md": {
-      "content_hash": "3a4fc05ecb48881435f7106bd9d1a6dc83bec1eaf208309e3839deaefb72410e",
+      "content_hash": "538a94f3409c696f8c7af85851337a8c5ef6d1dd82674a831b77fecf18ae7110",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 5,
-        "unmarked_facts": 5
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 7,
+        "fact_count": 6,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 7,
       "unit_count": 1,
       "issue_count": 0
     },
@@ -1444,7 +1456,7 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md": {
-      "content_hash": "0641f09176f29ec7c4c5d5c7cfc1f15944db8c3faa0fb9a500464c3be65f9c8c",
+      "content_hash": "1b0e5c2e0f773654c1fb155b0e7cc0d19f9f2da086632d38ebc7c5bf729831ed",
       "rollup": {
         "marker_count": 0,
         "fact_count": 5,

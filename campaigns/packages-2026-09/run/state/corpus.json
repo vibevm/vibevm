@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T23:48:03Z",
+  "updated_at": "2026-07-26T00:42:29Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md",
@@ -1170,12 +1170,18 @@
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 7,
       "units": 1,
-      "facts": 5,
-      "unmarked": 5,
+      "facts": 6,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
