@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Thirty-three rulings now, of which two are struck (18, 19).** They accumulate in
+**Thirty-eight rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -318,6 +318,51 @@ justification in its own report that did not survive being checked.
     at the function, because reflow is legal and a position-sensitive rule
     would red-light every legal one. So a ruling-33 repair passes C3 silently
     and **must be reported by the executor and read by the reviewer**.
+
+### Added by the B8 pass — the `world` genre calibration (2026-07-27) {#locked-b8}
+
+34. **A comma-joined sequence of complete clauses splits; a compound object does
+    not.** Rulings 3, 20 and 22 are all keyed to colons and semicolons, and
+    nothing covered the comma — which B8 met ten times. Split when each element
+    is a **complete clause** with its own subject and verb, separately
+    verdictable, and standing in the author's own words. Keep whole when the
+    elements are a **verb's compound object**: splitting would leave a dangling
+    lead («…replaces the frame **with**»), and manufacturing one is exactly what
+    ruling 3's no-invented-words guard forbids. *Consequence, accepted: the same
+    three facts sit at grain 3 in one file and grain 1 in another, and the
+    difference is pure syntax.* Ruling 28 stays narrow — a lead-less split is
+    legal for a bare list that **is** the content, not for a list that is a
+    verb's object.
+35. **An enumerating colon introduces members of a set the lead names. Anything
+    else is explanatory and stays whole — even when ruling 20's verdict test
+    passes.** A colon introducing the lead's *contrast*, *reason* or *definition*
+    does not split.
+    **The control that decides it, and it is internal to the corpus:** the same
+    three facts appear in `25-flow-decision-records.md` as a semicolon triple
+    with no colon, where rulings 3 and 22 unambiguously keep them whole, and in
+    `DECISION-RECORDS-PROTOCOL.md` behind a colon. Reading that colon as
+    enumerating would split one and not the other **for a punctuation difference
+    between two files saying the same thing**. Reading it as explanatory puts
+    both at the same grain. That is the strongest evidence this campaign has
+    produced for any convention.
+36. **Em-dash appositives stay whole.** Nothing in the rulings mentioned `—`;
+    treat it as ruling 3's explanatory colon, even when the clause after it
+    reads as a standalone rule.
+37. **A Composition entry takes the stage its predicate asserts, never a
+    genre-uniform one.** A rule in force or a checkable property of a shipped
+    package → `@impl/done`; typical practice («often precedes»), a
+    recommendation, or a positioning claim → `@spec/done`. **Uniformity was
+    considered and rejected:** it produces visibly different stage mixes in two
+    adjacent READMEs, which looks uneven and is correct — the two files assert
+    different kinds of thing, and forcing one stage would make one of them
+    wrong. Register is UPPER either way (ruling 9, package-map entries).
+38. **A flow's `spec/flows/**` documents take `spec/done`, and `audience` stays
+    absent on all of them** — including a consumer-facing `usage.md`. Rulings 7,
+    21 and 25 named README, boot snippet, normative document and appendix but
+    not this genre. The precedent is uniform across the 74 already-marked
+    package files: every file under `spec/` that is not a boot snippet or a
+    `SKILL.md` carries `spec/done`, and the language stacks' `spec/*/tools/*.md`
+    are the same genre. Ruling 8's «absent everywhere but a README» holds.
 
 ## Boundaries {#boundaries}
 

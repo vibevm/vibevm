@@ -1323,6 +1323,30 @@ command that would have tested it.
   The ruling was written up immediately and **the config change was held until
   the task landed**. A scope edit is never urgent; a measurement in flight is.
 
+- **2026-07-27 · F-097 — a package rename left its own install command behind,
+  in sixteen files.** `flow:atomic-commits` does not resolve. Commit `520e7478`
+  renamed the `git-practices` members and the package is `git-atomic-commits`;
+  no `name = "atomic-commits"` survives anywhere outside the regenerated
+  `vibedeps/` and `.vibe/cache/` copies. **Sixteen canonical files still cite the
+  dead name** — B8 found twelve and the reviewer's sweep found four more.
+
+  **The sharpest instance is the package's own README, lines 32 and 38:**
+  `vibe install flow:atomic-commits` and `vibe uninstall flow:atomic-commits`.
+  Those are copy-paste instructions, in the file a consumer reads first, for a
+  package that is not called that.
+
+  **This is the second finding in two days of a class the campaign had not seen
+  before F-093: an instruction that fails when followed**, as distinct from a
+  document that merely disagrees with reality. Both came from a rename or a
+  consolidation reaching the code and not the prose that names it. Worth
+  treating as a class rather than two incidents — the corrections that move a
+  name are exactly the ones whose fan-out nothing checks.
+
+  **It is wave-level, not B8's.** Every affected package is a `world` flow, so
+  B9–B16 will each meet their own copy. Filing one DRIFT against all sixteen is
+  cheaper than eight independent rediscoveries, and it must be a fact
+  correction under sync-from-code rather than a markup fix.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

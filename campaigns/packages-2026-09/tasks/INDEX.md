@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B8 | `discovery-prompt` + `decision-records` | opus | written, awaiting DRIFT-037 + the F-096 exclusion |
+| MARKUP-B8 | `discovery-prompt` + `decision-records` | opus | **done** — 366 units, **0 unmarked** (a first); ×1.28 measured; rulings 34–38 locked; F-097 |
 | MARKUP-B7 | `rust-ai-native-lang` v0.7.0 | opus | **done** — 544 of 546 units over 18 files; all 3 predictions held; ruling 33 locked |
 | DRIFT-037 | a skill's frontmatter stops being mistaken for prose | opus | **done** — F-092 closed; −9 exactly, three stacks reach 0; §2 review point still owner's |
 | MARKUP-B6 | `typescript-ai-native-lang` v0.6.0 | opus | **done** — 579 of 581 units over 18 files; 2 F-092 frontmatter units left; rulings 30–32 locked |

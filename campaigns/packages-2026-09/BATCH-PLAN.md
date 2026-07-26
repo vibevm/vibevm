@@ -9,7 +9,17 @@ counted two superseded slots that nothing resolves to._
 **202 files** across 37 packages; the observed corpus is **260 files**
 (58 host + 202 packages), confirmed by `progress scan`.
 
-**Sizing correction, now measured twice — multiply the scan number by ~1.7.**
+**Sizing: the `world` genre needs TWO constants, not one — measured at B8.**
+The language stacks came in at ×1.62 / ×1.72 / ×1.75, but B8's `world` flows
+measured **×1.28**, and the cause is structural: **47.6 % of their units are
+table body cells**, which are already at fact grain and cannot deconstruct. On
+prose alone B8 was **×1.53**. So size a `world` batch as
+**prose × 1.53 + cells × 1.00**, not by a blended constant — per file B8 ranged
+×1.10 (a template that is 72 % cells) to ×1.73 (a README with no tables), and a
+single number would mis-size an individual batch by up to 35 %. **Count the
+cells before sizing B9–B16.**
+
+**The language-stack figure, for those batches only — multiply by ~1.7.**
 The `facts` column below is the **pre-markup scan count**, and the deconstruction
 law then turns paragraphs into units. B5's `go-ai-native-lang` scanned at 411 and
 finished at **665** (×1.62); B6's `typescript-ai-native-lang` scanned at 338 and
@@ -65,7 +75,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B5~~ | `go-ai-native-lang` — **DONE**, 665 units | 19 | 411 |
 | ~~B6~~ | `typescript-ai-native-lang` — **DONE**, 581 units (×1.72) | 18 | 338 |
 | ~~B7~~ | `rust-ai-native-lang` — **DONE**, 546 units (×1.75) | 18 | 312 |
-| B8 | `discovery-prompt` + `decision-records` — F-096 dropped `DISCOVERY-PROMPT.md` | 8 | 286 |
+| ~~B8~~ | `discovery-prompt` + `decision-records` — **DONE**, 366 units (×1.28), **0 unmarked** | 8 | 286 |
 | B9 | `spec-genres` + `wal` + `addressable-specs` | 17 | 578 |
 | B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | 16 | 488 |
 | B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | 15 | 451 |
