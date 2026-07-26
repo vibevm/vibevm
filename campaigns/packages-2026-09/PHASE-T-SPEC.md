@@ -647,6 +647,46 @@ be resolved by a tool that cannot see fact grain.
    packet, and such a case is a **drift finding**, not a failing test: the fact
    goes back through sync-from-code.
 
+## 11.5 The test→fact registry is extracted, never assembled {#registry}
+
+*Owner, 2026-07-26: can the fact a test belongs to be determined
+programmatically, so the registry is not built by an LLM?*
+
+**Yes, and it is the design rather than an optimisation of it.** The worker
+writes a test and a tag; **the index is built by the extractor**, and no model
+assembles it:
+
+| what | carrier | who reads it |
+|---|---|---|
+| which fact a test verifies | `#[specmark::verifies("spec://…#FACT", r = N)]` (Rust) · `//spec:verifies <uri> r=<N>` above a Test/Fuzz/Example (Go) · `@verifies` JSDoc (TS) | `specmark` / `specmap` / `ts-extract` / `go-extract` |
+| the **kind** | the test-name prefix `canonical_` / `boundary_` / `negative_` / `property_` | `grep` |
+| the **tier** | `#[ignore]` and the file it sits in | `cargo` |
+
+- ##REG-COVERAGE-IS-A-QUERY **The exit gate's coverage count is therefore a query, not a census.**
+  «Every T-testable fact carries ≥3 edges of distinct kinds» is answered from the
+  extracted index plus a grep — nothing is tallied by hand or by a model, and
+  nothing rots between the tests and the count.
+- ##REG-DETECTOR-ALREADY-EXISTS `progress-core/src/evidence.rs:61` already flags a unit marked
+  `test/done` with zero `verifies` edges. **Built, and never given an input.**
+
+### 11.5.1 The prerequisite this creates, and it is not optional {#registry-proof}
+
+##REG-PROVE-ONE-EDGE-FIRST **Measured 2026-07-26: the `verifies` edge has ZERO producers anywhere in
+this repository.** The carrier is specified, documented for tests in all three
+language guides, and **has never once been exercised**. That is the same shape
+as every assumption this campaign has been burned by.
+
+**So before a single swarm packet is dispatched: tag one real test with
+`verifies`, run the extractor, and confirm the edge appears in the index and is
+counted.** One test, one command, one look. If the extraction does not reach
+test functions — a plausible failure, since nothing has ever needed it to —
+then twenty thousand tagged tests produce a registry of nothing, and the whole
+coverage claim of this phase is a lie told mechanically.
+
+*DRIFT-032's negative control is the shape to copy: it proved the tag compiled,
+then restored the old validator to prove the same tag fails. A passing check
+that was never shown able to fail proves nothing.*
+
 ## 12. Prerequisites {#prereqs}
 
 - **Phase E closed.** Tests are not written against code drift tasks are still
@@ -655,6 +695,9 @@ be resolved by a tool that cannot see fact grain.
 - **Fact anchors citable from code** — done: DRIFT-032 and DRIFT-034. Until
   those landed, `#[spec(verifies = "spec://…#UPPER-FACT")]` did not compile,
   and this phase was not expressible.
+- **The `verifies` extraction proven end to end on one real test** (§11.5.1).
+  Zero producers exist today; unproven, the phase's entire coverage claim rests
+  on a carrier nobody has ever run.
 
 ---
 

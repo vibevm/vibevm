@@ -102,6 +102,11 @@ the result to one account. Nothing else in it varies between the two.*
 > (§3.4): cover the implementation and say why the assertion is right. If the
 > only answer is «that is what it returned», delete it.
 >
+> **The `verifies` tag is load-bearing, not decoration.** It is what a tool
+> reads to build the test→fact index — nobody assembles that registry by hand or
+> by model, so a missing or mistyped tag is a test that exists and is invisible
+> to every count this phase produces. Copy the URI from the fact; never retype it.
+>
 > **Every `verifies` edge carries the fact's revision** — `#[specmark::verifies("spec://…#FACT", r = N)]`,
 > with `N` read from the fact, never invented. This is what makes a later
 > correction to that fact **name** the tests it affects instead of leaving
