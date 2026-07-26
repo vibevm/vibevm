@@ -613,8 +613,10 @@ be resolved by a tool that cannot see fact grain.
 
 ## 10. Exit gate — enumerating this phase's own steps (amendment A1) {#exit}
 
-1. **Triage complete**: every in-scope fact in exactly one of §2's three
-   buckets, counts recorded.
+1. **Triage complete**: every in-scope fact in exactly one of §2's **four**
+   buckets, with the **lists committed as artefacts** — `t-testable.txt`,
+   `t-untestable.txt`, `t-unbuilt.txt`, `t-checker.txt`. Counts alone do not
+   satisfy this: §10.1's checks read the lists as their denominator.
 2. **Coverage**: every **T-testable** fact carries **≥3 `verifies` edges of
    distinct kinds**, or a recorded exception with its reason. *Checkable
    because §7.2 makes kind greppable — a gate that needs a human to read the
@@ -630,6 +632,66 @@ be resolved by a tool that cannot see fact grain.
    the successor phase's input (§1.2).
 6. **Timing measured and tiers cut from it**, both recorded (§7).
 7. **`baseline.json` written** at phase close (amendment A6).
+8. **§10.1's coverage checker exists, runs, and is green** — all three grains,
+   each naming what is missing rather than reporting a percentage. **This is a
+   deliverable of the phase, not a follow-up**: a coverage claim with no checker
+   is a WISH by the Discipline's own law.
+
+## 10.1 The coverage checker — and it must ship with the phase {#coverage-checker}
+
+*Owner, 2026-07-26: can one command tell, at the end, whether tests exist for
+every fact that could have one — what if a worker died mid-run and its tests
+were lost?*
+
+**Today: no, and the detector that looks closest points the wrong way.**
+`evidence.rs:61` flags a unit marked `test/done` carrying zero `verifies` edges
+— «you claimed tested and nothing verifies it». **A dead worker never marks
+anything `test/done`**, so its facts stay unmarked and are invisible to that
+check. It catches over-claiming; the question is about under-delivering.
+
+##COVERAGE-NEEDS-A-DENOMINATOR **The missing piece is a denominator, for the eighth time in this
+programme.** A fact with zero edges is indistinguishable from a fact nobody
+attempted — *unless the list of facts that were supposed to get tests exists as
+an artefact*. §2's exit says «the three counts, recorded». **Counts are not
+enough: the triage must commit the LISTS**, and `t-testable.txt` is the
+denominator every check below reads.
+
+### 10.1.1 Three checks, three grains — because they catch different deaths {#three-grains}
+
+```
+A. FILE grain    — scaffold.txt  −  files with any content
+                   catches: a worker that died before writing, or lost a whole cell.
+B. FACT grain    — t-testable.txt  −  facts with ≥3 verifies edges of distinct kinds
+                   catches: a worker that died MID-cell. Check A cannot see this:
+                   the file is non-empty, so it looks done.
+C. TAG grain     — count of #[test] in spec_tests*.rs  vs  count of verifies edges
+                   from those same files
+                   catches: tests written but NOT tagged. Neither A nor B can see
+                   this: an untagged test is invisible to the index in exactly the
+                   way a nonexistent one is.
+```
+
+- ##COVERAGE-C-IS-THE-SUBTLE-ONE **Check C is the one that would otherwise be missed**, and it is the
+  likeliest real failure: a worker under budget pressure writes the test and
+  forgets the tag. The result reads as *fewer facts covered* when the truth is
+  *tests exist and are unfindable* — a much better position to be in, and one
+  you cannot act on without knowing it.
+- ##COVERAGE-EACH-NAMES-WHAT-IS-MISSING All three **name** what is missing, never report a count. «97 % of
+  facts covered» is the shape of statement this programme has now caught being
+  wrong seven times.
+
+### 10.1.2 The phase ships the checker, not the rule {#ship-the-checker}
+
+##COVERAGE-A-RULE-WITH-NO-CHECKER-IS-A-WISH The Discipline's own law: **a rule with no checker is a WISH.** A
+coverage claim verified by a human reading reports is exactly that. So the
+checker — an `xtask` subcommand or equivalent — **is a deliverable of Phase T,
+not a follow-up**, and §10's exit gate is not met until it runs and is green.
+
+It is small: the extracted index already carries the edges, the kinds are a
+greppable prefix, and the triage lists are plain text. The work is joining three
+things that all exist. **What makes it non-optional is that without it, «all
+testable facts have tests» is an assertion nobody can check — and this phase
+exists to stop that kind of assertion.**
 
 ## 11. Predictions — each naming the step that tests it (amendment A5) {#predictions}
 
