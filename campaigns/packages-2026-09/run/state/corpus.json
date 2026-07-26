@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-26T17:50:26Z",
+  "updated_at": "2026-07-26T18:29:49Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -1872,50 +1872,6 @@
       "units": 8,
       "facts": 57,
       "unmarked": 57,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 3,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 10,
-      "facts": 161,
-      "unmarked": 161,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 20,
-      "facts": 142,
-      "unmarked": 142,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 17,
-      "facts": 72,
-      "unmarked": 72,
       "issues": 0,
       "campaign": {}
     },

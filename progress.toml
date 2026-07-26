@@ -144,4 +144,24 @@ exclude = [
     # Re-add the languages here as includes when a stack for them lands — that
     # is the owner's "когда-нибудь", and it is an addition, not a revert.
     "packages/**/spec/legacy-projections/**",
+    # THE BOOK — reference depth, not a contract.
+    # OWNER RULING 2026-07-26, F-091: «исключи spec/book/**».
+    # `flow:redbook` ships the AI-native development book at `spec/book/ru/`
+    # (three chapters, 1 209 lines, 375 facts). The package's OWN boot snippet
+    # rules it out of standing instructions in as many words: «Do not read the
+    # book at session boot — it is reference depth, not standing instructions.»
+    # Nothing outside the package cites a chapter.
+    # The deciding argument is Phase C, not size: every marker earns a verdict,
+    # and `confirmed` has no meaning applied to a paragraph of philosophical
+    # prose. We would hit the same wall §3.3 and F-080 hit — `--exhaustive`
+    # cannot express "marked, never verified" — with the added cost of minting
+    # 375 spec:// addresses on narrative that nothing resolves against.
+    # This is NOT the frozen-history category: the book is authored, current,
+    # and the source of the discipline's spirit. It is a different genre —
+    # lore, in `spec-genres`' sense — and the corpus is for contracts.
+    # `spec/book/**` and not `spec/book/ru/**` per the ruling: the edition-plan
+    # README goes with the edition it plans.
+    # Re-admitting it needs a rule the campaign does not have — "lore is marked
+    # but never verified" — and that rule needs tooling, not just a glob.
+    "packages/**/spec/book/**",
 ]

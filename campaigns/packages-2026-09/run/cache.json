@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T17:50:26Z",
+  "updated_at": "2026-07-26T18:29:49Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -1975,50 +1975,6 @@
       },
       "marker_count": 0,
       "unit_count": 8,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md": {
-      "content_hash": "5adb8e5bdf1c9249657a7ca9ef1f0f1ac40b4b0b7925fba13792e038ef36ffef",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 8,
-        "unmarked_facts": 8
-      },
-      "marker_count": 0,
-      "unit_count": 3,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md": {
-      "content_hash": "8b4406d7112144d3b75a9e436343abdb8ffd51b8e97fdd68374318e2b92138b8",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 161,
-        "unmarked_facts": 161
-      },
-      "marker_count": 0,
-      "unit_count": 10,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md": {
-      "content_hash": "5a6df14aa0efad64c755c3f4c0f6e6725facd3bb0390de4a6a27a432269be4bc",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 142,
-        "unmarked_facts": 142
-      },
-      "marker_count": 0,
-      "unit_count": 20,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md": {
-      "content_hash": "5c4bf31b63b4e52277362af31f2c9882097d50864bd92959af0dfdf13835cf8a",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 72,
-        "unmarked_facts": 72
-      },
-      "marker_count": 0,
-      "unit_count": 17,
       "issue_count": 0
     },
     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md": {

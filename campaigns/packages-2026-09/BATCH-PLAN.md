@@ -6,18 +6,17 @@ counted two superseded slots that nothing resolves to._
 
 ## The workload, after three rounds of finding out what was in it
 
-**206 files** across 37 packages; the observed corpus is **264 files**
-(58 host + 206 packages), confirmed by `progress check`.
+**202 files** across 37 packages; the observed corpus is **260 files**
+(58 host + 202 packages), confirmed by `progress scan`.
 
-**Unmarked facts remaining: 5 685**, measured 2026-07-26 with
-`check --exhaustive` after B1a. The figure this file carried before was 6 561,
-quoted before F-080's eleven files left and before anything was marked; it was
-replaced by a measurement rather than by subtraction, because the campaign's own
-rule is that a number quoted before its decomposition is a guess wearing a
-decimal point — and that rule binds its own numbers first. Re-measure at each
-batch boundary rather than decrementing.
+**Unmarked facts remaining: 4 685**, re-measured 2026-07-26 at the B2 boundary,
+after F-091 excluded the book. Earlier figures in this file's history — 6 561,
+then 5 685, then 5 068 — were each replaced by a **measurement**, never by
+subtracting an estimate, because the campaign's own rule about numbers quoted
+before their decomposition binds its own numbers first. **Re-measure at every
+batch boundary rather than decrementing.**
 
-Getting to that number took **four** corrections, and the pattern in them is
+Getting to that number took **five** corrections, and the pattern in them is
 worth more than the number:
 
 | what came out | files | facts | why |
@@ -26,7 +25,8 @@ worth more than the number:
 | `LICENSE.md` × 33 (F-070) | 33 | 264 | verbatim third-party text |
 | three derived indexes (F-071) | 3 | 265 | "hand edits are a defect", their own words |
 | `core-ai-native/v0.7.0`, `redbook/v0.1.0` | 33 | 1 908 | superseded slots — frozen history |
-| `spec/legacy-projections/` (F-080) | 11 | *recount* | frozen history — owner ruling 2026-07-26 |
+| `spec/legacy-projections/` (F-080) | 11 | ~729 | frozen history — owner ruling 2026-07-26 |
+| `spec/book/**` (F-091) | 4 | 383 | reference depth, not a contract — owner ruling 2026-07-26 |
 
 **Every one of these was found by asking what the corpus is made of, not by
 estimating how big it is.** The first two rounds were prompted by the owner
@@ -51,7 +51,6 @@ Two facts decide the batching, and neither is visible from the file count:
 | # | Batch | Files | Facts |
 |---|---|---|---|
 | ~~B1–B2~~ | `core-ai-native` (live slot) — **DONE**, 943 units | 16 | — |
-| B4 | `redbook` (live slot) | 6 | 470 |
 | B5 | `go-ai-native-lang` | 19 | 411 |
 | B6 | `typescript-ai-native-lang` | 18 | 338 |
 | B7 | `rust-ai-native-lang` | 18 | 312 |
@@ -63,11 +62,11 @@ Two facts decide the batching, and neither is visible from the file count:
 | B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | 15 | 378 |
 | B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 339 |
 | B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
-| B16 | three `-mcp` packages + two family umbrellas | 8 | 145 |
+| B16 | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 | 10 | 232 |
 
-**Fifteen batches** against the plan's estimated 12–15, against this file's own
-earlier 18, and against the sixteen it read before F-080 retired
-`core-ai-native`'s third batch. `rust-ai-native` is already marked — it was the
+**Thirteen batches remain** (B5–B16). The count has read 18, 16, then 15: F-080
+retired `core-ai-native`'s third, F-091 dissolved `redbook`'s into B16, and B1–B2
+are done. `rust-ai-native` is already marked — it was the
 Phase A pilot.
 
 ## What each batch owes

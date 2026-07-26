@@ -1186,6 +1186,38 @@ command that would have tested it.
   forbids it running the gate; the flag was the correct move on the information
   it had.
 
+- **2026-07-26 · F-091 RULED — the book leaves the corpus, and the fifth
+  subtraction is the first that is not about staleness.** Owner: «исключи
+  `spec/book/**`». `flow:redbook`'s three Russian chapters (1 209 lines, **375
+  facts**) plus the edition-plan README leave; the package's README and boot
+  snippet stay. Corpus **264 → 260 files**, unmarked **5 068 → 4 685**, and B4
+  dissolves — `redbook`'s two survivors fold into B16.
+
+  **The package rules itself out in its own words.** Its boot snippet: «*Do not
+  read the book at session boot — it is reference depth, not standing
+  instructions.*» Nothing outside the package cites a chapter.
+
+  **But the deciding argument is Phase C, not size, and it is worth keeping
+  because the next case will look different.** Every marker earns a verdict, and
+  `confirmed` has no meaning applied to a paragraph of philosophical prose. We
+  would meet exactly the wall §3.3 and F-080 met — `--exhaustive` cannot express
+  «marked, never verified» — while minting 375 `spec://` addresses on narrative
+  nothing resolves against.
+
+  **This is a new category, not another instance of the old one.** The four
+  earlier subtractions were all *staleness or duplication*: machine copies,
+  third-party licence text, derived indexes, frozen slots. The book is
+  **authored, current, and the source of the discipline's spirit** — it is
+  excluded for its **genre**, not its age. In `spec-genres`' terms it is lore,
+  and the corpus is for contracts.
+
+  *Recorded so the door stays visibly ajar:* re-admitting it needs a rule this
+  campaign does not have — «lore is marked but never verified» — and that rule
+  needs **tooling**, not just a glob, because the exhaustive counter is what
+  forbids it today. The genre is worth having eventually: a flow citing the
+  chapter that justifies its rule is exactly the two-way link `spec-genres`
+  wants between a contract and its lore.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
