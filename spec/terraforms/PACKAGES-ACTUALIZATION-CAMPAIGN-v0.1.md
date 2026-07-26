@@ -696,6 +696,42 @@ command that would have tested it.
   that would have moved the duplicate rather than removing it. Neither was
   visible from reading the code; the second needed an experiment.*
 
+- **2026-07-26 · B1b closes core-ai-native's guiding+operating layer, and the
+  gate finds two grammar gaps the eye could not.** Six files, 506 → 655 lines,
+  **276 units marked** (including the batch's first tables — 70 body cells), 224
+  anchors, 32 paragraphs deconstructed, 21 heading anchors added. `progress
+  check` clean over 264 files. B1 total with B1a: **417 units over nine files**.
+
+  Two of the executor's open questions were settled by *running the checker*
+  rather than by argument, and both turned into findings.
+
+  **F-083 — a GFM task-list item cannot carry a fact anchor.**
+  `##FACT-ANCHOR-SYNTAX` requires the anchor to be the unit's **first token**;
+  the parser reads `- [ ]`'s checkbox as that first token, so an anchor placed
+  after it is invisible and the unit reports `MissingAnchor`. There is **no
+  legal placement today** — the checkbox is structure, exactly like the list
+  marker and the ordinal, and the grammar does not say so. Four items in
+  `02-EXECUTABLE-SCAFFOLDS.md` were marked, went red, and were reverted; they
+  stay unmarked until the parser learns it. The executor predicted this exact
+  outcome and named the one command that would settle it, which is the right
+  shape for an uncertainty.
+
+  **F-084 — the trailing marker dies silently next to a quoted fence.** In
+  `01-PATTERN-CARD-FORMAT.md:41` the last-token shorthand was not recognised on
+  a paragraph whose text carries an inline code span containing a **triple
+  backtick** (`` ` ```card-ops ` ``): fence-awareness (`##FENCE-AWARE`) misreads
+  it and the marker is swallowed. Moving the marker to position 1 clears it —
+  proven by re-running the gate, not by inspection. **The failure mode is the
+  dangerous part: it reports as `unmarked`, not as an error about the code
+  span**, so a session that "fixes" it by re-adding the marker in the same place
+  loops forever. Any document quoting a fence in prose is exposed; that is a
+  large class in this corpus, which is *about* fenced formats.
+
+  *Both gaps are in the tooling this campaign uses to measure, not in the corpus
+  it measures — the same place F-081 was. Three of the wave's findings so far
+  are the instrument being wrong rather than the subject, which is worth
+  noticing before the remaining thirteen batches trust its output.*
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

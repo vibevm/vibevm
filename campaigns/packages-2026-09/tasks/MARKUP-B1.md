@@ -191,6 +191,37 @@ file, the ruling wins — the earlier text was written before the cases were kno
     correction contract cites these, and a long clear name beats a short cryptic
     one. Keep them consistent within a file.
 
+### Added by the B1b pass (2026-07-26) {#locked-b1b}
+
+16. **Tables.** `##ROW-*` anchor on the **first** body cell of each row, a marker
+    on **every** non-empty body cell, uniform stage per row; header and
+    delimiter rows untouched. This is the host corpus's own live pattern
+    (`PROP-037`, `PROP-017`, `PROP-003`) and it puts visible `@impl/done` text
+    into rendered tables — that is accepted, not an oversight.
+17. **Empty table cells stay bare.** Verified: `--exhaustive` honours
+    `##COUNTABLE-UNITS`' "non-empty" literally. Do not insert an em-dash to
+    make a blank markable — that is a content edit.
+18. **Do not mark GFM task-list items — blocked by F-083.** A `- [ ]` item
+    cannot carry a fact anchor under today's grammar: the parser reads `[ ]` as
+    the unit's first token, so the anchor is invisible and the unit reports
+    `MissingAnchor`. Leave such items unmarked until the parser learns that a
+    checkbox is structure. B1b marked four and they were reverted.
+19. **Marker position when the text carries a fenced-code backtick — F-084.**
+    If a unit's text contains an inline code span holding a triple backtick
+    (e.g. ``` ` ```card-ops ` ```), the **last-token** shorthand is not
+    recognised and the unit reports as *unmarked*. Put the marker in position 1,
+    immediately after the anchor. **The failure is silent and misreads as a
+    forgotten marker**, so a session re-adding it in the same place will loop.
+20. **Colon-split tiebreaker: the verdict test.** When ruling 3 leaves a colon
+    ambiguous, ask whether **Phase C could assign a separate verdict to each
+    item**. "What is unusual is everything around it: types, contracts,
+    metadata, the verification loop" splits — each is separately checkable.
+    "Keep the three layers apart: method, project, machine" does not — the claim
+    is the separation, and the three names are its terms. This reconciles B1a's
+    aggressive split with B1b's conservative keeps; both were right under it.
+21. **Ruling 7's "normative root document" meant *normative document*.** Every
+    normative document takes `stage="spec" state="done"`, root or not.
+
 ## Boundaries {#boundaries}
 
 - **Semantic edits are forbidden** (plan §5-B). The diff contains **markers,

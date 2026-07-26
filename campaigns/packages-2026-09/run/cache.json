@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T12:40:33Z",
+  "updated_at": "2026-07-26T13:03:28Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -49,68 +49,140 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md": {
-      "content_hash": "f722973ab8bb737da7a9fb56bb95eb968c8c8a168ca29b1748297871140b5b75",
+      "content_hash": "b5833275e9870dc9dcabe4c694ec74c89a832ba21ae8a2ac879ef1435c5d6214",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 25,
-        "unmarked_facts": 25
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 31,
+        "fact_count": 30,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 31,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md": {
-      "content_hash": "f86adb921249df502205f2795b16ef597ad8664729859574e2a3a566d7d6ca98",
+      "content_hash": "3eacadc15f99d79ff87391830112829b26680f2b75e6afe105f5b12650296dc5",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 66,
-        "unmarked_facts": 66
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 73,
+        "fact_count": 76,
+        "unmarked_facts": 4
       },
-      "marker_count": 0,
+      "marker_count": 73,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md": {
-      "content_hash": "eda8f13a12deb299aeb13616c2e5deacc4928beb46fd8c16e04ff789ab7e7f15",
+      "content_hash": "8f6ee7227dd1c4dd3a705865514ce5ec21a142b40939d860ab7f9d4fe139730d",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 22,
-        "unmarked_facts": 22
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 28,
+        "fact_count": 27,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 28,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md": {
-      "content_hash": "699dd53388813d3a04395b8def3f1174ce23110c4fdc9a121129e4e3c4158e11",
+      "content_hash": "d13976f8125cfdb7cf5c9f319cdb53c2c21c7d11f4f8d59503e25c52f67acf8b",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 41,
-        "unmarked_facts": 41
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 64,
+        "fact_count": 63,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 64,
       "unit_count": 8,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md": {
-      "content_hash": "6cc32d1db0ebb548b25cc8b85d6c3e8fc03620f3f6f8ec0e56936b055725d07f",
+      "content_hash": "b97b1fec890ea65ce2abfc2c167f845860c95f0040b980de14627621a65a4f73",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 37,
-        "unmarked_facts": 37
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 47,
+        "fact_count": 46,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 47,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md": {
-      "content_hash": "45828526ed6094099743a79ba188ee44c182ac15f3aa6542a251d72c348957da",
+      "content_hash": "99bb51affd762bc903bc7fd570097e0f8a9fa49988483a25ade1e4450ff173ac",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 16,
-        "unmarked_facts": 16
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 29,
+        "fact_count": 28,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 29,
       "unit_count": 6,
       "issue_count": 0
     },
