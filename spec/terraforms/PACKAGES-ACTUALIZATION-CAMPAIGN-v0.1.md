@@ -534,8 +534,40 @@ command that would have tested it.
   Nothing was wrong with the checker — the checker was never given the input
   that falsifies.*
 
-  **F-078 — a content-minimal aggregator contributed a boot lane it does not
-  have, and the host now reads four rules twice.** `git-practices` ships three
+  **F-078 — the host now reads four rules twice.** *(Restated 2026-07-26 after
+  DRIFT-029 returned on its stop rule. The first version of this entry, below,
+  named the wrong cause: it read the generation of a slot's boot artifacts as
+  the defect. It is not — PROP-038 `##UNIT-PER-PACKAGE` decides that «every
+  package materialised under `vibedeps/` carries its **own** boot artifacts …
+  not only entry-point workspace nodes», and `##UNIT-SELF-CONTAINED` makes a
+  unit's `STATIC.md` contain everything statically linked into it, **once
+  each** — so the `git-practices` unit holding its four members is correct.
+  There was no path-based fallback either: `bootgen.rs:305` reads a
+  statically-linking dependency through its compiled `STATIC.md` **by explicit
+  design**, and the absent `[boot_snippet]` is why the other branch is not
+  taken. The prescribed one-line fix would have left that reference dangling
+  and turned a duplicated boot lane into a **failed install**, which a
+  characterization golden already pins.)*
+
+  **The real mechanism is the hoist counter, and it is a defect against
+  §2.3.** `static-soft` is the default precisely so that «a package statically
+  linked by more than one consumer is **hoisted** … and linked **once**»
+  (`##MODE-STATIC-SOFT`), and `##SOFT-DEFAULT-WHY` names the reason in the exact
+  words of what we observe: «the model sees the same prompt several times and
+  can be confused about which copy is authoritative». `hoist::soft_static_pulls`
+  walks only materialised packages, so a member pulled statically by **both**
+  the root and an aggregator counts **one** puller, misses the two-puller
+  threshold, stays unhoisted, and is compiled a second time by the root's
+  `static_transitive_closure`. Counting the root restores the `#use` references
+  §2.5 designed. **Queued as DRIFT-030, not run** — it rewrites boot
+  composition for every consumer and carries one unresolved interaction
+  (whether `append_hoisted` double-adds at the root, after
+  `compute_effective_boot` has already deduped). *Two premises of mine died
+  here in one task: that the write was wrong, and that a fallback caused it.
+  The stop rule is the only reason neither reached the tree.*
+
+  *The original entry, kept because a corrected record should show what it
+  corrected:* `git-practices` ships three
   files (`LICENSE`, `README.md`, `vibe.toml`) and its own manifest says
   «content-minimal (PROP-028): no boot snippet of its own; each member ships
   theirs». Materialisation nevertheless **wrote**
@@ -554,6 +586,37 @@ command that would have tested it.
   file's presence. **Does not block Phase B**: the duplicated text is
   identical, so it costs boot tokens and states no contradiction, and
   `spec/boot/**` is outside the observed corpus by design.
+
+- **2026-07-26 · Phase B opens, and the corpus loses a fourth chunk before the
+  first marker lands. F-080 RULED.** `core-ai-native` was batched B1–B3 by
+  genre — guiding + operating layer (9 files), mechanisms + appendix (7), and
+  `spec/legacy-projections/` (11). The third turned out not to be work.
+
+  Eleven v0.1 language guides — C++ ×3, Java ×4, Kotlin, Python, Go,
+  TypeScript — 1 264 lines of substantive normative prose (version floors, MUST
+  gates, licence flags) that **nothing in the living corpus cites**. The go
+  stack's guide says GUIDE-GO-v0.1 «stays, **untouched**» in that directory;
+  the typescript stack declares GUIDE-TYPESCRIPT-v0.1 superseded; the other
+  nine have no successor stack at all, which is what made it a genuine question
+  rather than an obvious exclusion.
+
+  **Owner ruling:** «legacy-projections — это замороженная история. Мы
+  когда-нибудь покроем эти языки, но еще не сейчас. Сейчас у нас есть активные
+  rust, typescript и go.» So it is §3.3's category — *marked, never verified* —
+  and, exactly as with the superseded version slots, `--exhaustive` cannot
+  express that, so the directory **leaves the corpus** instead. The exclusion is
+  genre-shaped (`packages/**/spec/legacy-projections/**`) rather than pinned to
+  `v0.8.0`, so the next version slot cannot silently re-admit 1 264 lines of
+  frozen text; the languages return as **includes** when a stack for them lands.
+
+  **The pattern holds for the fourth time.** Machine copies, licence
+  boilerplate, derived indexes, superseded slots — and now frozen projections.
+  *Every one was found by asking what the corpus is made of, and not one by
+  estimating how big it is.* Phase B is fifteen batches, not sixteen; the
+  package corpus is 206 files, not 217. **The fact count is deliberately left
+  as a recount** rather than carried forward minus an estimate — the campaign's
+  own rule about numbers quoted before their decomposition applies to its own
+  numbers first.
 
 ## 8. Deferrals {#deferrals}
 
