@@ -125,6 +125,25 @@ Two rules that are easy to lose mid-batch:
 at 0 unmarked — wave 2 does not un-measure wave 1. Write `baseline.json` at the
 batch boundary (amendment A6).
 
+**The mechanical half of the review is `tools/batch-review.py`** (added at the
+B6 boundary, after the same throwaway checker had been written from scratch four
+times). Run the gate, then hand it the log and the batch's predictions:
+
+```bash
+python tools/batch-review.py --selftest        # calibration; never trust a run where this fails
+python tools/batch-review.py --gate-log gate.log --scope scope.txt \
+    --expect-unmarked <n> --expect-residual residual.txt --expect-total <n>
+```
+
+It checks scope containment, word-stream identity, the gate delta against the
+brief's prediction, error classes, the closed vocabulary, anchor collisions,
+encoding, and markers-in-fences; it surfaces every `@unknown` and every
+ruling-30 candidate. **It does not judge**, and its output ends with the list of
+what it did not check — which is the review. Three of its checks read the
+brief's predictions, so **a brief that does not state them cannot be checked
+mechanically**: state the expected residual, the residual's files, and the
+expected corpus total in every batch brief from B7 on.
+
 **Unverified assumption, flagged rather than relied on:** `vibe update` as the
 re-materialisation path is the owner's account of his own tool and has not been
 exercised in this campaign. Run it once before Phase B leans on it.
