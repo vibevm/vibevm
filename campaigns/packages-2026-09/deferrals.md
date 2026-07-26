@@ -45,10 +45,24 @@ picked up. The authoritative statement of each is
 
 ## The engine re-mint, deferred — and what it blocks {#engine}
 
-**Phase C cannot open until this is done.** Its evidence join needs fact
-anchors and the engine the host consumes cannot see them; Phase A's exit gate
-is partially unreachable for the same reason (the `specmap.json` clause).
-Phase B markup is *not* blocked and proceeds.
+**RESOLVED 2026-07-26 — and by a command, not by the re-mint this section was
+written to plan.** `vibe update --all` repointed every lockfile entry from the
+stale second working copy to this one (`source_kind` `registry` → `local` on all
+36) and carried `core-ai-native` to **0.8.0 at the consumer**, pruning the
+v0.7.0 slot. Item 2 below — «the host resolves these packages from a second,
+stale working copy» — was the whole blocker, and the resolution recorded at the
+bottom of this section («repoint the resolve … closes the gap with no
+publication at all») is what `vibe update` *already does*. **Phase C is not
+blocked. No publication, no re-mint, no Rule 4 red line touched.**
+
+*The section below is kept as written because it names the three things that
+would still bind if a real re-mint is ever taken up — but its premise, that
+someone must do this by hand, was false.*
+
+~~Phase C cannot open until this is done.~~ Its evidence join needs fact
+anchors and the engine the host consumes could not see them; Phase A's exit gate
+was partially unreachable for the same reason (the `specmap.json` clause).
+Phase B markup was never blocked and proceeded.
 
 Confirmed before deferring, so nobody re-derives it: `is_valid_fact_id` exists
 **only** in `core-ai-native/v0.8.0`; `vibe.lock` pins `core-ai-native@=0.7.0`
