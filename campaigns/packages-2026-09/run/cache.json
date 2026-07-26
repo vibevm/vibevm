@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T21:36:02Z",
+  "updated_at": "2026-07-26T22:37:46Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -777,8 +777,8 @@
           "done"
         ],
         "marker_count": 35,
-        "fact_count": 35,
-        "unmarked_facts": 1
+        "fact_count": 34,
+        "unmarked_facts": 0
       },
       "marker_count": 35,
       "unit_count": 7,
@@ -800,8 +800,8 @@
           "done"
         ],
         "marker_count": 36,
-        "fact_count": 36,
-        "unmarked_facts": 1
+        "fact_count": 35,
+        "unmarked_facts": 0
       },
       "marker_count": 36,
       "unit_count": 6,
@@ -1224,8 +1224,8 @@
           "done"
         ],
         "marker_count": 36,
-        "fact_count": 36,
-        "unmarked_facts": 1
+        "fact_count": 35,
+        "unmarked_facts": 0
       },
       "marker_count": 36,
       "unit_count": 7,
@@ -1247,8 +1247,8 @@
           "done"
         ],
         "marker_count": 35,
-        "fact_count": 35,
-        "unmarked_facts": 1
+        "fact_count": 34,
+        "unmarked_facts": 0
       },
       "marker_count": 35,
       "unit_count": 6,
@@ -1545,8 +1545,8 @@
           "done"
         ],
         "marker_count": 28,
-        "fact_count": 28,
-        "unmarked_facts": 1
+        "fact_count": 27,
+        "unmarked_facts": 0
       },
       "marker_count": 28,
       "unit_count": 6,
@@ -1568,8 +1568,8 @@
           "done"
         ],
         "marker_count": 31,
-        "fact_count": 31,
-        "unmarked_facts": 1
+        "fact_count": 30,
+        "unmarked_facts": 0
       },
       "marker_count": 31,
       "unit_count": 6,
@@ -1967,57 +1967,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/README.md": {
-      "content_hash": "9c834d60bcf9e7a8c866325313ed9dcdf258d4937d1ec6e8f31acc823fb8040e",
+      "content_hash": "bc46036f6f6ec82821f78050a44c93cbc7e3cf96952f00ac0a35ec826f9e67da",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 15,
-        "unmarked_facts": 15
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 24,
+        "fact_count": 23,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 24,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md": {
-      "content_hash": "975d016c834c4fc35c66f90788c7e6c94c26dbc9d997c7d23de5003f3790e477",
+      "content_hash": "c1531d51b2f2ef018cb55e61bee96411863dd4b84f817c5ef9f49a9fad36f312",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 22,
-        "unmarked_facts": 22
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 30,
+        "fact_count": 29,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 30,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md": {
-      "content_hash": "785053e59fd1d06049a6c267433b08efc78826bba2cd2abecab4550004c09284",
+      "content_hash": "fc347433b5c71707cec90d03a6027c104d9e1479d95fab83605c18af9d4d275c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 58,
-        "unmarked_facts": 58
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 77,
+        "fact_count": 76,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 77,
       "unit_count": 10,
       "issue_count": 0
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md": {
-      "content_hash": "c5d0da0332e26266ce966899c8f93ba6e38e33f9e396f9510b98b18cfb9ac282",
+      "content_hash": "c81e61e9493d719f342125b3992312953e3687da53d632529b1d9ee749b87a3e",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 50,
-        "unmarked_facts": 50
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "unknown",
+          "hold"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 56,
+        "fact_count": 55,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 56,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md": {
-      "content_hash": "eeb25bc0e537c70787f0030e21daf2e3eb47d397d2cea5fd5793e53675b4b67c",
+      "content_hash": "2bebf0743365006bb5b8038d5472decd1c548d2334f21d031109956835cae7fd",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 62,
-        "unmarked_facts": 62
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 79,
+        "fact_count": 78,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 79,
       "unit_count": 7,
       "issue_count": 0
     },
@@ -2055,46 +2115,71 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md": {
-      "content_hash": "90900ca5786256cdbac24b2768e9e77eb9c2782e56f8fb5f95e12cd414e3193d",
+      "content_hash": "7d4d22d0b5b1fc2942b8375f2eee746669282eefc18482404a3def33fd8d29dd",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 11,
-        "unmarked_facts": 11
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 20,
+        "fact_count": 19,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 20,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md": {
-      "content_hash": "ccebf47dbf147cccf809ca984256f85eddbd009211de9c6b5bc5fedf7fb96408",
+      "content_hash": "1a8f4fc4c6bbef216fb4b4f90ece4a1b8729710858bb76d720977c63a26f2ea4",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 6,
-        "unmarked_facts": 6
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 11,
+        "fact_count": 10,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 11,
       "unit_count": 4,
       "issue_count": 0
     },
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md": {
-      "content_hash": "2e24d9f0382701df022eb9d2e4c55dd6782f442fe0a46cc6b0449723ddf00ad9",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 169,
-        "unmarked_facts": 169
-      },
-      "marker_count": 0,
-      "unit_count": 0,
-      "issue_count": 0
-    },
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md": {
-      "content_hash": "66360dbcd090a43077fe3a01845a0070b077badf356d6341e5fa2e7866fe3c37",
+      "content_hash": "2d322a4a952aa991ca72d9476c48280f483cb9f16b672ba13aeacfb261101501",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 62,
-        "unmarked_facts": 62
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 77,
+        "fact_count": 76,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 77,
       "unit_count": 10,
       "issue_count": 0
     },
@@ -2333,8 +2418,8 @@
       "content_hash": "80df60e05cb140f306a6993dd3c8a9cdfcc2daeaf3ddec5ce1926ac88cf9fea8",
       "rollup": {
         "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "fact_count": 12,
+        "unmarked_facts": 12
       },
       "marker_count": 0,
       "unit_count": 4,
@@ -2399,8 +2484,8 @@
       "content_hash": "5200a3ceffc8f939ae73c603aa92a945b6c1107f0c42747e515e3fbd5d72b71b",
       "rollup": {
         "marker_count": 0,
-        "fact_count": 8,
-        "unmarked_facts": 8
+        "fact_count": 7,
+        "unmarked_facts": 7
       },
       "marker_count": 0,
       "unit_count": 3,
@@ -3081,8 +3166,8 @@
       "content_hash": "e69dfea498662a07e8d2207be171b793e7192f452fde7a06b6fac7f72f829ef5",
       "rollup": {
         "marker_count": 0,
-        "fact_count": 10,
-        "unmarked_facts": 10
+        "fact_count": 9,
+        "unmarked_facts": 9
       },
       "marker_count": 0,
       "unit_count": 3,

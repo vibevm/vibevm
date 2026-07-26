@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-26T21:36:02Z",
+  "updated_at": "2026-07-26T22:37:46Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -575,8 +575,8 @@
       },
       "markers": 35,
       "units": 7,
-      "facts": 35,
-      "unmarked": 1,
+      "facts": 34,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -592,8 +592,8 @@
       },
       "markers": 36,
       "units": 6,
-      "facts": 36,
-      "unmarked": 1,
+      "facts": 35,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -914,8 +914,8 @@
       },
       "markers": 36,
       "units": 7,
-      "facts": 36,
-      "unmarked": 1,
+      "facts": 35,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -931,8 +931,8 @@
       },
       "markers": 35,
       "units": 6,
-      "facts": 35,
-      "unmarked": 1,
+      "facts": 34,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1157,8 +1157,8 @@
       },
       "markers": 28,
       "units": 6,
-      "facts": 28,
-      "unmarked": 1,
+      "facts": 27,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1174,8 +1174,8 @@
       },
       "markers": 31,
       "units": 6,
-      "facts": 31,
-      "unmarked": 1,
+      "facts": 30,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1536,56 +1536,86 @@
     },
     {
       "path": "packages/org.vibevm.world/decision-records/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 24,
       "units": 6,
-      "facts": 15,
-      "unmarked": 15,
+      "facts": 23,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 30,
       "units": 5,
-      "facts": 22,
-      "unmarked": 22,
+      "facts": 29,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 77,
       "units": 10,
-      "facts": 58,
-      "unmarked": 58,
+      "facts": 76,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 56,
       "units": 7,
-      "facts": 50,
-      "unmarked": 50,
+      "facts": 55,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 79,
       "units": 7,
-      "facts": 62,
-      "unmarked": 62,
+      "facts": 78,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1624,45 +1654,52 @@
     },
     {
       "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 20,
       "units": 6,
-      "facts": 11,
-      "unmarked": 11,
+      "facts": 19,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 11,
       "units": 4,
-      "facts": 6,
-      "unmarked": 6,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 169,
-      "unmarked": 169,
+      "facts": 10,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 77,
       "units": 10,
-      "facts": 62,
-      "unmarked": 62,
+      "facts": 76,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1903,8 +1940,8 @@
       "explicit": null,
       "markers": 0,
       "units": 4,
-      "facts": 13,
-      "unmarked": 13,
+      "facts": 12,
+      "unmarked": 12,
       "issues": 0,
       "campaign": {}
     },
@@ -1969,8 +2006,8 @@
       "explicit": null,
       "markers": 0,
       "units": 3,
-      "facts": 8,
-      "unmarked": 8,
+      "facts": 7,
+      "unmarked": 7,
       "issues": 0,
       "campaign": {}
     },
@@ -2651,8 +2688,8 @@
       "explicit": null,
       "markers": 0,
       "units": 3,
-      "facts": 10,
-      "unmarked": 10,
+      "facts": 9,
+      "unmarked": 9,
       "issues": 0,
       "campaign": {}
     },
