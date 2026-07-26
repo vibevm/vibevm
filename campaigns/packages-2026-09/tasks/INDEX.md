@@ -2,6 +2,9 @@
 
 | id | title | executor | status |
 |---|---|---|---|
+| MARKUP-B6 | `typescript-ai-native-lang` v0.6.0 | opus | dispatched — 18 files, 338 units scanned |
+| MARKUP-B5 | `go-ai-native-lang` v0.1.0 | opus | **done** — 663 of 665 units over 19 files; 2 F-083 frontmatter units left unmarked |
+| MARKUP-B2 | `core-ai-native` v0.8.0, mechanisms + appendix | opus | **done** — 526 units over 7 files; the live slot closed at 943 |
 | DRIFT-036 | both package gates learn their own denominator | opus | **done** — F-086 closed; sync 6/6, floor 7/7, guards fired |
 | DRIFT-035 | the boot lane carries each statically-linked package once | opus | queued (F-078 c, measure first) |
 | DRIFT-034 | a heading anchor may be written the way a fact id may | opus | re-scoped, queued — widening only; fold ruled out |
