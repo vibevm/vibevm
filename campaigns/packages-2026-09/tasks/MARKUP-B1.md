@@ -134,6 +134,12 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
+**Thirty-two rulings now, of which two are struck (18, 19).** They accumulate in
+one place on purpose: a batch reads this list and nothing else to know what was
+already decided. **The list is a derived thing too and nothing recomputes it** —
+B5 caught two rulings that had outlived their findings by a day, and B6 caught a
+justification in its own report that did not survive being checked.
+
 1. **Deconstruction grain is the paragraph, not the list item.** A
    *pre-existing* list item stays whole even when it carries several facts.
    `##DECONSTRUCTION-LAW` binds "a **paragraph** that carries more than one
@@ -258,6 +264,36 @@ file, the ruling wins — the earlier text was written before the cases were kno
     deliverable* which does not exist yet is `@idea/plan` — B1's
     `##MAP-RUST-TCG`. The test is whether the unit asserts a fact about the
     plan, or is itself a pointer to an unbuilt thing.
+
+### Added by the B6 pass (2026-07-26) {#locked-b6}
+
+30. **A lazy continuation at column 0 gets its blank line back.** A sentence
+    written at column 0 immediately after a list item is folded by markdown into
+    that item, so the item ends up asserting something it does not assert and
+    the sentence cannot be marked as itself. **Insert the blank line.** Ruling
+    14 already licenses whitespace-only insertion for exactly this class of
+    parser accident. **Scope it narrowly:** only at column 0, only where the
+    sentence is section-level (a `*Rule:*`, a closing summary over the list),
+    and only where the same file shows the author's own paragraph-level form of
+    the same construct. *(B6 did this twice in the TypeScript guide. Its report
+    justified it as «every other section states its `*Rule:*` at paragraph
+    level», which is **false** — checked: the guide has exactly two `*Rule:*`
+    lines at column 0, and only one of them has its blank line. The move is
+    right and the evidence for it is one internal precedent, not a pattern.
+    B7's Rust guide carries the same sentence in the same shape, once.)*
+31. **Ruling 23 generalises past tables.** Where prose mixes an outside-world
+    claim with our own posture and rulings 3 and 20 forbid splitting it, the
+    **outside-world stage governs the whole unit** — `@spec/done`. Ruling 23
+    said this for a table row; nothing said it for a semicolon-joined pair with
+    no colon lead, which is where B6 met it twice.
+32. **In a pattern card, the labelled field is the atom.** A card field
+    (`Evidence & Transfer-strength:`, `Risks & Assumptions:` …) stays one unit
+    even when it carries several separately-verdictable facts, and even when a
+    language-specific sentence is appended inside it. The go twins do this and
+    the deconstruction law's grain is the paragraph (ruling 1). **A strict
+    reading of ruling 20's verdict test would split these; it does not win
+    here** — the card format defines the field as the unit, and a format's own
+    grain beats a general test.
 
 ## Boundaries {#boundaries}
 
