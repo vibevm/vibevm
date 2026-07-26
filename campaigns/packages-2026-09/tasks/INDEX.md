@@ -2,6 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
+| DRIFT-037 | a skill's frontmatter stops being mistaken for prose | opus | queued (F-092; **not while a batch is in flight**) |
 | MARKUP-B6 | `typescript-ai-native-lang` v0.6.0 | opus | dispatched — 18 files, 338 units scanned |
 | MARKUP-B5 | `go-ai-native-lang` v0.1.0 | opus | **done** — 663 of 665 units over 19 files; 2 F-092 frontmatter units left unmarked |
 | MARKUP-B2 | `core-ai-native` v0.8.0, mechanisms + appendix | opus | **done** — 526 units over 7 files; the live slot closed at 943 |
