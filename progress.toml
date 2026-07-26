@@ -164,4 +164,30 @@ exclude = [
     # Re-admitting it needs a rule the campaign does not have — "lore is marked
     # but never verified" — and that rule needs tooling, not just a glob.
     "packages/**/spec/book/**",
+    # THE DISCOVERY PROMPT — a payload, not a claim.
+    # OWNER RULING 2026-07-27, F-096, asked before B8 was dispatched rather than
+    # after it was marked: exclude `DISCOVERY-PROMPT.md` (169 units, 37 % of that
+    # batch). The deciding argument is Phase C, the same one that removed the
+    # book: every marker earns a verdict, and `confirmed` has no meaning applied
+    # to a line of a prompt ADDRESSED TO ANOTHER MODEL. The file is not prose —
+    # `<PROMPT_INFO>`, `<VARIABLES>`, macro substitution, and assignments like
+    # "LLM = Claude/Haiku/Sonnet/Opus" that a downstream session consumes.
+    # The package's own boot snippet rules it out in as many words: "a payload
+    # for a fresh session, not standing instructions — do not load it into
+    # context outside an explicit deployment request." Nothing outside the
+    # package cites it; the single external hit is the generated
+    # `spec/boot/STATIC.md`, which is that same snippet compiled into the host's
+    # boot lane.
+    # THE LINE THIS DRAWS, because the next case will test it: the package's
+    # README, boot snippet and `usage.md` all STAY observed — every document
+    # that makes a claim ABOUT the artifact is still measured. Only the payload
+    # leaves, and it leaves because it asserts nothing this project could be
+    # wrong about. That is sharper than "lore is excluded": a document is in the
+    # corpus when it asserts something this project could be wrong about.
+    # Version-agnostic so a future `discovery-prompt` slot cannot silently
+    # re-admit it; NEVER widen this to `flows/**` or to `**/*-PROMPT.md`.
+    # The counter-argument is recorded in the campaign LOG rather than won: the
+    # artifact is what the package exists to ship, so its corpus is now
+    # meta-commentary about something unobserved. The owner accepted that.
+    "packages/**/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md",
 ]
