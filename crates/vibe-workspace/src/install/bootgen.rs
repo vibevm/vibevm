@@ -86,6 +86,24 @@ pub fn regenerate_boot_from(
         })?;
         // The absolute root is the hoist point: it carries the single copy of
         // every shared package (PROP-038 §2.4).
+        // <!-- REVIEW: DRIFT-030 §4 step 1 — this append is a SECOND write path
+        // into the root's static lane. `compute_effective_boot` above has
+        // already emitted a static entry for any package in the root's own
+        // static closure (`node_dependency_boot` → `boot.rs:246-288`, path from
+        // `bootgen.rs:305-310`), and `render_static` concatenates entry by
+        // entry with no dedup on `path` (`boot_artifacts.rs:224-261`). So a
+        // package that is both hoisted and in the root's closure lands twice.
+        // Measured on a fixture of vibevm's shape (root --static-transitive-->
+        // content-minimal aggregator --static--> member): counting the
+        // entry-point node in `hoist::soft_static_pulls` does clear the
+        // aggregator's copy — its zone degrades to the `#use` marker §2.5
+        // designs — but the root then holds the member twice, once per path.
+        // PROP-038 `##HOIST-LCA` explains why the collision is structural here:
+        // the hoist target is the LCA of a *continuous static zone*, and for an
+        // unbroken root→aggregator→member static chain that LCA IS the root,
+        // i.e. the hoist destination and the root's own compile site coincide.
+        // Which mechanism owns the dedup is a design question, so DRIFT-030
+        // stopped on its §8 rather than paper over it at this call. -->
         if rel == "." {
             append_hoisted(&mut effective, &shared, &table, &pulls);
         }
