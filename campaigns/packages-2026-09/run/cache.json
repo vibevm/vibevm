@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T19:14:02Z",
+  "updated_at": "2026-07-26T20:25:27Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -1084,200 +1084,416 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md": {
-      "content_hash": "8c443240b6628a69c157bb447765f643e93f97465da4a7b2b0f4dbe0e9df4bd4",
+      "content_hash": "ce24632069a8bed7cf5df3f2e7382302671fd849bad33bd41cc06b3c54ace919",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 23,
       "unit_count": 1,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md": {
-      "content_hash": "9b5debc73e9728bb209a75c3514fa499a9c926f173e0a74442b685af8c4ac68d",
+      "content_hash": "dc455dfe96bd840ffc61fcbf62f4274c6589fec7837aa7770c03cceff63e8770",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md": {
-      "content_hash": "6bff49c6f2fc9983a30950224eedb7d0be33a61a830ca02a7a1f27ad6f4ea8e7",
+      "content_hash": "3113cd984f56c78765f73cedcdb71d05decad883b89e711da9cd3f2fc7483297",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md": {
-      "content_hash": "afe402772c23f7235007f0cdbfb37275212a4030d93c7bc5d9dac712487032f1",
+      "content_hash": "885cebc915491b841fad0f6556d17752267effb0eab891aedf73ec518f289c06",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md": {
-      "content_hash": "1f0038c9848f8125a95f62313bb8b92908a1590f731610add2cef32fc86258cd",
+      "content_hash": "0f29ac518af4424048f10f90cb94f61dbe25a47a2db9ed733a3e03459520b752",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 48,
-        "unmarked_facts": 48
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 53,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-e-fast-loop.md": {
-      "content_hash": "ab65aecaf5b5a97ca5ba3b714262aa9a23c04f123a9007cc797ada1ec9d8ec32",
+      "content_hash": "ac74ce165b46cba560d626a7a9be0c42183fc9ac14efa4864af4613cd60c89d3",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-f-structured-diagnostics.md": {
-      "content_hash": "3416e68cb97e37668db864eb06f2db9949ca977dbd4b2288c3369746bc31a040",
+      "content_hash": "17ce96669f86eabf3aebc8568ee1e50a2bc93e56b853847b553c305214e2d5d2",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-g-doctests.md": {
-      "content_hash": "4c5b0f1956343c71abf8e7aeb5c2a729358c58fca119265924b0f642fa006d7e",
+      "content_hash": "78279d152089c8e54cdae95ef4bc63c9c36e80a5ea23545bc1dc24653d207a51",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-h-simulators.md": {
-      "content_hash": "b2d32a158282890ee373c48c06aabfc0cc7495993d629f7229c15e7ef1b11d8f",
+      "content_hash": "49d0fd5720131de9f781e237021f1d5ef6753ab3be645d98ab34a5e6aac67b40",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "7c71137a68a33c670f856ab25ad9fecb15aee7f620e4882c493ee688dfc00b14",
+      "content_hash": "521cd376746f3d6f2ff493a10cba6f436c40293bbe2df65dd57dd49abbeb4a72",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md": {
-      "content_hash": "62e37d2cc9e932c6014ff4098e53118370343ff530351232aedec95f66750ef0",
+      "content_hash": "41c68add9099a030ba54c244be84f6a48f598c56a7130fde075a4ff390706b47",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 15,
-        "unmarked_facts": 15
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 28,
+        "fact_count": 28,
+        "unmarked_facts": 1
       },
-      "marker_count": 0,
+      "marker_count": 28,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md": {
-      "content_hash": "8621dc1d43c407d6cf3a86f0d2d344cd5e41f37187102ec99df841e14076826a",
+      "content_hash": "a27728eb3d392c4ce7bdbdef2c63ba26199add5699433088c3a7b8235462311e",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 20,
-        "unmarked_facts": 20
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 31,
+        "fact_count": 31,
+        "unmarked_facts": 1
       },
-      "marker_count": 0,
+      "marker_count": 31,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
-      "content_hash": "0bb855210eead0ca5c6d610a27ad398a6985195970c1575caa64249d7695452a",
+      "content_hash": "bc9aff0a57d03e7e1b707cf5fe965ea7d98dbe1ff5681c4f8216386a72c54028",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 80,
-        "unmarked_facts": 80
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 154,
+        "fact_count": 153,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 154,
       "unit_count": 18,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
-      "content_hash": "107d60c1c05df5d9ddfb8fd6a7789cb51da4bf5fa29196dbe9b98a13c2d52e76",
+      "content_hash": "1a451863c2a7c10913a101577da43f226c4ea24da8cc6b79e7edc0650c5a5fd6",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 26,
-        "unmarked_facts": 26
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 41,
+        "fact_count": 40,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 41,
       "unit_count": 8,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md": {
-      "content_hash": "41ff0adba3db0c9548e9302aa31953bd7eb3b91dc2937f2348e0ad6144ed3406",
+      "content_hash": "614b746844d803edec398680e62a258503ce86c755314bc2e976bf24ffb083c9",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 39,
-        "unmarked_facts": 39
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 50,
+        "fact_count": 49,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 50,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
-      "content_hash": "6189ecf613130f71fd686b64a7b8ce9cafc3381c788f320f85276203c5685cc7",
+      "content_hash": "6dcc151777cbd0856fe80d247e123e943265b1eacc162495fc73022549b05d4c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 20,
-        "unmarked_facts": 20
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "unknown",
+          "hold"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 35,
+        "fact_count": 34,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 35,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md": {
-      "content_hash": "f229454f282b078b21158cda6e542bc6dc10d1336a6621463e10f7d600b50c16",
+      "content_hash": "b757b3c7483484f2a329f4c8fc620422781d1af6bb1b035a95ea57281219cb9c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 18,
-        "unmarked_facts": 18
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 28,
+        "fact_count": 27,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 28,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md": {
-      "content_hash": "7ef0daecdff0113d6bc0dd4a5cc0b4109d72fc9deee24753b6f9e9f5decad633",
+      "content_hash": "95d5b9cf62651c0b19a23b534eca87dcfa9055b955cdc37ed2e23e68aa4f6463",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 35,
-        "unmarked_facts": 35
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 42,
+        "fact_count": 41,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 42,
       "unit_count": 8,
       "issue_count": 0
     },
