@@ -125,15 +125,18 @@ Two rules that are easy to lose mid-batch:
 at 0 unmarked — wave 2 does not un-measure wave 1. Write `baseline.json` at the
 batch boundary (amendment A6).
 
-**The mechanical half of the review is `tools/batch-review.py`** (added at the
-B6 boundary, after the same throwaway checker had been written from scratch four
-times). Run the gate, then hand it the log and the batch's predictions:
+**The mechanical half of the review is `cargo xtask batch-review`** (added at
+the B6 boundary, after the same throwaway checker had been written from scratch
+four times). Run the gate, then hand it the log and the batch's predictions:
 
 ```bash
-python tools/batch-review.py --selftest        # calibration; never trust a run where this fails
-python tools/batch-review.py --gate-log gate.log --scope scope.txt \
-    --expect-unmarked <n> --expect-residual residual.txt --expect-total <n>
+cargo xtask batch-review --gate-log gate.log --scope scope.txt --expect-unmarked <n> --expect-residual residual.txt --expect-total <n>
 ```
+
+Its negative controls are `#[test]`s, so **the floor runs them on every commit**
+rather than when someone remembers a flag; `cargo xtask batch-review --selftest`
+additionally replays landed batches out of git history, which the hermetic tests
+cannot.
 
 It checks scope containment, word-stream identity, the gate delta against the
 brief's prediction, error classes, the closed vocabulary, anchor collisions,

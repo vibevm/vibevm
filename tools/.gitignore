@@ -18,9 +18,3 @@
 # vendored binary: zero-dependency node:http server + one static page.
 !progress-dashboard/serve.mjs
 !progress-dashboard/index.html
-# The batch-review checker is committed source for the same reason: it is
-# the mechanical half of a markup-batch review, and it existed as throwaway
-# scratchpad code four times before it was kept. Stdlib-only Python; it
-# gates nothing (the floor and `progress check` are the gates), so its
-# interpreter is a reviewer's dependency and never a build one.
-!batch-review.py

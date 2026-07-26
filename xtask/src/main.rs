@@ -27,12 +27,14 @@ use std::path::PathBuf;
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
+mod batch_review;
 mod codegen;
 mod conform;
 mod mirror;
 mod specmap;
 mod sync_engines;
 
+use batch_review::{BatchReviewArgs, run_batch_review};
 use codegen::{run_check_codegen, run_codegen};
 use conform::{run_conform_check, run_conform_freeze};
 use mirror::run_mirror;
@@ -154,6 +156,39 @@ enum Cmd {
         /// run stays deterministic and offline.
         #[arg(long)]
         mirrors: bool,
+    },
+
+    /// The mechanical half of a Phase-B markup batch review (PROP-043).
+    /// Checks scope containment, word-stream preservation, the gate delta
+    /// against the brief's predictions, the closed vocabulary, anchor
+    /// collisions, encoding and markers-in-fences; surfaces every
+    /// `@unknown` and every ruling-30 candidate. It judges nothing, and
+    /// prints what it did not check.
+    BatchReview {
+        /// Commit the batch started from (default: HEAD).
+        #[arg(long, default_value = "HEAD")]
+        base: String,
+        /// Review a landed batch at this commit instead of the worktree.
+        #[arg(long)]
+        commit: Option<String>,
+        /// Output of `vibe progress check --exhaustive`.
+        #[arg(long)]
+        gate_log: Option<PathBuf>,
+        /// File listing the batch's declared paths.
+        #[arg(long)]
+        scope: Option<PathBuf>,
+        /// Predicted residual unmarked units inside the batch.
+        #[arg(long)]
+        expect_unmarked: Option<usize>,
+        /// File listing paths allowed to carry residual unmarked units.
+        #[arg(long)]
+        expect_residual: Option<PathBuf>,
+        /// Predicted corpus-wide unmarked total after the batch.
+        #[arg(long)]
+        expect_total: Option<usize>,
+        /// Replay landed batches out of git history.
+        #[arg(long)]
+        selftest: bool,
     },
 
     /// Mirror the authored neutral engine crates
@@ -338,6 +373,31 @@ fn main() -> Result<()> {
                 Vec::new()
             };
             rust_ai_native_cli::run_health(&root, &out, &extra)
+        }
+        Cmd::BatchReview {
+            base,
+            commit,
+            gate_log,
+            scope,
+            expect_unmarked,
+            expect_residual,
+            expect_total,
+            selftest,
+        } => {
+            let root = repo_root()?;
+            run_batch_review(
+                &root,
+                BatchReviewArgs {
+                    base,
+                    commit,
+                    gate_log,
+                    scope,
+                    expect_unmarked,
+                    expect_residual,
+                    expect_total,
+                    selftest,
+                },
+            )
         }
         Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
     }
