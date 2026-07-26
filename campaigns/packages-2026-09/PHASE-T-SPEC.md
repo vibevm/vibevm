@@ -13,8 +13,14 @@ so it is a decision and not a drift).
 
 ## 0. Why the placement is E→F and not anywhere else {#placement}
 
-Phase E is the last phase that **changes code**. Writing tests against code that
-drift tasks are still correcting means writing them twice.
+Phase E is the last phase that **plans** code changes. Writing tests against code
+that drift tasks are still correcting means writing them twice.
+
+**T is not «after all code changes» — it is where the last of them are
+discovered.** Writing a real test from a fact is, for many facts, the first time
+anyone executes them, and §5.5 is the discipline that keeps what that turns up
+from becoming a second Phase E: waves close, and a wave does not close on an
+unresolved red.
 
 Phase F asks the mandate's question — *does the AI-native discipline hold itself
 to its own rule?* Today F could only answer it by prose judgement. With T in
@@ -259,6 +265,95 @@ test binds to the behaviour and not merely to itself — is available where a
 packet's fact is important enough to pay for it. It is not the default.
 
 A packet that reports no red exhibit is **not accepted**.
+
+## 5.5 Waves — tests and fixes close together, never 20 000 then a correction {#waves}
+
+*Owner, 2026-07-26: «нужно писать тесты и сразу же править код. Какими-то
+батчами. Иначе может оказаться, что понаписал 20 тысяч тестов, которые все
+инвалидируются первой же правкой.»*
+
+**The concern is right and it is sharper than it looks — so first, what actually
+invalidates.** A Phase T test is written from the fact's text, never from the
+code. Therefore:
+
+- ##WAVE-CODE-FIX-DOES-NOT-INVALIDATE **A code fix does not invalidate a test.** A test that was red
+  because the code disagreed with the fact simply **starts passing**. It was
+  right all along.
+- ##WAVE-FACT-CHANGE-INVALIDATES **A fact change does.** When a red is resolved the other way —
+  reality is right, the spec was wrong, so the fact is corrected through
+  sync-from-code — every test written from the old wording is now testing a
+  claim that no longer exists.
+
+So the exposure is **fact corrections, not code fixes**, and the whole of this
+section is about discovering them while they are cheap.
+
+### 5.5.1 The invalidation is already instrumented — pin the edges {#pinning}
+
+- ##WAVE-PIN-EVERY-EDGE **Every `verifies` edge carries `r=N`**, the fact's revision, and this
+  is not optional. PROP-014's two-tier revisions with **asymmetric
+  invalidation** then do the work: a spec bump flips every edge pinned to the
+  old revision to *suspect*, while a code change leaves edges valid — which is
+  exactly the asymmetry above, already built.
+- ##WAVE-INVALIDATION-IS-LOCATABLE **The blast radius of a fact correction is therefore a query, not a
+  search.** Bump the fact, and the tests bound to its old revision name
+  themselves. Twenty thousand tests are only frightening if finding the
+  affected ones is manual; pinned, it is a list.
+- ##WAVE-WITHOUT-PINS-THE-FEAR-IS-JUSTIFIED Without `r=N` the owner's worry is entirely justified and no
+  batching rescues it — you would be grepping prose to find what a wording
+  change broke.
+
+### 5.5.2 Wave 0 is a calibration, and its output is a number {#wave-zero}
+
+##WAVE-ZERO-MEASURES-THE-RED-RATE **The first wave is deliberately small — one or two cells — and its
+deliverable is not tests. It is the red rate:** of the facts tested, how many
+turned out to disagree with reality, and of those, how many resolved as *the
+fact was wrong* rather than *the code was wrong*.
+
+That single number sizes every wave after it, and nothing else can produce it:
+
+| red rate | what it means | wave width |
+|---|---|---|
+| near zero | the corpus is as sound as Phases C–E left it | wide waves, many cells at once |
+| a few per cent | ordinary drift | moderate; keep waves closing cleanly |
+| high | Phase C or E did not finish what they claimed | **stop and report** — that is a finding about the earlier phases, not a tuning parameter |
+
+*Sizing a wave before this number exists is the guess-wearing-a-decimal-point
+this campaign has now made five times.*
+
+### 5.5.3 Every wave closes before the next opens {#wave-closure}
+
+A wave is closed when **all four** hold, and none may be deferred into the next:
+
+```
+1. Every test in the wave is green, OR its red has a written verdict.
+2. Each red's verdict is one of exactly two, decided by the reviewer:
+     the CODE is wrong  → a fix, dispatched and landed;
+     the FACT is wrong  → sync-from-code, owner-approved, fact revision
+                          bumped, and the suspect edges re-affirmed.
+3. No test in the wave is bound to a fact whose revision moved during it.
+4. The floor is green on the merged result.
+```
+
+- ##WAVE-SWARM-CANNOT-CLOSE-A-RED **A worker never resolves a red — it only surfaces it.** Which of the
+  two verdicts applies is a judgement about the spec, and a fact correction is a
+  spec edit needing the owner. The swarm's job ends at «this test fails and here
+  is the fact it was written from».
+- ##WAVE-T-CONTAINS-CODE-CHANGES **This means Phase T contains code changes, and §0 should not be read
+  as denying it.** T is not «after all code changes» — it is **where the last of
+  them are discovered**, because writing a real test from a fact is the first
+  time many facts are executed at all. Phase E is where code changes were
+  *planned*; T is where the remainder are *found*. Each wave closing is what
+  keeps that from becoming a second Phase E.
+
+### 5.5.4 Do not over-specify, or a code fix will invalidate after all {#no-over-spec}
+
+##WAVE-ASSERT-NO-MORE-THAN-THE-FACT **Assert exactly what the fact promises and nothing more.** The one
+way a *code* fix does break a Phase T test is over-specification: a fact
+promising «a nearest-legal-value hint» is satisfied by any message containing
+the suggestion, and a test asserting the **exact string** breaks when the
+wording is improved — while the fact remains true throughout. That test was
+never testing the fact; it was pinning an implementation detail the fact never
+claimed. §3.2's list bans the vacuous shapes; this bans the greedy one.
 
 ## 6. Where the tests live {#location}
 

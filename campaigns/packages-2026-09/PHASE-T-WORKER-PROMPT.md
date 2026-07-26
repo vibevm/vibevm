@@ -93,6 +93,16 @@ the result to one account. Nothing else in it varies between the two.*
 > (§3.4): cover the implementation and say why the assertion is right. If the
 > only answer is «that is what it returned», delete it.
 >
+> **Every `verifies` edge carries the fact's revision** — `#[specmark::verifies("spec://…#FACT", r = N)]`,
+> with `N` read from the fact, never invented. This is what makes a later
+> correction to that fact **name** the tests it affects instead of leaving
+> someone to grep prose for them.
+>
+> **Assert exactly what the fact promises and nothing more.** If it promises a
+> hint, assert the hint is present — not the exact sentence. An over-specified
+> test pins an implementation detail the fact never claimed, and it is the one
+> kind that a legitimate code fix breaks.
+>
 > **Three tests per fact, of three different kinds** — `canonical_…`,
 > `boundary_…`, `negative_…` (`property_…` where a fact names no failure). Two
 > honest kinds and a stated reason beat three where one is invented.
