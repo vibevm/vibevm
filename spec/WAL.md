@@ -104,6 +104,14 @@ Phase T also has a worker prompt and an operator runbook.
   (`vibe progress seal`), or it is wrong in a direction nothing checks (F-076).
 - **Commit delegated work on the completion notification**, never on a
   filled-in task journal — executors write §9 as they go.
+- **`grep -v '\.vibe'` deletes this repository's own packages.** The org
+  namespace is literally `org.vibevm`, so that filter drops every
+  `packages/org.vibevm.*` path — and reports the absence as an answer. It hid a
+  file that was on disk and unchanged, on 2026-07-27, while checking whether an
+  exclusion had eaten it. Anchor such filters on a path segment (`/vibedeps/`,
+  `/.vibe/`) rather than a substring. Related: **PowerShell `-match` is
+  case-INSENSITIVE**, so `-match "DISCOVERY-PROMPT"` matches the lowercase
+  directory `discovery-prompt` and inflates a count that `grep` reports as zero.
 - **Never `git add -A` (or `git add .`) while an executor is running.** A
   reviewer's own bookkeeping commit swept 13 files of an in-flight batch's
   partial markup into itself on 2026-07-26, which is exactly what the task
