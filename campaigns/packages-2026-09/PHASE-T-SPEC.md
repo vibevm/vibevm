@@ -3,11 +3,15 @@
 <status stage="spec" state="plan" comment="drafted 2026-07-26 from the owner's rulings; not ratified"/>
 
 **Placement:** between Phase E (coding) and Phase F (the credibility report).
-**Executor:** a swarm of the running harness's **own** subagents (Claude Code,
-ZCode — whichever the session runs under). **Not fractality** (owner ruling
-2026-07-26, a deliberate exception to plan §2's «no fractality», recorded here
-so it is a decision and not a drift).
-**Reviewer:** the boss agent, on every packet.
+**Executor:** **GLM sessions** (ZCode-class harness) and, where the harness
+offers them, their own sub-agents — one packet per writer either way (§13.0.1).
+**Not fractality** (owner ruling 2026-07-26, a deliberate exception to plan §2's
+«no fractality», recorded here so it is a decision and not a drift; the second
+ruling of the same day names GLM as the writer and directs the design to be made
+realistic for it).
+**Reviewer:** the boss agent, on every packet. The boss also provisions every
+worktree, runs every cargo invocation, performs every red exhibit, and makes
+every commit — the writers only write test text (§13.0, §13.4, §13.5).
 
 ---
 
@@ -158,6 +162,7 @@ load-bearing part of this section, not this list.*
    Smallest = fewest fields set, shortest string, one element.
 5. Pick the kind (§4) and name the test for it:
    canonical_… / boundary_… / negative_… / property_…
+   ---- steps 1-5 are the WRITER's; 6-7 are the BOSS's, batched (§13.5) ----
 6. Run it. Green on the first run is EXPECTED and proves nothing yet —
    the fact is supposed to be implemented already.
 7. Change the expected literal to a WRONG value. Confirm red. Restore.
@@ -168,6 +173,12 @@ load-bearing part of this section, not this list.*
 Step 3 is the whole method compressed. **A literal cannot be copied from a run
 that has not happened yet**, so writing it first is what mechanically prevents
 the test from mirroring the code. Everything else supports that one move.
+
+##ROUTINE-SPLIT-IS-FREE **The 5/2 split costs the method nothing**, which is why it is safe to
+make. The routine already forbids running before the expected value is written,
+so steps 1–5 are build-free by construction; 6 and 7 are confirmation, and
+confirmation is exactly the part that batches (§13.5). A writer that stops at 5
+has done all of the thinking and none of the waiting.
 
 ### 3.2 Banned assertion shapes — the list to check against {#banned}
 
@@ -282,9 +293,14 @@ the test does not work at all — where the thing is not even lexically
 expressible and the worker has written something that cannot fail.
 
 ##FALSIFY-ONE-PER-PACKET **Per packet, at least one test must be exhibited red.** The cheap
-mechanism: after the test passes, perturb its **expected value** to a wrong one,
-confirm red, restore, and record both outputs in the packet's report. This
+mechanism: once the test passes, perturb its **expected value** to a wrong one,
+confirm red, restore, and record both outputs in the packet's record. This
 proves the test executes and its assertion is live.
+
+##FALSIFY-BOSS-PERFORMS-IT **The exhibit is performed by the boss, not by the writer**, batched
+across the wave (§13.5). The writer never runs the suite, so it cannot perform
+this step; and the step's failure mode is a perturbation left un-restored, which
+belongs with the party that can see the whole loop.
 
 ##FALSIFY-STRONGER-AVAILABLE The stronger form — perturb the **code** instead, proving the
 test binds to the behaviour and not merely to itself — is available where a
@@ -760,17 +776,73 @@ that was never shown able to fail proves nothing.*
 - **The `verifies` extraction proven end to end on one real test** (§11.5.1).
   Zero producers exist today; unproven, the phase's entire coverage claim rests
   on a carrier nobody has ever run.
+- **One packet run end to end on a GLM session, before any wave.** Wave 0 is a
+  calibration of the *corpus* (§5.5.2, its output is the red rate); this is a
+  calibration of the *writer*, and it is a different question — can a GLM
+  session, given one filled packet, produce three tests of three kinds with an
+  intact `verifies` tag? Nothing in this design has been exercised against that
+  reader. Run one, read the output, and fix the packet template before ten of
+  them run. **Its deliverable is the packet template, not the tests.**
+- **The harness's sub-agent capability established by observation, not
+  assumption** — and if it is absent, nothing changes except the session count
+  (§13.0.1). This is a prerequisite for *scheduling*, never for correctness.
 
 ---
 
-## 13. Running two worker accounts in parallel {#parallel}
+## 13. Running the swarm on GLM sessions {#parallel}
 
 *Owner, 2026-07-26: two accounts are available; how is the work split so they
-do not collide, and how is the scope computed?*
+do not collide, and how is the scope computed? Amended 2026-07-26 (second
+ruling): the writers are **GLM sessions and their sub-agents**, and the design
+is to be made realistic for that reader.*
 
 **The answer is not "split the facts". It is "split the files, and make sure
 every file that will be written already exists before anyone starts."** With
 that done, the merge is trivial by construction rather than by luck.
+
+### 13.0 The reader is weak, and the design has to spend that fact {#weak-reader}
+
+The executor is **not** a Claude-grade session. It is GLM — the same population
+the Discipline's own weak-reader results are about — and the first draft of this
+design was written for a reader it will not get.
+
+- ##P-DOCTRINE-APPLIES-TO-OURSELVES **The project's own doctrine binds this phase's prompts.** The
+  strong author materialises the structural decision; the weak reader fills a
+  named input (scaffold card A, in this corpus's own words). A prompt that asks
+  a weak writer to *derive* five invariants per test has moved the expensive
+  cognition to the cheap process, which is the inversion the whole discipline
+  exists to prevent.
+- ##P-PRECOMPUTE-EVERY-DERIVABLE-FIELD **Everything derivable is precomputed into the packet by the boss**
+  — the `spec://` URI, the revision `r=N`, the target file path, the three test
+  names, the tier. The writer copies literals and writes assertions. It never
+  derives an identifier, because a mistyped `verifies` tag is a test that exists
+  and is invisible to every count this phase produces (§11.5), and that is the
+  single most expensive failure available to a weak writer.
+- ##P-INLINE-NEVER-CITE **The routine is inlined, never cited.** A weak reader told to «read
+  §3.1» skims it. §3.1's seven steps, §3.2's ban list and §3.3's worked pair are
+  pasted into the packet in full. They are ~60 lines and they are the phase.
+- ##P-ONE-DECISION-PER-STEP **One decision per step.** Where the first draft asked for judgement
+  («balance by estimated tests», «choose the kind»), the packet carries the
+  answer and the writer executes it.
+
+### 13.0.1 The packet is the unit, and it serves both levels {#packet-is-the-unit}
+
+##P-SAME-PACKET-BOTH-LEVELS **One packet = one component = one writer**, and the *same* packet text
+works whether it is consumed by a whole GLM session or by one sub-agent inside
+one. This is deliberate: whether a ZCode-class harness offers native sub-agent
+orchestration is **not verified**, and no part of this design may depend on the
+answer.
+
+| if the harness has sub-agents | if it does not |
+|---|---|
+| one session, N packets fanned to N sub-agents | N sessions, one packet each |
+| the session lead does no cargo, no git, no merge | the same, per session |
+| **the packets are identical** | **the packets are identical** |
+
+##P-NO-BET-ON-UNVERIFIED-CAPABILITY The first draft bet the whole parallel design on ten sub-agents
+existing inside an account. Making the packet the unit removes the bet instead
+of hedging it: if fan-out exists it is a scheduling convenience, and if it does
+not, nothing about the work changes.
 
 ### 13.1 What actually collides — the short list {#collisions}
 
@@ -825,15 +897,23 @@ swarm will write and declares it:** an empty `spec_tests.rs` (and
   the end. Any that is still empty is named. Without it, «both branches merged
   cleanly» is a count with nothing to compare against.
 
-### 13.4 The prompts are the only channel {#no-coordination}
+### 13.4 The packet is the only channel {#no-coordination}
 
-**Two parallel worker accounts know nothing about each other** — native
-sub-agent orchestration works only *inside* one account, so there is no
-coordinator spanning them and no runtime channel between them.
+**Parallel writers know nothing about each other.** Whatever the harness, there
+is no coordinator spanning two accounts and no runtime channel between them.
 
 - ##P-STATIC-OR-NOTHING **The split is static or it does not exist.** Neither can ask which
   cells are its own, so the answer is a literal path list in its prompt,
   computed by the boss before either starts.
+- ##P-WRITER-NEVER-RUNS-GIT **No writer runs git. Not worktree, not branch, not commit.** The boss
+  provisions every worktree and makes every commit. Three reasons, and the third
+  is the one that decides it: the Windows `core.longpaths` failure is opaque and
+  a weak reader cannot diagnose it; a commit is where the attribution rule
+  (Rule 1) is most easily broken and it must be made by the party that owns the
+  rule; and **a writer that cannot commit cannot merge**, which is what §13.7's
+  check needs in order to still have two distinguishable sides to compare.
+  *(The first draft opened the worker prompt with a `git worktree add` recipe.
+  That was the single least realistic instruction in the design.)*
 - ##P-SCAFFOLD-IS-THE-ONLY-SYNC **The scaffold commit is the one synchronisation point**, and it
   happens *before* parallelism. Both prompts name the same starting sha. That
   is why the scaffold cannot be one of the two workers — the other would have
@@ -860,13 +940,20 @@ tolerate the queue but to remove cargo from the parallel path.**
   the fact's text is the oracle, so a test is *written* from a signature and a
   sentence. Running is only confirmation. **The sub-agents therefore write text
   and never invoke cargo once.**
-- ##P-LEAD-RUNS-WAVE-BUILDS **The lead runs one wave build for all ten**
+- ##P-BOSS-RUNS-WAVE-BUILDS **The BOSS runs the one wave build**
   (`cargo test --workspace --no-run`), routes each compile error back by path,
-  and repeats until it compiles.
-- ##P-BATCHED-RED-EXHIBIT **The red exhibits batch too.** Perturb one literal in **every** file
-  at once, run once, confirm exactly those failed, restore all, run again. Every
-  file still gets its exhibit; the check is not weakened. **Two builds for the
-  wave instead of two per test.**
+  and repeats until it compiles. *(The first draft gave this to the session
+  lead. A GLM lead is exactly as weak at a stateful build-and-route loop as the
+  sub-agents it would be routing to — the level was wrong, not the mechanism.)*
+- ##P-BATCHED-RED-EXHIBIT **The red exhibits batch too, and they are also the boss's.** Perturb
+  one literal in **every** file at once, run once, confirm exactly those failed,
+  restore all, run again. Every file still gets its exhibit; the check is not
+  weakened. **Two builds for the wave instead of two per test.**
+- ##P-RESTORE-IS-WHY-THE-BOSS-HOLDS-IT The restore step is the reason this cannot be delegated at all.
+  A perturbation that is not put back leaves a permanently failing test, the
+  failure surfaces far from its cause, and the party best placed to forget it is
+  the one that has just written two hundred files. The boss perturbs, records,
+  and restores in one bounded loop it can see the whole of.
 - ##P-THE-ARITHMETIC The scale of it: a wave of ten sub-agents × five tests is **150 cargo
   invocations** under the naive design and **three** under this one. The
   serialised resource is touched O(waves), not O(tests).
@@ -885,10 +972,16 @@ dispatching», which papered over the problem instead of removing it.*
 
 ### 13.6 Isolation, and the branch names {#isolation}
 
-Each account gets its **own branch and its own git worktree**. The worktree
-matters more than the branch: separate `target/` directories mean the two runs
-do not contend on the cargo build lock, which they otherwise would for every
-compile.
+Each account gets its **own branch and its own git worktree, both provisioned by
+the boss before the account is opened** (§13.4). The worktree matters more than
+the branch: separate `target/` directories mean the two runs do not contend on
+the cargo build lock, which they otherwise would for every compile.
+
+- ##P-LONGPATHS-IS-THE-BOSS-S `git worktree add` on this repository overflows Windows MAX_PATH on
+  the deep `vibedeps/` paths and fails opaquely; provisioning passes
+  `-c core.longpaths=true`. This is a paid-for fact (F19) and it now lives
+  where it is actionable — in the boss's provisioning step, not in a prompt
+  handed to a reader who could not have diagnosed the failure.
 
 - ##P-BRANCH-NAMES **Name the branches for their scope, never for the tool.** The
   attribution policy forbids model, agent or AI-tool names in **branch names**
