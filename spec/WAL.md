@@ -103,10 +103,14 @@ closes only through sync-from-code with owner approval.
   2026-07-26 — once by `scan` (caught, restored) and once by `check`, which
   was NOT caught and got committed in `07a38e1a`; the zone was restored from
   `d3482dd7` and both seals re-applied by hand.
-  **Wave 1's `run/` is closed and must be maintained by hand only — never
-  point a progress subcommand at it.** Its durable artefact is
-  `baseline.json` (920 units, intact), and `ZONE-LIFETIMES` already says
-  `run/` is disposable after close-out.
+  **RESOLVED 2026-07-26 (owner picked F-073 option (a)):** the wave-2 zone
+  `campaigns/packages-2026-09/` now owns the host corpus's verdicts too — all
+  58 host verdict maps were migrated into it, so there is **one live zone**
+  and a host anchor minted by sync-from-code has a campaign that judges it.
+  Wave 1's `run/` is archival from here (its durable artefact is
+  `baseline.json`, 920 units, intact; `ZONE-LIFETIMES` already calls `run/`
+  disposable after close-out). **Never point a progress subcommand at
+  `campaigns/progress-2026-08`.**
 - **With two campaign zones, a bare `vibe progress` writes no state.**
   `resolve_campaign` returns a zone only when exactly one exists, and
   otherwise drops to ad-hoc mode — reports still work, state silently does
