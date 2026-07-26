@@ -1347,6 +1347,39 @@ command that would have tested it.
   cheaper than eight independent rediscoveries, and it must be a fact
   correction under sync-from-code rather than a markup fix.
 
+- **2026-07-27 · F-098 — a promise whose «next release» has shipped.**
+  `wal/v0.2.0/README.md` says the Discipline «ships a convention document that
+  defers to this package **from its next release**». That release is
+  `core-ai-native/v0.8.0`; it contains **zero** occurrences of `flow:wal`, and
+  its `spec/06-WAL-CONVENTION.md` defers to nothing. B9 marked it `@spec/done`
+  as a claim about the future rather than a confident wrong `@impl/done` — the
+  falsity is a Phase C `drift` verdict, not a markup fix.
+
+  **The class is new and worth naming: a forward-dated claim that its own
+  deadline has passed.** Unlike F-093 and F-097 it does not fail when followed;
+  it simply stopped being true on a date nobody watched. Nothing in the campaign
+  detects that — a marker records *stage*, and `@spec/done` is the correct
+  marker for a claim about the future whether or not the future arrived.
+
+- **2026-07-27 · Two errors in MARKUP-B9.md, both the reviewer's, both found by
+  the executor.** Recorded because the brief-error streak is a measurement the
+  campaign keeps, and it had read «the last three did not».
+
+  **(a) A reconciliation paragraph for a disagreement no reader could see.**
+  `##B9-PLAN-SAID-578` explained why the plan said 578 and the measurement 577
+  — but the same commit that wrote the brief also corrected the plan, so by the
+  time anyone read either, both said 577. Harmless and wrong: it describes the
+  tree as it was in the author's head, not as it shipped. **Editing two files in
+  one commit and then explaining the difference between them is a shape to
+  watch for.**
+
+  **(b) The brief contradicted itself between two sections.**
+  `##B9-EXPECT-CORPUS-TOTAL` said «confirm the starting number with a gate run»;
+  `{#boundaries}` said «do not run any `vibe` command». The executor honoured
+  the boundary and confirmed the number two other ways. **A brief is a document
+  like any other and nothing checks it against itself** — the mechanical
+  reviewer checks the batch, not the instructions.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
