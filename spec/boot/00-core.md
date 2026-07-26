@@ -23,6 +23,10 @@
 3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** — one logical unit per commit, split mixed working trees. @impl/done
 4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done
 
+## Files you MUST NOT touch without explicit instruction
+
+- ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done
+
 ## Reading layers (per book, `refs/book/`)
 
 ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done
@@ -48,10 +52,6 @@
 2. ##UNC-STEP-BOOK Re-read the relevant chapter in `refs/book/`. @impl/done
 3. ##UNC-STEP-ANALOGS Look at the closest analog under `refs/src/` (cargo, uv, spec-kit). @impl/done
 4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done
-
-## Files you MUST NOT touch without explicit instruction
-
-- ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done
 
 ## End of session
 
