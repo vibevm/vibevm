@@ -222,6 +222,40 @@ file, the ruling wins — the earlier text was written before the cases were kno
 21. **Ruling 7's "normative root document" meant *normative document*.** Every
     normative document takes `stage="spec" state="done"`, root or not.
 
+### Added by the B2 pass (2026-07-26) {#locked-b2}
+
+22. **An enumerating colon beats the semicolon rule.** Ruling 3 says a
+    semicolon-joined pair of parallel clauses does not split; ruling 20 says
+    split when Phase C could verdict each item. They collide when a colon
+    introduces semicolon-separated items. **Resolution: an enumerating colon
+    plus a passing verdict test splits, whatever the separator; a semicolon
+    pair with no colon lead stays whole.** B2 called this the one most worth
+    locking — it decides roughly a dozen splits per batch.
+23. **A mixed table row takes the outside-world stage.** Ruling 16 forces one
+    stage per row; where a row mixes outside-world facts with our own posture,
+    `@spec/done` governs the row. The same content as a **list** keeps per-item
+    stages, which is better — prefer the list where the source allows it.
+24. **A registry record cited by id takes UPPER**, even when its content is
+    evidence. The kebab register is for text nothing cites; UPPER is for
+    content that gets cited. (ATLAS's 87 entries are UPPER on this reading.)
+25. **Appendix document markers go by content, not by folder.** An appendix
+    recording decisions and their rationale → `spec/done`. An appendix that is
+    derived and rendered for humans → `doc/done`.
+26. **A scheduled, unexecuted procedure step is `@spec/done`; a timeless rule
+    in force is `@impl/done`** — the latter even when its checker ships in
+    another package (ruling 10). Measure before choosing: B2 marked PROP-014
+    §4's migration playbook `spec` after verifying the crate it plans does not
+    exist.
+27. **A `` `req rN` `` kind line is a countable unit** and takes a kebab
+    service anchor named for its section (`##kind-line-<section>`).
+28. **A lead-less split is legal.** A bare comma-separated list with no colon
+    may become bullets; bullet characters are not invented words.
+29. **Future work: what the unit *is* decides the register.** A claim *about*
+    future work is `@spec/done` (ruling 10). A map entry that *names a
+    deliverable* which does not exist yet is `@idea/plan` — B1's
+    `##MAP-RUST-TCG`. The test is whether the unit asserts a fact about the
+    plan, or is itself a pointer to an unbuilt thing.
+
 ## Boundaries {#boundaries}
 
 - **Semantic edits are forbidden** (plan §5-B). The diff contains **markers,

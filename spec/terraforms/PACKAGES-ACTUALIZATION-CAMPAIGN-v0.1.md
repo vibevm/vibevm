@@ -1119,6 +1119,73 @@ command that would have tested it.
   since three more workspaces each own a `target/`. The tiering call is the
   owner's, and Phase T's §7 will want this number anyway.
 
+- **2026-07-26 · B2 closes `core-ai-native`, and the first thing it found was
+  the reviewer contradicting himself eight hours earlier.** Seven files, 950 →
+  1 100 lines, **526 units**, 472 fact anchors, 49 paragraphs deconstructed, 27
+  heading anchors. `progress check` clean over 264; zero unmarked in the seven
+  under `--exhaustive`. With B1 that is **943 units over sixteen files** and the
+  whole live slot of `core-ai-native` is marked.
+
+  Self-audited before hand-over: a word-stream diff proves every file
+  byte-equivalent once anchors, markers, bullets and whitespace are stripped,
+  and a re-implemented counter reports 0 unmarked, 0 anchor collisions, 0
+  marked-without-anchor, 0 anchored-without-marker. **Zero `@unknown`, and
+  stated as deliberate** — the two places it would have hedged it measured
+  instead, and the one unit it considered `@unknown` for it correctly reported
+  as *drift* («`unknown` means looked-at-and-not-understood; reporting drift is
+  the other channel»).
+
+  **The reviewer's error, and it is the sharp kind.** PROP-014 now contradicted
+  itself **inside one bullet list**: line 80, amended this morning, says the
+  heading grammar is «one law, shared with fact ids»; line 95, three bullets
+  below, still said «Heading anchors keep the kebab-only law». I amended the
+  first and did not read the second **in the same file**. The shipped parser
+  sides with line 80 and its doc comment cites that very section as authority.
+  Corrected in place, and the sentence now records *when* the law changed
+  instead of asserting the old one. *Amending a clause without re-reading its
+  document is the same failure as quoting a ledger line without re-measuring
+  it — and this is the second one today.*
+
+- **2026-07-26 · F-088 — a second derived file the F-071 audit missed, and this
+  campaign has now hand-edited it. OWNER RULING NEEDED.** `appendix/ATLAS.md`
+  declares on **line 2**: «GENERATED from `findings.jsonl` (A2: derived, do not
+  hand-edit)». **`findings.jsonl` is tracked nowhere in the repository.** Three
+  consequences, in rising order of discomfort: the file's stated source of truth
+  is absent; `01-PATTERN-CARD-FORMAT.md` points card authors at `findings.jsonl`
+  IDs that cannot be resolved; and **B2 has just minted 93 hand-authored anchors
+  into a file that forbids hand-editing** — if the generator ever returns, the
+  markup dies.
+
+  This is exactly F-071's class, which DRIFT-024 answered by excluding three
+  derived indexes from the corpus. **That audit missed this one**, and the
+  reason is instructive: it searched for the wording those three used, and ATLAS
+  says «GENERATED from» rather than «hand edits are a defect». *A phrase sweep
+  is not an audit — wave 1 wrote that lesson down and this is its second
+  instance.* Its internal arithmetic is **not** drifted (87 rendered entries;
+  axis, evidence-class and status distributions each sum to 87). The question is
+  scope, the same shape as F-080, and it is the owner's.
+
+- **2026-07-26 · F-089 and F-090 — PROP-014 against itself, twice more.**
+  **F-089:** its `##HOME-SHIPS-WITH-THE-DISCIPLINE` names the Rust
+  implementation as «`specmap-core` + the `rust-ai-native-specmap` binary».
+  `specmap-core` has **zero occurrences** anywhere in the repository; the real
+  crate is `core-ai-native-specmap`, **which PROP-014's own §2.9 uses**. A
+  pre-PROP-028 name the family rename missed — drift-stage work, and the unit
+  stays `@impl/done` because an implementation does exist and only the name
+  drifted. **F-090:** §2.7, §2.8 and §2.9 carry no `` `req rN` `` kind line
+  while §2.1–§2.6 all do — against its own §3.1 principle 3, «*Normativity is
+  marked, not implied … a reader must never guess whether a sentence binds*».
+  Three of its own decision subsections make the reader guess.
+
+- **2026-07-26 · One reported problem that is not one, recorded so nobody
+  "fixes" it.** B2 flagged `01-PATTERN-CARD-FORMAT.md:41` as carrying F-084's
+  shape with a last-token marker. It does, **on purpose**: DRIFT-031 fixed the
+  parser, and the marker was left in the position that used to break so the file
+  is a live witness that goes red again if run-matching regresses. The gate
+  confirms it — zero unmarked. The executor could not know, because the brief
+  forbids it running the gate; the flag was the correct move on the information
+  it had.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

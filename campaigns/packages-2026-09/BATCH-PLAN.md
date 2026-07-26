@@ -50,7 +50,7 @@ Two facts decide the batching, and neither is visible from the file count:
 
 | # | Batch | Files | Facts |
 |---|---|---|---|
-| B1–B2 | `core-ai-native` (live slot) | **16** | *recount* |
+| ~~B1–B2~~ | `core-ai-native` (live slot) — **DONE**, 943 units | 16 | — |
 | B4 | `redbook` (live slot) | 6 | 470 |
 | B5 | `go-ai-native-lang` | 19 | 411 |
 | B6 | `typescript-ai-native-lang` | 18 | 338 |
