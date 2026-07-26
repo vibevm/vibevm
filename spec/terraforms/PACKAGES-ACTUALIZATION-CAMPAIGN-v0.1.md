@@ -1218,6 +1218,32 @@ command that would have tested it.
   chapter that justifies its rule is exactly the two-way link `spec-genres`
   wants between a contract and its lore.
 
+- **2026-07-26 · F-092 — a `SKILL.md`'s YAML frontmatter cannot carry a fact
+  anchor, and the finding had been filed onto a closed id.** Nine files across
+  six packages open with `---`, and the scanner has no frontmatter rule: the
+  block parses as one countable paragraph whose first token is the opening
+  fence, so `##FACT-ANCHOR-SYNTAX`'s first-token requirement has no legal
+  placement. B5 met it on the two go skills, left them unmarked, and the landing
+  commit said so honestly — **663 of 665 units**. B6 will meet it on the two
+  TypeScript skills; B7 on the two Rust ones.
+
+  **The shape is F-083's exactly, one structure later.** There too an unmarkable
+  first token was structure the grammar did not name, and there too the fix was
+  one composition in the parser rather than a convention. `blocks.rs` is where
+  it goes: a leading `---`-delimited block is frontmatter, not a paragraph, and
+  is not a countable unit at all.
+
+  **What is worth recording is not the parser gap but the numbering.** This
+  finding was written into the checkpoint files as *F-083* — an id F-083 already
+  held, for the GFM task-list gap DRIFT-031 closed the same day. So one id named
+  an open finding and a closed one at once, the checkpoint said F-083 was open
+  while the task index said DRIFT-031 had closed it, and neither was wrong about
+  its own half. It is renumbered here, and the plan is where it should have been
+  filed on the day: **a finding recorded only in the checkpoint has no id
+  authority** — the checkpoint is rewritten every session and cannot arbitrate a
+  namespace. Sixth instance of the campaign's standing shape, and the first
+  where the drifting artefact was the campaign's own bookkeeping.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

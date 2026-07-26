@@ -58,12 +58,14 @@ no README in this package, no file in B6 takes `doc` and no file takes an
 
 ## The two SKILL.md files will not reach zero, and that is correct {#f083}
 
-##B6-F083-IS-EXPECTED Both `SKILL.md` files open with YAML frontmatter. The
+##B6-F092-IS-EXPECTED Both `SKILL.md` files open with YAML frontmatter. The
 parser reads the `name:`/`description:` block as a paragraph unit that **cannot
-carry an anchor** — YAML would break. This is **F-083**, open, nine files
+carry an anchor** — YAML would break. This is **F-092**, open, nine files
 corpus-wide, and its fix is one exemption in `blocks.rs`, not a markup move.
+*(Filed as F-083 until 2026-07-26; that id was already spent on the GFM
+task-list gap DRIFT-031 closed — see the plan's §7 entry for F-092.)*
 
-##B6-F083-EXPECTED-RESIDUE **Expected end state for this batch: exactly one
+##B6-F092-EXPECTED-RESIDUE **Expected end state for this batch: exactly one
 unmarked unit in each of the two `SKILL.md` files, and zero everywhere else.**
 Measured precedent: the go twins sit at exactly that today. Mark the body of
 both files normally; the document marker goes after the frontmatter's closing
@@ -126,7 +128,7 @@ cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --no-cache --
 ```
 
 **Two unmarked units remain in the batch's 18 files — the two `SKILL.md`
-frontmatter paragraphs (F-083) — and nothing else.** Every marked unit
+frontmatter paragraphs (F-092) — and nothing else.** Every marked unit
 anchored; no id collision within a file across the **one case-sensitive address
 space** shared with heading anchors; `git diff` shows markers, splits and
 anchors and nothing else.

@@ -169,8 +169,9 @@ Nothing running; the task queue is empty and the tree is clean.
    gate, commit. Then B7–B16.
 2. **Size batches with a ×1.6 multiplier.** `BATCH-PLAN.md`'s `facts` column is
    a *pre-markup scan* count: B5 scanned 411 and finished at 665 units.
-3. **Open findings needing a task**: F-083 (`SKILL.md` frontmatter — 9 files,
-   one exemption in `blocks.rs`), F-077's tail (`counters` written from one
+3. **Open findings needing a task**: F-092 (`SKILL.md` frontmatter — 9 files,
+   one exemption in `blocks.rs`; **renumbered from F-083**, which DRIFT-031 had
+   already closed for the task-list gap), F-077's tail (`counters` written from one
    computation, pinned by a test), F-089/090 (PROP-014 against itself).
 4. **Open findings needing the owner**: F-087 (17 commit bodies name a model;
    uncleanable without a history rewrite the mirror law forbids), F-088
@@ -185,7 +186,8 @@ Nothing running; the task queue is empty and the tree is clean.
   necessary and **not sufficient**: `##HOIST-LCA` puts the hoist target at the
   root, which is also the root's own compile site, so the duplicate *migrates*.
   Measured on a fixture, not deduced.
-- **F-083** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.
+- **F-092** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.
+  Was filed as F-083, an id already spent; renumbered 2026-07-26.
 - **F-087 / F-088** — owner's, see Next.
 - **`specmap` ratchet** — 37 gated orphans host-side, unmoved.
 - **vibespecs 401 on this machine** — resolution goes through project-local

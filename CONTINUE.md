@@ -77,7 +77,7 @@ Phase T size its swarm off the scan number.**
 |---|---|---|
 | **F-069** | aggregator grammar — a fact about another package | Phase C's, not B's |
 | **F-078** | boot-lane duplication; the counter is necessary and **not sufficient** — `##HOIST-LCA` puts the hoist target at the root, which is also the root's own compile site. **DRIFT-035 is written and NOT dispatched** | owner decides timing |
-| **F-083** | `SKILL.md` YAML frontmatter cannot carry an anchor — **9 files across 6 packages**, the only observed files starting with `---`. A worker found an in-file dodge and correctly did not apply it; the cheaper fix is one exemption in `blocks.rs` | needs a task |
+| **F-092** | `SKILL.md` YAML frontmatter cannot carry an anchor — **9 files across 6 packages**, the only observed files starting with `---`. A worker found an in-file dodge and correctly did not apply it; the cheaper fix is one exemption in `blocks.rs`. **Renumbered from F-083** — that id was already spent on the task-list gap DRIFT-031 closed | needs a task |
 | **F-087** | 17 commit bodies in history name a model, which the attribution policy forbids. **Cannot be cleaned** — that needs a history rewrite and the mirror law forbids `--force`. Accept, or amend the policy | owner |
 | **F-088** | `ATLAS.md` declares itself generated from `findings.jsonl`, which is tracked **nowhere**; this campaign minted 93 hand anchors into a file forbidding hand-edits | owner |
 | **F-089/090** | PROP-014 names a crate with zero occurrences (`specmap-core`); three of its decision subsections omit the kind line its own normativity rule requires | drift stage |
