@@ -732,6 +732,73 @@ command that would have tested it.
   are the instrument being wrong rather than the subject, which is worth
   noticing before the remaining thirteen batches trust its output.*
 
+- **2026-07-26 · DRIFT-031 lands both grammar gaps — and F-084 was three times
+  bigger than diagnosed.** Two commits, floor green on the committed tree,
+  `progress check` clean over 264 files on a **cold** parse.
+
+  **F-083's cause:** `parse/facts.rs::list_item_content` returned the offset
+  just past `- ` / `N. ` and stopped, so `- [ ] ##ID` had `[` as its first
+  token. Now composed with a `task_box_len` that accepts `[ ]`/`[x]`/`[X]` only
+  when followed by whitespace — `[ ]glued` stays prose, which is GFM's own rule.
+
+  **F-084's cause was not the triple backtick.** `parse/blocks.rs::blank_inline_code`
+  toggled `in_code` on **every individual backtick**, so *any* run of two or more
+  desynchronises the flag and everything after it is blanked — and any block with
+  an **odd total** of backticks blanks to its end. A probe over all **723**
+  `.md` files found **23 text blocks in 21 files** where naive and run-aware
+  blanking disagree, including a stray tick in `docs/glossary.md:217` swallowing
+  the rest of its block. *I characterised this as the triple-backtick case from
+  one sample; it is the general inline-code-span defect. The task's §4 had
+  already specified the general behaviour while its §8 hedged the scope — my own
+  task contradicted itself, and the executor resolved it toward the behavioural
+  half and said so.* Measured collateral: zero — no diagnostic anywhere else
+  moved.
+
+  The `01-PATTERN-CARD-FORMAT.md` marker went back to the **last** position on
+  purpose: that is the position F-084 broke, so the file is now a live witness
+  that goes red again if run-matching regresses.
+
+- **2026-07-26 · F-085 — the register that marks a normative fact is the one
+  code cannot cite. Found in DRIFT-031's forced deviation, and it aims straight
+  at this campaign's deliverable.**
+
+  `##DECISION-TWO-REGISTERS` (owner, 2026-07-24) makes `##UPPER-SLUG` the
+  register for a **normative** fact and `##kebab-case` for a service unit.
+  `is_valid_fact_id` accepts both — its own doc says so — but the `spec://`
+  **URI** parser validates through `is_valid_anchor`, which is kebab-only, and
+  rejects the rest with *"anchor must be kebab-case"*. So
+  `#[spec(implements = "spec://…#SOME-NORMATIVE-FACT")]` **does not compile**.
+  DRIFT-031 hit it, cited the containing *section* anchors instead, and named
+  the facts in doc comments — and reported the deviation rather than hiding it.
+
+  **Measured, not inferred:** of every `spec://…#anchor` cited from `crates/`,
+  **275 are kebab and none is UPPER** (the handful of non-kebab hits are
+  placeholder prose in doc comments).
+
+  Why it matters here specifically: Phase B is minting UPPER anchors on every
+  normative fact — that *is* the register decision — and Phase C's evidence join
+  exists to connect those facts to code. B1 alone minted roughly 330. As it
+  stands the join can only ever reach service units, which is precisely
+  backwards. **Options:** (a) let the URI parser accept `is_valid_fact_id` in
+  the anchor position, leaving the kebab-only law for *heading* anchors
+  untouched — the superset function already exists and is documented as such;
+  (b) flip the register convention, which re-anchors both waves and was already
+  considered and rejected at `##registers-rejected`; (c) accept, and let code
+  cite sections while naming facts in prose — which forfeits the fact-grain join
+  this campaign is built to produce. **Recommend (a).** The constraint is that
+  the grammar crate lives in `core-ai-native`, so per §5-D this is a **release
+  event**: the fix must be vendored forward with `cargo xtask sync-engines` to
+  all three stacks, not merely edited.
+
+- **2026-07-26 · Two operating facts worth not re-learning.** The parse cache
+  keys on **content hash only**, so a *parser* change is invisible to a warm
+  cache and re-verification after one needs `--no-cache` — DRIFT-031's first run
+  served the old parse for every unchanged file. And the deliberate copies of
+  `list_item_content` across the separability seam (`crates/vibe-spec/src/facts.rs`
+  and the package twin in `core-ai-native-specmap::mdspec`) **now disagree**:
+  only progress-core's learned the checkbox. That divergence is out of DRIFT-031's
+  bounds by design and wants its own decision.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
