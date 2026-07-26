@@ -36,7 +36,7 @@ Two things are being asked, and only the first is obvious:
 | Namespace | Packages | `.md` files | Lines | Shape |
 |---|---|---|---|---|
 | `org.vibevm.world` | 27 | 154 | 17 104 | prompt-only; no crates |
-| `org.vibevm.ai-native` | 10 | 140 | 11 629 | 8 of 10 carry `crates/` |
+| `org.vibevm.ai-native` | 10 | 140 | 11 629 | 7 of 10 carry `crates/` |
 | **total** | **37** | **294** | **28 733** | |
 
 Of those 294 `.md` files, **286 are observable**: eight are extractor test
@@ -262,7 +262,7 @@ and A1 and A4 change phases that follow, so read them before opening C.**
    `specmap.json`. Only then can Phase C join fact anchors to code.
 3. Create the campaign zone; pilot the loop on **three** packages of different
    genres — one prompt-only flow (`wal`), one code-bearing stack
-   (`rust-ai-native-lang`), one aggregator (`redbook`).
+   (`rust-ai-native-lang`), one aggregator (`rust-ai-native` — NOT `redbook`, which is a book of three chapters and a different genre entirely; corrected at the pilot 2026-07-26).
 
 *Exit gate:* `check --exhaustive` correct on the pilot; `specmap.json` carries
 fact units and non-zero fact-grain edges; floor green. *Prediction:* the
@@ -420,6 +420,38 @@ command that would have tested it.
   drifted — the gap is a version), and **with two campaign zones present a
   bare `vibe progress` command silently drops to ad-hoc mode and stops
   writing state**, so every command now needs an explicit `--campaign`.
+
+- **2026-07-26 · Phase A step 3 — the pilot probes the aggregator genre first,
+  and §6 prediction 2 CONFIRMS immediately.** The genre probe went to the
+  family umbrellas rather than to `redbook` (which turns out to be a *book* —
+  three Russian chapters — not an aggregator; §5-A's pilot list should say
+  `rust-ai-native` where it says `redbook`). Two findings from a 19-line file:
+  **F-069 — the grammar gap prediction 2 is about, found concretely.**
+  `rust-ai-native` is content-minimal by design (PROP-028) and **three of its
+  four substantive facts are about *other* packages** — what the `-lang` stack
+  ships, what the `-mcp` package serves, that `core-ai-native` arrives
+  transitively. Marking those `@impl/done` here asserts in this document
+  something this document cannot be the source of truth for; when the owning
+  package changes, nothing in the aggregator notices. Wave 1 never met this
+  because a host PROP owns its own subject matter. The grammar needs *this
+  fact is about `<other unit>`* — a delegating anchor whose verdict derives
+  from the owner's rather than being asserted independently. Until it exists
+  the honest fallback is `unverifiable` in the aggregator, verified where it
+  lives.
+  **F-068 — and the probe found real drift in the same file.**
+  `rust-ai-native`'s README tells a consumer to require `^0.6`; the package's
+  own manifest is `0.7.0`, and `^0.6` on a 0.x version means `>=0.6.0 <0.7.0`
+  — **the documented instruction excludes the very version shipping it**.
+  `typescript-ai-native` has it one minor down (README `^0.5`, manifest
+  `0.6.0`); `go-ai-native` carries no such line. Both offenders sit *exactly*
+  one minor behind themselves, which is the signature of a mechanical version
+  bump that never touched the prose. Worse than wave 1's stale status lines in
+  kind: a stale status line misleads a reader, this one misconfigures a
+  consumer. The caret in an aggregator README is derived data and should be
+  generated or gate-checked against the manifest.
+  *Finding ids continue wave 1's sequence (F-068 onward) rather than restarting
+  — findings cross wave boundaries (F-064…F-067 are wave-2 work) and one
+  namespace is worth more than a tidy reset.*
 
 ## 8. Deferrals {#deferrals}
 

@@ -1,5 +1,24 @@
 {
-  "schema": 1,
-  "updated_at": "2026-07-25T23:48:03Z",
-  "findings": []
+ "schema": 1,
+ "updated_at": "2026-07-26T16:00:00Z",
+ "findings": [
+  {
+   "id": "F-068",
+   "from": "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
+   "to": "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/vibe.toml",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 2,
+   "note": "THE DOCUMENTED INSTALL INSTRUCTION CANNOT RESOLVE THE PACKAGE IT IS PRINTED IN, and it is family-wide rather than a typo. rust-ai-native README:15 says: Require `stack:org.vibevm.ai-native/rust-ai-native` (`^0.6`) to get the whole family - while that package's own vibe.toml is version = \"0.7.0\". Under caret semantics for 0.x, ^0.6 means >=0.6.0 <0.7.0, so it EXCLUDES the very version shipping the sentence. typescript-ai-native has the identical defect one minor down: README:16 says ^0.5, vibe.toml says 0.6.0. go-ai-native (v0.1.0) carries no such line. Both offenders are EXACTLY one minor behind their own version, which is the signature of a mechanical version bump that did not touch the prose - the same class as wave 1's stale status lines, but worse, because a status line misleads a reader while this one misconfigures a consumer. Found in the FIRST aggregator file opened during the Phase A pilot. Fix direction: the caret in an aggregator README is derived data - it should be generated from, or gate-checked against, the manifest version, because a family aggregator's whole job is to name a version set and it bumps on every release."
+  },
+  {
+   "id": "F-069",
+   "from": "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
+   "to": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "PREDICTION 2 CONFIRMED AT THE PILOT, and concretely. The plan predicted the aggregator genre would need at least one grammar amendment to PROP-043 3.8. The umbrella packages are content-minimal by design (PROP-028): rust-ai-native carries a 19-line README and a manifest, and THREE OF ITS FOUR SUBSTANTIVE FACTS ARE ABOUT OTHER PACKAGES - what rust-ai-native-lang ships (GUIDE, cards, toolchain), what rust-ai-native-mcp serves, that core-ai-native arrives transitively. Marking those `@impl/done` here asserts, in this document, something this document cannot be the source of truth for: the truth conditions live in another package, and when that package changes nothing here notices. Wave 1 never hit this because a host PROP owns its own subject matter. The grammar needs a way to say `this fact is ABOUT <other unit>` - a borrowed or delegating anchor whose verdict is derived from the owning unit's rather than asserted independently, so a stale aggregator is detected by the owner moving rather than by someone re-reading the aggregator. Until that exists, the honest fallback is to mark such facts `unverifiable` in the aggregator and verify them where they live."
+  }
+ ]
 }
