@@ -6,8 +6,16 @@ use crate::doc::{BlockKind, Fact, FactKind, ParsedDoc};
 use specmark::spec;
 
 /// Byte offset of a list item's content when the line opens one
-/// (`- ` / `* ` / `+ ` / `N. ` / `N) `), else None.
+/// (`- ` / `* ` / `+ ` / `N. ` / `N) `), else None. A GFM task-list
+/// checkbox counts as part of the opener — see [`task_box_len`].
 fn list_item_content(line: &str) -> Option<usize> {
+    let off = list_marker_len(line)?;
+    Some(off + task_box_len(&line[off..]))
+}
+
+/// Byte offset just past the list marker itself (`- ` / `* ` / `+ ` /
+/// `N. ` / `N) `) when the line opens an item, else None.
+fn list_marker_len(line: &str) -> Option<usize> {
     let indent = line.len() - line.trim_start().len();
     let rest = &line[indent..];
     for pre in ["- ", "* ", "+ "] {
@@ -23,6 +31,43 @@ fn list_item_content(line: &str) -> Option<usize> {
         }
     }
     None
+}
+
+/// Byte length of the GFM task-list checkbox opening `t` — `[ ]`, `[x]` or
+/// `[X]` with its trailing spacing — else 0.
+///
+/// The checkbox is **structure**, exactly like the `-` bullet and the `1.`
+/// ordinal it follows: a task item is a list item, and `##COUNTABLE-UNITS`
+/// makes every list item countable with no task-list carve-out. GFM leaves
+/// no room *before* the box — writing `##ID` there stops the line being a
+/// task list at all — so the item's first token in the sense of
+/// `##FACT-ANCHOR-SYNTAX` is the token after the box, and the box is
+/// skipped with the marker rather than read as the item's content.
+///
+/// The spacing is eaten greedily, like the blockquote prefix, so the boxed
+/// form is no pickier about alignment than the plain one.
+///
+/// (The two facts are cited by their sections — `##COUNTABLE-UNITS` lives
+/// under §3.9 `#granularity`, `##FACT-ANCHOR-SYNTAX` under §3.8
+/// `#placement` — because the specmark address grammar takes kebab-case
+/// heading anchors only, not a fact anchor's `##<ID>`.)
+#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#granularity")]
+#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#placement")]
+fn task_box_len(t: &str) -> usize {
+    let b = t.as_bytes();
+    if b.len() < 3 || b[0] != b'[' || b[2] != b']' || !matches!(b[1], b' ' | b'x' | b'X') {
+        return 0;
+    }
+    // The box either ends the line or is followed by spacing; `[ ]glued`
+    // is prose that merely looks like a box.
+    let mut i = 3;
+    if i < b.len() && b[i] != b' ' && b[i] != b'\t' {
+        return 0;
+    }
+    while i < b.len() && (b[i] == b' ' || b[i] == b'\t') {
+        i += 1;
+    }
+    i
 }
 
 /// True when every cell of the table row is a `---`/`:--:`-style rule.
@@ -349,5 +394,54 @@ mod tests {
             .flat_map(|b| b.facts.iter().filter_map(|f| f.id.as_deref()))
             .collect();
         assert_eq!(ids, ["QUOTE-1"]);
+    }
+
+    /// The checkbox is structure: a task item's first token is the one
+    /// after the box, so `- [ ] ##ID …` is anchored and stays legal GFM.
+    #[test]
+    fn task_list_checkbox_is_structure_and_the_anchor_follows_it() {
+        let text = "# H {#h}\n\n- [ ] ##TASK-1 An unticked task. @impl/done\n\
+                    - [x] ##TASK-2 A ticked one. @impl/done\n\
+                      - [X] ##TASK-3 A nested one, capital X. @impl/done\n";
+        let doc = parse_document("x.md", text);
+        assert_eq!(doc.error_count(), 0, "issues: {:#?}", doc.issues);
+        assert_eq!(doc.fact_count, 3, "blocks: {:#?}", doc.blocks);
+        assert_eq!(doc.unmarked_facts.len(), 0, "blocks: {:#?}", doc.blocks);
+        let ids: Vec<&str> = doc
+            .blocks
+            .iter()
+            .flat_map(|b| b.facts.iter().filter_map(|f| f.id.as_deref()))
+            .collect();
+        assert_eq!(ids, ["TASK-1", "TASK-2", "TASK-3"]);
+    }
+
+    /// A bare task item is a countable unit that nobody marked — exactly
+    /// what an unmarked plain item is. Nothing about the box changes that.
+    #[test]
+    fn bare_task_list_item_stays_an_unmarked_unit() {
+        let text = "# H {#h}\n\n- [ ] Just a box and some prose.\n";
+        let doc = parse_document("x.md", text);
+        assert_eq!(doc.error_count(), 0, "issues: {:#?}", doc.issues);
+        assert_eq!(doc.fact_count, 1);
+        assert_eq!(doc.unmarked_facts.len(), 1);
+    }
+
+    /// Only a real box is structure: brackets that hold anything else, or
+    /// that are glued to the following word, are the item's own text.
+    #[test]
+    fn bracket_lookalikes_are_not_task_boxes() {
+        for t in ["[ ] rest", "[x] rest", "[X]\trest", "[ ]"] {
+            assert!(task_box_len(t) > 0, "should be a box: {t:?}");
+        }
+        for t in [
+            "[y] rest",
+            "[ ]glued",
+            "[  ] rest",
+            "[]",
+            "[ x] rest",
+            "no box",
+        ] {
+            assert_eq!(task_box_len(t), 0, "should not be a box: {t:?}");
+        }
     }
 }

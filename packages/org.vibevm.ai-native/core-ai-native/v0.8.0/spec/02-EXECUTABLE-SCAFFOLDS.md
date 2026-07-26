@@ -60,10 +60,10 @@
 6. ##BUILD-ORDER-I **I (codemods)** — potentially decisive for the swarm, but [E-hyp]; prototype and measure before the guide commits to it. @impl/done
 
 ## 3. The scaffold-reality checklist (all four must hold) {#reality-checklist}
-- [ ] **Runs/checks:** emits pass/fail or typed signal, not prose.
-- [ ] **Carries cognition:** encodes a decision a weak reader would otherwise re-derive.
-- [ ] **Fast enough:** signal returns inside the per-cell loop budget (<~60s).
-- [ ] **Cannot silently lie:** if it drifts from reality it FAILS (compile error / assert / red test), never misleads. (The doctest-vs-comment distinction.)
+- [ ] ##CHECKLIST-RUNS-OR-CHECKS **Runs/checks:** emits pass/fail or typed signal, not prose. @impl/done
+- [ ] ##CHECKLIST-CARRIES-COGNITION **Carries cognition:** encodes a decision a weak reader would otherwise re-derive. @impl/done
+- [ ] ##CHECKLIST-FAST-ENOUGH **Fast enough:** signal returns inside the per-cell loop budget (<~60s). @impl/done
+- [ ] ##CHECKLIST-CANNOT-SILENTLY-LIE **Cannot silently lie:** if it drifts from reality it FAILS (compile error / assert / red test), never misleads. (The doctest-vs-comment distinction.) @impl/done
 
 ## 4. The build/use boundary (a pilot hypothesis worth stating) {#build-use-boundary}
 ##sharp-capability-line-hypothesis There may be a sharp capability line between *building* a scaffold (Classes A, I — emit/parameterize) and *using* one (Classes G, H — consume). @spec/done
