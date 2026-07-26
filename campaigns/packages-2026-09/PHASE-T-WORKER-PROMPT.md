@@ -81,6 +81,15 @@ the result to one account. Nothing else in it varies between the two.*
 > reviewer answers it. Do not add a dev-dependency; if a test needs one that is
 > absent, that fact is not testable in this pass and you report it.
 >
+> **You never build a surface.** If a fact describes a type, a function or an
+> interface that **does not exist**, you do not create it and you do not adapt
+> the fact to what does exist. Write the test the fact describes, mark it
+> `#[ignore = "surface does not exist: <what is missing>"]`, keep its `verifies`
+> edge, and report it. That test is the specification of the missing work and
+> un-ignoring it is how that work will be accepted — it is a deliverable, not a
+> failure. **A fact claiming a surface that is absent is drift**, and reporting
+> it is among the most valuable things you can produce.
+>
 > **How to write each test — follow the routine, do not improvise.** It is
 > `campaigns/packages-2026-09/PHASE-T-SPEC.md` §3.1, and §3.2's banned list and
 > §3.3's worked pair are the parts to read twice. In one line: **the fact's text

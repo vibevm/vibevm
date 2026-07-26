@@ -75,8 +75,34 @@ classify into exactly one bucket:
 | bucket | meaning |
 |---|---|
 | **T-testable** | a public surface exists whose behaviour the fact constrains |
-| **T-untestable** | the fact asserts a *reason*, a *rejected alternative*, a *revisit trigger*, or a design intent — decision-record content, which has no runtime behaviour |
+| **T-untestable** | the fact asserts a *reason*, a *rejected alternative*, a *revisit trigger* — decision-record content, which has **no runtime behaviour and never will** |
+| **T-unbuilt** | a genuine behavioural claim whose **surface does not exist yet**. Testable in principle, untestable today — §2.1 |
 | **T-checker** | mechanically decidable but not by a unit test (file existence, cross-document agreement, config shape) |
+
+### 2.1 T-unbuilt — the bucket that is a finding, not a category {#unbuilt}
+
+*Owner, 2026-07-26: «при реализации теста могут появиться большие правки формы
+кода — например, строчка в спеке говорит "мы вводим новую поверхность, у нас
+будет 2 веб-интерфейса", и тут же меняются контракты на очень многое».*
+
+**T-untestable and T-unbuilt look alike and are opposites.** A *reason* will
+never have a runtime surface. A claim about a surface that does not exist yet
+becomes testable the day it is built — and until then, **a fact marked
+`@impl/done` whose surface does not exist is drift.** The marker says the thing
+is implemented and it is not.
+
+- ##UNBUILT-IS-A-VERDICT-CORRECTION **Every T-unbuilt fact is a verdict correction owed to the ledger.**
+  Phase C confirmed these markers; a test written from the fact is often the
+  first time anyone executed the claim, and executing is what Phase C's evidence
+  join could not do for a surface that is absent. **This is Phase T earning its
+  place beyond coverage** — it audits the earlier phase.
+- ##UNBUILT-ROUTINE-CATCHES-IT-AT-STEP-1 Routine step 1 catches most of it for free: «given ⟨X⟩, ⟨the thing⟩
+  ⟨does Y⟩» cannot be written when there is no *thing*. The failed sentence is
+  the report.
+- ##UNBUILT-RATE-IS-A-PHASE-FINDING **If T-unbuilt is more than a few per cent of the in-scope facts,
+  stop and report.** That is not a tuning parameter — it says Phases C and E did
+  not finish what they recorded, and the right response is to say so, not to
+  absorb it into a testing phase.
 
 The third bucket is §1.2's successor input; the second is expected to be large
 — the corpus is full of `##…-why` / `##…-rejected` / `##…-revisit` units by
@@ -345,7 +371,39 @@ A wave is closed when **all four** hold, and none may be deferred into the next:
   *planned*; T is where the remainder are *found*. Each wave closing is what
   keeps that from becoming a second Phase E.
 
-### 5.5.4 Do not over-specify, or a code fix will invalidate after all {#no-over-spec}
+### 5.5.4 Phase T never builds a surface — it writes the test that waits for one {#never-build}
+
+The hard case is not a small fix. It is a fact whose implication is
+**structural**: a new type, a new trait, a whole second interface — contracts
+changing across many files at once.
+
+##NEVER-BUILD-A-SURFACE **Phase T does not build it. Ever.** The moment a red requires **new API
+surface** rather than a behaviour correction, the wave stops treating it as a
+fix and treats it as a **sized report**.
+
+And the test is not discarded — it is the most useful thing in the exchange:
+
+- ##UNBUILT-TEST-IS-THE-SPEC **The written test stays, `#[ignore]`d, with the reason on the
+  attribute and its `verifies` edge intact.** It was written from the fact, it
+  is addressable, and it is executable the day the surface exists. **The test
+  becomes the specification of the missing work**, and un-ignoring it is that
+  work's acceptance criterion. A test waiting for a surface is a deliverable,
+  not a failure.
+- ##UNBUILT-BOUNDS-THE-PHASE **This is what bounds the phase.** Without it, one fact implying two
+  web interfaces turns a testing phase into a rewrite, and every estimate in
+  §11 becomes fiction. With it, T's output for such a fact is one ignored test
+  and one line in a report — cheap, honest, and complete.
+- ##UNBUILT-CROSS-CUTTING-IS-A-SCOPING-DOC **When the implication is cross-cutting, the by-product is a scoping
+  document the owner gets for free.** «Two web interfaces» is not one missing
+  surface, it is a design decision; Phase T contributes *the list of facts that
+  assume it, the tests already written from them, and the count*. Nobody has to
+  go find them afterwards — the `verifies` edges name them.
+- ##UNBUILT-IS-PHASE-E-WORK-FOUND-LATE **Structurally, this is Phase E work discovered late**, and naming it
+  that keeps the boundary honest: E planned the code changes, T finds the
+  remainder, and anything needing new surface goes back out to a task or a
+  campaign rather than being absorbed into a wave.
+
+### 5.5.5 Do not over-specify, or a code fix will invalidate after all {#no-over-spec}
 
 ##WAVE-ASSERT-NO-MORE-THAN-THE-FACT **Assert exactly what the fact promises and nothing more.** The one
 way a *code* fix does break a Phase T test is over-specification: a fact
