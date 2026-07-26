@@ -54,6 +54,82 @@ pub(crate) struct SyncSet {
 
 const MANIFEST: &str = "sync-engines.toml";
 
+/// The AI-Native package family this gate is the denominator for.
+///
+/// A vendored engine copy lives at `<slot>/crates/vendor/<crate>` — the
+/// layout law this file's header states — so every such directory in
+/// the family must be the target of some `[[sync]]` set. Until F-086
+/// this file only ever counted the pairs it was *told* about, and a
+/// count with no denominator always agrees with itself: two published
+/// go packages shipped an engine older than their own manifest declared
+/// and the gate stayed green through every commit that caused it.
+///
+/// A family name, deliberately not a version: a version literal here is
+/// exactly the rot this denominator exists to catch.
+const FAMILY_ROOT: &str = "packages/org.vibevm.ai-native";
+
+/// Directories the enumeration below never descends into. Build output
+/// and VCS state are not content (same reasoning as `file_set`);
+/// `vibedeps/` and `.vibe/cache/` hold RESOLVED dependency copies that a
+/// resolver writes and rewrites, so they are never an authored sync
+/// target and must not count against the denominator.
+const SCAN_DENY: [&str; 5] = ["target", ".git", "node_modules", ".vibe", "vibedeps"];
+
+/// Every directory under [`FAMILY_ROOT`] that holds vendored engine
+/// copies, repo-relative and `/`-separated so it compares against a
+/// manifest `target` verbatim on any platform.
+fn vendored_dirs(root: &Path) -> Result<BTreeSet<String>> {
+    let family = root.join(FAMILY_ROOT);
+    let mut dirs = BTreeSet::new();
+    if !family.is_dir() {
+        return Ok(dirs);
+    }
+    for entry in WalkDir::new(&family)
+        .into_iter()
+        .filter_entry(|e| !SCAN_DENY.iter().any(|d| e.file_name() == *d))
+    {
+        let entry =
+            entry.with_context(|| format!("sync-engines: walking `{}`", family.display()))?;
+        if !entry.file_type().is_dir() || entry.file_name() != "vendor" {
+            continue;
+        }
+        // `crates/vendor` is the layout law; a `vendor` dir anywhere
+        // else is somebody's unrelated directory, not an engine home.
+        let under_crates = entry
+            .path()
+            .parent()
+            .and_then(|p| p.file_name())
+            .is_some_and(|n| n == "crates");
+        if !under_crates {
+            continue;
+        }
+        let rel = entry
+            .path()
+            .strip_prefix(root)
+            .with_context(|| "sync-engines: path outside the repo root")?;
+        dirs.insert(rel.to_string_lossy().replace('\\', "/"));
+    }
+    Ok(dirs)
+}
+
+/// The vendored-engine directories no `[[sync]]` set targets — the gap
+/// a bare pair count can never show. Returns `(uncovered, total)`.
+fn uncovered_vendor_dirs(root: &Path, manifest: &SyncManifest) -> Result<(Vec<String>, usize)> {
+    let declared: BTreeSet<String> = manifest
+        .sync
+        .iter()
+        .flat_map(|set| set.targets.iter())
+        .map(|target| target.replace('\\', "/"))
+        .collect();
+    let found = vendored_dirs(root)?;
+    let total = found.len();
+    let uncovered = found
+        .into_iter()
+        .filter(|dir| !declared.contains(dir))
+        .collect();
+    Ok((uncovered, total))
+}
+
 fn load_manifest(root: &Path) -> Result<SyncManifest> {
     let path = root.join(MANIFEST);
     let text = fs::read_to_string(&path)
@@ -217,14 +293,34 @@ fn pair_count(manifest: &SyncManifest) -> usize {
 pub(crate) fn run_sync_engines(check: bool) -> Result<()> {
     let root = repo_root()?;
     let manifest = load_manifest(&root)?;
+    let (uncovered, vendor_dirs) = uncovered_vendor_dirs(&root, &manifest)?;
+    for dir in &uncovered {
+        eprintln!(
+            "sync-engines: `{dir}` holds vendored engine copies but is the target of no \
+             [[sync]] set — its copies drift with nothing watching."
+        );
+    }
     let (ops, drift) = sync_all(&root, &manifest, check)?;
     let pairs = pair_count(&manifest);
     let sets = manifest.sync.len();
     if check {
+        // The denominator first: a package outside the manifest cannot
+        // show up as drift, so a clean pair count over the wrong set of
+        // packages is the failure this reports (F-086).
+        if !uncovered.is_empty() {
+            bail!(
+                "sync-engines --check: {} of {vendor_dirs} vendored engine dir(s) under \
+                 {FAMILY_ROOT}/ are the target of no [[sync]] set (named above). Add each \
+                 to `{MANIFEST}` — a package whose engines nothing syncs ships whatever \
+                 it was copied with.",
+                uncovered.len(),
+            );
+        }
         if drift.is_empty() {
             println!(
                 "sync-engines --check: every vendored crate matches its authored source \
-                 ({pairs} pair(s) across {sets} sync set(s))."
+                 ({pairs} pair(s) across {sets} sync set(s)); all {vendor_dirs} vendored \
+                 engine dir(s) under {FAMILY_ROOT}/ are sync targets."
             );
             return Ok(());
         }
@@ -241,7 +337,9 @@ pub(crate) fn run_sync_engines(check: bool) -> Result<()> {
     }
     println!(
         "sync-engines: {ops} file operation(s); {pairs} vendored pair(s) across {sets} \
-         sync set(s) mirror their authored sources."
+         sync set(s) mirror their authored sources; {} of {vendor_dirs} vendored engine \
+         dir(s) under {FAMILY_ROOT}/ are covered.",
+        vendor_dirs - uncovered.len(),
     );
     Ok(())
 }
@@ -335,6 +433,73 @@ mod tests {
             2,
             "{drift:?}"
         );
+    }
+
+    /// The denominator: a slot whose engines nothing syncs is named,
+    /// and naming it is the whole point — the pair count over the sets
+    /// that ARE declared stays clean either way.
+    #[test]
+    fn an_untargeted_vendor_dir_is_named_and_counted() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let root = tmp.path();
+        let covered = format!("{FAMILY_ROOT}/covered-lang/v0.1.0/crates/vendor");
+        let orphan = format!("{FAMILY_ROOT}/orphan-lang/v0.1.0/crates/vendor");
+        write(
+            root,
+            &format!("{covered}/engine/src/lib.rs"),
+            "pub fn a() {}\n",
+        );
+        write(
+            root,
+            &format!("{orphan}/engine/src/lib.rs"),
+            "pub fn a() {}\n",
+        );
+
+        let m = SyncManifest {
+            sync: vec![SyncSet {
+                source_root: "core/crates".into(),
+                crates: vec!["engine".into()],
+                targets: vec![covered.clone()],
+            }],
+        };
+        let (uncovered, total) = uncovered_vendor_dirs(root, &m).expect("scan");
+        assert_eq!(total, 2, "both vendor dirs are in the denominator");
+        assert_eq!(uncovered, vec![orphan.clone()]);
+
+        // Declaring it closes the gap — nothing else about the manifest
+        // changed, which is exactly why a pair count could never see it.
+        let m = SyncManifest {
+            sync: vec![SyncSet {
+                source_root: "core/crates".into(),
+                crates: vec!["engine".into()],
+                targets: vec![covered, orphan],
+            }],
+        };
+        let (uncovered, total) = uncovered_vendor_dirs(root, &m).expect("rescan");
+        assert!(uncovered.is_empty(), "{uncovered:?}");
+        assert_eq!(total, 2);
+    }
+
+    /// Resolved dependency copies are not authored slots: `vibedeps/`
+    /// and `.vibe/cache/` carry whole vendored trees a resolver wrote,
+    /// and counting them would make the gate demand sync sets for
+    /// generated directories. A `vendor` dir that is not a child of
+    /// `crates/` is somebody else's directory, likewise.
+    #[test]
+    fn resolved_copies_and_stray_vendor_dirs_stay_out_of_the_denominator() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let root = tmp.path();
+        for rel in [
+            "real-lang/v0.1.0/vibedeps/stack-x/0.1.0/crates/vendor/engine/src/lib.rs",
+            "real-lang/v0.1.0/.vibe/cache/org.x/y/v0.1.0/crates/vendor/engine/src/lib.rs",
+            "real-lang/v0.1.0/target/debug/crates/vendor/engine/src/lib.rs",
+            "real-lang/v0.1.0/tools/vendor/thing.js",
+        ] {
+            write(root, &format!("{FAMILY_ROOT}/{rel}"), "x\n");
+        }
+        let (uncovered, total) = uncovered_vendor_dirs(root, &manifest()).expect("scan");
+        assert_eq!(total, 0, "nothing above is an authored engine home");
+        assert!(uncovered.is_empty(), "{uncovered:?}");
     }
 
     #[test]

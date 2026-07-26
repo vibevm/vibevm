@@ -35,6 +35,14 @@
 #                                          code drifts untagged (PROP-014).
 #  10. the mcp package gates            — the three MCP servers, likewise.
 #
+# Before any of it, step 0b asserts the floor's own DENOMINATOR: every LIVE
+# package workspace under packages/org.vibevm.ai-native/ (the newest version
+# slot of each package — superseded slots are frozen history) is one this
+# file builds, and every slot it builds is still live. Four of seven
+# packages were gated for months and "all green" was true the whole time
+# (F-086); a count with no denominator cannot be wrong. The sync gate's
+# half of the same lesson lives in `cargo xtask sync-engines --check`.
+#
 # Wrapped around all of it: the user-home tripwire. The real per-user
 # settings home (`~/.vibe`, or `$VIBE_SETTINGS`) is hashed path-by-path
 # before the first step, and compared twice — right after the workspace
@@ -94,7 +102,8 @@ OVERALL=0
 
 # The package workspaces this floor gates. Each is its OWN excluded Cargo
 # workspace (PROP-024 §2.4) that the root steps 1-5 never build, so every
-# slot path lives here once and the steps below only reference it.
+# slot path lives here once and the steps below only reference it. The
+# denominator guard (step 0b) asserts this list IS the live set.
 FAMILY_ROOT="packages/org.vibevm.ai-native"
 CORE_SLOT="$FAMILY_ROOT/core-ai-native/v0.8.0"
 PKG_DIR="$FAMILY_ROOT/rust-ai-native-lang/v0.7.0"
@@ -103,6 +112,7 @@ GOPKG_DIR="$FAMILY_ROOT/go-ai-native-lang/v0.1.0"
 MCPR_DIR="$FAMILY_ROOT/rust-ai-native-mcp/v0.7.0"
 MCPT_DIR="$FAMILY_ROOT/typescript-ai-native-mcp/v0.6.0"
 MCPG_DIR="$FAMILY_ROOT/go-ai-native-mcp/v0.1.0"
+GATED_SLOTS="$CORE_SLOT $PKG_DIR $TSPKG_DIR $GOPKG_DIR $MCPR_DIR $MCPT_DIR $MCPG_DIR"
 CORE_MANIFEST="$CORE_SLOT/Cargo.toml"
 PKG_MANIFEST="$PKG_DIR/Cargo.toml"
 TSPKG_MANIFEST="$TSPKG_DIR/Cargo.toml"
@@ -110,6 +120,70 @@ GOPKG_MANIFEST="$GOPKG_DIR/Cargo.toml"
 MCPR_MANIFEST="$MCPR_DIR/Cargo.toml"
 MCPT_MANIFEST="$MCPT_DIR/Cargo.toml"
 MCPG_MANIFEST="$MCPG_DIR/Cargo.toml"
+
+# The LIVE package workspaces, derived — never spelled. A package
+# directory may hold several version slots; only the newest is a living
+# contract, the older ones are superseded history (`progress.toml` drops
+# them from the observed corpus for exactly that reason). Deriving
+# "newest" from the slot ordering rather than naming a frozen version is
+# the whole point: a version literal here rots at the next release and
+# goes on passing, which is the class of defect this guard exists to
+# catch. When v0.9.0 lands, v0.8.0 leaves this set and v0.9.0 enters it,
+# and the guard goes red until GATED_SLOTS is repointed — F-081 found by
+# a checker instead of by a session happening to notice.
+live_slots() {
+  local pkg newest
+  for pkg in "$FAMILY_ROOT"/*/; do
+    [ -d "$pkg" ] || continue
+    newest="$(ls -1 "$pkg" 2>/dev/null | sort -V | tail -n 1)"
+    [ -n "$newest" ] || continue
+    # A live slot with no Cargo.toml is a prose-only package: nothing to
+    # build, so it is not a floor case. (Holding a vendored engine is a
+    # SYNC case — a different set, gated by `sync-engines --check`.)
+    [ -f "$pkg$newest/Cargo.toml" ] || continue
+    printf '%s\n' "$pkg$newest"
+  done
+}
+
+# 0b. The floor's denominator. Reported both ways: a live workspace this
+# file does not build, and a slot it builds that is no longer live. The
+# old failure mode was neither — "all green" over four of seven packages
+# was true, and said nothing (F-086).
+check_floor_denominator() {
+  local slot missing="" stale="" live count=0 rc=0
+  live="$(live_slots | tr '\n' ' ')"
+  for slot in $live; do
+    count=$((count + 1))
+    case " $GATED_SLOTS " in
+      *" $slot "*) ;;
+      *) missing="$missing $slot" ;;
+    esac
+  done
+  for slot in $GATED_SLOTS; do
+    case " $live " in
+      *" $slot "*) ;;
+      *) stale="$stale $slot" ;;
+    esac
+  done
+  for slot in $missing; do
+    echo "self-check: \`$slot\` is a live package workspace the floor does not build." >&2
+    rc=1
+  done
+  for slot in $stale; do
+    echo "self-check: \`$slot\` is gated but is not the live slot of its package." >&2
+    rc=1
+  done
+  if [ "$rc" -ne 0 ]; then
+    echo "self-check: fix GATED_SLOTS in this file (and the steps that use it);" >&2
+    echo "self-check: a floor that counts only what it was told about cannot be wrong." >&2
+    return 1
+  fi
+  [ "$QUIET" -ne 0 ] ||
+    echo "self-check: the floor builds all $count live package workspace(s) under $FAMILY_ROOT/." >&2
+  return 0
+}
+run_step "the floor builds every live package workspace" \
+  check_floor_denominator || OVERALL=$?
 
 # Machine obligations the stacks declare. The go stack's live oracle
 # needs gopls (TCG-ORACLE-GO §1) and the TS stack's structural gate
