@@ -963,6 +963,48 @@ command that would have tested it.
   keep leading with a measurement step, and the reviewer should stop writing
   confident current-state bullets that a single command would have checked.*
 
+- **2026-07-26 · DRIFT-033: one finding was already closed, the other splits in
+  two — and the stale claim was mine, from a ledger I had read.**
+
+  **F-075 needed no code at all.** `seal` has written `processed_hash` since
+  `e9fc7b44` (DRIFT-026, *sealing a verdict stops depending on memory*), landed
+  earlier **in this same campaign**. The task's §3 repeated F-067's original
+  wording — «written only by a real verify batch» — which was true when F-067
+  was filed and stopped being true when that commit shipped. Measured rather
+  than argued: a seal on a scratch copy wrote the file's own sha256, identical
+  to `sha256sum`, from the crate's single `content_hash`. **Amendment A4 is
+  therefore discharged**, by DRIFT-026 and not by DRIFT-033, which contributed
+  the test nobody had written. `deferrals.md` corrected in place.
+
+  *That commit subject was in the log this session read at boot and quoted in
+  its own resume report.* Six task files have now carried a wrong current-state
+  claim; this one was recoverable from a line I had already read. The rule that
+  follows is narrower than "measure more": **a ledger entry is a claim with a
+  date, and quoting it is not the same as checking it.**
+
+  **F-077 lands half and stops half, on two spec anchors.** The per-file
+  `summary` is gone and computed on read — nothing in the crate, the CLI, the
+  dashboard, `spec/**` or the campaign's own documents read it. But `counters`
+  in `campaign.json` is named by `##STATE-FILES` `@impl/done`, and
+  `##DASHBOARD-READS-ONLY` says «The dashboard reads **only** these; **it
+  computes nothing**» — and `tools/progress-dashboard/index.html:106` renders
+  four tiles straight from `camp.counters`. Removing it is a spec edit, so the
+  executor stopped. Correctly.
+
+  **And the two rules genuinely conflict, which my blanket recommendation of
+  option (a) did not anticipate.** `##DASHBOARD-READS-ONLY` exists for the same
+  reason F-077 does — to stop a second implementation of the campaign's
+  semantics, in this case in browser JS. Deleting `counters` would satisfy F-077
+  by violating that. **The resolution is that F-077's hazard was never "a
+  derived value is serialised" — it is "a derived value has an independent
+  writer that can drift".** `campaign.summary` went stale because it was
+  hand-maintained. A projection recomputed from the single source on every write
+  cannot. **Recommendation: keep `counters`, guarantee it is written from the
+  same one computation the rest of the system uses, and pin that with a test
+  asserting it equals a recount.** One computation, one writer, serialised for a
+  consumer contractually forbidden to compute. `##CACHE-TALLY-COMPUTED` records
+  the half that did land.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

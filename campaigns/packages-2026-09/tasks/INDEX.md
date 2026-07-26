@@ -4,7 +4,7 @@
 |---|---|---|---|
 | DRIFT-035 | the boot lane carries each statically-linked package once | opus | queued (F-078 c, measure first) |
 | DRIFT-034 | a heading anchor may be written the way a fact id may | opus | re-scoped, queued — widening only; fold ruled out |
-| DRIFT-033 | campaign state stops being believed on its own word | opus | queued (F-075 d + F-077 a) |
+| DRIFT-033 | campaign state stops being believed on its own word | opus | **done in part** — F-075 was already closed; F-077's `counters` stopped on spec |
 | DRIFT-032 | a `spec://` URI can address a normative fact | opus | **done** — F-085 a, floor green, 4 copies synced |
 | DRIFT-031 | the parser stops swallowing two units it can already see | opus | **done** — F-083 + F-084, floor green |
 | MARKUP-B1 | `core-ai-native` v0.8.0, guiding + operating layer | opus | **done** — B1a + B1b, 417 units over 9 files |

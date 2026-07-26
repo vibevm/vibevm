@@ -473,6 +473,12 @@ unit/paragraph counts, unmarked count, rollup results; campaign fields when a
 campaign is active: verdict per marker (`confirmed` / `drift` /
 `unverifiable`), evidence refs, batch id, processed hash. @impl/done
 
+##CACHE-TALLY-COMPUTED The per-file **verdict tally is computed on read**, never
+stored beside the verdict map it counts (F-077, owner ruling 2026-07-26). A
+stored tally is a second statement of the same fact with its own writer, and
+this campaign measured three that had gone stale — including one that claimed a
+drift row already closed. The map is the source; the count is a view of it. @impl/done
+
 ### 7.2 State projections (dashboard food) {#state}
 
 - ##STATE-FILES `campaign.json` (wave, stage-of-campaign, gates, counters, `updated_at`),

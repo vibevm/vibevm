@@ -25,11 +25,18 @@ picked up. The authoritative statement of each is
   engine — **now deferred by owner ruling 2026-07-26** («не перевыпускай
   пакет, сделаем это потом»).
 
-- **F-067 — the staleness signal inverts**, and it must be fixed *before*
-  Phase C (A4). `processed_hash` is written only by a real verify batch; a
-  campaign that hand-seals verdicts leaves it pointing at superseded text, so
-  the warning ends up naming the freshest files in the corpus. This campaign
-  will hand-seal across 294 files.
+- **F-067 — CLOSED 2026-07-26 by `e9fc7b44`, and amendment A4 is discharged
+  with it.** *(Was: `processed_hash` is written only by a real verify batch, so
+  a campaign that hand-seals leaves it pointing at superseded text and the
+  staleness warning names the freshest files in the corpus.)* `vibe progress
+  seal` has written `processed_hash` since DRIFT-026 landed — it is the file's
+  own sha256, from the single `content_hash` the parser already computes, so a
+  hand seal and a verify batch record the same digest. Verified by running a
+  seal on a scratch copy and comparing to `sha256sum`. **F-075 asked for exactly
+  this and needed no code**; DRIFT-033 added the test that was missing.
+  *This line stood in the present tense for a day after the fix shipped, and two
+  task files inherited the stale claim from it — which is the case for
+  re-measuring a ledger entry before quoting it, not merely re-reading it.*
 - **Two files need re-verifying first**: `MT-02-vibe-tree-tui.md` and
   `PROP-026-tcg-tool-family.md` carry wave-1 verdicts formed against text
   Phase D changed afterwards.
