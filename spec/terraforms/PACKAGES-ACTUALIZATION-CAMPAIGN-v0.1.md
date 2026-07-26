@@ -909,6 +909,60 @@ command that would have tested it.
   flagged its own task file for it after self-repairing an attribution trailer
   it had added — the rule working from the inside.*
 
+- **2026-07-26 · DRIFT-034 stops, and the corpus refutes the reviewer's own
+  argument.** Making duplicate detection case-insensitive flags **29 published
+  anchor pairs across 12 documents**, every one the same deliberate shape: a
+  section heading `{#kebab-slug}` and, two lines below, that section's lead
+  normative fact `##KEBAB-SLUG`. Independently recounted: 29 across 12. It is
+  the house convention the two registers exist for — the heading anchor
+  addresses the *section span*, the fact anchor addresses the *lead statement*,
+  and the register is what tells a reader which grain they are citing.
+
+  **The reasoning that justified the fold was wrong, and this is the
+  correction.** §2 of that task claimed: «today an `UPPER-SLUG` fact cannot
+  collide with a heading anchor, because a heading anchor cannot be UPPER —
+  that is a structural guarantee, and widening removes it.» It is not a
+  guarantee and widening removes nothing. `##TWO-TREES` and `{#two-trees}` are
+  **byte-different**, so they were never a duplicate under byte-exact detection,
+  before or after. What widening newly permits is writing `{#TWO-TREES}` — which
+  *would* be a byte-exact duplicate of `##TWO-TREES`, and the existing check
+  catches it **unchanged**.
+
+  So the two halves were never one idea: **the widening is safe on its own**
+  (measured: 727 files, 1 227 distinct heading anchors, zero that would fail the
+  wider grammar, zero digit-headed), and the case-insensitive check is a
+  separate proposal that this corpus refutes. Its purpose was to replace a
+  guarantee that did not exist, and its cost is flagging the authoring
+  convention 29 times. **Recommendation to the owner: widen, drop the fold.**
+  Byte-exact detection keeps catching every real duplicate; a fold would be
+  machinery for a defect that is not there.
+
+  Recorded because it will be asked again: duplicate detection lives in **five**
+  places, not one — `mdspec.rs:341` (PROP-014 warning), `progress-core/parse/anchors.rs:12`
+  (what `progress check` fails on), `vibe-spec/gate.rs:55` (a build error via
+  `pipeline.rs:82`), `vibe-spec/doctree.rs:71` (recorded, no consumer), and the
+  validator itself. And `doctree.rs:70`'s map **is** the resolution index, so any
+  future fold must be a second parallel key set there, never the lookup key.
+
+  Corroboration for F-078 from an unrelated angle: the same sweep found **69
+  byte-exact duplicate anchors, all inside `spec/boot/STATIC.md`** — the
+  generated lane carrying the duplicated git-practices snippets. Outside the
+  Progress-Control corpus, so nothing fails on it; it is the same defect seen by
+  a different instrument.
+
+- **2026-07-26 · A pattern in the reviewer's own work, stated rather than
+  buried.** Five task files this session carried a factual error an executor
+  found by measuring: DRIFT-029 (two premises wrong), DRIFT-030 (premise
+  incomplete), DRIFT-031 (§4 and §8 contradicted each other on scope), DRIFT-032
+  (an edge case that was already true), DRIFT-034 (the §2 reasoning above, plus
+  two slips in §6). **Every one was caught before it reached the tree**, by the
+  stop rule and by the "reproduce before you fix" step the tasks carry. The
+  mechanism is working exactly as designed and the frequency is the lesson: a
+  task file is written from reading, and reading this codebase has been wrong
+  five times out of five where a measurement was available. *Future tasks should
+  keep leading with a measurement step, and the reviewer should stop writing
+  confident current-state bullets that a single command would have checked.*
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
