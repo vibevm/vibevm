@@ -313,12 +313,20 @@ pub(super) fn c7_anchors(files: &[String], root: &Path, r: &mut Report) {
     // Deliberately redundant with the gate's own anchor laws. A cross-check
     // written from the spec rather than from the parser is what catches a
     // parser blind to its own grammar -- found three times in this campaign.
+    //
+    // `##FENCE-AWARE` covers inline code spans as well as fenced blocks, and
+    // this check blanked only the fences until B9 caught it: a protocol
+    // document that DOCUMENTS the anchor syntax carries `` `{#id}` `` three
+    // times in prose, and C7 reported a duplicate id named `id` while the gate
+    // reported nothing at all. C6 and C9 were given code-span blanking during
+    // the port and C7 was left behind -- so the two disagreed, which is the
+    // only reason it surfaced.
     let mut bad = Vec::new();
     for f in files {
         let Ok(text) = std::fs::read_to_string(root.join(f)) else {
             continue;
         };
-        let text = blank_fences(&text);
+        let text = blank_fences(&blank_code_spans_outside_fences(&text));
         let mut seen: BTreeMap<String, usize> = BTreeMap::new();
         for (_, _, id) in fact_anchors(&text) {
             *seen.entry(id).or_default() += 1; // case-SENSITIVE, per F-085
@@ -515,6 +523,30 @@ mod tests {
         c8_encoding(&files, d.path(), &mut r);
         c9_markers_in_fences(&files, d.path(), &mut r);
         assert!(!r.failed(), "clean sample went red: {:?}", r.caught());
+    }
+
+    /// A document that DOCUMENTS the anchor syntax quotes it in prose. Those
+    /// quotes live in inline code spans, which `##FENCE-AWARE` excludes — so
+    /// they are not anchors and cannot collide. C7 blanked only fenced blocks
+    /// until B9's protocol document reported a duplicate id named `id` while
+    /// the gate reported nothing.
+    #[test]
+    fn an_anchor_quoted_in_an_inline_code_span_is_not_an_anchor() {
+        let d = tempfile::tempdir().unwrap();
+        let body = "# T {#root}
+
+                    ##SYNTAX Heading anchors are written `{#id}` and facts `##ID`. @impl/done
+
+                    ##ALSO Renderers turn `{#id}` into a link target. @impl/done
+";
+        let files = write(d.path(), body);
+        let mut r = Report::default();
+        c7_anchors(&files, d.path(), &mut r);
+        assert!(
+            !r.failed(),
+            "quoted anchors read as real ones: {:?}",
+            r.caught()
+        );
     }
 
     #[test]
