@@ -103,6 +103,129 @@ Two hard rules follow:
   fact is not T-testable** — the worker returns it to the triage with a
   reason. It does not guess.
 
+### 3.1 The routine — seven steps, no judgement required {#routine}
+
+*Owner, 2026-07-26: «тесты должны быть настоящими тестами… исходя из смысла и
+сути тестируемого факта», and the worker may be a cheap model. So this is a
+**routine**, in the pattern-card sense: ordered, ≤7 steps, each one verifiable,
+none requiring taste. The Discipline's own central result says weak agents leapt
+from **executable scaffolds, not prose** — §3.3's worked pair is therefore the
+load-bearing part of this section, not this list.*
+
+```
+1. Read the fact. Write ONE sentence: "given <X>, <the thing> <does Y>."
+   Cannot? STOP — return the fact as not T-testable, and hand back your
+   failed sentence as the reason. That sentence is the deliverable.
+2. Underline the OBSERVABLE in Y. What could a program look at — a
+   return value, an error variant, a written file, an exit code?
+   Nothing observable? STOP — not T-testable.
+3. Write the EXPECTED VALUE as a LITERAL, before running anything.
+   Not "is_ok" — the actual value. Cannot name it from the fact's
+   words? STOP: you are one step from testing the implementation.
+4. Write the GIVEN as the smallest input that makes the fact apply.
+   Smallest = fewest fields set, shortest string, one element.
+5. Pick the kind (§4) and name the test for it:
+   canonical_… / boundary_… / negative_… / property_…
+6. Run it. Green on the first run is EXPECTED and proves nothing yet —
+   the fact is supposed to be implemented already.
+7. Change the expected literal to a WRONG value. Confirm red. Restore.
+   Still green? The assertion is not live: the TEST is wrong, not the
+   code. Fix the test and repeat from 6.
+```
+
+Step 3 is the whole method compressed. **A literal cannot be copied from a run
+that has not happened yet**, so writing it first is what mechanically prevents
+the test from mirroring the code. Everything else supports that one move.
+
+### 3.2 Banned assertion shapes — the list to check against {#banned}
+
+A weak model needs *«do not write this»* more than it needs *«write this»*.
+Each of these is **vacuous**: it passes whether or not the fact is true.
+
+| banned | why it proves nothing |
+|---|---|
+| `assert!(r.is_ok())` / `is_some()` alone | every fact worth stating says *what* the value is, not that one exists |
+| `assert_eq!(f(x), f(x))` | compares the code to itself |
+| expected value obtained by calling the code under test | the oracle became the implementation — §3's exact failure |
+| a snapshot created by running the code | that is **characterization**, a legitimate but different tool: it pins *current behaviour*, including its bugs. It never verifies a fact |
+| `assert!(true)`, an empty body, a test that only checks "does not panic" | passes on any implementation, including an empty one |
+| `assert!(err.is_err())` for a `negative` test | the fact names *which* failure; assert that variant, and its message where the fact quotes one |
+
+- ##BANNED-NO-LITERAL-IS-SUSPECT **An assertion containing no literal is suspect by default** and must
+  carry a one-line comment saying why a literal is impossible. This is
+  greppable, so the reviewer's sample is cheap.
+
+### 3.3 The worked pair — same fact, one useless test and one real one {#worked}
+
+The fact, real, from PROP-043 §3.7:
+
+> ##WORKED-FACT-QUOTED `@impl` ⇒ `<status stage="impl" state="work"/>` — bare shorthand defaults
+> to `state="work"`, with exactly one exception: `@unknown` ⇒ `state="hold"`.
+
+**Useless — and this is what a worker shown the implementation writes:**
+
+```rust
+#[test]
+fn shorthand() {
+    let m = parse_shorthand("@impl").unwrap();
+    assert!(m.state.is_some());   // vacuous: true of every possible state
+}
+```
+
+It passes if the default is `work`, `hold`, `plan`, or anything else. It tests
+that the parser returns *something*. **The fact says which something, and the
+test does not mention it.**
+
+**Real — three kinds, each read straight out of the fact's own words:**
+
+```rust
+#[specmark::verifies("spec://vibevm/modules/vibe-progress/PROP-043#SHORTHAND-BARE")]
+#[test]
+fn canonical_bare_shorthand_defaults_to_work() {
+    // literal written from the fact, before anything was run
+    assert_eq!(parse_shorthand("@impl"), Ok(Marker::new(Stage::Impl, State::Work)));
+}
+
+#[specmark::verifies("spec://vibevm/modules/vibe-progress/PROP-043#SHORTHAND-BARE")]
+#[test]
+fn boundary_unknown_is_the_one_exception_and_defaults_to_hold() {
+    // the fact says "exactly one exception" — that clause IS the boundary case
+    assert_eq!(parse_shorthand("@unknown"), Ok(Marker::new(Stage::Unknown, State::Hold)));
+}
+
+#[specmark::verifies("spec://vibevm/modules/vibe-progress/PROP-043#VOCAB-CLOSED")]
+#[test]
+fn negative_a_typo_dies_with_a_nearest_legal_value_hint() {
+    // the fact promises a hint, not merely an error — assert the hint
+    let err = parse_shorthand("@rewrok").unwrap_err();
+    assert!(err.to_string().contains("rework"), "no nearest-legal hint: {err}");
+}
+```
+
+Three things to take from the pair, and they generalise:
+
+- ##WORKED-CLAUSES-BECOME-KINDS **The fact's own clauses hand you the kinds.** «defaults to work» is
+  the canonical case; «with exactly one exception» *is* the boundary case,
+  named by the fact itself; the closed-vocabulary rule beside it supplies the
+  negative. You are not inventing cases — you are **enumerating the sentence**.
+- ##WORKED-NEGATIVE-ASSERTS-THE-PROMISE The negative test asserts the **promise**, not the failure.
+  `##VOCAB-CLOSED` promises a nearest-legal-value hint; `is_err()` would have
+  passed on a parser that returned a bare "invalid". The fact said more, so the
+  test says more.
+- ##WORKED-NO-IMPLEMENTATION-NEEDED **None of the three needed the implementation.** They needed the
+  signature, the type names, and the sentence.
+
+### 3.4 The hand test — the worker's own check before submitting {#hand-test}
+
+##HAND-TEST **Cover the implementation with your hand. Can you still say why this
+assertion is right?**
+
+If the only answer is *«because that is what it returned»*, **delete the test
+and go back to step 3.** If the answer quotes the fact, the test is real.
+
+That is the whole of §3 in one question, and it is the one to run on every test
+before it is submitted.
+
 ## 4. Three tests means three *kinds* {#kinds}
 
 *Owner ruling: three different kinds; more where the value is visible.*
@@ -258,6 +381,11 @@ be resolved by a tool that cannot see fact grain.
 
 - ##NEVER-READ-BODY Never show the implementation body to a test-writing worker. §3 is the
   phase's value and this is how it is lost.
+- ##NEVER-DESCRIBE-THE-CODE **Never write a test that describes how the code is built.** A test
+  states what the fact means; if the code were rewritten from scratch against
+  the same fact, every test in this phase must still pass. That is the
+  definition of a real test here, and §3.4's hand test is how a worker checks
+  it in one question.
 - ##NEVER-INVENT-EXPECTED Never let an expected value come from running the code. An
   undeliverable expectation means the fact is not T-testable.
 - ##NEVER-FORCE-THREE Never force a third kind that does not exist. Two honest kinds and a
