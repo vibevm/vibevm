@@ -1051,6 +1051,74 @@ command that would have tested it.
   consumer contractually forbidden to compute. `##CACHE-TALLY-COMPUTED` records
   the half that did land.
 
+- **2026-07-26 · DRIFT-036 closes F-086 — and disproves the consolation the
+  reviewer offered with it.**
+
+  **Both denominators exist and both were made to fire.** Sync went `33 pair(s)
+  across 6 sets` → **`51 across 9`, «all 6 vendored engine dir(s) … are sync
+  targets»**. The floor went 25 steps over 4 workspaces → **36 over 7**, opening
+  with «the floor builds all 7 live package workspace(s)». Three firings
+  recorded: a live workspace the floor does not build; a gated slot that is not
+  its package's live one (the F-081 shape, caught from the other side); a
+  vendored engine dir that is the target of no sync set. The frozen slot is
+  excluded **by derivation** — `live_slots` takes the newest slot per package by
+  `sort -V`, so a version literal cannot rot: when v0.9.0 lands the guard goes
+  **red** until the gate is repointed.
+
+  **The correction, and it lands on something already said out loud.** §3 of the
+  task claimed the go packages carry a v0.7.0 engine wholesale, that `rules/go.rs`
+  exists only in v0.8.0, and therefore that
+  `go-ai-native-lang/README.md:8-9`'s «^0.8 — the first edition carrying the Go
+  fact/config/rule support» is **false as shipped**. Measured: they are a
+  **mix** — `core-ai-native-conform` was already v0.8.0, `rules/go.rs` present
+  before this task touched anything (verified at `a314d38a^`); only `specmap`
+  and `specmark-grammar` lagged. **The README is accurate. The claim was mine
+  and it was wrong.**
+
+  That matters beyond the task, because it was used to answer the owner's
+  question *«why did the process not catch this, and could Phase C have?»* The
+  answer given was: the claim is false, it sits in an observed document, so
+  Phase C at batch B5 would have caught it. **All three legs fail.** No observed
+  document makes a claim that F-086 falsifies, so **no phase of this campaign
+  would have caught it** — the consolation is withdrawn and the underlying point
+  is left standing alone and stronger: *the corpus is observed; the instruments
+  are not.*
+
+  The real drift is sharper than «a version behind», and worth keeping in these
+  words: the go packages **froze when they were vendored and missed exactly what
+  the gate carried while they were outside it** — including, on the same day,
+  the two engine commits from DRIFT-032 and DRIFT-034.
+
+  **§8's stop did not fire and the feared break was imaginary.** The `Fact::GoUnsafe`
+  problem cannot occur here: the sync changed 8 files and needed **zero** source
+  edits. What the three unlisted workspaces did surface was untouched by any of
+  it — `fmt` had **never run** on them (root `cargo fmt --all` does not enter an
+  excluded workspace), three real clippy lints sat in authored go code, and
+  `typescript-ai-native-lang`'s **191 tests had never run here while its code
+  ships into another package**.
+
+  *A method note worth more than the numbers:* enumerating that stack's
+  environment-blocked tests by watching failures gave 3, then 5. `--no-fail-fast`
+  gave the truth — **6 across 4 binaries**, plus a second toolchain directory
+  nobody had looked in. **Iterative failure-watching under-counts by
+  construction**, because each run stops at the first failure and reports a
+  prefix as if it were the set.
+
+  **Accepted with its reason recorded — probe-guarded test steps.** A missing
+  `gopls` or `tsc` makes the step filter the tests that need it and print a NOTE
+  naming what was dropped and the recipe to restore it, **every run**; a
+  provisioned box filters nothing. That is consistent with this task rather than
+  an exception to it: **the filter has a denominator and states it out loud.**
+  The pre-existing `rust-analyzer` trade is the same bargain made *silently*, and
+  it is that one which should rise to this standard, not this one that should
+  fall to it. **Revisit when:** a NOTE is observed being ignored across sessions,
+  which would mean it has become wallpaper.
+
+  **Cost, reported and not decided (per §8):** floor **154 s warm over 36 steps**,
+  of which the 11 new steps are **30.7 s (+25 %)**; cold is materially worse
+  since three more workspaces each own a `target/`. The tiering call is the
+  owner's, and Phase T's §7 will want this number anyway.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

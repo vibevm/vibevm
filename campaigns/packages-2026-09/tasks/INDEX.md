@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| DRIFT-036 | both package gates learn their own denominator | opus | queued (F-086 widened) — **release event** |
+| DRIFT-036 | both package gates learn their own denominator | opus | **done** — F-086 closed; sync 6/6, floor 7/7, guards fired |
 | DRIFT-035 | the boot lane carries each statically-linked package once | opus | queued (F-078 c, measure first) |
 | DRIFT-034 | a heading anchor may be written the way a fact id may | opus | re-scoped, queued — widening only; fold ruled out |
 | DRIFT-033 | campaign state stops being believed on its own word | opus | **done in part** — F-075 was already closed; F-077's `counters` stopped on spec |
