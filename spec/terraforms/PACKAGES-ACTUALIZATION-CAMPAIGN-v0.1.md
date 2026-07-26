@@ -354,6 +354,29 @@ a package's crates must be **vendored forward** to every family member that
 copies it (`cargo xtask sync-engines`), and the task's acceptance says so
 explicitly or the fix ships to one consumer and not the others.
 
+### Phase T — Test coverage by swarm (owner amendment, 2026-07-26) {#phase-t}
+
+*Entry:* E closed. *Executor:* a swarm of the **running harness's own**
+subagents — a deliberate exception to §2's «no fractality», ruled by the owner
+2026-07-26 and recorded rather than assumed. *Reviewer:* the boss, per packet.
+
+**≥3 tests of distinct kinds per testable assertion.** Full specification:
+[`campaigns/packages-2026-09/PHASE-T-SPEC.md`](../../campaigns/packages-2026-09/PHASE-T-SPEC.md).
+The four things that decide whether it is worth anything, in one breath: a
+**triage first** (6 963 in-scope facts, not 10 825 — `world` flows have no
+callable surface and stay on §3.1's join); the **fact's text is the oracle and
+the worker never sees the implementation body**; **three kinds** (canonical,
+boundary, negative) rather than three assertions; and **one test exhibited red
+per packet**, which is not mutation coverage but a check that the test works at
+all.
+
+*Placed before F on purpose:* F must answer the mandate per practice, and with T
+in front of it, it answers with **measured coverage** instead of prose judgement.
+
+*Prerequisite that only just landed:* until DRIFT-032 and DRIFT-034,
+`#[spec(verifies = "spec://…#UPPER-FACT")]` did not compile, so this phase was
+not expressible at all.
+
 ### Phase F — The credibility report {#phase-f}
 
 The phase wave 1 does not have, and the reason this campaign exists.
