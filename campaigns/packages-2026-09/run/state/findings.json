@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T20:30:00Z",
+ "updated_at": "2026-07-26T11:40:00Z",
  "findings": [
   {
    "id": "F-068",
@@ -82,6 +82,15 @@
    "status": "resolved",
    "wave": 2,
    "note": "HAND-WRITTEN TIMESTAMPS WERE IN THE FUTURE, AND THEY FAILED UNSAFE. Found 2026-07-26 when the seal command wrote a real stamp (10:23:56Z) beside hand-written ones and moved verified_at BACKWARDS. Real UTC was 10:34Z; the reviewer had hand-written 12:30:00Z on PROP-002 and 19:00:00Z on PROP-043 - 2 and 8.5 hours ahead - simply by inventing plausible-looking values while sealing verdicts by hand. Direction is what matters: moved_crate (baseline.rs:302) calls a crate 'moved' when it carries commits NEWER than the verdict, so a future verified_at means nothing is ever newer and invalidation rule 2 NEVER FIRES for that file. Units carry forward that should have been suspect. That is the unsafe direction, against the principle every other part of this campaign was built to respect - the baseline omits rather than fabricates, the tripwire warns rather than passes, the seal refuses rather than stamps. Corrected both to real UTC. Standing rule now in the WAL: never hand-write a timestamp into campaign state; the tool writes it, or it is wrong in a direction nothing checks."
+  },
+  {
+   "id": "F-077",
+   "from": "campaigns/packages-2026-09/run/cache.json",
+   "to": "crates/progress-core/src/cache.rs",
+   "type": "contradiction",
+   "status": "open",
+   "wave": 2,
+   "note": "TWO COUNTS OF THE SAME THING DISAGREED, AND THE STALE ONE STILL CLAIMED A DRIFT ROW. Each file record carries both an authoritative `campaign.verdicts` map and a derived `campaign.summary` rollup. Summing verdicts gave 4 495 confirmed / 0 drift / 3 unverifiable; summing summary gave 4 486 / 1 / 3. The reviewer reported zero drift all session from the first, while the second - in the same file - still said one. Cause: `summary` is written by a verify batch and NOTHING refreshes it when verdicts are hand-edited, which is how this campaign has sealed verdicts throughout (Phase D's sync-from-code waves and every seal today). Found by DRIFT-028's executor while checking that its own change moved no verdict; it declined to touch it, correctly. Recomputed from the verdict maps on the spot, since summary is derived and the source of truth is unambiguous. THE UNDERLYING GAP REMAINS: nothing keeps them in sync and nothing compares them, so they will diverge again on the next hand-seal. Fix direction, in order of preference: (a) delete `summary` and compute it on read - a derived field that can disagree with its source is a liability, and section 7.5's erasure law says derived artefacts must be recomputable anyway; (b) have `seal` and any verdict write refresh it; (c) have `check` compare the two and fail on divergence. Note this is the SECOND time today a stale derived projection lied: run/state/tasks.json sat 18 tasks behind because scan seeds it and never refreshes it."
   }
  ]
 }

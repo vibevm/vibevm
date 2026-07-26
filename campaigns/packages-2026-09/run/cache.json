@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T10:35:38Z",
+  "updated_at": "2026-07-26T11:28:11Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "5a31a151790f6036089501351a146e5353ca0f8d30b9b0f739fbdb6060ad5e83",
@@ -2402,7 +2402,7 @@
       "issue_count": 0
     },
     "spec/boot/00-core.md": {
-      "content_hash": "78d18746e702bfbb3fe8a1ae98e39f4c5289d7d6104b017e99e9bfec6d3a312f",
+      "content_hash": "27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511",
       "rollup": {
         "computed": [
           "impl",
@@ -2412,19 +2412,17 @@
           "impl",
           "done"
         ],
-        "marker_count": 30,
-        "fact_count": 30,
+        "marker_count": 33,
+        "fact_count": 33,
         "unmarked_facts": 0
       },
-      "marker_count": 30,
-      "unit_count": 8,
+      "marker_count": 33,
+      "unit_count": 9,
       "issue_count": 0,
       "campaign": {
         "processed_hash": "78d18746e702bfbb3fe8a1ae98e39f4c5289d7d6104b017e99e9bfec6d3a312f",
         "summary": {
-          "confirmed": 33,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 33
         },
         "verdicts": {
           "project-identity": {
@@ -2609,6 +2607,24 @@
             "ev": [
               "commit discipline exercised per rules 2-4 across the session"
             ]
+          },
+          "VOID-NOT-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-028 2026-07-26, the reader-facing half of the same change, added at the owner's request beside the NOTOUCH list because it is an instruction of the same kind. The middle fact is the only reason the rule exists: a void unit's PROSE IS UNCHANGED and still reads like the requirement it used to be, so a session scanning for work finds actionable-looking text and the marker is the only thing that stops it."
+            ]
+          },
+          "VOID-TEXT-STILL-READS": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-028 2026-07-26, the reader-facing half of the same change, added at the owner's request beside the NOTOUCH list because it is an instruction of the same kind. The middle fact is the only reason the rule exists: a void unit's PROSE IS UNCHANGED and still reads like the requirement it used to be, so a session scanning for work finds actionable-looking text and the marker is the only thing that stops it."
+            ]
+          },
+          "VOID-FOLLOW-HEIRS": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-028 2026-07-26, the reader-facing half of the same change, added at the owner's request beside the NOTOUCH list because it is an instruction of the same kind. The middle fact is the only reason the rule exists: a void unit's PROSE IS UNCHANGED and still reads like the requirement it used to be, so a session scanning for work finds actionable-looking text and the marker is the only thing that stops it."
+            ]
           }
         },
         "verified_at": "2026-07-26T10:23:56Z",
@@ -2637,7 +2653,6 @@
         "processed_hash": "da61458f26f58261927c4112dacce002662f15ee24308b48d802ff96ab25cee1",
         "summary": {
           "confirmed": 29,
-          "drift": 0,
           "unverifiable": 2
         },
         "verdicts": {
@@ -2862,7 +2877,6 @@
         "processed_hash": "dc343dad5b950ce23f51f3b94c08387c23ffe92f0bed1c2fd6e2e720407107b8",
         "summary": {
           "confirmed": 161,
-          "drift": 0,
           "unverifiable": 1
         },
         "verdicts": {
@@ -3885,9 +3899,7 @@
         "marker_count": 11,
         "processed_hash": "bf798b01c38fb700c3a7d9fa40ad5bb7c21601ca2cce51b6b99c4b81f0cf6d8f",
         "summary": {
-          "confirmed": 10,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 10
         },
         "verdicts": {
           "status-line": {
@@ -3984,9 +3996,7 @@
         "marker_count": 45,
         "processed_hash": "966695c7f83560f4f38cfbb01247f3c02529383a9882af1bcbfa6d37ea36ae27",
         "summary": {
-          "confirmed": 44,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 44
         },
         "verdicts": {
           "status-line": {
@@ -4287,9 +4297,7 @@
         "marker_count": 31,
         "processed_hash": "c6592a970be72b92ec5f995139652d11499e30c1c02fc63334a6b951be69fb94",
         "summary": {
-          "confirmed": 30,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 30
         },
         "verdicts": {
           "status-line": {
@@ -4506,9 +4514,7 @@
         "marker_count": 113,
         "processed_hash": "6f0cdc165d1208b475749507386865039b029994f6b1ac24cb4248f9332398dd",
         "summary": {
-          "confirmed": 113,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 113
         },
         "verdicts": {
           "status-line": {
@@ -5224,9 +5230,7 @@
         "marker_count": 209,
         "processed_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
         "summary": {
-          "confirmed": 209,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 209
         },
         "verdicts": {
           "status-line": {
@@ -6518,9 +6522,7 @@
         "marker_count": 77,
         "processed_hash": "cfaa3c9b4d0530f780db587eadfc67ef4cfbb1da4b4be7870892b4a6e53910f7",
         "summary": {
-          "confirmed": 77,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 77
         },
         "verdicts": {
           "status-line": {
@@ -7024,9 +7026,7 @@
         "marker_count": 42,
         "processed_hash": "d84af88d9fc2529e7d0bd104a3a628ffc9d033758a967e652b49a5d5fb20535d",
         "summary": {
-          "confirmed": 41,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 41
         },
         "verdicts": {
           "status-line": {
@@ -7310,9 +7310,7 @@
         "marker_count": 32,
         "processed_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
         "summary": {
-          "confirmed": 25,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 25
         },
         "verdicts": {
           "status-line": {
@@ -7499,9 +7497,7 @@
         "marker_count": 96,
         "processed_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
         "summary": {
-          "confirmed": 75,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 75
         },
         "verdicts": {
           "status-line": {
@@ -7988,9 +7984,7 @@
         "marker_count": 128,
         "processed_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
         "summary": {
-          "confirmed": 107,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 107
         },
         "verdicts": {
           "status-line": {
@@ -8669,9 +8663,7 @@
         "marker_count": 83,
         "processed_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
         "summary": {
-          "confirmed": 68,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 68
         },
         "verdicts": {
           "status-line": {
@@ -9116,9 +9108,7 @@
         "marker_count": 34,
         "processed_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",
         "summary": {
-          "confirmed": 18,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 18
         },
         "verdicts": {
           "genre-definition": {
@@ -9259,9 +9249,7 @@
         "marker_count": 78,
         "processed_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
         "summary": {
-          "confirmed": 59,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 59
         },
         "verdicts": {
           "genre-line": {
@@ -9656,9 +9644,7 @@
         "marker_count": 76,
         "processed_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
         "summary": {
-          "confirmed": 60,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 60
         },
         "verdicts": {
           "companion-line": {
@@ -10063,9 +10049,7 @@
         "marker_count": 21,
         "processed_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",
         "summary": {
-          "confirmed": 21,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 21
         },
         "verdicts": {
           "status-line": {
@@ -10228,9 +10212,7 @@
         "marker_count": 176,
         "processed_hash": "a27b95ee35e289f3ac149be96121a413b3a8d5f2d330306d288e4b5e836d5c5f",
         "summary": {
-          "confirmed": 71,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 71
         },
         "verdicts": {
           "status-line": {
@@ -10695,9 +10677,7 @@
         "marker_count": 100,
         "processed_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
         "summary": {
-          "confirmed": 78,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 78
         },
         "verdicts": {
           "companion-line": {
@@ -11195,9 +11175,7 @@
       "campaign": {
         "processed_hash": "8aa920ab86a36b0723b1a5440d0adb31c3f0490eb78b174b9f361310f28dd755",
         "summary": {
-          "confirmed": 28,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 28
         },
         "verdicts": {
           "purpose": {
@@ -11399,9 +11377,7 @@
       "campaign": {
         "processed_hash": "8edba8cfa8e1ed5a9f7337b0f874a9ed893dac145ea6cc667d8261af26a9f487",
         "summary": {
-          "confirmed": 23,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 23
         },
         "verdicts": {
           "purpose": {
@@ -11569,9 +11545,7 @@
       "campaign": {
         "processed_hash": "be2077f10ab9b5695bf870f56f7b66edc841e3868b1d8559c1e50fcb8525c1fa",
         "summary": {
-          "confirmed": 16,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 16
         },
         "verdicts": {
           "purpose": {
@@ -11704,9 +11678,7 @@
         "marker_count": 45,
         "processed_hash": "5910b10816793785f6cb21cbb096f7eb5d3f522a083c58c588b331c796e29e7b",
         "summary": {
-          "confirmed": 45,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 45
         },
         "verdicts": {
           "modules-purpose": {
@@ -12019,9 +11991,7 @@
         "marker_count": 52,
         "processed_hash": "11ed95bb2f854fa300c635668b6e855a1161d10e10a5e5a1a3b92cdc4bbbd28f",
         "summary": {
-          "confirmed": 52,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 52
         },
         "verdicts": {
           "status-line": {
@@ -12373,9 +12343,7 @@
         "marker_count": 81,
         "processed_hash": "b86f273c7fce0d9bda7533f30bd4c27fff19ca92707c164c62b0daed97a99418",
         "summary": {
-          "confirmed": 81,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 81
         },
         "verdicts": {
           "status-line": {
@@ -12904,9 +12872,7 @@
         "marker_count": 137,
         "processed_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
         "summary": {
-          "confirmed": 110,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 110
         },
         "verdicts": {
           "status-line": {
@@ -13604,9 +13570,7 @@
         "marker_count": 62,
         "processed_hash": "94c63143b2c7874ceb35ca36ef763dbf15d5fa3a478dc1f7d2c97a54104dd652",
         "summary": {
-          "confirmed": 62,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 62
         },
         "verdicts": {
           "status-line": {
@@ -14015,9 +13979,7 @@
         "marker_count": 279,
         "processed_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
         "summary": {
-          "confirmed": 279,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 279
         },
         "verdicts": {
           "milestone-line": {
@@ -15728,9 +15690,7 @@
         "marker_count": 65,
         "processed_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
         "summary": {
-          "confirmed": 65,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 65
         },
         "verdicts": {
           "milestone-line": {
@@ -16157,9 +16117,7 @@
         "marker_count": 47,
         "processed_hash": "a377614449431b183a0b964819de4ba5e94e3accd45da81f5cf9f2349f353894",
         "summary": {
-          "confirmed": 47,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 47
         },
         "verdicts": {
           "status-line": {
@@ -16478,9 +16436,7 @@
         "marker_count": 76,
         "processed_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
         "summary": {
-          "confirmed": 58,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 58
         },
         "verdicts": {
           "milestone-line": {
@@ -16865,9 +16821,7 @@
         "marker_count": 70,
         "processed_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
         "summary": {
-          "confirmed": 59,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 59
         },
         "verdicts": {
           "guide-purpose": {
@@ -17234,7 +17188,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "66a53db5063a24de2a02b247f6c75f8ed69dcb5ac14975da5952c68806b7d19e",
+      "content_hash": "1fe7abaee19b01cafd53f5a9015fed6a7d2c52abbe511bafb6a8ff8ef2658f14",
       "rollup": {
         "explicit": [
           "impl",
@@ -17248,11 +17202,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 163,
-        "fact_count": 162,
+        "marker_count": 165,
+        "fact_count": 164,
         "unmarked_facts": 0
       },
-      "marker_count": 163,
+      "marker_count": 165,
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
@@ -17262,9 +17216,7 @@
         "marker_count": 159,
         "processed_hash": "a8e78ad435d4d2a71aa75160539a9109a092c00632516226be0347fe4ee91583",
         "summary": {
-          "confirmed": 144,
-          "drift": 1,
-          "unverifiable": 0
+          "confirmed": 151
         },
         "verdicts": {
           "self-uri": {
@@ -17421,7 +17373,7 @@
           "ROW-ATTR-STATE": {
             "v": "confirmed",
             "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
+              "DRIFT-028 sync-from-code 2026-07-26. State::Void ships in crates/progress-core/src/model.rs (ALL 4->5, as_str, parse) and rollup_key short-circuits on it. PINNED BY A PROPERTY TEST over Stage::ALL x State::ALL x Stage::ALL (245 assertions), asserting both halves: no non-void pair reaches a void key, and void's key is identical at every stage - which is what makes 'regardless of stage' true rather than merely likely. The three worked examples were also driven through the REAL pipeline on scratch files: {spec/void, impl/plan} -> impl/plan, {done, void} -> done, all-void -> void. Both syntaxes come free because element.rs:158 (state=\"...\") and :237 (@stage/state) share State::parse. Serde verified both directions. The §3.2 table is the normative closed list (##VOCAB-CLOSED: 'any value outside the tables is a check error'), so `void` had to land there and not only in §3.4."
             ]
           },
           "ROW-ATTR-ACTION": {
@@ -18168,6 +18120,18 @@
             "ev": [
               "DRIFT-026 sync-from-code 2026-07-26, verified against the shipped verb and live runs. progress-core/src/seal.rs carries the decision (Seal::{Recorded,Current,Unjudged,Unobserved}); commands/progress/seal.rs the verb. Proven by running it: baseline named 5 stale files before and 3 after sealing the two boot files, with MT-02, PROP-026 and PROP-043 still named. THE DISK TEST is the load-bearing one - a sealed file edited with no rescan showed cache content_hash == processed_hash == da61458f26f5 while disk read 73bb2096b927, and seal took the disk value; a content_hash-trusting build prints 'already sealed' there. Re-sealing prints 'already sealed against these bytes' and leaves cache.json byte-identical with verified_at unmoved. Refusing a partially-judged file names the count and the first anchors. COVERAGE NOT RECENCY, recorded because the task assumed otherwise and was wrong: sealing PROP-043 SUCCEEDS (148 verdicts over 147 addressable anchors), and recency is unanswerable because verdict entries carry only v and ev with one verified_at per file (F-075)."
             ]
+          },
+          "STATE-VOID": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-028 sync-from-code 2026-07-26. State::Void ships in crates/progress-core/src/model.rs (ALL 4->5, as_str, parse) and rollup_key short-circuits on it. PINNED BY A PROPERTY TEST over Stage::ALL x State::ALL x Stage::ALL (245 assertions), asserting both halves: no non-void pair reaches a void key, and void's key is identical at every stage - which is what makes 'regardless of stage' true rather than merely likely. The three worked examples were also driven through the REAL pipeline on scratch files: {spec/void, impl/plan} -> impl/plan, {done, void} -> done, all-void -> void. Both syntaxes come free because element.rs:158 (state=\"...\") and :237 (@stage/state) share State::parse. Serde verified both directions."
+            ]
+          },
+          "ROLLUP-VOID-OUTSIDE": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-028 sync-from-code 2026-07-26. State::Void ships in crates/progress-core/src/model.rs (ALL 4->5, as_str, parse) and rollup_key short-circuits on it. PINNED BY A PROPERTY TEST over Stage::ALL x State::ALL x Stage::ALL (245 assertions), asserting both halves: no non-void pair reaches a void key, and void's key is identical at every stage - which is what makes 'regardless of stage' true rather than merely likely. The three worked examples were also driven through the REAL pipeline on scratch files: {spec/void, impl/plan} -> impl/plan, {done, void} -> done, all-void -> void. Both syntaxes come free because element.rs:158 (state=\"...\") and :237 (@stage/state) share State::parse. Serde verified both directions."
+            ]
           }
         },
         "verified_at": "2026-07-26T10:35:08Z",
@@ -18203,9 +18167,7 @@
         "marker_count": 10,
         "processed_hash": "f854794e0ca29a21b4874a7d28b8f9a9565545ebe6b391b45e60eabf9fea4baf",
         "summary": {
-          "confirmed": 10,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 10
         },
         "verdicts": {
           "CARD-ONE-PROMISE": {
@@ -18302,9 +18264,7 @@
         "marker_count": 23,
         "processed_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
         "summary": {
-          "confirmed": 23,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 23
         },
         "verdicts": {
           "status-legend": {
@@ -18479,9 +18439,7 @@
         "marker_count": 16,
         "processed_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
         "summary": {
-          "confirmed": 16,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 16
         },
         "verdicts": {
           "status-legend": {
@@ -18614,9 +18572,7 @@
         "marker_count": 93,
         "processed_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
         "summary": {
-          "confirmed": 93,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 93
         },
         "verdicts": {
           "milestone-line": {
@@ -19214,9 +19170,7 @@
         "marker_count": 360,
         "processed_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
         "summary": {
-          "confirmed": 286,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 288
         },
         "verdicts": {
           "milestone-line": {
@@ -20987,9 +20941,7 @@
         "marker_count": 100,
         "processed_hash": "281c74bb6c891b02729d113da9ded346b14c18ca9277c98ac9897962602763b2",
         "summary": {
-          "confirmed": 92,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 92
         },
         "verdicts": {
           "milestone-line": {
@@ -21579,9 +21531,7 @@
         "marker_count": 93,
         "processed_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
         "summary": {
-          "confirmed": 93,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 93
         },
         "verdicts": {
           "milestone-line": {
@@ -22178,9 +22128,7 @@
         "marker_count": 38,
         "processed_hash": "c94b2a6794dee360ec49179b01af90626922bb4b5a4c78c68869335fc3df5300",
         "summary": {
-          "confirmed": 38,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 38
         },
         "verdicts": {
           "status-line": {
@@ -22469,9 +22417,7 @@
         "marker_count": 46,
         "processed_hash": "ea93a3ed159488ee2de216e6e8e4f033a6cc6bd4aea939512154e044e96b2c0f",
         "summary": {
-          "confirmed": 46,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 46
         },
         "verdicts": {
           "status-line": {
@@ -22819,9 +22765,7 @@
         "marker_count": 76,
         "processed_hash": "58d2569e3e769e56c001ec98527400a0a3515188dcaa79f505623fce6ca984aa",
         "summary": {
-          "confirmed": 76,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 76
         },
         "verdicts": {
           "self-uri": {
@@ -23377,9 +23321,7 @@
         "marker_count": 314,
         "processed_hash": "26cd5ca4c0ae6a73c874c7bc45f41c570d4325ad96f132d4a2c62c36830b2778",
         "summary": {
-          "confirmed": 292,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 292
         },
         "verdicts": {
           "status-line": {
@@ -25179,9 +25121,7 @@
         "marker_count": 106,
         "processed_hash": "3c6d6bd69b62a56684b7ccc4113e61851bd02eecede004c5763871d601705b9b",
         "summary": {
-          "confirmed": 80,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 80
         },
         "verdicts": {
           "status-line": {
@@ -25700,9 +25640,7 @@
         "marker_count": 74,
         "processed_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
         "summary": {
-          "confirmed": 65,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 65
         },
         "verdicts": {
           "status-line": {
@@ -26130,9 +26068,7 @@
         "marker_count": 44,
         "processed_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
         "summary": {
-          "confirmed": 44,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 44
         },
         "verdicts": {
           "status-line": {
@@ -26434,9 +26370,7 @@
         "marker_count": 147,
         "processed_hash": "b940150108bf0ce4e70140970e45f5eec269723686cb98f46a6b8c6e3481c2ed",
         "summary": {
-          "confirmed": 121,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 121
         },
         "verdicts": {
           "milestone-line": {
@@ -27203,9 +27137,7 @@
         "marker_count": 104,
         "processed_hash": "abecd46d4e84b936f5f6bd4240f397f89067b905e6b2b7938652087555903444",
         "summary": {
-          "confirmed": 104,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 104
         },
         "verdicts": {
           "milestone-line": {
@@ -27869,9 +27801,7 @@
         "marker_count": 97,
         "processed_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
         "summary": {
-          "confirmed": 97,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 97
         },
         "verdicts": {
           "milestone-line": {
@@ -28490,9 +28420,7 @@
         "marker_count": 84,
         "processed_hash": "2e00d2aab2e0007ad20916d6e76a933a8f331a043f7c4cf1ef39d9641c320b32",
         "summary": {
-          "confirmed": 84,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 84
         },
         "verdicts": {
           "milestone-line": {
@@ -29033,9 +28961,7 @@
         "marker_count": 50,
         "processed_hash": "9f092c76471e158b4bb04c5744ced93d245bce5a509864804c10d1035a28f09e",
         "summary": {
-          "confirmed": 50,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 50
         },
         "verdicts": {
           "status-line": {
@@ -29413,9 +29339,7 @@
         "marker_count": 53,
         "processed_hash": "27f1bad149d671ea82ae3e1bcec989cd35194721d97a49f9bda474803abc0e7f",
         "summary": {
-          "confirmed": 53,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 53
         },
         "verdicts": {
           "status-line": {
@@ -29807,9 +29731,7 @@
         "marker_count": 46,
         "processed_hash": "8d50a37b2c4e3b8421b60f9e912fb9ae726ed88e0a1d72e1fb95bfd0b2d8b8b1",
         "summary": {
-          "confirmed": 46,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 46
         },
         "verdicts": {
           "status-line": {
@@ -30122,9 +30044,7 @@
         "marker_count": 66,
         "processed_hash": "4150b1a3d9e61ce8fbe60099fccff098d31a0e9a00ba233585de2efe9e765405",
         "summary": {
-          "confirmed": 66,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 66
         },
         "verdicts": {
           "status-line": {
@@ -30558,9 +30478,7 @@
         "marker_count": 135,
         "processed_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
         "summary": {
-          "confirmed": 135,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 135
         },
         "verdicts": {
           "status-line": {
@@ -31409,9 +31327,7 @@
         "marker_count": 86,
         "processed_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
         "summary": {
-          "confirmed": 78,
-          "drift": 0,
-          "unverifiable": 0
+          "confirmed": 78
         },
         "verdicts": {
           "status-line": {

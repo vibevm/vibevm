@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-26T10:35:38Z",
+  "updated_at": "2026-07-26T11:27:56Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -2402,9 +2402,9 @@
         "state": "done"
       },
       "explicit": null,
-      "markers": 30,
-      "units": 8,
-      "facts": 30,
+      "markers": 33,
+      "units": 9,
+      "facts": 33,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -17012,9 +17012,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 163,
+      "markers": 165,
       "units": 27,
-      "facts": 162,
+      "facts": 164,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -17923,6 +17923,12 @@
             "v": "confirmed",
             "ev": [
               "DRIFT-024 sync-from-code 2026-07-26, verified against the shipped code and a live run. DEFAULT_EXCLUDE_FILES = [\"LICENSE.md\"] plus is_excluded_file give the always-on rule its file-name kind; ScopeConfig.exclude + apply_config_excludes give the project-side globs, applied after the includes and after both default kinds. Guard rails exercised: a stale pattern is named on every subcommand, an invalid glob errors with exit 1 and no panic, scan prints the drop count. Effect: corpus 344 -> 308, unmarked 8 992 -> 8 463; authored cards survived (spec/cards/ 10 -> 9, only INDEX.md left), narrowness unit-tested."
+            ]
+          },
+          "CMD-SEAL": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-026 sync-from-code 2026-07-26, verified against the shipped verb and live runs. progress-core/src/seal.rs carries the decision (Seal::{Recorded,Current,Unjudged,Unobserved}); commands/progress/seal.rs the verb. Proven by running it: baseline named 5 stale files before and 3 after sealing the two boot files, with MT-02, PROP-026 and PROP-043 still named. THE DISK TEST is the load-bearing one - a sealed file edited with no rescan showed cache content_hash == processed_hash == da61458f26f5 while disk read 73bb2096b927, and seal took the disk value; a content_hash-trusting build prints 'already sealed' there. Re-sealing prints 'already sealed against these bytes' and leaves cache.json byte-identical with verified_at unmoved. Refusing a partially-judged file names the count and the first anchors. COVERAGE NOT RECENCY, recorded because the task assumed otherwise and was wrong: sealing PROP-043 SUCCEEDS (148 verdicts over 147 addressable anchors), and recency is unanswerable because verdict entries carry only v and ev with one verified_at per file (F-075)."
             ]
           }
         },

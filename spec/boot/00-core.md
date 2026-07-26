@@ -27,6 +27,12 @@
 
 - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done
 
+## Units marked `void` — do not implement
+
+- ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state="void"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no replacement; its text survives only so its name is not reused and inbound links do not break. Do not implement it, do not plan from it, do not count it as outstanding. @impl/done
+- ##VOID-TEXT-STILL-READS The trap, and the only reason this rule is needed: the prose is unchanged. A tombstone still reads like the requirement it used to be, because it was one. The marker is the only thing saying otherwise, so read it before acting on the paragraph. @impl/done
+- ##VOID-FOLLOW-HEIRS If the unit names successors, they carry the claim and the work is theirs. If it names none, the claim was withdrawn and there is nothing to do. @impl/done
+
 ## Reading layers (per book, `refs/book/`)
 
 ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done

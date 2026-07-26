@@ -103,7 +103,7 @@ documents — the frontend duality of PROP-035 §5): @impl/done
 | Attribute | Required | Values |
 |---|---|---|
 | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |
-| ##ROW-ATTR-STATE `state` @impl/done | yes @impl/done | `plan` · `work` · `done` · `hold` @impl/done |
+| ##ROW-ATTR-STATE `state` @impl/done | yes @impl/done | `plan` · `work` · `done` · `hold` · `void` @impl/done |
 | ##ROW-ATTR-ACTION `action` @impl/done | no @impl/done | `continue` · `drift` · `rework` · `remove` @impl/done |
 | ##ROW-ATTR-ACTIONSTAGE `actionstage` @impl/done | no @impl/done | any `stage` value; absent ⇒ the action targets `stage` @impl/done |
 | ##ROW-ATTR-AUDIENCE `audience` @impl/done | no @impl/done | CSV of `user` · `author` · `dev`; absent ⇒ `dev` @impl/done |
@@ -154,6 +154,14 @@ number of **action** markers — a unit may legitimately need
 - ##STATE-DONE `done` — done for that
   stage. @impl/done
 - ##STATE-HOLD `hold` — deliberately parked (neither worked nor discarded). @impl/done
+- ##STATE-VOID `void` — the unit no longer asserts anything. Named for a **void
+  contract** — without effect — deliberately not the programming sense of
+  "still works, discouraged". The unit was either split into heirs and left as
+  a pointer to them, or cancelled with no replacement; its text survives only so
+  its name is not reused and inbound links do not break. It is neither work
+  outstanding nor work completed but **no claim at all**, and §3.10 sorts it
+  accordingly. Marking one is the author's judgment about their own corpus —
+  nothing derives it. @impl/done
 
 ### 3.5 Actions {#actions}
 
@@ -309,6 +317,16 @@ or end of a paragraph's text, never mid-sentence, never inside code or links. @i
 - ##ROLLUP-DOWNWARD **Downward (defaulting):** a node's marker covers unmarked descendants. @impl/done
 - ##ROLLUP-UPWARD **Upward (aggregation):** an unmarked node's computed status is the
   worst-of its children per the §3.3 order (`unknown` wins the bottom). @impl/done
+- ##ROLLUP-VOID-OUTSIDE `void` is the one value outside the `(stage, state)` order:
+  it sorts **above every other pair regardless of stage**, so worst-of never
+  returns it while any live unit remains. `worst-of {spec/void, impl/plan}` is
+  `impl/plan` — the live part governs and the tombstone's stage does not drag
+  the document back to `spec`; `worst-of {done, void}` is `done`. A document
+  whose every unit is `void` **is** `void`, which falls out of the same rule
+  rather than being special-cased. This is a property of the **pair**: giving
+  `void` the top state slot *within* its stage would leave `@spec/void`
+  governing by stage anyway, which is why two of the three options originally
+  proposed for it could not work. @impl/done
 - ##EXPLICIT-BEATS An explicit marker always beats both directions. Reports show *explicit*
   and *computed* separately — a divergence is information, not noise. @impl/done
 

@@ -335,6 +335,35 @@ Body paragraph. @idea
         assert_eq!(r.effective, Some((Stage::Impl, State::Work)));
     }
 
+    /// A tombstone does not govern the file it sits in — the live unit
+    /// beside it does (DRIFT-028 §4.1). Driven through the parser rather
+    /// than against `rollup_key` directly, so the new vocabulary value is
+    /// shown to reach the fold from the markup a document actually writes.
+    #[test]
+    fn a_void_unit_does_not_govern_the_document() {
+        let text = "\
+# T {#t}
+
+##a Split in two; kept only so the name is not reused. @spec/void
+
+##b The heir, still being written. @impl/plan
+";
+        let r = rollup_doc(&parse_document("x.md", text));
+        assert_eq!(r.computed, Some((Stage::Impl, State::Plan)));
+
+        // And a document whose every unit is void is itself void, which
+        // falls out of the same rule rather than being special-cased.
+        let all_void = "\
+# T {#t}
+
+##a Cancelled with no replacement. @spec/void
+
+##b Split into heirs kept elsewhere. @doc/void
+";
+        let r = rollup_doc(&parse_document("y.md", all_void));
+        assert_eq!(r.computed.map(|(_, s)| s), Some(State::Void));
+    }
+
     /// Three agreeing units under a section marker that says exactly what
     /// they say: the fold keeps everything.
     #[test]
