@@ -440,3 +440,107 @@ be resolved by a tool that cannot see fact grain.
 - **Fact anchors citable from code** — done: DRIFT-032 and DRIFT-034. Until
   those landed, `#[spec(verifies = "spec://…#UPPER-FACT")]` did not compile,
   and this phase was not expressible.
+
+---
+
+## 13. Running two worker accounts in parallel {#parallel}
+
+*Owner, 2026-07-26: two accounts are available; how is the work split so they
+do not collide, and how is the scope computed?*
+
+**The answer is not "split the facts". It is "split the files, and make sure
+every file that will be written already exists before anyone starts."** With
+that done, the merge is trivial by construction rather than by luck.
+
+### 13.1 What actually collides — the short list {#collisions}
+
+Phase T writes **one file per cell** (§6) and nothing else. So there are exactly
+three collision surfaces, and two of them are removable *before* the parallel
+run begins:
+
+| surface | collides? | removal |
+|---|---|---|
+| `src/<cell>/spec_tests*.rs` | only if two workers share a **cell** | partition by cell — §13.2 |
+| the `mod spec_tests;` line in the cell's parent | **yes**, when two cells share one parent | the scaffold pass — §13.3 |
+| `Cargo.toml` dev-dependencies | **yes**, if a test needs a new one | pre-provision before the split |
+
+- ##P-NOT-A-MERGE-PROBLEM Nothing else is shared. Workers do not run `vibe progress`, do not
+  write campaign state, and do not touch each other's crates. **This is not a
+  merge problem; it is a file-ownership problem**, and merging is only where an
+  unsolved ownership problem shows up.
+
+### 13.2 The partition unit is the cell, never the fact {#partition}
+
+- ##P-CELL-IS-THE-UNIT **Group the triage's T-testable facts by the cell whose public surface
+  they constrain, then assign whole cells.** §2's triage already produces that
+  mapping — it is the phase's first output and it is exactly the partition key,
+  so no separate scoping step is needed.
+- ##P-NEVER-SPLIT-A-CELL **Never split a cell across accounts.** One cell is one
+  `spec_tests.rs` with one writer, and a worker that has seen a cell's other
+  facts writes better tests for the next one.
+- ##P-SPANNING-FACTS-BIND-CELLS **A fact spanning two cells binds them into one unit.** Take the
+  connected components (union-find over facts that touch more than one cell) and
+  pack the *components*, not the cells. Otherwise one fact needs two accounts to
+  agree, which is the coordination this design exists to avoid.
+- ##P-BALANCE-BY-TESTS **Balance by estimated tests (≈ 3 × T-testable facts in the
+  component), not by fact count and never by file count** — B1 measured 46 units
+  per file and B2's remainder 28, so file count is a 1.6× lie about cost.
+  Greedy largest-first into two bins is deterministic, so the split is
+  reproducible and reviewable.
+
+### 13.3 The scaffold pass — the step that makes the merge trivial {#scaffold}
+
+**Before either account starts, one single-writer pass creates every file the
+swarm will write and declares it:** an empty `spec_tests.rs` (and
+`spec_tests_io.rs` where the cell needs it) for every in-scope cell, plus the
+`mod` line in each parent, plus any dev-dependency a kind will need.
+
+- ##P-SCAFFOLD-WHY After it, **every parallel write is to a leaf file that already exists
+  and is already declared.** No worker edits a shared file at all, so the two
+  branches touch provably disjoint paths and git merges them without a conflict
+  to resolve. **The scaffold pass is what converts a merge risk into an
+  invariant.**
+- ##P-SCAFFOLD-IS-ALSO-THE-DENOMINATOR It doubles as the denominator (this campaign's most-repeated
+  lesson): the scaffold list is the set of files that **must** be non-empty at
+  the end. Any that is still empty is named. Without it, «both branches merged
+  cleanly» is a count with nothing to compare against.
+
+### 13.4 Isolation, and the branch names {#isolation}
+
+Each account gets its **own branch and its own git worktree**. The worktree
+matters more than the branch: separate `target/` directories mean the two runs
+do not contend on the cargo build lock, which they otherwise would for every
+compile.
+
+- ##P-BRANCH-NAMES **Name the branches for their scope, never for the tool.** The
+  attribution policy forbids model, agent or AI-tool names in **branch names**
+  as plainly as in commit messages. `phase-t/batch-a` and `phase-t/batch-b`,
+  not the vendor.
+- ##P-PACKET-IS-A-PATH-LIST Each packet lists **its cells by path** and states the boundary in the
+  form every task in this campaign has used: *you may write only inside these
+  paths; a file outside them is out of bounds.* That boundary has held across
+  ten tasks.
+
+### 13.5 Verifying the split held {#verify-split}
+
+Mechanical, and run by the reviewer after the merge:
+
+```
+1. Files changed on branch A ∩ files changed on branch B  →  MUST be empty.
+2. (A ∪ B)  ==  the scaffold list                          →  MUST be equal.
+3. Any scaffolded file still empty                         →  named, not counted.
+```
+
+- ##P-VERIFY-IS-THE-POINT Step 1 is the invariant §13.3 bought; if it is ever non-empty the
+  partition was wrong and the merge that «worked» hid it. **Check it even when
+  the merge is clean** — especially then.
+
+### 13.6 The honest ceiling {#ceiling-parallel}
+
+- ##P-NOT-TWO-TIMES **Expect materially less than 2×.** Two accounts double model
+  throughput and share one machine's CPU and disk; seven package workspaces each
+  own a `target/`, and two worktrees double that. The gain is real and it is not
+  the factor the account count suggests.
+- ##P-SCALES-PAST-TWO Nothing here is specific to two. The partition is over components and
+  the scaffold is single-writer, so **N accounts work the same way** — the only
+  change is the bin count. Two is where it should be proven.
