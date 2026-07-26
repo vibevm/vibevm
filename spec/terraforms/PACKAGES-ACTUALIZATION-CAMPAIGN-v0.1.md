@@ -488,6 +488,73 @@ command that would have tested it.
   belongs there, which is a code change because §4 is include-only by design.
   Until it lands, **Phase B's exit gate cannot be reached honestly.**
 
+- **2026-07-26 · the `vibe update` pre-flight — the assumption held, and it
+  broke two things on the way.** `BATCH-PLAN.md` flagged `vibe update` as the
+  one unverified assumption under sixteen batches and asked for it to be
+  exercised once before Phase B leaned on it. It was. **The assumption itself
+  is now verified: `vibe update --all` re-materialises 36 packages cleanly and
+  the re-resolve is correct.** Three consequences and two defects, in that
+  order.
+
+  **It repointed the resolve, which closes `deferrals.md#engine` item 2 for
+  free.** Every lockfile entry moved from
+  `file:///C:/Users/olegc/gits/vibevm/…` — the *second, stale* working copy the
+  deferral names, last commit `c112f6f` — to
+  `file:///C:/Users/olegc/git/v/vibevm/…`, this one, and `source_kind` moved
+  `registry` → `local` on all 36. The deferral had recorded the resolution in
+  advance («repoint the resolve at this copy's `packages/` and bump the
+  lockfile locally… closes the gap with no publication at all») and marked it
+  as work someone would have to do. Nobody had to: `vibe update` is that
+  repoint. **No publication, no re-mint, no owner red line touched.**
+
+  **`core-ai-native` moved 0.7.0 → 0.8.0 at the consumer**, the last mile of
+  the caret fix that closed wave 1's final drift row. The v0.7.0 `vibedeps/`
+  slot was pruned. This retires an ambiguity rather than just a version: v0.7.0
+  is now superseded *at the consumer*, not merely in the source tree, so
+  `progress.toml`'s exclusion of `core-ai-native/v0.7.0/**` describes reality
+  instead of anticipating it. **B1's subject is unchanged** — the live slot was
+  already v0.8.0.
+
+  **F-079 — the shipped JSON Schema is one variant behind the spec and the
+  code, and only an environment change could expose it.**
+  `crates/vibe-cli/resources/package-tree.schema.v1.json` enumerates
+  `source.kind` as `registry · git · override · path · embedded`.
+  `SourceKind::Local` has existed in `vibe-core` and is **normative**:
+  [`##LOCAL-SOURCE-KIND`](../modules/vibe-registry/PROP-030-embedded-registry.md)
+  and `##LOCK-LOCAL` both say a package resolved from project-local records
+  `source_kind = "local"`. The schema never learned it. The golden
+  `tree_json_validates_against_schema_and_carries_known_facts` went red on all
+  36 packages the moment a resolve actually produced one — **the floor caught
+  it, which is the gate working.** It had been latent for as long as this host
+  resolved through the stale copy's embedded registry, because that path emits
+  `embedded`, which the schema does know. Fixed in place: the enum gains
+  `local` and a description distinguishing it from `embedded`. *The lesson is
+  the campaign's own thesis in miniature: a contract document drifted from the
+  code it describes, and no gate could see it until the environment changed.
+  Nothing was wrong with the checker — the checker was never given the input
+  that falsifies.*
+
+  **F-078 — a content-minimal aggregator contributed a boot lane it does not
+  have, and the host now reads four rules twice.** `git-practices` ships three
+  files (`LICENSE`, `README.md`, `vibe.toml`) and its own manifest says
+  «content-minimal (PROP-028): no boot snippet of its own; each member ships
+  theirs». Materialisation nevertheless **wrote**
+  `vibedeps/flow-git-practices/0.1.0/spec/boot/{INDEX,STATIC}.md` — 192
+  generated lines compiling the umbrella's four members — and the host then
+  inlined that generated file into `spec/boot/STATIC.md` as a contribution
+  *from `git-practices`*, on top of the four members it had already compiled
+  directly from the BFS closure. `STATIC.md` grew **+194 / −0** and each of
+  atomic-commits, attribution-policy, autonomy and conventional-commits now
+  appears **twice**. Source clean and `.vibe/cache` copy clean were both
+  checked, so cache poisoning is ruled out by elimination: vibe generated it
+  during the run. Filed as **DRIFT-029**; the boundary that makes it tractable
+  is that the one other slot with a generated `INDEX.md`
+  (`delegation-rules`) ships it **from source**, so the fix must separate
+  *generated here* from *shipped by the package* rather than keying on the
+  file's presence. **Does not block Phase B**: the duplicated text is
+  identical, so it costs boot tokens and states no contradiction, and
+  `spec/boot/**` is outside the observed corpus by design.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
