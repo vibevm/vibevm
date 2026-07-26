@@ -11,7 +11,7 @@
 # The neutral engines: authored in flow:org.vibevm.ai-native/core-ai-native,
 # vendored into each language stack.
 [[sync]]
-source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates"
+source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -30,7 +30,7 @@ targets = [
 
 # The neutral engines + the MCP transport, into the rust mcp package.
 [[sync]]
-source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates"
+source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -57,7 +57,7 @@ targets = ["packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates"]
 
 # The neutral engines + the MCP transport, into the typescript mcp package.
 [[sync]]
-source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates"
+source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",

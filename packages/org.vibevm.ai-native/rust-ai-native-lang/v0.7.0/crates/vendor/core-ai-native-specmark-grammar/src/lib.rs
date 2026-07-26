@@ -114,6 +114,36 @@ pub fn is_valid_anchor(anchor: &str) -> bool {
     })
 }
 
+/// Validate a fact-anchor id: `[A-Za-z][A-Za-z0-9_-]*` (PROP-014 §2.1).
+///
+/// A fact anchor — a `##<ID>` written as the first token of a paragraph or
+/// list item — carries a wider grammar than a kebab heading anchor: an
+/// ASCII-alphabetic first character, then ASCII alphanumerics, `-`, or `_`.
+/// Both id registers validate here — `UPPER-SLUG` names a normative fact,
+/// `kebab-case` a service one — the register is convention, not enforced.
+/// The kebab-only [`is_valid_anchor`] law for heading anchors is untouched;
+/// the wider grammar applies to `##` ids only.
+///
+/// ```
+/// use core_ai_native_specmark_grammar::{is_valid_anchor, is_valid_fact_id};
+/// assert!(is_valid_fact_id("FACT-A")); // normative UPPER-SLUG register
+/// assert!(is_valid_fact_id("my-fact")); // service kebab-case register
+/// assert!(is_valid_fact_id("R_040")); // underscores and digits allowed
+/// assert!(!is_valid_fact_id("9lives")); // must start with a letter
+/// assert!(!is_valid_fact_id("has space"));
+/// assert!(!is_valid_fact_id(""));
+/// // A fact id is a strict superset — an UPPER-SLUG is no heading anchor.
+/// assert!(!is_valid_anchor("FACT-A"));
+/// ```
+pub fn is_valid_fact_id(id: &str) -> bool {
+    let mut chars = id.chars();
+    match chars.next() {
+        Some(c) if c.is_ascii_alphabetic() => {}
+        _ => return false,
+    }
+    chars.all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+}
+
 /// Parse and validate a `spec://` URI string.
 ///
 /// ```

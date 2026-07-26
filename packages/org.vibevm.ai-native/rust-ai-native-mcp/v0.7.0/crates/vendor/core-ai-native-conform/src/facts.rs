@@ -116,6 +116,22 @@ pub enum Fact {
         in_test: bool,
         reason: Option<String>,
     },
+    /// A Go ban-census occurrence (GUIDE-AI-NATIVE-GO §2, §5, §7),
+    /// produced by the `go-extract` frontend: `kind` is one of
+    /// `init_decl` / `blank_import` / `ambient_call` / `naked_go` /
+    /// `error_string_match` / `t_skip` / `reasonless_suppression` /
+    /// `seam_error_missing_req`. `reason` carries the text of a
+    /// reasoned `//spec:deviates … reason="…"` covering the site (the
+    /// Go shape of deviation testimony, honoured by
+    /// `go-unsafe-in-domain` instead of flagged) or a suppression
+    /// directive's own reason. `in_test` marks `_test.go` files —
+    /// file-grain, because Go test scoping is a file convention.
+    GoUnsafe {
+        kind: String,
+        line: u32,
+        in_test: bool,
+        reason: Option<String>,
+    },
 }
 
 /// Facts of one source file, with its repo-relative path.

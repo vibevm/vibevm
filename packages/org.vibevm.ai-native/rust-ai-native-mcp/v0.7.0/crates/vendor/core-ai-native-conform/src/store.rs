@@ -69,6 +69,17 @@ impl Store {
         }
     }
 
+    /// The Go-scan view of the same store: scan roots and exclusions
+    /// come from the `[go]` policy table; the cache directory is shared
+    /// (slots are keyed by frontend id+version).
+    pub fn for_go(repo: &Path, config: &Config) -> Store {
+        Store {
+            root: repo.join("target").join("conform").join("facts"),
+            roots: config.go.roots.clone(),
+            exclude: config.go.exclude_substrings.clone(),
+        }
+    }
+
     fn slot(&self, frontend: &dyn Frontend, content_hash: &str) -> PathBuf {
         self.root
             .join(format!("{}-{}", frontend.id(), frontend.version()))
@@ -98,6 +109,19 @@ impl Store {
         log: &mut ExtractionLog,
     ) -> Result<Vec<SourceFacts>> {
         let sources = typescript_sources(repo, &self.roots, &self.exclude);
+        self.extract_sources(sources, frontend, log)
+    }
+
+    /// Extract facts for every Go source under the configured roots
+    /// (flat walk: `.go`, with `vendor`/`testdata`-style trees skipped).
+    /// Same cache, same log.
+    pub fn extract_go(
+        &self,
+        repo: &Path,
+        frontend: &dyn Frontend,
+        log: &mut ExtractionLog,
+    ) -> Result<Vec<SourceFacts>> {
+        let sources = go_sources(repo, &self.roots, &self.exclude);
         self.extract_sources(sources, frontend, log)
     }
 
@@ -326,6 +350,88 @@ fn typescript_sources(
                     .is_some_and(|e| TS_EXTENSIONS.contains(&e))
                 && !path.to_string_lossy().ends_with(".d.ts");
             if !is_ts {
+                continue;
+            }
+            let file = path
+                .strip_prefix(repo)
+                .unwrap_or(path)
+                .to_string_lossy()
+                .replace('\\', "/");
+            if exclude.iter().any(|s| file.contains(s.as_str())) {
+                continue;
+            }
+            out.push((file.clone(), root_name.clone(), file, path.to_path_buf()));
+        }
+    }
+    out
+}
+
+/// Directory names the Go walk never descends into — vendored trees,
+/// goldens/fixtures, and build output, mirroring go-extract's own skip
+/// list.
+const GO_SKIP_DIRS: &[&str] = &[
+    "vendor",
+    "testdata",
+    "node_modules",
+    ".git",
+    "vibedeps",
+    "target",
+];
+
+/// Enumerate Go sources as `(repo-rel file, root name, module,
+/// absolute path)`. Like the TypeScript walk there is no crate
+/// topology: each configured root is walked whole, the "crate" is the
+/// root's directory name, and the module is the repo-relative path
+/// itself (the extractor reports package facts per file). `_test.go`
+/// files ARE walked — the extractor stamps them `in_test` and the
+/// census rules scope by it.
+fn go_sources(
+    repo: &Path,
+    roots: &[String],
+    exclude: &[String],
+) -> Vec<(String, String, String, PathBuf)> {
+    let mut root_dirs: Vec<PathBuf> = Vec::new();
+    for root in roots {
+        if let Some(parent) = root.strip_suffix("/*") {
+            if let Ok(rd) = std::fs::read_dir(repo.join(parent)) {
+                for entry in rd.filter_map(Result::ok) {
+                    if entry.path().is_dir() {
+                        root_dirs.push(entry.path());
+                    }
+                }
+            }
+        } else {
+            let dir = repo.join(root);
+            if dir.is_dir() {
+                root_dirs.push(dir);
+            }
+        }
+    }
+    root_dirs.sort();
+    root_dirs.dedup();
+
+    let mut out = Vec::new();
+    for root_dir in root_dirs {
+        let root_name = crate_dir_name(&root_dir).unwrap_or_default();
+        for entry in walkdir::WalkDir::new(&root_dir)
+            .sort_by_file_name()
+            .into_iter()
+            .filter_entry(|e| {
+                // depth 0 is the scan root itself — a literal `.` root
+                // must not be eaten by the hidden-dir filter below.
+                e.depth() == 0
+                    || !e.file_type().is_dir()
+                    || e.file_name()
+                        .to_str()
+                        .map(|n| !GO_SKIP_DIRS.contains(&n) && !n.starts_with('.'))
+                        .unwrap_or(true)
+            })
+            .filter_map(Result::ok)
+        {
+            let path = entry.path();
+            let is_go = entry.file_type().is_file()
+                && path.extension().and_then(|e| e.to_str()) == Some("go");
+            if !is_go {
                 continue;
             }
             let file = path

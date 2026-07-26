@@ -12,7 +12,7 @@ whole family at one exact-pinned version set:
 - `flow:org.vibevm.ai-native/core-ai-native` — the language-neutral discipline core,
   arriving transitively through the stack.
 
-Require `stack:org.vibevm.ai-native/rust-ai-native` (`^0.6`) to get the whole family;
+Require `stack:org.vibevm.ai-native/rust-ai-native` (`^0.7`) to get the whole family;
 require `rust-ai-native-lang` alone if you want the stack without the MCP
 server. The consumer front door — wiring, floor, sweep — is documented in
 the `-lang` package's README and `spec/rust/GUIDE-AI-NATIVE-RUST.md`.

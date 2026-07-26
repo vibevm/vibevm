@@ -66,6 +66,10 @@ pub struct Config {
     /// `typescript-ai-native-conform` (the `ts-tsc` frontend). Absent for
     /// Rust-only projects; the Rust rules never read it.
     pub typescript: TsConfig,
+    /// The Go half of the policy (`[go]`), consumed by
+    /// `go-ai-native-conform` (the `go-extract` frontend). Absent for
+    /// projects without Go; no other rules read it.
+    pub go: GoConfig,
 }
 
 impl Default for Config {
@@ -82,6 +86,58 @@ impl Default for Config {
             max_file_lines: 600,
             exempt: Vec::new(),
             typescript: TsConfig::default(),
+            go: GoConfig::default(),
+        }
+    }
+}
+
+/// The `[go]` policy table (GUIDE-AI-NATIVE-GO §2, §6, §7).
+///
+/// ```
+/// let cfg: core_ai_native_conform::Config = toml::from_str(
+///     "[go]\nroots = [\".\"]\ncells_dir = \"internal/cells\"\n",
+/// )
+/// .unwrap();
+/// assert_eq!(cfg.go.roots, vec![".".to_string()]);
+/// assert_eq!(cfg.go.cells_dir.as_deref(), Some("internal/cells"));
+/// ```
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct GoConfig {
+    /// Go source roots (flat walk; `<dir>/*` scans subdirs).
+    pub roots: Vec<String>,
+    /// A `.go` file whose repo-relative path contains any of these
+    /// substrings is skipped (fixtures, goldens, vendored trees).
+    pub exclude_substrings: Vec<String>,
+    /// The directory whose immediate subdirectories are cells
+    /// (`go-cell-isolation`); `None` disables the isolation rule.
+    /// Unlike the TS shape there is no seam module INSIDE a cell:
+    /// Go cells never import siblings at all — seams live in
+    /// `seams_pkg` and the registry is the only cell importer
+    /// (GUIDE-AI-NATIVE-GO §2).
+    pub cells_dir: Option<String>,
+    /// The seams package path (repo-relative) — for the oracle's
+    /// `scope` answers and the init generator; carries no rule.
+    pub seams_pkg: Option<String>,
+    /// The registry package path (repo-relative) — the one legal cell
+    /// importer and flag reader, for init/codemod; carries no rule
+    /// (files outside `cells_dir` are already free to import cells).
+    pub registry_pkg: Option<String>,
+    /// Floor steps this project explicitly disables, each with a
+    /// recorded reason — printed on every run, same posture as the
+    /// TypeScript table.
+    pub floor_disable: Vec<FloorDisable>,
+}
+
+impl Default for GoConfig {
+    fn default() -> Self {
+        GoConfig {
+            roots: vec![".".into()],
+            exclude_substrings: vec!["/testdata/".into(), "/vendor/".into()],
+            cells_dir: None,
+            seams_pkg: None,
+            registry_pkg: None,
+            floor_disable: Vec::new(),
         }
     }
 }
