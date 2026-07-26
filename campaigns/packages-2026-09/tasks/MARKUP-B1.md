@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Thirty-two rulings now, of which two are struck (18, 19).** They accumulate in
+**Thirty-three rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -294,6 +294,30 @@ justification in its own report that did not survive being checked.
     reading of ruling 20's verdict test would split these; it does not win
     here** — the card format defines the field as the unit, and a format's own
     grain beats a general test.
+
+### Added by the B7 pass (2026-07-27) {#locked-b7}
+
+33. **A wrapped line whose first token is a bullet character gets re-wrapped.**
+    When prose contains `-`, `+` or `*` as a word and an author's line wrap puts
+    it at the start of a continuation line, markdown reads it as a list marker:
+    the character **vanishes from the rendered text** and one unit becomes two.
+    **Move one word across the newline so it sits mid-line.** No text byte
+    changes — only which side of a newline a word is on.
+    *This codifies what two batches had already done without a rule.* B5 made
+    exactly this repair to «the surface is the four queries **+** lifecycle» in
+    the go package and recorded it in its landing commit; B7 met the same
+    sentence in rust and repaired it the same way. Ruling 30 is the same
+    rationale through a different mechanism — there a blank line was missing,
+    here a word is on the wrong line — and both are the parser mis-reading
+    layout as structure.
+    **The alternative is worse and is why this is a repair, not an edit:**
+    marking both fragments puts a marker mid-sentence and mints a `spec://`
+    address for a phrase that is not a fact.
+    ⚠️ **The batch checker cannot see this.** `cargo xtask batch-review` drops
+    standalone bullet characters from its word stream — a blind spot declared
+    at the function, because reflow is legal and a position-sensitive rule
+    would red-light every legal one. So a ruling-33 repair passes C3 silently
+    and **must be reported by the executor and read by the reviewer**.
 
 ## Boundaries {#boundaries}
 

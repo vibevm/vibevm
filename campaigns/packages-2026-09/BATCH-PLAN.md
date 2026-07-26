@@ -63,7 +63,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B1–B2~~ | `core-ai-native` (live slot) — **DONE**, 943 units | 16 | — |
 | ~~B5~~ | `go-ai-native-lang` — **DONE**, 665 units | 19 | 411 |
 | ~~B6~~ | `typescript-ai-native-lang` — **DONE**, 581 units (×1.72) | 18 | 338 |
-| B7 | `rust-ai-native-lang` | 18 | 312 |
+| ~~B7~~ | `rust-ai-native-lang` — **DONE**, 546 units (×1.75) | 18 | 312 |
 | B8 | `discovery-prompt` + `decision-records` | 9 | 455 |
 | B9 | `spec-genres` + `wal` + `addressable-specs` | 17 | 578 |
 | B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | 16 | 488 |
