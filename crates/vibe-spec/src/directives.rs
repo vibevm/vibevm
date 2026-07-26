@@ -247,7 +247,8 @@ mod tests {
 
     #[test]
     fn bad_address_is_reported() {
-        let d = Directives::parse("#use spec://vibevm/a/b#Bad\n");
+        // A digit-headed anchor: `#Bad` is a legal fact id and no longer serves.
+        let d = Directives::parse("#use spec://vibevm/a/b#9lives\n");
         assert!(d.directives.is_empty());
         assert_eq!(d.errors.len(), 1);
         assert!(d.errors[0].message.contains("bad address"));

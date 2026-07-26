@@ -79,7 +79,7 @@ pub enum SpecAddressError {
     EmptyPathSegment,
     #[error("spec:// address has a `#` but an empty anchor")]
     EmptyAnchor,
-    #[error("invalid anchor segment `{0}` (expected kebab-case `[a-z0-9]+(-[a-z0-9]+)*`)")]
+    #[error("invalid anchor segment `{0}` (expected an id `[A-Za-z][A-Za-z0-9_-]*`)")]
     InvalidAnchorSegment(String),
     #[error("invalid revision pin `{0}` (expected `~rN` with N ≥ 1)")]
     InvalidRevision(String),
@@ -229,19 +229,25 @@ fn parse_revision(rev: &str) -> Result<u32, SpecAddressError> {
     if n == 0 { Err(bad()) } else { Ok(n) }
 }
 
-/// One anchor tree-path segment: kebab-case `[a-z0-9]+(-[a-z0-9]+)*`. Applied
+/// One anchor tree-path segment: an id `[A-Za-z][A-Za-z0-9_-]*`. Applied
 /// per-segment so a flat `spec://pkg/doc#flat-anchor` validates exactly as the
-/// vendored `is_valid_anchor` does.
+/// vendored `is_valid_fact_id` does — and `.`, the one character the id
+/// grammar excludes, is exactly what separates the segments.
+///
+/// A document's headings and its `##<ID>` facts share one address space
+/// (PROP-014 §2.1), so an address must name either: `#SOME-NORMATIVE-FACT` as
+/// readily as `#a-heading`. The kebab-only law still governs where a *heading*
+/// anchor is minted; it is not this parser's business. Mirrored, not shared,
+/// across the separability seam (PROP-035 §4) — the twin is
+/// `core-ai-native-specmark-grammar::is_valid_fact_id`, and the convention is
+/// held by tests on both sides.
 fn is_valid_anchor_segment(seg: &str) -> bool {
-    if seg.is_empty() {
-        return false;
+    let mut chars = seg.chars();
+    match chars.next() {
+        Some(c) if c.is_ascii_alphabetic() => {}
+        _ => return false,
     }
-    seg.split('-').all(|part| {
-        !part.is_empty()
-            && part
-                .chars()
-                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit())
-    })
+    chars.all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
 }
 
 #[cfg(test)]
@@ -363,15 +369,83 @@ mod tests {
 
     #[test]
     fn rejects_bad_anchor_segment() {
+        // A non-letter head — the id grammar's one shape rule.
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#Bad"),
-            Err(SpecAddressError::InvalidAnchorSegment("Bad".into()))
+            SpecAddress::parse("spec://vibevm/x/y#9lives"),
+            Err(SpecAddressError::InvalidAnchorSegment("9lives".into()))
+        );
+        assert_eq!(
+            SpecAddress::parse("spec://vibevm/x/y#_lead"),
+            Err(SpecAddressError::InvalidAnchorSegment("_lead".into()))
+        );
+        // A character outside the id charset.
+        assert_eq!(
+            SpecAddress::parse("spec://vibevm/x/y#has!bang"),
+            Err(SpecAddressError::InvalidAnchorSegment("has!bang".into()))
         );
         // An empty segment between dots.
         assert_eq!(
             SpecAddress::parse("spec://vibevm/x/y#a..b"),
             Err(SpecAddressError::InvalidAnchorSegment(String::new()))
         );
+    }
+
+    /// An `UPPER-SLUG` names a normative fact and a `kebab-case` one a service
+    /// unit; both live in the document's one address space, so an address must
+    /// carry either. `#Bad` moved here from the rejection set above — the
+    /// owner ruled the behaviour changes.
+    #[test]
+    fn anchor_segments_carry_both_id_registers() {
+        let a = SpecAddress::parse("spec://vibevm/x/y#Bad").unwrap();
+        assert_eq!(a.anchor, vec!["Bad"]);
+
+        let f = SpecAddress::parse(
+            "spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#SINGLE-DESIGN-TARGET",
+        )
+        .unwrap();
+        assert_eq!(f.anchor, vec!["SINGLE-DESIGN-TARGET"]);
+
+        // Underscores, digits, a revision pin, and a tree path all compose.
+        let p = SpecAddress::parse("spec://vibevm/x/y#R_040.sub-a~r2").unwrap();
+        assert_eq!(p.anchor, vec!["R_040", "sub-a"]);
+        assert_eq!(p.pinned_r, Some(2));
+        assert_eq!(p.without_pin(), "spec://vibevm/x/y#R_040.sub-a");
+    }
+
+    /// The seam convention (PROP-035 §4): `vibe-spec` shares no code with
+    /// `core-ai-native-specmark-grammar`, so the two must be held to one input
+    /// set by tests on both sides. This is the host half — the same strings
+    /// the package's `parse_spec_uri` tests assert, with the same verdicts.
+    #[test]
+    fn host_twin_agrees_with_the_package_grammar_on_anchor_ids() {
+        // Accepted by `is_valid_fact_id`, so accepted here.
+        for ok in [
+            "FACT-A",
+            "my-fact",
+            "R_040",
+            "a",
+            "Z9",
+            "x-y_z-1",
+            "A-b",
+            "req-conditional-fixpoint",
+            "SINGLE-DESIGN-TARGET",
+        ] {
+            let raw = format!("spec://vibevm/x/y#{ok}");
+            assert!(
+                SpecAddress::parse(&raw).is_ok(),
+                "package grammar accepts `{ok}`; host must too"
+            );
+        }
+        // Rejected by `is_valid_fact_id`, so rejected here. `a.b` is absent on
+        // purpose: `.` descends the tree path here, and each side splits before
+        // it validates.
+        for bad in ["", "9lives", "-lead", "_lead", "has space", "a!", "café"] {
+            let raw = format!("spec://vibevm/x/y#{bad}");
+            assert!(
+                SpecAddress::parse(&raw).is_err(),
+                "package grammar rejects `{bad}`; host must too"
+            );
+        }
     }
 
     #[test]
