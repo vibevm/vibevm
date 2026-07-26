@@ -2,6 +2,8 @@
 
 | id | title | executor | status |
 |---|---|---|---|
+| DRIFT-035 | the boot lane carries each statically-linked package once | opus | queued (F-078 c, measure first) |
+| DRIFT-034 | an anchor may be written any way, and a collision is caught | opus | queued — **after DRIFT-032**, same file |
 | DRIFT-033 | campaign state stops being believed on its own word | opus | queued (F-075 d + F-077 a) |
 | DRIFT-032 | a `spec://` URI can address a normative fact | opus | in progress (F-085 a) — **release event** |
 | DRIFT-031 | the parser stops swallowing two units it can already see | opus | **done** — F-083 + F-084, floor green |
