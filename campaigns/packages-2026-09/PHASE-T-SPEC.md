@@ -505,7 +505,30 @@ swarm will write and declares it:** an empty `spec_tests.rs` (and
   the end. Any that is still empty is named. Without it, «both branches merged
   cleanly» is a count with nothing to compare against.
 
-### 13.4 Isolation, and the branch names {#isolation}
+### 13.4 The prompts are the only channel {#no-coordination}
+
+**Two parallel worker accounts know nothing about each other** — native
+sub-agent orchestration works only *inside* one account, so there is no
+coordinator spanning them and no runtime channel between them.
+
+- ##P-STATIC-OR-NOTHING **The split is static or it does not exist.** Neither can ask which
+  cells are its own, so the answer is a literal path list in its prompt,
+  computed by the boss before either starts.
+- ##P-SCAFFOLD-IS-THE-ONLY-SYNC **The scaffold commit is the one synchronisation point**, and it
+  happens *before* parallelism. Both prompts name the same starting sha. That
+  is why the scaffold cannot be one of the two workers — the other would have
+  to wait for it, and waiting needs a channel neither has.
+- ##P-NEITHER-MERGES **Neither agent merges.** Each commits on its branch and stops. Not
+  because merging disjoint files is hard, but because §13.5's check **requires
+  seeing both branches**, and an agent that merges its own can only see one
+  side. Handing the verification to someone structurally unable to perform it
+  discards the design and keeps the ceremony.
+
+The ready-to-fill prompt, with the worktree recipe and the Windows
+`core.longpaths` gotcha that would otherwise cost an hour:
+[`PHASE-T-WORKER-PROMPT.md`](PHASE-T-WORKER-PROMPT.md).
+
+### 13.5 Isolation, and the branch names {#isolation}
 
 Each account gets its **own branch and its own git worktree**. The worktree
 matters more than the branch: separate `target/` directories mean the two runs
@@ -521,7 +544,7 @@ compile.
   paths; a file outside them is out of bounds.* That boundary has held across
   ten tasks.
 
-### 13.5 Verifying the split held {#verify-split}
+### 13.6 Verifying the split held {#verify-split}
 
 Mechanical, and run by the reviewer after the merge:
 
@@ -535,7 +558,7 @@ Mechanical, and run by the reviewer after the merge:
   partition was wrong and the merge that «worked» hid it. **Check it even when
   the merge is clean** — especially then.
 
-### 13.6 The honest ceiling {#ceiling-parallel}
+### 13.7 The honest ceiling {#ceiling-parallel}
 
 - ##P-NOT-TWO-TIMES **Expect materially less than 2×.** Two accounts double model
   throughput and share one machine's CPU and disk; seven package workspaces each
