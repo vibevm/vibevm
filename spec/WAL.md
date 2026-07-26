@@ -6,12 +6,16 @@ ruling, and wave 2's plan reviewed for ratification)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — wave 1 CLOSED OUT.** The spec tree
-measures **4 488 confirmed / 1 drift / 3 unverifiable of 4 492 = 99.9 %**.
-Findings **61 of 67 resolved**. The single remaining drift row
-(`FACT-GRAIN-EVIDENCE`) cannot close here: it waits on
-`rust-ai-native-lang` v0.8.0 re-vendoring the fact-aware specmap engine,
-which is wave 2's Phase A2.
+**Progress Control (PROP-043) — wave 1 CLOSED OUT, and the ledger is at
+ZERO DRIFT.** The spec tree measures **4 491 confirmed / 0 drift / 3
+unverifiable of 4 494 = 99.93 %**. Findings **61 of 69**.
+`FACT-GRAIN-EVIDENCE` — the row wave 1 closed out believing no work in this
+repository could touch — **closed on 2026-07-26**, and not the way the plan
+expected. It needed no re-mint and no publication: all three `-lang` stacks
+required `core-ai-native ^0.7` while the current version is 0.8.0, and on a
+0.x version that caret excludes 0.8.0. The long-lead item was a caret.
+*(An earlier line here read 4 488 / 4 492 — stale by the two anchors sealed
+in `812bfecc`. Recounted from the cache.)*
 
 **The task queue is empty.** DRIFT-020, 022 and 023 all landed and were
 reviewed diff-by-diff. `bash tools/self-check.sh` exits 0 against the real

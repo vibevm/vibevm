@@ -31,6 +31,10 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 #   vibe-graph, vibe-llm  — M0 stub crates, no code yet
 #   vibe-wire             — generated code; the JTD schema is the taggable unit
 #   xtask                 — internal tooling binary (panics ok at the dev console)
+#   vibe-test-support     — test-only, consumed solely as a dev-dependency and
+#                           shipped in no binary (DRIFT-020); it has no product
+#                           surface for a spec URI to point at. Same reason it
+#                           is exempt in conform.toml, kept in step with it.
 # (core-ai-native-specmark + core-ai-native-specmark-grammar relocated into
 #  flow:org.vibevm.ai-native/core-ai-native in the traceability + engine-consolidation
 #  moves, so they are no longer vibevm crates to exempt here; the packages
@@ -38,6 +42,7 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 exempt = [
     "vibe-graph",
     "vibe-llm",
+    "vibe-test-support",
     "vibe-wire",
     "xtask",
 ]
