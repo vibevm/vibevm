@@ -528,7 +528,42 @@ The ready-to-fill prompt, with the worktree recipe and the Windows
 `core.longpaths` gotcha that would otherwise cost an hour:
 [`PHASE-T-WORKER-PROMPT.md`](PHASE-T-WORKER-PROMPT.md).
 
-### 13.5 Isolation, and the branch names {#isolation}
+### 13.5 Cargo is off the parallel path entirely {#cargo}
+
+The obvious objection: cargo takes an **exclusive lock on `target/`**, so ten
+sub-agents in one worktree do not build in parallel — they queue, and the
+parallelism evaporates. **The objection is right, and the answer is not to
+tolerate the queue but to remove cargo from the parallel path.**
+
+- ##P-AUTHORING-IS-BUILD-FREE **Authoring is build-free by construction, and §3 already said so.**
+  The routine forbids running anything before the expected value is written —
+  the fact's text is the oracle, so a test is *written* from a signature and a
+  sentence. Running is only confirmation. **The sub-agents therefore write text
+  and never invoke cargo once.**
+- ##P-LEAD-RUNS-WAVE-BUILDS **The lead runs one wave build for all ten**
+  (`cargo test --workspace --no-run`), routes each compile error back by path,
+  and repeats until it compiles.
+- ##P-BATCHED-RED-EXHIBIT **The red exhibits batch too.** Perturb one literal in **every** file
+  at once, run once, confirm exactly those failed, restore all, run again. Every
+  file still gets its exhibit; the check is not weakened. **Two builds for the
+  wave instead of two per test.**
+- ##P-THE-ARITHMETIC The scale of it: a wave of ten sub-agents × five tests is **150 cargo
+  invocations** under the naive design and **three** under this one. The
+  serialised resource is touched O(waves), not O(tests).
+- ##P-ACCOUNTS-NEVER-CONTENDED **The two accounts never contended in the first place** — `target/` is
+  relative to the worktree root, so separate worktrees already have separate
+  build directories. The contention was only ever *within* an account, and it is
+  now gone from there too.
+
+The cost is honest and small: a sub-agent learns its test compiles at wave end
+rather than in seconds. Its packet carries the exact signatures and type names,
+so a compile error means **the packet was thin** — which is worth reporting,
+not worth a feedback loop to paper over.
+
+*This section exists because an earlier draft said «warm the build once before
+dispatching», which papered over the problem instead of removing it.*
+
+### 13.6 Isolation, and the branch names {#isolation}
 
 Each account gets its **own branch and its own git worktree**. The worktree
 matters more than the branch: separate `target/` directories mean the two runs
@@ -544,7 +579,7 @@ compile.
   paths; a file outside them is out of bounds.* That boundary has held across
   ten tasks.
 
-### 13.6 Verifying the split held {#verify-split}
+### 13.7 Verifying the split held {#verify-split}
 
 Mechanical, and run by the reviewer after the merge:
 
@@ -567,7 +602,7 @@ procedure with commands is
   partition was wrong and the merge that «worked» hid it. **Check it even when
   the merge is clean** — especially then.
 
-### 13.7 The honest ceiling {#ceiling-parallel}
+### 13.8 The honest ceiling {#ceiling-parallel}
 
 - ##P-NOT-TWO-TIMES **Expect materially less than 2×.** Two accounts double model
   throughput and share one machine's CPU and disk; seven package workspaces each

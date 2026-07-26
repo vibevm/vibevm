@@ -97,10 +97,10 @@ the result to one account. Nothing else in it varies between the two.*
 > `boundary_…`, `negative_…` (`property_…` where a fact names no failure). Two
 > honest kinds and a stated reason beat three where one is invented.
 >
-> **Per file, exhibit one test red.** After it passes, change its expected
-> literal to a wrong value, confirm it fails, restore it, and paste both outputs
-> in your report. A file with no red exhibit is not accepted. This is not
-> mutation coverage — it is the check that the test runs at all.
+> **Per file, one test is exhibited red — but YOU do that in a batch (below),
+> not the sub-agents one test at a time.** A file with no red exhibit is not
+> accepted. This is not mutation coverage; it is the check that the test runs
+> at all.
 >
 > **Tier every test as you write it**, never afterwards: `#[ignore]` marks the
 > slow tier (needs an external tool, a network, or real sample counts); a test
@@ -113,11 +113,11 @@ the result to one account. Nothing else in it varies between the two.*
 > or an AI tool anywhere** — not in a commit message, not in a comment, not in a
 > test name. That is a hard repository rule.
 >
-> **Verify before you report:**
+> **Verify before you report — you, once, not them:**
 >
 > ```bash
 > cargo fmt --all
-> cargo test --workspace          # your new tests green
+> cargo test --workspace          # the wave green after restoration
 > ```
 >
 > **Run this with ten of your own sub-agents, and orchestrate them yourself.**
@@ -128,18 +128,30 @@ the result to one account. Nothing else in it varies between the two.*
 >    produced it: group by cell, never split a cell, and keep cells that share
 >    a fact together. Balance by estimated tests (≈ 3 × testable facts), not by
 >    file count. **Keep the ten sub-lists** — you need them to verify.
-> 2. **Warm the build once before dispatching:** `cargo test --workspace --no-run`.
->    Otherwise all ten queue behind one cold compile.
+> 2. **Your sub-agents NEVER run cargo. Not once.** Ten agents share one
+>    `target/`, and cargo takes an exclusive lock on it — ten concurrent builds
+>    do not run in parallel, they queue, and the parallelism you were given
+>    evaporates. **They write text; you run the builds.** This costs nothing,
+>    because the routine already forbids running before the expected value is
+>    written (§3): authoring is build-free by construction, and running is only
+>    confirmation.
 > 3. **Dispatch ten sub-agents**, each with its own literal path list and the
->    same routine. Give each the identical boundary: *write only these files.*
-> 4. **Each sub-agent runs only its own tests** — `cargo test <its_name_prefix>`
->    — **never `cargo test --workspace`.** Ten agents in one worktree share one
->    `target/`, and a whole-workspace run would show it another agent's
->    deliberate red from step 7 of the routine and read it as its own failure.
-> 5. **When perturbing an expected literal (routine step 7), change the VALUE
->    and never the TYPE** — `3` → `4`, not `3` → `"x"`. A wrong value still
->    compiles, so the red stays inside that one test; a wrong type breaks the
->    crate and every other sub-agent with it.
+>    same routine, and each told explicitly: *write the files, run nothing,
+>    report what you wrote.* Give each the identical boundary: *write only
+>    these files.*
+> 4. **You run ONE wave build when they are all back:**
+>    `cargo test --workspace --no-run` compiles everything at once. Route each
+>    compile error back to the sub-agent that owns that file, by path. Repeat
+>    until it compiles. Because their packets carry exact signatures and type
+>    names, errors here should be rare — an error means the packet was thin,
+>    and that is worth reporting.
+> 5. **Then ONE batched red exhibit for the whole wave.** Perturb one expected
+>    literal in **every** file at once, run the suite once, and confirm that
+>    exactly the perturbed tests failed. Restore all of them, run once more,
+>    confirm green. **Every file still gets its exhibit and the check is not
+>    weakened** — it costs two builds for the wave instead of two per test.
+>    **Perturb the VALUE, never the TYPE** — `3` → `4`, not `3` → `"x"` — so
+>    each failure stays inside its own test instead of breaking the crate.
 > 6. **Verify at your level before you commit**, exactly as your own prompt is
 >    verified above: no file touched by two sub-agents, and each sub-agent
 >    inside its own sub-list. A file outside every sub-list is a violation even
