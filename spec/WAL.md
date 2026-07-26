@@ -104,6 +104,14 @@ Phase T also has a worker prompt and an operator runbook.
   (`vibe progress seal`), or it is wrong in a direction nothing checks (F-076).
 - **Commit delegated work on the completion notification**, never on a
   filled-in task journal — executors write §9 as they go.
+- **Never `git add -A` (or `git add .`) while an executor is running.** A
+  reviewer's own bookkeeping commit swept 13 files of an in-flight batch's
+  partial markup into itself on 2026-07-26, which is exactly what the task
+  briefs' "do not stage, do not commit" rule exists to prevent — the rule binds
+  the reviewer's *command*, not only the worker's intent. Stage explicit paths;
+  read `git status --short` before every commit while a batch is out. The
+  recovery is `git reset --mixed HEAD~1` (unpushed only; the working tree is
+  untouched, so the running worker never notices).
 - **Outstanding manual runs (owner sign-off pending):** MT-02
   (`vibe tree` TUI) and MT-03 (`vibe prefs ui`). An agent may pre-run;
   only a person signs off.
