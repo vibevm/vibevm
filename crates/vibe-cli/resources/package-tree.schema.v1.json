@@ -66,7 +66,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "kind": { "enum": ["registry", "git", "override", "path", "embedded"] },
+        "kind": { "enum": ["registry", "git", "override", "path", "embedded", "local"], "description": "Which resolution path produced the entry. embedded = the in-tree packages/ of a source-installed vibe (PROP-030 §2); local = the project's own packages/ (PROP-030 §3.3) — per-project and portable, so unlike embedded it does not trip the reproducibility guard" },
         "url": { "type": ["string", "null"] },
         "ref": { "type": ["string", "null"] },
         "commit": { "type": ["string", "null"] }
