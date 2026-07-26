@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Thirty-eight rulings now, of which two are struck (18, 19).** They accumulate in
+**Forty-one rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -363,6 +363,34 @@ justification in its own report that did not survive being checked.
     package files: every file under `spec/` that is not a boot snippet or a
     `SKILL.md` carries `spec/done`, and the language stacks' `spec/*/tools/*.md`
     are the same genre. Ruling 8's «absent everywhere but a README» holds.
+
+### Added by the B9 pass (2026-07-27) {#locked-b9}
+
+39. **Ruling 35 is applied literally, and it beats ruling 34 where they
+    collide.** B9 met the same three facts twice inside one package — «rots
+    **three ways**: A, B, C» in a README and «rots: A, B, C» in a boot snippet.
+    Ruling 35's test splits the first (the lead names a set) and keeps the
+    second (it does not), which is exactly the cross-file grain divergence
+    ruling 35's own control argument was written to avoid. **Apply 35 anyway.**
+    Ruling 34 already accepts that grain can differ on syntax alone, and a test
+    that bends when its own output looks uneven is not a test. *(4 units in the
+    README, 1 in the snippet.)*
+40. **A bare connector colon is not a unit; a lead-in with content is.** A
+    trailing lead of ≤3 words carrying no independent claim — «Compare:»,
+    «Then:», «Watch for:», «Short version:» — is connective tissue and rides
+    with the sentence before it. A lead that carries its own content — «Two ways
+    in:», «The body includes, at minimum:» — is its own unit. **Exception:** a
+    connector already standing as its own paragraph in the source stays one
+    (B8's `##side-by-side-lead`).
+41. **A multi-sentence blockquote stays one unit.** Ruling 13 makes a marked
+    blockquote a unit but does not exempt it from deconstruction; splitting one
+    needs blank-separated `>` blocks, which renders as several quote boxes.
+    That is a form change beyond a sense-preserving split, so it is not made.
+    *Also settled, needing no ruling of its own: a compound predicate sharing
+    one subject («This package sorts…, fixes…, and pins…») matches neither pole
+    of ruling 34 and stays whole; and a `**Scope of this document.**` paragraph
+    carrying a second fact still splits, with the bold label riding on the
+    first heir.*
 
 ## Boundaries {#boundaries}
 

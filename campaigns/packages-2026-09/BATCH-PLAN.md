@@ -9,7 +9,24 @@ counted two superseded slots that nothing resolves to._
 **202 files** across 37 packages; the observed corpus is **260 files**
 (58 host + 202 packages), confirmed by `progress scan`.
 
-**Sizing: the `world` genre needs TWO constants, not one — measured at B8.**
+**Sizing: THREE constants, measured twice and stable to 0.7 % — corrected at B9.**
+Size a `world` batch as **paragraphs × 2.13 + pre-existing list items × 1.00 +
+table cells × 1.00**. Only paragraphs multiply: items and cells are already at
+fact grain, and ruling 1 keeps a pre-existing item whole. Measured paragraph
+heirs — B8 **71 → 151 (×2.127)**, B9 **179 → 378 (×2.112)**. On B9's real
+composition the three constants predict **779** against a measured **776**
+(+0.4 %), where B8's two-constant rule said 797 (+2.7 %), a blended ×1.28 said
+739 (−4.8 %) and the language-stack ×1.7 said 981 (+26 %).
+
+**Why two constants were not enough, and it is worth keeping:** the old rule's
+single «prose» constant lumped paragraphs and list items, which behave nothing
+alike. B9's prose is 57 % items against B8's 53 %, and that 4 points is the
+whole 2.6 % miss. **`progress check` reports only a total today** — the
+para/item/cell split has to be counted from the gate log's «Para unit» / «Item
+unit» / «Cell unit» text, and a subcommand that reported it directly would make
+this sizing a command rather than a ritual.
+
+**Superseded — kept for the reasoning, which still holds:**
 The language stacks came in at ×1.62 / ×1.72 / ×1.75, but B8's `world` flows
 measured **×1.28**, and the cause is structural: **47.6 % of their units are
 table body cells**, which are already at fact grain and cannot deconstruct. On
@@ -76,7 +93,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B6~~ | `typescript-ai-native-lang` — **DONE**, 581 units (×1.72) | 18 | 338 |
 | ~~B7~~ | `rust-ai-native-lang` — **DONE**, 546 units (×1.75) | 18 | 312 |
 | ~~B8~~ | `discovery-prompt` + `decision-records` — **DONE**, 366 units (×1.28), **0 unmarked** | 8 | 286 |
-| B9 | `spec-genres` + `wal` + `addressable-specs` | 17 | 577 |
+| ~~B9~~ | `spec-genres` + `wal` + `addressable-specs` — **DONE**, 776 units, **0 unmarked** | 17 | 577 |
 | B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | 16 | 488 |
 | B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | 15 | 451 |
 | B12 | `campaign-plans` + `two-process-model` + `operating-modes` | 15 | 403 |
