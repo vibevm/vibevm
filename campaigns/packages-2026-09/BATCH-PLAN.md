@@ -6,11 +6,15 @@ counted two superseded slots that nothing resolves to._
 
 ## The workload, after three rounds of finding out what was in it
 
-**217 files · 6 561 facts** across 37 packages; the observed corpus is
-**275 files** (58 host + 217 packages).
+**206 files** across 37 packages; the observed corpus is **264 files**
+(58 host + 206 packages). The fact count is **pending a recount** — it stood at
+6 561 before F-080's eleven files left, and the campaign's own rule is that a
+number quoted before its decomposition is a guess wearing a decimal point.
+Recompute it at the B1 boundary with a scan on a settled tree; do not carry the
+old number forward minus an estimate.
 
-Getting to that number took three corrections, and the pattern in them is worth
-more than the number:
+Getting to that number took **four** corrections, and the pattern in them is
+worth more than the number:
 
 | what came out | files | facts | why |
 |---|---|---|---|
@@ -18,6 +22,7 @@ more than the number:
 | `LICENSE.md` × 33 (F-070) | 33 | 264 | verbatim third-party text |
 | three derived indexes (F-071) | 3 | 265 | "hand edits are a defect", their own words |
 | `core-ai-native/v0.7.0`, `redbook/v0.1.0` | 33 | 1 908 | superseded slots — frozen history |
+| `spec/legacy-projections/` (F-080) | 11 | *recount* | frozen history — owner ruling 2026-07-26 |
 
 **Every one of these was found by asking what the corpus is made of, not by
 estimating how big it is.** The first two rounds were prompted by the owner
@@ -29,8 +34,10 @@ decomposition is a guess wearing a decimal point.
 
 Two facts decide the batching, and neither is visible from the file count:
 
-- **`core-ai-native` is 23 % of the work** — 27 files, 1 487 facts. It was 35 %
-  until its superseded slot left. Still the largest by a wide margin.
+- **`core-ai-native` is still the largest single package** — 16 files after
+  F-080, down from 27, down from 56 before its superseded slot left. Three
+  subtractions have now hit this one package; each time the remainder was the
+  part a consumer actually resolves.
 - **File count lies about cost.** `redbook` is 6 files but 470 facts (78/file);
   `go-ai-native-lang` is 19 files but 411 (22/file). Batching by file count
   would put a 3.5× cost difference in the same-sized box.
@@ -39,7 +46,7 @@ Two facts decide the batching, and neither is visible from the file count:
 
 | # | Batch | Files | Facts |
 |---|---|---|---|
-| B1–B3 | `core-ai-native` (live slot) | 27 | 1 487 |
+| B1–B2 | `core-ai-native` (live slot) | **16** | *recount* |
 | B4 | `redbook` (live slot) | 6 | 470 |
 | B5 | `go-ai-native-lang` | 19 | 411 |
 | B6 | `typescript-ai-native-lang` | 18 | 338 |
@@ -54,8 +61,10 @@ Two facts decide the batching, and neither is visible from the file count:
 | B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
 | B16 | three `-mcp` packages + two family umbrellas | 8 | 145 |
 
-**Sixteen batches** against the plan's estimated 12–15, and against this file's
-own earlier 18. `rust-ai-native` is already marked — it was the Phase A pilot.
+**Fifteen batches** against the plan's estimated 12–15, against this file's own
+earlier 18, and against the sixteen it read before F-080 retired
+`core-ai-native`'s third batch. `rust-ai-native` is already marked — it was the
+Phase A pilot.
 
 ## What each batch owes
 
@@ -72,6 +81,14 @@ Two rules that are easy to lose mid-batch:
   corpus instead. Owner policy (2026-07-26) keeps this rare: **a package
   version is not bumped on every change** — the source text is edited in place
   and `vibe update` re-materialises consumers.
+- **Frozen history leaves the corpus; it is not marked.** Owner ruling
+  2026-07-26 (F-080) puts `spec/legacy-projections/` in the same category as a
+  superseded version slot: «замороженная история… Сейчас у нас есть активные
+  rust, typescript и go.» The three active languages are covered by their own
+  `-lang` stacks. The exclusion is genre-shaped in `progress.toml`, so a future
+  version slot cannot silently re-admit it, and the languages return as
+  *includes* when a stack for them lands.
+
 - **F-069 is Phase C's, not this phase's.** An aggregator's facts are about
   other packages; whether this document can be their source of truth is a
   question about the *verdict*, not the *marker*. Mark stage and state and

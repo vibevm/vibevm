@@ -124,4 +124,24 @@ exclude = [
     # -lang re-mint was called off rather than executed.
     "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/**",
     "packages/org.vibevm.world/redbook/v0.1.0/**",
+    # LEGACY LANGUAGE PROJECTIONS — frozen history, same category as a
+    # superseded version slot and excluded for the same reason: §3.3 rules them
+    # "marked, never verified", and `--exhaustive` cannot express that (it
+    # demands a marker per paragraph; one document marker does not satisfy it).
+    # OWNER RULING 2026-07-26, F-080: «legacy-projections - это замороженная
+    # история. Мы когда-нибудь покроем эти языки, но еще не сейчас. Сейчас у нас
+    # есть активные rust, typescript и go.» The eleven v0.1 guides (C++ ×3,
+    # Java ×4, Kotlin, Python, Go, TypeScript) are 1 264 lines of substantive
+    # normative prose that NOTHING in the living corpus cites; the go stack's
+    # guide says GUIDE-GO-v0.1 «stays, untouched» there, and the typescript
+    # stack declares GUIDE-TYPESCRIPT-v0.1 superseded. The three active
+    # languages are served by their own `-lang` stacks, whose guides ARE
+    # observed.
+    # Genre-shaped like the `cards/INDEX.md` pattern above rather than pinned to
+    # one version slot, so the next core-ai-native version does not silently
+    # re-admit 1 264 lines of frozen text. It matches exactly one live directory
+    # today; a pattern that stops matching is warned about by name on every run.
+    # Re-add the languages here as includes when a stack for them lands — that
+    # is the owner's "когда-нибудь", and it is an addition, not a revert.
+    "packages/**/spec/legacy-projections/**",
 ]
