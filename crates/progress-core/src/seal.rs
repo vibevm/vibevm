@@ -287,6 +287,98 @@ mod tests {
         );
     }
 
+    /// The staleness evidence, asserted on the **record** rather than on
+    /// the claim returned beside it (F-075).
+    ///
+    /// The claim is this function's report of what it did; the field is
+    /// what a staleness check reads back tomorrow, and the two are only
+    /// the same thing for as long as somebody checks. Until DRIFT-026 the
+    /// field was written by a verify batch and by nothing else, so a
+    /// campaign that hand-seals — as every sync-from-code wave does —
+    /// left every file it touched with no recency evidence at all.
+    #[test]
+    fn seal_writes_the_processed_hash() {
+        let (mut cache, doc) = fixture(&["a1", "a2"]);
+        assert!(
+            !cache.files["a.md"].campaign.contains_key("processed_hash"),
+            "the fixture starts with no recency evidence to inherit"
+        );
+
+        assert!(matches!(
+            seal(&mut cache, &doc, "2026-07-26T00:00:00Z"),
+            Seal::Recorded(_)
+        ));
+
+        let written = cache.files["a.md"].campaign["processed_hash"]
+            .as_str()
+            .expect("`processed_hash` is a string");
+        assert!(!written.is_empty(), "written, and not written empty");
+        assert_eq!(written, doc.content_hash, "the digest of the text sealed");
+    }
+
+    /// §4 step 2: the same content, recorded two ways, ends up with the
+    /// same digest — a file a batch verified and a file a hand sealed.
+    ///
+    /// Both numbers come from [`crate::parse::content_hash`], which is the
+    /// point and is what this asserts: the third equality names that
+    /// function directly, so a second hash implementation growing inside
+    /// either path moves one of these values and not the others. Two
+    /// digests that agree today and are computed twice are the defect this
+    /// field exists to detect, wearing the field's own clothes.
+    #[test]
+    fn a_hand_seal_and_a_batch_agree_on_the_digest() {
+        const TEXT: &str =
+            "# One {#one}\n\n##a1 First claim. @impl/done\n\n##a2 Second claim. @impl/done\n";
+        let mut cache = Cache::default();
+        for path in ["hand.md", "batch.md"] {
+            let doc = parse_document(path, TEXT);
+            cache.upsert(&doc, &crate::rollup::rollup_doc(&doc));
+            let verdicts: serde_json::Map<String, Value> = ["a1", "a2"]
+                .iter()
+                .map(|id| ((*id).to_string(), json!({"v": "confirmed"})))
+                .collect();
+            cache
+                .files
+                .get_mut(path)
+                .expect("the record just upserted")
+                .campaign
+                .insert("verdicts".into(), Value::Object(verdicts));
+        }
+
+        // The batch's half: it read the file and recorded the digest of
+        // what it read.
+        cache
+            .files
+            .get_mut("batch.md")
+            .expect("the batch record")
+            .campaign
+            .insert(
+                "processed_hash".into(),
+                json!(crate::parse::content_hash(TEXT)),
+            );
+
+        // The hand seal's half, over the same bytes.
+        assert!(matches!(
+            seal(
+                &mut cache,
+                &parse_document("hand.md", TEXT),
+                "2026-07-26T00:00:00Z"
+            ),
+            Seal::Recorded(_)
+        ));
+
+        assert_eq!(
+            cache.files["hand.md"].campaign["processed_hash"],
+            cache.files["batch.md"].campaign["processed_hash"],
+            "same content, same digest, whichever path recorded it"
+        );
+        assert_eq!(
+            cache.files["hand.md"].campaign["processed_hash"],
+            json!(crate::parse::content_hash(TEXT)),
+            "and it is the crate's one hash, not a second implementation"
+        );
+    }
+
     /// §4.2 refusal 2: a path the campaign never observed has no record,
     /// so there are no verdicts here to speak for — including the case
     /// the wording calls out, a path outside the observed scope.
