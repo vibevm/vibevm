@@ -95,10 +95,44 @@ fn duplicate_anchor_in_one_file_warns_and_keeps_both() {
 
 #[test]
 fn invalid_anchor_warns_and_skips() {
-    let text = "## A {#Bad_Anchor}\nbody\n";
+    // A digit head — `{#Bad_Anchor}` used to serve here and is a legal id
+    // since DRIFT-034, so the fixture moved to the one shape still refused.
+    let text = "## A {#9lives}\nbody\n";
     let (units, warnings) = parse_units(DOC, text, NS);
     assert!(units.is_empty());
     assert_eq!(warnings[0].code, "invalid-anchor");
+}
+
+#[test]
+fn a_heading_anchor_may_be_written_the_way_a_fact_id_may() {
+    // The widening, at the grain a document is actually written in: an
+    // underscore and the upper register both mint units where the kebab law
+    // would have warned and skipped them.
+    let text = "# D {#root}\n\n## A {#Some_Anchor}\none\n\n## B {#TWO-TREES}\ntwo\n";
+    let (units, warnings) = parse_units(DOC, text, NS);
+    assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
+    let anchors: Vec<&str> = units.iter().map(|u| u.anchor.as_str()).collect();
+    assert_eq!(anchors, ["root", "Some_Anchor", "TWO-TREES"]);
+}
+
+#[test]
+fn a_heading_anchor_and_a_fact_id_differing_only_in_case_are_two_names() {
+    // The house convention: a section heading `{#two-trees}` with that
+    // section's lead normative fact `##TWO-TREES` under it. The two differ
+    // byte for byte, so they are two units and no duplicate — detection is
+    // byte-exact and nothing folds case. Widening the anchor grammar did not
+    // change that; it is why no fold was needed (DRIFT-034 §2).
+    let text = "# D {#root}\n\n## Two trees {#two-trees}\n\n##TWO-TREES The lead fact.\n";
+    let (units, warnings) = parse_units(DOC, text, NS);
+    assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
+    assert_eq!(unit(&units, "two-trees").line, 3);
+    assert_eq!(unit(&units, "TWO-TREES").line, 5);
+    // …and the byte-exact duplicate the widening newly *permits* writing is
+    // still caught, unchanged.
+    let dup = "# D {#root}\n\n## Two trees {#TWO-TREES}\n\n##TWO-TREES The lead fact.\n";
+    let (_, warnings) = parse_units(DOC, dup, NS);
+    assert_eq!(warnings.len(), 1);
+    assert_eq!(warnings[0].code, "duplicate-anchor");
 }
 
 #[test]
@@ -276,7 +310,7 @@ fn fact_anchor_inside_a_fence_is_not_a_unit() {
 
 #[test]
 fn heading_line_is_never_a_fact_anchor() {
-    // A `## Heading {#anchor}` line is a heading unit (kebab law), and an
+    // A `## Heading {#anchor}` line is a heading unit, and an
     // unanchored `## Plain` heading mints nothing — neither is a fact.
     let text = "# D {#root}\n\n## Sub {#sub}\nbody\n\n## Plain heading\nmore\n";
     let (units, warnings) = parse_units(DOC, text, NS);

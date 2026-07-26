@@ -97,41 +97,44 @@ impl SpecUri {
     }
 }
 
-/// Validate a kebab-case **heading** anchor: `[a-z0-9]+(-[a-z0-9]+)*`.
+/// Validate a **heading** anchor: the id grammar `[A-Za-z][A-Za-z0-9_-]*`.
 ///
-/// This is the law for a heading's `{#anchor}` and for nothing else. The
-/// anchor position of a `spec://` URI is wider ([`is_valid_fact_id`]): a
-/// document's headings and its `##<ID>` facts share one address space, so an
-/// address must be able to name either, while only a heading is held to
-/// kebab.
+/// A heading's `{#anchor}` and a paragraph's `##<ID>` fact both mint a name
+/// into the document's one address space (PROP-014 §2.1), so one grammar
+/// governs both: a heading anchor may be written every way a fact id may.
+/// The kebab convention survives as a convention — `UPPER-SLUG` for a
+/// normative fact, `kebab-case` for a service unit — and the register is what
+/// tells a reader which grain is being cited, but it is no longer enforced
+/// here.
+///
+/// This **calls** [`is_valid_fact_id`] rather than restating it. Two
+/// predicates that agree today are two predicates that drift tomorrow.
+///
+/// The move is not a pure widening: kebab admitted a digit head and the id
+/// grammar does not, so `9lives` goes accepted → rejected while `Some_Anchor`
+/// and `a-` go the other way. Measured first — no heading anchor in the
+/// scanned corpus is digit-headed.
 ///
 /// ```
 /// use core_ai_native_specmark_grammar::is_valid_anchor;
 /// assert!(is_valid_anchor("req-conditional-fixpoint"));
-/// assert!(!is_valid_anchor("Mixed-Case")); // uppercase rejected
-/// assert!(!is_valid_anchor("-leading")); // empty leading segment
+/// assert!(is_valid_anchor("Mixed-Case")); // the id register, now legal
+/// assert!(!is_valid_anchor("9lives")); // the head must be a letter
+/// assert!(!is_valid_anchor("-leading")); // …and a dash is no letter
 /// ```
 pub fn is_valid_anchor(anchor: &str) -> bool {
-    if anchor.is_empty() {
-        return false;
-    }
-    anchor.split('-').all(|seg| {
-        !seg.is_empty()
-            && seg
-                .chars()
-                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit())
-    })
+    is_valid_fact_id(anchor)
 }
 
 /// Validate a fact-anchor id: `[A-Za-z][A-Za-z0-9_-]*` (PROP-014 §2.1).
 ///
 /// A fact anchor — a `##<ID>` written as the first token of a paragraph or
-/// list item — carries a wider grammar than a kebab heading anchor: an
-/// ASCII-alphabetic first character, then ASCII alphanumerics, `-`, or `_`.
-/// Both id registers validate here — `UPPER-SLUG` names a normative fact,
-/// `kebab-case` a service one — the register is convention, not enforced.
-/// The kebab-only [`is_valid_anchor`] law for heading anchors is untouched;
-/// the wider grammar applies to `##` ids only.
+/// list item — takes an ASCII-alphabetic first character, then ASCII
+/// alphanumerics, `-`, or `_`. Both id registers validate here —
+/// `UPPER-SLUG` names a normative fact, `kebab-case` a service one — the
+/// register is convention, not enforced. This is the whole of the document's
+/// name grammar: [`is_valid_anchor`] delegates here, so a heading anchor and
+/// a fact id are one language.
 ///
 /// ```
 /// use core_ai_native_specmark_grammar::{is_valid_anchor, is_valid_fact_id};
@@ -141,8 +144,8 @@ pub fn is_valid_anchor(anchor: &str) -> bool {
 /// assert!(!is_valid_fact_id("9lives")); // must start with a letter
 /// assert!(!is_valid_fact_id("has space"));
 /// assert!(!is_valid_fact_id(""));
-/// // A fact id is a strict superset — an UPPER-SLUG is no heading anchor.
-/// assert!(!is_valid_anchor("FACT-A"));
+/// // One grammar, two grains: a heading anchor is held to exactly this.
+/// assert!(is_valid_anchor("FACT-A"));
 /// ```
 pub fn is_valid_fact_id(id: &str) -> bool {
     let mut chars = id.chars();
@@ -155,9 +158,10 @@ pub fn is_valid_fact_id(id: &str) -> bool {
 
 /// Parse and validate a `spec://` URI string.
 ///
-/// The anchor position takes the id grammar ([`is_valid_fact_id`]), not the
-/// kebab heading-anchor law: `##FACT-ID-GRAMMAR` states a fact is addressable
-/// as `spec://…#<ID>`, so a normative `UPPER-SLUG` must be citable from code.
+/// The anchor position takes the id grammar ([`is_valid_fact_id`]) — the one
+/// law a heading anchor is held to as well: `##FACT-ID-GRAMMAR` states a fact
+/// is addressable as `spec://…#<ID>`, so a normative `UPPER-SLUG` is citable
+/// from code exactly as a heading anchor is.
 ///
 /// ```
 /// use core_ai_native_specmark_grammar::parse_spec_uri;

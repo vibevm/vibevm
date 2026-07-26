@@ -102,7 +102,7 @@ fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {
             let other = &w["disputed(#".len()..w.len() - 1];
             if !is_valid_anchor(other) {
                 return Err(format!(
-                    "kind line `{decl}`: disputed(...) must name a kebab-case anchor, got `{other}`"
+                    "kind line `{decl}`: disputed(...) must name an anchor id `[A-Za-z][A-Za-z0-9_-]*`, got `{other}`"
                 ));
             }
             (Some(SpecUnitStatus::Disputed), Some(other.to_string()))
@@ -179,8 +179,9 @@ fn list_item_content(line: &str) -> Option<usize> {
 /// `##` followed by an invalid id — a non-letter head (`##9bad`) or an id
 /// run glued to a non-space glyph (`##bad!`) — is ordinary prose: `None`,
 /// and (unlike a malformed heading anchor) no warning (PROP-014 §2.1). The
-/// id charset is the wider fact grammar ([`is_valid_fact_id`]), not the
-/// kebab heading law.
+/// id charset is [`is_valid_fact_id`], which a heading anchor now takes too —
+/// one grammar, two grains; only the reaction to a bad name differs, prose
+/// here and a warning there.
 fn fact_anchor_at(line: &str, start: usize) -> Option<(String, String)> {
     let seg = &line[start..];
     let lead_ws = seg.len() - seg.trim_start().len();
@@ -383,7 +384,9 @@ pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, V
         if !is_valid_anchor(&anchor) {
             warnings.push(Warning {
                 code: "invalid-anchor".to_string(),
-                message: format!("anchor `{{#{anchor}}}` is not kebab-case; unit skipped"),
+                message: format!(
+                    "anchor `{{#{anchor}}}` is not an id `[A-Za-z][A-Za-z0-9_-]*`; unit skipped"
+                ),
                 file: file.to_string(),
                 line: heading_line_no,
             });
