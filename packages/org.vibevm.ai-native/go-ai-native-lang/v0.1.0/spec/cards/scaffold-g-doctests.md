@@ -1,23 +1,39 @@
-# CARD: scaffold-g-doctests — Executable Examples (Go)
-**Discipline v0.2 · BETA · T2 · Go**
+# CARD: scaffold-g-doctests — Executable Examples (Go) {#root}
 
-## Band 1 — Identity & Recognition
-Classification: layer=C (meta) + G (empirics); mechanism=scaffold G.
-Intent: Ship one compiled, RUNNING example per public seam showing the ONE canonical way to use it — a few-shot usage signal that cannot drift into a lie. Go's `Example` functions are the strongest doctest form of the three stacks: `go test` compiles them AND executes them, diffing stdout against the `// Output:` comment — a behavioral guarantee, not just compilation.
-Also Known As: doctest; Example function; `// Output:`; usage example; golden usage; runnable spec-by-example.
-Applicability / Recognition: Apply when — a public seam has no `Example` of canonical use; usage is documented only in godoc prose; multiple usage idioms coexist with no canonical one. *Detector seed:* an exported seam item with no `ExampleXxx` demonstrating construction+use → recognition fires (the reference-library result, R2C-008; examples are the executable half of "primitives + notes").
+<status stage="spec" state="done"/>
 
-## Band 2 — Justification & Tradeoffs
-Motivation: A weak agent imitates whatever usage it sees nearby (R3-006). If the nearest example is a godoc snippet that has drifted, it imitates a lie. An `Example` with `// Output:` that lies FAILS `go test` — the imitated signal is guaranteed truthful at the behavioral level — and it shows the single canonical idiom (construct via `New`, consume the seam, handle the closed error set), suppressing idiom divergence. godoc renders Examples beside the item, so the carrier doubles as the doc surface.
-Structure & Participants: *`ExampleXxx` function* (in `example_test.go`, package `foo_test` — exercising the PUBLIC surface only) · *`// Output:` comment* (the executed assertion; `// Unordered output:` where order is not contractual) · *canonical idiom* (the one blessed usage).
-Collaborations: Encodes the canonical idiom Class B's types/constructors enforce; runs in the Class E loop; its truthfulness backs §9 prose discipline; the seam-error Example doubles as a Class-F navigability demo (the printed message cites its REQ).
-Goals / Non-Goals: *Goals:* every public seam item carries ≥1 Example of canonical construction+use, with `// Output:` wherever output is deterministic. *Non-Goals:* NOT exhaustive examples (one canonical each); NOT a replacement for tests (examples show usage; tests check behavior matrices); NOT Examples for unexported helpers.
-Consequences: (+) the imitated few-shot signal cannot lie — it executes; (+) one canonical idiom suppresses divergence; (+) godoc renders it (unlike the hidden `//spec:` directives — the two carriers split human-doc and machine-trace duties). (−) Examples are code to maintain; (−) output-free Examples (no `// Output:`) only compile — prefer deterministic output or a wrapping assertion; (−) over-exampling bloats — one canonical per seam.
-Alternatives: godoc prose snippets (drift silently); separate example programs under `examples/` (fine for larger scenarios, still built in CI). Prefer executed, co-located.
-Risks & Assumptions: assumes the seam has a canonical usage worth blessing and deterministic-enough output. *Sunset:* none material.
-Evidence & Transfer-strength: R2C-008 (executable reference material transformative, benchmark), R3-006 (codebase as few-shot prompt, theory), H4 (lying prose harms). Class: benchmark + theory. Tag: **[E-strong]**.
+##status-line **Discipline v0.2 · BETA · T2 · Go** @impl/done
 
-## Band 3 — Operation
+## Band 1 — Identity & Recognition {#band-one-identity}
+
+##CLASSIFICATION Classification: layer=C (meta) + G (empirics); mechanism=scaffold G. @impl/done
+
+##INTENT Intent: Ship one compiled, RUNNING example per public seam showing the ONE canonical way to use it — a few-shot usage signal that cannot drift into a lie. Go's `Example` functions are the strongest doctest form of the three stacks: `go test` compiles them AND executes them, diffing stdout against the `// Output:` comment — a behavioral guarantee, not just compilation. @impl/done
+
+##ALSO-KNOWN-AS Also Known As: doctest; Example function; `// Output:`; usage example; golden usage; runnable spec-by-example. @spec/done
+
+##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a public seam has no `Example` of canonical use; usage is documented only in godoc prose; multiple usage idioms coexist with no canonical one. *Detector seed:* an exported seam item with no `ExampleXxx` demonstrating construction+use → recognition fires (the reference-library result, R2C-008; examples are the executable half of "primitives + notes"). @impl/done
+
+## Band 2 — Justification & Tradeoffs {#band-two-justification}
+
+##MOTIVATION Motivation: A weak agent imitates whatever usage it sees nearby (R3-006). If the nearest example is a godoc snippet that has drifted, it imitates a lie. An `Example` with `// Output:` that lies FAILS `go test` — the imitated signal is guaranteed truthful at the behavioral level — and it shows the single canonical idiom (construct via `New`, consume the seam, handle the closed error set), suppressing idiom divergence. godoc renders Examples beside the item, so the carrier doubles as the doc surface. @spec/done
+
+##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *`ExampleXxx` function* (in `example_test.go`, package `foo_test` — exercising the PUBLIC surface only) · *`// Output:` comment* (the executed assertion; `// Unordered output:` where order is not contractual) · *canonical idiom* (the one blessed usage). @impl/done
+
+##COLLABORATIONS Collaborations: Encodes the canonical idiom Class B's types/constructors enforce; runs in the Class E loop; its truthfulness backs §9 prose discipline; the seam-error Example doubles as a Class-F navigability demo (the printed message cites its REQ). @impl/done
+
+##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* every public seam item carries ≥1 Example of canonical construction+use, with `// Output:` wherever output is deterministic. *Non-Goals:* NOT exhaustive examples (one canonical each); NOT a replacement for tests (examples show usage; tests check behavior matrices); NOT Examples for unexported helpers. @impl/done
+
+##CONSEQUENCES Consequences: (+) the imitated few-shot signal cannot lie — it executes; (+) one canonical idiom suppresses divergence; (+) godoc renders it (unlike the hidden `//spec:` directives — the two carriers split human-doc and machine-trace duties). (−) Examples are code to maintain; (−) output-free Examples (no `// Output:`) only compile — prefer deterministic output or a wrapping assertion; (−) over-exampling bloats — one canonical per seam. @spec/done
+
+##ALTERNATIVES Alternatives: godoc prose snippets (drift silently); separate example programs under `examples/` (fine for larger scenarios, still built in CI). Prefer executed, co-located. @spec/done
+
+##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the seam has a canonical usage worth blessing and deterministic-enough output. *Sunset:* none material. @spec/done
+
+##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable reference material transformative, benchmark), R3-006 (codebase as few-shot prompt, theory), H4 (lying prose harms). Class: benchmark + theory. Tag: **[E-strong]**. @spec/done
+
+## Band 3 — Operation {#band-three-operation}
+
 ```card-ops
 trigger: WHEN an exported seam item lacks an Example of canonical construction+use THEN apply
 mode: gate

@@ -1,23 +1,39 @@
-# CARD: scaffold-h-simulators — Local Simulators / Reference Models (Go)
-**Discipline v0.2 · BETA · T2 · Go**
+# CARD: scaffold-h-simulators — Local Simulators / Reference Models (Go) {#root}
 
-## Band 1 — Identity & Recognition
-Classification: layer=E (verification) + H (weak-reader); mechanism=scaffold H.
-Intent: Ship a small runnable model of a subsystem's behavior the reader can EXECUTE to understand or predict — offloading the execution-prediction that weak models fail at, without running the whole system. Go's test culture already lives here: small interfaces make hand-rolled in-memory fakes one-screen literals, and `httptest` is a stdlib network simulator.
-Also Known As: reference implementation; in-memory fake; executable spec; oracle model; test double; `httptest` server; steppable model.
-Applicability / Recognition: Apply when — a subsystem has non-obvious dynamics (a reconcile loop, a state machine, a retry/backoff protocol); understanding requires mentally simulating execution; an external dependency (HTTP, a store, a queue) must be reasoned about offline. *Detector seed:* a subsystem whose behavior is documented in prose-describing-execution, with no runnable model or fake → recognition fires (execution-prediction is weak models' weakest point — DR2-019, CRUXEval ~63% even for strong models).
+<status stage="spec" state="done"/>
 
-## Band 2 — Justification & Tradeoffs
-Motivation: A weak agent must modify the reconciler's convergence loop (diff → actions → apply → re-diff). It cannot mentally simulate whether a partial apply converges or oscillates. A steppable in-memory world — `sim.World` with `Step()` returning the applied actions and the next state — replaces mental simulation with execution: feed a desired/actual pair, watch convergence, print the trace. The EsoLang library shipped exactly this idea (a local simulator) and it carried the weak-agent gain.
-Structure & Participants: *Reference model* (runnable, small, steppable — `Step()`/`State()` inspection surface) · *In-memory fake* (a literal implementation of the seam's narrow interface — Go's native double) · *`httptest` server* (the stdlib simulator for HTTP boundaries) · *Conformance test* (model vs production agree on representative inputs).
-Collaborations: Provides the comparator for Class D oracles (the model IS the expected-behavior source); backs Class C contracts; pairs with Class G (the model's usage is Example-demonstrated). Capability injection (§2) is what makes fakes drop-in — a cell taking `seams.Store` accepts the ten-line map-backed fake with no mocking framework.
-Goals / Non-Goals: *Goals:* make non-obvious dynamics executable, not just described. *Non-Goals:* NOT a second production implementation (a reference model, kept simple); NOT for trivially-obvious subsystems; NOT reflection-based mock generation (gomock-class module-graph interception is the §7 posture — literal fakes are cheaper and honest).
-Consequences: (+) the reader runs instead of simulates; (+) doubles as a Class D comparator and the test fixture; (+) zero third-party cost — interfaces + httptest are stdlib culture. (−) a model is code to keep in sync — conformance-test it against production; (−) over-modeling wastes effort — only non-obvious dynamics.
-Alternatives: prose describing behavior (weak readers can't execute prose); reading the production code directly (the thing too complex to simulate). The model is the offload.
-Risks & Assumptions: assumes the subsystem's behavior is modelable simply; a model that drifts from production misleads — conformance-test it. *Sunset:* if the production code becomes simple enough to read directly, the model retires.
-Evidence & Transfer-strength: R2C-008 (simulator in the transformative library, benchmark), DR2-019 (execution-prediction weakness, benchmark). Class: benchmark. Tag: **[E-strong]**.
+##status-line **Discipline v0.2 · BETA · T2 · Go** @impl/done
 
-## Band 3 — Operation
+## Band 1 — Identity & Recognition {#band-one-identity}
+
+##CLASSIFICATION Classification: layer=E (verification) + H (weak-reader); mechanism=scaffold H. @impl/done
+
+##INTENT Intent: Ship a small runnable model of a subsystem's behavior the reader can EXECUTE to understand or predict — offloading the execution-prediction that weak models fail at, without running the whole system. Go's test culture already lives here: small interfaces make hand-rolled in-memory fakes one-screen literals, and `httptest` is a stdlib network simulator. @impl/done
+
+##ALSO-KNOWN-AS Also Known As: reference implementation; in-memory fake; executable spec; oracle model; test double; `httptest` server; steppable model. @spec/done
+
+##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a subsystem has non-obvious dynamics (a reconcile loop, a state machine, a retry/backoff protocol); understanding requires mentally simulating execution; an external dependency (HTTP, a store, a queue) must be reasoned about offline. *Detector seed:* a subsystem whose behavior is documented in prose-describing-execution, with no runnable model or fake → recognition fires (execution-prediction is weak models' weakest point — DR2-019, CRUXEval ~63% even for strong models). @impl/done
+
+## Band 2 — Justification & Tradeoffs {#band-two-justification}
+
+##MOTIVATION Motivation: A weak agent must modify the reconciler's convergence loop (diff → actions → apply → re-diff). It cannot mentally simulate whether a partial apply converges or oscillates. A steppable in-memory world — `sim.World` with `Step()` returning the applied actions and the next state — replaces mental simulation with execution: feed a desired/actual pair, watch convergence, print the trace. The EsoLang library shipped exactly this idea (a local simulator) and it carried the weak-agent gain. @spec/done
+
+##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Reference model* (runnable, small, steppable — `Step()`/`State()` inspection surface) · *In-memory fake* (a literal implementation of the seam's narrow interface — Go's native double) · *`httptest` server* (the stdlib simulator for HTTP boundaries) · *Conformance test* (model vs production agree on representative inputs). @impl/done
+
+##COLLABORATIONS Collaborations: Provides the comparator for Class D oracles (the model IS the expected-behavior source); backs Class C contracts; pairs with Class G (the model's usage is Example-demonstrated). Capability injection (§2) is what makes fakes drop-in — a cell taking `seams.Store` accepts the ten-line map-backed fake with no mocking framework. @impl/done
+
+##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make non-obvious dynamics executable, not just described. *Non-Goals:* NOT a second production implementation (a reference model, kept simple); NOT for trivially-obvious subsystems; NOT reflection-based mock generation (gomock-class module-graph interception is the §7 posture — literal fakes are cheaper and honest). @impl/done
+
+##CONSEQUENCES Consequences: (+) the reader runs instead of simulates; (+) doubles as a Class D comparator and the test fixture; (+) zero third-party cost — interfaces + httptest are stdlib culture. (−) a model is code to keep in sync — conformance-test it against production; (−) over-modeling wastes effort — only non-obvious dynamics. @spec/done
+
+##ALTERNATIVES Alternatives: prose describing behavior (weak readers can't execute prose); reading the production code directly (the thing too complex to simulate). The model is the offload. @spec/done
+
+##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the subsystem's behavior is modelable simply; a model that drifts from production misleads — conformance-test it. *Sunset:* if the production code becomes simple enough to read directly, the model retires. @spec/done
+
+##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (simulator in the transformative library, benchmark), DR2-019 (execution-prediction weakness, benchmark). Class: benchmark. Tag: **[E-strong]**. @spec/done
+
+## Band 3 — Operation {#band-three-operation}
+
 ```card-ops
 trigger: WHEN a subsystem with non-obvious dynamics has no runnable reference model or fake THEN apply
 mode: gate
