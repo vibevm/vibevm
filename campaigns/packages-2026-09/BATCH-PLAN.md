@@ -9,6 +9,14 @@ counted two superseded slots that nothing resolves to._
 **202 files** across 37 packages; the observed corpus is **260 files**
 (58 host + 202 packages), confirmed by `progress scan`.
 
+**Sizing correction, measured at the B5 boundary — multiply the scan number by
+~1.6.** The `facts` column below is the **pre-markup scan count**, and the
+deconstruction law then turns paragraphs into units: B5's `go-ai-native-lang`
+scanned at 411 and finished at **665 units** — 84 source paragraphs became 338.
+The scan number is exact as a starting measurement and **under-predicts the
+batch by ~62 %**. Size B6–B16 accordingly; the column is left as scanned so the
+two numbers stay distinguishable.
+
 **Unmarked facts remaining: 4 685**, re-measured 2026-07-26 at the B2 boundary,
 after F-091 excluded the book. Earlier figures in this file's history — 6 561,
 then 5 685, then 5 068 — were each replaced by a **measurement**, never by
@@ -51,7 +59,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | # | Batch | Files | Facts |
 |---|---|---|---|
 | ~~B1–B2~~ | `core-ai-native` (live slot) — **DONE**, 943 units | 16 | — |
-| B5 | `go-ai-native-lang` | 19 | 411 |
+| ~~B5~~ | `go-ai-native-lang` — **DONE**, 665 units | 19 | 411 |
 | B6 | `typescript-ai-native-lang` | 18 | 338 |
 | B7 | `rust-ai-native-lang` | 18 | 312 |
 | B8 | `discovery-prompt` + `decision-records` | 9 | 455 |

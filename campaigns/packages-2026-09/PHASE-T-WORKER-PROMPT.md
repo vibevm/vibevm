@@ -120,10 +120,38 @@ the result to one account. Nothing else in it varies between the two.*
 > cargo test --workspace          # your new tests green
 > ```
 >
+> **Run this with ten of your own sub-agents, and orchestrate them yourself.**
+> You are the lead inside your account; sub-agent orchestration works *within*
+> an account, which is exactly the level you are at. Do it like this:
+>
+> 1. **Split your scope list into ten sub-lists**, by the same rule that
+>    produced it: group by cell, never split a cell, and keep cells that share
+>    a fact together. Balance by estimated tests (≈ 3 × testable facts), not by
+>    file count. **Keep the ten sub-lists** — you need them to verify.
+> 2. **Warm the build once before dispatching:** `cargo test --workspace --no-run`.
+>    Otherwise all ten queue behind one cold compile.
+> 3. **Dispatch ten sub-agents**, each with its own literal path list and the
+>    same routine. Give each the identical boundary: *write only these files.*
+> 4. **Each sub-agent runs only its own tests** — `cargo test <its_name_prefix>`
+>    — **never `cargo test --workspace`.** Ten agents in one worktree share one
+>    `target/`, and a whole-workspace run would show it another agent's
+>    deliberate red from step 7 of the routine and read it as its own failure.
+> 5. **When perturbing an expected literal (routine step 7), change the VALUE
+>    and never the TYPE** — `3` → `4`, not `3` → `"x"`. A wrong value still
+>    compiles, so the red stays inside that one test; a wrong type breaks the
+>    crate and every other sub-agent with it.
+> 6. **Verify at your level before you commit**, exactly as your own prompt is
+>    verified above: no file touched by two sub-agents, and each sub-agent
+>    inside its own sub-list. A file outside every sub-list is a violation even
+>    if no one else touched it.
+> 7. **You commit, they do not.** One commit per sub-list, so the history shows
+>    which chunk covered what.
+>
 > **Report:** per file — tests written, kinds used, tier assigned; every fact you
 > returned as untestable with the sentence from routine step 1; the red exhibit
-> for each file; every semantic problem you saw and did **not** fix; and your
-> branch name and commit hashes. **Do not fix a semantic problem** — a fact that
+> for each file; every semantic problem you saw and did **not** fix; your
+> ten sub-lists and the result of step 6's verification; and your branch name
+> and commit hashes. **Do not fix a semantic problem** — a fact that
 > looks wrong is a finding, and a test that fails against working code is the
 > most valuable thing you can produce, not a failure.
 

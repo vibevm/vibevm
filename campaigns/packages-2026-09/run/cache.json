@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T18:29:49Z",
+  "updated_at": "2026-07-26T19:14:02Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -371,211 +371,439 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
-      "content_hash": "cd97953e81706baf0f7010bf99195b11ba655cf29ab7536fbec656dfed41f2e4",
+      "content_hash": "0bb204d621551276a7e07d540ac48c1b6e29bbd1731d19ac6f2ba53f4757a299",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 49,
-        "unmarked_facts": 49
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 59,
+        "fact_count": 58,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 59,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md": {
-      "content_hash": "f0391ed2119c3a048c41eb139f5cef6ab0d9894fee473e864a86a9ed34d05075",
+      "content_hash": "a4e363c6331613c0fea4f6fbc41c9c47c425755fb7e578b206fe75fbd1eceda0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 10,
-        "unmarked_facts": 10
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 19,
+        "fact_count": 18,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 19,
       "unit_count": 1,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md": {
-      "content_hash": "c22822498789e5befbd0249d46cf4a78760293bfbc95b025cd0795e6d618668c",
+      "content_hash": "ea3dd504db114a93dba96108dc37ce915b37054db09ea63c52bea7109ed6d8df",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md": {
-      "content_hash": "0a8cde73c30e71ab1914492887653ba6a7484362b63479f8bf324ef8c4aaf98e",
+      "content_hash": "7e00772932a6189add5d4f0903c4125189409a435687f3a532b5f54bc49b3b7f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md": {
-      "content_hash": "6c23de899075d81cc71bf45424573237dff4c246f0eb1f9c1192fcd7c2bb4a98",
+      "content_hash": "37d30201591def68acd3bbe8c943b38c95eea8fd2f448d632b1f0f924dfae6de",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md": {
-      "content_hash": "f4d52fe0f4ac02f679f11f76f632bd2d82fea0db8797a278ebc585cc4b62269c",
+      "content_hash": "dabd1d40db070028c345e4d580df3810916ad3150a34f1d0d8e59b071207aa15",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 48,
-        "unmarked_facts": 48
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 53,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md": {
-      "content_hash": "9341737e712d5be80eb80dcdb836e8f0f8f86cc9a080f30b1b15ed8da5206f0e",
+      "content_hash": "357e719ca549bc15e919efdfc749a827a1bd3c1493c04e070c73161b5153be8c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-f-structured-diagnostics.md": {
-      "content_hash": "5805d43437ecc1bf0a81773a0512b962688cdcf441005ab7d482c8240845ba60",
+      "content_hash": "ccafcff42a4d55bb286ff0b87bb86b5ca54373cf1671cc7ae65b6438e550dd2e",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md": {
-      "content_hash": "74e6fa5d39f037df7b1868e99bcd2e13f4c0b7468d2e1be5ca7264174ac078bb",
+      "content_hash": "9f83982e17e8a42c8d49c985f76a6e8f0d394048108ee6d01139787d21c65c9c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md": {
-      "content_hash": "b5c00980e0b62b0f46bbba1ffcf4a67e645cc174bf47b95cf31319c9d11aa8af",
+      "content_hash": "14b2604c3a394ffee31fc3a65059fc6cdeadd56cbbc90e8ae1a3ce101010f480",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "6e2c884b7e562229ee059c9aa63f6fced9cbb9d28ce30aa01547b2a0de7b3635",
+      "content_hash": "de4cc5d4efe00563d131b8efecb9846494c8b6c4fb9491dcc5e12ea23c442f09",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
-      "content_hash": "42b1e2754b737503f27b50d1dc3dcd036d7d0e45caa818a34384d15a60c94b1a",
+      "content_hash": "58f9e96fda6d18c6e0b4656687e942bc455d0d2a7d84e25ed46441574cb2a41f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 103,
-        "unmarked_facts": 103
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 150,
+        "fact_count": 149,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 150,
       "unit_count": 17,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
-      "content_hash": "2104176c7a9a13deff7b49664d891880a94edfdded3b29bb193cf3b8cdfbda83",
+      "content_hash": "f5ebd784c40a0d36957e3e48b216f5adb49e896ff1cec80b05897a27be2d5743",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 34,
-        "unmarked_facts": 34
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 72,
+        "fact_count": 71,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 72,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
-      "content_hash": "4b4b761842ee698e2e3346200154606a6b9c378ad3e1fac8c4ad2de56ef60823",
+      "content_hash": "d8e6ba429937c0280e459c648bcacb104288645d0fa08da8bc83d94cf878fbe5",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 34,
-        "unmarked_facts": 34
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 52,
+        "fact_count": 51,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 52,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
-      "content_hash": "32dd5e00cd69a5c15d759a438e6409963820bd9290b5fb73d5a1761186dbf95f",
+      "content_hash": "ec144d917d989ae9bfb31f06511d8788cfb6cd4bd4cd7e054b12b96b356ab4d3",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 21,
-        "unmarked_facts": 21
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 30,
+        "fact_count": 29,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 30,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md": {
-      "content_hash": "cc53c0da9432d1e2eca57179c4b8664c62fb96f90e34a08d4052216923225750",
+      "content_hash": "5855f5128468cb5c93ea12d4ebf9728fa3adae50f8fc490abfd5d629f4010572",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 16,
-        "unmarked_facts": 16
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 26,
+        "fact_count": 25,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 26,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md": {
-      "content_hash": "365ee3f39fb6ddb92329065137379b9998aa687bc3e43e8e43b2b05351926f24",
+      "content_hash": "5d86dcf52da27cb1861b2625ac7183ff7ebea9b052270bb79cbfec6f556f01ad",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 32,
-        "unmarked_facts": 32
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 38,
+        "fact_count": 37,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 38,
       "unit_count": 8,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
-      "content_hash": "7a8cb1892c81ec8be3d602065a0044a0253aa5c8ca838712ea50d946cd373abf",
+      "content_hash": "7d3c1f614cc7e78c5c2a89f419e84a9b36396e1db853010dad4aaeeefcdb9ae6",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 18,
-        "unmarked_facts": 18
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 35,
+        "fact_count": 35,
+        "unmarked_facts": 1
       },
-      "marker_count": 0,
+      "marker_count": 35,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md": {
-      "content_hash": "bd9ab3f75667a0cc95f77bb96f775d4262aae4ab5f3652d274af0e0be6c349d4",
+      "content_hash": "824b69588c4a3ed0f0a6c92d906e4d480ae6884fa669d31666e95a132da28bba",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 22,
-        "unmarked_facts": 22
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 36,
+        "fact_count": 36,
+        "unmarked_facts": 1
       },
-      "marker_count": 0,
+      "marker_count": 36,
       "unit_count": 6,
       "issue_count": 0
     },

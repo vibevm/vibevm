@@ -201,17 +201,20 @@ file, the ruling wins — the earlier text was written before the cases were kno
 17. **Empty table cells stay bare.** Verified: `--exhaustive` honours
     `##COUNTABLE-UNITS`' "non-empty" literally. Do not insert an em-dash to
     make a blank markable — that is a content edit.
-18. **Do not mark GFM task-list items — blocked by F-083.** A `- [ ]` item
-    cannot carry a fact anchor under today's grammar: the parser reads `[ ]` as
-    the unit's first token, so the anchor is invisible and the unit reports
-    `MissingAnchor`. Leave such items unmarked until the parser learns that a
-    checkbox is structure. B1b marked four and they were reverted.
-19. **Marker position when the text carries a fenced-code backtick — F-084.**
-    If a unit's text contains an inline code span holding a triple backtick
-    (e.g. ``` ` ```card-ops ` ```), the **last-token** shorthand is not
-    recognised and the unit reports as *unmarked*. Put the marker in position 1,
-    immediately after the anchor. **The failure is silent and misreads as a
-    forgotten marker**, so a session re-adding it in the same place will loop.
+18. ~~Do not mark GFM task-list items — blocked by F-083.~~ **OBSOLETE since
+    DRIFT-031 (`4f9143b4`).** `parse/facts.rs::task_box_len` now treats the
+    checkbox as structure, so `- [ ] ##ID … @impl/done` is legal and a test
+    asserts it. **Mark task-list items normally.** *(Caught stale by B5, which
+    read the ruling against the code rather than trusting it — the ruling had
+    outlived its finding by a day.)*
+19. ~~Marker position when the text carries a fenced-code backtick — F-084.~~
+    **OBSOLETE since DRIFT-031 (`75009f8c`).** `parse/blocks.rs::blank_inline_code`
+    was rewritten to run-matching, so a trailing marker survives beside a quoted
+    fence and a test asserts it. **Place markers last-token as everywhere else.**
+    *(Also caught stale by B5. Two rulings out of twenty-nine had outlived the
+    findings that produced them, and neither bit that batch — the go corpus has
+    no task lists and no quoted fences — but both bound B6 onward as written.
+    A convention list is a derived thing too, and nothing recomputes it.)*
 20. **Colon-split tiebreaker: the verdict test.** When ruling 3 leaves a colon
     ambiguous, ask whether **Phase C could assign a separate verdict to each
     item**. "What is unusual is everything around it: types, contracts,
