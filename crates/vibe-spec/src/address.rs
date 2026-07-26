@@ -236,11 +236,13 @@ fn parse_revision(rev: &str) -> Result<u32, SpecAddressError> {
 ///
 /// A document's headings and its `##<ID>` facts share one address space
 /// (PROP-014 §2.1), so an address must name either: `#SOME-NORMATIVE-FACT` as
-/// readily as `#a-heading`. The kebab-only law still governs where a *heading*
-/// anchor is minted; it is not this parser's business. Mirrored, not shared,
+/// readily as `#a-heading`. Since DRIFT-034 that is one law end to end — a
+/// heading anchor is minted under this same grammar, so there is no narrower
+/// register left for this parser to be lenient about. Mirrored, not shared,
 /// across the separability seam (PROP-035 §4) — the twin is
-/// `core-ai-native-specmark-grammar::is_valid_fact_id`, and the convention is
-/// held by tests on both sides.
+/// `core-ai-native-specmark-grammar::is_valid_fact_id`, which
+/// `is_valid_anchor` now delegates to, and the convention is held by tests on
+/// both sides.
 fn is_valid_anchor_segment(seg: &str) -> bool {
     let mut chars = seg.chars();
     match chars.next() {
