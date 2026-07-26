@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T19:45:00Z",
+ "updated_at": "2026-07-26T20:30:00Z",
  "findings": [
   {
    "id": "F-068",
@@ -60,10 +60,10 @@
    "id": "F-074",
    "from": "spec/boot/00-core.md",
    "to": "spec/WAL.md",
-   "type": "contradiction",
-   "status": "open",
+   "type": "reality-mismatch",
+   "status": "resolved",
    "wave": 2,
-   "note": "THE NOTOUCH LIST LOST THREE OF ITS FOUR ENTRIES ON OWNER INSTRUCTION (2026-07-26), and the guard that remains is weaker than the one removed. `spec/boot/00-core.md`, `spec/boot/90-user.md` and `VIBEVM-SPEC.md` are no longer listed under 'Files you MUST NOT touch without explicit instruction'; only `refs/book/` is. The immediate effect was good and intended - it unblocked F-063's second half, which had sat on the owner's desk purely because no session could edit 90-user.md. The standing effect is that the two boot files carry the OWNER'S OWN machine facts, credentials layout and personal preferences, and any session may now re-form that prose wholesale. What is left is a WAL constraint saying 'mark additively, do not re-form without an instruction' - a convention, enforced by nothing, in a repository whose whole campaign exists because conventions were not being kept (F-055/056/057 were one forgotten discipline caught three times by accident). Worth an explicit decision rather than drift: (a) leave as-is and rely on the convention; (b) restore 00-core/90-user to NOTOUCH and keep VIBEVM-SPEC out, since the boot pair is personal and the spec is merely frozen; (c) replace the list with a gate - a floor check that fails if those files changed without a marker recording an owner instruction, which is the only option that does not rely on memory."
+   "note": "WITHDRAWN 2026-07-26 - filed in error, and the error is worth keeping. This was raised as a defect: the NOTOUCH list lost three of four entries, leaving the boot pair guarded only by a WAL convention 'enforced by nothing'. On challenge the framing did not survive. The list was NEVER enforced by anything, before or after - it is an instruction a session reads at boot, not a gate - so removing entries changed no mechanism and nothing regressed. What changed is the SCOPE the owner wants protected, which is his to set, and he set it deliberately. The third option offered ('replace the list with a floor gate') was a NEW proposal dressed up as a restoration, attached to make the finding look substantive. Residue actually corrected: the WAL line editorialising about the decision, now stating the rule plainly instead. If enforcement is ever wanted it is separate, new work. Lesson for the ledger: a finding that reports an owner's decision back to him as a defect is not a finding, and the tell was that it had no failure mode - only a feeling that something had loosened."
   }
  ]
 }

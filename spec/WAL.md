@@ -72,12 +72,17 @@ closes only through sync-from-code with owner approval.
 - **conform R-001 gate.** `crates/vibe-cli/src/registry.rs` is the only
   sanctioned constructor site for embedded/local-composite providers.
 - **Boot pair marking.** `spec/boot/00-core.md` / `90-user.md` carry the
-  owner's own machine facts and preferences: mark ADDITIVELY, and do not
-  re-form their prose without an instruction. **The NOTOUCH bar was lifted
-  2026-07-26** — the owner removed `00-core.md`, `90-user.md` and
-  `VIBEVM-SPEC.md` from the must-not-touch list, leaving only `refs/book/`.
-  A session may now edit them; this line is what remains of the guard, and
-  it is a convention rather than a rule.
+  owner's own machine facts and preferences: mark ADDITIVELY, and prefer not
+  to re-form their prose. They left the `NOTOUCH` list on 2026-07-26 (owner
+  instruction), together with `VIBEVM-SPEC.md`; `refs/book/` is the one entry
+  that remains. A session may edit all three.
+- **`spec/boot/90-user.md` mixes project and machine scope, deliberately for
+  now.** It is tracked in a public repository and carries this developer's
+  workstation facts (`##ssh-auth-lead`, `##GITVERSE-SSH` naming a host,
+  `##proven-commands-lead`) alongside genuinely project-scoped ones (the
+  multi-homed repo URLs, the split-host posture, the token-path convention).
+  Raised 2026-07-26; **owner parked it — "оставь пока, будем переосмысливать
+  это когда-нибудь потом".** Do not tidy it unasked.
 - **legacy-spec/ is an archive.** Nothing in the living corpus or
   crates may cite into it as a normative source — archive-provenance
   pointers only; the campaign plan in `spec/terraforms/` is the one
