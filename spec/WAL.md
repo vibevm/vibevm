@@ -126,6 +126,13 @@ closes only through sync-from-code with owner approval.
   scan` writes into `~/.vibe/progress-cache/`, so a concurrent scan turns
   the floor red — correctly, by the gate's own definition, but confusingly.
   Sequence them: scan first, then the floor.
+- **Never hand-write a timestamp into campaign state.** Sealing verdicts by
+  hand on 2026-07-26 put `verified_at` 2 and 8.5 hours in the FUTURE on two
+  files — plausible-looking values, invented. Direction is what matters:
+  `moved_crate` calls a crate moved when its commits are *newer* than the
+  verdict, so a future stamp means nothing is ever newer and invalidation
+  rule 2 never fires. It fails UNSAFE. Let the tool write it
+  (`vibe progress seal`), or it is wrong in a direction nothing checks (F-076).
 - **Commit delegated work on the completion notification**, never on a
   filled-in task journal — executors write §9 as they go.
 - **Outstanding manual runs (owner sign-off pending):** MT-02

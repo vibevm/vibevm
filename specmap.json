@@ -191,6 +191,20 @@
     },
     {
       "crate_name": "progress-core",
+      "file": "crates/progress-core/src/seal.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "progress_core::seal"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/seal.rs",
+      "item_kind": "fn",
+      "line": 72,
+      "symbol": "progress_core::seal::seal"
+    },
+    {
+      "crate_name": "progress-core",
       "file": "crates/progress-core/src/sidecar.rs",
       "item_kind": "mod",
       "line": 30,
@@ -1014,6 +1028,13 @@
       "item_kind": "mod",
       "line": 11,
       "symbol": "vibe_cli::commands::progress::rescan"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/progress/seal.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_cli::commands::progress::seal"
     },
     {
       "crate_name": "vibe-cli",
@@ -6484,6 +6505,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/progress-core/src/seal.rs",
+      "from_symbol": "progress_core::seal",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-progress/PROP-043#seal",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/seal.rs",
+      "from_symbol": "progress_core::seal::seal",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-progress/PROP-043#seal",
+      "verb": "implements"
+    },
+    {
       "file": "crates/progress-core/src/sidecar.rs",
       "from_symbol": "progress_core::sidecar",
       "line": 30,
@@ -7429,6 +7466,14 @@
       "line": 11,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#baseline",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/progress/seal.rs",
+      "from_symbol": "vibe_cli::commands::progress::seal",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-progress/PROP-043#seal",
       "verb": "implements"
     },
     {
@@ -14674,12 +14719,21 @@
       "uri": "spec://vibevm/boot/00-core#RULE-AUTONOMY"
     },
     {
+      "anchor": "NOTOUCH-REFS-BOOK",
+      "content_hash": "sha256:089ba64bc4d3c40193ebfb85280be2438d7ede6fae26bc27c8632eeabcf0e985",
+      "doc_path": "boot/00-core",
+      "file": "spec/boot/00-core.md",
+      "heading": "`refs/book/` — the user's book, read-only reference material. @impl/done",
+      "line": 28,
+      "uri": "spec://vibevm/boot/00-core#NOTOUCH-REFS-BOOK"
+    },
+    {
       "anchor": "reading-layers-lead",
       "content_hash": "sha256:fa8b1f64489abac900db62d5900ce2e64b2b76cd4c8a9d386a504fd47a4dcc67",
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
-      "line": 28,
+      "line": 32,
       "uri": "spec://vibevm/boot/00-core#reading-layers-lead"
     },
     {
@@ -14688,7 +14742,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
-      "line": 30,
+      "line": 34,
       "uri": "spec://vibevm/boot/00-core#LAYER-HEAD"
     },
     {
@@ -14697,7 +14751,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
-      "line": 31,
+      "line": 35,
       "uri": "spec://vibevm/boot/00-core#LAYER-WAL"
     },
     {
@@ -14706,7 +14760,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
-      "line": 32,
+      "line": 36,
       "uri": "spec://vibevm/boot/00-core#LAYER-SPEC"
     },
     {
@@ -14715,7 +14769,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
-      "line": 33,
+      "line": 37,
       "uri": "spec://vibevm/boot/00-core#LAYER-CODE"
     },
     {
@@ -14724,7 +14778,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back. @impl/done",
-      "line": 35,
+      "line": 39,
       "uri": "spec://vibevm/boot/00-core#SYNC-FROM-CODE-PATH"
     },
     {
@@ -14733,7 +14787,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**Language:** Rust. See [spec://vibevm/common/PROP-000#language](../common/PROP-000.md#language). @impl/done",
-      "line": 39,
+      "line": 43,
       "uri": "spec://vibevm/boot/00-core#CONV-LANGUAGE"
     },
     {
@@ -14742,7 +14796,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**Manifests:** TOML. One `vibe.toml` per node — the role is set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`); lockfile = `vibe.lock`. @impl/done",
-      "line": 40,
+      "line": 44,
       "uri": "spec://vibevm/boot/00-core#CONV-MANIFESTS"
     },
     {
@@ -14751,7 +14805,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**Terminology:** only five installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say \"lifecycle\", \"phase\", \"goal\", \"plugin\" (except that \"plugin\" == \"package\" in passing context). See `VIBEVM-SPEC.md` §4. @impl/done",
-      "line": 41,
+      "line": 45,
       "uri": "spec://vibevm/boot/00-core#CONV-TERMINOLOGY"
     },
     {
@@ -14760,7 +14814,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "**Repository URLs:** vibevm source = `git@gitverse.ru:vibevm/vibevm.git` / `https://gitverse.ru/vibevm/vibevm`. Package registry = the GitHub organization `https://github.com/vibespecs` (deliberate split-host posture — see `spec/boot/90-user.md` and [PROP-000 §7](../common/PROP-000.md#registry)). The legacy GitVerse monorepo `git@gitverse.ru:anarchic/vibespecs.git` is read-only transition state. @impl/done",
-      "line": 42,
+      "line": 46,
       "uri": "spec://vibevm/boot/00-core#CONV-REPO-URLS"
     },
     {
@@ -14769,7 +14823,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "When the spec is silent on a question: @impl/done",
-      "line": 46,
+      "line": 50,
       "uri": "spec://vibevm/boot/00-core#uncertainty-lead"
     },
     {
@@ -14778,7 +14832,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "Re-read the relevant section of `VIBEVM-SPEC.md`. @impl/done",
-      "line": 47,
+      "line": 51,
       "uri": "spec://vibevm/boot/00-core#UNC-STEP-SPEC"
     },
     {
@@ -14787,7 +14841,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "Re-read the relevant chapter in `refs/book/`. @impl/done",
-      "line": 48,
+      "line": 52,
       "uri": "spec://vibevm/boot/00-core#UNC-STEP-BOOK"
     },
     {
@@ -14796,7 +14850,7 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "Look at the closest analog under `refs/src/` (cargo, uv, spec-kit). @impl/done",
-      "line": 49,
+      "line": 53,
       "uri": "spec://vibevm/boot/00-core#UNC-STEP-ANALOGS"
     },
     {
@@ -14805,17 +14859,8 @@
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
       "heading": "If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
-      "line": 50,
-      "uri": "spec://vibevm/boot/00-core#UNC-STEP-REVIEW-MARKER"
-    },
-    {
-      "anchor": "NOTOUCH-REFS-BOOK",
-      "content_hash": "sha256:089ba64bc4d3c40193ebfb85280be2438d7ede6fae26bc27c8632eeabcf0e985",
-      "doc_path": "boot/00-core",
-      "file": "spec/boot/00-core.md",
-      "heading": "`refs/book/` — the user's book, read-only reference material. @impl/done",
       "line": 54,
-      "uri": "spec://vibevm/boot/00-core#NOTOUCH-REFS-BOOK"
+      "uri": "spec://vibevm/boot/00-core#UNC-STEP-REVIEW-MARKER"
     },
     {
       "anchor": "EOS-WAL-REWRITE",
@@ -38039,7 +38084,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:34eb805c8a82e7748469966a94721188ee40a7899d4adf54bde4d864e16a64e6",
+      "content_hash": "sha256:4386b523edfc4765522dfba8dd1cc7d6a6a1997530789f3c4eb6cefe5671adbe",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "PROP-043 — Progress Control: inline status markup and the `vibe progress` tool",
@@ -39002,7 +39047,7 @@
     },
     {
       "anchor": "tool",
-      "content_hash": "sha256:4be20bb83633df1c218ff9d7cf1c33aaf68b0a8fcd1398af360eb5290e9bf20d",
+      "content_hash": "sha256:4b4cff45fb1ccd48202d91ead4ff491332565117633e9e8446799fcbc5e65f3d",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "5. The tool — `vibe progress`",
@@ -39100,12 +39145,21 @@
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#CMD-BASELINE"
     },
     {
+      "anchor": "CMD-SEAL",
+      "content_hash": "sha256:a183f7e3c27cae8421c6e05ffe02779cef16bd6639c26be4a0b1e254426cf3f1",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**`seal <path>…`** {#seal} — record that a file's verdicts hold for",
+      "line": 401,
+      "uri": "spec://vibevm/modules/vibe-progress/PROP-043#CMD-SEAL"
+    },
+    {
       "anchor": "CMD-GATE",
       "content_hash": "sha256:76a667472f47b979d5929ab4ccc9c5bffc686cca4edd96186e2ee4a0efacca8e",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**`gate`** {#gate} — record one gate's verdict into the campaign's",
-      "line": 401,
+      "line": 416,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#CMD-GATE"
     },
     {
@@ -39114,7 +39168,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**`resume`** {#resume} — render `RESUME.md` from the campaign journal and",
-      "line": 405,
+      "line": 420,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#CMD-RESUME"
     },
     {
@@ -39123,7 +39177,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "6. Evidence providers",
-      "line": 408,
+      "line": 423,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#evidence"
     },
     {
@@ -39132,7 +39186,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "The core defines a seam: *given a unit, return external facts about it*. @impl/done",
-      "line": 410,
+      "line": 425,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#EVIDENCE-SEAM"
     },
     {
@@ -39141,7 +39195,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "The",
-      "line": 411,
+      "line": 426,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#EVIDENCE-SPECMAP"
     },
     {
@@ -39150,7 +39204,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "`report` then flags",
-      "line": 414,
+      "line": 429,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#EVIDENCE-MISMATCH-FLAGS"
     },
     {
@@ -39159,7 +39213,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "A project without specmap runs with an empty evidence",
-      "line": 418,
+      "line": 433,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#EVIDENCE-OPTIONAL"
     },
     {
@@ -39168,7 +39222,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Verification *verdicts* (confirmed / drift / unverifiable) are campaign data",
-      "line": 421,
+      "line": 436,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#VERDICTS-NOT-IN-MARKUP"
     },
     {
@@ -39177,7 +39231,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "*Fact-grain evidence (2026-07-24, owner-directed):* the specmap side",
-      "line": 424,
+      "line": 439,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#FACT-GRAIN-EVIDENCE"
     },
     {
@@ -39186,7 +39240,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "7. Data contracts",
-      "line": 430,
+      "line": 445,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#data"
     },
     {
@@ -39195,7 +39249,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "All formats are schema-versioned (`\"schema\": 1`); all writes are atomic",
-      "line": 432,
+      "line": 447,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#DATA-DISCIPLINE"
     },
     {
@@ -39204,7 +39258,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "7.1 Cache (per-file records)",
-      "line": 436,
+      "line": 451,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#cache"
     },
     {
@@ -39213,7 +39267,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Per observed file: path, content-hash, extracted markers with positions,",
-      "line": 438,
+      "line": 453,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#CACHE-RECORD"
     },
     {
@@ -39222,7 +39276,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "7.2 State projections (dashboard food)",
-      "line": 443,
+      "line": 458,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#state"
     },
     {
@@ -39231,7 +39285,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "`campaign.json` (wave, stage-of-campaign, gates, counters, `updated_at`),",
-      "line": 445,
+      "line": 460,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#STATE-FILES"
     },
     {
@@ -39240,7 +39294,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "The dashboard reads **only**",
-      "line": 449,
+      "line": 464,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#DASHBOARD-READS-ONLY"
     },
     {
@@ -39249,7 +39303,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "7.3 Baseline (inter-campaign contract)",
-      "line": 452,
+      "line": 467,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#baseline"
     },
     {
@@ -39258,7 +39312,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "`baseline.json` — per unit: URI#anchor, unit content-hash at verdict time,",
-      "line": 454,
+      "line": 469,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#BASELINE-RECORD"
     },
     {
@@ -39267,7 +39321,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Invalidation:",
-      "line": 462,
+      "line": 477,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#BASELINE-INVALIDATION"
     },
     {
@@ -39276,7 +39330,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "7.4 The campaign zone",
-      "line": 468,
+      "line": 483,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#campaign-zone"
     },
     {
@@ -39285,7 +39339,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "`campaigns/<id>/` at the repository root: `baseline.json`, `deferrals.md`,",
-      "line": 470,
+      "line": 485,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#ZONE-LAYOUT"
     },
     {
@@ -39294,7 +39348,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Excluded from markup scope, from packaging, and from",
-      "line": 473,
+      "line": 488,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#ZONE-EXCLUDED"
     },
     {
@@ -39303,7 +39357,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "`run/` is disposable after close-out; the other four",
-      "line": 475,
+      "line": 490,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#ZONE-LIFETIMES"
     },
     {
@@ -39312,7 +39366,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Process law (journal step protocol, recovery",
-      "line": 477,
+      "line": 492,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#PROCESS-LAW-ELSEWHERE"
     },
     {
@@ -39321,7 +39375,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "7.5 The erasure law",
-      "line": 480,
+      "line": 495,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#erasure"
     },
     {
@@ -39330,7 +39384,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Delete every derived artifact — cache, state, journal, mirror, weave — and no",
-      "line": 482,
+      "line": 497,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#ERASURE-LAW"
     },
     {
@@ -39339,7 +39393,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "The one",
-      "line": 484,
+      "line": 499,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#BASELINE-ACCELERATION"
     },
     {
@@ -39348,7 +39402,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "8. Parsing rules",
-      "line": 489,
+      "line": 504,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#parsing"
     },
     {
@@ -39357,7 +39411,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Markdown frontend first: the scanner operates on the document tree",
-      "line": 491,
+      "line": 506,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#PARSE-MARKDOWN-FIRST"
     },
     {
@@ -39366,7 +39420,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Countable units** *(fact amendment, 2026-07-24)*: inside a text block",
-      "line": 495,
+      "line": 510,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#PARSE-COUNTABLE"
     },
     {
@@ -39375,7 +39429,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Fact anchors** *(fact amendment, 2026-07-24)*: a `##<ID>` first token",
-      "line": 504,
+      "line": 519,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#PARSE-FACT-ANCHORS"
     },
     {
@@ -39384,7 +39438,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "The element grammar is XML: attributes quoted, point markers self-closed.",
-      "line": 509,
+      "line": 524,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#PARSE-XML-GRAMMAR"
     },
     {
@@ -39393,7 +39447,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Foreign inline grammars (`@spec://`, `#use`, `#embed`, `#source`,",
-      "line": 512,
+      "line": 527,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#PARSE-FOREIGN-OPAQUE"
     },
     {
@@ -39402,7 +39456,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "9. Genre semantics",
-      "line": 515,
+      "line": 530,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#genres"
     },
     {
@@ -39411,7 +39465,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Every genre is in scope** — contracts, design docs, research, plans, manual",
-      "line": 517,
+      "line": 532,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#EVERY-GENRE-IN-SCOPE"
     },
     {
@@ -39420,7 +39474,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Genre only",
-      "line": 519,
+      "line": 534,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#GENRE-TERMINALS"
     },
     {
@@ -39429,7 +39483,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "10. Maintenance discipline",
-      "line": 524,
+      "line": 539,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#maintenance"
     },
     {
@@ -39438,7 +39492,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "After the first campaign: @spec/done",
-      "line": 526,
+      "line": 541,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#maintenance-lead"
     },
     {
@@ -39447,7 +39501,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Edit a unit ⇒ update its marker in the same commit.** `vibe progress",
-      "line": 528,
+      "line": 543,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#EDIT-UPDATES-MARKER"
     },
     {
@@ -39456,7 +39510,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Task pipelines close the loop: an IMPL task cites markers on entry and",
-      "line": 530,
+      "line": 545,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#TASK-LOOP"
     },
     {
@@ -39465,7 +39519,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "`freeze/done` requires green evidence where a provider exists (§6). @spec/done",
-      "line": 532,
+      "line": 547,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#FREEZE-NEEDS-EVIDENCE"
     },
     {
@@ -39474,7 +39528,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Doc-coverage (units lacking `documents` edges / doc-view closure) ratchets",
-      "line": 533,
+      "line": 548,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#DOC-COVERAGE-RATCHET"
     },
     {
@@ -39483,7 +39537,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Periodic re-verification runs as a recurring campaign",
-      "line": 535,
+      "line": 550,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#PERIODIC-REVERIFICATION"
     },
     {
@@ -39492,7 +39546,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "11. Out of scope / future",
-      "line": 538,
+      "line": 553,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#future"
     },
     {
@@ -39501,7 +39555,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "XML document storage (arrives with the PROP-035 XML frontend — this markup is",
-      "line": 540,
+      "line": 555,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#FUT-XML-STORAGE"
     },
     {
@@ -39510,7 +39564,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "second-wave corpora (`packages/org.vibevm.world`,",
-      "line": 542,
+      "line": 557,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#FUT-SECOND-WAVE"
     },
     {
@@ -39519,7 +39573,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "extraction into a",
-      "line": 545,
+      "line": 560,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#FUT-EXTRACTION"
     },
     {
@@ -39528,7 +39582,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "dashboard evolution beyond the minimal read-only page. @spec/done",
-      "line": 547,
+      "line": 562,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#FUT-DASHBOARD"
     },
     {
@@ -39537,7 +39591,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "(Terminology note:",
-      "line": 548,
+      "line": 563,
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#DASHBOARD-TERM"
     },
     {
@@ -61151,6 +61205,18 @@
     },
     {
       "code": "dangling-edge",
+      "file": "crates/progress-core/src/seal.rs",
+      "line": 19,
+      "message": "edge `progress_core::seal` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#seal`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/progress-core/src/seal.rs",
+      "line": 117,
+      "message": "edge `progress_core::seal::seal` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#seal`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "crates/progress-core/src/weave.rs",
       "line": 4,
       "message": "edge `progress_core::weave` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#weave`: no spec unit carries this anchor"
@@ -61172,6 +61238,12 @@
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "line": 156,
       "message": "edge `vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/progress/seal.rs",
+      "line": 17,
+      "message": "edge `vibe_cli::commands::progress::seal` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#seal`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",

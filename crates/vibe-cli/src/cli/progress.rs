@@ -54,6 +54,12 @@ pub enum ProgressSubcommand {
     /// automation seam: whoever ran the real gate reports the result here,
     /// and the dashboard reads it out of `campaign.json`.
     Gate(ProgressGateArgs),
+
+    /// Record that a file's verdicts were re-derived against its current
+    /// text, so the staleness warning stops firing on it. Verifies
+    /// nothing — the caller did the re-derivation and reports it here —
+    /// and refuses any file whose markers are not all judged.
+    Seal(ProgressSealArgs),
 }
 
 #[derive(Debug, Args)]
@@ -191,6 +197,22 @@ pub struct ProgressGateArgs {
     /// the reason it is stale.
     #[arg(long)]
     pub detail: Option<String>,
+}
+
+#[derive(Debug, Args)]
+pub struct ProgressSealArgs {
+    #[command(flatten)]
+    pub common: ProgressCommonArgs,
+
+    /// The files to seal. Each is judged on its own: one refusal does not
+    /// abort the rest, and the run exits non-zero if any refused.
+    ///
+    /// Sealing a file asserts that **every** verdict in it is valid for
+    /// the text on disk right now — so a file where only some anchors
+    /// were re-derived belongs in no list here; it is refused, and stays
+    /// flagged until the whole of it is re-verified.
+    #[arg(required = true, value_name = "PATH")]
+    pub paths: Vec<PathBuf>,
 }
 
 /// The verdicts `vibe progress gate` accepts (PROP-043 §7.2). Declared

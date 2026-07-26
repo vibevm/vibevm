@@ -1,304 +1,7 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-26T09:59:15Z",
+  "updated_at": "2026-07-26T10:35:38Z",
   "files": [
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 4,
-      "facts": 13,
-      "unmarked": 13,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/00-MANIFESTO.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 10,
-      "facts": 61,
-      "unmarked": 61,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/01-PATTERN-CARD-FORMAT.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 9,
-      "facts": 25,
-      "unmarked": 25,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/02-EXECUTABLE-SCAFFOLDS.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 6,
-      "facts": 66,
-      "unmarked": 66,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/03-RAID-PLAYBOOK.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 6,
-      "facts": 22,
-      "unmarked": 22,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/04-SWEEP-PLAYBOOK.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 8,
-      "facts": 41,
-      "unmarked": 41,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/05-CAMPAIGN-FORM.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 6,
-      "facts": 37,
-      "unmarked": 37,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/06-WAL-CONVENTION.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 6,
-      "facts": 16,
-      "unmarked": 16,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/appendix/ATLAS.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 10,
-      "facts": 93,
-      "unmarked": 93,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/appendix/CONTRADICTION-MAP.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 8,
-      "facts": 24,
-      "unmarked": 24,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/boot/10-flow-core-ai-native.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 1,
-      "facts": 5,
-      "unmarked": 5,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 11,
-      "facts": 58,
-      "unmarked": 58,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 11,
-      "facts": 71,
-      "unmarked": 71,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 11,
-      "facts": 82,
-      "unmarked": 82,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-GO-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 11,
-      "facts": 88,
-      "unmarked": 88,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 6,
-      "facts": 36,
-      "unmarked": 36,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 5,
-      "facts": 34,
-      "unmarked": 34,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 8,
-      "facts": 44,
-      "unmarked": 44,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 11,
-      "facts": 84,
-      "unmarked": 84,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 15,
-      "facts": 131,
-      "unmarked": 131,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 11,
-      "facts": 86,
-      "unmarked": 86,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 11,
-      "facts": 77,
-      "unmarked": 77,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 12,
-      "facts": 35,
-      "unmarked": 35,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 7,
-      "facts": 45,
-      "unmarked": 45,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/LEDGER-INTENT-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 9,
-      "facts": 29,
-      "unmarked": 29,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/MCP-CORE-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 6,
-      "facts": 19,
-      "unmarked": 19,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 27,
-      "facts": 158,
-      "unmarked": 158,
-      "issues": 0,
-      "campaign": {}
-    },
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
       "effective": null,
@@ -2187,72 +1890,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 8,
-      "facts": 31,
-      "unmarked": 31,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.1.0/spec/book/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 3,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 10,
-      "facts": 161,
-      "unmarked": 161,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-2-shared-state-and-files.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 20,
-      "facts": 142,
-      "unmarked": 142,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-3-memory-individual.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 17,
-      "facts": 72,
-      "unmarked": 72,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.1.0/spec/boot/03-flow-redbook.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 3,
-      "facts": 14,
-      "unmarked": 14,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/redbook/v0.2.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2771,7 +2408,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
+        "processed_hash": "78d18746e702bfbb3fe8a1ae98e39f4c5289d7d6104b017e99e9bfec6d3a312f",
         "summary": {
           "confirmed": 33,
           "drift": 0,
@@ -2962,7 +2599,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-26T19:45:00Z",
+        "verified_at": "2026-07-26T10:23:56Z",
         "verify_batch": "c0-boot + d2g"
       }
     },
@@ -2979,7 +2616,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "fa50702facdc42c0d17ace9b80e0c09d0b693d7d3470a987fd8e317550767d55",
+        "processed_hash": "da61458f26f58261927c4112dacce002662f15ee24308b48d802ff96ab25cee1",
         "summary": {
           "confirmed": 29,
           "drift": 0,
@@ -3173,7 +2810,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-26T19:45:00Z",
+        "verified_at": "2026-07-26T10:23:56Z",
         "verify_batch": "c0-boot"
       }
     },
@@ -17375,9 +17012,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 162,
+      "markers": 163,
       "units": 27,
-      "facts": 161,
+      "facts": 162,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -18289,7 +17926,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-26T19:00:00Z",
+        "verified_at": "2026-07-26T10:35:08Z",
         "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
@@ -21038,7 +20675,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-26T12:30:00Z",
+        "verified_at": "2026-07-26T10:35:08Z",
         "verify_batch": "c4b-registry-core + d2d"
       }
     },

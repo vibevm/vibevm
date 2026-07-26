@@ -33,6 +33,7 @@ pub mod parse;
 pub mod report;
 pub mod rollup;
 pub mod scope;
+pub mod seal;
 pub mod sidecar;
 pub mod state;
 pub mod weave;

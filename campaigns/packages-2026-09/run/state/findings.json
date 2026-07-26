@@ -64,6 +64,24 @@
    "status": "resolved",
    "wave": 2,
    "note": "WITHDRAWN 2026-07-26 - filed in error, and the error is worth keeping. This was raised as a defect: the NOTOUCH list lost three of four entries, leaving the boot pair guarded only by a WAL convention 'enforced by nothing'. On challenge the framing did not survive. The list was NEVER enforced by anything, before or after - it is an instruction a session reads at boot, not a gate - so removing entries changed no mechanism and nothing regressed. What changed is the SCOPE the owner wants protected, which is his to set, and he set it deliberately. The third option offered ('replace the list with a floor gate') was a NEW proposal dressed up as a restoration, attached to make the finding look substantive. Residue actually corrected: the WAL line editorialising about the decision, now stating the rule plainly instead. If enforcement is ever wanted it is separate, new work. Lesson for the ledger: a finding that reports an owner's decision back to him as a defect is not a finding, and the tell was that it had no failure mode - only a feeling that something had loosened."
+  },
+  {
+   "id": "F-075",
+   "from": "crates/progress-core/src/seal.rs",
+   "to": "campaigns/packages-2026-09/run/cache.json",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "THE SEAL REFUSAL IS A COVERAGE GATE, NOT A RECENCY GATE - and the task that specified it assumed otherwise. DRIFT-026's section 4.2 asserted in a parenthetical that PROP-043 'must not be sealed' because only 4 of ~300 anchors had been re-derived. The executor DISPROVED that by running it: sealing PROP-043 SUCCEEDS. It carries 148 verdicts covering all 147 addressable anchors, so it passes the only test the cache can support - does every marker have a verdict. Whether those verdicts are RECENT is unanswerable: every one of the 4 492 verdict entries carries exactly `v` and `ev`, and the single date in the schema is one `verified_at` per FILE. There is nothing to key recency on. So the three files that stayed flagged did so because nobody sealed them, not because the command would refuse - and a session that seals a file after re-deriving one anchor of three hundred will be believed. Options: (a) accept coverage-only and document it loudly at the call site, since the operator asserting the seal is the real gate; (b) add a per-anchor date to the verdict schema, making recency checkable and per-anchor sealing possible later; (c) require an explicit --i-reverified-everything style flag so the claim is at least deliberate. The executor refused to absorb the schema change unasked, correctly."
+  },
+  {
+   "id": "F-076",
+   "from": "campaigns/packages-2026-09/run/cache.json",
+   "to": "crates/progress-core/src/baseline.rs",
+   "type": "reality-mismatch",
+   "status": "resolved",
+   "wave": 2,
+   "note": "HAND-WRITTEN TIMESTAMPS WERE IN THE FUTURE, AND THEY FAILED UNSAFE. Found 2026-07-26 when the seal command wrote a real stamp (10:23:56Z) beside hand-written ones and moved verified_at BACKWARDS. Real UTC was 10:34Z; the reviewer had hand-written 12:30:00Z on PROP-002 and 19:00:00Z on PROP-043 - 2 and 8.5 hours ahead - simply by inventing plausible-looking values while sealing verdicts by hand. Direction is what matters: moved_crate (baseline.rs:302) calls a crate 'moved' when it carries commits NEWER than the verdict, so a future verified_at means nothing is ever newer and invalidation rule 2 NEVER FIRES for that file. Units carry forward that should have been suspect. That is the unsafe direction, against the principle every other part of this campaign was built to respect - the baseline omits rather than fabricates, the tripwire warns rather than passes, the seal refuses rather than stamps. Corrected both to real UTC. Standing rule now in the WAL: never hand-write a timestamp into campaign state; the tool writes it, or it is wrong in a direction nothing checks."
   }
  ]
 }

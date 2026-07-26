@@ -398,6 +398,21 @@ include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent
   unit with no judged fact is omitted rather than filled in, so the artifact
   fails toward re-verifying. Default output is `campaigns/<id>/baseline.json`.
   @impl/done
+- ##CMD-SEAL **`seal <path>…`** {#seal} — record that a file's verdicts hold for
+  its **current** text: sets `content_hash` and `campaign.processed_hash` to the
+  digest **recomputed from disk**, plus `verified_at`. Same shape as
+  `##CMD-GATE` — the caller did the real re-derivation and this records it;
+  the command computes, changes and invents no verdict. Reading the cached
+  `content_hash` instead of the disk would defeat the purpose, since that field
+  is refreshed only by `scan` and between scans compares one stale value with
+  another. It **refuses** a file whose markers are not all judged (naming the
+  count and the first few), refuses a path the cache does not carry, prints
+  what it is vouching for before doing it, and is a no-op with no fresh
+  timestamp when the digest already matches. **Its refusal is a *coverage*
+  test, not a *recency* one** — the schema carries one date per file and none
+  per verdict, so "every marker has a verdict" is checkable and "every verdict
+  is fresh" is not; the operator asserting the seal is the real gate (F-075).
+  @impl/done
 - ##CMD-GATE **`gate`** {#gate} — record one gate's verdict into the campaign's
   gate panel in `campaign.json`. The automation seam: whoever ran the real
   gate reports the result here, and the dashboard reads it back out. Spawns

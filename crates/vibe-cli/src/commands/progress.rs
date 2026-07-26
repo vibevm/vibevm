@@ -40,6 +40,10 @@ mod baseline;
 /// git checkout (PROP-043 §7.3).
 mod rescan;
 
+/// The seal verb: recording that a file's verdicts hold for its current
+/// text, so a hand-sealed campaign stops reading as stale (DRIFT-026).
+mod seal;
+
 // Re-exported under their own names so every caller — the verbs below, the
 // two verb submodules, the tests — reaches them exactly as before.
 use grounding::{Ground, campaign_id, ground, refresh_state, resolve_campaign};
@@ -55,6 +59,7 @@ pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
         ProgressSubcommand::Baseline(a) => baseline::baseline_cmd(ctx, &a),
         ProgressSubcommand::Resume(a) => resume(ctx, &a),
         ProgressSubcommand::Gate(a) => gate(ctx, &a),
+        ProgressSubcommand::Seal(a) => seal::seal_cmd(ctx, &a),
     }
 }
 

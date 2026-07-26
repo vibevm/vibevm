@@ -109,4 +109,19 @@ include = [
 # to `cards/**` or to `**/INDEX.md`.
 exclude = [
     "packages/**/spec/cards/INDEX.md",
+    # SUPERSEDED VERSION SLOTS — frozen history, not living contracts.
+    # Plan §3.3 rules that a superseded slot is "marked, never verified",
+    # because verifying frozen history costs what a live contract costs and
+    # buys nothing. `check --exhaustive` cannot express that: it demands a
+    # marker on every paragraph, and one document-level marker does not
+    # satisfy it. So the slot leaves the corpus instead.
+    # These two are 33 files and 1 908 facts — 23 % of Phase B's whole
+    # workload, on text nothing resolves to.
+    # Owner policy (2026-07-26) makes this a rare case rather than a growing
+    # one: a package version is NOT bumped on every change. The source text is
+    # edited in place and `vibe update` re-materialises consumers, so new
+    # superseded slots appear only at a real release — which is also why the
+    # -lang re-mint was called off rather than executed.
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/**",
+    "packages/org.vibevm.world/redbook/v0.1.0/**",
 ]
