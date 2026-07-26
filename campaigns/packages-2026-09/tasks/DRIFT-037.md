@@ -119,8 +119,13 @@ cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --no-cache --
   after. The difference must be exactly 9 — not "about 9", and not "9 or more".**
   A larger drop means the rule is eating prose somewhere and is a failure, not a
   bonus.
-- **`go-ai-native-lang` v0.1.0 reaches 0 unmarked**, 19 files of 19 — the first
-  batch in this campaign to be completed retroactively by a parser fix.
+- **Three whole packages reach 0 unmarked** — `go-ai-native-lang` (19 of 19),
+  `typescript-ai-native-lang` (18 of 18) and `rust-ai-native-lang` (18 of 18).
+  Batches B5, B6 and B7 each closed two units short for this one reason, and
+  this fix completes all three retroactively. *(Re-measured 2026-07-27: when
+  this task was written only go was affected; B6 and B7 have landed since, and
+  the count of affected files is unchanged at 9 because each package has exactly
+  two skills.)*
 - **No other file's per-file unmarked count changes.** This is the real gate;
   produce the before/after per-file lists and diff them.
 - New tests, one per §4 edge case, named for the case. At least one must be a
