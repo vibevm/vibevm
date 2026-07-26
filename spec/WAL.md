@@ -1,40 +1,32 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-26 (session end — **wave 1 closed out to zero drift; wave 2
-ratified, opened and through Phase A**; seven DRIFT tasks executed)_
+_Updated: 2026-07-26 (session end — **Phase B running, three batches landed;
+eleven findings; Phases T and G designed from scratch**)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — wave 2, `packages-2026-09`, Phase A closed and
-Phase B not started.** The live zone is `campaigns/packages-2026-09/`;
-`campaigns/progress-2026-08/` is **archival** (baseline.json, 920 units, intact).
+**Progress Control (PROP-043) — wave 2, `packages-2026-09`, Phase B in flight.**
+Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
+**archival**.
 
-**Ledger: 4 495 confirmed / 0 drift / 3 unverifiable over 275 files.** Floor
-green with the user-home tripwire, `progress check` 0, `conform check` 0,
-specmap ratchet 37, tree clean, `github/main` = `3dbedba0`, fully pushed.
+**34 of 202 package files marked; 4 276 unmarked facts remain** (measured, never
+decremented). B1+B2 closed `core-ai-native` (943 units / 16 files); B5 closed
+`go-ai-native-lang` (665 units / 19 files). Corpus **260 files** after two owner
+subtractions. Floor green, `progress check` clean, tree pushed.
 
-**Wave 1's last drift row closed, and not the way the plan expected.**
-`FACT-GRAIN-EVIDENCE` was believed to need a package re-mint; the blocker was a
-**caret**. All three `-lang` stacks required `core-ai-native ^0.7` while the
-current version is 0.8.0, and on a 0.x version that caret excludes 0.8.0. Fixed
-in place — no new version slot, no publication. specmap went 1 041 → 5 267 spec
-units, fact-targeting edges 0 → 65, unresolved edges 77 → 12.
+**Eleven findings, F-081…F-091, and the through-line matters more than any of
+them: three were the measuring instrument being wrong, not the corpus** — the
+floor gating a frozen slot, the parser blind to units its own grammar allows,
+the sync gate covering four of seven workspaces. Each was green and wrong. **A
+green panel reports what was checked and says nothing about what was covered.**
 
-**Wave 2 is ratified with all six §4.5 amendments**, applied to the phase
-bodies rather than left in a list. Phase A: scope widened, zone seeded, pilot
-run, and three of its own baseline numbers corrected (the ai-native join target
-is 703 specmark sites, not 247; 7 of 10 packages carry crates, not 8; 286
-observable package files, not 294).
+**Next: batch B6** (`typescript-ai-native-lang`, 18 files) — write a thin
+`MARKUP-B6.md` beside B5's and dispatch. The 29 locked rulings in
+`MARKUP-B1.md` bind it; **rulings 18 and 19 are struck.**
 
-**Next is Phase B** — 16 batches, 217 files, 6 555 facts, plan in
-`campaigns/packages-2026-09/BATCH-PLAN.md`. Markup is **hybrid** by owner
-ruling: opus marks per package, Fable reviews every diff and keeps splits,
-anchor naming and audience. Run `vibe update` once before B1 — it is the
-owner's stated re-materialisation path and has never been exercised here.
-
-Key laws unchanged: no fractality, engine pin `claude-opus-5`,
-`reality-mismatch` closes only through sync-from-code with owner approval, and
-the executor never edits `spec/**`.
+**Two phases were designed and not run:** Phase T (tests by swarm, between E and
+F) and Phase G (documentation as a package, after F). Both have full specs;
+Phase T also has a worker prompt and an operator runbook.
 
 ## Constraints — do not violate
 
@@ -173,59 +165,50 @@ Nothing running; the task queue is empty and the tree is clean.
 
 ## Next
 
-1. **`vibe update` once**, to retire the one unverified assumption Phase B
-   would otherwise stand on.
-2. **Phase B, batch B1** — `core-ai-native` live slot, 27 files / 1 487 facts.
-   `BATCH-PLAN.md` first; it carries the two rules easiest to lose mid-batch
-   (superseded slots are out of scope, and F-069 belongs to Phase C).
-3. **Three open findings, all wave 2**: F-069 (aggregator grammar — Phase C's,
-   does not block B), F-075 (`seal` refuses on coverage, not recency — owner's
-   call), F-077 (two counts of the same thing can disagree).
-4. **Phases F and G**, inherited from wave 1 and needing a judgment-marking
-   pass and a harvest pass respectively before they can start at all.
+1. **B6** — `typescript-ai-native-lang`, 18 files. Thin brief, dispatch, review,
+   gate, commit. Then B7–B16.
+2. **Size batches with a ×1.6 multiplier.** `BATCH-PLAN.md`'s `facts` column is
+   a *pre-markup scan* count: B5 scanned 411 and finished at 665 units.
+3. **Open findings needing a task**: F-083 (`SKILL.md` frontmatter — 9 files,
+   one exemption in `blocks.rs`), F-077's tail (`counters` written from one
+   computation, pinned by a test), F-089/090 (PROP-014 against itself).
+4. **Open findings needing the owner**: F-087 (17 commit bodies name a model;
+   uncleanable without a history rewrite the mirror law forbids), F-088
+   (`ATLAS.md` declares a generator that is tracked nowhere), F-078 (DRIFT-035
+   is written and deliberately **not dispatched**).
+5. **Before Phase G's manifest:** confirm «quick.dev (v2)» means **Qwik**.
 
 ## Known issues
 
-- **GitVerse SSH down since 2026-07-25** — banner-exchange timeout, network
-  level, not divergence. GitHub carries everything. Recovery: plain
-  `cargo xtask mirror`; NEVER `--force`.
-- **F-069 — the aggregator grammar gap.** An umbrella's facts are about *other*
-  packages, so the document cannot be their source of truth. Phase C's, not
-  Phase B's — a marker records stage/state; source-of-truth is a verdict
-  question.
-- **F-075 — `seal` refuses on coverage, not recency.** Verdict entries carry
-  only `v` and `ev` with one date per file, so "every marker has a verdict" is
-  checkable and "every verdict is fresh" is not. A session sealing after
-  re-deriving one anchor of three hundred will be believed.
-- **F-077 — two counts of the same thing can disagree.** `campaign.summary` and
-  the verdict maps; recomputed once, nothing keeps them in sync.
-- **`-lang` slots carry 0.8.0 engines under 0.7.0 numbers.** Green and working;
-  owner ruled obsolete versions are not worked on and versions are not bumped
-  per change.
-- **vibespecs 401 on this machine** — redbook + rust-ai-native resolve via
-  vibe-embedded.
-- **specmap ratchet** — 37 gated orphans host-side, unmoved.
+- **F-069** — aggregator grammar. Phase C's problem, not Phase B's.
+- **F-078** — the boot lane carries four git rules twice. The counter fix is
+  necessary and **not sufficient**: `##HOIST-LCA` puts the hoist target at the
+  root, which is also the root's own compile site, so the duplicate *migrates*.
+  Measured on a fixture, not deduced.
+- **F-083** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.
+- **F-087 / F-088** — owner's, see Next.
+- **`specmap` ratchet** — 37 gated orphans host-side, unmoved.
+- **vibespecs 401 on this machine** — resolution goes through project-local
+  `packages/` since `vibe update` repointed it.
 
 ## Session context
 
-One long session that closed wave 1 out and opened wave 2. Seven DRIFT tasks
-dispatched and reviewed diff by diff; every one of them landed, and two of them
-disproved a premise in the task I had written rather than agreeing with it —
-that PROP-043 could not be sealed (it can), and that fact ids are unique across
-the corpus (they are per file; 316 names live in more than one file, `root` in
-168). Both stop rules fired correctly, which is the mechanism working, and the
-frequency is the lesson: I wrote "measured" about things I had inferred.
+One long session that ran `vibe update` (the campaign's last unverified
+assumption — it held, and repointed the resolve off a stale second working copy
+for free), opened Phase B, landed three batches, closed six findings and opened
+eleven, and designed two phases that did not exist.
 
-The most expensive discoveries were all the same shape — **a derived thing that
-nothing keeps honest.** A caret excluded the version the whole family needed. A
-hand-written timestamp landed in the future and silently disabled an
-invalidation rule. Three separate stale projections — `tasks.json`,
-`campaign.summary`, both findings ledgers — each stated a number that another
-part of the same file contradicted. None was caught by a gate; all were caught
-by someone recomputing from the source.
+**The pattern worth carrying forward is about this reviewer's own work.** Nine
+task files were written; **every executor that ran one found a factual error in
+it by measuring rather than trusting it.** Two premises died in a single task.
+One correction reached an answer already given to the owner and withdrew it. The
+stop rules caught all of them before the tree moved, which is the mechanism
+working — but the frequency is the lesson: **a current-state bullet written from
+reading is wrong about this codebase far more often than it is right, wherever a
+command could have checked it.**
 
-The corpus itself shrank by four rounds of subtraction, none of which came from
-estimating its size: machine copies, licence boilerplate, derived indexes and
-superseded slots came out only because the owner kept asking what the corpus
-was made of. Phase B is 6 555 facts rather than the 8 992 first reported, and
-the difference is entirely text that nothing resolves to.
+The second pattern is the same shape one level up. **A ledger entry is a claim
+with a date, and quoting it is not checking it.** Three stale lines cost real
+time, and the worst was in `CLAUDE.md` itself — it said `TASKS.md` did not
+exist, three months after it did, and only the editor's read-before-write guard
+stopped that claim from destroying the file.
