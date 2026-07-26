@@ -37,11 +37,23 @@ because Phase B recorded what facts *are* and was never asked what should
 *happen* to them. G's `harvest/` is empty because Phase C skipped its own
 harvest step and its exit gate did not check for it.
 
-**Wave 2 is reviewed and awaits the owner's ratification call:**
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`, now carrying
-§4.5 — six proposed amendments from wave 1's close-out, plus two corrected
-baseline numbers (the ai-native join target is **703** specmark sites, not
-the 247 the plan claimed — that figure was the rust family alone).
+**Wave 2 is RATIFIED and Phase A is open** —
+`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`. All six §4.5
+amendments adopted and applied to the phase bodies (Phase C's exit gate now
+enumerates five conditions; every §6 prediction names the step that tests it;
+a sixth prediction added — *this campaign's stitching introduces zero new
+false claims*, which wave 1 would have failed 1 and 1). Two baseline numbers
+corrected at ratification: the ai-native join target is **703** specmark
+sites, not 247 (that figure was the rust family alone), and **7** of 10
+packages carry `crates/`, not 8. Phase A step 1 closed — scope widened, zone
+`campaigns/packages-2026-09/` seeded, **344 files / 13 916 facts / 8 997
+unmarked**, `progress check` 0 across both corpora, and the expected file
+count corrected from 294 to **286** (eight are extractor fixtures the
+always-on `fixtures` exclusion drops). **Phase A step 2 — the v0.8.0 re-mint —
+was deferred by owner ruling and then turned out not to be needed:** the
+blocker was a caret, fixed in place. Phase C is therefore no longer blocked
+on an engine. Phase A step 3's pilot found F-068 and F-069 in one 19-line
+file.
 
 Key laws unchanged: no fractality (Fable = judgment and ALL review,
 Opus = DRIFT execution), engine pin `claude-opus-5`, `reality-mismatch`
@@ -78,6 +90,15 @@ closes only through sync-from-code with owner approval.
   time in code**, and inside the campaign's own correction: PROP-043 §7.3
   was made to claim `Baseline::load / store` because a `store` existed —
   on `Cache`, a different type in the same crate (F-065).
+- **`progress scan` observes the GLOBAL scope, whatever `--campaign` says.**
+  The campaign flag chooses only where state is *written*. Since wave 2
+  widened `progress.toml`, scanning into wave 1's closed-out zone pulls all
+  286 package files into its cache (done once, restored from git). Seal
+  wave-1 verdicts by hand; do not rescan that zone.
+- **With two campaign zones, a bare `vibe progress` writes no state.**
+  `resolve_campaign` returns a zone only when exactly one exists, and
+  otherwise drops to ad-hoc mode — reports still work, state silently does
+  not. Always pass `--campaign`.
 - **Do not run a real `vibe` command while `tools/self-check.sh` is
   running.** The floor now snapshots the real `~/.vibe` before it builds
   and compares after the test steps (DRIFT-020's tripwire). `vibe progress
