@@ -1,9 +1,9 @@
 //! `go-ai-native tripwire` — list debt-registry entries whose `touch:`
 //! tripwires fire on the current change set. Warn-only by contract.
-//! The evaluation is `specmap_core::tripwire` (language-free registry
-//! + glob matching); the change-set collection duplicates the sibling
-//! drivers' — a cross-package crate dep would couple the stacks for
-//! sixty lines of git plumbing.
+//! The evaluation is `specmap_core::tripwire` (language-free
+//! registry + glob matching); the change-set collection duplicates the
+//! sibling drivers' — a cross-package crate dep would couple the
+//! stacks for sixty lines of git plumbing.
 
 use std::path::Path;
 use std::process::Command;

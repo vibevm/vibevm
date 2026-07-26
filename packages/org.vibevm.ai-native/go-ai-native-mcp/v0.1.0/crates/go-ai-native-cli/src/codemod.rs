@@ -108,7 +108,10 @@ pub fn run_codemod_add_cell(root: &Path, cell: &str, spec_uri: &str) -> Result<(
     let created = || -> Result<()> {
         write("doc.go", doc_source(cell, spec_uri))?;
         write(&format!("{cell}.go"), cell_source(cell, &type_name))?;
-        write(&format!("{cell}_test.go"), smoke_test_source(cell, &type_name))?;
+        write(
+            &format!("{cell}_test.go"),
+            smoke_test_source(cell, &type_name),
+        )?;
         Ok(())
     };
     if let Err(e) = created() {

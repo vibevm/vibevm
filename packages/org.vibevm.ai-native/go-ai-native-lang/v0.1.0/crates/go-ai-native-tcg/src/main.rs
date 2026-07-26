@@ -136,7 +136,7 @@ fn main() -> Result<()> {
             if let Ok(records) = go_ai_native_extract_bridge::extract_tree(
                 &policy.root,
                 &policy.extractor,
-                Some(&[file.clone()]),
+                Some(std::slice::from_ref(&file)),
             ) {
                 for record in &records {
                     branded.extend(go_ai_native_tcg::brands_of(record));
@@ -175,7 +175,10 @@ fn main() -> Result<()> {
                 prefix.as_deref(),
                 max.max(1),
             );
-            println!("{}", serde_json::to_string_pretty(&serde_json::json!({ "entries": out }))?);
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&serde_json::json!({ "entries": out }))?
+            );
             let _ = oracle.shutdown();
             Ok(())
         }
@@ -201,6 +204,8 @@ fn main() -> Result<()> {
             let _ = oracle.shutdown();
             Ok(())
         }
-        Cmd::Bench { corpus, report } => go_ai_native_tcg::bench::run_bench(&root, &corpus, &report),
+        Cmd::Bench { corpus, report } => {
+            go_ai_native_tcg::bench::run_bench(&root, &corpus, &report)
+        }
     }
 }

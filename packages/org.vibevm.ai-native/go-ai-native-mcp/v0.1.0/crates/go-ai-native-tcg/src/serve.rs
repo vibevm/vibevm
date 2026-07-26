@@ -127,8 +127,7 @@ fn handle_op(
                     },
                 );
                 oracle.complete(f, pos, content.clone()).map(|entries| {
-                    let symbols =
-                        finalise_completions(&policy.config, entries, f, None, 200);
+                    let symbols = finalise_completions(&policy.config, entries, f, None, 200);
                     let cell = cell_of(&policy.config, f);
                     let seam = seam_file_for(&policy.config, f);
                     // Brands come from the seams package's files (and
@@ -139,10 +138,7 @@ fn handle_op(
                         for entry in entries.filter_map(std::result::Result::ok) {
                             let p = entry.path();
                             if p.extension().and_then(|e| e.to_str()) == Some("go") {
-                                let rel = format!(
-                                    "{seam}/{}",
-                                    entry.file_name().to_string_lossy()
-                                );
+                                let rel = format!("{seam}/{}", entry.file_name().to_string_lossy());
                                 sources.push(rel);
                             }
                         }

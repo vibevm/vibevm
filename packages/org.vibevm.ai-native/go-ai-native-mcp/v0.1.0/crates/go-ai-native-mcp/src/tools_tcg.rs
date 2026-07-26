@@ -14,8 +14,8 @@ use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
 use go_ai_native_tcg::{
-    Policy, ScopeAnswer, brands_of, cell_of, enrich_validate, finalise_completions,
-    parse_position, seam_file_for, spawn_oracle, validate_exit_code,
+    Policy, ScopeAnswer, brands_of, cell_of, enrich_validate, finalise_completions, parse_position,
+    seam_file_for, spawn_oracle, validate_exit_code,
 };
 use go_ai_native_tcg_bridge::client::ChildTransport;
 use go_ai_native_tcg_bridge::position::OuterPosition;

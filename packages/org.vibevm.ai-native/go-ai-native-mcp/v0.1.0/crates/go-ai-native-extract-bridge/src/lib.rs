@@ -226,7 +226,10 @@ pub fn extract_tree(
     files: Option<&[String]>,
 ) -> Result<Vec<FileRecord>, BridgeError> {
     let mut cmd = Command::new(go_binary());
-    cmd.arg("run").arg(extractor).arg("--root").arg(project_root);
+    cmd.arg("run")
+        .arg(extractor)
+        .arg("--root")
+        .arg(project_root);
     if let Some(files) = files {
         cmd.arg("--files");
         for file in files {
@@ -321,7 +324,10 @@ mod tests {
             matches!(f, conform_core::Fact::GoUnsafe { kind, reason, .. }
                 if kind == "ambient_call" && reason.is_some())
         });
-        assert!(sanctioned.is_some(), "deviation testimony must survive lowering");
+        assert!(
+            sanctioned.is_some(),
+            "deviation testimony must survive lowering"
+        );
         let t_skip = conform_facts(&records[1]);
         assert!(t_skip.iter().any(|f| {
             matches!(f, conform_core::Fact::GoUnsafe { kind, in_test, .. }

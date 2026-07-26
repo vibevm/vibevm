@@ -43,7 +43,10 @@ pub fn run_specmap_go(root: &Path, check: bool) -> Result<()> {
         }
     } else {
         let (path, summary) = specmap_core::index::write_with_scanner(root, &scan_cfg, &scanner)?;
-        eprintln!("go-ai-native-specmap: wrote {} ({summary}).", path.display());
+        eprintln!(
+            "go-ai-native-specmap: wrote {} ({summary}).",
+            path.display()
+        );
         summary
     };
     // The vacuity warning rides only a CONFIGURED scan (mirroring the

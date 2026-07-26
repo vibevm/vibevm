@@ -339,7 +339,13 @@ mod tests {
         let records = vec![record(
             "internal/a.go",
             vec![
-                marker("deviates", "spec://demo/PROP-001#req", Some(1), None, Some("F")),
+                marker(
+                    "deviates",
+                    "spec://demo/PROP-001#req",
+                    Some(1),
+                    None,
+                    Some("F"),
+                ),
                 marker("implements", "not-a-uri", None, None, Some("G")),
             ],
             &["F", "G"],
@@ -357,7 +363,13 @@ mod tests {
             // plan.go carries the package scope in its doc block…
             record(
                 "internal/cells/plan/doc.go",
-                vec![marker("scope", "spec://demo/PROP-001#cells", Some(1), None, None)],
+                vec![marker(
+                    "scope",
+                    "spec://demo/PROP-001#cells",
+                    Some(1),
+                    None,
+                    None,
+                )],
                 &[],
             ),
             // …so a SIBLING file's exports are covered too.

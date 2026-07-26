@@ -13,7 +13,7 @@ specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014
 use std::path::Path;
 
 use crate::generated::specmap::{SpecUnit, SpecUnitKind, SpecUnitStatus, Warning};
-use specmark_grammar::is_valid_anchor;
+use specmark_grammar::{is_valid_anchor, is_valid_fact_id};
 use walkdir::WalkDir;
 
 use crate::config::Config;
@@ -102,7 +102,7 @@ fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {
             let other = &w["disputed(#".len()..w.len() - 1];
             if !is_valid_anchor(other) {
                 return Err(format!(
-                    "kind line `{decl}`: disputed(...) must name a kebab-case anchor, got `{other}`"
+                    "kind line `{decl}`: disputed(...) must name an anchor id `[A-Za-z][A-Za-z0-9_-]*`, got `{other}`"
                 ));
             }
             (Some(SpecUnitStatus::Disputed), Some(other.to_string()))
@@ -143,6 +143,156 @@ fn fence_mask(lines: &[&str]) -> Vec<bool> {
         }
     }
     mask
+}
+
+/// Byte offset of a list item's content when the line opens one
+/// (`- ` / `* ` / `+ ` / `N. ` / `N) ` at any indent), else `None`.
+///
+/// A list item is where the finest fact grain lives: a `##<ID>` written as
+/// the item's first token mints its own unit (PROP-014 §2.1). This mirrors
+/// — without sharing code (PROP-014 §2.9 separability; the convention is
+/// held by tests on both sides) — the host Progress-Control scanner's list
+/// recognition.
+fn list_item_content(line: &str) -> Option<usize> {
+    let indent = line.len() - line.trim_start().len();
+    let rest = &line[indent..];
+    for pre in ["- ", "* ", "+ "] {
+        if rest.starts_with(pre) {
+            return Some(indent + pre.len());
+        }
+    }
+    let digits = rest.chars().take_while(|c| c.is_ascii_digit()).count();
+    if (1..=9).contains(&digits) {
+        let after = &rest[digits..];
+        if after.starts_with(". ") || after.starts_with(") ") {
+            return Some(indent + digits + 2);
+        }
+    }
+    None
+}
+
+/// A `##<ID>` fact anchor at `line[start..]` (leading whitespace skipped):
+/// `##`, a valid fact id, then whitespace or end-of-line. Returns the id
+/// and the trimmed remainder of the line — the fact's lead text, kept as
+/// the unit heading.
+///
+/// `##` followed by an invalid id — a non-letter head (`##9bad`) or an id
+/// run glued to a non-space glyph (`##bad!`) — is ordinary prose: `None`,
+/// and (unlike a malformed heading anchor) no warning (PROP-014 §2.1). The
+/// id charset is [`is_valid_fact_id`], which a heading anchor now takes too —
+/// one grammar, two grains; only the reaction to a bad name differs, prose
+/// here and a warning there.
+fn fact_anchor_at(line: &str, start: usize) -> Option<(String, String)> {
+    let seg = &line[start..];
+    let lead_ws = seg.len() - seg.trim_start().len();
+    let rest = seg[lead_ws..].strip_prefix("##")?;
+    let id_len = rest
+        .chars()
+        .take_while(|&c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+        .count();
+    if id_len == 0 {
+        return None;
+    }
+    let id = &rest[..id_len];
+    let after = &rest[id_len..];
+    if !is_valid_fact_id(id) || after.chars().next().is_some_and(|c| !c.is_whitespace()) {
+        return None;
+    }
+    Some((id.to_string(), after.trim().to_string()))
+}
+
+/// The `duplicate-anchor` warning, shared by heading anchors and `##<ID>`
+/// fact anchors — one id per document, whichever grain mints it first
+/// (PROP-014 §2.1, one address space per document).
+fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {
+    Warning {
+        code: "duplicate-anchor".to_string(),
+        message: format!(
+            "anchor `{{#{anchor}}}` already used earlier in this file — \
+             spec://…#{anchor} is ambiguous"
+        ),
+        file: file.to_string(),
+        line,
+    }
+}
+
+/// Segment one text block (`lines[start..end]` — no blank, heading, or
+/// fenced line inside) into untyped fact units.
+///
+/// A `##<ID>` mints a unit when it is the first token of the block's lead
+/// paragraph or of any list item; a nested item is its own unit, and a
+/// plain line continues the paragraph/item above it. The span is the
+/// segment's own lines (continuations included) and the unit is untyped —
+/// no `kind:`/revision line applies to a fact (PROP-014 §2.1). Fact ids
+/// share the document's `seen_anchors`, so a duplicate — fact-vs-fact or
+/// fact-vs-heading — warns exactly as a heading collision does. Returns the
+/// block's units and warnings for the caller to append in document order.
+fn segment_block_facts(
+    lines: &[&str],
+    start: usize,
+    end: usize,
+    file: &str,
+    namespace: &str,
+    doc_path: &str,
+    seen_anchors: &mut Vec<String>,
+) -> (Vec<SpecUnit>, Vec<Warning>) {
+    let len = end - start;
+    // `Some(off)` — the byte offset of a list item's content; `None` — a
+    // plain line (a paragraph line, or an item's continuation).
+    let markers: Vec<Option<usize>> = (start..end).map(|k| list_item_content(lines[k])).collect();
+
+    // Each segment: (anchoring line, marker offset on it, span [lo, hi)).
+    let mut segments: Vec<(usize, usize, usize, usize)> = Vec::new();
+    let mut k = 0;
+    // Lead: the plain lines before the first list item form one paragraph.
+    if matches!(markers.first(), Some(None)) {
+        let mut e = 0;
+        while e + 1 < len && markers[e + 1].is_none() {
+            e += 1;
+        }
+        segments.push((start, 0, start, start + e + 1));
+        k = e + 1;
+    }
+    // Every later segment opens on a list item; the following plain lines
+    // are its continuation, up to the next item.
+    while k < len {
+        let Some(off) = markers[k] else { break };
+        let mut e = k;
+        while e + 1 < len && markers[e + 1].is_none() {
+            e += 1;
+        }
+        segments.push((start + k, off, start + k, start + e + 1));
+        k = e + 1;
+    }
+
+    let mut units = Vec::new();
+    let mut warnings = Vec::new();
+    for (anchor_line, marker_off, span_lo, span_hi) in segments {
+        let Some((id, heading)) = fact_anchor_at(lines[anchor_line], marker_off) else {
+            continue;
+        };
+        let line_no = (anchor_line + 1) as u32;
+        if seen_anchors.contains(&id) {
+            warnings.push(duplicate_anchor_warning(&id, file, line_no));
+        } else {
+            seen_anchors.push(id.clone());
+        }
+        let span_text = lines[span_lo..span_hi].join("\n");
+        units.push(SpecUnit {
+            uri: format!("spec://{namespace}/{doc_path}#{id}"),
+            docPath: doc_path.to_string(),
+            file: file.to_string(),
+            anchor: id,
+            heading,
+            contentHash: content_hash(&span_text),
+            line: line_no,
+            kind: None,
+            revision: None,
+            status: None,
+            disputes: None,
+        });
+    }
+    (units, warnings)
 }
 
 /// The canonical citation path used inside `spec://` URIs — the house
@@ -198,7 +348,35 @@ pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, V
             continue;
         }
         let Some((level, heading, anchor)) = parse_heading(lines[i]) else {
-            i += 1;
+            // Not an anchored heading. Blank lines and unanchored headings
+            // mint no unit; every other non-fenced line opens a text block
+            // that may carry `##<ID>` fact anchors (PROP-014 §2.1). Scanning
+            // in document order keeps the `seen_anchors` dedup line-ordered
+            // across headings and facts alike.
+            if lines[i].trim().is_empty() || heading_level(lines[i]).is_some() {
+                i += 1;
+                continue;
+            }
+            let mut end = i;
+            while end < lines.len()
+                && !fenced[end]
+                && !lines[end].trim().is_empty()
+                && heading_level(lines[end]).is_none()
+            {
+                end += 1;
+            }
+            let (mut u, mut w) = segment_block_facts(
+                &lines,
+                i,
+                end,
+                file,
+                namespace,
+                &doc_path,
+                &mut seen_anchors,
+            );
+            units.append(&mut u);
+            warnings.append(&mut w);
+            i = end;
             continue;
         };
         let heading_line_no = (i + 1) as u32;
@@ -206,7 +384,9 @@ pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, V
         if !is_valid_anchor(&anchor) {
             warnings.push(Warning {
                 code: "invalid-anchor".to_string(),
-                message: format!("anchor `{{#{anchor}}}` is not kebab-case; unit skipped"),
+                message: format!(
+                    "anchor `{{#{anchor}}}` is not an id `[A-Za-z][A-Za-z0-9_-]*`; unit skipped"
+                ),
                 file: file.to_string(),
                 line: heading_line_no,
             });
@@ -214,15 +394,7 @@ pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, V
             continue;
         }
         if seen_anchors.contains(&anchor) {
-            warnings.push(Warning {
-                code: "duplicate-anchor".to_string(),
-                message: format!(
-                    "anchor `{{#{anchor}}}` already used earlier in this file — \
-                     spec://…#{anchor} is ambiguous"
-                ),
-                file: file.to_string(),
-                line: heading_line_no,
-            });
+            warnings.push(duplicate_anchor_warning(&anchor, file, heading_line_no));
         } else {
             seen_anchors.push(anchor.clone());
         }
@@ -389,191 +561,4 @@ pub fn scan_external_units(root: &Path, cfg: &Config) -> Vec<SpecUnit> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    const DOC: &str = "spec/test/DOC.md";
-    const NS: &str = "project";
-
-    fn fmt_warnings(w: &[Warning]) -> String {
-        w.iter()
-            .map(|x| format!("{}:{} [{}] {}", x.file, x.line, x.code, x.message))
-            .collect::<Vec<_>>()
-            .join("; ")
-    }
-
-    #[test]
-    fn anchored_heading_becomes_a_unit_with_span_hash() {
-        let text = "# Title {#root}\n\nbody one\n\n## Sub {#sub-part}\n\nbody two\n\n## Next {#next-part}\nafter\n";
-        let (units, warnings) = parse_units(DOC, text, NS);
-        assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
-        assert_eq!(units.len(), 3);
-        assert_eq!(units[0].anchor, "root");
-        assert_eq!(units[0].uri, "spec://project/test/DOC#root");
-        assert_eq!(units[0].docPath, "test/DOC");
-        assert_eq!(units[0].file, DOC);
-        assert_eq!(units[0].line, 1);
-        // The root unit spans the whole document (no same-or-higher
-        // heading follows); the sub unit ends before `## Next`.
-        assert_eq!(units[1].anchor, "sub-part");
-        assert_eq!(units[2].anchor, "next-part");
-        assert_ne!(units[1].contentHash, units[2].contentHash);
-    }
-
-    #[test]
-    fn unanchored_heading_ends_a_span_but_is_not_a_unit() {
-        let text = "## A {#a}\nbody\n## Plain heading\nmore\n## B {#b}\nbody b\n";
-        let (units, _) = parse_units(DOC, text, NS);
-        assert_eq!(units.len(), 2);
-        // A's span must stop at `## Plain heading`.
-        let a_hash = units[0].contentHash.clone();
-        let (units2, _) = parse_units(DOC, "## A {#a}\nbody\n", NS);
-        assert_eq!(a_hash, units2[0].contentHash);
-    }
-
-    #[test]
-    fn kind_line_parses_kind_revision_status() {
-        let text = "### R {#req-x}\n`req r2`\n\nMUST hold.\n\n### P {#req-y}\n`req r1 planned`\n\n### D {#req-z}\n`req r3 disputed(#req-x)` — see the pair.\n";
-        let (units, warnings) = parse_units(DOC, text, NS);
-        assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
-        assert!(matches!(units[0].kind.as_deref(), Some(SpecUnitKind::Req)));
-        assert_eq!(units[0].revision.as_deref(), Some(&2));
-        assert!(units[0].status.is_none());
-        assert!(matches!(
-            units[1].status.as_deref(),
-            Some(SpecUnitStatus::Planned)
-        ));
-        assert!(matches!(
-            units[2].status.as_deref(),
-            Some(SpecUnitStatus::Disputed)
-        ));
-        assert_eq!(units[2].disputes.as_deref(), Some(&"req-x".to_string()));
-    }
-
-    #[test]
-    fn ordinary_inline_code_is_not_a_kind_line() {
-        let text = "### T {#t}\n`vibe install` does things.\n";
-        let (units, warnings) = parse_units(DOC, text, NS);
-        assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
-        assert!(units[0].kind.is_none());
-    }
-
-    #[test]
-    fn malformed_kind_line_warns_but_keeps_the_unit() {
-        let text = "### T {#t}\n`req rX`\n";
-        let (units, warnings) = parse_units(DOC, text, NS);
-        assert_eq!(units.len(), 1);
-        assert_eq!(warnings.len(), 1);
-        assert_eq!(warnings[0].code, "malformed-kind-line");
-        let text = "### T {#t}\n`req r1 someday`\n";
-        let (_, warnings) = parse_units(DOC, text, NS);
-        assert_eq!(warnings[0].code, "malformed-kind-line");
-    }
-
-    #[test]
-    fn duplicate_anchor_in_one_file_warns_and_keeps_both() {
-        let text = "## A {#phases}\none\n## B {#phases}\ntwo\n";
-        let (units, warnings) = parse_units(DOC, text, NS);
-        assert_eq!(units.len(), 2);
-        assert_eq!(warnings.len(), 1);
-        assert_eq!(warnings[0].code, "duplicate-anchor");
-        assert_eq!(warnings[0].line, 3);
-    }
-
-    #[test]
-    fn invalid_anchor_warns_and_skips() {
-        let text = "## A {#Bad_Anchor}\nbody\n";
-        let (units, warnings) = parse_units(DOC, text, NS);
-        assert!(units.is_empty());
-        assert_eq!(warnings[0].code, "invalid-anchor");
-    }
-
-    #[test]
-    fn root_spec_docs_are_scanned_and_other_root_md_is_not() {
-        let dir = tempfile::tempdir().unwrap();
-        std::fs::create_dir_all(dir.path().join("spec")).unwrap();
-        std::fs::write(
-            dir.path().join("spec").join("X.md"),
-            "## In tree {#in-tree}\nbody\n",
-        )
-        .unwrap();
-        std::fs::write(
-            dir.path().join("ROOT-SPEC.md"),
-            "# demo {#root}\n\n## Section 5. The task graph {#task-graph}\nbody\n",
-        )
-        .unwrap();
-        std::fs::write(dir.path().join("README.md"), "# Readme {#root}\n").unwrap();
-        let cfg = Config {
-            root_spec_docs: vec!["ROOT-SPEC.md".into()],
-            ..Config::default()
-        };
-        let (units, warnings) = scan_spec_tree(dir.path(), &cfg);
-        assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
-        let uris: Vec<&str> = units.iter().map(|u| u.uri.as_str()).collect();
-        assert!(uris.contains(&"spec://project/X#in-tree"));
-        assert!(uris.contains(&"spec://project/ROOT-SPEC#root"));
-        assert!(uris.contains(&"spec://project/ROOT-SPEC#task-graph"));
-        // README-class root markdown stays out of the inventory.
-        assert_eq!(units.len(), 3);
-    }
-
-    #[test]
-    fn external_specs_resolve_under_their_own_namespace_and_are_skipped_when_absent() {
-        let dir = tempfile::tempdir().unwrap();
-        let ext = dir.path().join("vibedeps/some-flow/0.3.0/spec");
-        std::fs::create_dir_all(ext.join("mechanisms")).unwrap();
-        std::fs::write(
-            ext.join("mechanisms/ENGINE-X-v0.1.md"),
-            "## Rules {#rules}\n`req r1`\n\nbody\n",
-        )
-        .unwrap();
-        let cfg = Config {
-            external_specs: vec![
-                crate::config::ExternalSpec {
-                    namespace: "some-flow".into(),
-                    root: "vibedeps/some-flow/0.3.0/spec".into(),
-                },
-                // A not-yet-installed package: skipped, never fatal.
-                crate::config::ExternalSpec {
-                    namespace: "ghost".into(),
-                    root: "vibedeps/ghost/1.0.0/spec".into(),
-                },
-            ],
-            ..Config::default()
-        };
-        let units = scan_external_units(dir.path(), &cfg);
-        assert_eq!(units.len(), 1);
-        assert_eq!(
-            units[0].uri,
-            "spec://some-flow/mechanisms/ENGINE-X-v0.1#rules"
-        );
-        assert_eq!(units[0].revision.as_deref(), Some(&1));
-    }
-
-    #[test]
-    fn fenced_sample_headings_are_not_units_and_do_not_cut_spans() {
-        let text = "## Real {#real-unit}\nbody\n```markdown\n## Sample {#req-sample}\n`req r2`\n```\ntail\n## Next {#next-unit}\n";
-        let (units, warnings) = parse_units(DOC, text, NS);
-        assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
-        assert_eq!(units.len(), 2);
-        assert_eq!(units[0].anchor, "real-unit");
-        assert_eq!(units[1].anchor, "next-unit");
-        // The fenced sample stays inside real-unit's span (the hash
-        // covers it), it just isn't a unit of its own.
-        let (units2, _) = parse_units(
-            DOC,
-            "## Real {#real-unit}\nbody\ntail\n## Next {#next-unit}\n",
-            NS,
-        );
-        assert_ne!(units[0].contentHash, units2[0].contentHash);
-    }
-
-    #[test]
-    fn hash_is_line_ending_invariant() {
-        let lf = "## A {#a}\nbody\n";
-        let crlf = "## A {#a}\r\nbody\r\n";
-        let (u1, _) = parse_units(DOC, lf, NS);
-        let (u2, _) = parse_units(DOC, crlf, NS);
-        assert_eq!(u1[0].contentHash, u2[0].contentHash);
-    }
-}
+mod tests;

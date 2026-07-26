@@ -164,16 +164,13 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
     // 5. The conform gate (the go-extract structural rules).
     if !is_disabled("conform") {
         header(opts, "go-ai-native-conform check");
-        let ok = go_ai_native_conform::run_check(
-            root,
-            go_ai_native_conform::DEFAULT_GO_BASELINE,
-            None,
-        )
-        .map(|()| true)
-        .unwrap_or_else(|e| {
-            eprintln!("{e}");
-            false
-        });
+        let ok =
+            go_ai_native_conform::run_check(root, go_ai_native_conform::DEFAULT_GO_BASELINE, None)
+                .map(|()| true)
+                .unwrap_or_else(|e| {
+                    eprintln!("{e}");
+                    false
+                });
         if !record(&mut outcomes, "conform", ok) && !opts.keep_going {
             bail!("floor: `conform` failed");
         }

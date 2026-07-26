@@ -29,11 +29,24 @@ fn oracle_with(pull: bool, inbound: Vec<serde_json::Value>) -> GoOracle<Script> 
 #[test]
 fn overlay_versions_are_monotonic_and_close_resets() {
     let mut oracle = oracle_with(true, vec![]);
-    assert_eq!(oracle.update("a.go", Some("package a".into())).expect("v1"), 1);
-    assert_eq!(oracle.update("a.go", Some("package a2".into())).expect("v2"), 2);
+    assert_eq!(
+        oracle.update("a.go", Some("package a".into())).expect("v1"),
+        1
+    );
+    assert_eq!(
+        oracle
+            .update("a.go", Some("package a2".into()))
+            .expect("v2"),
+        2
+    );
     assert_eq!(oracle.update("a.go", None).expect("close"), 0);
     // Re-open starts a fresh document at v1 (didOpen again).
-    assert_eq!(oracle.update("a.go", Some("package a3".into())).expect("v1 again"), 1);
+    assert_eq!(
+        oracle
+            .update("a.go", Some("package a3".into()))
+            .expect("v1 again"),
+        1
+    );
 }
 
 #[test]

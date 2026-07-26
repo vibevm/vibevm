@@ -80,12 +80,9 @@ fn init_then_gates_catch_violations_and_the_tagged_tree_passes() {
 
     // 2. The conform gate catches the ambient call through the real
     // go run.
-    let err = go_ai_native_conform::run_check(
-        root,
-        go_ai_native_conform::DEFAULT_GO_BASELINE,
-        None,
-    )
-    .expect_err("the ambient call must fail the gate");
+    let err =
+        go_ai_native_conform::run_check(root, go_ai_native_conform::DEFAULT_GO_BASELINE, None)
+            .expect_err("the ambient call must fail the gate");
     assert!(err.to_string().contains("1 new finding(s)"), "{err}");
 
     // 3. The index mints (the ratchet is warn-only on a mint), then

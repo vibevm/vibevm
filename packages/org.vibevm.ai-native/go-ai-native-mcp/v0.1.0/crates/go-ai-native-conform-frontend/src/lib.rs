@@ -36,10 +36,9 @@ impl GoExtractFrontend {
     /// Materialise the bridge's embedded extractor and return the
     /// frontend.
     pub fn new(project_root: &Path) -> Result<GoExtractFrontend> {
-        let path =
-            go_ai_native_extract_bridge::materialise_extractor(project_root).with_context(
-                || format!("materialising go-extract under {}", project_root.display()),
-            )?;
+        let path = go_ai_native_extract_bridge::materialise_extractor(project_root).with_context(
+            || format!("materialising go-extract under {}", project_root.display()),
+        )?;
         Ok(GoExtractFrontend {
             project_root: project_root.to_path_buf(),
             extractor: path,

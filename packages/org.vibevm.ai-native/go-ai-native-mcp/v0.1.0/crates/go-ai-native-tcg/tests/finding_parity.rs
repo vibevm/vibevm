@@ -7,8 +7,7 @@
 use std::path::PathBuf;
 
 fn fixture_dirty() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../tools/go-extract/test/fixtures/dirty")
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tools/go-extract/test/fixtures/dirty")
 }
 
 #[test]
@@ -37,14 +36,22 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
         .map(|f| f.rule.as_str())
         .collect();
     assert_eq!(
-        rules.iter().filter(|r| **r == "go-unsafe-in-domain").count(),
+        rules
+            .iter()
+            .filter(|r| **r == "go-unsafe-in-domain")
+            .count(),
         9,
         "{:?}",
         enriched.conform_findings
     );
     // Advice cites the guide, deduplicated per rule/kind.
     assert!(!enriched.advice.is_empty());
-    assert!(enriched.advice.iter().all(|a| a.contains("GUIDE-AI-NATIVE-GO")));
+    assert!(
+        enriched
+            .advice
+            .iter()
+            .all(|a| a.contains("GUIDE-AI-NATIVE-GO"))
+    );
     // The markers stream is FILLED (the protocol's named delta): the
     // fixture's scope/implements/deviates directives ride along.
     assert!(enriched.markers.iter().any(|m| m.tag == "scope"));
@@ -52,6 +59,9 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
     // Facts carry the file's census with deviation testimony intact.
     assert!(enriched.facts.iter().any(|f| matches!(
         f,
-        go_ai_native_extract_bridge::RawFact::GoUnsafe { reason: Some(_), .. }
+        go_ai_native_extract_bridge::RawFact::GoUnsafe {
+            reason: Some(_),
+            ..
+        }
     )));
 }

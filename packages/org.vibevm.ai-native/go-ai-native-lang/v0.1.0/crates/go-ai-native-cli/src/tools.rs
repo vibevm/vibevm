@@ -24,7 +24,7 @@ pub(crate) fn gofmt_command(root: &Path) -> Command {
     let go = go_ai_native_extract_bridge::go_binary();
     let path = PathBuf::from(&go);
     let gofmt = match path.parent() {
-        Some(dir) if dir.as_os_str().len() > 0 => {
+        Some(dir) if !dir.as_os_str().is_empty() => {
             let sibling = dir.join(if cfg!(windows) { "gofmt.exe" } else { "gofmt" });
             if sibling.exists() {
                 sibling

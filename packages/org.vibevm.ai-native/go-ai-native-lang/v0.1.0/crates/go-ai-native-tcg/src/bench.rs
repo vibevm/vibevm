@@ -178,8 +178,8 @@ pub fn run_bench(root: &Path, corpus_rel: &str, report_rel: &str) -> Result<()> 
             }
             ok
         } else {
-            let existence_ok = build_red == case.expect.build_red
-                && oracle_error == case.expect.build_red;
+            let existence_ok =
+                build_red == case.expect.build_red && oracle_error == case.expect.build_red;
             let messages_ok = case.expect.oracle_message_contains.iter().all(|needle| {
                 enriched
                     .diagnostics
@@ -200,7 +200,10 @@ pub fn run_bench(root: &Path, corpus_rel: &str, report_rel: &str) -> Result<()> 
             } else if !messages_ok {
                 detail = "an expected oracle message substring is missing".to_string();
             } else if !rules_ok {
-                detail = format!("expected conform rules {:?}, got {rules:?}", case.expect.conform_rules);
+                detail = format!(
+                    "expected conform rules {:?}, got {rules:?}",
+                    case.expect.conform_rules
+                );
             }
             existence_ok && messages_ok && rules_ok
         };

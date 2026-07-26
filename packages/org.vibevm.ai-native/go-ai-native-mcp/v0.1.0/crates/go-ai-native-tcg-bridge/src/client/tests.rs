@@ -71,7 +71,11 @@ fn server_configuration_request_is_answered_per_item_mid_request() {
     ]);
     let mut client = LspClient::new(script);
     let result = client
-        .request("textDocument/hover", serde_json::json!({}), Duration::from_secs(1))
+        .request(
+            "textDocument/hover",
+            serde_json::json!({}),
+            Duration::from_secs(1),
+        )
         .expect("request");
     assert_eq!(result["ok"], true);
     let answer = client

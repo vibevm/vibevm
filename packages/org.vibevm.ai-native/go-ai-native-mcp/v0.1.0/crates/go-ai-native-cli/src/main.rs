@@ -165,10 +165,9 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     let root = std::path::PathBuf::from(&cli.path);
     match cli.command {
-        Cmd::Init { namespace, force } => go_ai_native_cli::run_init(
-            &root,
-            &go_ai_native_cli::InitOptions { namespace, force },
-        ),
+        Cmd::Init { namespace, force } => {
+            go_ai_native_cli::run_init(&root, &go_ai_native_cli::InitOptions { namespace, force })
+        }
         Cmd::Floor { keep_going, quiet } => go_ai_native_cli::run_floor(
             &root,
             &go_ai_native_cli::FloorOptions { keep_going, quiet },

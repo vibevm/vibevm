@@ -41,10 +41,7 @@ fn seeded_error_surfaces_through_an_overlay_and_the_session_shuts_down() {
         )
         .expect("validate answers");
     assert!(
-        outcome
-            .diagnostics
-            .iter()
-            .any(|d| d.category == "error"),
+        outcome.diagnostics.iter().any(|d| d.category == "error"),
         "a seeded type error must surface: {outcome:?}"
     );
 
