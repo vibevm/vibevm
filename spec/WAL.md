@@ -1,63 +1,40 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-26 (**wave 1 closed out**: the task queue drained, the
-baseline artifact exists for the first time, F and G deferred by owner
-ruling, and wave 2's plan reviewed for ratification)_
+_Updated: 2026-07-26 (session end — **wave 1 closed out to zero drift; wave 2
+ratified, opened and through Phase A**; seven DRIFT tasks executed)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — wave 1 CLOSED OUT, and the ledger is at
-ZERO DRIFT.** The spec tree measures **4 491 confirmed / 0 drift / 3
-unverifiable of 4 494 = 99.93 %**. Findings **61 of 69**.
-`FACT-GRAIN-EVIDENCE` — the row wave 1 closed out believing no work in this
-repository could touch — **closed on 2026-07-26**, and not the way the plan
-expected. It needed no re-mint and no publication: all three `-lang` stacks
-required `core-ai-native ^0.7` while the current version is 0.8.0, and on a
-0.x version that caret excludes 0.8.0. The long-lead item was a caret.
-*(An earlier line here read 4 488 / 4 492 — stale by the two anchors sealed
-in `812bfecc`. Recounted from the cache.)*
+**Progress Control (PROP-043) — wave 2, `packages-2026-09`, Phase A closed and
+Phase B not started.** The live zone is `campaigns/packages-2026-09/`;
+`campaigns/progress-2026-08/` is **archival** (baseline.json, 920 units, intact).
 
-**The task queue is empty.** DRIFT-020, 022 and 023 all landed and were
-reviewed diff-by-diff. `bash tools/self-check.sh` exits 0 against the real
-`~/.vibe/` — now carrying the user-home tripwire — and `progress check`,
-`conform check` and the specmap ratchet are all green at HEAD.
+**Ledger: 4 495 confirmed / 0 drift / 3 unverifiable over 275 files.** Floor
+green with the user-home tripwire, `progress check` 0, `conform check` 0,
+specmap ratchet 37, tree clean, `github/main` = `3dbedba0`, fully pushed.
 
-**Close-out is complete.** `campaigns/progress-2026-08/baseline.json`
-exists (920 units; 914 confirmed / 2 drift / 4 unverifiable) and
-round-trips clean: `rescan` against it reports 919 carried-forward, 0 new,
-and 1 changed that is the named-crate invalidation rule firing correctly.
-`deferrals.md` is written. The REPORT is filled against all six §8
-predictions — four confirmed, one confirmed only because close-out went
-and measured it, one falsified in the favourable direction.
+**Wave 1's last drift row closed, and not the way the plan expected.**
+`FACT-GRAIN-EVIDENCE` was believed to need a package re-mint; the blocker was a
+**caret**. All three `-lang` stacks required `core-ai-native ^0.7` while the
+current version is 0.8.0, and on a 0.x version that caret excludes 0.8.0. Fixed
+in place — no new version slot, no publication. specmap went 1 041 → 5 267 spec
+units, fact-targeting edges 0 → 65, unresolved edges 77 → 12.
 
-**Phases F and G were deferred to wave 2 by owner ruling**, and not for
-time: close-out measured their inputs and found them absent. F's three
-views are empty (`freeze/plan` 0, `action="rework"` 0, `stage="idea"` 0)
-because Phase B recorded what facts *are* and was never asked what should
-*happen* to them. G's `harvest/` is empty because Phase C skipped its own
-harvest step and its exit gate did not check for it.
+**Wave 2 is ratified with all six §4.5 amendments**, applied to the phase
+bodies rather than left in a list. Phase A: scope widened, zone seeded, pilot
+run, and three of its own baseline numbers corrected (the ai-native join target
+is 703 specmark sites, not 247; 7 of 10 packages carry crates, not 8; 286
+observable package files, not 294).
 
-**Wave 2 is RATIFIED and Phase A is open** —
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`. All six §4.5
-amendments adopted and applied to the phase bodies (Phase C's exit gate now
-enumerates five conditions; every §6 prediction names the step that tests it;
-a sixth prediction added — *this campaign's stitching introduces zero new
-false claims*, which wave 1 would have failed 1 and 1). Two baseline numbers
-corrected at ratification: the ai-native join target is **703** specmark
-sites, not 247 (that figure was the rust family alone), and **7** of 10
-packages carry `crates/`, not 8. Phase A step 1 closed — scope widened, zone
-`campaigns/packages-2026-09/` seeded, **344 files / 13 916 facts / 8 997
-unmarked**, `progress check` 0 across both corpora, and the expected file
-count corrected from 294 to **286** (eight are extractor fixtures the
-always-on `fixtures` exclusion drops). **Phase A step 2 — the v0.8.0 re-mint —
-was deferred by owner ruling and then turned out not to be needed:** the
-blocker was a caret, fixed in place. Phase C is therefore no longer blocked
-on an engine. Phase A step 3's pilot found F-068 and F-069 in one 19-line
-file.
+**Next is Phase B** — 16 batches, 217 files, 6 555 facts, plan in
+`campaigns/packages-2026-09/BATCH-PLAN.md`. Markup is **hybrid** by owner
+ruling: opus marks per package, Fable reviews every diff and keeps splits,
+anchor naming and audience. Run `vibe update` once before B1 — it is the
+owner's stated re-materialisation path and has never been exercised here.
 
-Key laws unchanged: no fractality (Fable = judgment and ALL review,
-Opus = DRIFT execution), engine pin `claude-opus-5`, `reality-mismatch`
-closes only through sync-from-code with owner approval.
+Key laws unchanged: no fractality, engine pin `claude-opus-5`,
+`reality-mismatch` closes only through sync-from-code with owner approval, and
+the executor never edits `spec/**`.
 
 ## Constraints — do not violate
 
@@ -196,66 +173,59 @@ Nothing running; the task queue is empty and the tree is clean.
 
 ## Next
 
-1. **Push.** 13 commits from this session are unpushed —
-   `github/main` still sits at `e7851a0e`. GitVerse (`origin`) is 125
-   behind and its SSH link has been down since 2026-07-25. Recovery is a
-   plain `cargo xtask mirror`; **never** `--force`.
-2. **Ratify wave 2, or strike its amendments.** The plan carries §4.5's
-   six proposals; each is the owner's to take or drop. A1 is the one that
-   matters most — the plan today repeats wave 1's exact defect, gating
-   Phase C on verdicts while its own §3.2 step says the checker runs are
-   captured as doc fixtures.
-3. **F-063's owner half.** `spec/boot/90-user.md`
-   `##TOKEN-FILE-CONVENTION` still names `VIBEVM_PUBLISH_TOKEN` as the
-   highest-precedence token source; `VIBEVM_PUBLISH_TOKEN_<HOST>` outranks
-   it. The PROP-002 half landed. That file is user-owned — no session may
-   edit it, and the corrected line is in `deferrals.md` §1.
-4. **Re-verify two files before trusting anything downstream** —
-   `MT-02-vibe-tree-tui.md` and `PROP-026-tcg-tool-family.md` carry
-   verdicts formed against text Phase D changed afterwards.
-   `vibe progress baseline` names both on every run. Minutes of work.
-5. **Open tails now in `campaigns/progress-2026-08/deferrals.md`**, which
-   is the authoritative list: F-064 (the second config home), F-065's
-   spec half is closed but F-066 (the spec still names the old config
-   home) and F-067 (the staleness signal inverts) are open, MT-02/MT-03
-   await a human sign-off, and Phases F and G are wave 2's to carry.
+1. **`vibe update` once**, to retire the one unverified assumption Phase B
+   would otherwise stand on.
+2. **Phase B, batch B1** — `core-ai-native` live slot, 27 files / 1 487 facts.
+   `BATCH-PLAN.md` first; it carries the two rules easiest to lose mid-batch
+   (superseded slots are out of scope, and F-069 belongs to Phase C).
+3. **Three open findings, all wave 2**: F-069 (aggregator grammar — Phase C's,
+   does not block B), F-075 (`seal` refuses on coverage, not recency — owner's
+   call), F-077 (two counts of the same thing can disagree).
+4. **Phases F and G**, inherited from wave 1 and needing a judgment-marking
+   pass and a harvest pass respectively before they can start at all.
 
 ## Known issues
 
-- **GitVerse SSH link DOWN since 2026-07-25.** Banner-exchange timeout —
-  network-level, not divergence. Recovery: plain `cargo xtask mirror`;
-  NEVER `--force`. **GitHub is also behind**: 13 commits unpushed.
-- **F-064 — a second config home** (`legacy_xdg_config_path()`,
-  `user_config.rs:285`) that `$VIBE_SETTINGS` does not relocate. Same
-  shape as the leg DRIFT-021 removed, one severity lower.
-- **F-066 — `VIBEVM-SPEC.md` §9.5 still names `~/.config/vibe/config.toml`**
-  as the user-level config. That path is only a migration fallback now.
-  Close it with F-064, or after: once F-064 deletes the leg, the spec
-  line names a path that does not exist.
-- **F-067 — the staleness signal inverts.** `processed_hash` is only
-  written by a real verify batch, and this campaign sealed verdicts by
-  hand throughout, so `progress baseline`'s warning fires on the files
-  with the *freshest* verdicts. Cleared by hand for PROP-002/PROP-043;
-  standing for MT-02/PROP-026, which genuinely need re-verifying.
-- **vibespecs 401 on this machine** — redbook + rust-ai-native resolve
-  via vibe-embedded; consuming lockfiles carry `source_kind = "embedded"`.
+- **GitVerse SSH down since 2026-07-25** — banner-exchange timeout, network
+  level, not divergence. GitHub carries everything. Recovery: plain
+  `cargo xtask mirror`; NEVER `--force`.
+- **F-069 — the aggregator grammar gap.** An umbrella's facts are about *other*
+  packages, so the document cannot be their source of truth. Phase C's, not
+  Phase B's — a marker records stage/state; source-of-truth is a verdict
+  question.
+- **F-075 — `seal` refuses on coverage, not recency.** Verdict entries carry
+  only `v` and `ev` with one date per file, so "every marker has a verdict" is
+  checkable and "every verdict is fresh" is not. A session sealing after
+  re-deriving one anchor of three hundred will be believed.
+- **F-077 — two counts of the same thing can disagree.** `campaign.summary` and
+  the verdict maps; recomputed once, nothing keeps them in sync.
+- **`-lang` slots carry 0.8.0 engines under 0.7.0 numbers.** Green and working;
+  owner ruled obsolete versions are not worked on and versions are not bumped
+  per change.
+- **vibespecs 401 on this machine** — redbook + rust-ai-native resolve via
+  vibe-embedded.
 - **specmap ratchet** — 37 gated orphans host-side, unmoved.
 
 ## Session context
 
-The session that closed wave 1 out. Three DRIFT tasks dispatched and
-reviewed diff-by-diff, and the review caught what mattered each time: the
-tripwire's home resolution had to mirror `home_dir()` exactly or it would
-guard the wrong directory, and the baseline's marker snapshot had to be
-resolved by the *same* code path `rescan` compares against or every row
-would report `marker_diverged` forever.
+One long session that closed wave 1 out and opened wave 2. Seven DRIFT tasks
+dispatched and reviewed diff by diff; every one of them landed, and two of them
+disproved a premise in the task I had written rather than agreeing with it —
+that PROP-043 could not be sealed (it can), and that fact ids are unique across
+the corpus (they are per file; 316 names live in more than one file, `root` in
+168). Both stop rules fired correctly, which is the mechanism working, and the
+frequency is the lesson: I wrote "measured" about things I had inferred.
 
-The lasting lesson is in the REPORT's gap list rather than in the ledger.
-**The campaign's own corrections introduced drift, and its own verification
-confirmed it.** Phase D authored a `Shipped:` line claiming a
-`Baseline::store` that had never existed — the `store` in view belonged to
-`Cache`, a different type in the same crate — and Phase C had earlier
-sealed five token-precedence anchors `confirmed` on evidence that compared
-one spec document against another carrying the identical error. Both were
-found by going to the code, and both are now predictions wave 2 should make
-about itself rather than surprises it rediscovers.
+The most expensive discoveries were all the same shape — **a derived thing that
+nothing keeps honest.** A caret excluded the version the whole family needed. A
+hand-written timestamp landed in the future and silently disabled an
+invalidation rule. Three separate stale projections — `tasks.json`,
+`campaign.summary`, both findings ledgers — each stated a number that another
+part of the same file contradicted. None was caught by a gate; all were caught
+by someone recomputing from the source.
+
+The corpus itself shrank by four rounds of subtraction, none of which came from
+estimating its size: machine copies, licence boilerplate, derived indexes and
+superseded slots came out only because the owner kept asking what the corpus
+was made of. Phase B is 6 555 facts rather than the 8 992 first reported, and
+the difference is entirely text that nothing resolves to.
