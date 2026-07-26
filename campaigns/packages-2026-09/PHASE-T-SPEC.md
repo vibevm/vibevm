@@ -549,10 +549,19 @@ compile.
 Mechanical, and run by the reviewer after the merge:
 
 ```
-1. Files changed on branch A ∩ files changed on branch B  →  MUST be empty.
-2. (A ∪ B)  ==  the scaffold list                          →  MUST be equal.
-3. Any scaffolded file still empty                         →  named, not counted.
+0. Both branches descend from the scaffold commit.
+1. files(A) ∩ files(B)                    →  MUST be empty.
+2. files(A) ⊆ scope-a  and  files(B) ⊆ scope-b  →  MUST hold.
+3. scaffold − (A ∪ B)                     →  reconcile by name against the
+                                             workers' untestable reports.
 ```
+
+**Checks run BEFORE the merge, on the separate branches** — a clean merge over
+an overlapping partition leaves a tree indistinguishable from a correct one.
+**Check 2 is the one an intersection alone does not give**: a worker straying
+into a file the other never touched leaves the intersection empty. The full
+procedure with commands is
+[`PHASE-T-WORKER-PROMPT.md` §5](PHASE-T-WORKER-PROMPT.md#boss).
 
 - ##P-VERIFY-IS-THE-POINT Step 1 is the invariant §13.3 bought; if it is ever non-empty the
   partition was wrong and the merge that «worked» hid it. **Check it even when

@@ -148,24 +148,99 @@ runs independent.
   later commit and the two trees disagree about which files exist, which is the
   one thing the scaffold pass was run to guarantee.
 
-## 5. The boss's half {#boss}
+## 5. The boss's half — the integration procedure {#boss}
 
-Before: pack the components (§13.2), run the scaffold (§13.3), commit, push,
-record the sha. After **both** report:
+**Before launching either account:** pack the components (§13.2), run the
+scaffold pass (§13.3), commit it, push, and **record three artefacts** — the
+scaffold sha, `scaffold.txt` (every file the pass created), and `scope-a.txt` /
+`scope-b.txt` (the two path lists, verbatim as pasted into the prompts). Those
+three are what §5.2 checks against; without them the checks have no denominator
+and this whole design collapses into hoping.
 
+### 5.1 Verify BEFORE merging, not after {#verify-first}
+
+##W-VERIFY-BEFORE-MERGE The checks run on the branches, while they are still separate. Merging
+first destroys the cheapest evidence — after a clean merge over an overlapping
+partition, the tree looks exactly like a correct one.
+
+```bash
+S=<scaffold-sha>; A=phase-t/batch-a; B=phase-t/batch-b
+D="$(mktemp -d)"
+
+# 0. Both branches exist and both grew from the scaffold commit.
+git merge-base --is-ancestor "$S" "$A" || echo "A did not start at the scaffold"
+git merge-base --is-ancestor "$S" "$B" || echo "B did not start at the scaffold"
+
+git diff --name-only "$S..$A" | sort > "$D/a"
+git diff --name-only "$S..$B" | sort > "$D/b"
+
+# 1. No file touched by both.                       MUST print nothing.
+comm -12 "$D/a" "$D/b"
+
+# 2. Each branch stayed inside its OWN declared list. MUST print nothing.
+comm -23 "$D/a" <(sort scope-a.txt)
+comm -23 "$D/b" <(sort scope-b.txt)
+
+# 3. Which scaffolded files were never filled.       Cross-check, not a failure.
+sort -u "$D/a" "$D/b" > "$D/ab"
+comm -13 "$D/ab" <(sort scaffold.txt)
 ```
-1. git merge phase-t/batch-a          # fast-forward
-2. git merge phase-t/batch-b          # disjoint files → automatic
-3. files(A) ∩ files(B)                → MUST be empty
-4. files(A) ∪ files(B) == scaffold    → MUST be equal; name any gap
-5. bash tools/self-check.sh           → real exit code
+
+- ##W-CHECK-2-IS-THE-ONE-I-MISSED **Check 2 is the one an intersection test alone does not give you.**
+  A worker can stray into a file the *other* worker never touched: the
+  intersection stays empty and the violation is invisible. Only comparing each
+  branch to **its own** list catches it. *(This procedure's first draft had
+  check 1 and not check 2 — the omission is recorded because it is the same
+  shape as everything else this campaign has found: a check with no denominator.)*
+- ##W-CHECK-3-IS-NOT-A-FAILURE **An unfilled scaffolded file is not automatically wrong.** It is a
+  cell where every fact came back **untestable**, and the worker's report says
+  so. Reconcile check 3's output against those reports **by name**; a file that
+  is empty and *not* in a report is the real gap.
+- ##W-IF-A-CHECK-FIRES **If check 1 or 2 fires: stop. Do not merge.** The partition was wrong,
+  which means the scope lists were wrong, which means the next thing to fix is
+  §13.2's packing — not the branch. Merging first and sorting it out afterwards
+  gives up the one moment where the two sides are still distinguishable.
+
+### 5.2 The merge itself {#merge}
+
+```bash
+git checkout main
+git merge --no-ff "$A" -m "test(phase-t): integrate batch A"
+git merge --no-ff "$B" -m "test(phase-t): integrate batch B"
 ```
 
-- ##W-CHECK-EVEN-WHEN-CLEAN **Run step 3 even when the merge was clean — especially then.** A
-  clean merge over an overlapping partition means one worker's file silently
-  won; it does not mean the partition held. That is precisely the shape this
-  campaign has now found seven times: a green result that reports what was
-  checked and says nothing about what was covered.
+- ##W-NO-FF-ON-PURPOSE **`--no-ff` on both, including the first.** The first would
+  fast-forward and the two integrations would then look different in the
+  history for no reason but arrival order. Two symmetric merge commits say what
+  happened.
+- ##W-NEVER-REBASE **Never rebase a worker branch and never force anything.** Rebasing
+  rewrites its commits, which the repository's Rule 4 forbids; the disjoint
+  file sets mean there is nothing a rebase would buy anyway.
+- ##W-CONFLICT-MEANS-CHECKS-LIED **A conflict here means the checks were wrong**, not that the merge is
+  hard. Abort it, go back to §5.1, and find out which check should have fired.
+
+### 5.3 After the merge — what only the merged tree can tell you {#post-merge}
+
+```bash
+cargo fmt --all
+bash tools/self-check.sh ; echo "EXIT=$?"      # the REAL exit code, never a piped tail
+```
+
+- ##W-MERGED-RUN-FINDS-INTERACTIONS **This run is not a formality — it is the first time the two test
+  sets run together.** Each passed in isolation; together they can collide on a
+  shared fixture, a fixed tempdir name, a bound port, or global state. Disjoint
+  *files* do not imply independent *tests*, and nothing before this point could
+  have caught it.
+- ##W-RESTORATION-IS-CHECKED-HERE **It is also what proves every red exhibit was restored.** A worker
+  that perturbed an expected literal and forgot to put it back leaves a failing
+  test, and this is the run that says so. No separate check is needed.
+- ##W-THEN-THE-TIER-AUDIT Then the tier audit (§7 of the spec): run the full suite, compare each
+  test's wall-clock against the tier it was **assigned at authoring time**. A
+  fast-tier test that is not fast is a mis-assignment to fix, not a boundary to
+  redraw.
+- ##W-THEN-COVERAGE Then the coverage count for the exit gate: every T-testable fact
+  carries **≥3 `verifies` edges of distinct kinds**, kinds read off the
+  greppable name prefixes.
 
 ## 6. If the accounts are on different machines {#different-machines}
 
