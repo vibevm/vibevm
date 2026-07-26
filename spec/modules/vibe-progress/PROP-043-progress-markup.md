@@ -323,13 +323,31 @@ schema = 1
 include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent
 ```
 
-- ##DEFAULT-EXCLUDES **Default excludes** (applied always, even under explicit includes):
+- ##DEFAULT-EXCLUDES **Default excludes** (applied always, even under explicit includes),
+  in two kinds. **By directory**, matched against any path component:
   `vibedeps/`, `.vibe/`, `refs/`, `fixtures/`, `campaigns/`, `target/`,
-  `node_modules/`, `**/vendor/`. @impl/done
+  `node_modules/`, `**/vendor/`. **By file name**, matched against the
+  basename wherever it sits: `LICENSE.md`. @impl/done
 - ##excludes-rationale Rationale: regenerated dependency copies must
   never carry authored markup (PROP-009's install-never-edits-authored-spec
   law), third-party and test-asserted content is off-limits, and the campaign
-  zone (§7.4) is not itself corpus. @spec/done
+  zone (§7.4) is not itself corpus. A licence is the same case one granularity
+  down — verbatim text the observing project neither authored nor is the
+  source of truth for, replaced wholesale from upstream — so it needed the
+  file-name kind rather than a directory. @spec/done
+- ##CONFIG-EXCLUDE **Project-side `exclude`** — an optional list of globs in
+  `progress.toml`, matched against the `/`-separated repo-relative path and
+  applied **after** the includes and after both default kinds. It exists for
+  what an include glob cannot say: *everything under this subtree except these
+  named files* — a derived index, a generated projection, anything whose own
+  words make a hand edit a defect. §4 is include-style so that nothing is
+  observed by accident, and an **enumerated** exclude list serves that purpose
+  exactly as well as an enumerated include list; both are explicit and both
+  are reviewable. It must not become a wildcard escape hatch, so: a pattern
+  matching **no** observed file is reported by name on every subcommand, the
+  count of files it removes is printed by `scan`, an invalid glob is a clean
+  error naming the pattern, and an absent key behaves as a config that never
+  had one. @impl/done
 - ##NESTED-OWNS-SUBTREE A nested package with its own
   `progress.toml` owns its subtree (the host aggregates; it does not reach in) —
   this is how a specspace keeps its own cadence. @spec/done

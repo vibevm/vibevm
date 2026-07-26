@@ -83,6 +83,9 @@ fn refresh_state_derives_phase_from_journal() {
         cache: cache::Cache::load_tolerant(&run.join("cache.json")).0,
         cache_warning: None,
         payloads: sidecar::Payloads::load(Some(tmp.path().join(FIXTURE_CACHE_DIR))),
+        // This fixture builds its corpus by hand rather than enumerating
+        // one, so no `exclude` glob ever ran over it.
+        excluded: 0,
     };
     refresh_state(&mut g).expect("refresh_state");
 

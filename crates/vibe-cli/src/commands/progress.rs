@@ -66,6 +66,8 @@ struct Ground {
     /// having it is an empty store, so a run whose bucket was never
     /// created is a cold run and says nothing about it.
     payloads: sidecar::Payloads,
+    /// Files the config `exclude` globs removed (`scope::ExcludeReport`).
+    excluded: usize,
 }
 
 /// Resolve the tree, then produce one `ParsedDoc` per observed file —
@@ -111,7 +113,10 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     // campaign are one case, and that case is "parse" (DRIFT-016 §4.3).
     let payloads = sidecar::Payloads::load(payload_dir(&root, &cfg, campaign.as_deref()));
 
-    let files = scope::observed_files(&root, &cfg)?;
+    let (files, excludes) = scope::observed_files_reported(&root, &cfg)?;
+    for p in &excludes.stale {
+        eprintln!("vibe progress: warning: exclude pattern `{p}` matched no observed file");
+    }
     let mut docs = Vec::new();
     for rel in files {
         let full = root.join(&rel);
@@ -134,6 +139,7 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         cache,
         cache_warning,
         payloads,
+        excluded: excludes.dropped,
     })
 }
 
@@ -300,6 +306,7 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
                 "facts": facts,
                 "unmarked": unmarked,
                 "errors": errors,
+                "excluded": g.excluded,
                 // Whether there was a campaign zone to write into at all —
                 // not whether anything moved, which is `written` below.
                 "state_written": refreshed.campaign.is_some(),
@@ -312,6 +319,9 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
             "progress scan: {} files, {markers} markers, {unmarked}/{facts} facts unmarked, {errors} errors",
             g.docs.len()
         );
+        if g.excluded > 0 {
+            println!("  {} file(s) dropped by the `exclude` globs", g.excluded);
+        }
         match &refreshed.campaign {
             Some(c) => println!(
                 "  state refreshed under {} — {wrote} written, {skipped} unchanged and skipped",

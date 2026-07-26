@@ -1,18 +1,7 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-26T00:42:29Z",
+  "updated_at": "2026-07-26T01:24:17Z",
   "files": [
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/README.md",
       "effective": null,
@@ -307,17 +296,6 @@
       "units": 27,
       "facts": 158,
       "unmarked": 158,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -619,17 +597,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -648,17 +615,6 @@
       "units": 1,
       "facts": 10,
       "unmarked": 10,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 8,
-      "facts": 92,
-      "unmarked": 92,
       "issues": 0,
       "campaign": {}
     },
@@ -850,17 +806,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -883,17 +828,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -901,17 +835,6 @@
       "units": 1,
       "facts": 5,
       "unmarked": 5,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -934,17 +857,6 @@
       "units": 1,
       "facts": 9,
       "unmarked": 9,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 6,
-      "facts": 81,
-      "unmarked": 81,
       "issues": 0,
       "campaign": {}
     },
@@ -1125,17 +1037,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/README.md",
       "effective": null,
       "explicit": null,
@@ -1158,17 +1059,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
       "effective": {
         "stage": "doc",
@@ -1186,17 +1076,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md",
       "effective": null,
       "explicit": null,
@@ -1204,17 +1083,6 @@
       "units": 1,
       "facts": 13,
       "unmarked": 13,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 8,
-      "facts": 92,
-      "unmarked": 92,
       "issues": 0,
       "campaign": {}
     },
@@ -1406,17 +1274,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md",
       "effective": null,
       "explicit": null,
@@ -1439,17 +1296,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md",
       "effective": null,
       "explicit": null,
@@ -1457,17 +1303,6 @@
       "units": 1,
       "facts": 5,
       "unmarked": 5,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/addressable-specs/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -1527,17 +1362,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -1589,17 +1413,6 @@
       "units": 8,
       "facts": 37,
       "unmarked": 37,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/comparative-research/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -1659,17 +1472,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -1721,17 +1523,6 @@
       "units": 7,
       "facts": 48,
       "unmarked": 48,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/decision-records/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -1824,17 +1615,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -1919,17 +1699,6 @@
       "units": 12,
       "facts": 35,
       "unmarked": 35,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -2066,17 +1835,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/health-audit/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2139,17 +1897,6 @@
       "units": 4,
       "facts": 13,
       "unmarked": 13,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/licensing/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -2220,17 +1967,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2282,17 +2018,6 @@
       "units": 7,
       "facts": 28,
       "unmarked": 28,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/manual-tests/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -2352,17 +2077,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/operating-modes/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2418,17 +2132,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2480,17 +2183,6 @@
       "units": 7,
       "facts": 44,
       "unmarked": 44,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/redbook/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -2561,17 +2253,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v0.2.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/redbook/v0.2.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2638,17 +2319,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2704,17 +2374,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2766,17 +2425,6 @@
       "units": 10,
       "facts": 47,
       "unmarked": 47,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/spec-genres/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -2891,17 +2539,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -2953,17 +2590,6 @@
       "units": 9,
       "facts": 36,
       "unmarked": 36,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/two-process-model/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -3023,17 +2649,6 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
       "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/README.md",
       "effective": null,
       "explicit": null,
@@ -3063,17 +2678,6 @@
       "units": 9,
       "facts": 40,
       "unmarked": 40,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/LICENSE.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 0,
-      "facts": 8,
-      "unmarked": 8,
       "issues": 0,
       "campaign": {}
     },
@@ -3707,9 +3311,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 161,
+      "markers": 162,
       "units": 27,
-      "facts": 160,
+      "facts": 161,
       "unmarked": 0,
       "issues": 0,
       "campaign": {}

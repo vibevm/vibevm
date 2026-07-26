@@ -90,11 +90,18 @@ closes only through sync-from-code with owner approval.
   time in code**, and inside the campaign's own correction: PROP-043 §7.3
   was made to claim `Baseline::load / store` because a `store` existed —
   on `Cache`, a different type in the same crate (F-065).
-- **`progress scan` observes the GLOBAL scope, whatever `--campaign` says.**
-  The campaign flag chooses only where state is *written*. Since wave 2
-  widened `progress.toml`, scanning into wave 1's closed-out zone pulls all
-  286 package files into its cache (done once, restored from git). Seal
-  wave-1 verdicts by hand; do not rescan that zone.
+- **EVERY parsing `vibe progress` subcommand writes the cache — `check`
+  included, and `check` looks read-only.** The `--campaign` flag chooses only
+  where state is *written*; the observed scope is always global. Since wave 2
+  widened `progress.toml`, ANY such command aimed at wave 1's closed-out zone
+  drags all 286 package files into its cache. This happened twice on
+  2026-07-26 — once by `scan` (caught, restored) and once by `check`, which
+  was NOT caught and got committed in `07a38e1a`; the zone was restored from
+  `d3482dd7` and both seals re-applied by hand.
+  **Wave 1's `run/` is closed and must be maintained by hand only — never
+  point a progress subcommand at it.** Its durable artefact is
+  `baseline.json` (920 units, intact), and `ZONE-LIFETIMES` already says
+  `run/` is disposable after close-out.
 - **With two campaign zones, a bare `vibe progress` writes no state.**
   `resolve_campaign` returns a zone only when exactly one exists, and
   otherwise drops to ad-hoc mode — reports still work, state silently does

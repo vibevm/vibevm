@@ -2,9 +2,15 @@
 
 | id | title | executor | status |
 |---|---|---|---|
+| DRIFT-024 | the scope stops observing what it must not mark | opus | done |
 
-*(empty — Phase A is scope and prerequisite work, not tasks. The first entries
-arrive from Phase C's ledger.)*
+DRIFT-024 is the exception to "Phase A is not tasks": it comes out of the
+Phase A pilot, where `check --exhaustive` turned out to demand fact markup on
+33 files of verbatim licence text (F-070) and on three derived indexes that
+call hand edits a defect (F-071). Neither can be expressed in `progress.toml`,
+because §4 is include-only by design — so the exclusions need code, and one of
+them needs a §4 amendment. Until it lands, Phase B's exit gate cannot be
+reached honestly.
 
 Wave-2 DRIFT tasks differ from wave 1's in one way that must appear in every
 task's acceptance: **a fix inside a package's crates has to be vendored forward**

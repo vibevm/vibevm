@@ -20,9 +20,14 @@
 # (owner ruling: the §6 monthly recurrence consumes it in place).
 # Re-add a glob here if an archived doc is ever promoted back to
 # living-contract status.
-# §4 is include-only by design, so exclusions are expressed by
-# enumeration; a new spec/ subtree or top-level spec doc must be added
-# here explicitly — review at batch boundaries.
+# §4 was include-ONLY by design until 2026-07-26, so exclusions were
+# expressed by enumerating the includes; a new spec/ subtree or top-level
+# spec doc must still be added here explicitly — review at batch boundaries.
+# DRIFT-024 amended that: an `exclude` key now exists (bottom of this file)
+# for what an include glob cannot say — "everything under this subtree
+# except these named files". The design's PURPOSE is unchanged, since an
+# enumerated exclude is as explicit and reviewable as an enumerated
+# include; see PROP-043 ##CONFIG-EXCLUDE for the guard rails.
 # WAVE 2 opened 2026-07-26 (PACKAGES-ACTUALIZATION-CAMPAIGN ratified): the two
 # authored package namespaces join the scope. The host's 58 files STAY in
 # scope — wave 2 does not un-measure wave 1, and both corpora share one
@@ -36,15 +41,38 @@
 # roots (`packages`, `spec`), and NO path segment named target, vibedeps,
 # node_modules, vendor, .vibe, refs, campaigns, fixtures, dist, build,
 # generated or .git — `DEFAULT_EXCLUDES` (scope.rs) holds those always-on,
-# even under an explicit include. Two leaks the exclusion list does NOT catch,
-# both filed and both needing the same code-side fix:
+# even under an explicit include.
+#
+# The accounting closes exactly, so no future session has to re-derive it.
+# `packages/**` holds **1 370** `.md` files on disk:
+#     970  inside an excluded directory  — .vibe/cache 563, vibedeps 376,
+#          refs 23, fixtures 8.  (vendor / target / node_modules contribute
+#          ZERO .md, so their exclusion is belt-and-braces, not load-bearing.)
+#     114  packages/org.vibevm.fractality/**  — dropped by the INCLUDE globs
+#          rather than by an exclusion: its own specspace, own boot contract
+#          and WAL (plan §1). Deliberate.
+#     286  observed  (250 after DRIFT-024's exclusions land — see below).
+#     ---
+#   1 370  total, and **0** observed files sit inside any excluded directory.
+# So ~71 % of the markdown under packages/ is machine-copied dependency trees
+# and is correctly invisible. DRIFT-024 then removed 36 more (33 LICENSE.md by
+# the file-name default, 3 derived indexes by the `exclude` globs below), so
+# the corpus is 308 files and the 8 463 unmarked facts are authored text only.
+#
+# Two leaks the always-on list did NOT catch, both filed and both since fixed:
 #   F-071 — `spec/cards/INDEX.md` in all three language stacks is a DERIVED
 #           index ("hand edits are a defect", its own words). Markup there
 #           dies on regen. Wave 1 dodged the same problem for its boot
 #           artifacts via the `spec/boot/[0-9]*.md` glob; `packages/**/*.md`
 #           has no equivalent trick and §4 is include-only by design.
 #   F-070 — 33 `LICENSE.md` files, 264 paragraphs of verbatim UPL text.
-# Until both land, `check --exhaustive` cannot go green honestly.
+# BOTH LANDED 2026-07-26 (DRIFT-024), by two different mechanisms because the
+# two classes are different. F-070 went into code: `LICENSE.md` is now a
+# `DEFAULT_EXCLUDE_FILES` entry in `crates/progress-core/src/scope.rs`,
+# always-on like `refs` and for the same reason — verbatim third-party text
+# the observing project neither authored nor owns — and project-neutral, so
+# it belongs to the engine and not to this file. F-071 is project-specific
+# and went into the `exclude` key below.
 #
 # NOTE, and it bites immediately: with two `campaigns/<id>/` zones present, a
 # BARE `vibe progress …` no longer resolves a campaign — `resolve_campaign`
@@ -60,4 +88,25 @@ include = [
     "spec/modules/**/*.md",
     "packages/org.vibevm.world/**/*.md",
     "packages/org.vibevm.ai-native/**/*.md",
+]
+
+# Enumerated exclusions, applied after the includes above (DRIFT-024 §4.2).
+# The include-only design's purpose is that nothing is observed by accident,
+# and an enumerated exclude list serves that purpose exactly as well as an
+# enumerated include list — both are explicit and both are reviewable. It is
+# not a wildcard escape hatch: keep every pattern narrow enough to name the
+# files it removes, and add one only for a file that must never carry markup.
+# A pattern that stops matching anything is warned about by name on every
+# `vibe progress` run — delete it when that happens rather than leaving a
+# dead exclusion behind.
+#
+# `spec/cards/INDEX.md` (rust v0.7.0, typescript v0.6.0, go v0.1.0) is a
+# DERIVED index — "Generated/maintained as a derived index (A2/R-030); hand
+# edits are a defect", in its own words. Markup written there dies at the
+# next regeneration, exactly as it would in the boot artifacts wave 1 kept
+# out. The three files leave; the authored `spec/cards/*.md` cards beside
+# them are contracts and STAY observed — this pattern must never be widened
+# to `cards/**` or to `**/INDEX.md`.
+exclude = [
+    "packages/**/spec/cards/INDEX.md",
 ]
