@@ -7,11 +7,15 @@ counted two superseded slots that nothing resolves to._
 ## The workload, after three rounds of finding out what was in it
 
 **206 files** across 37 packages; the observed corpus is **264 files**
-(58 host + 206 packages). The fact count is **pending a recount** — it stood at
-6 561 before F-080's eleven files left, and the campaign's own rule is that a
-number quoted before its decomposition is a guess wearing a decimal point.
-Recompute it at the B1 boundary with a scan on a settled tree; do not carry the
-old number forward minus an estimate.
+(58 host + 206 packages), confirmed by `progress check`.
+
+**Unmarked facts remaining: 5 685**, measured 2026-07-26 with
+`check --exhaustive` after B1a. The figure this file carried before was 6 561,
+quoted before F-080's eleven files left and before anything was marked; it was
+replaced by a measurement rather than by subtraction, because the campaign's own
+rule is that a number quoted before its decomposition is a guess wearing a
+decimal point — and that rule binds its own numbers first. Re-measure at each
+batch boundary rather than decrementing.
 
 Getting to that number took **four** corrections, and the pattern in them is
 worth more than the number:
@@ -81,6 +85,18 @@ Two rules that are easy to lose mid-batch:
   corpus instead. Owner policy (2026-07-26) keeps this rare: **a package
   version is not bumped on every change** — the source text is edited in place
   and `vibe update` re-materialises consumers.
+- **F-082 — OPEN, owner's call, and it recurs across the whole wave.** Marking a
+  package's **boot snippet** grew `10-flow-core-ai-native.md` from 29 to 44
+  lines, +52 %. That file is installed into every *consuming project's* boot
+  lane and read at every session start, and its own
+  `##DO-NOT-READ-ALL-AT-BOOT` rule is minimal sufficiency — so our campaign's
+  markup rides into every consumer's context window permanently. Roughly thirty
+  packages ship one. The host's own authored boot snippets (`00-core.md`,
+  `90-user.md`) *are* marked and in the corpus, which is the precedent pointing
+  the other way; the difference is that those are read by host sessions only.
+  **Marking proceeds meanwhile** — B1a's snippet is marked and the cost is
+  measured rather than assumed, which is what makes the ruling decidable.
+
 - **Frozen history leaves the corpus; it is not marked.** Owner ruling
   2026-07-26 (F-080) puts `spec/legacy-projections/` in the same category as a
   superseded version slot: «замороженная история… Сейчас у нас есть активные

@@ -127,6 +127,70 @@ nothing.
 Set it only where it is **obvious** — a README addressed to a consumer is
 `audience="user"`. When in doubt leave it absent; the reviewer owns this axis.
 
+## Conventions LOCKED by the B1a calibration (2026-07-26) {#locked}
+
+B1a marked 141 units over 183 lines and surfaced thirteen cases the grammar
+above did not decide. These are the reviewer's rulings; **they bind B1b and
+every batch after it.** Where a ruling contradicts the prose earlier in this
+file, the ruling wins — the earlier text was written before the cases were known.
+
+1. **Deconstruction grain is the paragraph, not the list item.** A
+   *pre-existing* list item stays whole even when it carries several facts.
+   `##DECONSTRUCTION-LAW` binds "a **paragraph** that carries more than one
+   fact"; `##COUNTABLE-UNITS` is satisfied by one marker per item; and PROP-043's
+   own live markup keeps multi-fact items whole. **This overrides the "one fact
+   per item" phrasing in this file's target-shape section, which was looser than
+   the law it paraphrased.**
+2. **Exception, and it is forced by the grammar, not by taste:** an item whose
+   facts need **different markers** must split, because `##MULTI-MARKERS` allows
+   at most one status marker per node. An unsplittable two-stage item is
+   unmarkable. This is what resolved `##MAP-RUST-TCG`.
+3. **Split guard — no invented words.** A colon splits when the lead and every
+   item stand in the author's own wording. An *explanatory* colon does not, and
+   a semicolon-joined pair of parallel clauses does not (`##SEP-NEVER`).
+4. **When the facts are not parallel, split into sibling paragraphs** rather
+   than forcing a bulleted list. `##DECONSTRUCTION-LAW`'s end state is "one fact
+   per unit"; "most prose becomes lists" is its expectation, not a requirement,
+   and a forced list over non-parallel sentences is less sense-preserving.
+5. **Heading `{#anchor}`s ARE owed.** `##FORM-ONLY` says campaign passes still
+   add missing ones, and `BATCH-PLAN.md` lists them in what a batch owes. B1a
+   shipped without them and the reviewer added them; **B1b adds its own.**
+   Kebab-case, short, derived from the heading text. Watch
+   `##FACT-ID-GRAMMAR`: heading anchors and fact ids share one address space, so
+   do not mint `{#central-law}` beside a `##CENTRAL-LAW` fact — vary the wording.
+6. **No section markers.** `##PLACE-SECTION` defines the position, but sections
+   are not countable units and nothing requires one.
+7. **Document-marker stage by genre:** a README → `doc/done` with
+   `audience="user"` (the pilot shape); an installed boot snippet →
+   `impl/done`; a normative root document → `spec/done`. **No `comment=`** —
+   the pilot carries none and provenance is in git.
+8. **`audience` only where obvious.** README `user`; absent everywhere else,
+   including boot snippets, whose real reader is a *consuming project's* session
+   and fits none of `user`/`author`/`dev` cleanly. Leaving it absent is the
+   honest answer; do not stretch a value to fit.
+9. **Register case law.** `##UPPER-SLUG` for laws, axioms, vocabulary and legend
+   entries, package-map entries, and enumerated limitations. `##kebab-case` for
+   status lines, colon lead-ins, connective sentences, and rationale or
+   evidence prose. This is PROP-043's own live pattern.
+10. **Stage discriminator.** A claim verifiable against this corpus or this
+    repository → `@impl/done`. A claim about the outside world, about
+    motivation, or about the future → `@spec/done`. A stated rule is
+    `@impl/done` **even when its checker ships in another package** — the fact
+    realized here is that the rule exists and is in force.
+11. **`@unknown` is the honest answer and it is cheap.** Prefer it to a guess and
+    list it in the report; the reviewer adjudicates. B1a left two, both correct
+    to leave.
+12. **Splitting an italic paragraph re-applies its emphasis.** Those `*`
+    characters are the only text bytes a markup pass may add beyond anchors and
+    markers.
+13. **Blockquotes are anchored and marked** — verified: `progress check` reads a
+    marked blockquote as a unit, not as an orphan marker.
+14. **A title with no preamble gains one blank line** before its document
+    marker, so the marker does not read as an orphan. Whitespace only.
+15. **Anchor names: descriptive over short.** Do not shorten for taste; the
+    correction contract cites these, and a long clear name beats a short cryptic
+    one. Keep them consistent within a file.
+
 ## Boundaries {#boundaries}
 
 - **Semantic edits are forbidden** (plan §5-B). The diff contains **markers,

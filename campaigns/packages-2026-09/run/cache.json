@@ -1,26 +1,50 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T11:28:11Z",
+  "updated_at": "2026-07-26T12:40:33Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
-      "content_hash": "5a31a151790f6036089501351a146e5353ca0f8d30b9b0f739fbdb6060ad5e83",
+      "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 27,
+        "fact_count": 26,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 27,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md": {
-      "content_hash": "da31662f11a411473eba30824737ecaeb32b98a515f6240102d85db5ecfebdff",
+      "content_hash": "7f0933ad9bbc050398ff46e608ed12115c693ef2ce6ea6a56f66abcff90a1128",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 61,
-        "unmarked_facts": 61
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "unknown",
+          "hold"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 101,
+        "fact_count": 100,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 101,
       "unit_count": 10,
       "issue_count": 0
     },
@@ -113,135 +137,26 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
-      "content_hash": "949385221b0e1da538b091bef2736a4355a0307099a2f56870c202efa1b6d53b",
+      "content_hash": "b61f3d864c52b7311a9b487101073021da9ff4f52643d7edac064caccc42ef8b",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 5,
-        "unmarked_facts": 5
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 17,
+        "fact_count": 16,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 17,
       "unit_count": 1,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md": {
-      "content_hash": "f7cee6e6ef54ce6506e467513f370166ae6087c6370747acedf4df60b8d51e2f",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 58,
-        "unmarked_facts": 58
-      },
-      "marker_count": 0,
-      "unit_count": 11,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md": {
-      "content_hash": "80b81216c377e889eebe519dce6373cbc9079e6167ea4d2c83851e92524d88be",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 71,
-        "unmarked_facts": 71
-      },
-      "marker_count": 0,
-      "unit_count": 11,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md": {
-      "content_hash": "31e45c6569fa3941d79475880c4710c2b753b53ee3dc4a86f334f7b321efcc76",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 82,
-        "unmarked_facts": 82
-      },
-      "marker_count": 0,
-      "unit_count": 11,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md": {
-      "content_hash": "20489efef19664b21955e7c58e2bd014ecc3be98599120b88a4c0078cb3adcdc",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 88,
-        "unmarked_facts": 88
-      },
-      "marker_count": 0,
-      "unit_count": 11,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md": {
-      "content_hash": "b3ac943494544b72faa712ded3a2fc8d54faa1cc1122aeb6cc8f0b5d8c616e60",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 36,
-        "unmarked_facts": 36
-      },
-      "marker_count": 0,
-      "unit_count": 6,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md": {
-      "content_hash": "dae6a66ffb73f5098ca8438d9a45ff8e865764b4ad078cdaf23fea9625f412e7",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 34,
-        "unmarked_facts": 34
-      },
-      "marker_count": 0,
-      "unit_count": 5,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md": {
-      "content_hash": "2b5f9a61a2c1c867230deceab5e57ef4e177957725ca9f9f2e4b9e232a7213a1",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 44,
-        "unmarked_facts": 44
-      },
-      "marker_count": 0,
-      "unit_count": 8,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md": {
-      "content_hash": "8d57cd7f457348d3d02dff475e9c54e57acd7cd2b62671a4d66e1f783a1578d2",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 84,
-        "unmarked_facts": 84
-      },
-      "marker_count": 0,
-      "unit_count": 11,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md": {
-      "content_hash": "00af5805ffd96f33ec95d25d7828f1e64e37c0f608863e55db24f84c2aa1c535",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 131,
-        "unmarked_facts": 131
-      },
-      "marker_count": 0,
-      "unit_count": 15,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md": {
-      "content_hash": "9e5efcec5f39de5a6b14184049453c8cebd6f3a94793e796be8b577d5fe7595c",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 86,
-        "unmarked_facts": 86
-      },
-      "marker_count": 0,
-      "unit_count": 11,
-      "issue_count": 0
-    },
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md": {
-      "content_hash": "e27e9eef934b2be0cb8bfaa93238e2a9298ce8dbe72271e7520fb02bcae9213e",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 77,
-        "unmarked_facts": 77
-      },
-      "marker_count": 0,
-      "unit_count": 11,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md": {

@@ -4,9 +4,11 @@
 <status stage="impl" state="plan" ref="DRIFT-030"/>
 ```
 
-**Status:** queued — **not dispatched.** Owner decides whether this runs during
-Phase B; it rewrites boot composition for every consumer and does not block
-markup.
+**Status:** **returned** — §8 first bullet fired, 2026-07-26. The §4 step 1 gate
+answers *yes*: the counter fix alone double-adds at the root, measured on a
+fixture of vibevm's exact shape rather than deduced. The counter is **necessary
+and not sufficient**, and who owns the dedup is a design question in the
+reviewer's lane. See §9 for the three candidate owners.
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** workspace
 **Finding:** F-078, restated (campaign LOG, 2026-07-26).

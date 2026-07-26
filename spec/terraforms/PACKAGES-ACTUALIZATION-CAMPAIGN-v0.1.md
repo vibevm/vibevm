@@ -661,6 +661,41 @@ command that would have tested it.
   against: **whenever one file's constant must track another file's constant,
   the tracking is a checker or it is a WISH.***
 
+- **2026-07-26 · F-078, third state: the duplication is structural, and the
+  stop rule caught a wrong fix for the second time.** DRIFT-030 returned on its
+  §4 step 1 gate — the question the task made it answer *before* touching the
+  counter. It answered by **measuring**: a fixture of vibevm's exact shape
+  (root `static-transitive` → content-minimal aggregator `static` → member),
+  driven through `apply_resolution`. Baseline reproduced the live defect (root
+  copies 2, aggregator 1). With the counter fix applied: root copies **still 2**,
+  aggregator 0. **The duplicate does not disappear; it migrates into the root's
+  own lane.**
+
+  The reason is in the spec, not the code. `##HOIST-LCA` puts the hoist target
+  at the LCA of a *continuous static zone*; vibevm's root → redbook →
+  git-practices → member chain is unbroken static, so that **LCA is the root** —
+  and the root is simultaneously the hoist destination and its own compile site.
+  Two write paths reach the root's lane and neither knows about the other:
+  `compute_effective_boot` dedups only inside its own BFS closure and never sees
+  `append_hoisted`, which pushes the same `{slot}/{source}` path unconditionally.
+
+  So the counter is **necessary and not sufficient** — and the remaining half is
+  a design question about which mechanism owns dedup, which is spec-shaped and
+  therefore the reviewer's, not the executor's. Three candidates are on the
+  table; the third reads `##HOIST-LCA` most literally and satisfies §6 verbatim:
+  **the root is a hoist destination and never a puller, so a zone emits `#use`
+  for anything the hoist point already carries and `append_hoisted` does not
+  fire at the root at all.**
+
+  **Not decided here, and deliberately.** Phase B is the mandate; this
+  duplication costs boot tokens and states no contradiction, since both copies
+  are byte-identical. It is recorded, measured, and parked with a recommendation
+  rather than half-fixed. *Two executor runs, two returns, and both returns were
+  worth more than the fix would have been — the first killed a change that would
+  have turned a duplicated boot lane into a failed install, the second killed one
+  that would have moved the duplicate rather than removing it. Neither was
+  visible from reading the code; the second needed an experiment.*
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
