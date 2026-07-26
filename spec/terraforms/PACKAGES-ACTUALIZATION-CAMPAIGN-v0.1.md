@@ -618,6 +618,49 @@ command that would have tested it.
   own rule about numbers quoted before their decomposition applies to its own
   numbers first.
 
+- **2026-07-26 · F-081 — the floor was gating a dead slot, and it is the
+  mandate's own question answered against us.** Found while checking whether
+  Phase B markup could break the packages' specmap ratchet. It cannot — that
+  gate is orphan-coverage over **code** — but two lines away sat something
+  worse.
+
+  `tools/self-check.sh` steps 7 and 9 gated
+  `core-ai-native/**v0.7.0**`. `sync-engines.toml` declares the authored home of
+  the neutral engines as `core-ai-native/**v0.8.0**/crates`, and moved there in
+  `0aa4ba01` — wave 1's caret fix. `self-check.sh` was not moved with it; its
+  last touch is `2570629d`, earlier. **So for that whole interval the floor ran
+  `fmt` / `test` / `clippy` and the self-trace over a frozen slot** — one
+  `progress.toml` excludes as superseded, `vibe update` has since pruned from
+  `vibedeps/`, and nothing resolves to — **while the engines everything actually
+  vendors went ungated.**
+
+  The two trees are not close: ten files differ, and two source trees exist
+  **only** in v0.8.0 — `conform/src/rules/go.rs` and `specmap/src/mdspec/`,
+  the latter carrying `tests.rs`. **The fact-grain specmap engine's own tests
+  had never been executed by the floor** — the engine Phase C's evidence join
+  depends on, and the one whose arrival closed wave 1's last drift row.
+
+  Step 7's comment states its purpose verbatim: «Gate the authored source
+  here.» It stopped doing that and **nothing noticed, because the gate stayed
+  green** — faithfully testing the wrong tree. That is §1's *профанация* in its
+  purest observed form, and it was found in the campaign's own gate rather than
+  in the corpus it was pointed at.
+
+  **Fixed, measured before changed.** All four gates were run against v0.8.0
+  *first* — fmt 0, test 0 (all suites green), clippy 0, specmap `--gate` 0
+  orphans — so the repoint adds coverage without buying a red. The slot is now
+  one `CORE_SLOT` constant, and a new floor step asserts it appears as a
+  `source_root` in `sync-engines.toml`, failing loudly with the candidate lines
+  if it does not. **Both branches of that guard were made to fire before it was
+  trusted** (DRIFT-020's rule): it passes on v0.8.0 and fires on v0.7.0 — the
+  exact state it would have caught.
+
+  *This is the fourth time in two waves that the expensive thing was a derived
+  value nothing kept honest — a caret, a hand-written timestamp, three stale
+  projections, and now a gate's target. The pattern is stable enough to plan
+  against: **whenever one file's constant must track another file's constant,
+  the tracking is a checker or it is a WISH.***
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

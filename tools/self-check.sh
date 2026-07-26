@@ -156,7 +156,29 @@ run_step "cargo xtask sync-engines --check" cargo xtask sync-engines --check || 
 # workspace (PROP-024), excluded from the vibevm root. Steps 1-5 build the
 # VENDORED copies as dependencies but never run the authored tests/doctests,
 # and root fmt+clippy never touch them. Gate the authored source here.
-CORE_MANIFEST="packages/org.vibevm.ai-native/core-ai-native/v0.7.0/Cargo.toml"
+#
+# WHICH slot is the authored source is not this file's to decide: it is
+# whatever `sync-engines.toml` vendors FROM. That pointer moved to v0.8.0 in
+# `0aa4ba01` and this file was not moved with it, so for the whole interval
+# steps 7 and 9 gated the frozen v0.7.0 slot — green, faithfully, on a tree
+# nothing resolves to, while the authored engines went untested (F-081). The
+# guard below makes the coupling checkable instead of remembered: a rule with
+# no checker is a WISH, and this one had been a WISH for exactly as long as it
+# took to break.
+CORE_SLOT="packages/org.vibevm.ai-native/core-ai-native/v0.8.0"
+CORE_MANIFEST="$CORE_SLOT/Cargo.toml"
+check_core_slot_is_authored() {
+  if grep -qF "source_root = \"$CORE_SLOT/crates\"" sync-engines.toml; then
+    return 0
+  fi
+  echo "self-check: \`$CORE_SLOT\` is not a sync-engines.toml source_root." >&2
+  echo "self-check: the floor would gate a slot nothing is vendored from." >&2
+  echo "self-check: repoint CORE_SLOT at the authored core-ai-native slot:" >&2
+  grep -n 'core-ai-native/v[0-9.]*/crates' sync-engines.toml >&2
+  return 1
+}
+run_step "core-ai-native gated slot is the authored one" \
+  check_core_slot_is_authored || OVERALL=$?
 run_step "cargo fmt --all --check (core-ai-native pkg)" \
   cargo fmt --manifest-path "$CORE_MANIFEST" --all --check || OVERALL=$?
 run_step "cargo test --workspace (core-ai-native pkg)" \
@@ -181,7 +203,7 @@ run_step "cargo clippy --all-targets (rust-ai-native-lang pkg)" \
 # scope! targets are cross-package spec units, so a full index would be all
 # cross-repo "dangling"; coverage is what matters. The conform step-5 lesson
 # (a gate not in self-check drifts silently) applied to the packages' traces.
-CORE_DIR="packages/org.vibevm.ai-native/core-ai-native/v0.7.0"
+CORE_DIR="$CORE_SLOT"
 run_step "rust-ai-native-specmap --gate (core-ai-native pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p rust-ai-native-specmap --bin rust-ai-native-specmap -- --gate --path "$CORE_DIR" || OVERALL=$?
 PKG_DIR="packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0"
