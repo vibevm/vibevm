@@ -40,6 +40,12 @@ invented. One severity vocabulary in the project, not two.
 | ##SEV-P2 **P2** | a real gap with no emergency in it: a missing surface, a feature the corpus assumes and the code lacks, a mechanism specified and unbuilt | **this file.** Drains into the next wave |
 | ##SEV-P3 **P3** | noted, no action planned | recorded here as `accepted`, so it is not rediscovered as new |
 
+- ##SEV-REVIEWER-IS-AN-AGENT **«Reviewer» here means the boss *agent*, not the owner.** That is
+  fine for classifying, and **not** fine for two things: **severity moves up
+  freely and down only through the owner** (an agent may escalate to P1, never
+  downgrade from it), and **every P2/P3 filed during a wave is reported to the
+  owner at the time**, not merely written here — otherwise the agent deciding
+  «this is a finding, not work» is the agent that wants to move on.
 - ##SEV-ASSIGNED-BY-REVIEWER **Severity is the reviewer's call, never a worker's.** A cheap model
   calling something critical is noise, and a scale anyone may set is not a
   scale. A worker **reports the observation**; the reviewer classifies it.

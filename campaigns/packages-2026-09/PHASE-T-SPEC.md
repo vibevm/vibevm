@@ -435,6 +435,36 @@ routes by severity, not by which wave noticed it:
   nor a fact correction — the two verdicts of §5.5.3 come first, and «file it»
   is not a third verdict a wave may reach on its own.
 
+### 5.5.5.1 «Reviewer» means the boss agent — and where that is not enough {#who-decides}
+
+Three roles, and conflating them is how a deferral becomes invisible:
+
+| | who | may decide |
+|---|---|---|
+| **worker** | a swarm sub-agent | nothing. Surfaces a red, reports an observation |
+| **reviewer** | the **boss agent** (plan §2's Fable role) | which of the two verdicts applies; the severity; that something is a finding |
+| **owner** | the **human** | every fact correction (sync-from-code law); every P1; every scope question |
+
+Two of the reviewer's decisions are safe for an agent and two are not, and the
+difference is whether the agent has an incentive to get it wrong:
+
+- ##DECIDE-SAFE-FOR-AN-AGENT **Code-wrong versus fact-wrong is diagnostic** — evidence-based, visible
+  in the diff, and wrong answers are caught by the next reader. An agent owns it.
+- ##DECIDE-DEFERRAL-IS-NOT-SAFE **«This is a finding, not work» shrinks the wave, and the agent
+  deciding it is the agent that wants to move on.** Saying «the reviewer
+  decides» is circular there. **So: every P2 and P3 filed during a wave appears
+  in that wave's report to the owner**, not only in `BACKLOG.md`. A deferral is
+  visible at the moment it is taken, rather than discoverable later by someone
+  opening a file nobody opens.
+- ##DECIDE-SEVERITY-IS-ONE-WAY **Severity moves up freely and down only through the owner.** An
+  agent — worker or reviewer — may **escalate** to P1 without permission and may
+  **never downgrade** from it. Under-calling a P1 is the failure that costs
+  something irreversible; over-calling one costs a conversation.
+- ##DECIDE-FACT-EDIT-IS-THE-OWNERS **A fact correction is never an agent's to land.** The reviewer
+  diagnoses «the spec was wrong»; the edit itself goes through sync-from-code
+  with the owner's approval, exactly as every scope ruling in this campaign did.
+  The agent's verdict is a proposal with evidence attached.
+
 ### 5.5.6 Do not over-specify, or a code fix will invalidate after all {#no-over-spec}
 
 ##WAVE-ASSERT-NO-MORE-THAN-THE-FACT **Assert exactly what the fact promises and nothing more.** The one
