@@ -387,6 +387,29 @@ namespaces, and an explicit verdict on every practice the host claims to
 follow. The owner reads it and rules. **A green host floor is not an answer
 to this question and may not be cited as one.**
 
+### Phase G — Documentation (owner amendment, 2026-07-26) {#phase-g}
+
+*Entry:* F closed, **and** the judgment-marking pass run — it supplies the
+`audience` axis and the `actionstage="doc"` markers the guides' tables of
+contents are generated from. Full specification:
+[`campaigns/packages-2026-09/PHASE-G-SPEC.md`](../../campaigns/packages-2026-09/PHASE-G-SPEC.md).
+
+`docs/` (43 unobserved files) moves wholesale to `docs-legacy/` under the
+`legacy-spec/` rule; documentation is re-authored as a package,
+`org.vibevm.doc/doc`, with `org.vibevm.doc/web` reserved as a manifest only.
+
+**The law that shapes it: documentation cites a spec unit and never restates
+it.** The reason is this campaign's own most-repeated finding — a restated fact
+is a second statement of one truth with its own writer, and nothing forces the
+two to agree. Links run one way, docs → spec; **the spec tree does not know the
+documentation exists.** The cost of that (a spec unit can move under a page
+citing it) is paid by PROP-014's revision pinning, so authorship is one-way and
+*detection* is two-way.
+
+*Not a deviation from `spec-genres`' two-way-link rule:* that rule governs lore
+explaining a contract, and product documentation is a genre its map does not
+carry at all. Phase G adds the row.
+
 ## 6. Predictions (falsifiable, campaign-wide) {#predictions}
 
 **A5 is adopted, so each prediction names the step that tests it.** Wave 1's
