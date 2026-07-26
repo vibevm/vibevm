@@ -2,8 +2,9 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B1 | `core-ai-native` v0.8.0, guiding + operating layer | opus | B1a in review, B1b queued |
-| DRIFT-030 | the hoist counter learns that the root is a consumer too | opus | queued — **not dispatched**, owner decides timing |
+| DRIFT-031 | the parser stops swallowing two units it can already see | opus | queued (F-083 + F-084) |
+| MARKUP-B1 | `core-ai-native` v0.8.0, guiding + operating layer | opus | **done** — B1a + B1b, 417 units over 9 files |
+| DRIFT-030 | the hoist counter learns that the root is a consumer too | opus | returned (§8 stop) — counter necessary, not sufficient; design call parked |
 | DRIFT-029 | a slot's boot artifacts are spec, not drift | opus | returned (§8 stop) — superseded by DRIFT-030 |
 | DRIFT-028 | a unit can be void; the names query stopped on its own rule | opus | partial (§4.1 done, §4.2 stopped) |
 | DRIFT-027 | one config home, the way there is one credential home | opus | done |
