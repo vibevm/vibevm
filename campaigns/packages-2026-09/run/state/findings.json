@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T19:15:00Z",
+ "updated_at": "2026-07-26T19:45:00Z",
  "findings": [
   {
    "id": "F-068",
@@ -55,6 +55,15 @@
    "status": "open",
    "wave": 2,
    "note": "A NEW HOST-CORPUS ANCHOR NOW HAS NO CAMPAIGN TO JUDGE IT. Wave 1 is closed out and its run/ is disposable by ZONE-LIFETIMES; wave 2's subject is packages/, and the host's 58 files are in its scope only to keep the shared `progress check` gate at 0 - wave 2 does not verify them. So when a host spec gains an anchor (as PROP-043 just did, twice today, via sync-from-code), there is no live zone that owns its verdict: wave 1's cache is the only home and it can no longer be refreshed by any tool, because every parsing subcommand rescans the GLOBAL scope and drags 286 package files into it. Worked around today by hand-editing wave 1's cache and setting content_hash to the file's real sha256 so the staleness flag fires honestly. That is a workaround, not a design. Options for the owner: (a) let wave 2 own the host corpus's verdicts too, since it already observes it; (b) give a campaign its own scope rather than sharing progress.toml; (c) accept that the host corpus is frozen at wave 1's close and re-open it only at the next recurrence run."
+  },
+  {
+   "id": "F-074",
+   "from": "spec/boot/00-core.md",
+   "to": "spec/WAL.md",
+   "type": "contradiction",
+   "status": "open",
+   "wave": 2,
+   "note": "THE NOTOUCH LIST LOST THREE OF ITS FOUR ENTRIES ON OWNER INSTRUCTION (2026-07-26), and the guard that remains is weaker than the one removed. `spec/boot/00-core.md`, `spec/boot/90-user.md` and `VIBEVM-SPEC.md` are no longer listed under 'Files you MUST NOT touch without explicit instruction'; only `refs/book/` is. The immediate effect was good and intended - it unblocked F-063's second half, which had sat on the owner's desk purely because no session could edit 90-user.md. The standing effect is that the two boot files carry the OWNER'S OWN machine facts, credentials layout and personal preferences, and any session may now re-form that prose wholesale. What is left is a WAL constraint saying 'mark additively, do not re-form without an instruction' - a convention, enforced by nothing, in a repository whose whole campaign exists because conventions were not being kept (F-055/056/057 were one forgotten discipline caught three times by accident). Worth an explicit decision rather than drift: (a) leave as-is and rely on the convention; (b) restore 00-core/90-user to NOTOUCH and keep VIBEVM-SPEC out, since the boot pair is personal and the spec is merely frozen; (c) replace the list with a gate - a floor check that fails if those files changed without a marker recording an owner instruction, which is the only option that does not rely on memory."
   }
  ]
 }

@@ -18,8 +18,11 @@ being worked is in `tasks/INDEX.md`, not here.
   the spec to match would delete a promise the engine is about to keep.
   *Deferred to wave 2, by construction rather than by choice.*
 
-- **`spec/boot/90-user.md` `##TOKEN-FILE-CONVENTION` — the owner's half of
-  F-063.** The line states `VIBEVM_PUBLISH_TOKEN` is the highest-precedence
+- ~~**`spec/boot/90-user.md` `##TOKEN-FILE-CONVENTION` — the owner's half of
+  F-063.**~~ **CLOSED 2026-07-26**, when the owner lifted the NOTOUCH bar on
+  the boot pair and the corrected line landed under sync-from-code. Kept here
+  with its original reasoning because a deferral that silently vanishes
+  teaches nothing: The line states `VIBEVM_PUBLISH_TOKEN` is the highest-precedence
   token source; it is not — `VIBEVM_PUBLISH_TOKEN_<HOST>` outranks it. The
   PROP-002 half landed under sync-from-code this session. `90-user.md` is
   user-owned (`00-core` `NOTOUCH-90-USER`), so no session may edit it; the

@@ -51,9 +51,6 @@
 
 ## Files you MUST NOT touch without explicit instruction
 
-- ##NOTOUCH-00-CORE `spec/boot/00-core.md` (this file) — user-owned. @impl/done
-- ##NOTOUCH-90-USER `spec/boot/90-user.md` — user-owned overrides. @impl/done
-- ##NOTOUCH-VIBEVM-SPEC `VIBEVM-SPEC.md` — the owner-frozen specification document; edits require the user. (URL corrections landed at the owner's direct request.) @impl/done
 - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done
 
 ## End of session

@@ -3,7 +3,7 @@
   "updated_at": "2026-07-25T23:33:59Z",
   "files": {
     "spec/boot/00-core.md": {
-      "content_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
+      "content_hash": "b38f28df6e4e2ba930ad8d2ec4fcc40e3665fb39f7c3fde7f14bead0dff4b867",
       "rollup": {
         "computed": [
           "impl",
@@ -193,24 +193,6 @@
               "REVIEW-marker contract in conflict-protocol flow (STATIC.md #review)"
             ]
           },
-          "NOTOUCH-00-CORE": {
-            "v": "confirmed",
-            "ev": [
-              "file exists; B2 marked it additive-only (honoured line-for-line)"
-            ]
-          },
-          "NOTOUCH-90-USER": {
-            "v": "confirmed",
-            "ev": [
-              "file exists; additive-only honoured in B2"
-            ]
-          },
-          "NOTOUCH-VIBEVM-SPEC": {
-            "v": "confirmed",
-            "ev": [
-              "file exists; L1 treated it report-only per the rule"
-            ]
-          },
           "NOTOUCH-REFS-BOOK": {
             "v": "confirmed",
             "ev": [
@@ -230,12 +212,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T12:44:02Z",
+        "verified_at": "2026-07-26T19:45:00Z",
         "verify_batch": "c0-boot + d2g"
       }
     },
     "spec/boot/90-user.md": {
-      "content_hash": "fa50702facdc42c0d17ace9b80e0c09d0b693d7d3470a987fd8e317550767d55",
+      "content_hash": "da61458f26f58261927c4112dacce002662f15ee24308b48d802ff96ab25cee1",
       "rollup": {
         "computed": [
           "impl",
@@ -335,7 +317,7 @@
           "TOKEN-FILE-CONVENTION": {
             "v": "confirmed",
             "ev": [
-              "token.rs resolves per-host <prefix>.publish.token with legacy git.publish.token fallback + VIBEVM_PUBLISH_TOKEN env priority"
+              "F-063 closed in full 2026-07-26. The host-specific VIBEVM_PUBLISH_TOKEN_<HOST> is the highest-precedence source (crates/vibe-publish/src/token.rs load_token_for_host :146-164, read_host_env_token :173 before read_legacy_env_token :186); the host-agnostic variable is second and kept for compatibility. Both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. The PROP-002 half landed earlier the same day; this half waited on the owner because the file was NOTOUCH, and landed when he lifted that."
             ]
           },
           "SCOPE-DISCIPLINE": {
@@ -447,7 +429,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T12:44:02Z",
+        "verified_at": "2026-07-26T19:45:00Z",
         "verify_batch": "c0-boot"
       }
     },

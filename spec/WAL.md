@@ -71,8 +71,13 @@ closes only through sync-from-code with owner approval.
   vibe-embedded but NOT project-local (PROP-030 §5 + §3.3).
 - **conform R-001 gate.** `crates/vibe-cli/src/registry.rs` is the only
   sanctioned constructor site for embedded/local-composite providers.
-- **Boot pair marking.** `spec/boot/00-core.md` / `90-user.md` are
-  user-owned: mark ADDITIVELY only; never re-form their prose.
+- **Boot pair marking.** `spec/boot/00-core.md` / `90-user.md` carry the
+  owner's own machine facts and preferences: mark ADDITIVELY, and do not
+  re-form their prose without an instruction. **The NOTOUCH bar was lifted
+  2026-07-26** — the owner removed `00-core.md`, `90-user.md` and
+  `VIBEVM-SPEC.md` from the must-not-touch list, leaving only `refs/book/`.
+  A session may now edit them; this line is what remains of the guard, and
+  it is a convention rather than a rule.
 - **legacy-spec/ is an archive.** Nothing in the living corpus or
   crates may cite into it as a normative source — archive-provenance
   pointers only; the campaign plan in `spec/terraforms/` is the one
