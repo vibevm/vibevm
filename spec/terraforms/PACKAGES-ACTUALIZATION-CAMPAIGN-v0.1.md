@@ -1244,6 +1244,46 @@ command that would have tested it.
   namespace. Sixth instance of the campaign's standing shape, and the first
   where the drifting artefact was the campaign's own bookkeeping.
 
+- **2026-07-27 · F-093 — the Rust stack's published wiring recipe cannot work as
+  written.** `GUIDE-AI-NATIVE-RUST.md` §13 step 3 tells a consumer to write
+  `specmark = { path = "vibedeps/<stack-slot>/crates/vendor/specmark" }`. That
+  directory does not exist: the vendored crate is `core-ai-native-specmark`, so
+  the line needs both a corrected path **and** a `package =` key it does not
+  have. The package's own `Cargo.toml` carries the same shape.
+
+  **This is a different severity from the drift the campaign has been finding.**
+  Every earlier finding was a document disagreeing with reality; this is an
+  instruction that fails when followed. It is the *engine consolidation* landing
+  in the crates and not in the recipe that names them — and the recipe is the
+  first thing a new consumer runs.
+
+- **2026-07-27 · F-094 — the same package's README is wrong in five places, and
+  one of them cites a rule its own guide retracts.** `crates/specmark` (a third
+  spelling of the specmark path, also absent); `schemas/specmap.jtd.json` (no
+  `schemas/` directory exists); `specmap-core/src/generated/` (it is
+  `crates/vendor/core-ai-native-specmap/src/generated`); the umbrella tool list
+  omits `ledger`, which `vibe.toml` and the package's own boot snippet both
+  carry; and the crate-naming line says names take the **`-rust` suffix** «per
+  the GUIDE §2 language-suffix rule» — while GUIDE §2's `##FAMILY-PREFIX-RULE`
+  says that policy is **superseded** by PROP-028 §2.4, and no crate in the
+  package carries the suffix.
+
+  **The go twin's README was updated for the same policy change and rust's was
+  not**, which is what makes this a *fan-out* defect rather than a stale line:
+  the correction reached one projection and stopped. Worth pricing before Phase
+  D, because the family has three members and the next policy change will
+  distribute the same way.
+
+- **2026-07-27 · F-095 — the rust terraform skill duplicates the sweep skill's
+  generic section where both twins wrote a raid-specific one.**
+  `skills/rust-ai-native-terraform/SKILL.md`'s «The generation-time assistant»
+  is verbatim the sweep skill's text; go and TypeScript both carry «The
+  generation-time assistant **during raids**» with their own units. **Here the
+  original looks like the copy** — the inverse of `##B7-RUST-IS-THE-SOURCE`,
+  which B7's brief had told the executor to assume. It did not correct toward
+  the twins, which was right; the finding is that the assumption has an
+  exception and the next brief in this family should say so.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
