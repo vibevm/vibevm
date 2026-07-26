@@ -65,7 +65,14 @@ Verified 2026-07-26 by reading the parser, not by recall:
   block to be a break rule. A block carrying `name:` and `description:` fails
   it, stays `BlockKind::Text`, and becomes a countable paragraph.
 - Corpus effect, measured by `check --exhaustive` on 2026-07-26: **nine files
-  across six packages**, one unmarked unit each. `go-ai-native-lang`'s two are
+  across six packages**, each with **one unmarked unit at line 1**.
+  *(Corrected 2026-07-27 by the executor: this line originally read «one
+  unmarked unit each», which is true of only six of the nine. `health-audit`
+  carries 13, `draft-eula` 8 and `wal-status` 10 — one at line 1 and the rest
+  ordinary unmarked prose further down. The acceptance arithmetic is unaffected,
+  because its denominator is nine LINE-1 units and not nine single-unit files,
+  but the sentence would mislead anyone predicting which files reach zero: only
+  the six `-lang` ones do.)* `go-ai-native-lang`'s two are
   the entire residue of batch B5 — 663 of 665.
 
 ## 4. Required behavior {#behavior}
@@ -153,4 +160,30 @@ before writing this one.
 
 ## 9. Log {#log}
 
-*(appended by executor/reviewer)*
+##log-done **Done 2026-07-27**, reviewed and landed in `2ade1cdc`. Corpus
+3 630 → 3 621, exactly −9; every other file's per-file count unmoved; the three
+language stacks reach 0. 127 `progress-core` tests and the floor green.
+
+##log-two-deviations **Two deliberate departures from §4's literal text, both accepted.**
+§4 said «scan forward for the next line that is exactly `---` (trimmed)»; the
+executor implemented a **blank-line stop** and **column-0** matching. Both
+narrow the rule and both fail safe — an unrecognised frontmatter leaves a
+visible unmarked unit rather than eating prose. §4 as literally written is not
+jointly satisfiable with §6's demand for a surviving line-1 thematic break, and
+the executor said so rather than picking one section and ignoring the other.
+
+##log-the-control-was-the-only-detector **The negative control was the only thing that could have caught it.**
+The literal §4 form passes the numeric acceptance on today's corpus: exactly
+nine observed files open with `---`, all close at line 4, none has a blank line
+before its closer. The bug is undetectable from the data. Swapped for the naive
+form, the planted control lost a whole marked unit and reported the loss as
+nothing. **A checker validated only against the data it will run on is
+validated against the cases that happen to exist.**
+
+##log-budget-flagged The §8 budget signal was exceeded (+200 against 150) and flagged
+rather than met by deleting mandated tests. The rule is 28 lines; the seven
+tests §6 requires carry the rest.
+
+##log-review-point-open **The §2 review point is still OPEN and is the owner's.** PROP-043
+names what a unit IS and never what structure is; DRIFT-031 moved that boundary
+in code and this task moved it again. Neither amended the spec.
