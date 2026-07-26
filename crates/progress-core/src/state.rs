@@ -93,7 +93,11 @@ pub fn write_state(
                 "facts": r.rollup.fact_count,
                 "unmarked": r.rollup.unmarked_facts,
                 "issues": r.issue_count,
-                "campaign": r.campaign,
+                // The view, not the record: the verdict tally the campaign
+                // used to store beside its verdicts is computed here, on
+                // every write, so the dashboard still reads a `summary`
+                // and can never read a stale one (DRIFT-033, F-077).
+                "campaign": r.campaign_view(),
             })
         })
         .collect();
@@ -220,6 +224,49 @@ mod tests {
             let v: serde_json::Value = serde_json::from_str(&text).expect("json");
             assert_eq!(v["schema"], 1, "{f}");
         }
+    }
+
+    /// F-077's other half, on the seam it matters at: the dashboard is
+    /// still handed a per-file `summary`, and it is handed one the cache
+    /// does not carry.
+    ///
+    /// That is the whole of the change from a consumer's side — the same
+    /// key with the same numbers, recomputed at every write instead of
+    /// copied forward from whenever it was last typed. The projection is
+    /// rewritten on every scan, so the count cannot outlive the verdicts
+    /// it counts; the stored field could, and the only reason it never
+    /// did is that nobody had edited a verdict by hand yet.
+    #[test]
+    fn the_projection_carries_a_computed_summary() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let mut cache = Cache::default();
+        let doc = crate::parse::parse_document("a.md", "@impl hello\n");
+        cache.upsert(&doc, &crate::rollup::rollup_doc(&doc));
+        cache
+            .files
+            .get_mut("a.md")
+            .expect("the record just upserted")
+            .campaign
+            .insert(
+                "verdicts".into(),
+                json!({"a1": {"v": "confirmed"}, "a2": {"v": "drift"}, "a3": {"v": "confirmed"}}),
+            );
+
+        write_state(dir.path(), "progress-test", "A", &cache).expect("write");
+        let corpus: serde_json::Value = serde_json::from_str(
+            &std::fs::read_to_string(dir.path().join("corpus.json")).expect("read"),
+        )
+        .expect("json");
+
+        assert_eq!(
+            corpus["files"][0]["campaign"]["summary"],
+            json!({"confirmed": 2, "drift": 1}),
+            "the reader gets the count"
+        );
+        assert!(
+            !cache.files["a.md"].campaign.contains_key("summary"),
+            "and the cache it was computed from never held one"
+        );
     }
 
     fn gate(name: &str, status: GateStatus, detail: Option<&str>) -> GateRecord {
