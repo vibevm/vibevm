@@ -69,6 +69,13 @@ The project-practice wave — running a project over the long haul:
 - `tool-design-lessons` — paid-for lessons for self-updating tools
   and package systems.
 
+The cultural-extraction wave — host-scale organisation:
+
+- `dev-runtime-docs` — the running-notes discipline for a project's
+  development-runtime documents.
+- `wal-specspaces` — nested projects (specspaces), each carrying its
+  own boot contract, WAL, and cold-resume file.
+
 An **edition** is a tested set: the umbrella pins every member
 exactly, and the umbrella's version is the edition number. Individual
 members may move ahead on their own lines between editions.

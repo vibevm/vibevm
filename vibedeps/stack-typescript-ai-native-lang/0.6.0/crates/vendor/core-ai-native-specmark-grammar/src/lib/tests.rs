@@ -138,3 +138,30 @@ fn spec_args_rejects_zero_revision_and_empty_reason() {
     let err = syn::parse2::<SpecArgs>(quote! { deviates = #URI, reason = "  " }).unwrap_err();
     assert!(err.to_string().contains("must not be empty"), "{err}");
 }
+
+#[test]
+fn fact_id_grammar_is_wider_than_the_heading_anchor_law() {
+    // `[A-Za-z][A-Za-z0-9_-]*`: a letter head, then letters/digits/`-`/`_`.
+    for ok in ["FACT-A", "my-fact", "R_040", "a", "Z9", "x-y_z-1"] {
+        assert!(is_valid_fact_id(ok), "should accept `{ok}`");
+    }
+    // Non-letter head, whitespace, punctuation, or empty are rejected.
+    for bad in [
+        "",
+        "9lives",
+        "-lead",
+        "_lead",
+        "has space",
+        "a!",
+        "a.b",
+        "café",
+    ] {
+        assert!(!is_valid_fact_id(bad), "should reject `{bad}`");
+    }
+    // The two grammars share one address space but not one shape: every
+    // heading anchor is a valid fact id, never the reverse.
+    assert!(is_valid_fact_id("req-conditional-fixpoint"));
+    assert!(is_valid_anchor("req-conditional-fixpoint"));
+    assert!(is_valid_fact_id("FACT-A"));
+    assert!(!is_valid_anchor("FACT-A"));
+}

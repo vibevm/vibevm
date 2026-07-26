@@ -14,11 +14,13 @@ use crate::facts::{Fact, SourceFacts};
 
 mod budget;
 mod diagnostics;
+mod go;
 mod structure;
 mod typescript;
 
 pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};
 pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
+pub use go::{GoCellIsolation, GoUnsafeInDomain};
 pub use structure::{CellHasOracle, CellIsolation, FlagSites};
 pub use typescript::{TsCellIsolation, TsUnsafeInDomain};
 

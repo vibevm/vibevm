@@ -79,9 +79,10 @@ impl Frontend for RustFrontend {
             | Fact::ErrorVariant { line, .. }
             | Fact::UnwrapUse { line, .. }
             | Fact::EnvRead { line, .. }
-            // Never produced by rust-syn — the ts-tsc frontend owns it —
-            // but the sort is total over the shared fact model.
-            | Fact::TsUnsafe { line, .. } => *line,
+            // Never produced by rust-syn — the ts-tsc and go frontends own
+            // these — but the sort is total over the shared fact model.
+            | Fact::TsUnsafe { line, .. }
+            | Fact::GoUnsafe { line, .. } => *line,
         });
         v.facts
     }
