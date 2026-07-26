@@ -161,25 +161,82 @@ Four things this buys, and the fourth is the reason:
 - **the tier boundary already exists**: `spec_tests` versus everything else,
   with no extra bookkeeping. §7 depends on this.
 
-## 7. Tiering — measured, then cut {#tiers}
+## 7. Tiering — assigned at authoring time, not derived afterwards {#tiers}
 
-*Owner ruling: tiered, but the very first run runs everything.*
+*Owner ruling 2026-07-26: «использовать [ярусы]. Но при первом написании будем
+делать полное покрытие, долго и мучительно. И тесты сразу делить, к какому они
+ярусу относятся.»*
 
-That order is right, and not merely cautious: **the first full run is the only
-place the real number comes from**, and tiers cut before it would be cut against
-a guess.
+**The second sentence is the one that changes the design.** An earlier draft of
+this section had the tiers *derived* after a full timing run. That is wrong for
+the same reason everything else in this campaign has been wrong: a derived
+classification over 20 000 tests is a second statement with its own writer, and
+producing it means re-reading every test. **The tier is a property of the test,
+known by whoever writes it, and it costs one token at authoring time.**
 
-1. Build the suite. Run **all** of it. Record wall-clock, per crate.
-2. Cut tiers from those numbers:
-   - **per-cell** (the dev loop, discipline budget < ~60 s) — the cell's own
-     `spec_tests` plus its existing tests;
-   - **floor** — what fits the gate without making it unusable;
-   - **full** — everything, on demand and scheduled.
-3. Record the cut and its numbers. A tier boundary with no measurement behind
-   it is a guess wearing a decimal point.
+- ##T-TIER-AT-WRITE **The worker assigns the tier as it writes the test.** Never a later
+  pass, never inferred from a stopwatch.
+- ##T-FIRST-PASS-IS-FULL **The first authoring pass is full coverage** — every T-testable
+  fact, slowly and deliberately. Tiering governs what runs *when*, never what
+  gets *written*.
+- ##T-MEASURE-VALIDATES **The timing run still happens, and its job changes**: it no longer
+  produces the tiers, it **audits** them. A test in the fast tier that is not
+  fast is a mis-assignment to fix, and the run is what finds it.
 
-Today's baseline for comparison: the floor's longest single suite is **24.75 s**
-across 2 009 tests.
+### 7.1 The three tiers {#tier-defs}
+
+| tier | admits | runs in |
+|---|---|---|
+| **fast** | pure, in-process, deterministic, no I/O | the dev loop **and** the floor |
+| **floor** | touches a tempdir or a fixture; still deterministic and quick | the floor |
+| **slow** | property/fuzz at real sample counts, differential oracles, anything needing an external tool (`gopls`, `tsc`, `rust-analyzer`) or a network | on demand and scheduled |
+
+The third tier already has a live precedent: DRIFT-036's probe-guarded steps
+filter exactly this class and print what they dropped. Those tests are **slow
+tier by nature**, and Phase T should place them there rather than leave them
+filtered by a probe.
+
+### 7.2 How tier and kind are carried — and why not in the tag {#carriers}
+
+`#[spec(…)]`'s grammar is **closed**: `<verb> = "<uri>" [, r = N] [, reason = "…"]`.
+It takes no arbitrary keys, so `tier =` / `kind =` would be a **grammar change in
+a package crate — a release event**, propagated to six packages, for a phase that
+has not started. Deferred deliberately; §7.3 records the upgrade path.
+
+Until then both ride the two carriers Phase T already has:
+
+- ##T-CARRIER-VERIFIES **The edge:** `#[specmark::verifies("spec://…#FACT")]` — sugar that
+  already exists **specifically for tests** and is shorter than the general
+  form. This is the carrier §10's coverage count reads.
+- ##T-CARRIER-KIND **The kind:** a test-name prefix — `canonical_…`, `boundary_…`,
+  `negative_…`, `property_…`. Greppable, so §10's «three *distinct* kinds»
+  becomes a mechanical check instead of a human reading tests. **Without this
+  the exit gate is not checkable at all**, which is why it is not optional.
+- ##T-CARRIER-TIER **The tier:** `#[ignore]` marks the **slow** tier — cargo-native,
+  and `--include-ignored` is the full run. `fast` vs `floor` is the file:
+  `spec_tests.rs` and `spec_tests_io.rs` beside the cell (§6), so the dev loop
+  selects by target and the split stays visible from the path, which was the
+  reason for the sibling file in the first place.
+
+### 7.3 The upgrade path, named so it is a decision and not a drift {#tier-upgrade}
+
+If selecting or reporting by tier/kind **through specmap** becomes needed — a
+coverage report broken down by kind, say — the answer is to add `kind` and
+`tier` keys to the `#[spec]` grammar, not to build a second index off the
+naming convention. That is a release event and it waits for a reason.
+
+**Revisit when:** the naming convention is observed drifting (a test whose
+prefix and content disagree), or a report is wanted that a grep cannot produce.
+
+### 7.4 The number to beat {#baseline}
+
+Today's floor, measured 2026-07-26 after DRIFT-036: **154 s warm over 36 steps**,
+of which the eleven newest are **30.7 s**. Its longest single suite is
+**24.75 s** across 2 009 tests. Cold is materially worse — seven package
+workspaces each own a `target/`.
+
+Phase T adds tests of the order of ten times the current count. **The floor
+cannot absorb that untiered**, which is the whole reason this section exists.
 
 ## 8. Languages — Rust pilots {#languages}
 
@@ -216,7 +273,12 @@ be resolved by a tool that cannot see fact grain.
 1. **Triage complete**: every in-scope fact in exactly one of §2's three
    buckets, counts recorded.
 2. **Coverage**: every **T-testable** fact carries **≥3 `verifies` edges of
-   distinct kinds**, or a recorded exception with its reason.
+   distinct kinds**, or a recorded exception with its reason. *Checkable
+   because §7.2 makes kind greppable — a gate that needs a human to read the
+   tests is not a gate.*
+2b. **Every test carries a tier**, assigned when it was written (§7.1), and the
+   timing run **audits** the assignment rather than producing it: a fast-tier
+   test that is not fast is a defect to fix, not a boundary to redraw.
 3. **The existing detector is green**: no unit marked `test/done` with zero
    `verifies` edges — `progress-core/src/evidence.rs:61` already computes this
    and has never had input.
