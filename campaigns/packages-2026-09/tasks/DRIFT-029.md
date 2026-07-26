@@ -4,7 +4,7 @@
 <status stage="impl" state="plan" ref="DRIFT-029"/>
 ```
 
-**Status:** queued
+**Status:** returned — §8 stop, PROP-038 §2.1 specifies the behaviour, 2026-07-26
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** workspace
 **Finding:** F-078 (campaign LOG, 2026-07-26).
@@ -161,3 +161,110 @@ regeneration, then confirm the `vibedeps/` write is **not** that.
 ## 9. Log {#log}
 
 *(appended by executor / reviewer)*
+
+### 2026-07-26 — executor: RETURNED under §8, first bullet
+
+**§4 step 1 — the code path that writes into the slot.**
+`crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:151-153`
+(`emit_package_units`) builds `boot_dir = <workspace_root>/<slot>/spec/boot`
+and calls `emit_effective`, which writes `INDEX.md` and `STATIC.md` at
+`hybrid_emit.rs:269-283`. It is reached for every unit in `with_static`
+(`hybrid_emit.rs:142-146`) — a unit whose static zone contains a boot-carrying
+child other than itself.
+
+**The stop.** §8's first bullet fires verbatim. PROP-038 §2.1 carries the
+spec unit `##UNIT-PER-PACKAGE`
+(`spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:33`, `@impl/done`):
+
+> **Decision.** Every package materialised under `vibedeps/` carries its
+> **own** boot artifacts — `vibedeps/<slot>/spec/boot/STATIC.md` … and
+> `.../INDEX.md` … not only entry-point workspace nodes.
+
+`##UNITS-CHANGES-009` (line 35) restates it as amending PROP-009 §2.3, and
+`##MIGRATION-SAFETY-COROLLARY` (line 172) names the artifacts additive and
+"expected on migration". §4 step 2 ("it must not have boot artifacts compiled
+into it. Suppress the write") is the negation of a ratified, implemented
+decision. No edit made; no semantics invented.
+
+**Why `flow-git-practices` and nothing else.** Each of the four members
+declares `link = "static"` in its **own** `[boot_snippet]`
+(`packages/org.vibevm.world/git-{atomic-commits,conventional-commits,autonomy,attribution-policy}/v0.1.0/vibe.toml`).
+`build_unit_table` resolves an edge's mode by consumer-declared → target
+suggestion → consumer default (`hybrid_emit.rs:57-63`), so the aggregator's
+four undeclared edges all resolve `Static` off the members' suggestion. That
+makes `git-practices` the tree's only intermediate static edge, so it is the
+only unit for which `has_static_children` holds and the only slot emitted into.
+
+**§3's causal model is wrong in a way that matters.** §3 concludes "the
+contribution therefore came from a path-based fallback that found the file vibe
+had just generated". There is no path-based fallback. The host reads the
+aggregator through its compiled `STATIC.md` by explicit design at
+`crates/vibe-workspace/src/install/bootgen.rs:305-307`:
+
+```rust
+let boot_path = if with_static.contains(&(dep.group.clone(), dep.name.clone())) {
+    Some(format!("{slot}/spec/boot/{}", boot_artifacts::STATIC_FILE))
+} else {
+    snippet.map(|bs| format!("{slot}/{}", …))
+};
+```
+
+commented "PROP-038 §2.1: a dependency that statically links a child is read
+through its compiled STATIC.md (carrying the whole zone), not its raw snippet".
+The absent `[boot_snippet]` is why the `else` arm is not taken; it is not a
+fallback firing.
+
+**Consequently the prescribed fix is also mechanically unsound.** `with_static`
+is computed from the zone table, independently of any write. Suppressing the
+write alone leaves `bootgen.rs:306` emitting a host entry that points at
+`vibedeps/flow-git-practices/0.1.0/spec/boot/STATIC.md`, and `render_static`
+reads that path with `fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?`
+(`crates/vibe-workspace/src/boot_artifacts.rs:256-257`) — a hard error, not a
+skip. §4's "Error paths: none new. This removes a write; it introduces no
+failure mode" does not hold.
+
+**Where the duplication actually enters — the question for the owner.** The
+host-side double copy is real and reproduced (`spec/boot/STATIC.md`: members at
+363/421/486/514 from the root's own forced-inline closure, the aggregator's
+compiled lane at 551 carrying the same four at 557/615/680/708). It enters
+through the **hoist counter**, not through per-unit emission.
+`hoist::soft_static_pulls` (`crates/vibe-workspace/src/boot/hybrid/hoist.rs:58-81`)
+walks only `table`, which `build_unit_table` builds from `resolution` — i.e.
+materialised packages. An entry-point node's own static pulls are never
+counted. So each member scores exactly one puller (`git-practices`), fails the
+`pullers.len() >= 2` test at `bootgen.rs:56-61`, is not `shared`, and is
+compiled locally — while the root compiles it a second time through
+`static_transitive_closure` (`bootgen.rs:350-374`, the redbook
+`static-transitive` edge; `vibedeps/flow-redbook/0.2.0/vibe.toml:29` requires
+`git-practices`). Count the root as a puller and each member becomes `shared`,
+hoists to the root once, and the aggregator's local zone degrades to the `#use`
+markers PROP-038 §2.5 designed for — the §6 outcome without deleting anything
+§2.1 mandates.
+
+This also explains why §5's `##MIGRATION-SAFETY-COROLLARY` no longer holds: it
+promised byte-stable root artifacts only "for a tree with no intermediate
+static edges", and `git-practices` is now exactly such an edge. The 194-line
+growth is that precondition lapsing, not a regression in the emitter.
+
+**Owner ruling needed (either resolves the finding; both are outside this
+task's mandate):**
+
+1. Does `##UNIT-PER-PACKAGE` stand? If it does, DRIFT-029 must be re-specced
+   as a hoist-counter fix (count entry-point nodes in `soft_static_pulls`), and
+   §6's `grep -c "vibe:static org.vibevm.world/git-practices"` → **0** is the
+   wrong assertion — under hoisting the aggregator's zone entry survives with
+   `#use` markers inside it, so that count is **1**, while
+   `grep -c "^# Flow: Atomic Commits"` → **1** still holds.
+2. Or is `##UNIT-PER-PACKAGE` itself the drift, to be narrowed in spec first?
+   That is a spec edit, i.e. the reviewer's lane per §5.
+
+`vibedeps/flow-delegation-rules/0.1.0/` is unaffected either way — its
+`INDEX.md` is copied from the tracked source
+`packages/org.vibevm.fractality/delegation-rules/v0.1.0/spec/boot/INDEX.md`
+(confirmed via `git ls-files`), not emitted.
+
+**Landed:** the `<!-- REVIEW: … -->` marker §8 requires, at
+`hybrid_emit.rs:148-160` (house form `// <!-- REVIEW: … -->`, per
+`crates/progress-core/src/rollup.rs:162`), plus this entry and the §7 status
+flip. No behavioural change; §6 acceptance not run, since no fix was attempted.
+Budget spent: 2 files, well inside §8's 6-file / 150-line signal.

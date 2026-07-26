@@ -145,6 +145,19 @@ pub(super) fn emit_package_units(
         .map(|(id, _)| id.clone())
         .collect();
 
+    // <!-- REVIEW: DRIFT-029 asked for this write to be suppressed, so a
+    // materialised slot would carry no compiled boot artifacts. PROP-038 §2.1
+    // `##UNIT-PER-PACKAGE` decides the opposite — "Every package materialised
+    // under `vibedeps/` carries its **own** boot artifacts" — so the task
+    // stopped for an owner ruling rather than contradict the spec. Two facts
+    // for whoever rules: `with_static` is computed above independently of this
+    // write, so suppressing only the write leaves `bootgen.rs:305` pointing at
+    // a STATIC.md that no longer exists (a hard `io_err` in `render_static`,
+    // `boot_artifacts.rs:257`); and the host-side duplication the task reports
+    // enters through the hoist counter, not through this loop —
+    // `hoist::soft_static_pulls` counts package→package static pulls only,
+    // never an entry-point node's own, so a member pulled by both the root and
+    // an aggregator scores one puller and is never hoisted (§2.4). -->
     for id in &with_static {
         let Some(slot) = slots.get(id) else { continue };
         let effective = zone_to_effective(id, &zones[id], table, &with_static, &slots, shared);
