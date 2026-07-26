@@ -2,7 +2,9 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| DRIFT-031 | the parser stops swallowing two units it can already see | opus | queued (F-083 + F-084) |
+| DRIFT-033 | campaign state stops being believed on its own word | opus | queued (F-075 d + F-077 a) |
+| DRIFT-032 | a `spec://` URI can address a normative fact | opus | in progress (F-085 a) — **release event** |
+| DRIFT-031 | the parser stops swallowing two units it can already see | opus | **done** — F-083 + F-084, floor green |
 | MARKUP-B1 | `core-ai-native` v0.8.0, guiding + operating layer | opus | **done** — B1a + B1b, 417 units over 9 files |
 | DRIFT-030 | the hoist counter learns that the root is a consumer too | opus | returned (§8 stop) — counter necessary, not sufficient; design call parked |
 | DRIFT-029 | a slot's boot artifacts are spec, not drift | opus | returned (§8 stop) — superseded by DRIFT-030 |

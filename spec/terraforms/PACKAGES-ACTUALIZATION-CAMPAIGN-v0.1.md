@@ -799,6 +799,42 @@ command that would have tested it.
   only progress-core's learned the checkbox. That divergence is out of DRIFT-031's
   bounds by design and wants its own decision.
 
+- **2026-07-26 · Four owner rulings, and the open-findings queue empties.**
+
+  **F-082 — RULED: boot snippets ARE marked**, «и внутри пакетов, и внутри самой
+  vibevm». So the +52 % the measurement showed is accepted as the price of
+  making a consumer's boot lane addressable by `spec://`, which is what the
+  correction contract exists for. Nothing changes operationally — the host's own
+  `00-core.md` / `90-user.md` were marked in wave 1, and the 24 package snippets
+  are marked as their batches arrive. Recorded so the cost is never re-litigated
+  as if it had been an oversight.
+
+  **F-085 — RULED (a): the URI parser must accept fact ids; heading anchors are
+  not touched.** Filed as DRIFT-032 and dispatched. It is a **release event** —
+  the grammar crate is vendored into five packages, so `cargo xtask
+  sync-engines` propagates or the floor goes red. Worth recording that the fix
+  is *not* a new decision: `##FACT-ID-GRAMMAR` already says a fact is
+  addressable as `spec://…/<doc>#<ID>`, and the parser simply never implemented
+  that sentence. One test flips by design (`tests.rs:33` lists
+  `spec://vibevm/x#A-b` as rejected, commented «uppercase anchor»), and the
+  assertions that `is_valid_anchor("FACT-A")` stays false must survive — a
+  useful tripwire that the change is scoped to the URI and not to the heading law.
+
+  **F-075 — RULED (d):** `seal` writes `processed_hash`. **F-077 — RULED (a):**
+  the derived counts are deleted and computed on read. Both filed as DRIFT-033.
+  F-075's choice also discharges **amendment A4**, which requires the hand-seal
+  staleness gap closed before Phase C and names F-067 as the reason — the same
+  field, seen from the other end, so one change answers both. Recorded for
+  honesty: (d) makes staleness *checkable* against the text; it does **not**
+  detect a session that re-derived one anchor of three hundred and sealed the
+  file. That half stays open by choice, not by oversight.
+
+  **F-077's target had already moved before the ruling landed.** The
+  `campaign.summary` the finding named is gone; the stored projection is now
+  `counters` in `campaign.json`. Option (a) is written against the class rather
+  than the instance for exactly that reason — this one has demonstrated it
+  relocates.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
