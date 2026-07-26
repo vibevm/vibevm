@@ -12,11 +12,13 @@ merely a method. These are not this campaign's own tails yet — they are its
 picked up. The authoritative statement of each is
 [wave 1's deferrals](../progress-2026-08/deferrals.md).
 
-- **Phase F — the judgment-marking pass** (amendment A3.i). Wave 1 marked what
+- **The judgment-marking pass** — *wave 1's* Phase F (amendment A3.i). **Not this
+  campaign's Phase F, which is the credibility report, and not Phase T.** The
+  collision of labels is why this line now names the work instead of a letter. Wave 1 marked what
   4 917 facts *are* and was never asked what should *happen* to them, so every
   forward-looking view came out empty. This campaign marks judgment as it marks
   state, in one sweep over both corpora, so the three owner plans have an input.
-- **Phase G — the harvest pass and the two doc trees** (A3.ii). The User Guide
+- **The harvest pass and the two doc trees** — *wave 1's* Phase G (A3.ii). The User Guide
   and the Package Author Guide, the latter documenting the `packages/` corpus
   that is this campaign's own subject.
 - **`FACT-GRAIN-EVIDENCE`** — wave 1's single surviving drift row, which no
