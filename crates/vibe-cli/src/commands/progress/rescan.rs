@@ -2,7 +2,7 @@
 //!
 //! One of the two places that know the observed tree is a git checkout —
 //! the other asks only which branch it is on, to key the payload sidecar
-//! (`super::payload_dir`), and asks it once per run.
+//! (`super::grounding::payload_dir`), and asks it once per run.
 //! Whether a crate moved under a verdict reaches the core as *data*
 //! (`RescanOptions`) — asking git is adapter work, and it happens here,
 //! once per crate the baseline names and never once per unit. The core has

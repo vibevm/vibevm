@@ -3,6 +3,7 @@
 | id | title | executor | status |
 |---|---|---|---|
 | DRIFT-024 | the scope stops observing what it must not mark | opus | done |
+| DRIFT-025 | the progress adapter splits before it is forced to | opus | done |
 
 DRIFT-024 is the exception to "Phase A is not tasks": it comes out of the
 Phase A pilot, where `check --exhaustive` turned out to demand fact markup on

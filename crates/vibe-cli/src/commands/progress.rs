@@ -4,22 +4,33 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#tool");
 
-use std::collections::{BTreeMap, BTreeSet};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use anyhow::{Context as _, Result, bail};
-use progress_core::doc::{ParsedDoc, Severity};
+use progress_core::doc::Severity;
 use progress_core::evidence::{EvidenceProvider, NoEvidence};
 use progress_core::model::Audience;
 use progress_core::report::View;
-use progress_core::{cache, journal, report, rollup, scope, sidecar, state, weave};
-use vibe_registry::ShellGit;
+use progress_core::{cache, journal, report, rollup, state, weave};
 
 use crate::cli::{
     GateStatusArg, ProgressArgs, ProgressCheckArgs, ProgressCommonArgs, ProgressGateArgs,
     ProgressReportArgs, ProgressSubcommand, ProgressWeaveArgs,
 };
 use crate::output::Context;
+
+// What `tests.rs` and its submodules reach through `use super::*` and the
+// adapter itself no longer spells: the grounding cell took the last uses of
+// these names with it (DRIFT-025), and the move is only a move if no test
+// file had to change.
+#[cfg(test)]
+use progress_core::{doc::ParsedDoc, sidecar};
+#[cfg(test)]
+use std::{collections::BTreeMap, path::PathBuf};
+
+/// The campaign-grounding cell every verb enters through: the observed
+/// tree, the campaign zone, and the caches behind them (PROP-043 §7.1).
+mod grounding;
 
 /// The writer half of the baseline: the campaign's fact-grain verdicts
 /// projected onto §7.3's unit-grain record (DRIFT-023).
@@ -28,6 +39,10 @@ mod baseline;
 /// The rescan half — the only part of the adapter that knows this tree is a
 /// git checkout (PROP-043 §7.3).
 mod rescan;
+
+// Re-exported under their own names so every caller — the verbs below, the
+// two verb submodules, the tests — reaches them exactly as before.
+use grounding::{Ground, campaign_id, ground, refresh_state, resolve_campaign};
 
 pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
     match args.command {
@@ -41,252 +56,6 @@ pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
         ProgressSubcommand::Resume(a) => resume(ctx, &a),
         ProgressSubcommand::Gate(a) => gate(ctx, &a),
     }
-}
-
-/// The observed tree + campaign zone, resolved once per invocation.
-struct Ground {
-    root: PathBuf,
-    docs: Vec<ParsedDoc>,
-    campaign: Option<PathBuf>,
-    /// The campaign cache, read once at the head of the run: it says what
-    /// each observed file hashed to when it was judged, and carries the
-    /// verdicts. `refresh_state` writes it back. One read and one write
-    /// per invocation — a second `load` here would be a second megabyte of
-    /// JSON for the same bytes, and worse, a second opinion about them.
-    cache: cache::Cache,
-    /// The warning `load_tolerant` produced when the cache on disk could
-    /// not be read and this run is proceeding on an empty one. Every
-    /// subcommand prints it; `baseline` additionally **refuses** to run,
-    /// because a baseline projected from a cache that failed to load is
-    /// not an empty baseline — it is a truncated one, and it reads as
-    /// knowledge (DRIFT-023 §4.3).
-    cache_warning: Option<String>,
-    /// The parse-payload sidecar, outside the repository (DRIFT-016).
-    /// Read alongside the cache and written alongside it; every way of not
-    /// having it is an empty store, so a run whose bucket was never
-    /// created is a cold run and says nothing about it.
-    payloads: sidecar::Payloads,
-    /// Files the config `exclude` globs removed (`scope::ExcludeReport`).
-    excluded: usize,
-}
-
-/// Resolve the tree, then produce one `ParsedDoc` per observed file —
-/// from the sidecar where the cache's content hash says nothing changed,
-/// from the parser where it does not (PROP-043 §7.1, DRIFT-010 §4,
-/// DRIFT-016 §4).
-///
-/// The file is read either way: the hash is over its bytes, so there is no
-/// version of this that trusts a timestamp. What a hit buys is the parse,
-/// not the read. `--no-cache` skips the lookup entirely and parses
-/// everything, which is what a run that must not inherit a verdict does.
-///
-/// Every subcommand grounds through here, so "all subcommands are
-/// incremental over the content-hash cache" is one function's property
-/// rather than eight — realises `TOOL-INCREMENTAL`.
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#tool")]
-fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
-    let root = common
-        .path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", common.path.display()))?;
-    let root = super::init::strip_unc_public(root);
-    let cfg = scope::load_config(&root)?;
-    let campaign = resolve_campaign(&root, common.campaign.as_deref());
-
-    // An unreadable cache is a warning and a cold run, never a failure:
-    // the cache is derived acceleration and may be deleted at any time
-    // (PROP-043 §7.5).
-    let (cache, cache_warning) = match &campaign {
-        Some(c) => {
-            let (loaded, recovered) =
-                cache::Cache::load_tolerant(&c.join("run").join("cache.json"));
-            if let Some(warning) = &recovered {
-                eprintln!("vibe progress: warning: {warning}");
-            }
-            (loaded, recovered)
-        }
-        None => (cache::Cache::default(), None),
-    };
-    // The payload store is pure acceleration and lives outside the tree,
-    // so it has no warning to print and no failure to report: an absent
-    // bucket, an unreadable file and a machine that has never run this
-    // campaign are one case, and that case is "parse" (DRIFT-016 §4.3).
-    let payloads = sidecar::Payloads::load(payload_dir(&root, &cfg, campaign.as_deref()));
-
-    let (files, excludes) = scope::observed_files_reported(&root, &cfg)?;
-    for p in &excludes.stale {
-        eprintln!("vibe progress: warning: exclude pattern `{p}` matched no observed file");
-    }
-    let mut docs = Vec::new();
-    for rel in files {
-        let full = root.join(&rel);
-        let text = std::fs::read_to_string(&full)
-            .with_context(|| format!("reading {}", full.display()))?;
-        let path = scope::rel_str(&rel);
-        let hash = progress_core::parse::content_hash(&text);
-        let cached = (!common.no_cache)
-            .then(|| cache.cached_doc(&path, &hash, &payloads))
-            .flatten();
-        docs.push(match cached {
-            Some(hit) => hit.clone(),
-            None => progress_core::parse::parse_document(&path, &text),
-        });
-    }
-    Ok(Ground {
-        root,
-        docs,
-        campaign,
-        cache,
-        cache_warning,
-        payloads,
-        excluded: excludes.dropped,
-    })
-}
-
-/// Where this run's payload sidecar lives, or `None` for a run without one
-/// — no campaign zone to key it by, or no per-user home to hang it off.
-///
-/// Two pieces of knowledge the core is not allowed to have meet here, and
-/// only here. Which checkout this is comes from git, asked exactly once
-/// per run and answered as data — the same seam DRIFT-009 uses for the
-/// crate→commit map (PROP-043 §2). And the per-user home comes from the
-/// settings chokepoint, so `VIBE_SETTINGS` relocates this store with
-/// everything else and the sidecar needs no environment variable of its
-/// own — one variable to remember rather than two (F-055).
-fn payload_dir(root: &Path, cfg: &scope::ScopeConfig, campaign: Option<&Path>) -> Option<PathBuf> {
-    let campaign = campaign?;
-    let home = vibe_core::settings::settings_dir();
-    let branch = current_branch(root);
-    sidecar::resolve_dir(
-        root,
-        cfg.progress.cache_dir.as_deref(),
-        home.as_deref(),
-        branch.as_deref(),
-        &campaign_id(campaign),
-    )
-}
-
-/// The branch checked out at `root`, or `None` when there is none to name.
-///
-/// A detached HEAD, a tree that is not a checkout, no git binary at all:
-/// every one of them lands in the `detached` bucket rather than failing a
-/// run. The payload is optional by construction, and so is knowing which
-/// branch produced it.
-fn current_branch(root: &Path) -> Option<String> {
-    ShellGit::new().branch(root).ok().flatten()
-}
-
-/// `--campaign` wins; otherwise the single `campaigns/<id>/` when exactly
-/// one exists; otherwise none (ad-hoc mode — reports work, state does not).
-fn resolve_campaign(root: &Path, flag: Option<&Path>) -> Option<PathBuf> {
-    if let Some(f) = flag {
-        return Some(if f.is_absolute() {
-            f.to_path_buf()
-        } else {
-            root.join(f)
-        });
-    }
-    let zone = root.join("campaigns");
-    let entries: Vec<PathBuf> = std::fs::read_dir(&zone)
-        .ok()?
-        .filter_map(|e| e.ok())
-        .map(|e| e.path())
-        .filter(|p| p.is_dir())
-        .collect();
-    match entries.as_slice() {
-        [one] => Some(one.clone()),
-        _ => None,
-    }
-}
-
-fn campaign_id(campaign: &Path) -> String {
-    campaign
-        .file_name()
-        .map(|n| n.to_string_lossy().into_owned())
-        .unwrap_or_else(|| "campaign".into())
-}
-
-/// What a refresh did to the disk (DRIFT-017 §4.3): one entry per
-/// artifact the run could have written, `true` where it actually did.
-///
-/// A run over an unchanged tree writes none of them, and that is exactly
-/// why the tally is reported rather than assumed — a skip nobody can see
-/// is an optimisation nobody can debug.
-#[derive(Debug, Default)]
-struct Refresh {
-    campaign: Option<PathBuf>,
-    writes: BTreeMap<String, bool>,
-}
-
-impl Refresh {
-    /// How many artifacts this run wrote, and how many it left alone.
-    fn tally(&self) -> (usize, usize) {
-        let wrote = self.writes.values().filter(|w| **w).count();
-        (wrote, self.writes.len() - wrote)
-    }
-}
-
-/// Refresh cache + sidecar + state under the campaign zone from parsed
-/// docs.
-///
-/// Takes the cache `ground` already read — the upsert is over the same
-/// records the reuse decision was made against, and the campaign fields
-/// those records carry ride through untouched (`upsert` preserves them).
-///
-/// Every write here first asks whether it would change anything, so a run
-/// over an unchanged tree touches no file at all (DRIFT-017). What it
-/// costs is one read per artifact; what it saves is the fsync'd rewrite of
-/// several megabytes that DRIFT-010 §9 measured as the real cost of a run.
-///
-/// The two writes are deliberately unequal. `cache.json` is tracked, holds
-/// the verdicts, and a failure to write it fails the run. The sidecar is
-/// derived, lives outside the tree, and a failure to write it is a slower
-/// next run — so it goes second and says nothing either way.
-fn refresh_state(g: &mut Ground) -> Result<Refresh> {
-    let Some(campaign) = &g.campaign else {
-        return Ok(Refresh::default());
-    };
-    let run_dir = campaign.join("run");
-    let cache_path = run_dir.join("cache.json");
-    let c = &mut g.cache;
-    for doc in &g.docs {
-        let r = rollup::rollup_doc(doc);
-        c.upsert(doc, &r);
-    }
-    // Prune records whose file left the observed scope, so the cache — and
-    // thus `corpus.json` / `campaign.json` — describes exactly the parsed
-    // corpus, not the union across every past scan (DRIFT-001). A pruned
-    // record that still carried campaign verdicts is surfaced loudly, never
-    // silently discarded (DRIFT-001 §5).
-    let observed: BTreeSet<String> = g.docs.iter().map(|d| d.path.clone()).collect();
-    for lost in c.retain_paths(&observed) {
-        eprintln!(
-            "vibe progress: warning: pruned out-of-scope record `{lost}` that carried campaign verdicts"
-        );
-    }
-    // Stamping first is safe and deliberate: the identity test ignores the
-    // `updated_at` a document carries, so the candidate may hold this
-    // run's clock while the file keeps the one it was last changed at.
-    c.touch();
-    let mut writes = BTreeMap::new();
-    writes.insert("cache.json".to_string(), c.store(&cache_path)?);
-    writes.insert(
-        sidecar::PAYLOAD_FILE.to_string(),
-        g.payloads.store(g.docs.iter()),
-    );
-    // Phase is derived from the campaign's own journal (last `phase` event
-    // wins; absent ⇒ "A") — never compiled in, never parsed from Markdown.
-    let phase = journal::derive_phase(&journal::read_journal(&run_dir.join("journal.jsonl"))?);
-    writes.extend(state::write_state(
-        &run_dir.join("state"),
-        &campaign_id(campaign),
-        &phase,
-        c,
-    )?);
-    Ok(Refresh {
-        campaign: Some(campaign.clone()),
-        writes,
-    })
 }
 
 fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
