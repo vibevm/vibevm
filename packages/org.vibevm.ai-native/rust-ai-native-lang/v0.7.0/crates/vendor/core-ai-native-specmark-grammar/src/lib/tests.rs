@@ -27,19 +27,72 @@ fn uri_parses_revision_pin() {
 #[test]
 fn uri_rejections() {
     for bad in [
-        "http://x/y#a",         // wrong scheme
-        "spec://vibevm#a",      // no doc-path
-        "spec://vibevm/x",      // no fragment
-        "spec://vibevm/x#A-b",  // uppercase anchor
-        "spec://vibevm/x#a b",  // whitespace
-        "spec://vibevm/x#a~rx", // non-integer pin
-        "spec://vibevm/x#a~r0", // r0
-        "spec://vibevm/x#a#b",  // two fragments
-        "spec://vibevm/x#-a",   // leading dash
-        "spec://vibevm/x#a-",   // trailing dash
+        "http://x/y#a",           // wrong scheme
+        "spec://vibevm#a",        // no doc-path
+        "spec://vibevm/x",        // no fragment
+        "spec://vibevm/x#",       // empty anchor
+        "spec://vibevm/x#a b",    // whitespace
+        "spec://vibevm/x#a~rx",   // non-integer pin
+        "spec://vibevm/x#a~r0",   // r0
+        "spec://vibevm/x#a#b",    // two fragments
+        "spec://vibevm/x#-a",     // leading dash
+        "spec://vibevm/x#_lead",  // leading underscore: the head must be a letter
+        "spec://vibevm/x#9lives", // digit head, likewise
+        "spec://vibevm/x#a.b",    // `.` is not an id character
     ] {
         assert!(parse_spec_uri(bad).is_err(), "should reject `{bad}`");
     }
+}
+
+/// A normative `UPPER-SLUG` fact is addressable as a URI — the sentence
+/// `##FACT-ID-GRAMMAR` already states, now implemented. `#A-b` moved here
+/// from the rejection set above: the owner ruled the behaviour changes.
+#[test]
+fn uri_accepts_an_upper_fact_anchor() {
+    let u = parse_spec_uri("spec://vibevm/x#A-b").unwrap();
+    assert_eq!(u.anchor, "A-b");
+    assert_eq!(u.pinned_r, None);
+    assert_eq!(u.without_pin(), "spec://vibevm/x#A-b");
+
+    // The revision pin composes with it unchanged.
+    let p = parse_spec_uri("spec://vibevm/x#A-b~r2").unwrap();
+    assert_eq!(p.anchor, "A-b");
+    assert_eq!(p.pinned_r, Some(2));
+    assert_eq!(p.without_pin(), "spec://vibevm/x#A-b");
+
+    // A real minted fact id, underscores and all.
+    let f =
+        parse_spec_uri("spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#R_040").unwrap();
+    assert_eq!(f.anchor, "R_040");
+
+    // The id grammar constrains only the head character, so a dash may sit
+    // anywhere after it — `#a-` is a URI the kebab law would have refused.
+    // Only the head rule still bites.
+    assert!(parse_spec_uri("spec://vibevm/x#a-").is_ok());
+    assert!(parse_spec_uri("spec://vibevm/x#-a").is_err());
+}
+
+/// Widening the URI's anchor position leaves the heading-anchor law alone:
+/// `is_valid_anchor` is what a heading's `{#anchor}` is held to, and it is
+/// still kebab-only.
+#[test]
+fn heading_anchor_law_is_unchanged_by_the_uri_widening() {
+    for kebab in ["req-conditional-fixpoint", "root", "a1", "9lives"] {
+        assert!(
+            is_valid_anchor(kebab),
+            "heading anchor `{kebab}` should hold"
+        );
+    }
+    for not_kebab in ["FACT-A", "A-b", "Mixed-Case", "R_040", "-leading", "a-", ""] {
+        assert!(
+            !is_valid_anchor(not_kebab),
+            "`{not_kebab}` is no heading anchor"
+        );
+    }
+    // …and a URI may name what a heading may not: one address space, two
+    // registers.
+    assert!(parse_spec_uri("spec://vibevm/x#FACT-A").is_ok());
+    assert!(!is_valid_anchor("FACT-A"));
 }
 
 #[test]

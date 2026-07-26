@@ -16,7 +16,10 @@
 //! ```
 //!
 //! Rules enforced here: the verb set is closed; the URI must be
-//! `spec://<package>/<doc-path>#<anchor>[~r<N>]` with a kebab-case anchor;
+//! `spec://<package>/<doc-path>#<anchor>[~r<N>]` whose anchor is an id
+//! `[A-Za-z][A-Za-z0-9_-]*` — one document address space holds both
+//! registers, so code cites a normative `##UPPER-SLUG` fact exactly as it
+//! cites a kebab heading anchor (PROP-014 §2.1);
 //! `r` is a positive integer; `reason` is mandatory for `deviates` and
 //! rejected on every other verb; a revision pinned both in the URI (`~rN`)
 //! and as `r = N` must agree.
@@ -94,7 +97,13 @@ impl SpecUri {
     }
 }
 
-/// Validate a kebab-case anchor: `[a-z0-9]+(-[a-z0-9]+)*`.
+/// Validate a kebab-case **heading** anchor: `[a-z0-9]+(-[a-z0-9]+)*`.
+///
+/// This is the law for a heading's `{#anchor}` and for nothing else. The
+/// anchor position of a `spec://` URI is wider ([`is_valid_fact_id`]): a
+/// document's headings and its `##<ID>` facts share one address space, so an
+/// address must be able to name either, while only a heading is held to
+/// kebab.
 ///
 /// ```
 /// use core_ai_native_specmark_grammar::is_valid_anchor;
@@ -146,11 +155,18 @@ pub fn is_valid_fact_id(id: &str) -> bool {
 
 /// Parse and validate a `spec://` URI string.
 ///
+/// The anchor position takes the id grammar ([`is_valid_fact_id`]), not the
+/// kebab heading-anchor law: `##FACT-ID-GRAMMAR` states a fact is addressable
+/// as `spec://…#<ID>`, so a normative `UPPER-SLUG` must be citable from code.
+///
 /// ```
 /// use core_ai_native_specmark_grammar::parse_spec_uri;
 /// let uri = parse_spec_uri("spec://vibevm/modules/vibe-registry/PROP-002#mirror").unwrap();
 /// assert_eq!(uri.doc_path, "modules/vibe-registry/PROP-002");
 /// assert_eq!(uri.anchor, "mirror");
+/// // A normative fact is addressable in the same one space.
+/// let f = parse_spec_uri("spec://vibevm/modules/vibe-progress/PROP-043#FACT-ID-GRAMMAR").unwrap();
+/// assert_eq!(f.anchor, "FACT-ID-GRAMMAR");
 /// // A missing `#anchor` fragment is rejected.
 /// assert!(parse_spec_uri("spec://vibevm/x").is_err());
 /// ```
@@ -192,9 +208,9 @@ pub fn parse_spec_uri(raw: &str) -> Result<SpecUri, String> {
             (anchor, Some(n))
         }
     };
-    if !is_valid_anchor(anchor) {
+    if !is_valid_fact_id(anchor) {
         return Err(format!(
-            "anchor must be kebab-case `[a-z0-9]+(-[a-z0-9]+)*`, got `#{anchor}` in `{raw}`"
+            "anchor must be an id `[A-Za-z][A-Za-z0-9_-]*`, got `#{anchor}` in `{raw}`"
         ));
     }
     Ok(SpecUri {
