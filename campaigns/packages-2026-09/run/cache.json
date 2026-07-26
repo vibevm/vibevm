@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T20:25:27Z",
+  "updated_at": "2026-07-26T21:36:02Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -841,200 +841,416 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md": {
-      "content_hash": "68b7288c89d5cec37eca3a27b4c5396f587d83c01ce8549b06e6deda035b0944",
+      "content_hash": "36c6fd842ba09b560d66f6a0af9eba462c61a459f470b0e33ef4e697d8e61e64",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 17,
+        "fact_count": 16,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 17,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md": {
-      "content_hash": "be10c5acb16aea6ae08325cdf0a0f28acbe2526bb0c9fc95b797dd36feffa473",
+      "content_hash": "21e24fb2ed30cc6ab7c410332dbe36b81ef1c3a8cb87875e756f6ca3c9f3fdc6",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 9,
-        "unmarked_facts": 9
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 18,
+        "fact_count": 17,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 18,
       "unit_count": 1,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md": {
-      "content_hash": "1bfbe6590087d205eb92b0882fcbb1327b96077f14455821ba357fd1b0950ee2",
+      "content_hash": "fc678589ba5c62ffe693bc7f6ba6bd7a03e78c82ee7064d0ad5e40c65bbfabfc",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md": {
-      "content_hash": "54432d46dad81ea965ce89438836bd2ea1c8f7b4bb908365de97faf0f93890c9",
+      "content_hash": "a11c0f18c00ccb53c3bd9f1a973b404c7201c319cdd72152438e5c1047b980b0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md": {
-      "content_hash": "b0f09c947c40a7fdff923234899f963b197952e6335c973786f039a0683eb4cb",
+      "content_hash": "17df090e1077a37cb44ff22d2fcd58453e6781e2572e8800f0e5d8a0937e9881",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md": {
-      "content_hash": "9e35877aa22eb46a425050310252164e378f52986e917af771cd1d7ed3f5b988",
+      "content_hash": "4fc8272e5822f7f60c82a682a3a62d1e2d71163901f9325b5aa437aef0316f42",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 47,
-        "unmarked_facts": 47
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 52,
+        "fact_count": 51,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 52,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md": {
-      "content_hash": "3327490af5999723b1aadd1d3db726ee8dbf2edbc5c4fa15017c741243579da9",
+      "content_hash": "b5b64df6a800d6601f40463f30a782e7845eadc2994ed4905f5fd653fc18ce75",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md": {
-      "content_hash": "d9050315b2bd84af7281229093a2ffb8d8ce66b174f4bad71a0f5891208dd39d",
+      "content_hash": "1bff0d5268448ebc4e8129faa32f6da7ef92d873a34eba5ab0c20e99057685cc",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md": {
-      "content_hash": "909c847ee439a7cf8d9f29ef0d0299fcbcb333d8b53f27150eafab10f4e1e531",
+      "content_hash": "d1f483b15abb5acff9035d6c1cc17318154ad866fae67e6c2fc454ccb148a9d5",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md": {
-      "content_hash": "e6950480611c1ccb91ac02eca15b48749e6db38b2203853b52a5d1b925fb669b",
+      "content_hash": "5f882f326ff4c4e80d254f103704689cd0e8acc901a895569fe38e9cb064275d",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "5d4d380aa9373232723093ab25db8e41958850c02649b2284e5b2bb5e549673a",
+      "content_hash": "eb77613d3842a5571c1f6ab3a4b4d21999b3bcd0a9311d7006b060b76d374be1",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 3,
-        "unmarked_facts": 3
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 14,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
-      "content_hash": "a51e783392a6c9a8d553ae32d30323faa40fc5f17b116457141fd712f63ca4c7",
+      "content_hash": "e000dc8463043c173a0644d4bf72ccd4f3aa2ac61b79ba805821fff4fe5814cb",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 55,
-        "unmarked_facts": 55
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 89,
+        "fact_count": 88,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 89,
       "unit_count": 16,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
-      "content_hash": "c1dfa5a9e859d0ee0f65f6cd55734e9827784b9d3478f2f5c77293b4ea7185c3",
+      "content_hash": "9bdac518e930e35f74eb07d15e910e3bdc56c21d72570ef02af27e9292c99d6e",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 29,
-        "unmarked_facts": 29
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 72,
+        "fact_count": 71,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 72,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
-      "content_hash": "dc0cf1b9ff5ac857ca298166fe6d0e75e407c68536c1291973167038e5f5aca4",
+      "content_hash": "f2c338a2590478bb4430fa05c4eb0c4c0d2f0d4b074787dd76c74df90235387a",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 34,
-        "unmarked_facts": 34
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 53,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md": {
-      "content_hash": "3572273eb3d4132fe5ef1ba69e59cb9446588a29b59987a031af0f42b8a36732",
+      "content_hash": "358e0775e5641255c530543e2252547c9857ee339ea1ed870756005a70c9967f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 28,
-        "unmarked_facts": 28
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 37,
+        "fact_count": 36,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 37,
       "unit_count": 8,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
-      "content_hash": "da2f0d7c040e895c72b30f46e6bf62da445812076218901a016bb859d5f4ba20",
+      "content_hash": "23d40984aa2d23c9c6545319471b33913c1fadc962d055bc41446a61104f5879",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 34,
-        "unmarked_facts": 34
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 41,
+        "fact_count": 40,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 41,
       "unit_count": 8,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
-      "content_hash": "5891df576cf9319d21ae67bc45991274ae30f9946c296306e595ada452524fe9",
+      "content_hash": "311723053c462cff642eb84ec6f59feb03c8bd32ebce09a9d070c457843aa15f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 19,
-        "unmarked_facts": 19
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 36,
+        "fact_count": 36,
+        "unmarked_facts": 1
       },
-      "marker_count": 0,
+      "marker_count": 36,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md": {
-      "content_hash": "3acc7cd3380098972078b02d1afe7b49eb77474b0494ebfd3e7b6035aa6f7e25",
+      "content_hash": "8d86b781cbbfb07b6423abe3c1ea458faa8f211938dc441bf64bc6f83f00e6a3",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 20,
-        "unmarked_facts": 20
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 35,
+        "fact_count": 35,
+        "unmarked_facts": 1
       },
-      "marker_count": 0,
+      "marker_count": 35,
       "unit_count": 6,
       "issue_count": 0
     },

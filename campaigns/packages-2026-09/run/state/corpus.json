@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-26T20:25:27Z",
+  "updated_at": "2026-07-26T21:36:02Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -632,199 +632,307 @@
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 17,
       "units": 4,
-      "facts": 13,
-      "unmarked": 13,
+      "facts": 16,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 18,
       "units": 1,
-      "facts": 9,
-      "unmarked": 9,
+      "facts": 17,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 52,
       "units": 4,
-      "facts": 47,
-      "unmarked": 47,
+      "facts": 51,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
       "units": 4,
-      "facts": 3,
-      "unmarked": 3,
+      "facts": 13,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 89,
       "units": 16,
-      "facts": 55,
-      "unmarked": 55,
+      "facts": 88,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 72,
       "units": 9,
-      "facts": 29,
-      "unmarked": 29,
+      "facts": 71,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 53,
       "units": 6,
-      "facts": 34,
-      "unmarked": 34,
+      "facts": 52,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 37,
       "units": 8,
-      "facts": 28,
-      "unmarked": 28,
+      "facts": 36,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 41,
       "units": 8,
-      "facts": 34,
-      "unmarked": 34,
+      "facts": 40,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 36,
       "units": 7,
-      "facts": 19,
-      "unmarked": 19,
+      "facts": 36,
+      "unmarked": 1,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 35,
       "units": 6,
-      "facts": 20,
-      "unmarked": 20,
+      "facts": 35,
+      "unmarked": 1,
       "issues": 0,
       "campaign": {}
     },
