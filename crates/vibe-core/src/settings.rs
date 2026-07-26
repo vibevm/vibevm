@@ -161,21 +161,38 @@ mod tests {
     #[test]
     fn every_accessor_is_rooted_in_the_one_settings_dir() {
         // The invariant the removed migration fallback used to break:
-        // every path this module hands out lives under `settings_dir()`,
-        // so `$VIBE_SETTINGS` relocates the whole surface at once and a
-        // test can isolate it by setting one variable. A second home that
-        // the override did not move is exactly what made the old fallback
-        // reachable from an isolated run.
+        // every per-user path the crate hands out lives under
+        // `settings_dir()`, so `$VIBE_SETTINGS` relocates the whole surface
+        // at once and a test can isolate it by setting one variable. A
+        // second home that the override did not move is exactly what made
+        // the old fallback reachable from an isolated run.
+        //
+        // The reach matters as much as the rule. This test covered only
+        // this module when it was written, so `user_config`'s own second
+        // home survived the pass that added it — found later by hand, which
+        // is the expensive way. It now walks that module's candidate list
+        // too, and any module that grows a per-user path belongs in this
+        // loop on the same day it grows one.
         let root = settings_dir().expect("home dir present in test env");
-        for path in [
+        let mut paths: Vec<PathBuf> = [
             registry_config_path(),
             user_config_path(),
             settings_toml_path(),
             registries_cache_dir(),
             search_cache_dir(),
             aiui_dir(),
-        ] {
-            let path = path.expect("home dir present in test env");
+        ]
+        .into_iter()
+        .map(|p| p.expect("home dir present in test env"))
+        .collect();
+        paths.extend(crate::user_config::config_file_candidates());
+
+        assert!(
+            paths.len() > 6,
+            "the user-config candidates dropped out of this loop — \
+             the gate no longer reaches `user_config`"
+        );
+        for path in paths {
             assert!(
                 path.starts_with(&root),
                 "{} escapes the settings dir {}",

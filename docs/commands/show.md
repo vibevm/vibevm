@@ -136,14 +136,14 @@ Environment:
 | `vibe.toml` | Read from the project manifest. Every `[[registry]]` / `[[mirror]]` / `[[override]]` block sources here in v0. |
 | `env` | Set in the environment, raw value safe to print. |
 | `redacted` | Set in the environment **or** defaulted via the user-level config, but the value is sensitive (token-shaped); the real bytes are never displayed — `vibe show config` prints `(redacted; set in environment)` or `(redacted; defaulted in user config)` instead. Same secrecy invariant `vibe registry publish` applies. |
-| `user-config` | Defaulted via `~/.config/vibe/config.toml [env]`. Live env-vars (when set) win over this layer. |
+| `user-config` | Defaulted via `<settings-dir>/config.toml [env]`. Live env-vars (when set) win over this layer. |
 | `default` | Neither env-var nor user-config defaults the value; the runtime falls back to its built-in default. |
 
 `VIBEVM-SPEC.md` §9.5 lists the full precedence chain (CLI > env > project `vibe.toml` > user-level config > built-in defaults). v0 of `vibe show config` reads four of those layers and surfaces them via the table above. CLI-flag-level overrides will plug in as a fifth provenance value when they ship.
 
 ### User-level config
 
-`~/.config/vibe/config.toml` is optional. When present, its `[env]` section provides defaults for environment-variable-driven runtime knobs:
+`<settings-dir>/config.toml` (canonically `~/.vibe/config.toml`) is optional. When present, its `[env]` section provides defaults for environment-variable-driven runtime knobs:
 
 ```toml
 [env]

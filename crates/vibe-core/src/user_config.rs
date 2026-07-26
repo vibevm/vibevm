@@ -14,10 +14,22 @@
 //! - `VIBEVM_USER_CONFIG` env-var, when set, points at the file
 //!   directly (override; useful for tests + ad-hoc invocations).
 //! - Otherwise the canonical `<settings-dir>/config.toml` via the one
-//!   `crate::settings` chokepoint. The pre-consolidation XDG location
-//!   (`$XDG_CONFIG_HOME/vibe/config.toml`, `%APPDATA%\vibe\config.toml`,
-//!   or `$HOME/.config/vibe/config.toml`) is read only as a migration
-//!   fallback when no canonical file exists.
+//!   `crate::settings` chokepoint.
+//!
+//! That is the whole list. The single on-disk leg hangs off the one
+//! settings dir, so `$VIBE_SETTINGS` relocates the user-config layer
+//! together with every credential. The pre-consolidation location
+//! (`%APPDATA%\vibe\config.toml` on Windows, else
+//! `$HOME/.config/vibe/config.toml`, or wherever the XDG config-home
+//! variable redirected it) supplied a second leg until 2026-07-26; that
+//! read was removed because `$VIBE_SETTINGS` deliberately did not
+//! relocate it, which left a path by which an isolated run still reached
+//! the operator's real `config.toml` whenever the isolated settings dir
+//! held none — the normal case for a fresh temp home. A config file
+//! still sitting there is the operator's to move into `~/.vibe`: vibevm
+//! does not read it, does not copy it, and does not touch it. It does
+//! say so once ([`left_behind_notice`]), because a config that quietly
+//! stopped being read is the failure that rule exists to prevent.
 //!
 //! v0 deliberately scopes "what runtime consumers do with this layer"
 //! to ZERO — only `vibe show config` reads it today. Wiring user-
@@ -31,6 +43,7 @@ specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-011#materialise-diff
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
+use std::sync::Once;
 
 use serde::{Deserialize, Serialize};
 use specmark::spec;
@@ -158,28 +171,20 @@ pub enum SlotIntegrity {
 
 impl UserConfig {
     /// Path the loader would consult, given the current environment.
-    /// Returns `None` on platforms where no home / config directory
+    /// Returns `None` on platforms where no home / settings directory
     /// can be determined.
+    ///
+    /// Two legs, and no third: the `VIBEVM_USER_CONFIG` override — an
+    /// explicit file, not a home — then the one on-disk candidate in
+    /// [`config_file_candidates`]. Whether that candidate exists does not
+    /// change the answer; a missing file is `UserConfig::default()`, and
+    /// the reported path is where [`UserConfig::save`] would write.
     pub fn default_path() -> Option<PathBuf> {
         if let Some(custom) = std::env::var_os("VIBEVM_USER_CONFIG") {
             return Some(PathBuf::from(custom));
         }
-        // Consolidated into the one settings dir (`~/.vibe`, or
-        // `$VIBE_SETTINGS`). Prefer the canonical file; fall back to the
-        // pre-consolidation XDG / `%APPDATA%` location only when the
-        // canonical is absent but a legacy file exists, so a not-yet-
-        // migrated user keeps being read.
-        let canonical = crate::settings::user_config_path();
-        if let Some(c) = &canonical
-            && c.exists()
-        {
-            return canonical;
-        }
-        if let Some(legacy) = legacy_xdg_config_path()
-            && legacy.exists()
-        {
-            return Some(legacy);
-        }
+        let canonical = config_file_candidates().into_iter().next();
+        warn_once_about_a_left_behind_config(canonical.as_deref());
         canonical
     }
 
@@ -287,17 +292,90 @@ pub enum UserConfigError {
     },
 }
 
-/// The pre-consolidation user-config location, a read-only migration
-/// fallback for [`UserConfig::default_path`]:
-/// `$XDG_CONFIG_HOME/vibe/config.toml`, else `%APPDATA%\vibe\config.toml`
-/// on Windows, else `$HOME/.config/vibe/config.toml`. Superseded by the
-/// canonical `<settings-dir>/config.toml` (`crate::settings`).
-fn legacy_xdg_config_path() -> Option<PathBuf> {
-    if let Some(xdg) = std::env::var_os("XDG_CONFIG_HOME").filter(|s| !s.is_empty()) {
-        return Some(PathBuf::from(xdg).join("vibe").join("config.toml"));
+/// The ordered on-disk user-config candidates: exactly one,
+/// `<settings-dir>/config.toml` in the canonical settings dir (`~/.vibe`,
+/// or `$VIBE_SETTINGS`).
+///
+/// This is the entire disk surface of the user-config layer and its single
+/// authority. [`UserConfig::default_path`] resolves its non-override answer
+/// from here, and `settings`'s
+/// `every_accessor_is_rooted_in_the_one_settings_dir` walks the same list —
+/// so the two cannot drift, and a candidate added here that is not rooted
+/// in the settings dir goes red in a gate rather than surviving until a
+/// campaign goes looking for it.
+///
+/// It stays a list rather than collapsing into a bare path because a second
+/// entry is the exact defect removed on 2026-07-26. One directory means
+/// `$VIBE_SETTINGS` relocates every candidate at once, so an isolated run
+/// cannot reach the operator's real config — the property a second,
+/// separately-rooted home silently took away.
+pub(crate) fn config_file_candidates() -> Vec<PathBuf> {
+    crate::settings::user_config_path().into_iter().collect()
+}
+
+/// Guards [`warn_once_about_a_left_behind_config`]. `default_path` runs on
+/// every invocation and more than once in some (`vibe show config` reports
+/// the path and then loads it), so an unguarded diagnostic would repeat
+/// per call. Once per process, whatever the call pattern.
+static LEFT_BEHIND_NOTICE: Once = Once::new();
+
+/// Emit [`left_behind_notice`] on stderr, at most once per process.
+fn warn_once_about_a_left_behind_config(canonical: Option<&Path>) {
+    LEFT_BEHIND_NOTICE.call_once(|| {
+        if let Some(line) = left_behind_notice(canonical, former_config_path().as_deref()) {
+            eprintln!("{line}");
+        }
+    });
+}
+
+/// The one-line notice for a config left at the pre-consolidation
+/// location. `Some(line)` only when no canonical config exists *and* a file
+/// does sit at the old one — i.e. exactly when removing that read stopped a
+/// file that used to be read from being read. Switching silently is the
+/// failure this prevents; it is the one thing the 2026-07-26 change added
+/// rather than removed, so it is one line and no more.
+///
+/// Pure, and it takes both paths instead of resolving them, so the
+/// message's shape is assertable without an environment.
+///
+/// What it does **not** do is the point. It does not read the file, does
+/// not copy it, does not move it, and prints no byte of its contents: a
+/// `[env]` table is a plausible place for someone to have parked a
+/// credential, so the rule `vibe_cli::promote_user_config_env` follows for
+/// refused names holds here too — once, by path, never the contents.
+fn left_behind_notice(canonical: Option<&Path>, former: Option<&Path>) -> Option<String> {
+    let (canonical, former) = (canonical?, former?);
+    if canonical.exists() || !former.is_file() {
+        return None;
     }
-    // Windows precedence: %APPDATA% wins over ~/.config (which is not the
-    // canonical Windows shape) when no XDG_CONFIG_HOME is set.
+    Some(format!(
+        "vibe: warning: `{}` is no longer read; move it to `{}` for it to take effect",
+        former.display(),
+        canonical.display(),
+    ))
+}
+
+/// The pre-consolidation user-config location: `%APPDATA%\vibe\config.toml`
+/// on Windows, else `<home>/.config/vibe/config.toml`.
+///
+/// **Not a resolution leg.** Nothing here reads this path, nothing writes
+/// it, and [`UserConfig::default_path`] never returns it. It exists so
+/// [`left_behind_notice`] can name a file that used to be read, and for no
+/// other purpose — keeping it out of [`config_file_candidates`] is the
+/// whole change.
+///
+/// It deliberately does not consult the XDG config-home variable, which the
+/// removed leg checked first. A probe steered by a redirect variable would
+/// re-create the removed shape one step weaker: a run isolated by
+/// `$VIBE_SETTINGS` would still resolve a path from an ambient variable the
+/// harness does not control. Home is read the one way the settings dir
+/// reads it, and nothing redirects it. The cost, named rather than hidden:
+/// an operator who had pointed the XDG config home somewhere non-default
+/// gets no notice — only the switch to `<settings-dir>/config.toml`, which
+/// is correct either way.
+fn former_config_path() -> Option<PathBuf> {
+    // Windows precedence: `%APPDATA%` wins over `~/.config`, which is not
+    // the canonical Windows shape.
     if cfg!(windows)
         && let Some(appdata) = std::env::var_os("APPDATA").filter(|s| !s.is_empty())
     {
@@ -323,117 +401,5 @@ fn home_dir() -> Option<PathBuf> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use tempfile::tempdir;
-
-    #[test]
-    fn default_is_empty_env() {
-        let cfg = UserConfig::default();
-        assert!(cfg.env.is_empty());
-    }
-
-    #[test]
-    fn load_from_missing_file_is_default() {
-        let dir = tempdir().unwrap();
-        let path = dir.path().join("config.toml");
-        let cfg = UserConfig::load_from(&path).unwrap();
-        assert_eq!(cfg, UserConfig::default());
-    }
-
-    #[test]
-    fn load_from_parses_env_block() {
-        let dir = tempdir().unwrap();
-        let path = dir.path().join("config.toml");
-        std::fs::write(
-            &path,
-            r#"[env]
-VIBE_REGISTRY_CACHE = "/custom/cache"
-VIBE_LOG = "vibe_registry=debug"
-"#,
-        )
-        .unwrap();
-        let cfg = UserConfig::load_from(&path).unwrap();
-        assert_eq!(
-            cfg.env.get("VIBE_REGISTRY_CACHE").map(String::as_str),
-            Some("/custom/cache")
-        );
-        assert_eq!(
-            cfg.env.get("VIBE_LOG").map(String::as_str),
-            Some("vibe_registry=debug")
-        );
-    }
-
-    #[test]
-    fn load_from_rejects_unknown_top_level_section() {
-        // `deny_unknown_fields` keeps the schema strict so a typo
-        // surfaces instead of a silent no-op.
-        let dir = tempdir().unwrap();
-        let path = dir.path().join("config.toml");
-        std::fs::write(
-            &path,
-            r#"[envv]
-VIBE_REGISTRY_CACHE = "/typo"
-"#,
-        )
-        .unwrap();
-        let err = UserConfig::load_from(&path).unwrap_err();
-        assert!(matches!(err, UserConfigError::Parse { .. }));
-    }
-
-    #[test]
-    fn load_from_malformed_toml_errors() {
-        let dir = tempdir().unwrap();
-        let path = dir.path().join("config.toml");
-        std::fs::write(&path, "this is = not = toml").unwrap();
-        let err = UserConfig::load_from(&path).unwrap_err();
-        assert!(matches!(err, UserConfigError::Parse { .. }));
-    }
-
-    // --- PROP-011 §5.2 — the `[install]` section --------------------------
-
-    #[test]
-    fn slot_integrity_defaults_to_trust_presence() {
-        let cfg = UserConfig::default();
-        assert_eq!(cfg.install.slot_integrity, SlotIntegrity::TrustPresence);
-        assert!(cfg.install.is_default());
-    }
-
-    #[test]
-    fn load_from_parses_install_slot_integrity() {
-        let dir = tempdir().unwrap();
-        let path = dir.path().join("config.toml");
-        std::fs::write(&path, "[install]\nslot_integrity = \"verify\"\n").unwrap();
-        let cfg = UserConfig::load_from(&path).unwrap();
-        assert_eq!(cfg.install.slot_integrity, SlotIntegrity::Verify);
-        assert!(!cfg.install.is_default());
-    }
-
-    #[test]
-    fn install_section_round_trips() {
-        let cfg = UserConfig {
-            install: InstallConfig {
-                slot_integrity: SlotIntegrity::Verify,
-            },
-            ..Default::default()
-        };
-        let rendered = toml::to_string_pretty(&cfg).unwrap();
-        assert!(
-            rendered.contains("slot_integrity = \"verify\""),
-            "{rendered}"
-        );
-        let back: UserConfig = toml::from_str(&rendered).unwrap();
-        assert_eq!(cfg, back);
-    }
-
-    #[test]
-    fn load_from_rejects_an_unknown_install_key() {
-        let dir = tempdir().unwrap();
-        let path = dir.path().join("config.toml");
-        std::fs::write(&path, "[install]\nbogus = true\n").unwrap();
-        assert!(matches!(
-            UserConfig::load_from(&path).unwrap_err(),
-            UserConfigError::Parse { .. }
-        ));
-    }
-}
+#[path = "user_config/tests.rs"]
+mod tests;

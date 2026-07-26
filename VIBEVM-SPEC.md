@@ -1074,7 +1074,7 @@ A `--quiet` flag reduces output to one line of summary. Useful in CI and in scri
 1. Command-line flags (highest precedence).
 2. Environment variables (`VIBE_*` prefix).
 3. Project `vibe.toml`.
-4. User-level config at `~/.config/vibe/config.toml`.
+4. User-level config at `<settings-dir>/config.toml` — canonically `~/.vibe/config.toml`, or under `$VIBE_SETTINGS` when that is set.
 5. Built-in defaults (lowest precedence).
 
 `vibe show config` prints the effective configuration with provenance for each value.

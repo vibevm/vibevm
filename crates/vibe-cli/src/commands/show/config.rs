@@ -86,7 +86,7 @@ struct ConfigEnvEntry {
     value: Option<String>,
     /// `"env"` — set in the live environment;
     /// `"redacted"` — set in env, sensitive (token-shaped) — bytes never printed;
-    /// `"user-config"` — defaulted via `~/.config/vibe/config.toml [env]`;
+    /// `"user-config"` — defaulted via `<settings-dir>/config.toml [env]`;
     /// `"default"` — unset, built-in fallback applies.
     provenance: &'static str,
     /// Short description of what the variable controls.
@@ -382,7 +382,7 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
         }
         ConfigUserConfigSummary { path: None, .. } => {
             println!(
-                "User config: (no path resolved — set HOME / XDG_CONFIG_HOME / VIBEVM_USER_CONFIG)"
+                "User config: (no path resolved — set HOME / VIBE_SETTINGS / VIBEVM_USER_CONFIG)"
             );
         }
     }
