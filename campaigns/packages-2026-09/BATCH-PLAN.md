@@ -130,8 +130,16 @@ the B6 boundary, after the same throwaway checker had been written from scratch
 four times). Run the gate, then hand it the log and the batch's predictions:
 
 ```bash
-cargo xtask batch-review --gate-log gate.log --scope scope.txt --expect-unmarked <n> --expect-residual residual.txt --expect-total <n>
+cargo xtask batch-review --gate-log gate.log --scope scope.txt --expect-unmarked <n> --expect-residual residual.txt --expect-total <n> --campaign campaigns/packages-2026-09
 ```
+
+**Always pass `--campaign`** — it is what enables C11, the check that every task
+file has a row in `tasks/INDEX.md` and every row names a task that exists. That
+ledger has already gone silent twice in this campaign: `MARKUP-B2` and
+`MARKUP-B5` both ran, landed, and were never entered, so a cold reader would
+have seen `MARKUP-B1` at the top of the table and concluded nothing else had
+run. C11 was verified by running it against the tree as it stood at B5's landing
+commit, where it names both missing tasks.
 
 Its negative controls are `#[test]`s, so **the floor runs them on every commit**
 rather than when someone remembers a flag; `cargo xtask batch-review --selftest`

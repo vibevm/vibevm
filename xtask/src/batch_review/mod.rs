@@ -35,6 +35,7 @@
 //! replays landed batches out of git history, which the hermetic tests cannot.
 
 mod checks;
+mod index;
 mod report;
 mod text;
 
@@ -44,6 +45,7 @@ use std::process::Command;
 use anyhow::{Context, Result};
 
 use checks::*;
+use index::c11_task_index;
 use report::Report;
 use text::word_stream;
 
@@ -101,6 +103,7 @@ pub struct BatchReviewArgs {
     pub expect_unmarked: Option<usize>,
     pub expect_residual: Option<std::path::PathBuf>,
     pub expect_total: Option<usize>,
+    pub campaign: Option<std::path::PathBuf>,
     pub selftest: bool,
 }
 
@@ -161,6 +164,9 @@ pub fn run_batch_review(root: &Path, a: BatchReviewArgs) -> Result<()> {
     c8_encoding(&files, root, &mut r);
     c9_markers_in_fences(&files, root, &mut r);
     c10_unknowns(&files, root, &mut r);
+    if let Some(zone) = &a.campaign {
+        c11_task_index(&root.join(zone), &mut r);
+    }
 
     r.emit();
     if r.failed() {

@@ -186,6 +186,11 @@ enum Cmd {
         /// Predicted corpus-wide unmarked total after the batch.
         #[arg(long)]
         expect_total: Option<usize>,
+        /// Campaign zone (e.g. `campaigns/packages-2026-09`). Enables C11,
+        /// the check that every task file has an index row and every row
+        /// names a task that exists.
+        #[arg(long)]
+        campaign: Option<PathBuf>,
         /// Replay landed batches out of git history.
         #[arg(long)]
         selftest: bool,
@@ -382,6 +387,7 @@ fn main() -> Result<()> {
             expect_unmarked,
             expect_residual,
             expect_total,
+            campaign,
             selftest,
         } => {
             let root = repo_root()?;
@@ -395,6 +401,7 @@ fn main() -> Result<()> {
                     expect_unmarked,
                     expect_residual,
                     expect_total,
+                    campaign,
                     selftest,
                 },
             )
