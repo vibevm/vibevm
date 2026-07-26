@@ -174,3 +174,84 @@ pattern.
 ## 9. Log {#log}
 
 *(appended by executor / reviewer)*
+
+### Executor, 2026-07-26 — done, floor green {#log-exec}
+
+**Three sites, as specified.** `parse_spec_uri` validates the anchor with
+`is_valid_fact_id` (grammar `lib.rs:211`); the host twin
+`is_valid_anchor_segment` takes the same id grammar (`address.rs:242`); the
+four vendored copies received it via `cargo xtask sync-engines` (8 file ops,
+`--check` clean across 33 pairs / 6 sets). `is_valid_anchor` is **byte-identical**
+— only its doc comment gained a sentence saying it is the heading law and
+nothing else. `mdspec.rs:103` and `:383` still call it; `:197` still calls
+`is_valid_fact_id`. `tests.rs` keeps `is_valid_fact_id("FACT-A")` true and
+`is_valid_anchor("FACT-A")` false, untouched.
+
+**§4 step 4 — no normalisation, no case-insensitive index.** Both anchor
+collections are byte-exact: `crates/vibe-spec/src/doctree.rs:70`
+(`anchors: HashMap<String, NodeId>`, insert `:171`/`:357`, lookup `:219`) and
+`core-ai-native-specmap/src/mdspec.rs:341` (`seen_anchors: Vec<String>`, checked
+`:274`/`:393`). `vibe-spec/`, `progress-core/`, and the whole authored engine
+tree contain **zero** `to_lowercase` / `to_ascii_lowercase` / `eq_ignore_ascii_case`
+occurrences; no `unicase`-style dependency exists. No heading-text slugification
+exists — both `split_anchor`s (`doctree.rs:415`, `progress-core/parse/units.rs:46`)
+read only an explicit `{#…}`. No anchor becomes a path component, so the
+case-insensitive Windows filesystem never sees one. Corroborating: mixed-case
+`##<ID>` facts **already** share this namespace with kebab heading anchors, so
+the collision shape was live before this change and is handled case-sensitively.
+
+**Not a pure widening — recorded, because §4's edge-case list says
+`9lives` "still fails" and in fact it used to pass.** `is_valid_fact_id` is not
+a superset of `is_valid_anchor`: kebab allows a digit head (`is_valid_anchor("9lives")`
+is `true`), the id grammar requires an ASCII letter. So digit-headed anchors move
+from accepted to **rejected**, and trailing/doubled dashes (`#a-`) move from
+rejected to accepted. Measured before editing: of **380** distinct anchor
+segments cited in `spec://` addresses across `spec/`, `campaigns/`, `crates/`,
+`xtask/`, `packages/` and **750** distinct `{#…}` heading anchors, **every one**
+already matches `[A-Za-z][A-Za-z0-9_-]*`. Zero corpus regression. The asymmetry is
+pinned by `heading_anchor_law_is_unchanged_by_the_uri_widening`, which asserts
+`is_valid_anchor("9lives")` while `parse_spec_uri("…#9lives")` errors.
+
+**Two tests deliberately flipped, both authorised by the owner's ruling.**
+`tests.rs` moved `"spec://vibevm/x#A-b"` out of `uri_rejections` into the new
+`uri_accepts_an_upper_fact_anchor`; `address.rs` moved `#Bad` out of
+`rejects_bad_anchor_segment` into `anchor_segments_carry_both_id_registers`. Two
+further fixtures had to change because they *used* a now-valid string as their
+"invalid" input — `address.rs::rejects_bad_anchor_segment` and
+`directives.rs::bad_address_is_reported` now use `#9lives`. New tests:
+`heading_anchor_law_is_unchanged_by_the_uri_widening` and the seam test
+`host_twin_agrees_with_the_package_grammar_on_anchor_ids` (host half of the
+tests-on-both-sides convention; `vibe-spec` depends only on `thiserror`, so the
+seam holds).
+
+**§6 end-to-end proof, done and removed.** A temporary
+`#[spec(implements = "spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#SINGLE-DESIGN-TARGET")]`
+on a real fn in `core-ai-native-specmark/tests/usage.rs` **compiled** (`EXIT=0`).
+Negative control: with the old validator restored, the identical tag is a hard
+`compile_error!` naming `#SINGLE-DESIGN-TARGET` — so the tag is load-bearing, not
+inert. Both temporaries removed; `usage.rs` is byte-identical to `HEAD`.
+
+**Acceptance.** `cargo test -p vibe-spec` 102 passed; core-ai-native `--workspace`
+all green; `sync-engines --check` clean; `bash tools/self-check.sh` → all 25 steps,
+`self-check: all green`, **real `EXIT=0`**.
+
+**Open items for the reviewer (not acted on — outside §5).**
+
+1. `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0` and
+   `…/go-ai-native-mcp/v0.1.0` vendor `core-ai-native-specmark-grammar`
+   copies that are **byte-identical to the v0.7.0 authored crate**, while their
+   `vibe.toml` declares `flow:…/core-ai-native = "^0.8"`. They are absent from
+   `sync-engines.toml`, so `--check` is blind to them and this fix did not reach
+   them. **Pre-existing at the base commit `d46bcc0e`** — not caused here, and
+   adding sync targets is a design call, not an executor edit.
+2. `vibedeps/flow-core-ai-native/0.8.0/…/lib.rs:195` is git-tracked and still
+   carries `is_valid_anchor(anchor)`. It is a materialised install artefact
+   refreshed by `vibe install`, is excluded from the root workspace
+   (`Cargo.toml` `exclude = ["packages", "vibedeps"]`), and nothing links it, so
+   the floor is green regardless. The host's own `#[spec]` tags compile against
+   the **synced** copy — root `Cargo.toml:104` points `specmark` at
+   `rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmark`, which now
+   carries the fix.
+3. Per §5 the spec text is the reviewer's: PROP-014 / PROP-043 may want a line
+   recording that the URI anchor position takes the id grammar while heading
+   anchors stay kebab.
