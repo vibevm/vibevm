@@ -1284,6 +1284,45 @@ command that would have tested it.
   the twins, which was right; the finding is that the assumption has an
   exception and the next brief in this family should say so.
 
+- **2026-07-27 · F-096 RULED — the discovery prompt leaves the corpus, and the
+  sixth subtraction is the second one about genre.** Owner ruling, asked before
+  B8 was dispatched rather than after it was marked: **exclude
+  `DISCOVERY-PROMPT.md`** (169 units, 37 % of B8).
+
+  **The deciding argument is Phase C, exactly as it was for the book.** Every
+  marker earns a verdict, and `confirmed` has no meaning applied to a line of a
+  prompt addressed to another model — «LLM = Claude/Haiku/Sonnet/Opus» is a
+  variable assignment for a downstream session, not a claim about this system.
+  The file is not prose at all: `<PROMPT_INFO>`, `<VARIABLES>`, macro
+  substitution.
+
+  **The package's own boot snippet rules it out in as many words:** «a **payload
+  for a fresh session**, not standing instructions — do not load it into context
+  outside an explicit deployment request.» Nothing outside the package cites it;
+  the single external hit is the generated `spec/boot/STATIC.md`, which is that
+  same snippet compiled into the host's boot lane.
+
+  **The line the exclusion draws is worth keeping, because the next case will
+  test it.** The package's README, boot snippet and `usage.md` **stay** — every
+  document that makes a claim *about* the artifact is still measured. Only the
+  payload leaves, and it leaves because it makes no claims about this system at
+  all. That is a sharper rule than «lore is excluded»: *a document is in the
+  corpus when it asserts something this project could be wrong about.*
+
+  **The counter-argument, recorded because it is real:** the artifact is what
+  the package exists to ship, so the corpus now holds a package described only
+  by its own meta-commentary. The owner accepted that. The third option — mark
+  it and carve it out of Phase C — needs the «marked, never verified» rule the
+  F-091 entry says the campaign does not have and that needs tooling, not a
+  glob; it stays unbuilt.
+
+  **Sequencing note, and it is a near miss.** DRIFT-037 was running when this
+  was ruled, and its acceptance is «exactly −9 unmarked, and no other file's
+  count changes». Editing `progress.toml` mid-run would have moved the corpus
+  under its before/after measurement and broken both halves of that acceptance.
+  The ruling was written up immediately and **the config change was held until
+  the task landed**. A scope edit is never urgent; a measurement in flight is.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

@@ -26,7 +26,7 @@ subtracting an estimate, because the campaign's own rule about numbers quoted
 before their decomposition binds its own numbers first. **Re-measure at every
 batch boundary rather than decrementing.**
 
-Getting to that number took **five** corrections, and the pattern in them is
+Getting to that number took **six** corrections, and the pattern in them is
 worth more than the number:
 
 | what came out | files | facts | why |
@@ -37,6 +37,7 @@ worth more than the number:
 | `core-ai-native/v0.7.0`, `redbook/v0.1.0` | 33 | 1 908 | superseded slots — frozen history |
 | `spec/legacy-projections/` (F-080) | 11 | ~729 | frozen history — owner ruling 2026-07-26 |
 | `spec/book/**` (F-091) | 4 | 383 | reference depth, not a contract — owner ruling 2026-07-26 |
+| `DISCOVERY-PROMPT.md` (F-096) | 1 | 169 | a prompt payload, not a claim — owner ruling 2026-07-27 |
 
 **Every one of these was found by asking what the corpus is made of, not by
 estimating how big it is.** The first two rounds were prompted by the owner
@@ -64,7 +65,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B5~~ | `go-ai-native-lang` — **DONE**, 665 units | 19 | 411 |
 | ~~B6~~ | `typescript-ai-native-lang` — **DONE**, 581 units (×1.72) | 18 | 338 |
 | ~~B7~~ | `rust-ai-native-lang` — **DONE**, 546 units (×1.75) | 18 | 312 |
-| B8 | `discovery-prompt` + `decision-records` | 9 | 455 |
+| B8 | `discovery-prompt` + `decision-records` — F-096 dropped `DISCOVERY-PROMPT.md` | 8 | 286 |
 | B9 | `spec-genres` + `wal` + `addressable-specs` | 17 | 578 |
 | B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | 16 | 488 |
 | B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | 15 | 451 |
