@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T13:03:28Z",
+  "updated_at": "2026-07-26T13:23:40Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -49,7 +49,7 @@
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md": {
-      "content_hash": "b5833275e9870dc9dcabe4c694ec74c89a832ba21ae8a2ac879ef1435c5d6214",
+      "content_hash": "8041b7191db9aa9cee6e0fd6c5d2c48639a9be3637a14a114aec99d940b78bdb",
       "rollup": {
         "explicit": [
           "spec",
@@ -63,16 +63,16 @@
           "spec",
           "done"
         ],
-        "marker_count": 31,
-        "fact_count": 30,
+        "marker_count": 37,
+        "fact_count": 36,
         "unmarked_facts": 0
       },
-      "marker_count": 31,
+      "marker_count": 37,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md": {
-      "content_hash": "3eacadc15f99d79ff87391830112829b26680f2b75e6afe105f5b12650296dc5",
+      "content_hash": "70a8158485bf4ace4d9dc4a193ea35becf3a34011c4a3fe45f94ab6b0a5e6ce2",
       "rollup": {
         "explicit": [
           "spec",
@@ -86,11 +86,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 73,
+        "marker_count": 77,
         "fact_count": 76,
-        "unmarked_facts": 4
+        "unmarked_facts": 0
       },
-      "marker_count": 73,
+      "marker_count": 77,
       "unit_count": 6,
       "issue_count": 0
     },

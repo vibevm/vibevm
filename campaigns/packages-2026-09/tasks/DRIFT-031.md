@@ -178,3 +178,100 @@ getting its own branch.
 ## 9. Log {#log}
 
 *(appended by executor / reviewer)*
+
+### 2026-07-26 — executor: both findings fixed, floor green
+
+**The two sites, named before changing them.**
+
+1. **F-083** — `crates/progress-core/src/parse/facts.rs:10-26`,
+   `list_item_content`. It returns the byte offset of a list item's content
+   after `- ` / `* ` / `+ ` / `N. ` / `N) ` and stops there, so for
+   `- [ ] ##ID …` the item's content begins at `[`. `take_fact_id`
+   (`facts.rs:88`) then finds no `##` at the first token and mints no anchor,
+   while the trailing shorthand still marks the unit — the exact pair that
+   `check_anchor_laws` (`parse/anchors.rs:33-42`) reports as `MissingAnchor`.
+2. **F-084** — `crates/progress-core/src/parse/blocks.rs:185-199`,
+   `blank_inline_code`, reached from `collect_blocks`'s `flush` at
+   `blocks.rs:26`. It toggled an `in_code` flag on **every individual
+   backtick**. A code span whose contents hold a longer backtick run inverts
+   the flag an odd number of times, so everything after the span is treated as
+   code and blanked — including the paragraph's trailing marker.
+
+**Reproduced first, from the gate.** With the four anchors restored and
+`##band-three-fields-lead`'s marker moved to last position, on the unfixed
+parser:
+
+```
+02-EXECUTABLE-SCAFFOLDS.md:63: Error [MissingAnchor] marked unit has no `##<ID>` fact anchor (anchored-when-marked, PROP-043 §3.8)
+02-EXECUTABLE-SCAFFOLDS.md:64: …  :65: …  :66: …
+error: progress check: 4 error(s), 0 warning(s)
+01-PATTERN-CARD-FORMAT.md:41: Error [unmarked] Para unit carries no marker (--exhaustive)
+```
+
+Both cleared, each by its own change, with nothing else in the corpus moving.
+
+**The changes.** `facts.rs`: `list_item_content` now composes
+`list_marker_len` (the old body, unchanged) with a new `task_box_len` — the
+checkbox joins the set of things skipped when locating an item's first token,
+per §7, rather than getting a branch of its own. `blocks.rs`:
+`blank_inline_code` matches spans by backtick **run** (a run of N opens a span
+only a run of exactly N closes; a run with no matching closer is literal text
+and opens nothing), blanking span contents and leaving delimiters. The
+suppression is untouched — see the new
+`markers_inside_code_spans_and_fences_stay_unrecognised`, and the
+`foreign-grammars.md` golden, which is unchanged and green.
+
+**§8, second bullet — F-084 IS the general defect, and here is its radius.**
+The triple backtick is one instance of two mechanisms: (a) any backtick run of
+length ≥ 2 desynchronises the toggle; (b) any block with an **odd** total of
+backticks leaves the flag set and blanks everything to the end of the block. A
+probe replicating `collect_blocks`' segmentation over all 723 `.md` files in
+the tree found **23 text blocks in 21 files** where naive and run-aware
+blanking disagree — e.g. `` `` `req r1` `` `` in the terraform SKILLs
+(double-backtick span), `docs/glossary.md:217` (a stray tick, everything after
+it in the block blanked), and the v0.7.0 twin of this very paragraph. §4's
+required behaviour already prescribes the general fix (its edge cases name the
+one-, two- and four-backtick cases and the unterminated span explicitly), so
+the scope was not widened beyond what this task authorises.
+
+Empirically the wider radius costs nothing today: `--exhaustive` over the whole
+corpus differs from the pre-change run by exactly the four restored items
+(5482 → 5478 errors), **no line added anywhere**. The 23 blocks are re-blanked
+differently but none of them held a marker or anchor in the affected region.
+
+**Marker position.** `##band-three-fields-lead` is left in the **last**
+position. Both were verified against `--exhaustive` after the fix (0 hits in
+`core-ai-native/v0.8.0/spec/0[1-6]-*` either way); last is the position F-084
+actually broke, so leaving it there makes the file a live witness that would go
+red again if the run matching regressed.
+
+**Deviation, one, and it is forced.** §6 asks for `#[spec(implements = …)]`
+citing the §2 anchors, but those are fact anchors (`##COUNTABLE-UNITS`,
+`##FACT-ANCHOR-SYNTAX`, `##FENCE-AWARE`, `##SHORTHAND-STANDALONE`) and the
+specmark address grammar rejects them at compile time — *"anchor must be
+kebab-case `[a-z0-9]+(-[a-z0-9]+)*`"*. The tags therefore cite the **sections
+those facts live in** (`#granularity`, `#placement`, `#element`, `#shorthand`)
+and name the fact anchor in the doc comment beside it. Nothing in the repo
+cites a fact anchor from code today; whether the grammar should accept one is a
+reviewer question, not something this task settles.
+
+**Open items for the reviewer.**
+
+- **The `list_item_content` twins now disagree.** `crates/vibe-spec/src/facts.rs:29`
+  and the package twin `core-ai-native-specmap::mdspec` carry deliberate copies
+  of this function across the separability seam (the convention is held by
+  tests on both sides — `crates/vibe-spec/src/facts.rs:10-15`). Only the
+  progress-core copy learned the checkbox here, because §5 puts the other two
+  out of bounds. A follow-up task should decide whether the spec linter's
+  fact-leaf recogniser gains the same rule.
+- **A parser change is invisible to a warm parse cache.** `run/cache.json` is
+  keyed on file content hash only, so the first verification run after this
+  change reported the *old* parse for every unchanged file. `--no-cache` was
+  used throughout; anyone re-verifying should do the same or wipe the cache.
+- **PROP-043 amendment still owed** (reviewer's, per §5): a checkbox is
+  structure. `##COUNTABLE-UNITS` already admits task items with no carve-out,
+  so §4 was implemented without a spec contradiction, but the placement rule
+  says nothing about the box today.
+- **Budget:** 7 files, ~280 changed lines — inside the 8-file signal, slightly
+  past the 250-line one. The overrun is tests and doc comments; the production
+  change is ~60 lines across the two functions.

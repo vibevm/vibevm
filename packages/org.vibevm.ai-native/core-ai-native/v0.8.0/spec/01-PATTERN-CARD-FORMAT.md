@@ -38,7 +38,7 @@
 - ##FIELD-EVIDENCE-AND-TRANSFER-STRENGTH **Evidence & Transfer-strength** — backing `findings.jsonl` IDs, evidence class, and the honest tag [E-strong]/[E-mid]/[E-hyp]. Keeps cards falsifiable. @impl/done
 
 ### BAND 3 — Operation *(no GoF/JEP precedent; machine-extractable)* {#band-three-operation}
-##band-three-fields-lead @impl/done Authored as a fenced ` ```card-ops ` block of `key: value` fields so the harness can parse and deliver it without the prose. Fields:
+##band-three-fields-lead Authored as a fenced ` ```card-ops ` block of `key: value` fields so the harness can parse and deliver it without the prose. Fields: @impl/done
 - ##FIELD-TRIGGER **trigger** — the precise, ideally machine-detectable condition: `WHEN <signal> THEN apply`. @impl/done
 - ##FIELD-MODE **mode** — `inline | gate | raid | review` (where the trigger lives). @impl/done
 - ##FIELD-ROUTINE **routine** — ordered steps, target ≤7, each verifiable. @impl/done
