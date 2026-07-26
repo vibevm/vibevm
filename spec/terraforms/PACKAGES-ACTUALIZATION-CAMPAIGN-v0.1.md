@@ -835,6 +835,80 @@ command that would have tested it.
   than the instance for exactly that reason — this one has demonstrated it
   relocates.
 
+- **2026-07-26 · DRIFT-032 lands F-085, and its executable change is two lines.**
+  `parse_spec_uri` validates the anchor with `is_valid_fact_id` instead of
+  `is_valid_anchor`; the message follows. `is_valid_anchor`'s body is
+  **byte-identical** — the owner's «заголовочные якори пока не трогаем» held.
+  Host twin (`vibe-spec/src/address.rs`) widened to match, four vendored copies
+  propagated by `sync-engines` (33 pairs, 6 sets, clean), floor green on 25 steps.
+
+  **Proved rather than asserted, and with a negative control:** a temporary
+  `#[spec(implements = "spec://…/00-MANIFESTO#SINGLE-DESIGN-TARGET")]` — a real
+  anchor B1 minted — compiled; the old validator was then restored to confirm
+  the same tag *fails*, so the passing case was load-bearing rather than inert.
+  Both temporaries removed.
+
+  **§4 step 4 came back NOT FOUND**, thoroughly: both anchor collections are
+  byte-exact maps, `vibe-spec`, `progress-core` and the whole authored engine
+  tree contain **zero** case transforms, no heading-text slugification exists,
+  and no anchor becomes a path component (so the case-insensitive Windows
+  filesystem never sees one). That clears the ground for DRIFT-034's
+  case-insensitive duplicate check.
+
+  **My task file was wrong on an edge case and the executor measured before
+  proceeding.** §4 claimed `9lives` "still fails"; it did not — kebab admits a
+  digit head, so the swap is **not a pure widening**: digit-headed anchors go
+  accepted → rejected, trailing dashes rejected → accepted. Measured across
+  **380** distinct cited anchor segments and **750** distinct `{#…}` heading
+  anchors: every one already matches `[A-Za-z][A-Za-z0-9_-]*`. Zero regression,
+  and the asymmetry is pinned in a test. **DRIFT-034 inherits that measurement**
+  — widening the heading law has the same digit-head consequence and the same
+  zero blast radius.
+
+- **2026-07-26 · F-086 — the sync gate is green because it is not looking, and
+  that is the third one this session.** `cargo xtask sync-engines --check`
+  reports «every vendored crate matches its authored source (33 pairs across 6
+  sync sets)». **Six** packages vendor `core-ai-native-specmark-grammar`;
+  `sync-engines.toml` names **five** roots and no target for
+  `go-ai-native-lang` or `go-ai-native-mcp`. They are not out of sync — they are
+  **outside the check**.
+
+  Measured, not inferred: `go-ai-native-lang/v0.1.0`'s vendored grammar is
+  **byte-identical to the authored v0.7.0** and **differs from v0.8.0**, while
+  its own manifest declares `flow:…/core-ai-native = "^0.8"`. The rust twin is
+  correctly identical to v0.8.0. So a package declares 0.8 and ships the 0.7
+  engine — it predates the fact-grain amendment and now also the URI widening —
+  and the gate built to catch exactly that says everything matches.
+
+  This is plan §5-E's own rule failing on its own terms: «a fix inside a
+  package's crates must be **vendored forward** to every family member that
+  copies it, or the fix ships to one consumer and not the others». Pre-existing
+  at DRIFT-032's base commit; adding sync targets is a design call, not a fix,
+  because the go family's engine version is a release question.
+
+  *Third instance of one shape: F-081 (the floor gating a frozen slot), F-083
+  and F-084 (the parser not seeing units the grammar allows), and now F-086.
+  **A green panel is evidence about what was checked, never about what was
+  covered** — and nothing in the panel reports its own coverage.*
+
+- **2026-07-26 · F-087 — the repository's own attribution rule is contradicted
+  by a convention in its history. Raised for the owner; not actionable by me.**
+  The policy says, unqualified: «Never mention model, agent, or AI-tool names in
+  commit messages, branch names, or code comments.» **17 of this repository's
+  1 852 commit bodies name a model** — the wave-1 convention of writing which
+  executor tier a task went to. Campaign task files carry the same in their
+  `**Executor:**` line, though those plausibly fall under the policy's explicit
+  carve-out for «technical AI-workflow documents … agent instructions».
+
+  **The history half cannot be cleaned.** It would need a rewrite of published
+  commits — a Rule 4 red line — and the source-mirrors law forbids `--force`
+  «for any ref, for any reason». So the practical choice is between accepting
+  the existing 17 and stopping there, or amending the policy to carve out
+  executor-tier labels. **No new commit in this session names a model**; the
+  convention stops here regardless of the ruling. *Surfaced because an executor
+  flagged its own task file for it after self-repairing an attribution trailer
+  it had added — the rule working from the inside.*
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
