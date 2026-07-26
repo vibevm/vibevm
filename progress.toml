@@ -31,6 +31,21 @@
 # own specspace, its own boot contract and WAL) and `vibedeps/**` (regenerated
 # consumer copies of the same packages — marking a copy is marking nothing).
 #
+# AUDITED 2026-07-26 on an owner challenge ("did you really keep everything
+# generated out?"). Result across all 344 observed files: exactly two top-level
+# roots (`packages`, `spec`), and NO path segment named target, vibedeps,
+# node_modules, vendor, .vibe, refs, campaigns, fixtures, dist, build,
+# generated or .git — `DEFAULT_EXCLUDES` (scope.rs) holds those always-on,
+# even under an explicit include. Two leaks the exclusion list does NOT catch,
+# both filed and both needing the same code-side fix:
+#   F-071 — `spec/cards/INDEX.md` in all three language stacks is a DERIVED
+#           index ("hand edits are a defect", its own words). Markup there
+#           dies on regen. Wave 1 dodged the same problem for its boot
+#           artifacts via the `spec/boot/[0-9]*.md` glob; `packages/**/*.md`
+#           has no equivalent trick and §4 is include-only by design.
+#   F-070 — 33 `LICENSE.md` files, 264 paragraphs of verbatim UPL text.
+# Until both land, `check --exhaustive` cannot go green honestly.
+#
 # NOTE, and it bites immediately: with two `campaigns/<id>/` zones present, a
 # BARE `vibe progress …` no longer resolves a campaign — `resolve_campaign`
 # returns the single zone only when exactly one exists, and otherwise drops to
