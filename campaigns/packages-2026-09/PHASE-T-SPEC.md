@@ -403,7 +403,39 @@ And the test is not discarded — it is the most useful thing in the exchange:
   remainder, and anything needing new surface goes back out to a task or a
   campaign rather than being absorbed into a wave.
 
-### 5.5.5 Do not over-specify, or a code fix will invalidate after all {#no-over-spec}
+### 5.5.5 Where a finding goes — three severities, three destinations {#severity-routing}
+
+*Owner, 2026-07-26: findings from the programme collect in their own file and
+the next wave drains from it — **except** the critical ones, which stop and
+report.*
+
+A red that is not a code fix and not a fact correction is a **finding**, and it
+routes by severity, not by which wave noticed it:
+
+| | | |
+|---|---|---|
+| **P1** | security, data loss, structural integrity, **or a gate reporting green while not looking** | **stops the wave**, reaches the owner the same session |
+| **P2** | a missing surface, a feature the corpus assumes and the code lacks | [`BACKLOG.md`](../../BACKLOG.md) — the next wave drains from it |
+| **P3** | noted, no action planned | `BACKLOG.md`, disposition `accepted` |
+
+- ##ROUTE-UNBUILT-IS-P2-BY-CONSTRUCTION **Every T-unbuilt fact (§2.1) is a P2 by construction**, and the
+  `#[ignore]`d test already written from it **is** the specification of the
+  work. `BACKLOG.md` cites the anchor and the test; it restates neither.
+- ##ROUTE-SEVERITY-IS-THE-REVIEWERS **A worker never assigns severity.** It reports the observation; the
+  reviewer classifies. The one exception runs the other way — a worker that
+  believes it has found something alarming stops its own packet immediately and
+  says so, and the interruption needs no permission even though the
+  classification is not its to make.
+- ##ROUTE-GATE-BLINDNESS-IS-P1 **A gate that is green because it is not looking is P1, not P2.**
+  This programme found that shape three times before Phase T opened, and each
+  instance was green and wrong. That is a structural-integrity failure, not a
+  gap in coverage.
+- ##ROUTE-NOT-A-DUMPING-GROUND `BACKLOG.md` is not where inconvenient reds go to be forgotten. A
+  red is only a finding after the reviewer has decided it is neither a code fix
+  nor a fact correction — the two verdicts of §5.5.3 come first, and «file it»
+  is not a third verdict a wave may reach on its own.
+
+### 5.5.6 Do not over-specify, or a code fix will invalidate after all {#no-over-spec}
 
 ##WAVE-ASSERT-NO-MORE-THAN-THE-FACT **Assert exactly what the fact promises and nothing more.** The one
 way a *code* fix does break a Phase T test is over-specification: a fact

@@ -149,7 +149,13 @@ Facts about *this project* — its design, conventions, decisions, milestones, o
 
 - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).
 - `MEMORY.md` at repo root (currently a pointer to [`spec/boot/90-user.md`](spec/boot/90-user.md), the user-owned boot snippet).
-- `TASKS.md` at repo root, if one is warranted (not present today).
+- `TASKS.md` at repo root — the current work-slice's checklist, each item a
+  commit waiting to be made. **Present since 2026-04; the parenthetical here
+  that said otherwise stood for three months.**
+- `BACKLOG.md` at repo root — findings the work surfaced and deliberately did
+  not act on, severity-triaged P1/P2/P3, drained by the next wave. The opposite
+  genre to `TASKS.md`: nobody is working on these yet, and they are kept so the
+  decision to start can be taken deliberately (owner directive 2026-07-26).
 - Authoritatively, the `spec/**/*.md` tree — PROP / FEAT documents, `spec/WAL.md`, `spec/boot/*`.
 
 Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.
