@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Forty-one rulings now, of which two are struck (18, 19).** They accumulate in
+**Forty-six rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -391,6 +391,40 @@ justification in its own report that did not survive being checked.
     of ruling 34 and stays whole; and a `**Scope of this document.**` paragraph
     carrying a second fact still splits, with the bold label riding on the
     first heir.*
+
+### Added by the B10 pass (2026-07-27) {#locked-b10}
+
+42. **An arrow chain `→` does not split.** Nothing covered `→`, and B10 met a
+    four-rung ladder compressed into one arrow-separated sentence. Ruling 36's
+    principle generalises: **an unruled separator is non-splitting.** *Accepted
+    consequence, and it is the same shape ruling 39 accepts: the four rungs are
+    four table rows in one document and one unit in another.*
+43. **«Sequence» in ruling 34 means three or more.** A two-clause «X, and Y»
+    compound sentence stays whole. All ten instances that produced ruling 34
+    had three or more elements, so the ruling was written from a population that
+    never tested two — this settles it rather than leaving each batch to guess.
+44. **Ruling 20's verdict test gates ruling 34, not only ruling 3.** A
+    comma-joined sequence that passes 34's grammatical test but fails 20's
+    verdict test stays whole: «It is boring, it is unskippable, and it does not
+    delegate» is three terms of one claim, exactly like ruling 20's own
+    «keep the three layers apart: method, project, machine». Ruling 20 was
+    stated as a tiebreaker for ruling 3 alone; it binds 34 as well.
+45. **The colon-segment tiebreaker, from a measured corroboration.** B10
+    measured every colon decision B8 and B9 made: **every split had three or
+    more post-colon segments; every keep had one.** So a colon with 3+ segments
+    splits and a colon with 1 does not, which matches rulings 22 and 35 without
+    contradicting either. **Two segments is genuinely undecided** — B10's two
+    such calls went opposite ways and both are defensible. Report a
+    two-segment colon rather than settling it silently.
+46. **Ruling 32 is confined to the pattern-card format.** A `**Bold label.**`
+    paragraph in ordinary prose splits when it carries a second fact (ruling 41),
+    and the label rides with the first heir. Ruling 32's «the labelled field is
+    the atom» governs card Band-1/Band-2 fields and nothing else.
+    *Also recorded, needing no ruling: ruling 23 sends an outside-world «why»
+    column to `@spec/done` even when the table's rules are in force — B10 marked
+    39 such cells that way. It is 23 working as written, and the list form it
+    recommends is not available, because turning a table into a list is not a
+    sense-preserving split.*
 
 ## Boundaries {#boundaries}
 
