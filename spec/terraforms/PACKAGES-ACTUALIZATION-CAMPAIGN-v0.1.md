@@ -1522,6 +1522,61 @@ command that would have tested it.
   the test could fail at all. **A probe that passes is evidence about the probe
   until a control says otherwise.**
 
+- **2026-07-28 · F-103 — a boot snippet whose every in-package link is broken,
+  and a README that contradicts its own manifest.** `sync-from-code` keeps its
+  snippet at `boot/20-flow-sync-from-code.md`, not `spec/boot/`. All three of
+  its relative links point at `../flows/sync-from-code/*.md`, which from `boot/`
+  resolves to `<pkg>/flows/…` — a directory that does not exist; the files are
+  at `<pkg>/spec/flows/…`. Verified by resolving each. They work only after the
+  snippet has been installed into a consuming project. The two sibling snippets
+  live at `spec/boot/` and resolve correctly in place. **And the README says the
+  package ships `spec/boot/20-flow-sync-from-code.md` while `vibe.toml` declares
+  `source = "boot/20-flow-sync-from-code.md"`** — the two sibling READMEs match
+  their manifests exactly. F-097's genre: an instruction that fails when
+  followed. Four more packages share the bare-`boot/` trait and are B15's.
+
+- **2026-07-28 · F-104 — a protocol that misplaces its own skeleton.**
+  `LICENSING-PROTOCOL.md` says «A skeleton of this text ships with the
+  `draft-eula` skill». It ships in `spec/flows/licensing/eula-template.md`; the
+  skill only points at it, and says so in its own step 2.
+
+- **2026-07-28 · F-105 — a shipped flow package cites this repository's unbuilt
+  command and its private milestone numbering.** `when-to-apply.md`'s boundary
+  list says «**`vibe build`** (M1.5+) handles the other direction — generating
+  code from spec». **There is no top-level `vibe build` at all**: the only
+  `Build` in the CLI is `vibe bin build`, which builds package-declared tools,
+  and PROP-018 §SEAM-DECOUPLING names the spec-to-code command as «a future
+  deterministic command». A consuming project has neither the command nor the
+  milestone scheme. Marked `@spec/done` by adjudication (ruling 10, a claim
+  about the future) after the batch left it `@unknown` — correctly, since the
+  ambiguity was real and the answer needed the host's CLI.
+
+- **2026-07-28 · F-106 — one package, two vocabularies for weak copyleft.**
+  `dependency-licenses.md`'s table reads «MPL-2.0, EPL»; `LICENSING-PROTOCOL.md`
+  §deps and the boot snippet both name only MPL-2.0 for that class. `EPL` occurs
+  exactly once in the package. *(The count needed care: a case-sensitive grep for
+  `EPL` also matches the anchor `##AT-RELICENSE-TIME-THE-PLACEHOLDER-IS-REPLACED-WHOLESALE`,
+  because `REPLACED` contains it. The corpus's own markup is now a source of
+  substring false positives — a new instance of the WAL's standing warning.)*
+
+- **2026-07-28 · F-107 — three sibling packages of one generation, three licence
+  conventions.** `sync-from-code` ships `LICENSE` (no extension) and cites it
+  unlinked with a sentence about the registry; `licensing` ships `LICENSE.md`
+  and cites it unlinked; `manual-tests` ships `LICENSE.md` and links it. F-070
+  excludes `LICENSE.md` from the corpus by name, so the odd one out is also
+  excluded only because it is not markdown.
+
+- **2026-07-28 · Reported and NOT a finding: the dotted anchor.** B14 reported
+  that `review-workflow.md` teaches naming an anchor `{#verification.timeout}`,
+  which `##FACT-ID-GRAMMAR` (`[A-Za-z][A-Za-z0-9_-]*`) rejects. **It does not
+  survive checking.** The grammar governs *fact ids*; heading `{#anchor}`s share
+  the address space without inheriting the character class. Every occurrence
+  corpus-wide is an illustration in a fictional project — two inside fenced
+  blocks in `ADDRESSABLE-SPECS-PROTOCOL.md`, one inside a fenced example in
+  `record-template.md`, the rest in inline code. Nothing mints a dotted anchor.
+  Recorded because a checked-and-dismissed report is worth as much as a
+  confirmed one, and the next batch should not re-file it.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
