@@ -71,6 +71,7 @@ back over three batches:
 | B13 | 274 | 168 | 82 | 546 | 555 | **−1.6 %** |
 | B14 | 259 | 150 | 47 | 476 | 479 | **−0.6 %** |
 | B15 | 237 | 120 | 46 | 428 | 409 | **+4.6 %** |
+| B16 |  94 |  39 | 146 | 289 | 281 | **+2.8 %** |
 
 **B13 was the first batch sized with the band before dispatch, and the band
 held**: predicted 543–565, measured 555, realised coefficient **1.113**.
@@ -96,6 +97,7 @@ subtracting the pre-state item count:
 |---|---|---|---|---|---|
 | B14 | 25 | 282 | 259 | +23 | 1.089 |
 | B15 | 10 | 243 | 237 | +6 | 1.025 |
+| B16 | 4 | 96 | 94 | +2 | 1.021 |
 
 B15's own executor put it exactly: its paragraphs produced 243 units from 237
 terminators — deconstruction did what the mechanism says, one unit per sentence
@@ -116,10 +118,17 @@ documents.** Two consequences, and the second is the one that matters:
 each time. What is established here is the **mechanism** (arithmetically
 necessary, not fitted) and two measurements consistent with it.*
 
+**B16 made it three, and it was predicted in advance.** Its brief said this
+would be the batch whose total the coefficient could not move — 185 of its 232
+units were already at fact grain — and it landed at **1.021** with **four**
+manufactured bullets against **one** colon split and eight keeps. Three
+consecutive batches now sit on the line: 25 bullets → +23, 10 → +6, 4 → +2.
+**The mechanism is no longer a hypothesis about the rule; it is the rule.**
+
 **Superseded by §coefficient-is-judgement above, and kept for the history it
 records.** B12 realised **1.153** units per paragraph-sentence against B11's
 1.08, and 1.153 reproduces its 624 exactly; four batches then spanned
-1.068–1.153. **Seven now span 1.025–1.153**, and the instruction "treat the next
+1.068–1.153. **Eight now span 1.021–1.153**, and the instruction "treat the next
 batch that lands outside it as informative rather than as a surprise" was
 written before anyone knew what such a batch would be informative *about*. B15
 answered that: it is informative about how the batch tie-broke its colons.
@@ -250,7 +259,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B13~~ | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` — **DONE**, 555 units, **0 unmarked** | 15 | 378 |
 | ~~B14~~ | `sync-from-code` + `licensing` + `manual-tests` — **DONE**, 479 units, **0 unmarked** | 16 | 327 |
 | ~~B15~~ | the git family + `wal-specspaces` + `dev-runtime-docs` — **DONE**, 409 units, **0 unmarked** | 17 | 300 |
-| B16 | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 | 10 | 232 |
+| ~~B16~~ | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 — **DONE**, 281 units, **0 unmarked**; corpus reaches ZERO | 10 | 232 |
 
 **Thirteen batches remain** (B5–B16). The count has read 18, 16, then 15: F-080
 retired `core-ai-native`'s third, F-091 dissolved `redbook`'s into B16, and B1–B2

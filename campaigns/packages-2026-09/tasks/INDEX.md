@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B16 | three `-mcp` packages + two family umbrellas + `redbook` | opus | **dispatched** — 232 units over 10 files; predicted 285–293; **closes Phase B at zero** |
+| MARKUP-B16 | three `-mcp` packages + two family umbrellas + `redbook` | opus | **done** — 281 units, **0 unmarked**; **Phase B closed, corpus at ZERO**; rulings 59–61, 45 struck |
 | MARKUP-B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | opus | **done** — 409 units, **0 unmarked**; **band broken** (1.025) and explained; rulings 57–58 |
 | MARKUP-B14 | `sync-from-code` + `licensing` + `manual-tests` | opus | **done** — 479 units, **0 unmarked**; band held twice running (1.089); rulings 53–56; F-102 fixed under it |
 | MARKUP-B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | opus | **done** — 555 units, **0 unmarked**; band held (1.113); rulings 51–52 |

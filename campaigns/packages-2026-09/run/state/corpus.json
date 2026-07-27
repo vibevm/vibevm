@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-27T20:09:23Z",
+  "updated_at": "2026-07-27T20:50:06Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -599,34 +599,52 @@
     },
     {
       "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 4,
       "units": 1,
-      "facts": 2,
-      "unmarked": 2,
+      "facts": 3,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 52,
       "units": 4,
-      "facts": 41,
-      "unmarked": 41,
+      "facts": 51,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 6,
       "units": 1,
       "facts": 5,
-      "unmarked": 5,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -938,23 +956,35 @@
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 7,
       "units": 1,
-      "facts": 5,
-      "unmarked": 5,
+      "facts": 6,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 52,
       "units": 4,
-      "facts": 43,
-      "unmarked": 43,
+      "facts": 51,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1283,34 +1313,52 @@
     },
     {
       "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 7,
       "units": 1,
-      "facts": 5,
-      "unmarked": 5,
+      "facts": 6,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 50,
       "units": 4,
-      "facts": 39,
-      "unmarked": 39,
+      "facts": 49,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 7,
       "units": 1,
-      "facts": 5,
-      "unmarked": 5,
+      "facts": 6,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -2659,23 +2707,35 @@
     },
     {
       "path": "packages/org.vibevm.world/redbook/v0.2.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 66,
       "units": 8,
-      "facts": 57,
-      "unmarked": 57,
+      "facts": 65,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 40,
       "units": 3,
-      "facts": 30,
-      "unmarked": 30,
+      "facts": 39,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
