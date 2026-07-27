@@ -1405,6 +1405,44 @@ command that would have tested it.
   like any other and nothing checks it against itself** — the mechanical
   reviewer checks the batch, not the instructions.
 
+- **2026-07-27 · F-099 — a README miscounts its own contents.**
+  `tool-design-lessons/v0.1.0/README.md:22` says the package «ships **four**
+  pieces of content plus a boot snippet» and then lists **three**. Three exist on
+  disk. Both sibling READMEs in the same batch say «three» and both are right.
+  A self-describing count is the cheapest fact in a document to check and the
+  easiest to leave behind when a piece is dropped.
+
+- **2026-07-27 · F-100 — a grammar example cites a real package at a version it
+  never had.** `qualified-naming/…/ref-grammar.md` §forms illustrates the
+  versioned form with `org.vibevm.world/wal@0.6.0`. That package is real and it
+  is at **v0.2.0**. The neighbouring §examples section deliberately uses invented
+  groups to stay product-neutral; this row reaches for a real coordinate and
+  gets it wrong. Low severity, and the shape is worth noting: **an example that
+  borrows a real name inherits an obligation to be right about it.**
+
+- **2026-07-27 · The paragraph-density hypothesis is dead, and the replacement
+  is a mechanism rather than a fit.** B10 proposed that the markup multiplier
+  tracks paragraph density; B11 was dispatched to test it and falsified it on the
+  most paragraph-heavy batch yet — measured ×2.235 where density predicted ≥2.3,
+  with a per-file correlation of **r = −0.171**, no relationship and the wrong
+  sign.
+
+  **What killed it is a controlled pair inside one package.**
+  `self-updating-tools.md` and `packaging-lessons.md` share an author, a package,
+  a four-field genre and an *identical* pre-composition — 29 paragraphs, 7 items,
+  0 cells each — and produced ×2.45 against ×1.93. Independently counted at
+  review they differ by **68 sentences against 55**, ratio 1.24 against the
+  multipliers' 1.27.
+
+  **Deconstruction produces about one unit per sentence**, which is what it is
+  for; paragraphs were a proxy all along. `1.08 × sentences + items + cells`
+  predicts B9, B10 and B11 within **0.8 %**, and sentences are countable by regex
+  **before** a batch is dispatched. Recorded in `BATCH-PLAN.md` with an explicit
+  instruction not to lock the coefficient — this is the rule's third version, the
+  second was promoted from two measurements and falsified by the third, and three
+  points is not proof either. The *mechanism* is what the controlled pair
+  supports; the coefficient is three numbers.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
