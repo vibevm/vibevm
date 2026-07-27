@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-27T12:59:16Z",
+  "updated_at": "2026-07-27T15:56:23Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -1486,56 +1486,86 @@
     },
     {
       "path": "packages/org.vibevm.world/comparative-research/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 22,
       "units": 6,
-      "facts": 13,
-      "unmarked": 13,
+      "facts": 21,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 13,
       "units": 3,
-      "facts": 10,
-      "unmarked": 10,
+      "facts": 12,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 67,
       "units": 13,
-      "facts": 38,
-      "unmarked": 38,
+      "facts": 66,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 68,
       "units": 8,
-      "facts": 44,
-      "unmarked": 44,
+      "facts": 67,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 27,
       "units": 5,
-      "facts": 19,
-      "unmarked": 19,
+      "facts": 26,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1839,56 +1869,86 @@
     },
     {
       "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 21,
       "units": 6,
-      "facts": 13,
-      "unmarked": 13,
+      "facts": 20,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 17,
       "units": 5,
-      "facts": 12,
-      "unmarked": 12,
+      "facts": 16,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 36,
       "units": 9,
-      "facts": 25,
-      "unmarked": 25,
+      "facts": 35,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 42,
       "units": 7,
-      "facts": 40,
-      "unmarked": 40,
+      "facts": 41,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 47,
       "units": 7,
-      "facts": 37,
-      "unmarked": 37,
+      "facts": 46,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -2471,56 +2531,86 @@
     },
     {
       "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 21,
       "units": 6,
-      "facts": 14,
-      "unmarked": 14,
+      "facts": 20,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 22,
       "units": 5,
-      "facts": 14,
-      "unmarked": 14,
+      "facts": 21,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 72,
       "units": 13,
-      "facts": 48,
-      "unmarked": 48,
+      "facts": 71,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 50,
       "units": 7,
-      "facts": 26,
-      "unmarked": 26,
+      "facts": 49,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 45,
       "units": 8,
-      "facts": 25,
-      "unmarked": 25,
+      "facts": 44,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
