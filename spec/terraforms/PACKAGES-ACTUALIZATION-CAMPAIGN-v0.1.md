@@ -1347,6 +1347,31 @@ command that would have tested it.
   cheaper than eight independent rediscoveries, and it must be a fact
   correction under sync-from-code rather than a markup fix.
 
+  **WIDENED 2026-07-27 after B10, and measured as a class instead of found one
+  batch at a time.** B10 met the same defect under a second name
+  (`flow:attribution-policy`), which prompted a sweep of **every** package
+  reference in canonical markdown against **every** declared package name. The
+  `git-*` rename left **four** names dead, not one:
+
+  | dead reference | real name | files | refs |
+  |---|---|---|---|
+  | `flow:atomic-commits` | `git-atomic-commits` | 16 | 20 |
+  | `flow:attribution-policy` | `git-attribution-policy` | 6 | 8 |
+  | `flow:conventional-commits` | `git-conventional-commits` | 2 | 3 |
+  | `flow:autonomy` | `git-autonomy` | 1 | 2 |
+
+  **21 distinct canonical files, 33 references, and 6 of them are literal
+  `vibe install` / `vibe uninstall` command lines** — in three different
+  packages' own READMEs, each telling a reader to install a name that does not
+  resolve. Every one of the four is declared correctly under its `git-` name, so
+  the rename landed everywhere except the prose that cites it.
+
+  **The sweep is the point, not the count.** Three batches would each have
+  rediscovered their own slice; one query against the declared-name list found
+  the whole class in a minute, and it is repeatable at any time. **A reference
+  that names a package is checkable mechanically, and nothing checks it** — that
+  gap is worth a gate long after this DRIFT closes.
+
 - **2026-07-27 · F-098 — a promise whose «next release» has shipped.**
   `wal/v0.2.0/README.md` says the Discipline «ships a convention document that
   defers to this package **from its next release**». That release is
