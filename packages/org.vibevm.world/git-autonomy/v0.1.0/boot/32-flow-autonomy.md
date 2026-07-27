@@ -1,25 +1,32 @@
 # Flow: Commit autonomy {#root}
 
-The default posture for how much an agent decides on its own versus stops to ask, on the
-**commit and push** surface.
+<status stage="impl" state="done"/>
+
+##THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE The default posture for how much an agent decides on its own versus stops to ask, on the
+**commit and push** surface. @impl/done
 
 ## Routine — proceed without asking {#routine}
 
-Routine large changes proceed and are committed/pushed **without** a confirmation handshake:
-implementing a planned milestone, finishing a feature slice, touching many files for one
-coherent reason. The approval was given upstream, when the work was authorised; a mid-work
-"shall I proceed?" is overhead already paid for.
+##ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @impl/done
+
+- ##ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE implementing a planned milestone, @impl/done
+- ##ROUTINE-FINISHING-A-FEATURE-SLICE finishing a feature slice, @impl/done
+- ##ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON touching many files for one
+  coherent reason. @impl/done
+
+##the-approval-was-given-upstream The approval was given upstream, when the work was authorised; a mid-work
+"shall I proceed?" is overhead already paid for. @spec/done
 
 ## Non-routine — stop and ask first {#red-lines}
 
-Ask first for anything whose reversal costs work:
+##ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK Ask first for anything whose reversal costs work: @impl/done
 
-- rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work);
-- `git push --force` / `--force-with-lease`;
-- bringing in large binary blobs;
-- changing CI, signing, or secrets configuration;
-- **any operation whose reversal would cost work.**
+- ##RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work); @impl/done
+- ##RED-LINE-FORCE-PUSH `git push --force` / `--force-with-lease`; @impl/done
+- ##RED-LINE-LARGE-BINARY-BLOBS bringing in large binary blobs; @impl/done
+- ##RED-LINE-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @impl/done
+- ##RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **any operation whose reversal would cost work.** @impl/done
 
-**When uncertain, ask.**
+##WHEN-UNCERTAIN-ASK **When uncertain, ask.** @impl/done
 
-Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md).
+##sibling-document-pointers Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md). @impl/done

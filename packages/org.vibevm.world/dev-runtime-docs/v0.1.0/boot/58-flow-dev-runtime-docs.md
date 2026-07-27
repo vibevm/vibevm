@@ -1,19 +1,23 @@
 # Flow: Load-bearing setup docs {#root}
 
-A project's setup and runtime documentation is **load-bearing** — it is the file
+<status stage="impl" state="done"/>
+
+##SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING A project's setup and runtime documentation is **load-bearing** — it is the file
 someone reaches for when the build breaks, the environment is wrong, or a
-prerequisite is missing.
+prerequisite is missing. @impl/done
 
-## The rule
+## The rule {#rule}
 
-Every change that touches the **toolchain, prerequisites, environment variables,
+##EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT Every change that touches the **toolchain, prerequisites, environment variables,
 paths, or bootstrap steps** updates the relevant setup/runtime doc **in the same
-commit**. Never ship a setup change with the doc update deferred — deferral is
-exactly where the drift these files exist to prevent lives.
+commit**. @impl/done
 
-Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md).
+##NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED Never ship a setup change with the doc update deferred — deferral is
+exactly where the drift these files exist to prevent lives. @impl/done
 
-## Never
+##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done
 
-- Never ship a dev-env or runtime-setup change with its doc update in a later commit.
-- Never let the setup docs describe a toolchain the project no longer uses.
+## Never {#never}
+
+- ##NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT Never ship a dev-env or runtime-setup change with its doc update in a later commit. @impl/done
+- ##NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN Never let the setup docs describe a toolchain the project no longer uses. @impl/done

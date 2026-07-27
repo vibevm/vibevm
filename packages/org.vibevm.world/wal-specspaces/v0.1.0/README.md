@@ -1,34 +1,40 @@
-# wal-specspaces
+# wal-specspaces {#root}
 
-Non-central WALs for repositories that host more than one project.
+<status stage="doc" state="done" audience="user"/>
 
-`flow:org.vibevm.world/wal` gives a project session-durable state: a living
+##NON-CENTRAL-WALS-FOR-MULTI-PROJECT-REPOSITORIES Non-central WALs for repositories that host more than one project. @impl/done
+
+##THE-WAL-FLOW-GIVES-A-PROJECT-SESSION-DURABLE-STATE `flow:org.vibevm.world/wal` gives a project session-durable state: a living
 WAL checkpoint plus a cold-resume snapshot, wind-down and resume
-phrases. This package extends that convention to **specspaces** —
+phrases. @impl/done
+
+##THIS-PACKAGE-EXTENDS-THAT-CONVENTION-TO-SPECSPACES This package extends that convention to **specspaces** —
 sub-projects nested in a host repository but worked on as independent
-projects. Each specspace carries its own boot contract, WAL, and
+projects. @impl/done
+
+##EACH-SPECSPACE-CARRIES-ITS-OWN-STATE-REGISTRY-AND-GRAMMAR Each specspace carries its own boot contract, WAL, and
 cold-resume file; a one-file registry (`SPECSPACES.md`) at the host
 root names them; the session grammar gains an optional specspace name
 (`RESUME SESSION <name>`, `END SESSION <name>`) that switches a
-session into a specspace **without loading the host's full boot**.
+session into a specspace **without loading the host's full boot**. @impl/done
 
-A **bare** phrase (no name) never wanders into a specspace on its own:
+##A-BARE-PHRASE-NEVER-WANDERS-INTO-A-SPECSPACE A **bare** phrase (no name) never wanders into a specspace on its own:
 it targets the `default` specspace declared in `SPECSPACES.md` if one
-is set, and otherwise the host project itself.
+is set, and otherwise the host project itself. @impl/done
 
-What ships:
+##package-contents-lead What ships: @impl/done
 
-- `spec/boot/11-flow-wal-specspaces.md` — the boot snippet: how a
+- ##CONTENT-THE-BOOT-SNIPPET `spec/boot/11-flow-wal-specspaces.md` — the boot snippet: how a
   session recognises specspace phrases, which project a bare phrase
   targets, and what it loads (and pointedly does not load) for a
-  specspace session.
-- `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` — the full
+  specspace session. @impl/done
+- ##CONTENT-THE-FULL-PROTOCOL `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` — the full
   protocol: the registry format (with the optional default), target
   resolution, the scoped grammar, the five laws (boot scoping, state
   locality, one focus, host rules survive, package state stays out),
-  lifecycle, and a re-derive prompt.
+  lifecycle, and a re-derive prompt. @impl/done
 
-Requires `flow:org.vibevm.world/wal` (=0.2.0): specspaces reuse its
-two-file model rather than redefining it.
+##REQUIRES-THE-WAL-FLOW-AT-AN-EXACT-PIN Requires `flow:org.vibevm.world/wal` (=0.2.0): specspaces reuse its
+two-file model rather than redefining it. @impl/done
 
-License: UPL-1.0.
+##license-line License: UPL-1.0. @impl/done
