@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-26T23:47:41Z",
+  "updated_at": "2026-07-27T09:46:29Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -1511,56 +1511,86 @@
     },
     {
       "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 22,
       "units": 6,
-      "facts": 16,
-      "unmarked": 16,
+      "facts": 21,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 23,
       "units": 5,
-      "facts": 15,
-      "unmarked": 15,
+      "facts": 22,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 70,
       "units": 11,
-      "facts": 42,
-      "unmarked": 42,
+      "facts": 69,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 60,
       "units": 5,
-      "facts": 42,
-      "unmarked": 42,
+      "facts": 59,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 65,
       "units": 7,
-      "facts": 48,
-      "unmarked": 48,
+      "facts": 64,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1911,67 +1941,103 @@
     },
     {
       "path": "packages/org.vibevm.world/health-audit/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 21,
       "units": 7,
-      "facts": 15,
-      "unmarked": 15,
+      "facts": 20,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 18,
       "units": 6,
-      "facts": 10,
-      "unmarked": 10,
+      "facts": 17,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 89,
       "units": 12,
-      "facts": 60,
-      "unmarked": 60,
+      "facts": 88,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 66,
       "units": 20,
-      "facts": 53,
-      "unmarked": 53,
+      "facts": 65,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 31,
       "units": 6,
-      "facts": 23,
-      "unmarked": 23,
+      "facts": 30,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 15,
       "units": 4,
-      "facts": 12,
-      "unmarked": 12,
+      "facts": 14,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -2043,56 +2109,86 @@
     },
     {
       "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 20,
       "units": 6,
-      "facts": 13,
-      "unmarked": 13,
+      "facts": 19,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 10,
       "units": 3,
-      "facts": 6,
-      "unmarked": 6,
+      "facts": 9,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 85,
       "units": 13,
-      "facts": 50,
-      "unmarked": 50,
+      "facts": 84,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 65,
       "units": 8,
-      "facts": 54,
-      "unmarked": 54,
+      "facts": 64,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 56,
       "units": 7,
-      "facts": 28,
-      "unmarked": 28,
+      "facts": 55,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },

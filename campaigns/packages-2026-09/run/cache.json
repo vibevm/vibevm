@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-26T23:47:41Z",
+  "updated_at": "2026-07-27T09:46:29Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -1972,57 +1972,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md": {
-      "content_hash": "8ecd0060a3936d4b2cfe4bbb39275df88950d8d1a25b2b0da818845fec68267c",
+      "content_hash": "4bba86eadbc8817423cf149675e4978879ba9e45ea505d2ede7d45d4e5198231",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 16,
-        "unmarked_facts": 16
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 22,
+        "fact_count": 21,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 22,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md": {
-      "content_hash": "7894d5e4190173e3de7138e341c56cab1b82bde7e3c33beeb049b5116eb36310",
+      "content_hash": "37bfb66e0000263b44944fbb58c8fa97f857ceff1ed6d76bb309b8068a1cedc0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 15,
-        "unmarked_facts": 15
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 23,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md": {
-      "content_hash": "f0108a36efd765ff4b738ad64731b9e9d0a152fd2f02b62d97adeba046884914",
+      "content_hash": "951dd530a7ed50d38c49ca51662ed3d06215fdc4e86d677ef4b646c831d3ee81",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 42,
-        "unmarked_facts": 42
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 70,
+        "fact_count": 69,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 70,
       "unit_count": 11,
       "issue_count": 0
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md": {
-      "content_hash": "efdb41a56530b8cd3258315242bf439a57f8912cadeec19fe8e339e961ed072d",
+      "content_hash": "0945aed1ab5fc2af65a77baa904d04b7cad765011ac543d39c41382aeda0afe0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 42,
-        "unmarked_facts": 42
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 60,
+        "fact_count": 59,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 60,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md": {
-      "content_hash": "914b3ba439415a463150c2f1887d5c8147b59cae742c48c410edc96b3829c9c2",
+      "content_hash": "7860349feb503892e50fa667f2fdcc4d197b44aa84130e237a46b199b5ac6dbf",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 48,
-        "unmarked_facts": 48
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 65,
+        "fact_count": 64,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 65,
       "unit_count": 7,
       "issue_count": 0
     },
@@ -2420,68 +2480,140 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/README.md": {
-      "content_hash": "800a634a753e7594f3a233cda28439863913caf3d2f91313ec6a774d18bbb4d6",
+      "content_hash": "a1b3baa983946f9990f89ca91f2c4a40abc19964d7abbfa04cc82a7ce6bfb780",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 15,
-        "unmarked_facts": 15
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 21,
+        "fact_count": 20,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 21,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md": {
-      "content_hash": "f710fb4280e401377095f32fc6b50f22eb3cc60b8bb5d4ab4ed855942b9960e6",
+      "content_hash": "c4054902635e8eb335aa835aef3827895d9e8660952d42029e4955f00d478060",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 10,
-        "unmarked_facts": 10
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 18,
+        "fact_count": 17,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 18,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md": {
-      "content_hash": "28a4c50f4bfecf9fb050b4f22da5d1bb82dcf1fd71bbff4eaa86d37824f7f20c",
+      "content_hash": "e9a25e03d33c3b7b53003de9742d6dc63cabdf896a67022fafc9bf574833740d",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 60,
-        "unmarked_facts": 60
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 89,
+        "fact_count": 88,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 89,
       "unit_count": 12,
       "issue_count": 0
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md": {
-      "content_hash": "91a1d6b8370d4365e62c5999dc20d55cdd1dc056b68995f93e1cb3f0b781c6e3",
+      "content_hash": "c10db3d6a98f3676253b03e6435b0151a9eb8c401021452dc8a73c63e3f752c7",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 53,
-        "unmarked_facts": 53
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 66,
+        "fact_count": 65,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 66,
       "unit_count": 20,
       "issue_count": 0
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md": {
-      "content_hash": "982a177cb9461495cf192df8666d5678d669386c9a6e325676a6f671c1fc271b",
+      "content_hash": "b8ba17597e0f129b4d6b3b4b21ffd04f2ff7cfabb523e0c7a18190a5cbd62920",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 23,
-        "unmarked_facts": 23
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 31,
+        "fact_count": 30,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 31,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md": {
-      "content_hash": "80df60e05cb140f306a6993dd3c8a9cdfcc2daeaf3ddec5ce1926ac88cf9fea8",
+      "content_hash": "9ff19490ad21b6e0cd5bee163bc0d8b191fa3dca79567b89dbc0467361edd4c0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 12,
-        "unmarked_facts": 12
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 15,
+        "fact_count": 14,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 15,
       "unit_count": 4,
       "issue_count": 0
     },
@@ -2552,57 +2684,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md": {
-      "content_hash": "57955b0a4fdbe94270965dd745e58987a97f05cd529f1d081ef695d4cce4de1a",
+      "content_hash": "590a1d386c6af864042b4983ea4560dc379789645479075dd2bf57b1c9bbe286",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 20,
+        "fact_count": 19,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 20,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md": {
-      "content_hash": "7b6289e2c943976e42dd211c41245cb19d2e3a88ac5b7c10b8eef9bc1ce9986e",
+      "content_hash": "5224916cba89bb31850ebe63bdd05ae06f24d0723b632f162e3be97b8850961d",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 6,
-        "unmarked_facts": 6
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 10,
+        "fact_count": 9,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 10,
       "unit_count": 3,
       "issue_count": 0
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md": {
-      "content_hash": "cc37fb0b4a2766d8fb7490c53df85b37ab4873462c49e8928887a3d36c1a0f92",
+      "content_hash": "a0d5f7e270d26a52a6e66362698b9a38e993028e4191521e178eb5d026309440",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 50,
-        "unmarked_facts": 50
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 85,
+        "fact_count": 84,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 85,
       "unit_count": 13,
       "issue_count": 0
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md": {
-      "content_hash": "c29b6edbab0b2bdc8bb8c62402dc0b9935cebf10d13dd2b6895603e6ba3d3b67",
+      "content_hash": "923bd9392a9e3c43ac56fdd28ef54fc9bad2f8a1e035999d1fb9d48e13d9414c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 54,
-        "unmarked_facts": 54
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 65,
+        "fact_count": 64,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 65,
       "unit_count": 8,
       "issue_count": 0
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md": {
-      "content_hash": "5d476ab85b7427fbbb36ef18fa860dacefc10a0ec82c118893e278cc4283dbe5",
+      "content_hash": "c0636ad3471015f3c0026ee941bbcd3321d1c6f78c297c984cc4d1e38a0c74cc",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 28,
-        "unmarked_facts": 28
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 56,
+        "fact_count": 55,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 56,
       "unit_count": 7,
       "issue_count": 0
     },
