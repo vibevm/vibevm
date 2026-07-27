@@ -1,69 +1,92 @@
 # Managed Blocks Protocol {#root}
 
-**Scope of this document.** This file defines *how* a tool writes
+<status stage="spec" state="done"/>
+
+##scope-of-this-document **Scope of this document.** This file defines *how* a tool writes
 into a file it does not own: the co-tenant law that bounds it to one
 delimited region, the marker design that makes that region findable
 by a deterministic scan, the well-formedness state machine that
 classifies a file before any mutation, the three verbs the tool is
 allowed (create / update / remove), and how two tools cohabit one
-file without ever colliding.
+file without ever colliding. @impl/done
 
 ## The problem: a tool clobbering a shared file {#problem}
 
-Many tools need to write into a file they did not create and do not
-solely own. A shell installer appends to `~/.bashrc`. An agent
-framework wants a line in `CLAUDE.md`. A deploy tool edits an
-`ssh_config`. A linter drops config into a shared `package.json`.
-Each of these files already carries content from other parties — the
-user by hand, and often one or more *other* tools.
+##MANY-TOOLS-WRITE-INTO-FILES-THEY-DO-NOT-SOLELY-OWN Many tools need to write into a file they did not create and do not
+solely own. @spec/done
 
-The naive implementation is a whole-file rewrite: read a template,
-fill it in, `write()` the file. It is easy, and it is a **data-loss
-event**. The first install into any project with a non-trivial host
+##example-a-shell-installer-appends-to-bashrc A shell installer appends to `~/.bashrc`. @spec/done
+
+##example-an-agent-framework-wants-a-line-in-claude-md An agent
+framework wants a line in `CLAUDE.md`. @spec/done
+
+##example-a-deploy-tool-edits-an-ssh-config A deploy tool edits an
+`ssh_config`. @spec/done
+
+##example-a-linter-drops-config-into-package-json A linter drops config into a shared `package.json`. @spec/done
+
+##EACH-OF-THESE-FILES-ALREADY-CARRIES-OTHER-CONTENT Each of these files already carries content from other parties — the
+user by hand, and often one or more *other* tools. @spec/done
+
+##THE-NAIVE-IMPLEMENTATION-IS-A-WHOLE-FILE-REWRITE The naive implementation is a whole-file rewrite: read a template,
+fill it in, `write()` the file. @spec/done
+
+##IT-IS-EASY-AND-IT-IS-A-DATA-LOSS-EVENT It is easy, and it is a **data-loss
+event**. @spec/done
+
+##THE-FIRST-INSTALL-DESTROYS-EVERY-OTHER-TENANTS-BYTES The first install into any project with a non-trivial host
 file silently destroys every byte the user and every other tool put
 there — and it destroys precisely the file a person is most likely
-to have invested in by hand.
+to have invested in by hand. @spec/done
 
-The discipline that avoids this is old and universal: `ssh`,
-shell-rc installers, and countless config tools already use it. The
+##the-discipline-is-old-and-universal The discipline that avoids this is old and universal: `ssh`,
+shell-rc installers, and countless config tools already use it. @spec/done
+
+##THE-TOOL-OWNS-ONE-DELIMITED-MACHINE-FINDABLE-REGION The
 tool owns one small, clearly delimited, machine-findable region and
-never touches a byte outside it. The host file stops being "the
-tool's file." It becomes **a shared file with the tool's block in
-it**.
+never touches a byte outside it. @impl/done
+
+##the-host-file-stops-being-the-tools-file The host file stops being "the
+tool's file." @impl/done
+
+##IT-BECOMES-A-SHARED-FILE-WITH-THE-TOOLS-BLOCK-IN-IT It becomes **a shared file with the tool's block in
+it**. @impl/done
 
 ## The co-tenant law {#co-tenant}
 
-> Own exactly one delimited block. Never touch a byte outside it.
+> ##THE-CO-TENANT-LAW Own exactly one delimited block. Never touch a byte outside it. @impl/done
 
-A good co-tenant writes into its own pen and leaves the rest of the
-file to whoever else shares it. Stated operationally:
+##A-GOOD-CO-TENANT-WRITES-INTO-ITS-OWN-PEN A good co-tenant writes into its own pen and leaves the rest of the
+file to whoever else shares it. Stated operationally: @impl/done
 
-- The tool reads and rewrites only the content **between** its own
-  opening and closing markers.
-- Every byte outside that block is another tenant's property,
+- ##TOOL-REWRITES-ONLY-BETWEEN-ITS-OWN-MARKERS The tool reads and rewrites only the content **between** its own
+  opening and closing markers. @impl/done
+- ##EVERY-BYTE-OUTSIDE-THE-BLOCK-IS-PRESERVED-VERBATIM Every byte outside that block is another tenant's property,
   **preserved verbatim** across every operation the tool performs —
-  install, update, uninstall, reconfigure.
-- The tool assumes it is **never the only tenant**. Even in an empty
+  install, update, uninstall, reconfigure. @impl/done
+- ##THE-TOOL-ASSUMES-IT-IS-NEVER-THE-ONLY-TENANT The tool assumes it is **never the only tenant**. Even in an empty
   project today, a human or a second tool may share the file
-  tomorrow.
+  tomorrow. @impl/done
 
-This is the same rule a C `#include` obeys: pulling in a dependency
-must never modify the including file's own authored content.
+##the-same-rule-a-c-include-obeys This is the same rule a C `#include` obeys: pulling in a dependency
+must never modify the including file's own authored content. @spec/done
 
 ## Marker design {#markers}
 
-The block is bounded by an opening marker and a closing marker, each
-alone on its own line. Four properties are non-negotiable.
+##THE-BLOCK-IS-BOUNDED-BY-AN-OPENING-AND-A-CLOSING-MARKER The block is bounded by an opening marker and a closing marker, each
+alone on its own line. @impl/done
+
+##FOUR-PROPERTIES-ARE-NON-NEGOTIABLE Four properties are non-negotiable. @impl/done
 
 | Property | Requirement |
 |----------|-------------|
-| **Unique** | The marker string must not plausibly occur in host content. Namespace it with the tool's name — `# >>> toolname >>>`, `<toolname>`, `# BEGIN toolname`. A generic `# BEGIN` will collide. |
-| **Greppable** | Locatable by a plain line-anchored text scan — no format parser, no model. See the next section on why. |
-| **Paired** | A distinct open and close, so a byte scan yields an unambiguous region, not a single sentinel whose end must be guessed. |
-| **Self-documenting** | The first line *inside* the block carries a do-not-edit notice, so a human reading the host file learns the region is managed without consulting docs. |
+| ##ROW-MARKER-UNIQUE **Unique** @impl/done | The marker string must not plausibly occur in host content. Namespace it with the tool's name — `# >>> toolname >>>`, `<toolname>`, `# BEGIN toolname`. A generic `# BEGIN` will collide. @impl/done |
+| ##ROW-MARKER-GREPPABLE **Greppable** @impl/done | Locatable by a plain line-anchored text scan — no format parser, no model. See the next section on why. @impl/done |
+| ##ROW-MARKER-PAIRED **Paired** @impl/done | A distinct open and close, so a byte scan yields an unambiguous region, not a single sentinel whose end must be guessed. @impl/done |
+| ##ROW-MARKER-SELF-DOCUMENTING **Self-documenting** @impl/done | The first line *inside* the block carries a do-not-edit notice, so a human reading the host file learns the region is managed without consulting docs. @impl/done |
 
-A worked block, using bare tags (chosen here because the primary
-reader is an LLM, to which a tag reads unambiguously):
+##a-worked-block-using-bare-tags A worked block, using bare tags (chosen here because the primary
+reader is an LLM, to which a tag reads unambiguously): @impl/done
 
 ```
 <toolname>
@@ -73,7 +96,7 @@ reader is an LLM, to which a tag reads unambiguously):
 </toolname>
 ```
 
-Comment-style markers suit an rc file or ssh config equally well:
+##COMMENT-STYLE-MARKERS-SUIT-AN-RC-FILE-OR-SSH-CONFIG Comment-style markers suit an rc file or ssh config equally well: @impl/done
 
 ```
 # >>> toolname managed block >>>
@@ -84,90 +107,123 @@ export PATH="$PATH:/opt/toolname/bin"
 
 ### Version the marker format itself {#marker-version}
 
-The marker syntax is a wire format between your tool's past and
-future selves. If you ever need to change it, old blocks in the wild
-still carry the old markers. Carry a small version token in the
+##THE-MARKER-SYNTAX-IS-A-WIRE-FORMAT The marker syntax is a wire format between your tool's past and
+future selves. @impl/done
+
+##old-blocks-in-the-wild-still-carry-the-old-markers If you ever need to change it, old blocks in the wild
+still carry the old markers. @spec/done
+
+##CARRY-A-VERSION-TOKEN-IN-THE-OPENING-MARKER Carry a small version token in the
 opening marker (`<toolname v=1>`) or in the notice line, so a future
 release can recognise and migrate a v1 block instead of appending a
-duplicate v2 one beside it. Decide this before the first release —
+duplicate v2 one beside it. @impl/done
+
+##DECIDE-THE-VERSION-BEFORE-THE-FIRST-RELEASE Decide this before the first release —
 retrofitting a version onto an unversioned marker means one painful
-generation of heuristics.
+generation of heuristics. @impl/done
 
 ## Well-formedness: absent, present, malformed {#state-machine}
 
-Before writing, the tool classifies the host file by counting its
-own markers. There are exactly three states.
+##THE-TOOL-CLASSIFIES-THE-HOST-FILE-BEFORE-WRITING Before writing, the tool classifies the host file by counting its
+own markers. @impl/done
+
+##THERE-ARE-EXACTLY-THREE-STATES There are exactly three states. @impl/done
 
 | State | Marker count | Allowed action |
 |-------|-------------|----------------|
-| **Absent** | Zero markers | Create: append a fresh block (§verbs). |
-| **Present** | Exactly one opener, then exactly one closer, in order | Update or remove the body between them. |
-| **Malformed** | Anything else — two+ of either marker, an opener with no closer, a closer with no opener, or a closer before its opener | **Hard stop.** Change nothing; report. |
+| ##ROW-STATE-ABSENT **Absent** @impl/done | Zero markers @impl/done | Create: append a fresh block (§verbs). @impl/done |
+| ##ROW-STATE-PRESENT **Present** @impl/done | Exactly one opener, then exactly one closer, in order @impl/done | Update or remove the body between them. @impl/done |
+| ##ROW-STATE-MALFORMED **Malformed** @impl/done | Anything else — two+ of either marker, an opener with no closer, a closer with no opener, or a closer before its opener @impl/done | **Hard stop.** Change nothing; report. @impl/done |
 
-Malformed is the load-bearing state. A malformed managed block is
+##MALFORMED-IS-THE-LOAD-BEARING-STATE Malformed is the load-bearing state. @impl/done
+
+##A-MALFORMED-BLOCK-IS-ALWAYS-A-HUMANS-CALL A malformed managed block is
 **always a human's call**: the tool never guesses which of two
-blocks is canonical, never deletes a stray marker, never auto-repairs.
-It aborts the whole operation, names the file and the exact defect,
-and waits. The rationale is in
+blocks is canonical, never deletes a stray marker, never auto-repairs. @impl/done
+
+##IT-ABORTS-NAMES-THE-DEFECT-AND-WAITS It aborts the whole operation, names the file and the exact defect,
+and waits. @impl/done
+
+##auto-repair-rationale-pointer The rationale is in
 [`rejected-designs.md`](rejected-designs.md#auto-repair): auto-repair
 destroys the evidence a human needs and may destroy user content
-that drifted into the wrong side of a marker.
+that drifted into the wrong side of a marker. @spec/done
 
 ## The three verbs {#verbs}
 
-Everything the tool does to the block is one of three operations.
+##EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS Everything the tool does to the block is one of three operations. @impl/done
 
-- **Create** — the file is *absent* of a block. Append the block at
+- ##VERB-CREATE **Create** — the file is *absent* of a block. Append the block at
   the **end of the file**, preceded by one blank line of separation.
   If the file itself does not exist, create it containing only the
   block. End-of-file is the humble default: the tool does not claim
-  the attention-priority top of a shared file.
-- **Update** — the file is *present*. Replace the content between the
+  the attention-priority top of a shared file. @impl/done
+- ##VERB-UPDATE **Update** — the file is *present*. Replace the content between the
   markers with freshly generated content. The markers themselves,
   and every byte outside them, are untouched. If the new body is
-  byte-identical to the old, write nothing (§no-op).
-- **Remove** — the file is *present* and the tool is uninstalling.
+  byte-identical to the old, write nothing (§no-op). @impl/done
+- ##VERB-REMOVE **Remove** — the file is *present* and the tool is uninstalling.
   Delete the block **and its separation** — the blank line the create
   step added — leaving the surrounding content byte-identical to what
   it was before the block ever existed. A remove that leaves a
-  dangling blank line is a remove with a bug.
+  dangling blank line is a remove with a bug. @impl/done
 
 ### Placement belongs to the user {#placement}
 
-The tool decides the block's position **exactly once** — at create,
-appended to the end. From then on the position is the **user's**.
-Update rewrites the body and never relocates the markers; if the user
+##THE-TOOL-DECIDES-THE-POSITION-EXACTLY-ONCE The tool decides the block's position **exactly once** — at create,
+appended to the end. @impl/done
+
+##FROM-THEN-ON-THE-POSITION-IS-THE-USERS From then on the position is the **user's**. @impl/done
+
+##UPDATE-NEVER-RELOCATES-THE-MARKERS Update rewrites the body and never relocates the markers; if the user
 moved the block to the top of the file, the tool splices it in place,
-wherever they put it. Honouring that lets the user tune how strongly
+wherever they put it. @impl/done
+
+##honouring-position-lets-the-user-tune-the-weight Honouring that lets the user tune how strongly
 the block weighs: at the top of an instruction file it reads as a
-first, system-prompt-like instruction; at the bottom it is a sidecar.
-The tool supplies a polite default and never overrides the choice.
+first, system-prompt-like instruction; at the bottom it is a sidecar. @spec/done
+
+##THE-TOOL-SUPPLIES-A-DEFAULT-AND-NEVER-OVERRIDES-THE-CHOICE The tool supplies a polite default and never overrides the choice. @impl/done
 
 ## Classify at plan time, not mid-write {#plan-time}
 
-Run the absent / present / malformed classification **before** any
-mutation begins — in a planning pass that touches nothing. A tool
+##CLASSIFY-BEFORE-ANY-MUTATION-BEGINS Run the absent / present / malformed classification **before** any
+mutation begins — in a planning pass that touches nothing. @impl/done
+
+##a-half-applied-change-has-no-clean-state-to-return-to A tool
 that discovers a malformed block halfway through a multi-file write
 has already half-applied its change: some files rewritten, one
-unwritable, no clean state to return to. Classifying every target
+unwritable, no clean state to return to. @spec/done
+
+##CLASSIFYING-UP-FRONT-FAILS-FAST-AND-CLEAN Classifying every target
 file up front means a malformed block fails the operation **fast and
 clean** — nothing is touched until every file is known to be
-writable. The mutation phase should never discover a surprise.
+writable. @impl/done
+
+##THE-MUTATION-PHASE-SHOULD-NEVER-DISCOVER-A-SURPRISE The mutation phase should never discover a surprise. @impl/done
 
 ## The byte-identical no-op {#no-op}
 
-If the freshly generated body equals the existing body, **do not
-rewrite the file**. An unconditional write churns the file's mtime
+##DO-NOT-REWRITE-WHEN-THE-BODY-IS-BYTE-IDENTICAL If the freshly generated body equals the existing body, **do not
+rewrite the file**. @impl/done
+
+##an-unconditional-write-churns-mtime-and-produces-a-no-op-diff An unconditional write churns the file's mtime
 and, worse, produces a no-op diff in version control that a reviewer
-must read to confirm it changes nothing. A tool that writes on every
+must read to confirm it changes nothing. @spec/done
+
+##an-ignored-diff-is-where-a-real-change-hides A tool that writes on every
 invocation trains its users to ignore its diffs — and an ignored diff
-is where a real change hides. Compare, then write only on a
-difference.
+is where a real change hides. @spec/done
+
+##COMPARE-THEN-WRITE-ONLY-ON-A-DIFFERENCE Compare, then write only on a
+difference. @impl/done
 
 ## Multi-tool cohabitation {#cohabitation}
 
-The law scales to any number of tools because each tool scans only
-for **its own** markers. Two tools, two blocks, one file:
+##THE-LAW-SCALES-BECAUSE-EACH-TOOL-SCANS-FOR-ITS-OWN-MARKERS The law scales to any number of tools because each tool scans only
+for **its own** markers. @impl/done
+
+##two-tools-two-blocks-one-file Two tools, two blocks, one file: @impl/done
 
 ```
 # Hand-written by the user — untouched by both tools.
@@ -184,23 +240,33 @@ export TOOLB_HOME=/opt/toolB
 # <<< toolB <<<
 ```
 
-Tool A counts `<toolA>` / `</toolA>` and finds exactly one ordered
-pair: *present*, splice its body. Tool B's markers are, to tool A,
-ordinary host content — outside its block, therefore preserved
-verbatim. Tool B sees the mirror image. Neither tool needs to know
-the other exists; the unique-marker requirement (§markers) is exactly
-what makes that independence hold. The user's hand-written alias is
-outside both blocks and survives every operation of both tools.
+##example-tool-a-finds-one-ordered-pair Tool A counts `<toolA>` / `</toolA>` and finds exactly one ordered
+pair: *present*, splice its body. @impl/done
 
-The failure this prevents is the reason marker uniqueness is not
+##example-tool-b-markers-are-ordinary-host-content-to-tool-a Tool B's markers are, to tool A,
+ordinary host content — outside its block, therefore preserved
+verbatim. @impl/done
+
+##example-tool-b-sees-the-mirror-image Tool B sees the mirror image. @impl/done
+
+##NEITHER-TOOL-NEEDS-TO-KNOW-THE-OTHER-EXISTS Neither tool needs to know
+the other exists; the unique-marker requirement (§markers) is exactly
+what makes that independence hold. @impl/done
+
+##THE-USERS-HAND-WRITTEN-CONTENT-SURVIVES-BOTH-TOOLS The user's hand-written alias is
+outside both blocks and survives every operation of both tools. @impl/done
+
+##MARKER-UNIQUENESS-PREVENTS-SILENT-MUTUAL-CORRUPTION The failure this prevents is the reason marker uniqueness is not
 optional: if both tools used a generic `# BEGIN` / `# END`, each would
 match the other's block, and the second tool to run would splice its
-body into the first tool's region — silent mutual corruption.
+body into the first tool's region — silent mutual corruption. @impl/done
 
 ## Re-derive for your project {#re-derive}
 
-This document states the practice tool-neutrally. Adapt it by handing
-your agent the task, not a copied template:
+##this-document-states-the-practice-tool-neutrally This document states the practice tool-neutrally. @impl/done
+
+##ADAPT-IT-BY-HANDING-YOUR-AGENT-THE-TASK Adapt it by handing
+your agent the task, not a copied template: @impl/done
 
 ```
 Read spec/flows/managed-blocks/ end to end. Then design the managed
@@ -221,14 +287,14 @@ Show me the design before writing any code.
 
 ## Summary {#summary}
 
-- A whole-file rewrite of a shared file is a data-loss event. Own one
-  delimited block; never touch a byte outside it.
-- Markers must be unique, greppable, paired, and carry an internal
-  do-not-edit notice. Version the marker format from day one.
-- Three states: absent → create at end of file; present → update or
-  remove the body; malformed → hard stop, human decides.
-- Remove deletes the block *and* its separation, restoring the file
-  byte-for-byte. Never rewrite when the result is byte-identical.
-- Classify at plan time so mutation never discovers a surprise.
-- Two tools cohabit because each scans only for its own markers —
-  which is why the markers must be unique.
+- ##SUM-A-WHOLE-FILE-REWRITE-IS-A-DATA-LOSS-EVENT A whole-file rewrite of a shared file is a data-loss event. Own one
+  delimited block; never touch a byte outside it. @spec/done
+- ##SUM-MARKER-PROPERTIES-AND-VERSIONING Markers must be unique, greppable, paired, and carry an internal
+  do-not-edit notice. Version the marker format from day one. @impl/done
+- ##SUM-THREE-STATES Three states: absent → create at end of file; present → update or
+  remove the body; malformed → hard stop, human decides. @impl/done
+- ##SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING Remove deletes the block *and* its separation, restoring the file
+  byte-for-byte. Never rewrite when the result is byte-identical. @impl/done
+- ##SUM-CLASSIFY-AT-PLAN-TIME Classify at plan time so mutation never discovers a surprise. @impl/done
+- ##SUM-TWO-TOOLS-COHABIT-BECAUSE-MARKERS-ARE-UNIQUE Two tools cohabit because each scans only for its own markers —
+  which is why the markers must be unique. @impl/done

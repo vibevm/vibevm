@@ -1,110 +1,165 @@
 # Rejected designs {#root}
 
-**Scope of this document.** Four designs that look reasonable and are
+<status stage="spec" state="done"/>
+
+##scope-of-this-document **Scope of this document.** Four designs that look reasonable and are
 wrong, each with its full reasoning, plus the exact hard-stop drill
-the tool runs when it meets a malformed block. These are the shortcuts
+the tool runs when it meets a malformed block. @impl/done
+
+##catalogue-the-temptations-once These are the shortcuts
 every author of a file-writing tool is tempted by; catalogue them once
-so the temptation is answered before it costs a user's data.
+so the temptation is answered before it costs a user's data. @spec/done
 
 ## A sidecar file instead of a block {#sidecar}
 
-*The design.* Do not touch the host file at all. Write the tool's
+##SIDECAR-DESIGN-DO-NOT-TOUCH-THE-HOST-FILE *The design.* Do not touch the host file at all. @spec/done
+
+##SIDECAR-DESIGN-WRITE-INTO-A-COMPANION-FILE Write the tool's
 content into a companion file next to it — `.tool/redirect`,
 `CLAUDE.local.md`, `~/.toolrc` — and point the real consumer at the
-sidecar.
+sidecar. @spec/done
 
-*Why it is rejected.* The entire value of a host file like
+##sidecar-why-the-host-files-value-is-zero-config-reading *Why it is rejected.* The entire value of a host file like
 `CLAUDE.md`, `~/.bashrc`, or `ssh_config` is that its consumer **already
-reads it, with zero configuration**. That is the property you are
-buying by writing there. A sidecar the consumer does not natively read
+reads it, with zero configuration**. @spec/done
+
+##sidecar-that-is-the-property-you-are-buying That is the property you are
+buying by writing there. @spec/done
+
+##SIDECAR-FORFEITS-THE-ZERO-CONFIGURATION-PROPERTY A sidecar the consumer does not natively read
 forfeits exactly that property: now something must be taught to read
 the sidecar, and that teaching step is one more thing to install, get
-wrong, and drift. Users read the host file — it is where they look for
-what is in effect. Content exiled to a sidecar is content nobody sees
-until it misbehaves. The sidecar trades a solved problem (write
-politely into the file everyone reads) for an unsolved one (make
-everyone read a new file).
+wrong, and drift. @spec/done
 
-A sidecar *is* the right answer for large payloads — but as a
-complement to the block, not a replacement. See
+##sidecar-users-read-the-host-file Users read the host file — it is where they look for
+what is in effect. @spec/done
+
+##sidecar-content-exiled-is-content-nobody-sees Content exiled to a sidecar is content nobody sees
+until it misbehaves. @spec/done
+
+##SIDECAR-TRADES-A-SOLVED-PROBLEM-FOR-AN-UNSOLVED-ONE The sidecar trades a solved problem (write
+politely into the file everyone reads) for an unsolved one (make
+everyone read a new file). @spec/done
+
+##A-SIDECAR-IS-RIGHT-FOR-LARGE-PAYLOADS-AS-A-COMPLEMENT A sidecar *is* the right answer for large payloads — but as a
+complement to the block, not a replacement. @impl/done
+
+##adoption-guide-pointer See
 [`adoption-guide.md`](adoption-guide.md#what-belongs) on keeping the
-block small and pointing it at tool-owned files.
+block small and pointing it at tool-owned files. @impl/done
 
 ## Model-based or heuristic block detection {#model-detection}
 
-*The design.* Instead of exact markers, find the block by
+##MODEL-DETECTION-DESIGN-FIND-THE-BLOCK-BY-INTELLIGENCE *The design.* Instead of exact markers, find the block by
 intelligence: "locate the region that looks like the tool's output,"
 possibly by asking an LLM, possibly by a fuzzy match against the last
-thing written.
+thing written. @spec/done
 
-*Why it is rejected.* The region gates a **mutating write** to a file
-full of someone else's data. The gate on a destructive operation must
+##model-detection-why-the-region-gates-a-mutating-write *Why it is rejected.* The region gates a **mutating write** to a file
+full of someone else's data. @spec/done
+
+##THE-GATE-ON-A-DESTRUCTIVE-OPERATION-MUST-BE-DETERMINISTIC The gate on a destructive operation must
 be **deterministic** — the same input yields the same region, every
-run, on every machine, forever. A model or a heuristic is
+run, on every machine, forever. @spec/done
+
+##a-model-is-nondeterministic-by-construction A model or a heuristic is
 nondeterministic by construction: it returns "probably here," and a
 "probably" that is wrong once has overwritten content that does not
-belong to the tool. There is no acceptable false-positive rate for
-"which bytes may I destroy." A plain line-anchored byte scan for a
+belong to the tool. @spec/done
+
+##no-acceptable-false-positive-rate-for-which-bytes-to-destroy There is no acceptable false-positive rate for
+"which bytes may I destroy." @spec/done
+
+##A-BYTE-SCAN-IS-THE-ONLY-CORRECT-DESIGN A plain line-anchored byte scan for a
 unique marker is not a lesser version of smart detection; it is the
 only correct design, because it is the only one whose answer you can
-prove before you write. Determinism is not a performance choice here —
-it is the safety property.
+prove before you write. @spec/done
+
+##DETERMINISM-IS-THE-SAFETY-PROPERTY Determinism is not a performance choice here —
+it is the safety property. @spec/done
 
 ## Auto-repairing a malformed block {#auto-repair}
 
-*The design.* The file has two opening markers, or an opener with no
-closer. Be helpful: delete the surplus marker, keep the first block,
-and proceed.
+##AUTO-REPAIR-DESIGN-THE-FILE-IS-MALFORMED *The design.* The file has two opening markers, or an opener with no
+closer. @spec/done
 
-*Why it is rejected.* A malformed block is **evidence** — of a failed
+##AUTO-REPAIR-DESIGN-BE-HELPFUL-AND-PROCEED Be helpful: delete the surplus marker, keep the first block,
+and proceed. @spec/done
+
+##A-MALFORMED-BLOCK-IS-EVIDENCE *Why it is rejected.* A malformed block is **evidence** — of a failed
 previous write, a bad merge, a hand-edit that went wrong, or two tool
-versions disagreeing. Auto-repair destroys that evidence before a
+versions disagreeing. @spec/done
+
+##auto-repair-destroys-evidence-and-guesses Auto-repair destroys that evidence before a
 human can read it, and the "repair" is a guess about which of two
-regions is canonical. Guess wrong and you have deleted the block the
+regions is canonical. @spec/done
+
+##auto-repair-guess-wrong-and-you-delete-the-wanted-block Guess wrong and you have deleted the block the
 user actually wanted and kept the stale one — silently, in the name of
-being helpful. The tool has no basis for the guess: nothing in the
-file says which duplicate is intended. Worse, user content may have
+being helpful. @spec/done
+
+##the-tool-has-no-basis-for-the-guess The tool has no basis for the guess: nothing in the
+file says which duplicate is intended. @spec/done
+
+##user-content-may-have-drifted-between-the-stray-markers Worse, user content may have
 drifted *between* the stray markers, so deleting a marker can delete
-the user's own lines with it. A malformed block is exactly the case
+the user's own lines with it. @spec/done
+
+##A-MALFORMED-BLOCK-IS-WHERE-THE-TOOL-MUST-STOP-AND-DEFER A malformed block is exactly the case
 where the tool must stop and defer to the one party who knows what was
-meant. Hard stop, precise report, human decides (§drill).
+meant. @spec/done
+
+##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done
 
 ## Whole-file ownership {#whole-file}
 
-*The design.* Skip blocks entirely: the tool owns the whole file and
-regenerates it on every run. Simple, and no marker machinery.
+##WHOLE-FILE-DESIGN-THE-TOOL-OWNS-THE-WHOLE-FILE *The design.* Skip blocks entirely: the tool owns the whole file and
+regenerates it on every run. @spec/done
 
-*Why it is mostly rejected — and the narrow case where it is fine.*
+##whole-file-design-simple-and-no-marker-machinery Simple, and no marker machinery. @spec/done
+
+##WHOLE-FILE-REGENERATION-IS-ACCEPTABLE-ONLY-WHEN-TOOL-OWNED *Why it is mostly rejected — and the narrow case where it is fine.*
 Whole-file regeneration is acceptable **only** when the file is 100%
 tool-owned and marked as such — a generated `.lock` file, a
 `tool-cache.json`, a file whose first line says "generated file — do
-not edit, your changes will be lost." In that case there is no
-co-tenant, so there is nothing to protect.
+not edit, your changes will be lost." @impl/done
 
-The trap is that ownership is not a decision the tool gets to keep.
-The moment a human edits the file — and they will, if it is readable
+##in-that-case-there-is-no-co-tenant-to-protect In that case there is no
+co-tenant, so there is nothing to protect. @spec/done
+
+##OWNERSHIP-IS-NOT-A-DECISION-THE-TOOL-GETS-TO-KEEP The trap is that ownership is not a decision the tool gets to keep. @spec/done
+
+##a-human-edit-makes-you-a-co-tenant The moment a human edits the file — and they will, if it is readable
 and sits somewhere they look — you have a co-tenant, and whole-file
-regeneration silently deletes their edit on the next run. So the test
+regeneration silently deletes their edit on the next run. @spec/done
+
+##THE-TEST-IS-CAN-ANYONE-ELSE-PLAUSIBLY-WRITE-HERE So the test
 is not "did I intend to own this file" but "can anyone else plausibly
-write here." If yes, you are a co-tenant and you own a block, not the
-file. Reserve whole-file ownership for files that are unmistakably,
+write here." @impl/done
+
+##IF-YES-YOU-OWN-A-BLOCK-NOT-THE-FILE If yes, you are a co-tenant and you own a block, not the
+file. @impl/done
+
+##RESERVE-WHOLE-FILE-OWNERSHIP-AND-MARK-IT-LOUDLY Reserve whole-file ownership for files that are unmistakably,
 permanently machine-only, and mark them loudly so no human mistakes
-them for editable.
+them for editable. @impl/done
 
 ## The malformed-state drill {#drill}
 
-When classification (see
+##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT When classification (see
 [`MANAGED-BLOCKS-PROTOCOL.md`](MANAGED-BLOCKS-PROTOCOL.md#state-machine))
 returns *malformed*, the tool aborts the whole operation and prints a
-report with three parts. Nothing is written.
+report with three parts. @impl/done
+
+##NOTHING-IS-WRITTEN Nothing is written. @impl/done
 
 | Part | Content |
 |------|---------|
-| **What I found** | The file path and the exact defect, with line numbers: "two `<toolname>` opening markers, at lines 12 and 40." |
-| **What I expected** | The well-formed shape: "either zero markers, or exactly one `<toolname>` … `</toolname>` pair in order." |
-| **How to unblock** | The precise human action: "keep the block you want, delete the other opening marker and its closing marker, then re-run." |
+| ##ROW-REPORT-WHAT-I-FOUND **What I found** @impl/done | The file path and the exact defect, with line numbers: "two `<toolname>` opening markers, at lines 12 and 40." @impl/done |
+| ##ROW-REPORT-WHAT-I-EXPECTED **What I expected** @impl/done | The well-formed shape: "either zero markers, or exactly one `<toolname>` … `</toolname>` pair in order." @impl/done |
+| ##ROW-REPORT-HOW-TO-UNBLOCK **How to unblock** @impl/done | The precise human action: "keep the block you want, delete the other opening marker and its closing marker, then re-run." @impl/done |
 
-A worked message:
+##a-worked-message A worked message: @impl/done
 
 ```
 error: managed block in CLAUDE.md is malformed — aborting, nothing written.
@@ -118,27 +173,27 @@ error: managed block in CLAUDE.md is malformed — aborting, nothing written.
 No files were changed.
 ```
 
-Three properties make this drill correct:
+##THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT Three properties make this drill correct: @impl/done
 
-- **It changes nothing.** The file is left exactly as found, so the
-  human debugs the real state, not a half-repaired one.
-- **It is specific.** Line numbers and the exact defect mean the human
-  fixes it in seconds, without opening the tool's source.
-- **It names the unblocking action.** The report ends by telling the
+- ##DRILL-IT-CHANGES-NOTHING **It changes nothing.** The file is left exactly as found, so the
+  human debugs the real state, not a half-repaired one. @impl/done
+- ##DRILL-IT-IS-SPECIFIC **It is specific.** Line numbers and the exact defect mean the human
+  fixes it in seconds, without opening the tool's source. @impl/done
+- ##DRILL-IT-NAMES-THE-UNBLOCKING-ACTION **It names the unblocking action.** The report ends by telling the
   human precisely what to do, so a hard stop is a thirty-second detour,
-  not a support ticket.
+  not a support ticket. @impl/done
 
 ## Summary {#summary}
 
-- **Sidecar** — forfeits the one property that made the host file
-  worth writing to: its consumer already reads it.
-- **Model / heuristic detection** — a nondeterministic gate on a
+- ##SUM-SIDECAR-FORFEITS-THE-HOST-FILES-ONE-PROPERTY **Sidecar** — forfeits the one property that made the host file
+  worth writing to: its consumer already reads it. @spec/done
+- ##SUM-MODEL-DETECTION-IS-A-NONDETERMINISTIC-GATE **Model / heuristic detection** — a nondeterministic gate on a
   destructive write; the region you may overwrite must be provable
-  before you write.
-- **Auto-repair** — destroys evidence and guesses which region is
-  canonical; may delete user content that drifted between markers.
-- **Whole-file ownership** — fine only for permanently machine-only
+  before you write. @spec/done
+- ##SUM-AUTO-REPAIR-DESTROYS-EVIDENCE-AND-GUESSES **Auto-repair** — destroys evidence and guesses which region is
+  canonical; may delete user content that drifted between markers. @spec/done
+- ##SUM-WHOLE-FILE-OWNERSHIP-IS-FOR-MACHINE-ONLY-FILES **Whole-file ownership** — fine only for permanently machine-only
   files, marked loudly; the moment a human edits it, you are a
-  co-tenant and owe them a block.
-- **Malformed → the drill**: change nothing, report what was found vs
-  expected, name the exact human action that unblocks.
+  co-tenant and owe them a block. @impl/done
+- ##SUM-MALFORMED-GOES-TO-THE-DRILL **Malformed → the drill**: change nothing, report what was found vs
+  expected, name the exact human action that unblocks. @impl/done
