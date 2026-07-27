@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Fifty rulings now, of which two are struck (18, 19).** They accumulate in
+**Fifty-two rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -460,6 +460,24 @@ described mechanism `@impl/done`, a claim about how humans and models behave
 largest block of `@spec`. **Left as the executor drew it**; if a future batch on
 outside-world subject matter disagrees, that disagreement is the evidence a
 ruling would need.
+
+### Added by the B13 pass (2026-07-27) {#locked-b13}
+
+51. **The pointer unit is `##sibling-document-pointers`.** Measured across the
+    landed corpus: **7 packages to 2** — `addressable-specs`, `spec-genres`,
+    `wal`, `qualified-naming`, `source-mirrors`, `campaign-plans`,
+    `operating-modes` against `decision-records` and `health-audit`. *(B13's
+    brief said «three batches to two», counting batches and omitting three B9
+    packages; the correction strengthens the ruling rather than reversing it.)*
+    **Known cost, accepted:** `secrets-hygiene/…/scope-discipline.md` calls
+    itself «the **companion** to the four laws» in the author's own words, so
+    its id now contradicts its sentence. Uniform ids beat locally apt ones —
+    the id is an address, not a description.
+52. **An enumeration BEFORE the colon, with the claim after it, stays whole.**
+    «Publish tokens, registry credentials, provider keys: none of them are
+    exported into a process running third-party code.» Every colon ruling
+    (22, 35, 45, 48, 49) assumes lead-then-items and none reaches this shape.
+    Ruling 3 decides it: splitting leaves the claim with nowhere to live.
 
 ## Boundaries {#boundaries}
 

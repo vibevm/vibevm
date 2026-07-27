@@ -15,8 +15,21 @@ counted two superseded slots that nothing resolves to._
 predicted units  ≈  1.08–1.15 × sentences  +  pre-existing list items  +  table cells
 ```
 
-**Count `sentences` by THIS rule, or the coefficient means nothing** (B12's
-rule, which reproduces B11's published figure exactly):
+**⚠️ The quantity is TERMINATORS UNDER THE REGEX BELOW, not sentences.** B13
+measured the gap: over its fifteen files the rule reads **274** where a true
+sentence count is **≈320**, a structural **+17 %**. 34 paragraphs end in a colon
+before a fence or a list and are never counted; 13 terminators are swallowed by
+a following `**` or backtick because the lookahead wants whitespace.
+
+**The coefficient is bound to that undercount, so do not "fix" the counter.**
+Anyone who repairs it toward real sentences reads ≈320 on B13, derives a
+coefficient near **0.95**, and sizing with 1.08 then over-predicts by an eighth.
+If the counter is ever corrected, **every coefficient in the table below must be
+re-derived in the same commit.** The word «sentences» is kept below only because
+the table's numbers were produced under it; read it as shorthand for the regex.
+
+**Count by THIS rule, or the coefficient means nothing** (B12's rule, which
+reproduces B11's published figure exactly):
 
 - **Universe:** paragraph units only — progress-core's own `Para`/`Lead` facts.
   List items and table cells are excluded; the formula adds each back at 1.
@@ -39,6 +52,11 @@ back over three batches:
 | B10 | 338 | 201 | 130 | 696 | 700 | **−0.6 %** |
 | B11 | 382 | 145 | 119 | 677 | 682 | **−0.8 %** |
 | B12 | 320 | 159 | 96 | 601 | 624 | **−3.7 %** |
+| B13 | 274 | 168 | 82 | 546 | 555 | **−1.6 %** |
+
+**B13 was the first batch sized with the band before dispatch, and the band
+held**: predicted 543–565, measured 555, realised coefficient **1.113**. Five
+points now span **1.068–1.153**.
 
 **The coefficient has now moved twice.** B12 realised **1.153** units per
 paragraph-sentence against B11's 1.08, and 1.153 reproduces its 624 exactly.
@@ -169,7 +187,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B10~~ | `health-audit` + `conflict-protocol` + `managed-blocks` — **DONE**, 700 units, **0 unmarked** | 16 | 487 |
 | ~~B11~~ | `source-mirrors` + `tool-design-lessons` + `qualified-naming` — **DONE**, 682 units, **0 unmarked** | 15 | 451 |
 | ~~B12~~ | `campaign-plans` + `two-process-model` + `operating-modes` — **DONE**, 624 units, **0 unmarked** | 15 | 403 |
-| B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | 15 | 378 |
+| ~~B13~~ | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` — **DONE**, 555 units, **0 unmarked** | 15 | 378 |
 | B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 339 |
 | B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
 | B16 | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 | 10 | 232 |
