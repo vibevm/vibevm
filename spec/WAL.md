@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-26 (session end — **Phase B running, three batches landed;
-eleven findings; Phases T and G designed from scratch**)_
+_Updated: 2026-07-27 (session end — **Phase B ran B6→B13 plus DRIFT-037; corpus
+4 276 → 870; batch review became a tool**)_
 
 ## Current phase
 
@@ -9,24 +9,25 @@ eleven findings; Phases T and G designed from scratch**)_
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**34 of 202 package files marked; 4 276 unmarked facts remain** (measured, never
-decremented). B1+B2 closed `core-ai-native` (943 units / 16 files); B5 closed
-`go-ai-native-lang` (665 units / 19 files). Corpus **260 files** after two owner
-subtractions. Floor green, `progress check` clean, tree pushed.
+**870 unmarked facts remain** (measured, never decremented; 4 276 at the start of
+2026-07-27). The host corpus stays at **0**. Batches B1, B2 and **B5–B13** are
+done; **B14, B15 and B16 remain**. The last six batches each finished at **zero
+residual** — possible only since DRIFT-037 closed F-092.
 
-**Eleven findings, F-081…F-091, and the through-line matters more than any of
-them: three were the measuring instrument being wrong, not the corpus** — the
-floor gating a frozen slot, the parser blind to units its own grammar allows,
-the sync gate covering four of seven workspaces. Each was green and wrong. **A
-green panel reports what was checked and says nothing about what was covered.**
+**The mechanical half of batch review is now `cargo xtask batch-review`** — 14
+checks, 33 hermetic controls the floor runs on every commit. Three checks
+surface a judgement queue rather than passing verdict, and the output ends with
+what it did **not** check. **It has been wrong four times**, each time by
+approximating a rule instead of reading it; each fix carries the control that
+caused it.
 
-**Next: batch B6** (`typescript-ai-native-lang`, 18 files) — write a thin
-`MARKUP-B6.md` beside B5's and dispatch. The 29 locked rulings in
-`MARKUP-B1.md` bind it; **rulings 18 and 19 are struck.**
+**52 rulings are locked** in `MARKUP-B1.md`, two struck. **Ten findings this
+session, F-092…F-101**, and the sharpest is a class the campaign had not named:
+**an instruction that fails when followed** — a wiring recipe naming a path that
+does not exist, and six `vibe install` lines naming packages that were renamed.
 
-**Two phases were designed and not run:** Phase T (tests by swarm, between E and
-F) and Phase G (documentation as a package, after F). Both have full specs;
-Phase T also has a worker prompt and an operator runbook.
+**Next: B14** (`sync-from-code` + `licensing` + `manual-tests`, 16 files).
+`CONTINUE.md` §recipe carries the eight-step loop verbatim.
 
 ## Constraints — do not violate
 
@@ -181,19 +182,22 @@ Nothing running; the task queue is empty and the tree is clean.
 
 ## Next
 
-1. **B6** — `typescript-ai-native-lang`, 18 files. Thin brief, dispatch, review,
-   gate, commit. Then B7–B16.
-2. **Size batches with a ×1.6 multiplier.** `BATCH-PLAN.md`'s `facts` column is
-   a *pre-markup scan* count: B5 scanned 411 and finished at 665 units.
-3. **Open findings needing a task**: F-092 (`SKILL.md` frontmatter — 9 files,
-   one exemption in `blocks.rs`; **renumbered from F-083**, which DRIFT-031 had
-   already closed for the task-list gap), F-077's tail (`counters` written from one
-   computation, pinned by a test), F-089/090 (PROP-014 against itself).
-4. **Open findings needing the owner**: F-087 (17 commit bodies name a model;
-   uncleanable without a history rewrite the mirror law forbids), F-088
-   (`ATLAS.md` declares a generator that is tracked nowhere), F-078 (DRIFT-035
-   is written and deliberately **not dispatched**).
-5. **Before Phase G's manifest:** confirm «quick.dev (v2)» means **Qwik**.
+1. **B14** — `sync-from-code` + `licensing` + `manual-tests`, 16 files. Measure,
+   brief, dispatch to `opus5`, review with the tool, commit, push. Then B15, B16.
+2. **Size with the band, never a point.** `1.07–1.15 × terminators + items +
+   cells`. **The quantity is terminators under a recorded regex, not
+   sentences** — the coefficient is fitted to a 17 % undercount, and repairing
+   the counter toward its name breaks every prediction unless every coefficient
+   is re-derived in the same commit.
+3. **One wave-level DRIFT for F-097** — four dead package names across 21 files
+   and 33 references, six of them `vibe install` lines that cannot work. A fact
+   correction under sync-from-code, not a markup fix.
+4. **Open findings needing the owner**: F-087, F-088, F-078 (DRIFT-035 written,
+   deliberately not dispatched), and PROP-043 §2 — the spec names what a unit
+   **is** and never what structure **is**, a boundary two DRIFTs have now moved
+   in code.
+5. **Phases T and G are designed and unrun.** Phase T was rewritten this session
+   for GLM writers. **Do not start either without an explicit instruction.**
 
 ## Known issues
 
@@ -211,22 +215,27 @@ Nothing running; the task queue is empty and the tree is clean.
 
 ## Session context
 
-One long session that ran `vibe update` (the campaign's last unverified
-assumption — it held, and repointed the resolve off a stale second working copy
-for free), opened Phase B, landed three batches, closed six findings and opened
-eleven, and designed two phases that did not exist.
+One long session: nine batches, one parser fix, a review tool built and ported
+to Rust, and three successive corrections to the campaign's own sizing rule.
 
-**The pattern worth carrying forward is about this reviewer's own work.** Nine
-task files were written; **every executor that ran one found a factual error in
-it by measuring rather than trusting it.** Two premises died in a single task.
-One correction reached an answer already given to the owner and withdrew it. The
-stop rules caught all of them before the tree moved, which is the mechanism
-working — but the frequency is the lesson: **a current-state bullet written from
-reading is wrong about this codebase far more often than it is right, wherever a
-command could have checked it.**
+**The through-line is that the instruments kept being the thing that was
+wrong.** The review tool shipped four bugs and every one was the same mistake —
+a rule approximated instead of read: a bullet stripper that ate a `+` from
+prose, a shorthand pattern matching `@ts-ignore`, a heading test that also
+matched `##ANCHOR`, and a fence check that could not fire. Two were caught only
+because the tool and the gate **disagreed**, which is the entire argument for
+keeping the tool independent of `progress-core`.
 
-The second pattern is the same shape one level up. **A ledger entry is a claim
-with a date, and quoting it is not checking it.** Three stale lines cost real
-time, and the worst was in `CLAUDE.md` itself — it said `TASKS.md` did not
-exist, three months after it did, and only the editor's read-before-write guard
-stopped that claim from destroying the file.
+**The sizing rule was locked wrong twice and both times on too few points.** B9
+called two measurements «stable to 0.7 %», the plan promoted that to a rule, and
+B10 falsified it. B11 replaced it with a mechanism proven by a controlled pair —
+two documents identical in every respect but sentence count, whose multipliers
+differ by exactly that ratio. B13 then found the quantity is misnamed: it counts
+terminators, misses 17 % of real sentences, and the coefficient is fitted to the
+undercount. **Calling a measured quantity by the name of the thing it
+approximates is an invitation to improve it into wrongness.**
+
+**Fifteen of twenty-one briefs contained a factual error found by the batch that
+ran them** — including two of mine in one brief, and one that proved the plan's
+own arithmetic wrong. The habit that makes this work is not care; it is that
+every number comes from a command and every brief is still checked.
