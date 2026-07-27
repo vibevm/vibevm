@@ -41,6 +41,16 @@ reproduces B11's published figure exactly):
   case — measured across 148 paragraphs, zero occurrences of `e.g.`/`i.e.`/etc.
 - **A paragraph with no terminator counts as 1.** A multi-line blockquote is
   one paragraph.
+- **YAML frontmatter is structure, not a paragraph** (DRIFT-037). The rule said
+  "progress-core's own `Para`/`Lead` facts" and left this implicit; B14's
+  executor wrote a counter from the text alone, read the frontmatter of
+  `draft-eula/SKILL.md` as prose, and came out **+3 (262 against 259)** before
+  finding the omission. Any batch containing a `SKILL.md` is mis-sized by a
+  counter written from the recorded words alone.
+- **Fences are matched by RUN, not by prefix** (F-102). A block opened with four
+  backticks is not closed by a three-backtick line inside it. A counter that
+  gets this wrong reads *fewer* paragraphs than the gate, not more — it was an
+  eleven-unit gap on B14, and it is what surfaced the parser bug.
 
 Deconstruction produces roughly **one unit per sentence**, which is what it is
 for; paragraphs were only ever a proxy for sentences and a bad one. Measured
