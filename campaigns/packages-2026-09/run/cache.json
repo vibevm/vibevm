@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-27T09:46:29Z",
+  "updated_at": "2026-07-27T12:00:06Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -2909,57 +2909,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md": {
-      "content_hash": "85403f7f4f3c7821b30bafbac2b534299408f6e524a60a143b6565269d9db727",
+      "content_hash": "d6003091ae2a56d1528a5d6b88c91c1c0ed430884757492c5a61b99c89ebd317",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 15,
-        "unmarked_facts": 15
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 30,
+        "fact_count": 29,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 30,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md": {
-      "content_hash": "a070b23e544be31ffcf44e6419984a714412e036f9e87eaa8804dceae0825f0c",
+      "content_hash": "fcb692145a73bad6a2190c024920d48c0783231af0a1b412db5780799fcefc51",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 11,
-        "unmarked_facts": 11
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 15,
+        "fact_count": 14,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 15,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md": {
-      "content_hash": "b9069f295765d7faaef2267431e3c3bec0789c212a49f471b8e341dee444e216",
+      "content_hash": "1b506ae082ac082cbdf1a188de26e5cba74df3c4ba975928ba7c8449e0f32a11",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 40,
-        "unmarked_facts": 40
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 53,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md": {
-      "content_hash": "3cd3c84d77ca27acaf3d5a4dcdcf7bd2e455ae4fbd44f851f36881459fa2d164",
+      "content_hash": "f8dd2d1eb418bcfde0b1ee679ce844280da47421bd0676b43617ec056773be98",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 39,
-        "unmarked_facts": 39
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 63,
+        "fact_count": 62,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 63,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md": {
-      "content_hash": "cf6b172266daf6dd368dc0a9e652fe46ed403eb035fae67cc8de8fea9e4be789",
+      "content_hash": "3a4869c348da5f28f84e56a040c9709e444ad695fd5f79d40f12b3c87104c267",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 44,
-        "unmarked_facts": 44
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 58,
+        "fact_count": 57,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 58,
       "unit_count": 7,
       "issue_count": 0
     },
@@ -3041,57 +3101,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md": {
-      "content_hash": "b64b5b414d9e3689f57857f64a3f01cc1c537c600b31ef8cc7a1b71ddf6fa55a",
+      "content_hash": "cf1ac7251b5bf3b0996d5c403f2d9a553d63c777b0ea98ed92908bc953934eb1",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 14,
-        "unmarked_facts": 14
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 24,
+        "fact_count": 23,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 24,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md": {
-      "content_hash": "498e8d546527552ab38b5ab846c3178ae472db0a44837684e51ed6558aa3c555",
+      "content_hash": "057a74341e50fc52171b9d557daae76515e1cd7a9b420b3fc30ff51ee69d41a1",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 10,
-        "unmarked_facts": 10
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 17,
+        "fact_count": 16,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 17,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md": {
-      "content_hash": "6e1f6272a8d0994872f433e66b6f133c04d02621b0322fcee7c3de72843dce17",
+      "content_hash": "8d3cad84987576f2dbd523c83b2dfe95511cafac783c166d19805954105f34e1",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 38,
-        "unmarked_facts": 38
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 64,
+        "fact_count": 63,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 64,
       "unit_count": 10,
       "issue_count": 0
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md": {
-      "content_hash": "b3cd0d195fb79a1c8ceb33be3d8afcedb3950d229de122ae446c0129611072bb",
+      "content_hash": "2b5b0930a3d7a3cc1bd8fc50b1ffa92edc496f932875975c21dc99f519a6b022",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 42,
-        "unmarked_facts": 42
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 57,
+        "fact_count": 56,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 57,
       "unit_count": 8,
       "issue_count": 0
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md": {
-      "content_hash": "f0c79a218a7b4800a1f1ab1839d0517b4484121a68ff0014b1489b8b207b87b5",
+      "content_hash": "88ecac0157075218016b0785e401ec0500fd4592f63b6e644de654973ec28cf0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 47,
-        "unmarked_facts": 47
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 68,
+        "fact_count": 67,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 68,
       "unit_count": 10,
       "issue_count": 0
     },
@@ -3266,57 +3386,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md": {
-      "content_hash": "bc3200ac49ccf9604993ae25368eca84e171db829f92c3526a8376cb9f2bd2c9",
+      "content_hash": "461f4c04aae06345f8284099d141816c10632eb25e4be639e6df515830875af4",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 14,
-        "unmarked_facts": 14
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 20,
+        "fact_count": 19,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 20,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md": {
-      "content_hash": "915af16967e4fef88c3996f436dd136b5f16483585a32afa8bbd3ffc3d178b30",
+      "content_hash": "76736404c105718e2d4560629b031f32bc8191139b697ec52ab5ef0d31666d73",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 10,
-        "unmarked_facts": 10
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 13,
+        "fact_count": 12,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 13,
       "unit_count": 3,
       "issue_count": 0
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md": {
-      "content_hash": "108e78b1ab2a4311fd0486d01c4945051f708b88a6d06f78784183223d172b51",
+      "content_hash": "db953f92f66c2172d8bfcb9fb6a0acdb9e24ab3b322985c4c9d6fc70f298fd2d",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 55,
-        "unmarked_facts": 55
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 72,
+        "fact_count": 71,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 72,
       "unit_count": 10,
       "issue_count": 0
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md": {
-      "content_hash": "18cfefc18ba763ef71fc36372b284dfdda0a30939322159d11615b380087245e",
+      "content_hash": "5b46bf5ce930e664a0d0eb51a58f2fc1f95ee7682e18d3eb9fb70099cf487d4c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 36,
-        "unmarked_facts": 36
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 64,
+        "fact_count": 63,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 64,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md": {
-      "content_hash": "2b8609927c69ba21243316a492fb7b045c185f6258ad88f159b4ac5362f03748",
+      "content_hash": "4a9cb7bcf952009218c870b90b5b956889fae284e5599fef3db8e69b0fccdeae",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 36,
-        "unmarked_facts": 36
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 79,
+        "fact_count": 78,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 79,
       "unit_count": 9,
       "issue_count": 0
     },

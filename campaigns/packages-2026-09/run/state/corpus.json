@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-27T09:46:29Z",
+  "updated_at": "2026-07-27T12:00:07Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -2304,56 +2304,86 @@
     },
     {
       "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 30,
       "units": 6,
-      "facts": 15,
-      "unmarked": 15,
+      "facts": 29,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 15,
       "units": 4,
-      "facts": 11,
-      "unmarked": 11,
+      "facts": 14,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 53,
       "units": 9,
-      "facts": 40,
-      "unmarked": 40,
+      "facts": 52,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 63,
       "units": 6,
-      "facts": 39,
-      "unmarked": 39,
+      "facts": 62,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 58,
       "units": 7,
-      "facts": 44,
-      "unmarked": 44,
+      "facts": 57,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -2436,56 +2466,86 @@
     },
     {
       "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 24,
       "units": 7,
-      "facts": 14,
-      "unmarked": 14,
+      "facts": 23,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 17,
       "units": 4,
-      "facts": 10,
-      "unmarked": 10,
+      "facts": 16,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 64,
       "units": 10,
-      "facts": 38,
-      "unmarked": 38,
+      "facts": 63,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 57,
       "units": 8,
-      "facts": 42,
-      "unmarked": 42,
+      "facts": 56,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 68,
       "units": 10,
-      "facts": 47,
-      "unmarked": 47,
+      "facts": 67,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -2631,56 +2691,86 @@
     },
     {
       "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 20,
       "units": 6,
-      "facts": 14,
-      "unmarked": 14,
+      "facts": 19,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 13,
       "units": 3,
-      "facts": 10,
-      "unmarked": 10,
+      "facts": 12,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 72,
       "units": 10,
-      "facts": 55,
-      "unmarked": 55,
+      "facts": 71,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 64,
       "units": 9,
-      "facts": 36,
-      "unmarked": 36,
+      "facts": 63,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 79,
       "units": 9,
-      "facts": 36,
-      "unmarked": 36,
+      "facts": 78,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
