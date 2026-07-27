@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Fifty-eight rulings now, of which two are struck (18, 19).** They accumulate in
+**Sixty-one rulings now, of which three are struck (18, 19, 45).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -409,7 +409,7 @@ justification in its own report that did not survive being checked.
     delegate» is three terms of one claim, exactly like ruling 20's own
     «keep the three layers apart: method, project, machine». Ruling 20 was
     stated as a tiebreaker for ruling 3 alone; it binds 34 as well.
-45. **The colon-segment tiebreaker, from a measured corroboration.** B10
+45. ~~**The colon-segment tiebreaker, from a measured corroboration.**~~ **STRUCK at B16 — see `#locked-b16`.** B10
     measured every colon decision B8 and B9 made: **every split had three or
     more post-colon segments; every keep had one.** So a colon with 3+ segments
     splits and a colon with 1 does not, which matches rulings 22 and 35 without
@@ -546,6 +546,37 @@ ruling would need.
     decides it, position does not. *(Ruling 51 is untouched for the ordinary
     case: a file with ONE pointer paragraph uses the uniform id whatever it
     points at, which 35 landed files do — 16 of them at a single link.)*
+
+### Added by the B16 pass — the last (2026-07-28) {#locked-b16}
+
+59. **A disjunctive colon cannot be bulleted.** When the post-colon segments are
+    joined by **or**, the colon does not split — a bulleted list is a
+    **conjunction**, so bulleting `A OR B` silently asserts both where the source
+    asserts either. That is a sense change, and ruling 3 outranks every colon
+    ruling.
+    Site: «`tcg_validate`'s `isError` mirrors the one-shot exit contract: an
+    error-grade diagnostic **OR** a non-baselined finding», in all three
+    `discipline-mcp-*.md` briefs. **Ruling 57 read literally splits it** — the
+    two are cases of what the lead names.
+    **This is the only place in fifty-eight rulings where following the list
+    produces a semantic edit**, which is why it is a ruling rather than a note.
+60. **`##FORM-ONLY` reaches separator punctuation.** A manufactured bullet keeps
+    the author's trailing `,` or `;` and its lowercase initial — the item is the
+    author's clause, unaltered, with a bullet character in front of it. No ruling
+    said so; it was derived by grepping the landed corpus, and every batch since
+    B1 has done it. Written down so the next one does not re-derive it.
+61. **Read the package's `vibe.toml` before marking any aggregator or member
+    list — even though you may not touch it.** Ruling 37 asks whether a member
+    «exists **and is pinned**», and the pinned half is unanswerable from the
+    prose. B16's two largest findings (F-113, F-114) both came out of that one
+    comparison, and no brief before it had asked for it.
+
+**Ruling 45 is struck.** Its converse has now failed twice — B12 kept a
+three-segment colon whole on a mechanical reason, and B16 kept one whole at six
+sites under ruling 57. «Every split had 3+ segments» remains true of the
+population that produced it; «3+ segments splits» was never implied by it, and
+stating it as a tiebreaker invited the wrong default. Rulings 3, 20, 35, 48, 49,
+57 and 59 decide colons; segment count decides nothing.
 
 ## Boundaries {#boundaries}
 
