@@ -369,28 +369,55 @@ fn flush_block(
 /// directive scanner, which ignores directives in fenced code the same way.
 pub(crate) fn fence_mask(lines: &[String]) -> Vec<bool> {
     let mut mask = vec![false; lines.len()];
-    let mut fence: Option<&'static str> = None;
+    let mut fence: Option<(char, usize)> = None;
     for (i, line) in lines.iter().enumerate() {
         let trimmed = line.trim_start();
         match fence {
-            Some(marker) => {
+            Some((ch, open)) => {
                 mask[i] = true;
-                if trimmed.starts_with(marker) {
+                if closes_fence(trimmed, ch, open) {
                     fence = None;
                 }
             }
             None => {
-                if trimmed.starts_with("```") {
-                    fence = Some("```");
-                    mask[i] = true;
-                } else if trimmed.starts_with("~~~") {
-                    fence = Some("~~~");
+                if let Some(open) = fence_run(trimmed) {
+                    fence = Some(open);
                     mask[i] = true;
                 }
             }
         }
     }
     mask
+}
+
+/// The fence run a line opens with — its character and how many of it.
+///
+/// Third site of one defect: a fence delimiter matched by *prefix* instead
+/// of by *run*. `progress-core`'s block scanner and the batch-review tool
+/// carried it too and were fixed together (campaign finding F-102); this
+/// crate is a separate consumer of the same Markdown, so it carries its own
+/// copy of the rule rather than a dependency edge.
+fn fence_run(trimmed: &str) -> Option<(char, usize)> {
+    let ch = trimmed.chars().next()?;
+    if ch != '`' && ch != '~' {
+        return None;
+    }
+    let len = trimmed.chars().take_while(|&c| c == ch).count();
+    (len >= 3).then_some((ch, len))
+}
+
+/// Whether `trimmed` closes a fence of character `ch` opened at run length
+/// `open`: same character, a run at least as long, **and nothing else on the
+/// line**.
+///
+/// That last clause is a second bug this function had on its own: it closed
+/// on any line merely starting with the delimiter, so an info-string line
+/// like `` ```rust `` inside a block ended it early and the code after it
+/// was scanned as prose. Demonstrated before it was fixed — the quoted
+/// heading below such a line became a real node in the tree.
+fn closes_fence(trimmed: &str, ch: char, open: usize) -> bool {
+    fence_run(trimmed).is_some_and(|(c, n)| c == ch && n >= open)
+        && trimmed.trim_end().chars().all(|c| c == ch)
 }
 
 /// Parse an ATX heading line into `(level, heading_text, anchor, trailing)`.

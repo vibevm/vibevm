@@ -84,6 +84,61 @@ after
     assert_eq!(t.len(), 2); // root + Real
 }
 
+/// A document that quotes fenced markdown opens with four backticks and
+/// holds three-backtick blocks as content. Closing the outer block on the
+/// inner opener puts the quoted headings back into the tree as real
+/// sections — which is what a manual-test template is made of.
+#[test]
+fn headings_inside_a_quoted_fence_are_not_nodes() {
+    let src = "\
+# Real {#real}
+````markdown
+# Quoted title
+```
+a command
+```
+## Quoted section
+````
+after
+";
+    let t = DocTree::parse(src);
+    assert!(t.find_by_anchor("real").is_some());
+    // Count the whole tree, never one node's children: a quoted `#` heading
+    // is level 1 and lands under the ROOT, so `children(real).is_empty()`
+    // passes while the tree is wrong. That probe was written first and it
+    // reported the bug as absent.
+    assert_eq!(t.len(), 2, "root + Real only");
+}
+
+/// A closer carries no info string: `` ```rust `` opens, never closes.
+/// Reading it as a closer ends the block early and everything after it
+/// inverts, exactly as a short run did.
+#[test]
+fn an_info_string_line_does_not_close_a_fence() {
+    let src = "\
+# Real {#real}
+```
+```rust
+# Fake heading still in code
+```
+after
+";
+    let t = DocTree::parse(src);
+    assert!(t.find_by_anchor("real").is_some());
+    assert_eq!(t.len(), 2, "root + Real only");
+}
+
+/// NEGATIVE CONTROL for the two above: an unfenced heading with no anchor
+/// IS a node, so their length assertions can actually fail.
+#[test]
+fn an_anchorless_heading_outside_a_fence_is_still_a_node() {
+    let src = "# Real {#real}\n## Plain heading, no anchor\nbody\n";
+    let t = DocTree::parse(src);
+    let real = t.find_by_anchor("real").expect("the one real heading");
+    assert_eq!(t.children(real).len(), 1);
+    assert_eq!(t.len(), 3, "root + Real + the plain heading");
+}
+
 #[test]
 fn duplicate_anchor_keeps_first_and_reports() {
     let src = "\
