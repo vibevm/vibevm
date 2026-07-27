@@ -188,7 +188,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B11~~ | `source-mirrors` + `tool-design-lessons` + `qualified-naming` — **DONE**, 682 units, **0 unmarked** | 15 | 451 |
 | ~~B12~~ | `campaign-plans` + `two-process-model` + `operating-modes` — **DONE**, 624 units, **0 unmarked** | 15 | 403 |
 | ~~B13~~ | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` — **DONE**, 555 units, **0 unmarked** | 15 | 378 |
-| B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 339 |
+| B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 338 |
 | B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
 | B16 | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 | 10 | 232 |
 
@@ -196,6 +196,14 @@ Two facts decide the batching, and neither is visible from the file count:
 retired `core-ai-native`'s third, F-091 dissolved `redbook`'s into B16, and B1–B2
 are done. `rust-ai-native` is already marked — it was the
 Phase A pilot.
+
+**B14 reads 338, not the 339 this row carried until now.** The row was last
+written 2026-07-26 13:38; DRIFT-037's parser fix landed 2026-07-27 01:06 and
+took the YAML frontmatter of `licensing`'s `draft-eula/SKILL.md` out of the unit
+count — DRIFT-037 measured that file at 8 units, the live gate now reads 7.
+**No other remaining row moves:** the nine in-corpus `SKILL.md` files are the
+three language stacks' six, `health-audit`'s, `wal`'s and this one, and only
+this one had not yet been marked. B15 and B16 ship none.
 
 ## What each batch owes
 
