@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-27T18:15:17Z",
+  "updated_at": "2026-07-27T19:12:49Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -2133,67 +2133,103 @@
     },
     {
       "path": "packages/org.vibevm.world/licensing/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 25,
       "units": 7,
-      "facts": 16,
-      "unmarked": 16,
+      "facts": 24,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 18,
       "units": 4,
-      "facts": 13,
-      "unmarked": 13,
+      "facts": 17,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 55,
       "units": 9,
-      "facts": 31,
-      "unmarked": 31,
+      "facts": 54,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 39,
       "units": 7,
-      "facts": 28,
-      "unmarked": 28,
+      "facts": 38,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/eula-template.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 23,
       "units": 6,
-      "facts": 20,
-      "unmarked": 20,
+      "facts": 22,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 15,
       "units": 3,
-      "facts": 7,
-      "unmarked": 7,
+      "facts": 14,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -2284,56 +2320,86 @@
     },
     {
       "path": "packages/org.vibevm.world/manual-tests/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 19,
       "units": 6,
-      "facts": 13,
-      "unmarked": 13,
+      "facts": 18,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 17,
       "units": 4,
-      "facts": 11,
-      "unmarked": 11,
+      "facts": 16,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 49,
       "units": 9,
-      "facts": 37,
-      "unmarked": 37,
+      "facts": 48,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 36,
       "units": 6,
-      "facts": 20,
-      "unmarked": 20,
+      "facts": 35,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 18,
       "units": 5,
-      "facts": 14,
-      "unmarked": 14,
+      "facts": 17,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -2786,56 +2852,86 @@
     },
     {
       "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 21,
       "units": 6,
-      "facts": 16,
-      "unmarked": 16,
+      "facts": 20,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/boot/20-flow-sync-from-code.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 20,
       "units": 4,
-      "facts": 15,
-      "unmarked": 15,
+      "facts": 19,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 54,
       "units": 11,
-      "facts": 37,
-      "unmarked": 37,
+      "facts": 53,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 49,
       "units": 12,
-      "facts": 30,
-      "unmarked": 30,
+      "facts": 48,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 37,
       "units": 12,
-      "facts": 19,
-      "unmarked": 19,
+      "facts": 36,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },

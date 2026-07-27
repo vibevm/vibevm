@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-27T18:15:17Z",
+  "updated_at": "2026-07-27T19:17:34Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -2798,68 +2798,140 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/licensing/v0.1.0/README.md": {
-      "content_hash": "ec0933226f9bf38746a2675a6f4695e70695644115d8fe62b33089e9f8a3a77b",
+      "content_hash": "c8b3340628329e0c6cfcee654fe2fa858c832eea7720668cd18c903a501bdaa1",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 16,
-        "unmarked_facts": 16
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 25,
+        "fact_count": 24,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 25,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md": {
-      "content_hash": "f6b0cbe36ddf8a130fd67bdb24df7a8b874472ac1fa144ecc1e570086a97e663",
+      "content_hash": "08fb98231b052b935c26fdc329f972b60c379c1e35ea318350ded75b0fd46fd9",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 18,
+        "fact_count": 17,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 18,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md": {
-      "content_hash": "4dd99b2071503b02666b23a5800f201121b1cb3d000c237dad364e8c0f3c83ac",
+      "content_hash": "769c27157f61669f39946e0822e254ee69c1d85884ea0f5b21ab355e74fe1364",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 31,
-        "unmarked_facts": 31
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 55,
+        "fact_count": 54,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 55,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md": {
-      "content_hash": "0ea9306cc4388c9bc554b94ae29153e1b61c7ae325085c15aeee7e38977351b6",
+      "content_hash": "3eceab77b197652870a15fdc5a4df0f39cb5208d1f783ce30939984e5d0bf52f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 28,
-        "unmarked_facts": 28
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 39,
+        "fact_count": 38,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 39,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/eula-template.md": {
-      "content_hash": "6e1d7989947359ab3b1cfd91bcc43c6b2344971333f37da7c5d0e2f1e2f24c3b",
+      "content_hash": "c87c14b0fb88520ff1a497b1d5db6bab7b0df490af5fc639b505085cf50201b5",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 20,
-        "unmarked_facts": 20
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 23,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md": {
-      "content_hash": "5200a3ceffc8f939ae73c603aa92a945b6c1107f0c42747e515e3fbd5d72b71b",
+      "content_hash": "284026e41462e23b89e59d9cadb9377ed3517c9283aa6ac9e7fde329ca4e88a9",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 7,
-        "unmarked_facts": 7
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 15,
+        "fact_count": 14,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 15,
       "unit_count": 3,
       "issue_count": 0
     },
@@ -2979,57 +3051,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/README.md": {
-      "content_hash": "5fd724debe3ed3cff188bfa54be6fd739f26b072d4e0a383a68f9d8b13797d15",
+      "content_hash": "3c6ed891d520198c57af2d49c4002da9ae5fe4987ad443054d5609be5d8323e2",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 19,
+        "fact_count": 18,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 19,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md": {
-      "content_hash": "6d0a4a0e5d43328f340c4f2c2599aa723844b47780f9099a1050b53cd4a2055d",
+      "content_hash": "14baaf6cbd3f48ba5423cfd7733187bcb5817a7e76caabf136e598c8c7c497a3",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 11,
-        "unmarked_facts": 11
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 17,
+        "fact_count": 16,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 17,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md": {
-      "content_hash": "490f73b4062dababf3687d9bde1eedbc876d2605a68dfa098b9b39d9b37ee099",
+      "content_hash": "5414aab581d54282c5e4cab2a20f9fe8fcf08c19663443053539e54fab34ca98",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 37,
-        "unmarked_facts": 37
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 49,
+        "fact_count": 48,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 49,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md": {
-      "content_hash": "f393eef8f7d165ad4f0c39b8c7c1a72089f27ef69cd68c620034a6e306b8ffc5",
+      "content_hash": "740faa44ff2f001b5f8dddf4f6f35210a8ed54f050db68e615b516897e47074f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 20,
-        "unmarked_facts": 20
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 36,
+        "fact_count": 35,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 36,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md": {
-      "content_hash": "f82aec83e167d62868ce7bb30a8b8849efea5eb73765eeb055735a04de481eb5",
+      "content_hash": "821150a0f7c20fe7b92bcd899720f05ff1aca409123d7bebf67dcb1d961a224c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 14,
-        "unmarked_facts": 14
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 18,
+        "fact_count": 17,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 18,
       "unit_count": 5,
       "issue_count": 0
     },
@@ -3631,57 +3763,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md": {
-      "content_hash": "e7e15a042deecbdc83a6a09dbef6687ba9c56ee532616f8cbf8bbfbfafeeaa8a",
+      "content_hash": "dc107c4ad69334416eed75d1631ad93d312d4cae1480c1aede9c855b125385fc",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 16,
-        "unmarked_facts": 16
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 21,
+        "fact_count": 20,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 21,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/boot/20-flow-sync-from-code.md": {
-      "content_hash": "dc727d851c9aa69154c75f2cd60c2c3ee0845fe18367eb5ee153177f5ac20bac",
+      "content_hash": "d2cd6b5a37cbe3df22a537ecc375415fae40a903cd1e00c3ce524572adb5ebac",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 15,
-        "unmarked_facts": 15
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 20,
+        "fact_count": 19,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 20,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md": {
-      "content_hash": "53927e2217006aa4d450fb8e05cb70a2fc46f8d4399716496abecbac1702ef4c",
+      "content_hash": "db55a7f66f31a63f82d9e90e6084fe82744f9bb4d160fd2ad9685f3b1fbc19a0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 37,
-        "unmarked_facts": 37
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 54,
+        "fact_count": 53,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 54,
       "unit_count": 11,
       "issue_count": 0
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md": {
-      "content_hash": "6088ae3917a7187d607fd15747af4680a3af1e0f6ca78b250aec4577a99d09dd",
+      "content_hash": "80c2c50ef2ab95440cd9c877cc5ae9d5543dcf4fc655d3c0d95c2d5136159c72",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 30,
-        "unmarked_facts": 30
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 49,
+        "fact_count": 48,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 49,
       "unit_count": 12,
       "issue_count": 0
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md": {
-      "content_hash": "b4306e80742a4e06385768c54cb4edc7d4b125d693b58bd81d475ffa6e4fee83",
+      "content_hash": "00d1f440620de3e59efe6aca7ef219e64f066b1a18147ca5455d8dd72e37d05f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 19,
-        "unmarked_facts": 19
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 37,
+        "fact_count": 36,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 37,
       "unit_count": 12,
       "issue_count": 0
     },
