@@ -36,6 +36,7 @@
 
 mod checks;
 mod fences;
+mod gate;
 mod index;
 mod refs;
 mod report;
@@ -47,6 +48,7 @@ use std::process::Command;
 use anyhow::{Context, Result};
 
 use checks::*;
+use gate::{c4_gate, c5_error_classes};
 use index::c11_task_index;
 use refs::c12_package_refs;
 use report::Report;

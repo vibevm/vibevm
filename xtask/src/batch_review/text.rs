@@ -362,6 +362,33 @@ pub(super) fn word_stream(text: &str) -> Vec<String> {
         .collect()
 }
 
+/// The same stream with ruling-47 hyphen joins collapsed: a token ending in
+/// `-` is glued to the token after it.
+///
+/// Ruling 47 licenses moving one word across a newline when an author's wrap
+/// left a hyphen at a line end, because `word-\nrest` renders as `word- rest`.
+/// No text byte changes, but the whitespace-split stream does — so a legal
+/// repair reads as a reworded sentence to [`word_stream`].
+///
+/// This does NOT relax C3. It is only ever used to *classify* an already-
+/// detected divergence: if the raw streams differ and the joined streams do
+/// not, the difference is exactly a hyphen join and belongs in a judgement
+/// queue rather than a failure. Anything else still fails. The tool's standing
+/// law is that an approximation may admit a candidate for checking and never
+/// suppress one, and reporting a licensed repair as an unexplained rewording
+/// is the same defect pointing the other way: it teaches the reviewer to
+/// discount C3.
+pub(super) fn hyphen_joined(words: &[String]) -> Vec<String> {
+    let mut out: Vec<String> = Vec::new();
+    for w in words {
+        match out.last_mut() {
+            Some(prev) if prev.ends_with('-') => prev.push_str(w),
+            _ => out.push(w.clone()),
+        }
+    }
+    out
+}
+
 /// Paragraphs sitting directly after a list item: `(line-no, first words)`.
 ///
 /// Matched on the result and then diffed against the base — a paragraph that
@@ -459,5 +486,39 @@ mod tests {
     fn a_heading_after_a_list_is_not_a_lazy_continuation() {
         let body = "# T {#root}\n\n- ##ITEM-ONE first @impl/done\n\n## Next section {#next}\n";
         assert!(lazy_signature(body).is_empty());
+    }
+
+    /// The first ruling-47 repair ever made (B14) failed C3, because moving a
+    /// word across a newline changes the whitespace-split stream while
+    /// changing no text byte. Joined on both sides, the two agree.
+    #[test]
+    fn a_wrapped_hyphen_repair_is_word_identical_once_joined() {
+        let wrapped = "followed by clause-by-\nclause commentary.\n";
+        let repaired = "followed by clause-by-clause\ncommentary.\n";
+        assert_ne!(
+            word_stream(wrapped),
+            word_stream(repaired),
+            "the raw streams must still differ, or C3 would never see it"
+        );
+        assert_eq!(
+            hyphen_joined(&word_stream(wrapped)),
+            hyphen_joined(&word_stream(repaired))
+        );
+    }
+
+    /// NEGATIVE CONTROL: joining does not make a real rewording disappear.
+    #[test]
+    fn a_reworded_sentence_survives_hyphen_joining() {
+        let a = word_stream("followed by clause-by-\nclause commentary.\n");
+        let b = word_stream("followed by clause-by-clause\nnotes.\n");
+        assert_ne!(hyphen_joined(&a), hyphen_joined(&b));
+    }
+
+    /// NEGATIVE CONTROL: a dropped word next to a hyphen is not absorbed.
+    #[test]
+    fn a_dropped_word_beside_a_hyphen_survives_joining() {
+        let a = word_stream("the pre- and post-conditions hold\n");
+        let b = word_stream("the pre- post-conditions hold\n");
+        assert_ne!(hyphen_joined(&a), hyphen_joined(&b));
     }
 }

@@ -1,9 +1,10 @@
-//! The checks themselves — C1 to C10, each writing into a [`Report`].
+//! The checks themselves — C1 to C12, each writing into a [`Report`].
 //!
-//! Pass/fail checks state a fact about the batch. C2 and C10 are *surfaced*
-//! rather than failed: they hand the reviewer a queue to judge, because
-//! neither "is this structural insertion a repair" nor "is this `@unknown`
-//! honest" is a question a checker may answer.
+//! Pass/fail checks state a fact about the batch. C2, C3c and C10 are
+//! *surfaced* rather than failed: they hand the reviewer a queue to judge,
+//! because neither "is this structural insertion a repair", "is this hyphen a
+//! wrap or a compound", nor "is this `@unknown` honest" is a question a
+//! checker may answer.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -98,6 +99,7 @@ pub(super) fn c2_lazy_continuation(
 
 pub(super) fn c3_words(files: &[String], base: &str, root: &Path, r: &mut Report) {
     let (mut diverged, mut emphasis_lost) = (Vec::new(), Vec::new());
+    let mut hyphen_repairs = Vec::new();
     for f in files {
         let old = match git_show(root, base, f) {
             Ok(t) => t,
@@ -111,20 +113,51 @@ pub(super) fn c3_words(files: &[String], base: &str, root: &Path, r: &mut Report
                 .zip(b.iter())
                 .position(|(x, y)| x != y)
                 .unwrap_or(a.len().min(b.len()));
-            diverged.push(format!(
-                "{f} @word {at}\n       HEAD: {}\n       WORK: {}",
-                window(&a, at),
-                window(&b, at)
-            ));
+            // A ruling-47 repair moves a word across a newline, which changes
+            // the whitespace-split stream without changing a text byte. Joining
+            // hyphen-terminated tokens on BOTH sides tells the two apart: if
+            // that makes them equal, the whole difference was the repair.
+            if hyphen_joined(&a) == hyphen_joined(&b) {
+                // Show the two tokens that differ, not a window: the window is
+                // centred on `at` and truncates before reaching it, so both
+                // sides print identically and the line says nothing.
+                let head = a.get(at).map(String::as_str).unwrap_or("<end>");
+                let work = b.get(at).map(String::as_str).unwrap_or("<end>");
+                hyphen_repairs.push(format!("{f} @word {at}  {head:?} + next -> {work:?}"));
+            } else {
+                diverged.push(format!(
+                    "{f} @word {at}\n       HEAD: {}\n       WORK: {}",
+                    window(&a, at),
+                    window(&b, at)
+                ));
+            }
         }
         if new.matches('*').count() < old.matches('*').count() {
             emphasis_lost.push(f.clone());
         }
     }
+    if !hyphen_repairs.is_empty() {
+        r.note(format!(
+            "C3c {} hyphen join(s) — the ruling-47 shape, word-identical once joined:",
+            hyphen_repairs.len()
+        ));
+        for h in &hyphen_repairs {
+            r.note(format!("     {h}"));
+        }
+        r.note("     -> confirm each is a wrapped hyphen, not a compound the author wrote apart");
+    }
     if diverged.is_empty() {
         r.ok(
             "C3 words",
-            format!("{} file(s) word-identical to {base}", files.len()),
+            format!(
+                "{} file(s) word-identical to {base}{}",
+                files.len(),
+                if hyphen_repairs.is_empty() {
+                    String::new()
+                } else {
+                    format!(" ({} ruling-47 join(s) surfaced)", hyphen_repairs.len())
+                }
+            ),
         );
     } else {
         r.fail(
@@ -145,118 +178,6 @@ pub(super) fn c3_words(files: &[String], base: &str, root: &Path, r: &mut Report
                 "asterisk count DECREASED (ruling 12 permits only an increase): {}",
                 emphasis_lost.join(", ")
             ),
-        );
-    }
-}
-
-pub(super) fn c4_gate(
-    gate: &str,
-    files: &[String],
-    expect_unmarked: Option<usize>,
-    expect_files: Option<&Vec<String>>,
-    expect_total: Option<usize>,
-    r: &mut Report,
-) {
-    let rows: Vec<&str> = gate
-        .lines()
-        .filter(|l| l.starts_with("packages/") || l.starts_with("spec/"))
-        .collect();
-    let fset: BTreeSet<&String> = files.iter().collect();
-    let mine: Vec<&&str> = rows
-        .iter()
-        .filter(|l| {
-            l.split(':')
-                .next()
-                .is_some_and(|p| fset.contains(&p.to_string()))
-        })
-        .collect();
-
-    match expect_total {
-        Some(n) if n == rows.len() => {
-            r.ok("C4 corpus total", format!("{n} unmarked, as predicted"))
-        }
-        Some(n) => r.fail(
-            "C4 corpus total",
-            format!(
-                "{} unmarked, predicted {n} (delta {:+})",
-                rows.len(),
-                rows.len() as i64 - n as i64
-            ),
-        ),
-        None => r.ok(
-            "C4 corpus total",
-            format!("{} unmarked (no prediction given)", rows.len()),
-        ),
-    }
-    if let Some(n) = expect_unmarked {
-        if mine.len() == n {
-            r.ok(
-                "C4b batch residual",
-                format!("{n} unmarked in the batch, as predicted"),
-            );
-        } else {
-            r.fail(
-                "C4b batch residual",
-                format!("{} unmarked in the batch, predicted {n}", mine.len()),
-            );
-        }
-    }
-    if let Some(want) = expect_files {
-        let got: BTreeSet<String> = mine
-            .iter()
-            .filter_map(|l| l.split(':').next().map(str::to_string))
-            .collect();
-        let want: BTreeSet<String> = want.iter().cloned().collect();
-        if got == want {
-            r.ok(
-                "C4c residual files",
-                "residual sits exactly in the predicted file(s)",
-            );
-        } else {
-            r.fail(
-                "C4c residual files",
-                format!("residual in {got:?}, predicted {want:?}"),
-            );
-        }
-    }
-}
-
-pub(super) fn c5_error_classes(gate: &str, files: &[String], r: &mut Report) {
-    let fset: BTreeSet<&String> = files.iter().collect();
-    let mut classes: BTreeMap<String, usize> = BTreeMap::new();
-    for line in gate.lines() {
-        if !(line.starts_with("packages/") || line.starts_with("spec/")) {
-            continue;
-        }
-        let Some(path) = line.split(':').next() else {
-            continue;
-        };
-        if !fset.contains(&path.to_string()) {
-            continue;
-        }
-        if let Some(open) = line.find('[')
-            && let Some(close) = line[open..].find(']')
-        {
-            let class = line[open + 1..open + close].to_string();
-            *classes.entry(class).or_default() += 1;
-        }
-    }
-    let bad: BTreeMap<_, _> = classes
-        .iter()
-        .filter(|(k, _)| k.as_str() != "unmarked")
-        .collect();
-    if bad.is_empty() {
-        r.ok(
-            "C5 error classes",
-            format!(
-                "batch files carry only [unmarked] ({})",
-                classes.get("unmarked").copied().unwrap_or(0)
-            ),
-        );
-    } else {
-        r.fail(
-            "C5 error classes",
-            format!("unexpected classes in batch files: {bad:?}"),
         );
     }
 }
@@ -565,19 +486,5 @@ mod tests {
         let mut r = Report::default();
         c1_scope(&["a.md".to_string()], Some(&vec![]), &mut r);
         assert!(r.failed(), "a zero denominator must never read as clean");
-    }
-
-    #[test]
-    fn the_gate_predictions_are_compared_exactly() {
-        let gate = "packages/x/a.md:1: Error [unmarked] Para unit carries no marker\n\
-                    packages/x/b.md:2: Error [unmarked] Para unit carries no marker\n";
-        let files = vec!["packages/x/a.md".to_string()];
-        let mut r = Report::default();
-        c4_gate(gate, &files, Some(1), None, Some(2), &mut r);
-        assert!(!r.failed());
-
-        let mut r = Report::default();
-        c4_gate(gate, &files, Some(2), None, Some(2), &mut r);
-        assert!(r.failed(), "an off-by-one residual must fail");
     }
 }
