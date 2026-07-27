@@ -1467,6 +1467,40 @@ command that would have tested it.
   is an invitation to improve it into wrongness**, and this is the campaign's
   cleanest example of the class.
 
+- **2026-07-28 · F-102 — a fence matched by prefix inverts the parse, and the
+  units it invents cannot be marked.** Both the gate and the review tool closed
+  a fenced block on any line opening with three backticks, so a four-backtick
+  block quoting three-backtick ones was closed by its own first inner opener.
+  After that point the parse ran inverted: the quoted commands became paragraphs
+  `check --exhaustive` demanded a marker for, and the prose between them became
+  code it could not see.
+
+  **The demand was unsatisfiable in both directions**, which is what makes this
+  F-092's genre rather than an ordinary miscount: `##FENCE-AWARE` means a marker
+  written at those lines is not read as one, so the unit stays unmarked — and
+  writing it would edit a skeleton consumers copy verbatim. Eleven units stood
+  in that state, all in `manual-tests` (`test-template.md` 8, `authoring-rules.md`
+  3), every one of them a shell command.
+
+  **Measured before it was fixed, not after:** two files in the whole corpus
+  carry the construct, both in B14, and no already-marked file is affected —
+  so nothing landed carries a marker on code. The gate went 870 → 859 and the
+  log diff outside those two files is empty.
+
+  **It is the fifth instance of one defect — a delimiter matched by prefix
+  instead of by run** (F-084 was the fourth, and it rewrote `blank_inline_code`
+  while leaving the fence scanner ten lines above it alone). Fixed by
+  `c813b849`, which also gives the two rules one home each
+  (`parse::delimiters`, `batch_review::fences`), because living apart is why
+  they drifted. Both sides carry three controls.
+
+  **Why neither instrument caught it:** they had the identical defect, so they
+  agreed. Two of the tool's four earlier bugs were found precisely because it
+  and the gate *disagreed*; this one is the case that argument does not cover,
+  and the only thing that surfaced it was a third implementation — a
+  reviewer-side sentence counter written to CommonMark's rule — reading 130
+  paragraphs where the gate read 141.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
