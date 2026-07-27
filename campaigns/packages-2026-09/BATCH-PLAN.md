@@ -188,7 +188,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B11~~ | `source-mirrors` + `tool-design-lessons` + `qualified-naming` — **DONE**, 682 units, **0 unmarked** | 15 | 451 |
 | ~~B12~~ | `campaign-plans` + `two-process-model` + `operating-modes` — **DONE**, 624 units, **0 unmarked** | 15 | 403 |
 | ~~B13~~ | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` — **DONE**, 555 units, **0 unmarked** | 15 | 378 |
-| B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 338 |
+| B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 327 |
 | B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
 | B16 | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 | 10 | 232 |
 
@@ -197,13 +197,27 @@ retired `core-ai-native`'s third, F-091 dissolved `redbook`'s into B16, and B1�
 are done. `rust-ai-native` is already marked — it was the
 Phase A pilot.
 
-**B14 reads 338, not the 339 this row carried until now.** The row was last
-written 2026-07-26 13:38; DRIFT-037's parser fix landed 2026-07-27 01:06 and
-took the YAML frontmatter of `licensing`'s `draft-eula/SKILL.md` out of the unit
-count — DRIFT-037 measured that file at 8 units, the live gate now reads 7.
-**No other remaining row moves:** the nine in-corpus `SKILL.md` files are the
-three language stacks' six, `health-audit`'s, `wal`'s and this one, and only
-this one had not yet been marked. B15 and B16 ship none.
+**B14 reads 327. This row has now been corrected twice in one day, by two
+parser fixes, and both times the row was stale rather than wrong when written.**
+
+- **339 → 338 (DRIFT-037).** The row was last written 2026-07-26 13:38; the
+  frontmatter fix landed 2026-07-27 01:06 and took the YAML envelope of
+  `licensing`'s `draft-eula/SKILL.md` out of the count — DRIFT-037 measured that
+  file at 8 units, the gate then read 7. **No other remaining row moves:** the
+  nine in-corpus `SKILL.md` files are the three language stacks' six,
+  `health-audit`'s, `wal`'s and this one, and only this one was still unmarked.
+  B15 and B16 ship none.
+- **338 → 327 (F-102).** The fence scanner matched by prefix, so a
+  four-backtick block quoting three-backtick ones was closed by its own inner
+  opener and eleven shell commands inside `manual-tests`' two template files
+  were counted as prose. They could not have been marked — a marker inside a
+  fence is not read as one — so this is F-092's genre, not a miscount. Fixed by
+  `c813b849`; **corpus-wide 870 → 859**, and the two files are the only ones in
+  the corpus carrying the construct.
+
+**The pattern in both is the same and it is worth more than either number:**
+this table is a derived thing and nothing recomputes it. Measure the batch from
+a live gate log at dispatch; never quote this column into a brief.
 
 ## What each batch owes
 
