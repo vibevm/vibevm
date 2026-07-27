@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | opus | dispatched — 16 files, 487 units; predicts 0 / 2 102 / ≈663 |
+| MARKUP-B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | opus | **done** — 700 units, **0 unmarked**; **falsified the sizing constant** (×2.365); F-097 widened |
 | MARKUP-B9 | `spec-genres` + `wal` + `addressable-specs` | opus | **done** — 776 units, **0 unmarked**; sizing rule corrected to 3 constants; rulings 39–41 |
 | MARKUP-B8 | `discovery-prompt` + `decision-records` | opus | **done** — 366 units, **0 unmarked** (a first); ×1.28 measured; rulings 34–38 locked; F-097 |
 | MARKUP-B7 | `rust-ai-native-lang` v0.7.0 | opus | **done** — 544 of 546 units over 18 files; all 3 predictions held; ruling 33 locked |

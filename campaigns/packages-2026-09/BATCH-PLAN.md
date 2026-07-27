@@ -9,14 +9,33 @@ counted two superseded slots that nothing resolves to._
 **202 files** across 37 packages; the observed corpus is **260 files**
 (58 host + 202 packages), confirmed by `progress scan`.
 
-**Sizing: THREE constants, measured twice and stable to 0.7 % — corrected at B9.**
-Size a `world` batch as **paragraphs × 2.13 + pre-existing list items × 1.00 +
-table cells × 1.00**. Only paragraphs multiply: items and cells are already at
-fact grain, and ruling 1 keeps a pre-existing item whole. Measured paragraph
-heirs — B8 **71 → 151 (×2.127)**, B9 **179 → 378 (×2.112)**. On B9's real
-composition the three constants predict **779** against a measured **776**
-(+0.4 %), where B8's two-constant rule said 797 (+2.7 %), a blended ×1.28 said
-739 (−4.8 %) and the language-stack ×1.7 said 981 (+26 %).
+**Sizing: the paragraph multiplier is NOT a constant — falsified at B10.**
+Size a `world` batch as **paragraphs × ~2.2 + pre-existing list items × 1.00 +
+table cells × 1.00**, and **expect ±15 %**. The structural half is solid and
+confirmed three times: only paragraphs multiply, because items and cells are
+already at fact grain and ruling 1 keeps a pre-existing item whole. The
+multiplier is not.
+
+| batch | paragraph heirs | multiplier |
+|---|---|---|
+| B8 | 71 → 151 | ×2.127 |
+| B9 | 179 → 378 | ×2.112 |
+| **B10** | **156 → 369** | **×2.365** |
+
+**What went wrong, and it is the plan's own error, not the batches'.** B9's
+report said its measurement was «stable to 0.7 %» against B8's, and this file
+promoted that phrasing into a rule. **Two points cannot show stability — they
+can only fail to show instability.** B10 was dispatched as the stability test,
+it came in 11.6 % high, and the *superseded* two-constant rule was the closer of
+the two on that batch (−3.6 % against −5.6 %). A rule locked on two
+measurements and falsified by the third is exactly the shape this campaign
+keeps finding elsewhere; it found it here in its own planning arithmetic.
+
+**The multiplier tracks paragraph density, not package or genre.** Per file it
+ranges **×1.71 to ×2.93**: dense protocol documents run 2.5–2.9, READMEs
+1.71–2.00. A batch heavy in protocol prose will exceed 2.2 and a
+README-and-boot-snippet batch will fall short. Size with the range, not the
+point, and **do not lock a fourth constant on B11 alone.**
 
 **Why two constants were not enough, and it is worth keeping:** the old rule's
 single «prose» constant lumped paragraphs and list items, which behave nothing
@@ -94,7 +113,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B7~~ | `rust-ai-native-lang` — **DONE**, 546 units (×1.75) | 18 | 312 |
 | ~~B8~~ | `discovery-prompt` + `decision-records` — **DONE**, 366 units (×1.28), **0 unmarked** | 8 | 286 |
 | ~~B9~~ | `spec-genres` + `wal` + `addressable-specs` — **DONE**, 776 units, **0 unmarked** | 17 | 577 |
-| B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | 16 | 487 |
+| ~~B10~~ | `health-audit` + `conflict-protocol` + `managed-blocks` — **DONE**, 700 units, **0 unmarked** | 16 | 487 |
 | B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | 15 | 451 |
 | B12 | `campaign-plans` + `two-process-model` + `operating-modes` | 15 | 403 |
 | B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | 15 | 378 |
