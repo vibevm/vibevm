@@ -1535,6 +1535,16 @@ command that would have tested it.
   their manifests exactly. F-097's genre: an instruction that fails when
   followed. Four more packages share the bare-`boot/` trait and are B15's.
 
+  **WIDENED 2026-07-28, while sizing B15: it is universal, not incidental.**
+  Every relative link in every bare-`boot/` snippet is broken — **8 of 8**
+  across five packages (`sync-from-code` 3, `git-atomic-commits` 2,
+  `git-autonomy` 1, `git-conventional-commits` 1, `dev-runtime-docs` 1),
+  resolved one by one rather than sampled. Not one of these packages can be
+  read correctly from its own tree; all of them read correctly once installed.
+  **The `spec/boot/` packages have no broken links at all**, so the trait and
+  the defect coincide exactly. This is a wave-level fact correction under
+  sync-from-code, alongside F-097 — one DRIFT, five packages, eight links.
+
 - **2026-07-28 · F-104 — a protocol that misplaces its own skeleton.**
   `LICENSING-PROTOCOL.md` says «A skeleton of this text ships with the
   `draft-eula` skill». It ships in `spec/flows/licensing/eula-template.md`; the
@@ -1576,6 +1586,24 @@ command that would have tested it.
   `record-template.md`, the rest in inline code. Nothing mints a dotted anchor.
   Recorded because a checked-and-dismissed report is worth as much as a
   confirmed one, and the next batch should not re-file it.
+
+- **2026-07-28 · F-108 — an umbrella whose prose contradicts its own manifest,
+  three lines apart.** `git-practices/vibe.toml` declares **four** members —
+  `git-conventional-commits`, `git-atomic-commits`, `git-autonomy`,
+  `git-attribution-policy` — and the comment immediately above that block says
+  the family «grows to include human-authored attribution (§12.1) and commit
+  autonomy (§12.4) **as those members land**». They landed; the same file pins
+  them. The manifest's `description` field repeats the stale promise, and the
+  README lists **two** members where the closure pulls four, so a consumer
+  reading the README under-counts the family by half. Found while sizing B15;
+  both packages exist on disk and are verified present.
+
+- **2026-07-28 · F-109 — a shipped manifest cites a path only this repository
+  has.** `git-practices/vibe.toml` line 23 points a reader at
+  `neworder2/memory/BACKLOG.md`. The file is real **here** (9 tracked files
+  under `neworder2/`) and reaches no consumer of `flow:git-practices`. Same
+  genre as F-105: a package that can only be read correctly from inside the
+  repository that produced it.
 
 ## 8. Deferrals {#deferrals}
 
