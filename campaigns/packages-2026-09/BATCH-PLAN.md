@@ -63,10 +63,13 @@ back over three batches:
 | B11 | 382 | 145 | 119 | 677 | 682 | **−0.8 %** |
 | B12 | 320 | 159 | 96 | 601 | 624 | **−3.7 %** |
 | B13 | 274 | 168 | 82 | 546 | 555 | **−1.6 %** |
+| B14 | 259 | 150 | 47 | 476 | 479 | **−0.6 %** |
 
 **B13 was the first batch sized with the band before dispatch, and the band
-held**: predicted 543–565, measured 555, realised coefficient **1.113**. Five
-points now span **1.068–1.153**.
+held**: predicted 543–565, measured 555, realised coefficient **1.113**.
+**B14 held it a second time**: predicted 474–494, measured 479, realised
+**1.089**. Six points now span **1.068–1.153**, and the band has stopped being
+news — which is the point at which a rule is allowed to be boring.
 
 **The coefficient has now moved twice.** B12 realised **1.153** units per
 paragraph-sentence against B11's 1.08, and 1.153 reproduces its 624 exactly.
@@ -198,7 +201,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B11~~ | `source-mirrors` + `tool-design-lessons` + `qualified-naming` — **DONE**, 682 units, **0 unmarked** | 15 | 451 |
 | ~~B12~~ | `campaign-plans` + `two-process-model` + `operating-modes` — **DONE**, 624 units, **0 unmarked** | 15 | 403 |
 | ~~B13~~ | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` — **DONE**, 555 units, **0 unmarked** | 15 | 378 |
-| B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 327 |
+| ~~B14~~ | `sync-from-code` + `licensing` + `manual-tests` — **DONE**, 479 units, **0 unmarked** | 16 | 327 |
 | B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
 | B16 | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 | 10 | 232 |
 

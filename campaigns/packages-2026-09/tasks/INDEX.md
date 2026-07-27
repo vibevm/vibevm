@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B14 | `sync-from-code` + `licensing` + `manual-tests` | opus | **dispatched** — 327 units over 16 files; predicted 474–494; F-102 fixed under it |
+| MARKUP-B14 | `sync-from-code` + `licensing` + `manual-tests` | opus | **done** — 479 units, **0 unmarked**; band held twice running (1.089); rulings 53–56; F-102 fixed under it |
 | MARKUP-B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | opus | **done** — 555 units, **0 unmarked**; band held (1.113); rulings 51–52 |
 | MARKUP-B12 | `campaign-plans` + `two-process-model` + `operating-modes` | opus | **done** — 624 units, **0 unmarked**; counting rule written down; coefficient band 1.07–1.15 |
 | MARKUP-B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | opus | **done** — 682 units, **0 unmarked**; **falsified density**, found the sentence mechanism |
