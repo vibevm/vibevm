@@ -1501,6 +1501,27 @@ command that would have tested it.
   reviewer-side sentence counter written to CommonMark's rule — reading 130
   paragraphs where the gate read 141.
 
+  **Third site, found by looking rather than by failing: `vibe-spec`'s
+  `fence_mask`** (`1e1badda`). It drives `DocTree` and the directive scanner —
+  a different consumer of the same Markdown — and carried the run-length defect
+  *plus* one of its own: it closed on any line merely starting with the
+  delimiter, so `` ```rust `` inside a block ended it. **That half was live on a
+  marked corpus file**: `core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md`
+  opens a block at line 67 and writes ` ```card-ops ` at 84, so lines 85–93 were
+  scanned as document prose. `progress-core`'s closer always required the whole
+  line to be delimiter characters, **so the two parsers had disagreed about that
+  file for as long as it existed and nothing compares them.** The run-length half
+  was live here too and invisible only because the quoted headings in both
+  template files happen to land inside masked regions — luck, not design.
+
+  **A lesson about probes, paid for in this finding.** The first test written to
+  demonstrate the `vibe-spec` bug asserted `children(real).is_empty()` and
+  **passed against the broken code**: a quoted `#` heading is level 1, so it
+  attaches to the ROOT, not to the section above it. The bug only appeared once
+  the assertion counted the whole tree, and only after a negative control proved
+  the test could fail at all. **A probe that passes is evidence about the probe
+  until a control says otherwise.**
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
