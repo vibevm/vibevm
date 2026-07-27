@@ -53,7 +53,7 @@ Commits and a violation of the atomic rule. @impl/done
 - ##WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
   where *why* survives after the WAL and spec prose decay. @impl/done
 
-##sibling-document-pointers Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md). @impl/done
+##full-protocol-pointer Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md). @impl/done
 
 ## Never {#never}
 

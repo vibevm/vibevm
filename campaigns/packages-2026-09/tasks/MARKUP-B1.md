@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Fifty-six rulings now, of which two are struck (18, 19).** They accumulate in
+**Fifty-eight rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -516,6 +516,36 @@ ruling would need.
     and used the landed style for the second (`##full-protocol-pointer`,
     `##review-checklist-pointer`). Ruling 51 measured 7 packages to 2 and never
     considered the two-pointer case.
+
+### Added by the B15 pass (2026-07-28) {#locked-b15}
+
+57. **The colon boundary ruling 53 was missing: instances split, procedure steps
+    and glosses do not.** A colon introducing **instances, members or cases** of
+    what the lead names → **split**. A colon introducing the **steps of a named
+    procedure**, or an **appositive gloss** of the lead, → **keep whole**.
+    **The control is internal and same-file, which is the strongest kind this
+    campaign recognises.** `wal/…/spec/flows/wal/session-end-hook.md` keeps
+    «**Scope of this document.** The procedure every session ends with: confirm a
+    good stopping state, rewrite `spec/WAL.md`, overwrite `CONTINUE.md`, report.»
+    whole at four comma-separated steps behind a colon (line 5) — and splits
+    «Emit a short end-of-session report in the chat:» into four bullets 120 lines
+    later. One file, one author, one batch, opposite calls, and the difference is
+    exactly steps-of-a-procedure against members-of-a-set.
+    This bounds ruling 53, which was the widest colon ruling on the list and was
+    touching ruling 35's definition carve-out. **A definition *by extension* is
+    still an enumeration** — «Routine means: A, B, C, D» splits, because the
+    lead literally names the set and the items are literally its members.
+58. **When a file carries more than one pointer paragraph, ruling 51's uniform id
+    goes to the one pointing at the flow's *sibling documents*; a pointer whose
+    target is a single named document takes a descriptive id.**
+    `##full-protocol-pointer`, `##review-checklist-pointer`,
+    `##splitting-procedure-pointer` are the landed descriptive names.
+    Ruling 56 said "primary" and never said how to pick it; measured across the
+    corpus, **no positional rule survives** — of the three files with two pointer
+    paragraphs, the uniform id is last in two and first in the third. Function
+    decides it, position does not. *(Ruling 51 is untouched for the ordinary
+    case: a file with ONE pointer paragraph uses the uniform id whatever it
+    points at, which 35 landed files do — 16 of them at a single link.)*
 
 ## Boundaries {#boundaries}
 
