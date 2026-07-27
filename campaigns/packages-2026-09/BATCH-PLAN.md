@@ -67,10 +67,13 @@ text and what counts as a paragraph all move the number. So:
   commit the calibration actually read — it was B11's files. The cause is
   simply that the reviewer-side counter over-counts paragraphs by about a
   fifth, which is what the bias measures.)*
-- **Nothing specifies the counter.** Until something does, the mechanism is
-  sound and the *number* is only transferable between people who agree on how to
-  count. That is a smaller version of the campaign's own recurring problem: a
-  measurement is only as portable as its definition.
+- **RESOLVED 2026-07-27 at B13: the rule above is reproducible.** A second,
+  independent implementation reads **B11 at 381 against its published 382, and
+  B12 at 320 exactly**. The single defect in the reviewer's earlier counter — the
+  one that produced the 35 % gap — was that it read **indented continuation
+  lines of list items** as paragraph prose. Written down, the measurement now
+  transfers; that was the whole claim, and it is now demonstrated rather than
+  asserted.
 
 **The controlled experiment, which is why this is a mechanism and not another
 curve fit.** `self-updating-tools.md` and `packaging-lessons.md` are the same
