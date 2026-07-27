@@ -1,60 +1,82 @@
 # The Campaign Plan Format {#root}
 
-**Scope of this document.** This file defines *what* a campaign is,
+<status stage="spec" state="done"/>
+
+##scope-of-this-document **Scope of this document.** This file defines *what* a campaign is,
 *which* artifact roles its paper trail carries, and the *canonical
 section skeleton* of a campaign plan — the one document that lets a
-large change be planned once and executed cold. Phase mechanics:
+large change be planned once and executed cold. @impl/done
+
+##sibling-document-pointers Phase mechanics:
 [`phase-gates.md`](phase-gates.md); the record half:
-[`execution-ledger.md`](execution-ledger.md).
+[`execution-ledger.md`](execution-ledger.md). @impl/done
 
 ## What a campaign is {#what}
 
-A campaign is a multi-commit change too big for one session: a
+##A-CAMPAIGN-IS-A-MULTI-COMMIT-CHANGE-TOO-BIG-FOR-ONE-SESSION A campaign is a multi-commit change too big for one session: a
 package-family rename, a debt drain across the whole codebase, a new
-subsystem landed in six waves. It is executed as **gated phases** —
+subsystem landed in six waves. @impl/done
+
+##A-CAMPAIGN-IS-GATED-BY-PHASES-AND-PLANNED-TO-RUN-COLD It is executed as **gated phases** —
 each ends with the project's full gate panel green — and it is
 planned to run **cold**: by a fresh session with no memory of the
 planning conversation, by a different person, or by the author after
-total context loss. The test of a good plan is not "could I execute
-this tomorrow?" but "could a stranger execute this today?". The
+total context loss. @impl/done
+
+##THE-TEST-IS-WHETHER-A-STRANGER-COULD-EXECUTE-IT-TODAY The test of a good plan is not "could I execute
+this tomorrow?" but "could a stranger execute this today?". @impl/done
+
+##PAY-THE-FORMATS-COST-ONLY-FOR-WORK-THAT-SPANS-SESSIONS The
 format's cost is real: pay it only when the work spans sessions or
-more than a handful of commits.
+more than a handful of commits. @impl/done
 
 ## The five artifact roles {#artifacts}
 
-A campaign's paper trail carries five roles:
+##paper-trail-carries-five-roles-lead A campaign's paper trail carries five roles: @impl/done
 
 | Role | Written | Purpose |
 |---|---|---|
-| **PLAN** | before work starts | the cold-executable recipe |
-| **BASELINE** | at campaign open | the frozen starting facts: gate-panel state, inventory counts, the numbers phases are measured against |
-| **PREDICTIONS** | at campaign open | falsifiable expectations, stated *before* execution so the report can honestly say confirmed / falsified / surprised |
-| **LOG** | during execution | the running record: per-phase commit maps, deviations, discovered work |
-| **REPORT** | at campaign close | results vs predictions; what the campaign taught |
+| ##ROW-ROLE-PLAN **PLAN** @impl/done | before work starts @impl/done | the cold-executable recipe @impl/done |
+| ##ROW-ROLE-BASELINE **BASELINE** @impl/done | at campaign open @impl/done | the frozen starting facts: gate-panel state, inventory counts, the numbers phases are measured against @impl/done |
+| ##ROW-ROLE-PREDICTIONS **PREDICTIONS** @impl/done | at campaign open @impl/done | falsifiable expectations, stated *before* execution so the report can honestly say confirmed / falsified / surprised @impl/done |
+| ##ROW-ROLE-LOG **LOG** @impl/done | during execution @impl/done | the running record: per-phase commit maps, deviations, discovered work @impl/done |
+| ##ROW-ROLE-REPORT **REPORT** @impl/done | at campaign close @impl/done | results vs predictions; what the campaign taught @impl/done |
 
-**The one-file dialect (default).** One plan document carries all
+##THE-ONE-FILE-DIALECT-CARRIES-ALL-FIVE-ROLES **The one-file dialect (default).** One plan document carries all
 five roles: the baseline in the target-arithmetic and current-state
 sections, the predictions in their own section, the log in the
 execution ledger, the report in the execution-record block prepended
-at close — one file, one resume pointer. Very large campaigns may
-split the roles into files; the roles, not the count, are the contract.
+at close — one file, one resume pointer. @impl/done
 
-Two laws govern the set: **a campaign that skips the REPORT learns
-nothing durable, and a campaign without a written PLAN cannot be
-resumed by anyone but its author's context window.**
+##THE-ROLES-NOT-THE-COUNT-ARE-THE-CONTRACT Very large campaigns may
+split the roles into files; the roles, not the count, are the contract. @impl/done
+
+##two-laws-govern-the-set-lead Two laws govern the set: @impl/done
+
+- ##LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE **a campaign that skips the REPORT learns
+  nothing durable,** @impl/done
+- ##LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION **and a campaign without a written PLAN cannot be resumed
+  by anyone but its author's context window.** @impl/done
 
 ## The section skeleton {#skeleton}
 
-The canonical plan, in order. Sections 1 and 3–13 are written before
-execution; 2, 14, and 15 are filled by the executing session.
+##the-canonical-plan-in-order The canonical plan, in order. @impl/done
+
+##WHICH-SECTIONS-ARE-WRITTEN-BEFORE-EXECUTION Sections 1 and 3–13 are written before
+execution; 2, 14, and 15 are filled by the executing session. @impl/done
 
 ### 1 — Title and status line {#s1-status}
 
-The title names the campaign and its one-line point; under it, an
-italic status block: the lifecycle state (`PLANNED` → `EXECUTING` →
-`EXECUTED <date>`), the tree the plan was written against, and the
-cold-start flag. Owner review may annotate the state
-(`ACCEPTED with owner amendments, <date>`) before execution.
+##the-title-and-the-status-block-lead The title names the campaign and its one-line point; under it, an
+italic status block: @impl/done
+
+- ##STATUS-BLOCK-THE-LIFECYCLE-STATE the lifecycle state (`PLANNED` → `EXECUTING` →
+  `EXECUTED <date>`), @impl/done
+- ##STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST the tree the plan was written against, @impl/done
+- ##STATUS-BLOCK-THE-COLD-START-FLAG and the cold-start flag. @impl/done
+
+##OWNER-REVIEW-MAY-ANNOTATE-THE-STATE Owner review may annotate the state
+(`ACCEPTED with owner amendments, <date>`) before execution. @impl/done
 
 ```
 # CACHE-DRAIN-PLAN v0.1 — retire the legacy cache, consumer by consumer
@@ -64,15 +86,23 @@ any phase is a safe stop; the floor is green at every boundary._
 
 ### 2 — Execution record (prepended at close) {#s2-execution-record}
 
-Empty at authoring. At close, the executing session prepends a block
-into the status area: commit range, per-phase deltas, which
-predictions held ([`execution-ledger.md` §execution-record](execution-ledger.md#execution-record)).
+##EMPTY-AT-AUTHORING Empty at authoring. @impl/done
+
+##at-close-a-block-is-prepended-lead At close, the executing session prepends a block
+into the status area: @impl/done
+
+- ##RECORD-THE-COMMIT-RANGE commit range, @impl/done
+- ##RECORD-THE-PER-PHASE-DELTAS per-phase deltas, @impl/done
+- ##RECORD-WHICH-PREDICTIONS-HELD which
+  predictions held ([`execution-ledger.md` §execution-record](execution-ledger.md#execution-record)). @impl/done
 
 ### 3 — The mandate {#s3-mandate}
 
-The owner's commissioning words, **quoted verbatim and dated** —
-never paraphrased into blandness. Scope questions resolve against
-this text; the executor never re-litigates it.
+##THE-MANDATE-IS-QUOTED-VERBATIM-AND-DATED The owner's commissioning words, **quoted verbatim and dated** —
+never paraphrased into blandness. @impl/done
+
+##SCOPE-QUESTIONS-RESOLVE-AGAINST-THE-MANDATE Scope questions resolve against
+this text; the executor never re-litigates it. @impl/done
 
 ```
 Mandate (owner, 2026-07-07): "take everything listed in the previous
@@ -82,9 +112,10 @@ for the full pilot — build a small demo project instead."
 
 ### 4 — Target arithmetic {#s4-arithmetic}
 
-Baseline and exit state as **exact counts** that reconcile: every
-baseline unit ends in the exit state or in a phase that removes it.
-Vague targets make the report unwritable.
+##BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE Baseline and exit state as **exact counts** that reconcile: every
+baseline unit ends in the exit state or in a phase that removes it. @impl/done
+
+##VAGUE-TARGETS-MAKE-THE-REPORT-UNWRITABLE Vague targets make the report unwritable. @impl/done
 
 ```
 Baseline at plan time: 130 findings = 68 message-format + 28
@@ -95,20 +126,30 @@ Everything else reaches zero.
 
 ### 5 — Current-state facts (verified; do not re-discover) {#s5-facts}
 
-Facts gathered at authoring, with file-and-line pointers, marked so
-the executor trusts them instead of re-investigating. **Wrong facts
+##FACTS-ARE-GATHERED-AT-AUTHORING-WITH-POINTERS Facts gathered at authoring, with file-and-line pointers, marked so
+the executor trusts them instead of re-investigating. @impl/done
+
+##WRONG-FACTS-HERE-ARE-THE-MOST-EXPENSIVE-PLAN-BUG **Wrong facts
 here are the most expensive class of plan bug: verify while
-writing.** A real campaign recorded three files as stale at
+writing.** @spec/done
+
+##the-stale-trio-a-real-campaign-recorded A real campaign recorded three files as stale at
 566/556/554 lines; the true sizes were 609/612/608 — the author
-counted non-blank lines where the gate counts physical ones. A Phase
-0 probe caught what would have pruned live debt as stale.
+counted non-blank lines where the gate counts physical ones. @spec/done
+
+##a-phase-zero-probe-caught-it A Phase
+0 probe caught what would have pruned live debt as stale. @spec/done
 
 ### 6 — Decisions D1–DN {#s6-decisions}
 
-Every design decision, numbered. Each weighs its options, marks the
+##EVERY-DESIGN-DECISION-IS-NUMBERED Every design decision, numbered. @impl/done
+
+##EACH-DECISION-WEIGHS-ITS-OPTIONS-AND-REASONS-EVERY-REJECTION Each weighs its options, marks the
 chosen one, and gives every rejection a reason — so a mid-execution
 surprise is resolved in the spirit of the plan, and nobody re-opens
-a settled question. Rejections are as load-bearing as the choice.
+a settled question. @impl/done
+
+##REJECTIONS-ARE-AS-LOAD-BEARING-AS-THE-CHOICE Rejections are as load-bearing as the choice. @impl/done
 
 ```
 ### D4 — how the shared engine reaches both consumers
@@ -121,37 +162,46 @@ a settled question. Rejections are as load-bearing as the choice.
 
 ### 7 — Predictions {#s7-predictions}
 
-Numbered, falsifiable, stated before execution, checked one by one in
+##PREDICTIONS-ARE-NUMBERED-FALSIFIABLE-AND-CHECKED-ONE-BY-ONE Numbered, falsifiable, stated before execution, checked one by one in
 the report — "P3 — fewer than 10 test expectations break across all
-68 message edits: most tests match error kinds, not strings." A
-prediction that cannot fail is a hope, not a prediction.
+68 message edits: most tests match error kinds, not strings." @impl/done
+
+##A-PREDICTION-THAT-CANNOT-FAIL-IS-A-HOPE A prediction that cannot fail is a hope, not a prediction. @impl/done
 
 ### 8 — Phases {#s8-phases}
 
-Phase 0 is always spikes and probes and produces no commits; every
+##PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS Phase 0 is always spikes and probes and produces no commits; every
 later phase carries numbered steps, its own exit criterion, its own
 prediction, and its planned commit set with subjects spelled in
-advance. Full anatomy and gate rules: [`phase-gates.md`](phase-gates.md).
+advance. @impl/done
+
+##phase-anatomy-pointer Full anatomy and gate rules: [`phase-gates.md`](phase-gates.md). @impl/done
 
 ### 9 — Risks and fallbacks {#s9-risks}
 
-Named risks, each with its detection signal and its plan B — "flaky
+##EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B Named risks, each with its detection signal and its plan B — "flaky
 network: re-probe at each network-facing step; worst case those
-steps land red-pending-network, recorded, everything else lands." A
-risk without a fallback is a wish that nothing goes wrong.
+steps land red-pending-network, recorded, everything else lands." @impl/done
+
+##A-RISK-WITHOUT-A-FALLBACK-IS-A-WISH A risk without a fallback is a wish that nothing goes wrong. @impl/done
 
 ### 10 — Non-goals {#s10-non-goals}
 
-"What this plan deliberately does NOT do" — **named, so they stay
-visible.** Each non-goal carries a reason and a disposition: deferred
+##NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE "What this plan deliberately does NOT do" — **named, so they stay
+visible.** @impl/done
+
+##EVERY-NON-GOAL-CARRIES-A-REASON-AND-A-DISPOSITION Each non-goal carries a reason and a disposition: deferred
 to a named follow-up, held by the owner, or rejected outright —
 "does NOT extend the gate to the two remaining modules: that is the
-NEXT campaign's opening move, after this queue closes."
+NEXT campaign's opening move, after this queue closes." @impl/done
 
 ### 11 — Quick-start for the executing session {#s11-quick-start}
 
-The literal shell block a cold session runs first: confirm the tree,
-verify the green floor, capture the baseline numbers.
+##the-quick-start-block-lead The literal shell block a cold session runs first: @impl/done
+
+- ##QUICK-START-CONFIRM-THE-TREE confirm the tree, @impl/done
+- ##QUICK-START-VERIFY-THE-GREEN-FLOOR verify the green floor, @impl/done
+- ##QUICK-START-CAPTURE-THE-BASELINE-NUMBERS capture the baseline numbers. @impl/done
 
 ```sh
 git log --oneline -3        # tree must match the status line
@@ -161,8 +211,8 @@ git log --oneline -3        # tree must match the status line
 
 ### 12 — Whole-campaign acceptance {#s12-acceptance}
 
-A runnable script asserting the end state — the campaign's definition
-of done, executed on a green floor at close, cited by the report.
+##ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE A runnable script asserting the end state — the campaign's definition
+of done, executed on a green floor at close, cited by the report. @impl/done
 
 ```sh
 <gate-panel command>; echo "EXIT=$?"    # exit 0
@@ -172,35 +222,38 @@ test ! -d src/legacy_cache              # the drained module is gone
 
 ### 13 — Review points {#s13-review-points}
 
-Decisions only the owner can make, escalated as numbered points:
+##REVIEW-POINTS-GO-OPEN-THEN-RESOLVED Decisions only the owner can make, escalated as numbered points:
 `OPEN` with options and the executor's recommendation, later
 annotated `RESOLVED` with the ruling verbatim
-([`phase-gates.md` §review-points](phase-gates.md#review-points)).
+([`phase-gates.md` §review-points](phase-gates.md#review-points)). @impl/done
 
 ### 14 — Execution ledger {#s14-ledger}
 
-Filled by the executing session: per-phase commit maps binding hashes
+##THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS Filled by the executing session: per-phase commit maps binding hashes
 to the planned subjects, with what each commit confirmed or falsified
-([`execution-ledger.md`](execution-ledger.md)).
+([`execution-ledger.md`](execution-ledger.md)). @impl/done
 
 ### 15 — Deferrals ledger {#s15-deferrals}
 
-Everything the campaign chose not to do, named, one line each, with
-an owner and a disposition. Nothing evaporates: leftover work is in a
+##EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION Everything the campaign chose not to do, named, one line each, with
+an owner and a disposition. @impl/done
+
+##NOTHING-EVAPORATES Nothing evaporates: leftover work is in a
 commit or in this ledger
-([`execution-ledger.md` §deferrals](execution-ledger.md#deferrals)).
+([`execution-ledger.md` §deferrals](execution-ledger.md#deferrals)). @impl/done
 
 ## The lineage law {#lineage}
 
-A closed campaign's deferrals ledger **becomes the next campaign's
+##A-CLOSED-CAMPAIGNS-DEFERRALS-BECOME-THE-NEXT-MANDATE A closed campaign's deferrals ledger **becomes the next campaign's
 mandate**: the owner commissions the follow-up by pointing at it, and
-the new plan's opening table maps each deferral to a closing phase.
-Campaigns form a chain — no work item is lost between links, and no
-campaign starts blank ([`execution-ledger.md` §lineage](execution-ledger.md#lineage)).
+the new plan's opening table maps each deferral to a closing phase. @impl/done
+
+##CAMPAIGNS-FORM-A-CHAIN Campaigns form a chain — no work item is lost between links, and no
+campaign starts blank ([`execution-ledger.md` §lineage](execution-ledger.md#lineage)). @impl/done
 
 ## Re-derive for your project {#re-derive}
 
-Run this prompt once to adapt the format to a concrete project:
+##re-derive-lead Run this prompt once to adapt the format to a concrete project: @impl/done
 
 ```
 Read CAMPAIGN-PLAN-FORMAT.md, phase-gates.md, and execution-ledger.md.
@@ -220,11 +273,11 @@ Do not start a campaign; produce the adapted conventions only.
 
 ## Summary {#summary}
 
-- A campaign is a multi-commit change executed as gated phases,
-  planned to run cold — by a stranger, today.
-- Five roles: PLAN, BASELINE, PREDICTIONS, LOG, REPORT — one file by
-  default. Skip the report and the campaign learns nothing durable.
-- Mandate verbatim; arithmetic exact; facts verified at writing;
+- ##SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD A campaign is a multi-commit change executed as gated phases,
+  planned to run cold — by a stranger, today. @impl/done
+- ##SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT Five roles: PLAN, BASELINE, PREDICTIONS, LOG, REPORT — one file by
+  default. Skip the report and the campaign learns nothing durable. @impl/done
+- ##SUM-THE-PLANS-STANDING-OBLIGATIONS Mandate verbatim; arithmetic exact; facts verified at writing;
   decisions carry their rejections; predictions falsifiable;
-  non-goals named so they stay visible.
-- The deferrals ledger seeds the next campaign's mandate.
+  non-goals named so they stay visible. @impl/done
+- ##SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE The deferrals ledger seeds the next campaign's mandate. @impl/done
