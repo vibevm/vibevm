@@ -6,8 +6,21 @@ counted two superseded slots that nothing resolves to._
 
 ## The workload, after three rounds of finding out what was in it
 
-**202 files** across 37 packages; the observed corpus is **260 files**
-(58 host + 202 packages), confirmed by `progress scan`.
+**201 files** across 37 packages; the observed corpus is **259 files**
+(58 host + 201 packages), confirmed by `progress check --exhaustive` at the
+Phase B close.
+
+*This headline read 202 / 260 until 2026-07-28, contradicting its own
+decomposition table four screens down — which has recorded `DISCOVERY-PROMPT.md`
+leaving the corpus (F-096, owner ruling 2026-07-27) since the day it left. The
+"confirmed by `progress scan`" was true when written and nothing recomputed it.
+**The plan is a derived document too**, which is the same lesson the batch table
+taught twice in one day.*
+
+**Phase B is closed: `progress check --exhaustive` exits 0 over all 259 files,
+0 unmarked, 0 warnings.** `baseline.json` written at the boundary per amendment
+A6 — 921 units, 917 confirmed, 4 unverifiable, with four files flagged as having
+moved after they were judged.
 
 **Sizing: count SENTENCES, not paragraphs — the mechanism, found at B11.**
 
