@@ -36,6 +36,7 @@
 
 mod checks;
 mod index;
+mod refs;
 mod report;
 mod text;
 
@@ -46,6 +47,7 @@ use anyhow::{Context, Result};
 
 use checks::*;
 use index::c11_task_index;
+use refs::c12_package_refs;
 use report::Report;
 use text::word_stream;
 
@@ -167,6 +169,18 @@ pub fn run_batch_review(root: &Path, a: BatchReviewArgs) -> Result<()> {
     if let Some(zone) = &a.campaign {
         c11_task_index(&root.join(zone), &mut r);
     }
+    // F-097's four dead names are filed against the whole wave and fixed by
+    // one sync-from-code DRIFT, not by markup. A fifth would be new.
+    let known_dead: std::collections::BTreeSet<String> = [
+        "atomic-commits",
+        "attribution-policy",
+        "conventional-commits",
+        "autonomy",
+    ]
+    .iter()
+    .map(|s| s.to_string())
+    .collect();
+    c12_package_refs(&files, root, &known_dead, &mut r);
 
     r.emit();
     if r.failed() {
