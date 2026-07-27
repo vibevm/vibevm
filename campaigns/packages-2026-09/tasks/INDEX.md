@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B12 | `campaign-plans` + `two-process-model` + `operating-modes` | opus | dispatched — 15 files, 403 units; predicts 0 / 1 248; two sizing answers, 596 vs 715 |
+| MARKUP-B12 | `campaign-plans` + `two-process-model` + `operating-modes` | opus | **done** — 624 units, **0 unmarked**; counting rule written down; coefficient band 1.07–1.15 |
 | MARKUP-B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | opus | **done** — 682 units, **0 unmarked**; **falsified density**, found the sentence mechanism |
 | MARKUP-B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | opus | **done** — 700 units, **0 unmarked**; **falsified the sizing constant** (×2.365); F-097 widened |
 | MARKUP-B9 | `spec-genres` + `wal` + `addressable-specs` | opus | **done** — 776 units, **0 unmarked**; sizing rule corrected to 3 constants; rulings 39–41 |

@@ -12,8 +12,22 @@ counted two superseded slots that nothing resolves to._
 **Sizing: count SENTENCES, not paragraphs — the mechanism, found at B11.**
 
 ```
-predicted units  ≈  1.08 × sentences  +  pre-existing list items  +  table cells
+predicted units  ≈  1.08–1.15 × sentences  +  pre-existing list items  +  table cells
 ```
+
+**Count `sentences` by THIS rule, or the coefficient means nothing** (B12's
+rule, which reproduces B11's published figure exactly):
+
+- **Universe:** paragraph units only — progress-core's own `Para`/`Lead` facts.
+  List items and table cells are excluded; the formula adds each back at 1.
+- **Fenced code excluded entirely; inline code blanked** by progress-core's own
+  run-matching `blank_inline_code`, so a full stop inside `` `a-file.md` ``
+  cannot terminate a sentence.
+- **Terminator:** `[.!?]["\)]?` followed by whitespace or end of unit.
+- **Not terminators:** em-dash, semicolon, colon. **Abbreviations:** no special
+  case — measured across 148 paragraphs, zero occurrences of `e.g.`/`i.e.`/etc.
+- **A paragraph with no terminator counts as 1.** A multi-line blockquote is
+  one paragraph.
 
 Deconstruction produces roughly **one unit per sentence**, which is what it is
 for; paragraphs were only ever a proxy for sentences and a bad one. Measured
@@ -24,6 +38,13 @@ back over three batches:
 | B9 | 354 | 236 | 162 | 780 | 776 | **+0.6 %** |
 | B10 | 338 | 201 | 130 | 696 | 700 | **−0.6 %** |
 | B11 | 382 | 145 | 119 | 677 | 682 | **−0.8 %** |
+| B12 | 320 | 159 | 96 | 601 | 624 | **−3.7 %** |
+
+**The coefficient has now moved twice.** B12 realised **1.153** units per
+paragraph-sentence against B11's 1.08, and 1.153 reproduces its 624 exactly.
+Four batches span 1.068–1.153. **Size with the band, quote no point**, and treat
+the next batch that lands outside it as informative rather than as a surprise —
+that is the third time this file has been told a small-n constant is not one.
 
 **±0.8 % against the ±15 % the paragraph rule needed.**
 
@@ -37,8 +58,15 @@ text and what counts as a paragraph all move the number. So:
   meaningless with any other. A batch reporting a sentence count **must state
   its counting rule**, or the next batch cannot use it.
 - **Sizing before dispatch works only after calibrating your counter** against a
-  landed batch's reported figure. B12's reviewer-side count of 426 becomes ≈316
-  once divided by the measured 1.348 bias — a 715-unit prediction becomes 596.
+  landed batch's reported figure, **and the calibration works.** B12's
+  reviewer-side count of 426 became ≈316 once divided by the measured 1.348
+  bias; the batch's own rule read **320** — the correction landed within
+  **1.3 %**. Against the realised 624 units the corrected branch was 4.5 % low
+  and the uncorrected one 14.6 % high. *(B12 hypothesised that the 515 figure
+  was a B12 measurement mislabelled as B11's; checked at review against the
+  commit the calibration actually read — it was B11's files. The cause is
+  simply that the reviewer-side counter over-counts paragraphs by about a
+  fifth, which is what the bias measures.)*
 - **Nothing specifies the counter.** Until something does, the mechanism is
   sound and the *number* is only transferable between people who agree on how to
   count. That is a smaller version of the campaign's own recurring problem: a
@@ -137,7 +165,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B9~~ | `spec-genres` + `wal` + `addressable-specs` — **DONE**, 776 units, **0 unmarked** | 17 | 577 |
 | ~~B10~~ | `health-audit` + `conflict-protocol` + `managed-blocks` — **DONE**, 700 units, **0 unmarked** | 16 | 487 |
 | ~~B11~~ | `source-mirrors` + `tool-design-lessons` + `qualified-naming` — **DONE**, 682 units, **0 unmarked** | 15 | 451 |
-| B12 | `campaign-plans` + `two-process-model` + `operating-modes` | 15 | 403 |
+| ~~B12~~ | `campaign-plans` + `two-process-model` + `operating-modes` — **DONE**, 624 units, **0 unmarked** | 15 | 403 |
 | B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | 15 | 378 |
 | B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 339 |
 | B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
