@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-27T19:17:34Z",
+  "updated_at": "2026-07-27T20:16:51Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -2322,35 +2322,71 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md": {
-      "content_hash": "c22daf2e5abc5c3adc2a5aa05f784109fbdb45b1420e3e728f7556ade8848765",
+      "content_hash": "df4d7bf0a90fdaa24e10113cde280fa291b40ddf25fefac410ea0750cc0f895e",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 8,
-        "unmarked_facts": 8
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 10,
+        "fact_count": 9,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 10,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/boot/58-flow-dev-runtime-docs.md": {
-      "content_hash": "eb72e333851c3aabe277b9859400e3349156f8d67c17f92b29d8029aa4238b8f",
+      "content_hash": "5961040c992be643e4aa4c6c70972226c027c14df6157cc89bc12027d1349e54",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 5,
-        "unmarked_facts": 5
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 7,
+        "fact_count": 6,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 7,
       "unit_count": 3,
       "issue_count": 0
     },
     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md": {
-      "content_hash": "0be0976348847006d2afc766a30351130648b985ad5b8b5863110288065f0249",
+      "content_hash": "5c96bd002d990c5a8fdd263bfb8a9735c70c0b3814a42bbd51151730cff0f1a7",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 10,
-        "unmarked_facts": 10
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 16,
+        "fact_count": 15,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 16,
       "unit_count": 6,
       "issue_count": 0
     },
@@ -2424,46 +2460,94 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md": {
-      "content_hash": "df10b022d2e974ac040212ee1fbdd427ee85826c3c53ff0bccfd95ca91cc9287",
+      "content_hash": "26271c12015ed7ed72b270d27463f709607e0711d858ab9bf940cae1daa81dc7",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 12,
-        "unmarked_facts": 12
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 17,
+        "fact_count": 16,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 17,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/boot/30-flow-atomic-commits.md": {
-      "content_hash": "c24570ee06473bd59158663dcaa55d9d6aa60a7982385c7b4de58dfa6574894c",
+      "content_hash": "683a371681facaea6143d1a83c5262ca22ba7b2cdfac03ba27b0e9db0ff7d1fc",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 17,
-        "unmarked_facts": 17
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 22,
+        "fact_count": 21,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 22,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md": {
-      "content_hash": "aa94c3532ff20d8143aadd777a4a9bcf74884c48d0a819cd75cbc3cbb7eb9d9c",
+      "content_hash": "5bf6a45c7a14fe1850b19548c89f7fd1ceda0b8518273b2158f1440452f6b49c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 37,
-        "unmarked_facts": 37
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 65,
+        "fact_count": 64,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 65,
       "unit_count": 12,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md": {
-      "content_hash": "86ce29641a247095558471eae6b3332835be0995d3361acd0f6f6ee5b3af8234",
+      "content_hash": "6aa7e1e5c41df0274d4fc635485aa1e9b525d0273bdf95dcab76f88172983611",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 35,
-        "unmarked_facts": 35
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 53,
       "unit_count": 12,
       "issue_count": 0
     },
@@ -2583,79 +2667,163 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/README.md": {
-      "content_hash": "384218935e87d3242ee73e00d32d49669fda83e738f6ca6397f504c58c472ebc",
+      "content_hash": "fa0e312a041ab66ed87669b5f5141b48b7faaf3635ef508d8d83940740f54373",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 8,
         "fact_count": 7,
-        "unmarked_facts": 7
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 8,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/boot/32-flow-autonomy.md": {
-      "content_hash": "b73a70379479aa6a11f2c181e9eab1a82f4cdacb95e48e78940bce5449d6a7aa",
+      "content_hash": "d183036f997b71f243e0b4a873366492b59eae7853f13bff0034c8dd1e873aff",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 10,
-        "unmarked_facts": 10
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 15,
+        "fact_count": 14,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 15,
       "unit_count": 3,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md": {
-      "content_hash": "53028afc89b2d4e2b9a96ec6b0d408689b8fdbfa2ebd9190ba053f7f6afcfa02",
+      "content_hash": "023d3eaaa64ff3144e77a9e050e823f7b07fda12343ed334553d7aa7e9ff19b4",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 12,
-        "unmarked_facts": 12
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 25,
+        "fact_count": 24,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 25,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/README.md": {
-      "content_hash": "8bbff643fd78780799e86bb99f460b456a0870b1651b08a8d64e320f4339303c",
+      "content_hash": "80974ddf29ff0c0c63ba5e368a7a3dcc88a122a82ada52202342888001de58bc",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 7,
-        "unmarked_facts": 7
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 10,
+        "fact_count": 9,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 10,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/boot/31-flow-conventional-commits.md": {
-      "content_hash": "6f050c3a440bd7b2e0cf3dc07b27d23c800835d0e22950f0a4d957bd1cc50710",
+      "content_hash": "02a5c81358aea4287f6f690a41536b22a5034664d0a8fff9e2dcaf7d23ad337d",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 8,
-        "unmarked_facts": 8
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 13,
+        "fact_count": 12,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 13,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md": {
-      "content_hash": "3ad15763b109e8aa2d13df4aaa2c4d3442f01e1b83add9e35c875e36f365addc",
+      "content_hash": "30474caa328c8fe32e8df64e5a780d048defb3ee54d1c565cb3e97cbb911e683",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 60,
-        "unmarked_facts": 60
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 71,
+        "fact_count": 70,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 71,
       "unit_count": 17,
       "issue_count": 0
     },
     "packages/org.vibevm.world/git-practices/v0.1.0/README.md": {
-      "content_hash": "b47050e995249ecf0bdf714921b80401c8558fd7fd3516b6af4c1faf3950d070",
+      "content_hash": "d201bbbd9cd732e1899dd815d27be32f918529566fd0a4f6f7779e4dea052ec7",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 7,
-        "unmarked_facts": 7
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 10,
+        "fact_count": 9,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 10,
       "unit_count": 3,
       "issue_count": 0
     },
@@ -4108,35 +4276,71 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/README.md": {
-      "content_hash": "d88f01265744287eb899b88967c0f81d744178d77516422405eaa52849bf7c2f",
+      "content_hash": "28440e90f03214ba37d6ddf475086e13b58eb6346f1b7393385be772e8c2ab9c",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 8,
-        "unmarked_facts": 8
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 11,
+        "fact_count": 10,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 11,
       "unit_count": 1,
       "issue_count": 0
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md": {
-      "content_hash": "62fae676a57c13a5778692a88ca41e84718f04bce1c8ce5409c0dfbe408470c3",
+      "content_hash": "ae01747f8a227d7a4274d6199deafaace1587a0da3b40bbf6a230e74720bc21f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 17,
-        "unmarked_facts": 17
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 23,
       "unit_count": 5,
       "issue_count": 0
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md": {
-      "content_hash": "56274c45f0b3c1d80d268aab839f7afeb41127ed4f71d918f5db05d179e7dbe7",
+      "content_hash": "76552896e51943dbe5726dc100f3ed79a4636d157b49c9750ea2a48b0b2ed225",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 40,
-        "unmarked_facts": 40
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 50,
+        "fact_count": 49,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 50,
       "unit_count": 9,
       "issue_count": 0
     },

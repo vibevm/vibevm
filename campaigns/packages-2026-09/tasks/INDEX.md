@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | opus | **dispatched** — 300 units over 17 files; predicted 419–438; F-097's epicentre |
+| MARKUP-B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | opus | **done** — 409 units, **0 unmarked**; **band broken** (1.025) and explained; rulings 57–58 |
 | MARKUP-B14 | `sync-from-code` + `licensing` + `manual-tests` | opus | **done** — 479 units, **0 unmarked**; band held twice running (1.089); rulings 53–56; F-102 fixed under it |
 | MARKUP-B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | opus | **done** — 555 units, **0 unmarked**; band held (1.113); rulings 51–52 |
 | MARKUP-B12 | `campaign-plans` + `two-process-model` + `operating-modes` | opus | **done** — 624 units, **0 unmarked**; counting rule written down; coefficient band 1.07–1.15 |

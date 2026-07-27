@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-27T19:12:49Z",
+  "updated_at": "2026-07-27T20:09:23Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -1741,34 +1741,52 @@
     },
     {
       "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 10,
       "units": 5,
-      "facts": 8,
-      "unmarked": 8,
+      "facts": 9,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/boot/58-flow-dev-runtime-docs.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 7,
       "units": 3,
-      "facts": 5,
-      "unmarked": 5,
+      "facts": 6,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 16,
       "units": 6,
-      "facts": 10,
-      "unmarked": 10,
+      "facts": 15,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1825,45 +1843,69 @@
     },
     {
       "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 17,
       "units": 6,
-      "facts": 12,
-      "unmarked": 12,
+      "facts": 16,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/boot/30-flow-atomic-commits.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 22,
       "units": 6,
-      "facts": 17,
-      "unmarked": 17,
+      "facts": 21,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 65,
       "units": 12,
-      "facts": 37,
-      "unmarked": 37,
+      "facts": 64,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 53,
       "units": 12,
-      "facts": 35,
-      "unmarked": 35,
+      "facts": 52,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1954,78 +1996,120 @@
     },
     {
       "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 8,
       "units": 4,
       "facts": 7,
-      "unmarked": 7,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/boot/32-flow-autonomy.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 15,
       "units": 3,
-      "facts": 10,
-      "unmarked": 10,
+      "facts": 14,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 25,
       "units": 5,
-      "facts": 12,
-      "unmarked": 12,
+      "facts": 24,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 10,
       "units": 4,
-      "facts": 7,
-      "unmarked": 7,
+      "facts": 9,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/boot/31-flow-conventional-commits.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 13,
       "units": 5,
-      "facts": 8,
-      "unmarked": 8,
+      "facts": 12,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 71,
       "units": 17,
-      "facts": 60,
-      "unmarked": 60,
+      "facts": 70,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/git-practices/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 10,
       "units": 3,
-      "facts": 7,
-      "unmarked": 7,
+      "facts": 9,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -3107,34 +3191,52 @@
     },
     {
       "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 11,
       "units": 1,
-      "facts": 8,
-      "unmarked": 8,
+      "facts": 10,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 23,
       "units": 5,
-      "facts": 17,
-      "unmarked": 17,
+      "facts": 22,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 50,
       "units": 9,
-      "facts": 40,
-      "unmarked": 40,
+      "facts": 49,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
