@@ -8,6 +8,11 @@
 //! Each approximation is named at its function, and the rule they all obey is:
 //! **an approximation may only ever ADMIT a candidate for checking, never
 //! silently suppress one.**
+//!
+//! The run-matched delimiters this module scans over — what a backtick or
+//! tilde run opens and closes — live in [`super::fences`].
+
+use super::fences::{blank_fences, is_fence_line};
 
 // ---------------------------------------------------------------- vocabulary
 // spec://vibevm/modules/vibe-progress/PROP-043#stages / #states / #actions
@@ -30,114 +35,6 @@ pub(super) fn is_shorthand_delim(c: char) -> bool {
 }
 
 // ---------------------------------------------------------------- scanning
-/// Blank inline code spans on lines that are OUTSIDE a fenced block.
-///
-/// A fence is itself a backtick run, so blanking code spans over the whole
-/// document swallows every fenced block — which made the fence check vacuous
-/// in the first implementation: it compared "markers with fences eaten" against
-/// "markers with fences blanked" and the two were equal by construction, so it
-/// could never fire. The port's own control caught it; the Python original had
-/// shipped with a check that could not fail.
-pub(super) fn blank_code_spans_outside_fences(text: &str) -> String {
-    let mut out: Vec<String> = Vec::new();
-    let mut fence: Option<char> = None;
-    for line in text.split('\n') {
-        let t = line.trim_start();
-        if let Some(marker) = fence {
-            out.push(line.to_string());
-            if t.starts_with(&marker.to_string().repeat(3))
-                && t.trim_end().chars().all(|c| c == marker)
-            {
-                fence = None;
-            }
-            continue;
-        }
-        if t.starts_with("```") || t.starts_with("~~~") {
-            fence = Some(if t.starts_with("```") { '`' } else { '~' });
-            out.push(line.to_string());
-            continue;
-        }
-        out.push(blank_code_spans(line));
-    }
-    out.join("\n")
-}
-
-/// Blank inline `` `code` ``, preserving length so offsets survive.
-///
-/// APPROXIMATION: a code span is a run of N backticks closed by a run of
-/// exactly N. An unterminated run is left alone rather than swallowing the
-/// rest of the document — which is precisely the failure F-084 was.
-pub(super) fn blank_code_spans(text: &str) -> String {
-    let chars: Vec<char> = text.chars().collect();
-    let mut out: Vec<char> = chars.clone();
-    let mut i = 0usize;
-    while i < chars.len() {
-        if chars[i] != '`' {
-            i += 1;
-            continue;
-        }
-        let open = run_len(&chars, i);
-        let mut j = i + open;
-        let close = loop {
-            if j >= chars.len() {
-                break None;
-            }
-            if chars[j] == '`' {
-                let n = run_len(&chars, j);
-                if n == open {
-                    break Some(j);
-                }
-                j += n;
-                continue;
-            }
-            j += 1;
-        };
-        match close {
-            Some(end) => {
-                for slot in out.iter_mut().take(end + open).skip(i) {
-                    *slot = ' ';
-                }
-                i = end + open;
-            }
-            None => i += open,
-        }
-    }
-    out.into_iter().collect()
-}
-
-pub(super) fn run_len(chars: &[char], at: usize) -> usize {
-    let mut n = 0;
-    while at + n < chars.len() && chars[at + n] == '`' {
-        n += 1;
-    }
-    n
-}
-
-/// Replace fenced-code lines with empty ones, keeping line numbering.
-pub(super) fn blank_fences(text: &str) -> String {
-    let mut out = Vec::new();
-    let mut fence: Option<char> = None;
-    for line in text.split('\n') {
-        let t = line.trim_start();
-        if let Some(marker) = fence {
-            out.push(String::new());
-            if t.starts_with(&marker.to_string().repeat(3))
-                && t.trim_end().chars().all(|c| c == marker)
-            {
-                fence = None;
-            }
-            continue;
-        }
-        if t.starts_with("```") || t.starts_with("~~~") {
-            fence = Some(if t.starts_with("```") { '`' } else { '~' });
-            out.push(String::new());
-            continue;
-        }
-        out.push(line.to_string());
-    }
-    out.join("\n")
-}
-
 /// One `<status …>` or `</status>` element found in the text.
 pub(super) struct StatusEl {
     pub(super) start: usize,
@@ -379,11 +276,6 @@ pub(super) fn is_heading_line(line: &str) -> bool {
             .chars()
             .nth(hashes)
             .is_some_and(|c| c == ' ' || c == '\t')
-}
-
-pub(super) fn is_fence_line(line: &str) -> bool {
-    let t = line.trim_start();
-    t.starts_with("```") || t.starts_with("~~~")
 }
 
 /// The author's words, with everything a markup pass may add removed.

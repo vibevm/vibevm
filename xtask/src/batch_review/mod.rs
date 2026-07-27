@@ -35,6 +35,7 @@
 //! replays landed batches out of git history, which the hermetic tests cannot.
 
 mod checks;
+mod fences;
 mod index;
 mod refs;
 mod report;

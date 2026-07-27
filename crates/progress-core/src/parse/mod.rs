@@ -9,15 +9,17 @@
 //! that carries it. A marked paragraph/item without a fact anchor is an
 //! error (anchored-when-marked). Anything else is an issue, never a guess.
 //!
-//! The pipeline is split along its responsibility seams: block collection
-//! ([`blocks`]), heading/unit segmentation ([`units`]), fact segmentation
-//! ([`facts`]), marker scanning ([`markers`]), and the anchor laws
-//! ([`anchors`]). This module keeps the orchestrator and the shared hash.
+//! The pipeline is split along its responsibility seams: run-matched
+//! delimiters ([`delimiters`]), block collection ([`blocks`]),
+//! heading/unit segmentation ([`units`]), fact segmentation ([`facts`]),
+//! marker scanning ([`markers`]), and the anchor laws ([`anchors`]). This
+//! module keeps the orchestrator and the shared hash.
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#parsing");
 
 mod anchors;
 mod blocks;
+mod delimiters;
 mod facts;
 mod markers;
 mod units;

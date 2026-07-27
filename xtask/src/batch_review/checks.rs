@@ -8,6 +8,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
+use super::fences::{blank_code_spans_outside_fences, blank_fences};
 use super::report::Report;
 use super::text::*;
 use super::{git_show, truncate, window};
