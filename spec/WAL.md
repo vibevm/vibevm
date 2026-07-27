@@ -1,33 +1,49 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-27 (session end — **Phase B ran B6→B13 plus DRIFT-037; corpus
-4 276 → 870; batch review became a tool**)_
+_Updated: 2026-07-28 (**Phase B is CLOSED — B14, B15, B16 landed and the corpus
+reached zero**)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — wave 2, `packages-2026-09`, Phase B in flight.**
+**Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase B complete.**
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**870 unmarked facts remain** (measured, never decremented; 4 276 at the start of
-2026-07-27). The host corpus stays at **0**. Batches B1, B2 and **B5–B13** are
-done; **B14, B15 and B16 remain**. The last six batches each finished at **zero
-residual** — possible only since DRIFT-037 closed F-092.
+**`progress check --exhaustive` exits 0 over all 259 files — 0 unmarked, 0
+warnings.** Every paragraph, list item and non-empty table body cell in the
+living corpus carries a stage, a state and an address. Sixteen batches; 4 276
+unmarked at the start of 2026-07-27, none left. The corpus is **259 files
+(58 host + 201 packages)** — the plan's headline said 260/202 until it was
+corrected at the close. `baseline.json` written at the boundary per amendment
+A6: 921 units, 917 confirmed, 4 unverifiable, 4 files flagged as moved after
+being judged.
 
-**The mechanical half of batch review is now `cargo xtask batch-review`** — 14
-checks, 33 hermetic controls the floor runs on every commit. Three checks
-surface a judgement queue rather than passing verdict, and the output ends with
-what it did **not** check. **It has been wrong four times**, each time by
-approximating a rule instead of reading it; each fix carries the control that
-caused it.
+**61 rulings are locked** in `MARKUP-B1.md`, **three struck (18, 19, 45)**.
+Ruling 45's converse failed twice, so it was struck rather than outranked.
 
-**52 rulings are locked** in `MARKUP-B1.md`, two struck. **Ten findings this
-session, F-092…F-101**, and the sharpest is a class the campaign had not named:
-**an instruction that fails when followed** — a wiring recipe naming a path that
-does not exist, and six `vibe install` lines naming packages that were renamed.
+**Findings F-102…F-116 this session.** The two that matter most:
 
-**Next: B14** (`sync-from-code` + `licensing` + `manual-tests`, 16 files).
-`CONTINUE.md` §recipe carries the eight-step loop verbatim.
+- **F-102** — a fence matched by *prefix* instead of by *run*, in **three**
+  parsers. Fixed in `progress-core`, `batch_review` and `vibe-spec`; the first
+  two agreed with each other *because* they shared the defect, which is the case
+  the "keep the tool independent" argument does not cover. A third
+  implementation found it.
+- **F-114** — `redbook`'s README promises two projects on the same edition run
+  byte-identical practice text; its manifest, three lines above the pins, says
+  the cultural-extraction wave is "accumulated here in place" with the edition
+  bump deferred. **A normative claim falsified by the manifest that implements
+  it**, found only because B16's brief was the first to make an executor read
+  the manifest (now ruling 61).
+
+**The sizing rule took its fourth correction, and this one is an explanation
+rather than a constant.** The coefficient measures **how aggressively a batch
+splits colons**, not any property of the corpus: only a manufactured list can
+exceed one unit per terminator. Measured on three consecutive batches — 25
+manufactured bullets → +23 units, 10 → +6, 4 → +2. B15 broke the band; B16 was
+*predicted in advance* to be insensitive to it and was.
+
+**Next: nothing is running.** See §Next — every remaining item needs the owner
+or is explicitly off-limits.
 
 ## Constraints — do not violate
 
@@ -121,6 +137,11 @@ does not exist, and six `vibe install` lines naming packages that were renamed.
   read `git status --short` before every commit while a batch is out. The
   recovery is `git reset --mixed HEAD~1` (unpushed only; the working tree is
   untouched, so the running worker never notices).
+- **A Python `str.replace` with `\n` in the pattern silently no-ops on this
+  tree's files.** They are CRLF in the working copy (LF in the blob), so a
+  multi-line pattern never matches and the script reports success. It struck
+  twice on 2026-07-28 while editing campaign documents. Use an editor tool that
+  errors on a missed match, or anchor on a single line.
 - **Outstanding manual runs (owner sign-off pending):** MT-02
   (`vibe tree` TUI) and MT-03 (`vibe prefs ui`). An agent may pre-run;
   only a person signs off.
@@ -182,25 +203,42 @@ Nothing running; the task queue is empty and the tree is clean.
 
 ## Next
 
-1. **B14** — `sync-from-code` + `licensing` + `manual-tests`, 16 files. Measure,
-   brief, dispatch to `opus5`, review with the tool, commit, push. Then B15, B16.
-2. **Size with the band, never a point.** `1.07–1.15 × terminators + items +
-   cells`. **The quantity is terminators under a recorded regex, not
-   sentences** — the coefficient is fitted to a 17 % undercount, and repairing
-   the counter toward its name breaks every prediction unless every coefficient
-   is re-derived in the same commit.
-3. **One wave-level DRIFT for F-097** — four dead package names across 21 files
-   and 33 references, six of them `vibe install` lines that cannot work. A fact
-   correction under sync-from-code, not a markup fix.
-4. **Open findings needing the owner**: F-087, F-088, F-078 (DRIFT-035 written,
+**Phase B is done. Every item below needs the owner or is off-limits — no
+batch remains to run autonomously.**
+
+1. **Two wave-level DRIFTs are queued and neither is dispatched.** Both are fact
+   corrections under sync-from-code, which requires surfacing the draft to the
+   owner **before** applying:
+   - **F-097** — four dead package names. **16 sites by meaning in B15 alone**,
+     three of them H1 titles and four unusable `vibe install`/`uninstall` lines.
+     ⚠️ **Do not build the site list from a delimiter-anchored grep**: two sites
+     carry no `flow:` prefix and no backticks, and the review tool's C12 sees
+     only ten of the sixteen.
+   - **F-103 + F-110** — the bare-`boot/` family. **8 of 8 relative links broken**
+     across five packages, and all five READMEs name a `spec/boot/` path their
+     manifests contradict. Packages with `spec/boot/` have zero broken links, so
+     the trait and the defect coincide exactly.
+2. **Open findings needing the owner**: F-087, F-088, F-078 (DRIFT-035 written,
    deliberately not dispatched), and PROP-043 §2 — the spec names what a unit
    **is** and never what structure **is**, a boundary two DRIFTs have now moved
-   in code.
-5. **Phases T and G are designed and unrun.** Phase T was rewritten this session
-   for GLM writers. **Do not start either without an explicit instruction.**
+   in code. **New this session: F-114** (the redbook edition contract) is a
+   release-shaped decision, not an edit.
+3. **Phases T and G are designed and unrun. Do not start either without an
+   explicit instruction.**
+4. **If Phase B ever runs again, size with the band and read a miss as a report
+   about colon-splitting.** `1.07–1.15 × terminators + items + cells`, eight
+   points spanning 1.021–1.153. **The quantity is terminators under a recorded
+   regex, not sentences**; the coefficient is fitted to a 17 % undercount plus
+   two artefacts (a quoted question and `(e.g. …)` both fire it), and repairing
+   the counter breaks every prediction unless every coefficient is re-derived in
+   the same commit.
 
 ## Known issues
 
+- **F-113 / F-114 / F-115 / F-116** — `redbook`'s roster counts 21/22/23 in three
+  documents; its edition contract is falsified by its own manifest; the
+  TypeScript stack's front door points at a README that does not exist; and the
+  three `discipline-mcp-*.md` briefs carry twelve divergences, three normative.
 - **F-069** — aggregator grammar. Phase C's problem, not Phase B's.
 - **F-078** — the boot lane carries four git rules twice. The counter fix is
   necessary and **not sufficient**: `##HOIST-LCA` puts the hoist target at the
@@ -215,8 +253,38 @@ Nothing running; the task queue is empty and the tree is clean.
 
 ## Session context
 
-One long session: nine batches, one parser fix, a review tool built and ported
-to Rust, and three successive corrections to the campaign's own sizing rule.
+**Phase B's last three batches, and the phase closed at zero.**
+
+**The instruments were the story again, and the new part is how one was caught.**
+F-102 was a fence matched by prefix in *three* parsers. Two of them — the gate
+and the review tool — **agreed with each other**, and agreement read as
+confirmation. The campaign's standing argument for keeping the tool independent
+of `progress-core` rests on their disagreeing; it does not cover the case where
+they share a defect. What surfaced it was a third implementation with no stake
+in either, reading 130 paragraphs where the gate read 141. *A related lesson, on
+a smaller instrument: the first test written to demonstrate the `vibe-spec` half
+of that bug **passed against the broken code**, because it asked whether a
+section had children and the stray heading was level 1 and therefore the root's.
+A probe that passes is evidence about the probe until a control says otherwise.*
+
+**The sizing rule stopped being a curve fit.** It was falsified a fourth time at
+B15 and the replacement is not another constant: the coefficient measures how
+aggressively a batch splits colons, because only a manufactured list can exceed
+one unit per terminator. That is arithmetic, not correlation — and it was then
+*predictive* twice, most sharply at B16, whose brief said in advance that this
+would be the batch the coefficient could not move.
+
+**Fifteen of twenty-four briefs have carried a factual error found by the batch
+running them, and the last three were all counting-unit slips rather than
+arithmetic** — names against sites, headline against itemisation. B16's executor
+named the pattern; the rule that follows from it is *state the unit with every
+count*.
+
+**One ruling was found whose obedience would have been a semantic edit.** Ruling
+57 splits a colon introducing cases; ruling 59 now stops it when the cases are
+joined by **or**, because a bulleted list is a conjunction and bulleting
+`A OR B` asserts both where the source asserts either. In sixty-one rulings it
+is the only place following the list produced the thing the list forbids.
 
 **The through-line is that the instruments kept being the thing that was
 wrong.** The review tool shipped four bugs and every one was the same mistake —
