@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Fifty-two rulings now, of which two are struck (18, 19).** They accumulate in
+**Fifty-six rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -478,6 +478,44 @@ ruling would need.
     exported into a process running third-party code.» Every colon ruling
     (22, 35, 45, 48, 49) assumes lead-then-items and none reaches this shape.
     Ruling 3 decides it: splitting leaves the claim with nowhere to live.
+
+### Added by the B14 pass (2026-07-28) {#locked-b14}
+
+53. **Ruling 35's "a set the lead names" covers a condition, an instruction or a
+    bare predicate — the colon may supply the lead's complement.** What 35
+    excludes is a colon introducing the lead's *contrast*, *reason* or
+    *definition*, which is what its own control was about.
+    **Measured, and this is why it outranks the literal reading:** since ruling
+    35 was locked at B8, **69 lead-then-manufactured-list sites have landed**
+    across the marked corpus, and they routinely carry leads that name no set —
+    «When the channel degrades, the symptoms are always the same:»
+    (`two-process-model/…/files-as-ipc.md`), «Emit a short end-of-session report
+    in the chat:» (`wal/…/session-end-hook.md`), «The repair is never
+    mysterious:» (same file), «Concretely:»
+    (`spec-genres/…/SPEC-GENRES-PROTOCOL.md`). Reading 35 literally enough to
+    keep those whole would contradict the majority of the corpus it governs.
+    *B14 met the question twice and flagged rather than settled it; the count is
+    what decided it, not the argument.*
+54. **A `SKILL.md`'s document marker stands in the preamble, before the
+    `# Title`.** `##PLACE-DOCUMENT` reasons from "every file here opens with its
+    heading", which is false for this genre — a skill opens with YAML
+    frontmatter — so the rule does not reach it and there is no contradiction to
+    resolve. Both landed siblings (`wal-status`, `health-audit`) put the marker
+    after the frontmatter and before the title, and the gate reads it as the
+    document marker.
+55. **The trailing sentence of a deconstructed paragraph is not a ruling-30
+    candidate.** `batch-review`'s C2 surfaces "a paragraph sitting directly after
+    a list item", which is true **by construction** of every manufactured list
+    whose source paragraph continued past the enumeration — the blank line is
+    part of the split, not a separate repair. B14 produced four and all four were
+    the split's own tail. Check them against the pre-state anyway; the point is
+    that a C2 queue of this size is expected, not suspicious.
+56. **Ruling 51's uniform id names the *primary* pointer unit; a second pointer
+    paragraph in the same file takes a descriptive name.** Ids are unique per
+    file, so `##sibling-document-pointers` cannot repeat. B14 met two such files
+    and used the landed style for the second (`##full-protocol-pointer`,
+    `##review-checklist-pointer`). Ruling 51 measured 7 packages to 2 and never
+    considered the two-pointer case.
 
 ## Boundaries {#boundaries}
 
