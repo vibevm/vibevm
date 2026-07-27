@@ -1680,6 +1680,66 @@ command that would have tested it.
   The three stack aggregators are uniform by contrast — all three read
   `# AI-Native <Lang> (stack:…)`.*
 
+- **2026-07-28 · F-113 — `redbook`'s roster is wrong in three documents and no
+  two of them agree.** Counted: the manifest pins **22** members, the README's
+  «Members (edition 0.2.0)» table has **21** rows, and the boot snippet lists
+  **23**. The README **omits `git-practices` entirely** — which the manifest pins
+  twice and whose own comment reads «attribution-policy now arrives via
+  git-practices» — and omits the whole cultural-extraction wave
+  (`dev-runtime-docs`, `wal-specspaces`) that the manifest pins and the snippet
+  lists. Two of the names it does list are dead (F-097). So a consumer reading
+  the front door gets 21 names, two uninstallable and three missing.
+
+- **2026-07-28 · F-114 — the edition contract is falsified by the manifest that
+  implements it, three lines from the pins.** `redbook/README.md` §editions
+  states «An edition is a tested set … two projects on the same edition run
+  byte-identical practice text» and «a new edition is a new umbrella version with
+  refreshed pins». The manifest's own comment, immediately above the
+  cultural-extraction members, reads: «**edition bump to a clean 0.3.0 lands when
+  the full new practice set has settled; accumulated here in place meanwhile**».
+
+  **So the umbrella accumulates members inside 0.2.0 without an edition bump, and
+  says so.** Two projects that installed `redbook 0.2.0` on either side of that
+  wave do not run byte-identical practice text — which is precisely the promise.
+  This is the campaign's cleanest instance of a **normative claim contradicted by
+  its own implementation**, and it was found only because B16's brief was the
+  first to ask an executor to read the manifest before marking an aggregator
+  (now ruling 61).
+
+- **2026-07-28 · F-115 — the TypeScript stack's front door dead-ends.**
+  `typescript-ai-native/v0.6.0/README.md` sends the consumer to «the `-lang`
+  package's README»; `typescript-ai-native-lang/v0.6.0/` has **no `README.md`**.
+  The rust and go `-lang` packages both have one, so TypeScript is the only stack
+  of three whose aggregator points at a file that does not exist.
+
+- **2026-07-28 · F-116 — twelve divergences across three near-identical
+  siblings, three of them normative.** The `discipline-mcp-{rust,go,typescript}.md`
+  briefs are the same document per language. **(1)** The capture guarantee
+  («Reports are whole») is a standalone paragraph in rust, folded into a sentence
+  in ts, and stated **twice** in go. **(2)** The claim that the enumeration test
+  pins the parity-map list — checkable and normative — exists in rust and go and
+  **is absent from ts**, whose heading is followed straight by the table.
+  **(3)** ts cites `TCG-PROTOCOL-v0.1` unqualified where the siblings say
+  `TCG-PROTOCOL-RUST-v0.1` / `-GO-v0.1`, which in a repository shipping
+  `flow:qualified-naming` is now ambiguous. Nine further divergences are phrasing
+  or scope: a `force`-class rule only rust states, an oracle-fidelity caveat every
+  brief carries except the one whose oracle is not the reference implementation,
+  and a go sentence citing a «named delta over the Rust one» that the rust brief
+  does not record.
+
+  **The method is the finding.** These three files took about a third of B16 and
+  produced two thirds of its harvest, because marking them consistently forces a
+  reader to notice every place they are not. **Near-identical siblings belong in
+  one batch on purpose.**
+
+- **2026-07-28 · The brief's own error, and it was mine.** B16's `{#anchors}`
+  headline said «nine heading anchors owed»; its own itemisation summed to eight,
+  and eight is what a fence-aware scan of the pre-state finds. **Fifteen of
+  twenty-four briefs have now carried a factual error found by the batch running
+  them**, and B16's executor named the pattern behind the last three: they were
+  **counting-unit slips, not arithmetic** — names against sites, headline against
+  itemisation, units against terminators. *State the unit with every count.*
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
