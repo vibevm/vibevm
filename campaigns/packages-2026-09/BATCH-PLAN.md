@@ -25,9 +25,24 @@ back over three batches:
 | B10 | 338 | 201 | 130 | 696 | 700 | **−0.6 %** |
 | B11 | 382 | 145 | 119 | 677 | 682 | **−0.8 %** |
 
-**±0.8 % against the ±15 % the paragraph rule needed**, and — the part that
-matters operationally — **sentences are countable by regex before any markup
-work starts**, so a batch can be sized without dispatching it.
+**±0.8 % against the ±15 % the paragraph rule needed.**
+
+**The operational claim needs one caveat, found while sizing B12 and worth more
+than the coefficient.** «Countable by regex» is true, but **two regexes disagree
+by 35 %**: a reviewer-side counter read B11's pre-state at **515** sentences
+where the batch's own method reported **382**. Abbreviations, code spans, list
+text and what counts as a paragraph all move the number. So:
+
+- **The 1.08 is bound to the counter that produced 354 / 338 / 382**, and it is
+  meaningless with any other. A batch reporting a sentence count **must state
+  its counting rule**, or the next batch cannot use it.
+- **Sizing before dispatch works only after calibrating your counter** against a
+  landed batch's reported figure. B12's reviewer-side count of 426 becomes ≈316
+  once divided by the measured 1.348 bias — a 715-unit prediction becomes 596.
+- **Nothing specifies the counter.** Until something does, the mechanism is
+  sound and the *number* is only transferable between people who agree on how to
+  count. That is a smaller version of the campaign's own recurring problem: a
+  measurement is only as portable as its definition.
 
 **The controlled experiment, which is why this is a mechanism and not another
 curve fit.** `self-updating-tools.md` and `packaging-lessons.md` are the same
