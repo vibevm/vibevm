@@ -9,43 +9,50 @@ counted two superseded slots that nothing resolves to._
 **202 files** across 37 packages; the observed corpus is **260 files**
 (58 host + 202 packages), confirmed by `progress scan`.
 
-**Sizing: the paragraph multiplier is NOT a constant — falsified at B10.**
-Size a `world` batch as **paragraphs × ~2.2 + pre-existing list items × 1.00 +
-table cells × 1.00**, and **expect ±15 %**. The structural half is solid and
-confirmed three times: only paragraphs multiply, because items and cells are
-already at fact grain and ruling 1 keeps a pre-existing item whole. The
-multiplier is not.
+**Sizing: count SENTENCES, not paragraphs — the mechanism, found at B11.**
 
-| batch | paragraph heirs | multiplier |
-|---|---|---|
-| B8 | 71 → 151 | ×2.127 |
-| B9 | 179 → 378 | ×2.112 |
-| **B10** | **156 → 369** | **×2.365** |
+```
+predicted units  ≈  1.08 × sentences  +  pre-existing list items  +  table cells
+```
 
-**What went wrong, and it is the plan's own error, not the batches'.** B9's
-report said its measurement was «stable to 0.7 %» against B8's, and this file
-promoted that phrasing into a rule. **Two points cannot show stability — they
-can only fail to show instability.** B10 was dispatched as the stability test,
-it came in 11.6 % high, and the *superseded* two-constant rule was the closer of
-the two on that batch (−3.6 % against −5.6 %). A rule locked on two
-measurements and falsified by the third is exactly the shape this campaign
-keeps finding elsewhere; it found it here in its own planning arithmetic.
+Deconstruction produces roughly **one unit per sentence**, which is what it is
+for; paragraphs were only ever a proxy for sentences and a bad one. Measured
+back over three batches:
 
-**The multiplier tracks paragraph density, not package or genre.** Per file it
-ranges **×1.71 to ×2.93**: dense protocol documents run 2.5–2.9, READMEs
-1.71–2.00. A batch heavy in protocol prose will exceed 2.2 and a
-README-and-boot-snippet batch will fall short. Size with the range, not the
-point, and **do not lock a fourth constant on B11 alone.**
+| batch | sentences | items | cells | predicted | measured | error |
+|---|---|---|---|---|---|---|
+| B9 | 354 | 236 | 162 | 780 | 776 | **+0.6 %** |
+| B10 | 338 | 201 | 130 | 696 | 700 | **−0.6 %** |
+| B11 | 382 | 145 | 119 | 677 | 682 | **−0.8 %** |
 
-**Why two constants were not enough, and it is worth keeping:** the old rule's
-single «prose» constant lumped paragraphs and list items, which behave nothing
-alike. B9's prose is 57 % items against B8's 53 %, and that 4 points is the
-whole 2.6 % miss. **`progress check` reports only a total today** — the
-para/item/cell split has to be counted from the gate log's «Para unit» / «Item
-unit» / «Cell unit» text, and a subcommand that reported it directly would make
-this sizing a command rather than a ritual.
+**±0.8 % against the ±15 % the paragraph rule needed**, and — the part that
+matters operationally — **sentences are countable by regex before any markup
+work starts**, so a batch can be sized without dispatching it.
+
+**The controlled experiment, which is why this is a mechanism and not another
+curve fit.** `self-updating-tools.md` and `packaging-lessons.md` are the same
+author, the same package, the same four-field lesson genre, and *identical*
+pre-composition: 29 paragraphs, 7 items, 0 cells each. They produced **×2.45 and
+×1.93** — a 27 % spread with paragraph density, package and genre all held
+constant. Counted independently at review they carry **68 sentences against 55**,
+a ratio of 1.24 against the multipliers' 1.27. Paragraph share correlates with
+the multiplier at **r = −0.171** across B11's fifteen files; sentences per
+paragraph correlate at **r = +0.886**.
+
+**Read this as a mechanism with a provisional coefficient, and do not lock the
+coefficient.** This is the *third* version of this rule. The first was a blended
+constant, the second was «paragraphs ×2.13, stable to 0.7 %» promoted from two
+measurements and falsified by the third, and the plan recorded that as its own
+error. Three points is not proof either. **What is now well-supported is the
+mechanism — one unit per sentence — because a controlled pair demonstrates it;
+the 1.08 is three measurements and will move.**
 
 **Superseded — kept for the reasoning, which still holds:**
+The paragraph multiplier read ×2.127 (B8), ×2.112 (B9) and ×2.365 (B10). Only
+paragraphs multiply — items and cells are already at fact grain, and ruling 1
+keeps a pre-existing item whole — and that structural half survives intact; it
+is the *rate* that paragraphs were never the right unit for.
+
 The language stacks came in at ×1.62 / ×1.72 / ×1.75, but B8's `world` flows
 measured **×1.28**, and the cause is structural: **47.6 % of their units are
 table body cells**, which are already at fact grain and cannot deconstruct. On
@@ -114,7 +121,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B8~~ | `discovery-prompt` + `decision-records` — **DONE**, 366 units (×1.28), **0 unmarked** | 8 | 286 |
 | ~~B9~~ | `spec-genres` + `wal` + `addressable-specs` — **DONE**, 776 units, **0 unmarked** | 17 | 577 |
 | ~~B10~~ | `health-audit` + `conflict-protocol` + `managed-blocks` — **DONE**, 700 units, **0 unmarked** | 16 | 487 |
-| B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | 15 | 451 |
+| ~~B11~~ | `source-mirrors` + `tool-design-lessons` + `qualified-naming` — **DONE**, 682 units, **0 unmarked** | 15 | 451 |
 | B12 | `campaign-plans` + `two-process-model` + `operating-modes` | 15 | 403 |
 | B13 | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` | 15 | 378 |
 | B14 | `sync-from-code` + `licensing` + `manual-tests` | 16 | 339 |

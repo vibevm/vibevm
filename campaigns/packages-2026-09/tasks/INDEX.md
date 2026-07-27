@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| MARKUP-B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | opus | dispatched — 15 files, 451 units; predicts 0 / 1 651; tests the density hypothesis |
+| MARKUP-B11 | `source-mirrors` + `tool-design-lessons` + `qualified-naming` | opus | **done** — 682 units, **0 unmarked**; **falsified density**, found the sentence mechanism |
 | MARKUP-B10 | `health-audit` + `conflict-protocol` + `managed-blocks` | opus | **done** — 700 units, **0 unmarked**; **falsified the sizing constant** (×2.365); F-097 widened |
 | MARKUP-B9 | `spec-genres` + `wal` + `addressable-specs` | opus | **done** — 776 units, **0 unmarked**; sizing rule corrected to 3 constants; rulings 39–41 |
 | MARKUP-B8 | `discovery-prompt` + `decision-records` | opus | **done** — 366 units, **0 unmarked** (a first); ×1.28 measured; rulings 34–38 locked; F-097 |
