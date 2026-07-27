@@ -1443,6 +1443,30 @@ command that would have tested it.
   points is not proof either. The *mechanism* is what the controlled pair
   supports; the coefficient is three numbers.
 
+- **2026-07-27 · F-101 — a template disagrees with its own worked example.**
+  `comparative-research/…/research-template.md` writes capability, gap, lead and
+  delta subsections at **h3** in its skeleton and at **h2** in the worked
+  fragment beneath it, and gives every skeleton section a `{#anchor}` while the
+  fragment carries one and omits the rest. Both sit inside fenced blocks, so
+  they cost the markup nothing — **and a reader who copies the worked fragment,
+  which is what a worked fragment is for, gets a shape the template's own
+  commentary does not describe.**
+
+- **2026-07-27 · The sizing quantity is misnamed, and the name is the hazard.**
+  B13 measured it: the recorded rule reads **274** where a true sentence count
+  of the same files is **≈320** — a structural **+17 %** from 34 paragraphs
+  ending in a colon before a fence or list and 13 terminators swallowed by a
+  following `**` or backtick.
+
+  **The coefficient is fitted to that undercount.** A future implementer who
+  repairs the counter toward real sentences will read ≈320 on B13, derive ≈0.95,
+  and — sizing with the recorded 1.08–1.15 — over-predict by an eighth. Recorded
+  in `BATCH-PLAN.md` at the top of the rule, with the instruction that
+  correcting the counter requires re-deriving every coefficient in the same
+  commit. **Calling a measured quantity by the name of the thing it approximates
+  is an invitation to improve it into wrongness**, and this is the campaign's
+  cleanest example of the class.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
