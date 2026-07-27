@@ -39,6 +39,12 @@ reproduces B11's published figure exactly):
 - **Terminator:** `[.!?]["\)]?` followed by whitespace or end of unit.
 - **Not terminators:** em-dash, semicolon, colon. **Abbreviations:** no special
   case — measured across 148 paragraphs, zero occurrences of `e.g.`/`i.e.`/etc.
+  **That measurement does not generalise, falsified at B15:** its pre-state
+  carries one `(e.g. …)`, and six lines carry a quoted question mid-sentence
+  (`…threshold?" `), which the regex reads as a terminator because the lookahead
+  only wants whitespace. **Do not repair either** — the coefficient is fitted to
+  the same artefacts. Recorded so a batch reading a multi-terminator count on a
+  single-sentence unit does not go looking for a bug.
 - **A paragraph with no terminator counts as 1.** A multi-line blockquote is
   one paragraph.
 - **YAML frontmatter is structure, not a paragraph** (DRIFT-037). The rule said
@@ -64,18 +70,59 @@ back over three batches:
 | B12 | 320 | 159 | 96 | 601 | 624 | **−3.7 %** |
 | B13 | 274 | 168 | 82 | 546 | 555 | **−1.6 %** |
 | B14 | 259 | 150 | 47 | 476 | 479 | **−0.6 %** |
+| B15 | 237 | 120 | 46 | 428 | 409 | **+4.6 %** |
 
 **B13 was the first batch sized with the band before dispatch, and the band
 held**: predicted 543–565, measured 555, realised coefficient **1.113**.
 **B14 held it a second time**: predicted 474–494, measured 479, realised
-**1.089**. Six points now span **1.068–1.153**, and the band has stopped being
-news — which is the point at which a rule is allowed to be boring.
+**1.089**.
 
-**The coefficient has now moved twice.** B12 realised **1.153** units per
-paragraph-sentence against B11's 1.08, and 1.153 reproduces its 624 exactly.
-Four batches span 1.068–1.153. **Size with the band, quote no point**, and treat
-the next batch that lands outside it as informative rather than as a surprise —
-that is the third time this file has been told a small-n constant is not one.
+### B15 broke it, and the reason is the rule's fourth correction {#coefficient-is-judgement}
+
+**Predicted 419–438, measured 409, realised 1.025** — the first point outside
+1.068–1.153 since the band was introduced.
+
+**The coefficient is not a property of the corpus. It measures how aggressively
+a batch splits colons.** The formula multiplies terminators and adds items and
+cells at one, so the coefficient IS units-per-terminator over paragraph-derived
+units — and a paragraph can only exceed 1:1 by becoming a **manufactured list**,
+where one colon sentence turns into a lead plus N bullets. Nothing else in the
+deconstruction law creates units faster than terminators.
+
+Measured directly, by counting marked list items in the landed tree and
+subtracting the pre-state item count:
+
+| batch | manufactured bullets | paragraph-derived units | terminators | excess | coefficient |
+|---|---|---|---|---|---|
+| B14 | 25 | 282 | 259 | +23 | 1.089 |
+| B15 | 10 | 243 | 237 | +6 | 1.025 |
+
+B15's own executor put it exactly: its paragraphs produced 243 units from 237
+terminators — deconstruction did what the mechanism says, one unit per sentence
+— and it kept **seven** multi-segment colons whole, each on a named ruling. Had
+all seven split, the batch lands at **432** and the band holds.
+
+**So sizing from the band predicts the reviewer's future colon rulings, not the
+documents.** Two consequences, and the second is the one that matters:
+
+- **Quote the band, expect misses, and read a miss as a report about splitting
+  rather than about the corpus.** Ask how many colons the batch kept whole
+  before concluding anything about the files.
+- **The band will keep moving until the colon rules stop needing a per-batch
+  tie-break.** Ruling 57 is the first one derived from an internal control
+  rather than a count of precedents; each such ruling should narrow the spread.
+
+*Two points is not proof — this file has said so three times and been right
+each time. What is established here is the **mechanism** (arithmetically
+necessary, not fitted) and two measurements consistent with it.*
+
+**Superseded by §coefficient-is-judgement above, and kept for the history it
+records.** B12 realised **1.153** units per paragraph-sentence against B11's
+1.08, and 1.153 reproduces its 624 exactly; four batches then spanned
+1.068–1.153. **Seven now span 1.025–1.153**, and the instruction "treat the next
+batch that lands outside it as informative rather than as a surprise" was
+written before anyone knew what such a batch would be informative *about*. B15
+answered that: it is informative about how the batch tie-broke its colons.
 
 **±0.8 % against the ±15 % the paragraph rule needed.**
 
@@ -202,7 +249,7 @@ Two facts decide the batching, and neither is visible from the file count:
 | ~~B12~~ | `campaign-plans` + `two-process-model` + `operating-modes` — **DONE**, 624 units, **0 unmarked** | 15 | 403 |
 | ~~B13~~ | `git-attribution-policy` + `secrets-hygiene` + `comparative-research` — **DONE**, 555 units, **0 unmarked** | 15 | 378 |
 | ~~B14~~ | `sync-from-code` + `licensing` + `manual-tests` — **DONE**, 479 units, **0 unmarked** | 16 | 327 |
-| B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | 17 | 300 |
+| ~~B15~~ | the git family + `wal-specspaces` + `dev-runtime-docs` — **DONE**, 409 units, **0 unmarked** | 17 | 300 |
 | B16 | three `-mcp` packages + two family umbrellas + `redbook`'s remaining 2 | 10 | 232 |
 
 **Thirteen batches remain** (B5–B16). The count has read 18, 16, then 15: F-080
