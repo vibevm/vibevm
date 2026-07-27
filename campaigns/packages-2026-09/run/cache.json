@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-27T12:00:06Z",
+  "updated_at": "2026-07-27T12:59:16Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -1862,57 +1862,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md": {
-      "content_hash": "08775d4c24f8a34818236070254918e659e47d897581924502b3d325fb48b20b",
+      "content_hash": "206fae3b55d78417eb6a730ae53a7ed608507c1cecaf9cdd552d4032c45ec870",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 14,
-        "unmarked_facts": 14
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 24,
+        "fact_count": 23,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 24,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md": {
-      "content_hash": "24292ffe3efafd30ac5ff971d1ab3709536b382d52f65067a016104c1c627995",
+      "content_hash": "c44be62d2bafb8c88fc9c12da7c5230e67e86669f053e450b32a27ecaa606eb6",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 30,
+        "fact_count": 29,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 30,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
-      "content_hash": "2da3a790c4a93088e774fcbd45b48d49c0589063cfd3fcd353bf114252834f95",
+      "content_hash": "c71f34595f5b66b3a06b11ca117ff87af8af56b616d5145b213f931ec20d0106",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 42,
-        "unmarked_facts": 42
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 75,
+        "fact_count": 74,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 75,
       "unit_count": 22,
       "issue_count": 0
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md": {
-      "content_hash": "44bf41935d486b79833d968bf14123bcd8e74b0c8df28d4adcb11741fde9b70a",
+      "content_hash": "334fbcf2307726c0c3ba8d652f2a1535a349a49277418b759045a4cc2c21d556",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 32,
-        "unmarked_facts": 32
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 52,
+        "fact_count": 51,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 52,
       "unit_count": 10,
       "issue_count": 0
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md": {
-      "content_hash": "9725af32c821f293e1e63955da4c2038e1d9bcecce97cbf6988bf2b483972b20",
+      "content_hash": "c25c2527385d8dec5803d15edc3fb29e45afa44ade727bd9353e398ca926229e",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 37,
-        "unmarked_facts": 37
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 59,
+        "fact_count": 58,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 59,
       "unit_count": 8,
       "issue_count": 0
     },
@@ -2854,57 +2914,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/README.md": {
-      "content_hash": "e88660056adadfd5e1fc65fb70326ef69a4758a460653a59c20c21d4ca240b1c",
+      "content_hash": "bca20a01c36f26e4175775db1143f38b04ddf61e9c47f60b1aceb54633d2fe95",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 14,
-        "unmarked_facts": 14
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 21,
+        "fact_count": 20,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 21,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md": {
-      "content_hash": "c0913c09f2d93a5dfcc7b238e46ec1063fdbc5d51352bafd36f45578284f351a",
+      "content_hash": "7ef1cdc1d4e64f0fd027a6c5a4dd21c20898bb782eff0e4388f9c8735c88bcd0",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 25,
+        "fact_count": 24,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 25,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md": {
-      "content_hash": "850a99e273e3a6ebeacf8e48863d96d3e7714936328d2458b342fadec059ab4c",
+      "content_hash": "34f934d610a6a07999a483986a98d6025dacdaab50151d463c987be76ec06434",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 40,
-        "unmarked_facts": 40
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 58,
+        "fact_count": 57,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 58,
       "unit_count": 9,
       "issue_count": 0
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md": {
-      "content_hash": "501484c6d6c50bb79e7bc7cf6da27d16d5e0606c1e685107d67fadca185a83d0",
+      "content_hash": "215a0a988e589ba7cfe7223e2ea3c86a1a4e6e18157698cc069e471cc26aeaad",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 29,
-        "unmarked_facts": 29
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 34,
+        "fact_count": 33,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 34,
       "unit_count": 7,
       "issue_count": 0
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md": {
-      "content_hash": "4909375a5c01aaca06586b3ee09eec4878b87ab7a0e03c4b783e9728b82d5e1d",
+      "content_hash": "d0e6fe8f66b6f4ff270e8027bc7569af8f5da780d3add2a63f2659f392019e9f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 35,
-        "unmarked_facts": 35
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 48,
+        "fact_count": 47,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 48,
       "unit_count": 12,
       "issue_count": 0
     },
@@ -3501,57 +3621,117 @@
       "issue_count": 0
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/README.md": {
-      "content_hash": "364e7702aac2e1f935c000f675c19eb79b29496fd8b468107e43c6c36bfea3fd",
+      "content_hash": "fd48f9652914e2d30a5577465aa3151c8000248461f7bcbea6435a1b3652ade3",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 15,
-        "unmarked_facts": 15
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 23,
       "unit_count": 6,
       "issue_count": 0
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md": {
-      "content_hash": "a74985717dc6f2bfcc351525f502e27dcf4da731d28b2ae9339d64a0ebc35a02",
+      "content_hash": "9a7a3e8da2930eb4f9b3c249efc074d058e7d7c328fc6e27dfa81619089528a8",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 13,
-        "unmarked_facts": 13
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 18,
+        "fact_count": 17,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 18,
       "unit_count": 4,
       "issue_count": 0
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md": {
-      "content_hash": "3f9ebeef4556c1f0388d67ca2cc8b4969e182d7f7611b7af3879655d05fbfe99",
+      "content_hash": "1b8bfd391e63718d519439db77367b2d186d49685d921ad2ded68a2ffbadf2c3",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 29,
-        "unmarked_facts": 29
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 54,
+        "fact_count": 53,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 54,
       "unit_count": 11,
       "issue_count": 0
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md": {
-      "content_hash": "9fae56ef284f33dce7e5caf6b91d43fcadeb08e4e2b2494521d09910e1d07538",
+      "content_hash": "d0baa15f7e83c474faf72a9259dfedf5be554851c2e3f3f4d9f21156ed749856",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 39,
-        "unmarked_facts": 39
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 59,
+        "fact_count": 58,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 59,
       "unit_count": 12,
       "issue_count": 0
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md": {
-      "content_hash": "d4812fda11f9ed7d7fdd0d4209c8f609deaa8b8dce1ef8edf2da647831d61dcc",
+      "content_hash": "73d4d54a56a44bdb63eabafc7505daf142520b722d8bb5855160e17761f5ca5f",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 38,
-        "unmarked_facts": 38
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 59,
+        "fact_count": 58,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 59,
       "unit_count": 7,
       "issue_count": 0
     },
