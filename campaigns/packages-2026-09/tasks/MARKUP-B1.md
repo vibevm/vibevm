@@ -134,7 +134,7 @@ above did not decide. These are the reviewer's rulings; **they bind B1b and
 every batch after it.** Where a ruling contradicts the prose earlier in this
 file, the ruling wins — the earlier text was written before the cases were known.
 
-**Forty-six rulings now, of which two are struck (18, 19).** They accumulate in
+**Fifty rulings now, of which two are struck (18, 19).** They accumulate in
 one place on purpose: a batch reads this list and nothing else to know what was
 already decided. **The list is a derived thing too and nothing recomputes it** —
 B5 caught two rulings that had outlived their findings by a day, and B6 caught a
@@ -425,6 +425,41 @@ justification in its own report that did not survive being checked.
     39 such cells that way. It is 23 working as written, and the list form it
     recommends is not available, because turning a table into a list is not a
     sense-preserving split.*
+
+### Added by the B12 pass (2026-07-27) {#locked-b12}
+
+47. **A hyphen wrapped to the end of a line is repaired, the way a bullet is.**
+    A trailing `-` before a newline renders as `word- rest` — the parser reading
+    layout as content, ruling 33's family exactly. **Move one word across the
+    newline.** Ruling 33 licensed this only for a bullet character because a
+    bullet was the only case anyone had met; B12 met four hyphens in one package
+    and correctly left them, having no licence. It has one now.
+48. **An enumerating colon does not split when a substantive clause trails the
+    enumeration.** Attaching the coda to the last item changes what that item
+    claims. **A bracketed source pointer is not a coda** — a citation changes
+    nothing the item asserts and rides with it. This decided five sites in B12
+    and is the third clause of the split test, after «the lead stands alone» and
+    «each item is separately verdictable».
+49. **Ruling 40 gates the colon rules from the lead side, as ruling 20 gates
+    them from the item side.** If the only available lead is a ≤3-word connector
+    with no independent claim, and no preceding sentence in the same paragraph
+    can carry it, then **the colon cannot split** — there is nowhere legal to put
+    the lead. B12 met the identical shape three times and it split once, purely
+    because a sentence was available to ride with.
+50. **Ruling 45's «every split had 3+ segments» is a correlation, not a law.**
+    B12 kept a three-segment colon whole with a stated mechanical reason: one
+    item carried an em-dash parenthetical whose closing dash would leave the
+    bullet ending on nothing, so it could not stand in the author's own wording
+    (ruling 3). **Segment count is a tiebreaker, and rulings 3, 20, 35, 48 and 49
+    all outrank it.**
+
+*Reported and deliberately not ruled:* B12 drew a stage line for a package whose
+subject is human and AI cognition rather than this repository — a stated rule or
+described mechanism `@impl/done`, a claim about how humans and models behave
+`@spec/done`. It is ruling 10 read literally and it produced that batch's
+largest block of `@spec`. **Left as the executor drew it**; if a future batch on
+outside-world subject matter disagrees, that disagreement is the evidence a
+ruling would need.
 
 ## Boundaries {#boundaries}
 
