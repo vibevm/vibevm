@@ -1655,6 +1655,31 @@ command that would have tested it.
   four commits» before the sub-section that says the fourth should probably be
   reverted.
 
+- **2026-07-28 · F-112 — one line in a shipped README that is wrong in three
+  ways at once, found while sizing B16.** `go-ai-native-mcp/v0.1.0/README.md:9`
+  points a reader at `spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md`.
+
+  1. **The path is stale.** `spec/terraforms/` holds two files and that is not
+     one of them.
+  2. **The file it means is in the archive.** It lives at
+     `legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md`, and the WAL's standing
+     constraint is that nothing in the living corpus may cite into `legacy-spec/`
+     as a normative source — archive-provenance pointers only. So the *corrected*
+     path would still be a violation.
+  3. **It is a host path in a consumer's package** (F-105, F-109's genre): a
+     project installing `mcp:go-ai-native-mcp` has neither directory.
+
+  **This is the sharpest instance of "an instruction that fails when followed"
+  the campaign has produced, because it fails for the author too** — every other
+  member of that class at least worked from inside this repository.
+
+  *Two smaller facts from the same file, recorded so the batch does not re-file
+  them: it is a **stub** («This README is finalized at campaign close»), which is
+  why it carries 2 units where its two MCP siblings carry 5; and its H1 is the
+  only one of the three that reads `# <name> (mcp:…)` rather than `# mcp:…`.
+  The three stack aggregators are uniform by contrast — all three read
+  `# AI-Native <Lang> (stack:…)`.*
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
