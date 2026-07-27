@@ -1605,6 +1605,56 @@ command that would have tested it.
   genre as F-105: a package that can only be read correctly from inside the
   repository that produced it.
 
+- **2026-07-28 · F-097 gains two sites and, more usefully, a warning about how
+  its site list gets built.** B15 found two dead-name references outside the
+  criterion the brief used (`flow:`-prefixed or backtick-delimited): a **bold**
+  one at `git-atomic-commits/…/boot/30-flow-atomic-commits.md:23` — in a seventh
+  file the brief's table did not list, and an installed boot snippet at that —
+  and an **undelimited** one at `git-atomic-commits/README.md:60`
+  («atomic-commits is how that commit is shaped.»). So B15 carries **16**
+  package references by meaning where the brief counted 14 and the review tool's
+  C12 sees 10, each number correct under its own criterion.
+  **The actionable part: if the queued wave-level DRIFT builds its site list
+  from a delimiter-anchored grep it will silently skip both.** That is the third
+  time this campaign has been bitten by a grep criterion, after
+  `grep -v '\.vibe'` and the naive heading count. **The brief's own count was
+  the error** — recorded as such rather than as an under-scoped grep, because a
+  number presented as "the dead names in this batch" was short by two.
+
+- **2026-07-28 · F-110 — the README/manifest boot-path disagreement is the whole
+  bare-`boot/` family, not one package.** All four B15 packages that keep their
+  snippet at `boot/` name it as `spec/boot/NN-…` in their READMEs while their
+  manifests declare `source = "boot/NN-…"` — `git-atomic-commits`,
+  `git-autonomy`, `git-conventional-commits`, `dev-runtime-docs`, verified one
+  by one, and `sync-from-code` (F-103) makes five of five. F-103's text is
+  scoped to *links inside snippets*; these are *paths inside READMEs*, the same
+  root cause reaching a second surface. One DRIFT covers both.
+
+- **2026-07-28 · F-111 — a closed vocabulary maintained by hand in two places.**
+  `git-conventional-commits` states its eleven allowed types as an eleven-row
+  table in `conventional-commits.md` and again as an inline list in
+  `boot/31-flow-conventional-commits.md`. **They agree today** — checked type by
+  type, all eleven present in both, no extras. Two hand-maintained copies with
+  no generator, one of which installs into every consuming project's boot lane;
+  and the sibling `git-attribution-policy` states «one policy, one place» as a
+  law of its own. *Low severity today, and it is the shape that is worth the
+  finding rather than any current divergence.*
+
+- **2026-07-28 · F-108 gains its cross-file half, which makes it checkable from
+  the corpus alone.** `git-autonomy/README.md:28` says «A member of the
+  `flow:git-practices` family» while the umbrella's README says the family
+  «grows to include … commit autonomy **as those members land**». The member and
+  the umbrella contradict each other directly, without reference to the manifest.
+
+- **2026-07-28 · Two low-severity illustration drifts, recorded and not filed
+  separately.** `git-atomic-commits` illustrates one claim with different
+  arithmetic in two files — «without also undoing **three** correct things»
+  (`ATOMIC-COMMITS-PROTOCOL.md:65`) against «**two** correct things»
+  (`boot/30-…:52`); neither is wrong, and a reader comparing them sees a
+  discrepancy. And `splitting-large-changes.md` asserts «Six items collapsed to
+  four commits» before the sub-section that says the fourth should probably be
+  reverted.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
