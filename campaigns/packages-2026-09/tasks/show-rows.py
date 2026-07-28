@@ -44,6 +44,16 @@ def main():
     total = len(rows)
     rows = rows[start:start + count]
 
+    # `--brief` drops the quoted snippet from each evidence ref and keeps its
+    # address. The quote has already been resolved by `verify-evidence.py`
+    # before a reviewer opens the table at all, so re-reading it is the one
+    # part of the row that buys nothing — while the claim, the marker, the
+    # source classes and the `searched` field are the whole judgement. This is
+    # an economy on machine-verified text, NOT on rows: every row is still
+    # printed and still read, because reading fewer rows is what created the
+    # 138-row debt.
+    brief = "--brief" in sys.argv
+
     print(f"# {pathlib.Path(sys.argv[1]).name} — rows {start}..{start + len(rows) - 1} of {total}\n")
     for i, r in enumerate(rows, start):
         path = r.get("file", "")
@@ -53,8 +63,10 @@ def main():
         print(f"    file:    {path}")
         print(f"    marker:  {r.get('marker')}")
         print(f"    claim:   {r.get('claim')}")
+        if r.get("src"):
+            print(f"    src:     {r['src']}")
         for e in r.get("evidence", []) or []:
-            print(f"    ev:      {e}")
+            print(f"    ev:      {e.split('  ', 1)[0] if brief else e}")
         if r.get("searched"):
             print(f"    searched: {r['searched']}")
         if cur:

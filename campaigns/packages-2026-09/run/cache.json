@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T12:01:00Z",
+  "updated_at": "2026-07-28T13:49:53Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -25900,7 +25900,121 @@
       },
       "marker_count": 8,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "42b025697efe36a0b3e620d121ff13f777091988e4a574978413d960e6c9e421",
+        "verdicts": {
+          "PACKAGE-INSTALLS-THE-COMMIT-PUSH-AUTONOMY-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/vibe.toml:8  description = \"Commit/push autonomy: routine large changes proceed without a confirmation handshake; a fixed set of non-routine, hard-to-reverse operations (history rewrites, force-push, large blobs, CI/signing/secrets) always stops and asks first\"",
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md:10  ##ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @impl/done",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "spec/boot/STATIC.md:495  Routine large changes proceed and are committed/pushed **without** a confirmation handshake:",
+              "vibedeps/flow-git-autonomy/0.1.0/README.md:3  A vibevm `flow` package that installs the **commit/push autonomy** posture: routine, authorised",
+              "all three sources carry the posture and the host restates it as its own rule 4 (spec/boot/00-core.md:24). Recorded for the source-3 ledger and not against this fact: the INSTALLED README still titles itself `flow:autonomy`, the pre-rename name (vibedeps/flow-git-autonomy/0.1.0/README.md:1, :21)"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-RED-LINE-SET-IS-NEVER-SUSPENDED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:46  ##THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE These are not suspended by a heads-down / \"move fast\" posture: a mode may remove the",
+              "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:84  - ##RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history; @impl/done",
+              "spec/boot/STATIC.md:977  A small set of red lines survives **every** mode: rewriting published",
+              "spec/boot/00-core.md:24  … stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+              "the never-suspended half is corroborated independently by the operating-modes flow, which raises it to a law no codeword may erode (spec/boot/STATIC.md:982). **The divergence the worker measured is the host's, not this fact's**: of five host statements of the list, PROP-006:23 and CLAUDE.md:31 match item for item, spec/boot/00-core.md:24 drops «secrets», and spec/common/PROP-000.md:164 — the record CLAUDE.md:5 calls authoritative — lists four and drops the catch-all. Filed as a finding rather than charged here"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/README.md:14  ##package-contents-lead This package ships: @impl/done",
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/vibe.toml:15  [boot_snippet]",
+              "vibedeps/flow-git-autonomy/0.1.0/README.md:12  This package ships:",
+              "`find` returns exactly the five files the list implies — LICENSE, README.md, vibe.toml, the snippet and the protocol — and the installed slot returns the same five with the snippet at the pre-DRIFT-039 path"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-FULL-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:14  ## The default: routine proceeds {#routine}",
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:46  ##THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE These are not suspended by a heads-down / \"move fast\" posture…",
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:63  ## Re-derive for your project {#re-derive}",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:44  Name your own red-line set — the operations in *your* stack whose reversal costs real work",
+              "spec/common/PROP-000.md:164  … `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+              "the document exists at the named path and its sections are the three topics claimed plus #uncertain; a host reader reaches it only through vibedeps/, since `spec/flows/` does not exist in the host at all"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/vibe.toml:16  source = \"spec/boot/32-flow-autonomy.md\"",
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/vibe.toml:19  link = \"static\"",
+              "spec/boot/STATIC.md:486  <!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md -->",
+              "spec/boot/STATIC.md:680  <!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md -->",
+              "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:1  # Flow: Commit autonomy {#root}",
+              "the package ships the snippet at the path its manifest names, and «loaded at session start» is true twice over: the text is compiled verbatim into spec/boot/STATIC.md at 486-512 and again at 680-706, the second copy arriving through the git-practices umbrella (F-078)"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-THE-GIT-PRACTICES-FAMILY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:27  \"flow:org.vibevm.world/git-autonomy\" = \"=0.1.0\"",
+              "vibe.lock:295      \"flow:org.vibevm.world/git-autonomy@=0.1.0\",",
+              "spec/common/PROP-000.md:159  ##GIT-PRACTICES-FAMILY The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text: @spec/done",
+              "CLAUDE.md:5  … and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project…",
+              "membership is an exact pin in the umbrella's manifest and a resolved edge in the lockfile (vibe.lock:286-297)"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/LICENSE:3  The Universal Permissive License (UPL), Version 1.0",
+              "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The",
+              "LICENSE present in package and installed slot, manifest field agrees, and the host ledger records the UPL-1.0 relicense of packages/org.vibevm.* by merges present in the log"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:49:53Z",
+        "verify_batch": "W1d"
+      }
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md": {
       "content_hash": "d183036f997b71f243e0b4a873366492b59eae7853f13bff0034c8dd1e873aff",
@@ -25923,7 +26037,220 @@
       },
       "marker_count": 15,
       "unit_count": 3,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "d183036f997b71f243e0b4a873366492b59eae7853f13bff0034c8dd1e873aff",
+        "verdicts": {
+          "THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:11  ##this-protocol-draws-the-line-on-the-commit-and-push-surface This protocol draws the line on the **commit and push** surface…",
+              "spec/boot/STATIC.md:490  The default posture for how much an agent decides on its own versus stops to ask, on the",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking…",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — … and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family",
+              "the scope statement matches the protocol's own opening thesis and the host's rule 4 is scoped identically to commit-and-push"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:495  Routine large changes proceed and are committed/pushed **without** a confirmation handshake:",
+              "spec/boot/00-core.md:65  - ##EOS-MILESTONE-COMMIT Propose a milestone commit if work is a logical unit. For routine work, follow rule 4 above: commit and push using rules 2–3. For non-routine operations, stop and ask the user first. @impl/done",
+              "spec/boot/90-user.md:34  - ##CMD-ROUTINE-PUSH Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @impl/done",
+              "spec/common/PROP-006-operating-modes.md:21  - ##MFBT-SUSPENDS It suspends **only** Rule 4's \"ask before routine large changes\". @freeze/done",
+              "the rule is present in all three sources and restated by the host three ways. Whether any single commit was preceded by a handshake leaves no trace either way — the fact states a rule, and the rule is what is checked"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:496  implementing a planned milestone, finishing a feature slice, touching many files for one",
+              "spec/boot/00-core.md:65  - ##EOS-MILESTONE-COMMIT Propose a milestone commit if work is a logical unit. For routine work, follow rule 4 above: commit and push using rules 2–3.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:139  ### Milestone commits {#milestone}",
+              "present in all three sources; the host places the milestone commit under rule 4's routine branch (spec/boot/00-core.md:65) and the log carries milestone-shaped merges"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROUTINE-FINISHING-A-FEATURE-SLICE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:496  implementing a planned milestone, finishing a feature slice, touching many files for one",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:9  implementing a planned milestone, finishing a feature slice, touching many files for one",
+              "the clause is present in all three copies of the flow's own text and **no host artefact classifies feature-slice work as routine independently** — grep over the contract files, spec/**, TASKS.md, BACKLOG.md and CONTINUE.md returns nothing outside this flow. Confirmed on sources 1 and 3; source 2 is silent, which is not a contradiction, and claiming it would overstate the evidence"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:496  implementing a planned milestone, finishing a feature slice, touching many files for one",
+              "spec/boot/STATIC.md:497  coherent reason. The approval was given upstream, when the work was authorised; a mid-work",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:146  n=400  mean=5.29  median=3  max=130",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "the host's history carries the shape: 38 of 400 commits exceed ten files, mean 5.29, max 130 (harvest §Atomicity). A file count is not an idea count, which is why the harvest says so and this verdict rests on the rule plus the shape, not on a count of ideas"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-approval-was-given-upstream": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:497  coherent reason. The approval was given upstream, when the work was authorised; a mid-work",
+              "spec/boot/STATIC.md:498  \"shall I proceed?\" is overhead already paid for.",
+              "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — … begin without asking, drive to completion without confirmation handshakes… @freeze/done",
+              "CLAUDE.md:72  grant (2026-07-13): fractality runs are NOT treated as paid — do not ask",
+              "the upstream-authorisation reasoning is operative on the host in two independent places — PROP-006's codeword is defined as pre-authorisation, and the fractality ledger records a standing owner grant that removes the per-run ask"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:502  Ask first for anything whose reversal costs work:",
+              "spec/boot/00-core.md:24  … stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:31  … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly.",
+              "the criterion is named verbatim by the host at spec/boot/00-core.md:24 and CLAUDE.md:31, and extended by CLAUDE.md:74-78 to delegated work. Answering the brief's question: **spec/WAL.md does NOT invoke Rule 4 anywhere** — its Constraints section is campaign and cache rules"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-REWRITING-PUBLISHED-HISTORY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:504  - rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work);",
+              "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, …",
+              "spec/boot/90-user.md:34  … Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:159  - ##FROZEN-NEVER-AMEND **Never** `git commit --amend`. @impl/done",
+              "the rule is stated in all three sources and restated by the host four ways and by the sibling atomic-commits flow's «pushed history is frozen». The conformance half is unobservable by construction — a rewrite leaves no positive trace — so the verdict rests on the rule, and «no rewrite is visible» is not offered as evidence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-FORCE-PUSH": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:505  - `git push --force` / `--force-with-lease`;",
+              "spec/common/PROP-006-operating-modes.md:23  … `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes…",
+              "spec/boot/90-user.md:34  - ##CMD-ROUTINE-PUSH Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval…",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:161  - ##FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL **Never** `git push --force` or `--force-with-lease` without",
+              "the rule is located on all three sources and PROP-006:23 reproduces both flag spellings character for character. As with the rewrite row, a force-push leaves nothing in the log; the absence is not asserted as evidence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-LARGE-BINARY-BLOBS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:506  - bringing in large binary blobs;",
+              "spec/common/PROP-006-operating-modes.md:23  … large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work…",
+              "spec/boot/00-core.md:24  … stop and ask for history rewrites, force-push, large blobs, CI/signing changes…",
+              "CLAUDE.md:31  … (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work)…",
+              "present in all three sources and restated item-for-item at PROP-006:23. The host has no Git-LFS filter configured, which is a fact about the intake surface rather than a conformance measurement"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-CI-SIGNING-OR-SECRETS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:507  - changing CI, signing, or secrets configuration;",
+              "spec/common/PROP-006-operating-modes.md:23  … CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+              "spec/boot/00-core.md:24  … stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:31  … history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work…",
+              "present in all three sources; OPERATING-MODES-PROTOCOL.md:87 reproduces the three-part phrase word for word. The host's `.github` directory does not exist, so the CI half is normative here rather than exercised"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:508  - **any operation whose reversal would cost work.**",
+              "spec/common/PROP-006-operating-modes.md:23  … anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active.",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — …",
+              "CLAUDE.md:76  force-push, large blobs, CI / signing / secrets, irreversible ops) — those",
+              "present in all three sources and restated at PROP-006:23, spec/boot/00-core.md:24 and CLAUDE.md:31. That spec/common/PROP-000.md:164 omits it is the host's defect, filed as a finding"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "WHEN-UNCERTAIN-ASK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:510  **When uncertain, ask.**",
+              "spec/boot/STATIC.md:958  confirmation. When uncertain whether something is routine, ask.",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "present in all three sources and independently restated on the same compiled surface by the operating-modes snippet: «When uncertain whether something is routine, ask»"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md:32  ##sibling-document-pointers Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md). @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+              "campaigns/packages-2026-09/tasks/DRIFT-039.md:14  **8 of 8 links broken**, resolved one at a time rather than sampled:",
+              "spec/boot/STATIC.md:512  Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md).",
+              "**the pointer resolves for exactly one reader, and it is not the reader it is written for.** Measured over the whole corpus rather than this one link: in the packages, 60 relative `../flows/…` pointers and **0 dangling**; in the installed `vibedeps/` trees, 120 pointers and **15 dangling** — the ones whose snippet still sits at the pre-DRIFT-039 `boot/` path, this flow's among them; and in the host's compiled boot lane, **69 pointers and 69 dangling**, because `spec/flows/` does not exist in the host at all (`ls -d spec/flows` → No such file or directory).",
+              "So the fact is true in the authoring tree and false in both places a consumer stands. A boot snippet's whole purpose is to be read from the compiled lane, and from there this link has never resolved"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:49:53Z",
+        "verify_batch": "W1d"
+      }
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md": {
       "content_hash": "023d3eaaa64ff3144e77a9e050e823f7b07fda12343ed334553d7aa7e9ff19b4",
@@ -25946,7 +26273,358 @@
       },
       "marker_count": 25,
       "unit_count": 5,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "023d3eaaa64ff3144e77a9e050e823f7b07fda12343ed334553d7aa7e9ff19b4",
+        "verdicts": {
+          "an-agent-is-constantly-deciding-whether-to-ask": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:5  ##an-agent-is-constantly-deciding-whether-to-ask An agent working in a repository is constantly deciding: *do I just do this, or do I stop and",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:3  An agent working in a repository is constantly deciding: *do I just do this, or do I stop and",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:54  *routine* handshake, the dangerous handshakes (§red-lines) stay put",
+              "framing sentence; present in the package and the installed copy, absent from the host lane because only the snippet is compiled. src omits 2 honestly — the host restates the rule, not the framing"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "too-many-handshakes-crawl-too-few-risk-a-mistake": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:8  ##too-many-handshakes-crawl-too-few-risk-a-mistake Too many confirmation handshakes make an authorised body of work crawl; too few risk an",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:4  ask?* Too many confirmation handshakes make an authorised body of work crawl; too few risk an",
+              "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — … drive to completion without confirmation handshakes… @freeze/done",
+              "the trade-off is the stated reason the host's one codeword exists (PROP-006:19, :21), which is correspondence of substance rather than of text"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "this-protocol-draws-the-line-on-the-commit-and-push-surface": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:11  ##this-protocol-draws-the-line-on-the-commit-and-push-surface This protocol draws the line on the **commit and push** surface: what",
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md:5  ##THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE The default posture for how much an agent decides on its own versus stops to ask, on the",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** …, **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family…",
+              "spec/common/PROP-000.md:157  ## 12. Commit and push discipline {#commits}",
+              "the surface is named as such by the host: PROP-000 §12 is titled «Commit and push discipline» and the three contract files open with the same phrase"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-ASKING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:16  ##ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-ASKING **Routine large changes proceed without asking** — and are committed and pushed — when the",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:10  **Routine large changes proceed without asking** — and are committed and pushed — when the",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking…",
+              "spec/common/PROP-006-operating-modes.md:21  - ##MFBT-SUSPENDS It suspends **only** Rule 4's \"ask before routine large changes\". @freeze/done",
+              "the headline rule, restated verbatim in substance at spec/boot/00-core.md:24, with the authorisation precondition restated at :65 and spec/boot/90-user.md:34"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:19  - ##ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE implementing a planned milestone, @impl/done",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:11  activity has already been authorised. Routine means: implementing a planned milestone, finishing",
+              "spec/boot/00-core.md:65  - ##EOS-MILESTONE-COMMIT Propose a milestone commit if work is a logical unit. For routine work, follow rule 4 above: commit and push using rules 2–3.",
+              "same claim as the snippet's twin anchor; the host places milestone work under rule 4's routine branch and the log carries milestone-shaped merges"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROUTINE-FINISHING-A-FEATURE-SLICE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:20  - ##ROUTINE-FINISHING-A-FEATURE-SLICE finishing",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:11  activity has already been authorised. Routine means: implementing a planned milestone, finishing",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "identical to the snippet's twin: present in package and installed copy, and **uncorroborated on the host** — «feature slice» appears nowhere outside this flow's own text. Sources 1 and 3 only"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:22  - ##ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES a refactor touching many files for one coherent reason, @impl/done",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:12  a feature slice, a refactor touching many files for one coherent reason, or any large-but-expected",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "present in package and installed copy; the host's history shows large multi-file changes landing as single commits. The one wording difference — the snippet omits «refactor» — narrows the snippet, not this fact"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:23  - ##ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP or any large-but-expected",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:12  … or any large-but-expected",
+              "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — aim at the maximum version of the deliverable, phase the work into testable iterations, begin without asking, drive to completion without confirmation handshakes… @freeze/done",
+              "CLAUDE.md:73  before spawning; use them freely and by default, the more delegation the",
+              "the «already greenlit» construction is exactly how the host's one codeword and its standing owner grant work. Recorded: this catch-all clause **has no counterpart in the boot snippet**, whose routine list stops at three items — a snippet/protocol asymmetry in the direction of the snippet being narrower"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-approval-was-given-upstream": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:26  ##the-approval-was-given-upstream The approval was given upstream; re-asking \"shall I",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:13  step of work the human has already greenlit. The approval was given upstream; re-asking \"shall I",
+              "spec/boot/STATIC.md:497  coherent reason. The approval was given upstream, when the work was authorised; a mid-work",
+              "spec/common/PROP-006-operating-modes.md:21  - ##MFBT-SUSPENDS It suspends **only** Rule 4's \"ask before routine large changes\". @freeze/done",
+              "same claim as the snippet's twin with different wording; the host rests its whole codeword mechanism on prior authorisation"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "this-default-optimises-for-throughput": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:29  ##this-default-optimises-for-throughput This default optimises for throughput on work that is understood and approved. @spec/done",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:16  This default optimises for throughput on work that is understood and approved. It presumes the",
+              "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — … drive to completion without confirmation handshakes, and spend whatever time / tokens / reasoning depth it takes…",
+              "rationale sentence, present in package and installed copy and not compiled into the host lane. PROP-006:19 expresses the same intent in different words and is context, not corroboration — which is why src omits 2"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "IT-PRESUMES-THE-OTHER-DISCIPLINES-ARE-IN-FORCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:31  ##IT-PRESUMES-THE-OTHER-DISCIPLINES-ARE-IN-FORCE It presumes the",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.**",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "spec/boot/00-core.md:65  … For routine work, follow rule 4 above: commit and push using rules 2–3.",
+              "the presumption names two sibling flows, both installed and both compiled into the same lane, and the host makes the dependency explicit at spec/boot/00-core.md:65 («using rules 2–3»). **The measured caveat, which the fact survives:** the format holds structurally — 397/400 typed-and-scoped headers, 399/400 with a body — and fails on two sub-rules, 82/400 over the hard 72-char limit and 42/400 capitalising after the prefix. «In force» is true of the disciplines; their own compliance is F-123's business"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-FIXED-SET-OF-OPERATIONS-ALWAYS-STOPS-AND-ASKS-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:37  ##A-FIXED-SET-OF-OPERATIONS-ALWAYS-STOPS-AND-ASKS-FIRST Regardless of any \"proceed\" posture, a fixed set of operations **always stops and asks first**,",
+              "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — … STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:101  - ##CONSEQUENCE-NO-CODEWORD-MAY-RELAX-A-RED-LINE No codeword may be defined that relaxes a red line. A proposed mode",
+              "spec/boot/STATIC.md:982  threshold?\" handshake. No codeword can be defined that erodes this.",
+              "this is the cross-check the brief asked for and the two statements agree, with the sibling flow stronger: operating-modes makes it a law that no codeword may even be DEFINED that relaxes a red line"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-REWRITING-PUBLISHED-HISTORY": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:25  - **Rewriting published history** — rebasing pushed commits, `git commit --amend` on pushed work.",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:84  - ##RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history; @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:160  - ##FROZEN-NEVER-REBASE-THE-PUSHED-RANGE **Never** `git rebase -i` the pushed range. @impl/done",
+              "spec/common/PROP-006-operating-modes.md:23  … rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs…",
+              "the rule is stated in the package, the installed copy and four host restatements, plus the sibling flow's «pushed history is frozen» section. The conformance half is unobservable; the three author/committer deltas of 16-32 s are commit latency, not rebase, and are not offered as proof of absence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-FORCE-OPERATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:26  - **Force operations** — `git push --force` / `--force-with-lease`.",
+              "spec/common/PROP-006-operating-modes.md:23  … `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes…",
+              "spec/boot/90-user.md:34  … Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:161  - ##FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL **Never** `git push --force` or `--force-with-lease` without",
+              "the rule is located on all three sources; PROP-006:23 reproduces both flag spellings exactly. A force-push overwrites the ref and leaves nothing behind, so the behavioural half is unverifiable and is not claimed"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-LARGE-BINARY-BLOBS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:27  - **Large binary blobs** — anything that bloats the repository irreversibly.",
+              "spec/common/PROP-006-operating-modes.md:23  … large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work…",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:86  - ##RED-LINE-IMPORTING-LARGE-BINARY-BLOBS importing large binary blobs; @impl/done",
+              "spec/boot/STATIC.md:506  - bringing in large binary blobs;",
+              "present in all three sources and restated with the same noun phrase by two host documents. The `.gitattributes` observation is about configuration, not about the object store, and is recorded as such"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:28  - **CI, signing, or secrets configuration** — changes with reach beyond the working tree.",
+              "spec/common/PROP-006-operating-modes.md:23  … CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation…",
+              "spec/boot/00-core.md:24  … stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:87  - ##RED-LINE-CHANGING-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @impl/done",
+              "present in all three sources; the sibling protocol reproduces the three-part phrase word for word. spec/boot/00-core.md:24 dropping «secrets» is the host's defect and is filed, not charged here"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:29  - **Anything whose reversal would cost work** — the catch-all; if undoing it is expensive, ask.",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:88  - ##RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **anything whose reversal would cost work.** @impl/done",
+              "spec/common/PROP-006-operating-modes.md:23  … anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active.",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — …",
+              "present in all three sources and in the sibling operating-modes protocol under an identical anchor id. That the authoritative host record omits it entirely is the finding, not a falsification of the flow's own statement"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:46  ##THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE These are not suspended by a heads-down / \"move fast\" posture: a mode may remove the",
+              "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — … STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:84  rewriting published history, force-pushing, large binary blobs,",
+              "spec/boot/STATIC.md:980  costs work. A codeword removes the \"may I proceed with routine work?\"",
+              "the claim names the exact codeword the host has, and the host states the same two-handshake distinction twice — in PROP-006 and in the operating-modes flow's own mfbt-mode.md, which lists all five red lines as surviving"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-AGENT-STOPS-REPORTS-AND-ASKS-AT-THE-BOUNDARY": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:33  threshold?\" one. If a step cannot land without crossing a red line, the agent stops at that",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:90  ##A-RED-LINE-STOP-IS-THE-MODES-OWN-ESCAPE-HATCH If a phase cannot land without crossing a red line, stop at that",
+              "spec/boot/00-core.md:65  … For non-routine operations, stop and ask the user first. @impl/done",
+              "the rule is located and restated nearly word for word by the sibling mfbt-mode.md:90. A stop-and-ask leaves no artefact by construction — the operation simply does not appear — so the rule is what is checked and the behaviour is not claimed either way"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-LINE-IS-A-JUDGMENT-CALL": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:38  The line between routine and non-routine is a judgment call. When a change sits near the",
+              "spec/boot/STATIC.md:958  confirmation. When uncertain whether something is routine, ask.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:130  names, not capitalised words. *The check that would enforce this rule has to know",
+              "the host's own boot lane treats routineness as a call the agent makes («When uncertain whether something is routine, ask»), and no mechanical checker for it exists anywhere in the perimeter — which is what «judgment call» asserts"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "DEFAULT-TO-ASKING-NEAR-THE-BOUNDARY": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:38  … When a change sits near the",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:40  default to asking. A surplus question costs a moment; a surplus irreversible action costs work.",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "present in package and installed copy. The host's uncertainty protocol (spec/boot/00-core.md:54-60) resolves near-boundary doubt the other way — proceed conservatively with a REVIEW marker — but it is scoped to «when the spec is silent», a different surface, so it is a neighbouring rule and not a contradiction. src omits 2 for exactly that reason"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "a-surplus-question-costs-a-moment": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:61  ##a-surplus-question-costs-a-moment A surplus question costs a moment; a surplus irreversible action costs work. @spec/done",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:40  default to asking. A surplus question costs a moment; a surplus irreversible action costs work.",
+              "the aphorism carrying the asymmetry argument. Grep over the whole perimeter finds it only in this flow's own copies, so sources 1 and 3 are all there is — and this is the shape amendment A2 exists to count, one step short of self-referential"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "NAME-YOUR-OWN-RED-LINE-SET": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:44  Name your own red-line set — the operations in *your* stack whose reversal costs real work",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work…",
+              "CLAUDE.md:31  … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated…",
+              "**this is the one protocol instruction whose conformance is directly observable, and the host has done it**: rule 4 names a project-specific red-line set, PROP-006 restates it as the mode-invariant, and CLAUDE.md:31 extends it to a surface the flow never mentions — delegated work stops for the owner before it is handed to a worker. The three demo consumers have derived no set of their own"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-shape-is-universal-the-red-lines-are-yours": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:69  ##the-shape-is-universal-the-red-lines-are-yours The shape is universal; the specific",
+              "vibedeps/flow-git-autonomy/0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md:46  outside it, once authorised, proceeds without a handshake. The shape is universal; the specific",
+              "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:146  project's exact red-line list — the operations that must survive",
+              "corroborated as a design stance by the sibling operating-modes flow, whose adoption section gives the same instruction. The host's instantiation differs from the flow's list at two of five items, which is what «the red lines are yours» predicts"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:49:53Z",
+        "verify_batch": "W1d"
+      }
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/README.md": {
       "content_hash": "dfd0f2e39a19cc7ad2f22be3b90fb6d435f206d64a7d3247218e7bffab052b8b",
@@ -26038,7 +26716,151 @@
       },
       "marker_count": 10,
       "unit_count": 3,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "128cd2b381c7d9add73d3656fff82203ab675a22a318ca0faf6eb1c12a292023",
+        "verdicts": {
+          "AGG-ROLE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:8  description = \"Git practices — the family aggregator for a repository's commit-and-push discipline…\"",
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:15  # The family aggregator (PROP-028): exact pins hold the members to one set.",
+              "spec/common/PROP-000.md:159  ##GIT-PRACTICES-FAMILY The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text: @spec/done",
+              "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
+              "the aggregator role is declared by the manifest, pinned four ways, resolved in the lockfile and restated by the host at PROP-000:159-164. **Recorded and filed rather than charged here:** PROP-028:44 specifies the aggregator as `kind = \"stack\"`, and this package declares `kind = \"flow\"` — a divergence from the pattern the README cites, and not a claim this anchor makes"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "AGG-CLOSURE-PULLS-THE-WHOLE-FAMILY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:25  \"flow:org.vibevm.world/git-conventional-commits\" = \"=0.1.0\"",
+              "vibe.lock:286  name = \"git-practices\"",
+              "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
+              "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+              "spec/boot/STATIC.md:486  <!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md -->",
+              "all four members exist as standalone packages at the pinned version, the closure resolves in the lockfile, and each member's snippet reaches the host lane — provenance lines 363, 421, 486, 514"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "deliberately-separate-packages-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-practices/v0.1.0/README.md:12  ##deliberately-separate-packages-lead They are deliberately **separate packages** because they are different things: @impl/done",
+              "spec/common/PROP-028-package-families.md:159  The aggregator is deliberately empty so there is exactly one home for each",
+              "vibedeps/flow-git-practices/0.1.0/README.md:8  They are deliberately **separate packages** because they are different things:",
+              "separateness is verifiable on disk: five independent package directories, four independent lockfile records, and PROP-028 rejects an aggregator that ships its members' content. src omits 2 because no host document restates the rationale"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "AGG-MEMBER-CONVENTIONAL-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:28  ### Allowed types {#types}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:49  ### Scope {#scope}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:118  ## Worked examples {#examples}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:176  ## Anti-patterns {#antipatterns}",
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:25  \"flow:org.vibevm.world/git-conventional-commits\" = \"=0.1.0\"",
+              "six for six: every element of the claimed contents is a real section of the member's flow document. Recorded for the source-3 ledger: the INSTALLED umbrella README calls this member `conventional-commits` without the `git-` prefix — a stale pre-rename copy"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "AGG-MEMBER-ATOMIC-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:10  ## What an atomic commit is {#what}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:87  ## When to split {#splitting}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:115  ## When to batch {#batching}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:172  ## The AI advantage {#ai-advantage}",
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:26  \"flow:org.vibevm.world/git-atomic-commits\" = \"=0.1.0\"",
+              "four for four sections, plus the second document the member ships. Same pre-rename staleness in the installed README (`atomic-commits`)"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "EACH-IS-ADOPTABLE-ON-ITS-OWN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:187  ## Interaction with the git-atomic-commits rule {#atomicity}",
+              "spec/boot/STATIC.md:546  Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:97  **Three commits carry a type outside the allowed table**: `tools` twice",
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:25  \"flow:org.vibevm.world/git-conventional-commits\" = \"=0.1.0\"",
+              "independence is structural: neither member's manifest requires the other, so either installs alone. The orthogonality argument is restated by the conventional-commits flow itself and compiled into the host lane with the same example. That the counter-example has no instance in this history is what a counter-example is for"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-FAMILY-GROWS-TO-INCLUDE-ATTRIBUTION-AND-AUTONOMY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:27  \"flow:org.vibevm.world/git-autonomy\" = \"=0.1.0\"",
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:31  \"flow:org.vibevm.world/git-attribution-policy\" = \"=0.1.0\"",
+              "vibe.lock:294      \"flow:org.vibevm.world/git-attribution-policy@=0.1.0\",",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "**the future tense is already spent.** «The family grows to include human-authored attribution and commit autonomy **as those members land**» — both have landed: the umbrella's own manifest pins them (vibe.toml:27 and :31), the lockfile records all four (vibe.lock:293-296), and both snippets are compiled into the host boot lane (spec/boot/STATIC.md:421 and :486, and again at :615 and :680).",
+              "The README body still lists **two** members at :14-17 and defers the other two to this sentence, while the manifest ships four and the host's own PROP-000:159-164 lists all four as current. A reader of the umbrella's README is told two of its four members are pending"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONTENT-MINIMAL-NO-BOOT-SNIPPET-OF-ITS-OWN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:17  # umbrella carries no content of its own. Grows to include human-authored",
+              "spec/common/PROP-028-package-families.md:44  - ##ROLE-AGGREGATOR **`<family>`** — the *aggregator*. `kind = \"stack\"`, content-minimal: a",
+              "vibedeps/flow-git-practices/0.1.0/spec/boot/STATIC.md:128  <!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md -->",
+              "spec/boot/STATIC.md:551  <!-- vibe:static org.vibevm.world/git-practices — vibedeps/flow-git-practices/0.1.0/spec/boot/STATIC.md -->",
+              "**the package-side claim holds exactly**: `find` returns three files — LICENSE, README.md, vibe.toml — and the manifest has no `[boot_snippet]` table at all, unlike every member's. The umbrella authors no snippet and the members do ship theirs.",
+              "**What a consumer receives is not the same thing, and it is the installer's doing rather than this claim's:** the installed slot carries a generated 192-line `spec/boot/STATIC.md` holding all four members, which the host then compiles in verbatim (spec/boot/STATIC.md:551) — the mechanism behind F-078, whereby each git flow is read twice at every session boot. Verified from the host's own provenance lines: 363/557, 421/615, 486/680, 514/708"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "packages/org.vibevm.world/git-practices/v0.1.0/LICENSE:3  The Universal Permissive License (UPL), Version 1.0",
+              "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The",
+              "LICENSE present in package and installed slot, manifest field agrees, host ledger records the relicense"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:49:53Z",
+        "verify_batch": "W1d"
+      }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/README.md": {
       "content_hash": "5153595e4fd86e82d5e93955cd79c2b1d4174872e1370357af28e5f6a2590ef0",
