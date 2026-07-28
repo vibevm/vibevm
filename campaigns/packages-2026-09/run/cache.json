@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:35:13Z",
+  "updated_at": "2026-07-28T21:37:53Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -31243,7 +31243,300 @@
       },
       "marker_count": 22,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "4e3d391a4c327a5a45b02c0a58b51edd2b1b7dadaf3ba4c8117bd87dc8c708e8",
+        "verdicts": {
+          "PACKAGE-INSTALLS-THE-COMPARATIVE-RESEARCH-GENRE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/vibe.toml:4  kind = \"flow\"",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/vibe.toml:5  version = \"0.1.0\"",
+              "vibe.lock:196  name = \"comparative-research\"",
+              "vibe.lock:198  version = \"0.1.0\"",
+              "spec/boot/STATIC.md:128  <!-- vibe:static org.vibevm.world/comparative-research — vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md -->",
+              "confirmed: Read the manifest: `kind = \"flow\"`, `version = \"0.1.0\"`. Checked the installed reality: `vibe.lock` carries the package at lines 196-202 with `source_kind = \"local\"`, and `find vibedeps/flow-comparative-research -type f` returns 7 files (LICENSE.md, README.md, the boot snippet, the three flow documents, vibe.toml). The compiled host boot lane carries the provenance marker at spec/boot/STATIC.md:128. `vibe.lock:201` reads `files_written = []`, so the slot is the whole delivered surface."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "THE-OUTPUT-IS-A-SELF-CONTAINED-EVERGREEN-DOCUMENT": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:5  **Status.** Research document — self-contained, evergreen reference. Not implementation-locked. Each numbered roadmap delta in §6 maps to a future PROP / FEAT / milestone update; this file does not itself ratify those.…",
+              "legacy-spec/research/action-systems-vscode-idea.md:5  **Genre:** research (comparative-research flow) — non-binding, evergreen.…",
+              "legacy-spec/research/settings-system-vscode-idea.md:9  **Genre:** comparative research (evergreen study, readable months later without the sources).",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:5  form per D-R6 (flow:comparative-research: two-way gaps, numbered",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:9  deltas PROPOSE; acceptance happens in Stage B",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. All five located instances self-describe in exactly these terms. The one living-tree instance chain is the fractality specspace: `RLM-SYNTHESIS.md` opens by naming the flow (`flow:comparative-research: two-way gaps, numbered deltas, re-fetch list`) and states the deltas propose while acceptance happens in Stage B. HARVEST CORRECTION: harvest §s2-comparative frames the fractality body as a different genre; the two `*-SYNTHESIS.md` documents it lists but did not inspect adopt this genre by name."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-genre-exists-because-the-alternatives-fail": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:45  ##three-costs-justify-the-effort-lead Three costs justify the effort of a full study over a quick glance: @spec/done",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:47  …**Unexamined competitors cost roadmap mistakes.**…",
+              "confirmed: Rationale claim; checked against the package's own §why, which enumerates the three costs at COMPARATIVE-RESEARCH-PROTOCOL.md:45-58. Searched the host for an independent statement of the same rationale with `grep -rniE 'bookmark rots|re-argued next quarter|marketing you wrote' legacy-spec/ packages/ spec/ campaigns/ docs/` (vibedeps and .vibe/cache excluded) — no hit outside this package and its installed copy. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "a-bookmark-rots-when-the-url-moves": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:37  ##a-study-that-links-out-expires A study that merely links out is",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:180  - ##NOT-A-LINK-FARM **Not a link farm.** Links rot; the quotes are the evidence. @impl/done",
+              "confirmed: Aphorism restating the link-rot premise; the same claim is carried inside the package at §what (`a study that merely links out is a study that expires`) and §not (`Not a link farm. Links rot; the quotes are the evidence.`). Searched the host perimeter for an independent instance of the bookmark framing (`grep -rni 'bookmark' legacy-spec/ packages/ spec/ campaigns/ docs/ crates/`, vibedeps/.vibe/cache excluded) — nothing outside this package. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "a-verbal-comparison-evaporates-and-gets-re-argued": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:164  …\"Why don't we just do what X does?\" recurs @spec/done | A recurring question deserves a durable, citable answer, not a repeated verbal one @spec/done…",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:112  ##deleting-the-delta-deletes-the-immunity Delete the rejected",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:113  delta and you delete the immunity; the question comes back every",
+              "confirmed: The re-argument premise is stated three times inside the package: the §when trigger row, and the pipeline document's 'delete the rejected delta and you delete the immunity; the question comes back every quarter'. Searched the host for a recorded instance of a comparison being re-argued (`grep -rniE 're-argued|re-litigat|comes back every quarter' legacy-spec/ packages/ spec/ campaigns/`, vibedeps excluded) — the only hits are this package plus `decision-records`' own 'immunity from re-litigation' at packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:61. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "a-one-directional-rant-is-marketing-for-them": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:167  …A study that only finds gaps where we trail is marketing for the",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:110  | ##ROW-ONE-DIRECTIONAL-TRAIL-ONLY Only finds where you trail @spec/done | Marketing for the competitor @spec/done |",
+              "confirmed: Identical proposition to the honesty rule at from-research-to-roadmap.md:167-169 and to the §law-two-way table row. Checked whether any host study is trail-only: all five located instances carry both directions (see the LAW-TWO-WAY-GAPS row), so no host counter-instance exists to test the aphorism against. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "A-REAL-STUDY-QUOTES-MEASURES-AND-PROPOSES": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …in the **comparative-research genre** (quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead; numbered roadmap deltas each naming a target Spec-1 REQ; a re-fetch/provenance table)…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:199  (`notes/RLM-SYNTHESIS.md`) follows flow:comparative-research:",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:202  deltas** `RD-1..N` each with priority and target home…",
+              "legacy-spec/research/settings-system-vscode-idea.md:6  …Comparative-research genre: quote-first, two-way gaps, deltas-not-decrees.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The composite claim is restated in the project's own words in three places: the archived research plan at ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307, the Russian settings study's header, and — living — decision D-R6 of the fractality RLM research plan at FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:192-205. On the 'quotes verbatim with dates' half see the LAW-ONE rows: the Tessl study carries 27 blockquote lines (`grep -c '^> '`) and zero per-quote access dates; the 22 fractality notes carry zero blockquote lines at all (`for f in .../notes/*.md; do grep -c '^> ' $f; done` → all 0)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/vibe.toml:15  [boot_snippet]",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/vibe.toml:16  source = \"spec/boot/52-flow-comparative-research.md\"",
+              "vibe.lock:201  files_written = []",
+              "confirmed: `find packages/org.vibevm.world/comparative-research/v0.1.0 -type f` returns exactly 7: LICENSE.md, README.md, vibe.toml, the boot snippet, and the three documents under spec/flows/comparative-research/. `find vibedeps/flow-comparative-research -type f` returns the same 7 names. The manifest's `[boot_snippet]` block names the snippet source. Three content documents + one snippet, as claimed."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-GENRE-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:5  …**Scope of this document.** This file defines what a *comparative",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:67  ### Law 1 — Self-containedness {#law-self-contained}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:82  ### Law 2 — Quote first, critique second {#law-quote-first}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:97  ### Law 3 — Two-way gaps {#law-two-way}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:120  ### Law 4 — Deltas, not decrees {#law-deltas}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:137  ### Law 5 — The re-fetch list {#law-refetch}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:182  ## Re-derive for your project {#re-derive}",
+              "vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:1  # Comparative Research Protocol {#root}",
+              "confirmed: Read the file in full (215 lines). Every listed element is present and the five law headings appear in the order the README names them: §law-self-contained (67), §law-quote-first (82), §law-two-way (97), §law-deltas (120), §law-refetch (137); §when at 155, §re-derive at 182. The document is delivered to consumers: it exists in `vibedeps/flow-comparative-research/0.1.0/`. NOTE the installed copy is the pre-annotation text — `grep -rc '##[A-Za-z]' vibedeps/flow-comparative-research/0.1.0/` returns 0 for all 7 files, and `grep -rc '@impl/done\\|@spec/done'` likewise 0."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-RESEARCH-TEMPLATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:5  …**Scope of this document.** A copy-ready skeleton for a comparative",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:44  **Reading shape.** §1 the subject in its own words · §2 capability",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:112  ## Clause-by-clause commentary {#commentary}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:144  ## Worked fragment {#worked}",
+              "confirmed: Read the file in full (204 lines). The fenced skeleton runs lines 22-110 and contains every named part: source table (40-42), reading shape (44-46), §1 subject-words (50), §2 inventory (57), §3 trail (69), §4 lead (79), §5 deltas (87), §6 open questions (97), §7 re-fetch (101). Commentary §commentary at 112, worked fragment §worked at 144. Present in the installed slot."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-ROADMAP-PIPELINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:16  ## The pipeline {#pipeline}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:41  ## Owner review {#review}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:59  ## Accepted deltas become decisions {#accepted}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:87  ## Rejected deltas stay in the study {#rejected}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:123  ## Refresh discipline {#refresh}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:163  ## The honesty rule {#honesty}",
+              "confirmed: Read the file in full (213 lines). Section headings match the README's summary one for one: §pipeline (16), §review (41), §accepted (59), §rejected (87), §refresh (123), §honesty (163). Present in the installed slot."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/vibe.toml:15  [boot_snippet]",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md:5  ##THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS This project has a genre for studying external systems — a",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md:19  …When the user asks to study, evaluate, or compare against an",
+              "spec/boot/STATIC.md:128  <!-- vibe:static org.vibevm.world/comparative-research — vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md -->",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md:41  path = \"vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md\"",
+              "confirmed: The manifest declares the snippet; the file exists (49 lines) and says all three things. Source 3 checked two ways: the host compiles it into `spec/boot/STATIC.md` lines 128-172 behind a provenance marker (it is NOT a named `[[entry]]` in the host `spec/boot/INDEX.md`, which lists only 7 entries — `grep -c '^\\[\\[entry\\]\\]' spec/boot/INDEX.md` → 7, and `grep -n comparative-research spec/boot/INDEX.md` → no hit). The fractality specspace, by contrast, names the same snippet as a live `[[entry]]` in its own generated boot index; `packages/org.vibevm.fractality/delegation-rules/v0.1.0/spec/boot/INDEX.md:33` does the same."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/uninstall.rs:5  …declaration, and regenerates every node's boot artifacts so the",
+              "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
+              "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+              "crates/vibe-cli/src/commands/uninstall.rs:202  …\"\\nUninstalled {group}/{name}@{version} — removed its vibedeps/ slot, regenerated boot.\"",
+              "vibe.lock:201  files_written = []",
+              "confirmed: Widened into `crates/` (source 2, the host's implementation). `crates/vibe-cli/src/commands/uninstall.rs` (229 lines) removes the `vibedeps/` slot via `vibedeps::remove_slot`, drops the lockfile entry and the `[requires]` declaration, then calls `regenerate_boot(&workspace)` so the snippet leaves the compiled boot lane. For this package `files_written = []` in `vibe.lock:201`, so the slot plus the boot contribution IS every file it wrote. Not exercised here — I did not run `vibe uninstall`; this is a read of the implementation, not an observed removal."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/uninstall.rs:117  …// Remove the package's materialised slot — the unversioned in-place git",
+              "crates/vibe-cli/src/commands/uninstall.rs:136  …// Drop the `[requires]` declaration from the project manifest.",
+              "spec/boot/INDEX.md:38  path = \"spec/boot/90-user.md\"",
+              "confirmed, settled in the code as it was for the discovery-prompt and campaign-plans twins. `vibe uninstall` writes exactly three places — the vibedeps slot, `vibe.lock`, and the manifest's `[requires]` block — and the manifest edit is `drop_from_manifest_requires`, a retain minus exactly the entry `vibe install` wrote, through a writer documented as preserving operator comments. The worker is right that the code carries no explicit `user-owned` marker to check the claim's own vocabulary against; the host's regime lives in `spec/boot/00-core.md`'s NOTOUCH anchors and in `spec/boot/90-user.md` being a user-owned static entry, and this line inherits it rather than inventing it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-DISCOVERY-PROMPT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:4  kind = \"flow\"",
+              "vibe.lock:48      \"flow:org.vibevm.world/discovery-prompt@=0.1.0\",",
+              "legacy-spec/research/DISCOVERY_PROMPT.md:1  <PROMPT_INFO>",
+              "confirmed as a composition claim whose referent resolves: `discovery-prompt` exists, is pinned in the lockfile and is installed. The composition is not DECLARED — neither package requires the other, both arriving through the redbook umbrella — and no host study records a discovery session behind it. That is the practice going unadopted, not the claim being contradicted: a discovery session leaves no repository artefact by the sibling flow's own design, which forbids deploying its artefact absent a request. Reciprocity is real in the other direction — discovery-prompt's own README names comparative analysis among its four occasions."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-DECISION-RECORDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:78  …**When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. \"Later\" is not a trigger.…",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:89  ##RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR **At the spec anchor that governs the value.** @impl/done",
+              "vibe.lock:46      \"flow:org.vibevm.world/decision-records@=0.1.0\",",
+              "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:12  …Second revision shipped same day after the [PROP-004 Tessl comparative research](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) surfaced eight architectural improvements that were better folded into the design proposal *before* implementation than retrofitted later.…",
+              "confirmed on the composition, with the gap named precisely because it belongs to a different flow. The sibling exists, is installed, and carries the machinery this line names. The downstream half is OBSERVED in the host and the worker corrected my harvest to find it: PROP-003's r2 note records that the Tessl study forced eight architectural changes, and `spec/modules/vibe-resolver/PROP-003-dep-evolution.md` cites the study back at five anchors. What is missing is the record FORM — no revisit trigger is attached to any of those landings — and that is `decision-records`' own measured drift (4 of 153 sections carry all four fields, 11 triggers exist and none has all three parts, W3), not a defect in this sentence."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-SPEC-GENRES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:49  …**Research docs** @impl/done | What *other* projects/systems did — external studies, prior art @impl/done | Superseded by newer study @impl/done | Anyone surveying the field @impl/done | Non-binding @impl/done |",
+              "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:87  ##a-competitor-backgrounder-is-research A backgrounder on a",
+              "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md:25  …A study of a competitor or ecosystem tool @impl/done | **Research doc** @impl/done | Cite the version/date studied; it will be superseded @impl/done |",
+              "vibe.lock:58      \"flow:org.vibevm.world/spec-genres@=0.1.0\",",
+              "confirmed: Read the sibling: `SPEC-GENRES-PROTOCOL.md` carries a genre table whose Research-docs row reads exactly 'What *other* projects/systems did — external studies, prior art', marked Non-binding; §87 says 'A backgrounder on a competitor is research.' `when-to-write-what.md:25` routes 'A study of a competitor or ecosystem tool' to Research doc. The package is installed (`vibe.lock:58`, `vibedeps/flow-spec-genres/`)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "crystallized-from-the-origin-projects-research-doc-practice": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/README.md:3  Self-contained backgrounder documents — comparative research, threat-model analyses, prior-art surveys. Each is meant to be re-readable months after publication without referring to the original sources, and to outlast any one external project's URL stability.",
+              "legacy-spec/research/README.md:5  When a research document identifies actionable items, those land as roadmap deltas referencing the PROP, then as their own PROP / FEAT documents under [`spec/common/`](../common/) or [`spec/modules/`](../modules/) when prioritised.",
+              "packages/org.vibevm.world/spec-genres/v0.1.0/README.md:81  ##genre-model-crystallized-from-the-origin-project The genre model is crystallized from the origin project's own",
+              "confirmed: the practice this line points at exists in this repository's own archive, stated in the same terms — `legacy-spec/research/README.md:3` gives the evergreen-backgrounder rule and :5 gives the research → roadmap-delta → PROP/FEAT pipeline verbatim. The host's own root manifest records the extraction direction, so «the origin project» resolves to this project's earlier self. RECORDED FOR THE PHASE RATHER THAN THIS ROW: «the origin project» is an unresolved house phrase used across TWELVE redbook-family READMEs — comparative-research, discovery-prompt, health-audit, licensing, managed-blocks, manual-tests, operating-modes, qualified-naming, secrets-hygiene, source-mirrors, spec-genres and this one — and no file in the perimeter names which project it is. W5, W6 and W7 will each meet it; a reader outside this repository cannot resolve it at all."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "collections-spirit-is-the-redbook": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:3  This directory carries the source text of *AI-native development*…",
+              "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:44  \"flow:org.vibevm.world/comparative-research\" = \"=0.1.0\"",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:77  - ##MEMBER-COMPARATIVE-RESEARCH `comparative-research` — evergreen competitor studies with two-way",
+              "confirmed: `ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/` returns three Russian chapters (chapter-1-two-process-model.md, chapter-2-shared-state-and-files.md, chapter-3-memory-individual.md) plus an edition-plan README whose line 3 names the book. This package is a member of that umbrella both ways: pinned in the manifest at vibe.toml:44 and named in the snippet's member list at 03-flow-redbook.md:77."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "short-version-a-studied-competitor-is-intelligence": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:112  | ##ROW-FINDS-BOTH-ARGUED-EQUALLY Finds both, argued equally @spec/done | Intelligence you can act on @spec/done |",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:169  …us. Neither is intelligence.…",
+              "confirmed: Restates the §law-two-way table's third row and the honesty rule's closing sentence, both inside the package. Searched the host for an independent statement (`grep -rniE 'intelligence you can act on|is intelligence' legacy-spec/ packages/ spec/ campaigns/ docs/`, vibedeps and .vibe/cache excluded) — the only near-hit is the Tessl study's purpose line 'understanding what they do well — and what they don't — is load-bearing intelligence for vibevm's own roadmap' at legacy-spec/research/PROP-004-tessl-comparative-research.md:7, which is the template's own purpose wording rather than this aphorism. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+              "vibedeps/flow-comparative-research/0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+              "confirmed: The manifest declares `license = \"UPL-1.0\"`; LICENSE.md exists in the package and in the installed slot. `grep -c EULA packages/org.vibevm.world/comparative-research/v0.1.0/LICENSE.md` → 0, consistent with the host CLAUDE.md ledger's statement that `packages/org.vibevm.*/**` was relicensed to UPL-1.0."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T21:37:53Z",
+        "verify_batch": "W4"
+      }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md": {
       "content_hash": "0696171995b2d3516cf5efbf6e8bc17e0cd665145d20e2ce5e5459950d884f49",
