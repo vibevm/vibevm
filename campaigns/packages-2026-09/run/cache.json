@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:56:45Z",
+  "updated_at": "2026-07-28T21:57:52Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -49458,7 +49458,422 @@
       },
       "marker_count": 31,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "b8ba17597e0f129b4d6b3b4b21ffd04f2ff7cfabb523e0c7a18190a5cbd62920",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:18  ## The run, step by step {#steps}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:59  ## The `AUDIT.md` section format {#format}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:97  ## A worked run — \"Acme API\" {#worked-example}",
+              "confirmed: Three sections deliver the three promised parts, plus #owes and #summary. The worked example is on 'Acme API', a pytest + ruff + GitHub Actions REST service, which is invented — no such project exists in this repository. src [1] only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "companion-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
+              "confirmed: Both sibling targets exist in the package and in the installed payload. Step 2 does name audit-checklist.md by path, so the pointer and the step agree."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "A-RUN-MUST-FINISH-THE-INVENTORY": {
+            "v": "drift",
+            "ev": [
+              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+              "AUDIT.md:24  §2.2 checklist. The first full sweep is the next invocation; this seed",
+              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+              "DRIFT, stated by the artefact against itself. Two of three runs record in their own text that they did not finish the inventory — «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist. The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». The third finished the inventory of category E specifically. INT-0001 is the named full-sweep window and no run has closed it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-RUN-NEED-NOT-FINISH-EVERY-FIX": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+              "AUDIT.md:30  1 accepted, 9 open. **10 carry forward** to the next run.",
+              "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+              "AUDIT.md:389  The owner directed the filed program to completion the same day",
+              "confirmed: Confirmed by every run. The seed left 9 of 13 open and 1 filed. The 2026-06-12 run fixed 1 P1 in-run and filed 7 P2s. The scheduling then happened as a separate act: 'The owner directed the filed program to completion the same day … all seven filed P2s closed in one commit series' (AUDIT.md:389-391)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "STEP-OPEN-A-DATED-SECTION": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+              "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+              "confirmed: All three sections are headed by their run date in the form '## Audit run — YYYY-MM-DD (<gloss>)' at AUDIT.md lines 20, 154 and 191. The create-if-missing half is visible in git: commit b98227ce 'docs(audit): 2026-05-23 seed inventory' is +149 lines to a file that did not exist, and it opens with a header block (lines 1-18) before the first section — a header longer than one line, carrying the severity and disposition vocabularies."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "STEP-WALK-THE-CHECKLIST-BREADTH-FIRST": {
+            "v": "drift",
+            "ev": [
+              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+              "AUDIT.md:195  category **E (discipline depth)** this run adds to PROP-013 §2.2.",
+              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
+              "DRIFT: the instruction is adopted verbatim by the host — PROP-013's `##CHECKLIST-WALK` — and **no run has performed it.** Two disclaim the full sweep in their own text; the third went deep on one category by design («the INT-0001 audit window, run under the new category **E (discipline depth)** this run adds»). The seed run's findings do span A, B, C and D, but the run says they came from the M1.19 work and the checkpoint's known-issues list, not from a walk."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "STEP-RECORD-EVERY-FINDING-AS-YOU-GO": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+              "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+              "confirmed as a prescription whose timing the artefact cannot distinguish. The record SHAPE is confirmed for all 29 findings. Whether they were written as-you-go or batched at the end is not observable: each run landed as a single commit (`b98227ce` +149, `9283132f` +37, `21d47694` +199), so git history cannot separate the two. Settling it would need intra-run commits, which no run produced."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "STEP-CARRY-FORWARD-AND-RE-JUDGE": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+              "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
+              "AUDIT.md:369  unverified this run. Re-judged P2 → P3, open.",
+              "AUDIT.md:370  - **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`",
+              "AUDIT.md:373  migrations) — open, owner-court. **-08** (archived legacy repos) —",
+              "AUDIT.md:377  - **-13** (NaiveDepSolver the only solver) — **superseded in",
+              "confirmed and exercised in the strong form, with the exception self-declared. The 2026-06-12 run has a dedicated carry-forward section re-listing the whole prior series with per-finding re-judgements («Re-judged P2 → P3, open»; «accepted, stands»; «superseded in substance … Re-pointed, P3»). The 2026-06-10 run carried nothing forward and says in its own text it was not the full sweep. RECORDED: the escalate-or-accept clause has a live counter-instance outside AUDIT.md — DBT-0002, -0004 and -0005 have sat open in the debt registry since 2026-05-23 without escalation or acceptance."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "STEP-FIX-THE-CHEAP-FINDINGS-AND-FILE-THE-REST": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
+              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+              "AUDIT.md:444  - **AUD-0016 · fixed** (`be4aaef` and the two commits before it).",
+              "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
+              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+              "confirmed: Both halves exercised. Fixed in-run with a hash: 2026-06-12-01 `(9f06fbf)`, AUD-0016 `(be4aaef …)`, 2026-05-23-02 and -03 `(cc32d7e)` — though cc32d7e no longer resolves after the 2026-06-11 history rewrite (`git cat-file -e cc32d7e^{commit}` fails). Filed with a pointer: AUD-0017 'filed — DBT-0019', 2026-06-12-03 'filed (DBT-0019, escalated P3→P2)', and debt.json's `filed_as` field ('INT-0002 (the test-hardening work)'). Six of the nine filed findings carry a bare 'filed' in the heading with the destination only in the body."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "STEP-RECONCILE-THE-CHECKPOINT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+              "AUDIT.md:355  ### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)",
+              "AUDIT.md:357  **WAL and CONTINUE cited commit hashes that no longer exist**",
+              "AUDIT.md:27  WAL's standing Known-issues list.",
+              "confirmed: The step is adopted as a host obligation: PROP-013 §3 ##RECONCILE-WAL, 'Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes.' It has been exercised in both directions — the seed run drew on the checkpoint's standing Known-issues list, and 2026-06-12-12 records the checkpoint being repaired as part of the run. Per the campaign's citation rule I read the two checkpoint files to verify rather than citing them."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY": {
+            "v": "drift",
+            "ev": [
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "DRIFT in one run of three, verified commit by commit. Four of the five AUDIT.md commits are `docs(audit): …` and AUDIT.md-only — `b98227ce` 1 file +149, `21d47694` 1 file +199/-1, `f11ed38a` 1 file +52, `3656f362` 1 file +24/-2. The exception is the 2026-06-10 run: `9283132f docs(terraform): Phase 6 close-out` touches FIVE files — AUDIT.md plus the terraform LOG, REPORT, INTENT.md and intent.json — so that run's section is neither its own commit nor under an audit subject. The separate-fix half holds throughout: `9f06fbf2` and `be4aaef7` are standalone fix commits."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "AUDIT-MD-IS-APPEND-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+              "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+              "AUDIT.md:5  run appends a dated section; findings carry forward until they are",
+              "confirmed: Measured against the whole history. The three sections sit in chronological order (lines 20, 154, 191), so the host appends. Total deleted lines across all five commits, from `git show <h> -- AUDIT.md | grep '^-[^-]'`: b98227ce 0, 9283132f 0, 21d47694 1, f11ed38a 0, 3656f362 2. The single deletion in 21d47694 is the file header's category sentence, extended to add category E. The two in 3656f362 rewrite the AUD-0016 carry-forward line inside the SAME run's own section, same day, to re-disposition it filed→fixed. The 2026-05-23 and 2026-06-10 sections have never been modified."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "PAST-SECTIONS-ARE-FROZEN-HISTORY": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
+              "AUDIT.md:56  ### 2026-05-23-03 · A3 · P2 · fixed (`cc32d7e`)",
+              "confirmed: Confirmed mechanically: no commit after b98227ce deletes a line inside the 2026-05-23 section, and no commit after 9283132f deletes a line inside the 2026-06-10 section (see the append-only row for the per-commit deletion counts). The freeze has a visible cost a reviewer should see: findings 2026-05-23-02 and -03 record their fix as commit `cc32d7e`, which the 2026-06-11 history rewrite destroyed (`git cat-file -e cc32d7e^{commit}` fails). The 2026-06-12 run fixed the same class of dead reference in the checkpoint (finding -12) but left AUDIT.md's own frozen section carrying it — the freeze law and the record-the-hash prescription collide here."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "one-section-looks-like-this": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:70  ## 2026-07-07 {#2026-07-07}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:72  _Run by: owner + agent. Milestone M4 close-out. Prior run: 2026-05-30._",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:74  | ID          | Cat | Finding                                         | Sev | Disp    |",
+              "confirmed as the illustration it is — a fenced template with a dated heading, an italic run-provenance line, a five-column table and a Notes block, all internally coherent. RECORDED: the host's sections match it in substance and not in form. The headings read «## Audit run — 2026-05-23 (seed)» rather than the template's dated-anchor shape, **no run carries the italic «Run by / Prior run» line**, and only one of three uses a table. The Notes convention does appear, as the carry-forward and same-day-update sub-sections."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS": {
+            "v": "drift",
+            "ev": [
+              "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+              "AUDIT.md:184  | AUD-0014 | C | P3 | `expand_features` doc-string says cycles are \"rejected\"; the seen-set silently terminates them (test `cycles_terminate` pins the actual behaviour) | open — one-line doc fix, flagged in the Phase 2 proposals note |",
+              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+              "DRIFT on the row shape, confirmed on the fields. One of three runs uses the prescribed table — the 2026-06-10 run has the header `| id | cat | sev | finding | disposition |` with four rows. The other two give each finding its own `### <id> · <cat> · <sev> · <disp>` heading plus a multi-paragraph body: **25 findings that way against 4 in tables.** All five fields survive in both forms, so what fails is «one table row» and not the record's content. Nothing in PROP-013 prescribes either shape, which is why the fields hold and the form does not."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-DISP-COLUMN-RECORDS-WHERE-THE-FINDING-WENT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
+              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+              "AUDIT.md:186  | AUD-0016 | C | P3 | six `unsafe` blocks live outside any designated audit crate; frozen in the conform baseline, no audit-crate list exists yet | filed — the audit-crate designation is an owner decision; baseline may only shrink |",
+              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+              "AUDIT.md:104  **Legacy `vibespecs/flow-*` repos archived, not deleted.** The M1.19",
+              "AUDIT.md:344  60 s budget; revisit at the first breach or when vibe-cli decomposes.",
+              "confirmed: All three sub-rules are exercised. Hash for fixed: '(`cc32d7e`)', '(`9f06fbf`)', '(`be4aaef` and the two commits before it)'. Destination for filed: 'filed — DBT-0019', 'filed — the audit-crate designation is an owner decision; baseline may only shrink'. Note for accepted: both accepted findings carry their reason and revisit trigger in the body. The one gap: 2026-06-12-12's 'fixed (this run's WAL/AUDIT commits)' names no hash, and cc32d7e no longer resolves."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "take-an-invented-project": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:99  ##take-an-invented-project Take an invented project: a REST service, `pytest` + `ruff` + a GitHub",
+              "confirmed: The example is deliberately not this repository — pytest/ruff/GitHub Actions against vibevm's cargo/clippy/self-check.sh. `grep -rn 'Acme API' .` outside the package and its installed copy returns nothing. src [1] only: an invented example has no host counterpart by construction, which is the point."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "a-milestone-closed-and-the-owner-triggers-an-audit": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+              "confirmed: The narrated shape matches the host's two owner-triggered runs. The 2026-06-10 run is titled 'terraform close-out' — an audit run at a close-out, exactly the example's setup. The 2026-06-12 run opens 'Owner-requested' with the owner's quoted instruction."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EXAMPLE-A-TEST-INTEGRITY": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+              "AUDIT.md:56  ### 2026-05-23-03 · A3 · P2 · fixed (`cc32d7e`)",
+              "AUDIT.md:66  ### 2026-05-23-04 · A2 · P2 · open",
+              "spec/common/PROP-013-periodic-health-audit.md:30  - ##A1-COVERAGE-GAPS **A1 · Coverage gaps.** *Known:* install e2e tests overwhelmingly drive `LocalRegistry`, shadowing the real `GitPackageRegistry` + `NamingConvention` path; the `vibe init` default-config path had no e2e at all. @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
+              "confirmed: The example's shape is the host's seed run with the names changed: an A1 coverage gap filed as too large (2026-05-23-01), an A3 test guarding a defect fixed in-run (-03), an A2 quarantine (-04). Two differences worth noting for a reviewer: the host's A3 was filed P2 rather than the example's P1, and the host's A2 finding was left open rather than fixed by deletion — it is still open as DBT-0002 today."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EXAMPLE-B-ROT-OUTSIDE-THE-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:76  ### 2026-05-23-05 · B1 · P3 · open",
+              "AUDIT.md:78  **`fixtures/manual-test-packages/` carries retired schema.**",
+              "tools/self-check.sh:42  # packages were gated for months and \"all green\" was true the whole time",
+              "tools/self-check.sh:43  # (F-086); a count with no denominator cannot be wrong. The sync gate's",
+              "confirmed: Both example shapes have a host counterpart. B1: `fixtures/manual-test-packages/` that no hermetic test parses (2026-05-23-05, still open). B2: F-086, four of seven packages absent from what the floor built — and the host's fix was the same shape as the example's, adding them plus a denominator assertion to the gate script."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EXAMPLE-C-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:110  ### 2026-05-23-09 · C2 · P3 · open",
+              "AUDIT.md:112  **PROP-005 references a non-existent `schemas/` directory.** PROP-005",
+              "AUDIT.md:121  **Residual doc requalification deferred from PROP-008 Phase 8.** Phase",
+              "AUDIT.md:355  ### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)",
+              "AUDIT.md:357  **WAL and CONTINUE cited commit hashes that no longer exist**",
+              "confirmed: Both shapes are host history. The stale-doc shape: PROP-005's non-existent `schemas/` directory (2026-05-23-09) and the deferred requalification sweep (-10), plus DBT-0018's stale `vibe init` hint. The checkpoint shape: 2026-06-12-12, where WAL and CONTINUE cited hashes that no longer existed — the same category C3 and the same step-6 disposition the example names."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EXAMPLE-D-DEBT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:348  Hygiene census for the record: `#[ignore]` 5 (vibe-cli live quartet +",
+              "AUDIT.md:349  1 specmap-core); `#[allow]` 28 src-side (19 in vibe-cli); `anyhow`",
+              "AUDIT.md:339  ### 2026-06-12-10 · E3 · P3 · accepted",
+              "AUDIT.md:344  60 s budget; revisit at the first breach or when vibe-cli decomposes.",
+              "spec/common/PROP-013-periodic-health-audit.md:51  - ##D4-DEP-STALENESS **D4 · Dependency staleness** — `cargo update --dry-run`; `cargo audit` / `cargo outdated`. @spec/done",
+              "confirmed: The D3 accepted-with-a-reason-and-trigger shape has a host instance (2026-06-12-10, accepted with 'revisit at the first breach or when vibe-cli decomposes'). The D2 aging-FIXME shape does not — the one census found ~17 TODO-family markers of which 14 were false positives and concluded 'Nothing actionable'. The D4 dependency shape has no host instance at all: no D4 finding in any run, no dependency entry among the debt registry's 22, and no `cargo audit` / `cargo outdated` anywhere in the host's own tooling (the only hits are in vendored refs/src/uv/)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EXAMPLE-THE-RUN-CLOSES-WITH-THE-SECTION-AND-SEPARATE-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+              "confirmed: The host's commit subjects are close but not the template: `docs(audit): 2026-05-23 seed inventory`, `docs(audit): 2026-06-12 run - the discipline-depth inventory`, `docs(audit): same-day dispositions - the depth program closed its P2s`, `docs(audit): AUD-0016 dispositioned fixed - the posture is live` — all `docs(audit):` with a descriptive rather than a `<date> health audit` subject. The 2026-06-10 run's section is not its own commit at all (9283132f, `docs(terraform): Phase 6 close-out`, 5 files). The separate-fixes half holds (9f06fbf2, be4aaef7). The reconciliation half I verified by reading the checkpoint files, which I do not cite."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EXAMPLE-THE-NEXT-RUN-OPENS-BY-RE-READING-THESE-ROWS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+              "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
+              "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
+              "confirmed: Done once, skipped once. The 2026-06-12 run opens its carry-forward by re-reading both prior sections' open and filed rows — the heading is literally 'Carry-forward (2026-05-23 series + 2026-06-10), re-judged' — and it re-reads AUD-0014/-0015/-0016/-0017 from the 2026-06-10 table. The 2026-06-10 run did not re-read the seed run's rows. And there has been no run since 2026-06-12 to re-read that one's twelve."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "OWES-A-COMPLETE-INVENTORY": {
+            "v": "drift",
+            "ev": [
+              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+              "DRIFT on one of its four sub-obligations. Recorded-and-dispositioned holds for all 29 findings. Checkpoint-reconciled is adopted as a rule in PROP-013 and exercised once. Carried-forward-and-re-judged is done at one of two opportunities. **Every-category-walked is claimed by no run**, with two disclaiming the full sweep outright and the named window INT-0001 never closing. A rule that owes four things and gets three is drift on the list, per W1's precedent for enumerated obligations."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DOES-NOT-OWE-EVERY-FIX": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+              "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
+              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+              "confirmed: The host's one large P1 was filed, not force-fixed, and the filing text gives the design-pass reason: 'Large enough for its own milestone task or a PROP' (AUDIT.md:43-44). It became DBT-0001, `filed_as: INT-0002`. The seed run's tally line — '2 fixed, 1 filed, 1 accepted, 9 open' — is the shape this row licenses."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-THE-SEVEN-STEPS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+              "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "confirmed: Steps 1, 3, 5, 6 and 7 have host instances (dated sections; five-field records; a P1 fixed in-run and seven P2s filed; PROP-013:64's reconciliation rule; four `docs(audit):` commits). Step 2 has none — no run records a breadth-first walk and two disclaim it. Step 4 has one of two. So five of seven steps are confirmed, one is partial and one is unconfirmed."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-AUDIT-MD-IS-APPEND-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+              "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+              "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+              "confirmed: Append-only and frozen-sections hold mechanically (3 deletions total across 5 commits, none inside a prior run's section). Five fields and disposition-records-where-it-went hold for all 29 findings. 'One table row per finding' does not: 25 of 29 findings use a per-finding heading plus body rather than a table row, and only the 2026-06-10 run tabulates."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-FIX-CHEAP-FILE-THE-REST-COMMIT-SEPARATELY": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+              "AUDIT.md:444  - **AUD-0016 · fixed** (`be4aaef` and the two commits before it).",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "confirmed: Fix-cheap and file-the-rest hold (1 P1 fixed in-run at 9f06fbf2, 7 P2s filed, AUD-0016 fixed at be4aaef7 as its own commit series). Section-is-its-own-commit holds for four of five AUDIT.md commits; the fifth, 9283132f, bundles the 2026-06-10 section with four terraform files, which `git show --stat 9283132f` shows."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-THE-RUN-MUST-FINISH-THE-INVENTORY": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+              "confirmed: The not-every-fix half is confirmed by all three runs. The finish-the-inventory half is disclaimed by two of them in their own text ('**not** a fresh full sweep'; '**not** the full §2.2 breadth sweep'), and the named full-sweep window INT-0001 remains open — debt.json's DBT-0001 carries `sunset: 're-disposition at the first full PROP-013 audit run (INT-0001)'`, so the host is still waiting on it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T21:57:52Z",
+        "verify_batch": "W5"
+      }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md": {
       "content_hash": "9ff19490ad21b6e0cd5bee163bc0d8b191fa3dca79567b89dbc0467361edd4c0",
