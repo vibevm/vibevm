@@ -1,0 +1,358 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-THE-MANAGED-BLOCKS-DISCIPLINE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:5  ##PACKAGE-INSTALLS-THE-MANAGED-BLOCKS-DISCIPLINE A `flow` package that installs one discipline: **how a tool writes",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:6  into a file it does not own** — an agent-instruction file, a shell rc,",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:7  an ssh config, a shared project config — without destroying what the",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/vibe.toml:4  kind = \"flow\"",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/vibe.toml:8  description = \"Managed blocks: how a tool writes into files it does not own — one delimited block, deterministic scanning, hard stop on malformed state\"",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md:1  # Flow: Managed Blocks {#root}",
+     "spec/boot/STATIC.md:853  <!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md -->",
+     "confirmed: The package manifest declares the kind the fact asserts: `kind = \"flow\"` at vibe.toml:4, and the description at vibe.toml:8 names the same discipline in the same words ('how a tool writes into files it does not own'). For the installed side I ran `ls -R vibedeps/flow-managed-blocks` and got exactly one version slot, 0.1.0, holding LICENSE.md, README.md, vibe.toml, spec/boot/65-flow-managed-blocks.md and the three spec/flows/managed-blocks/*.md files — i.e. the discipline arrives as files. `grep -n 'managed-blocks' spec/boot/STATIC.md` returns line 853, the provenance marker `<!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md -->`, so the compiled host boot lane carries the snippet with its origin recorded. The list of four host-file genres in the fact (agent-instruction file, shell rc, ssh config, shared project config) is the package's own enumeration; two of the four have a real implementation in this repository (see the rows for example-a-shell-installer-appends-to-bashrc and example-an-agent-framework-wants-a-line-in-claude-md)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "FIRST-INSTALL-INTO-A-NON-TRIVIAL-HOST-FILE-IS-A-DATA-LOSS-EVENT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:10  ##FIRST-INSTALL-INTO-A-NON-TRIVIAL-HOST-FILE-IS-A-DATA-LOSS-EVENT The first install of a whole-file-overwriting",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:11  tool into a project with a non-trivial host file is a data-loss event;",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:12  this practice is how it stops being one. @spec/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:20  - ##whole-file-write The Phase-4 implementation — `vibe-workspace::boot_artifacts::write_boot_artifacts` — does this with an unconditional whole-file `fs::write`: every `vibe install` / `vibe reinstall` / `vibe uninstall` / `vibe update` replaces the **entire file** with vibevm's generated content. @impl/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:30  - ##silent-destruction A whole-file overwrite silently destroys every byte of that. @impl/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:31  - ##data-loss-event The first `vibe install` in any project with a non-trivial `CLAUDE.md` is a data-loss event — and it destroys precisely the file a developer is most likely to have invested in by hand. @impl/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:28  - ##tenant-vibevm-repo in the vibevm repository itself, `CLAUDE.md` is today ~200 hand-authored lines carrying the four non-negotiable rules and the session-end command. @impl/done",
+     "confirmed: This is the host's own history, not a hypothetical. PROP-012 line 20 records that the shipped Phase-4 implementation did the redirect 'with an unconditional whole-file `fs::write`'; line 30 says 'A whole-file overwrite silently destroys every byte of that'; line 31 states the data-loss-event conclusion in almost the flow's wording. Line 28 names this repository as the concrete victim ('`CLAUDE.md` is today ~200 hand-authored lines'). Searched with `grep -rn 'data-loss' spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md` and by reading §1 Motivation in full. Direction of provenance matters here and runs host → flow: PROP-012 is dated 2026-05-22 (its §8 history) and the flow README restates it, so the host is the source of the lesson rather than an independent confirmation of it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AUDIENCE-IS-TOOL-AUTHORS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:14  ##AUDIENCE-IS-TOOL-AUTHORS **Audience: tool authors.** Anyone whose software writes into files it",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:15  does not solely own. @impl/done",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:3  <status stage=\"doc\" state=\"done\" audience=\"user\"/>",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:5  ##scope-of-this-document **Scope of this document.** This file defines *how* a tool writes",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:6  into a file it does not own: the co-tenant law that bounds it to one",
+     "confirmed: Settled inside the package. README:14-15 states the audience; the protocol's scope line (P:5-6) addresses the same reader ('how a tool writes into a file it does not own'). One thing a reviewer should see rather than be surprised by: the README's document-level status line at README:3 reads `<status stage=\"doc\" state=\"done\" audience=\"user\"/>`, i.e. `audience=\"user\"`. Checked the vocabulary at spec/modules/vibe-progress/PROP-043-progress-markup.md:109 — `audience` is a CSV of `user` / `author` / `dev`, the reader-class axis of the markup, so `user` there means 'end-user-facing document' and does not name a topical audience; the two are different axes and the values do not contradict. No source-2 or source-3 evidence applies: an audience declaration has no host behaviour to observe."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "IF-YOUR-TOOL-WRITES-A-FILE-OTHERS-EDIT-THIS-IS-FOR-YOU": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:17  ##IF-YOUR-TOOL-WRITES-A-FILE-OTHERS-EDIT-THIS-IS-FOR-YOU If your tool `write()`s a file a human or another",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:18  tool also edits, this is for you. @impl/done",
+     "crates/vibe-workspace/src/boot_artifacts.rs:80  /// The agent instruction files a node carries at its root. vibevm owns",
+     "crates/vibe-workspace/src/boot_artifacts.rs:81  /// only a `<vibevm>` block inside each (PROP-012); the rest of every file",
+     "crates/vibe-workspace/src/boot_artifacts.rs:82  /// belongs to the developer and any other tool sharing it.",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:24  ##SHARED-SURFACE `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` are not vibevm's files. They are the **shared contact surface every coding agent reads at session start**, and many parties legitimately write there: @impl/done",
+     "confirmed: The host is exactly the described tool and says so in code: boot_artifacts.rs:80-82 is the doc comment on `REDIRECT_FILES` — 'vibevm owns only a `<vibevm>` block inside each (PROP-012); the rest of every file belongs to the developer and any other tool sharing it'. PROP-012:24 names the same two co-tenant classes ('the shared contact surface every coding agent reads at session start, and many parties legitimately write there'). Found by `grep -rln 'vibevm>' crates/ --include='*.rs'`, which returns ten files — note that the harvest's copy of this same command lists only six and omits crates/vibe-workspace/src/boot_artifacts.rs, the file the doc comment lives in."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-law-fits-on-one-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:20  ##the-law-fits-on-one-line The law fits on one line: @impl/done",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:23  Own exactly one delimited block; never touch a byte outside it.",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:10  ##the-law-fits-on-one-line The law",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:14  Own exactly one delimited block; never touch a byte outside it.",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:57  > ##THE-CO-TENANT-LAW Own exactly one delimited block. Never touch a byte outside it. @impl/done",
+     "vibedeps/flow-managed-blocks/0.1.0/README.md:15  Own exactly one delimited block; never touch a byte outside it.",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md:10  Own exactly one delimited block; never touch a byte outside it.",
+     "confirmed: The identical one-line law appears at four places in the shipped payload: README:23, boot snippet 65-flow-managed-blocks.md:14, the protocol's blockquoted co-tenant law at MANAGED-BLOCKS-PROTOCOL.md:57 (wording 'Own exactly one delimited block. Never touch a byte outside it.' — sentence-period instead of semicolon), and the installed copies vibedeps/.../README.md:15 and .../65-flow-managed-blocks.md:10. Checked byte-equality of the installed snippet against the package source with `diff vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md`: the only differences are the PROP-043 markup the package grew after installation (the `<status>` line, the `##ID` prefixes, the `@impl/done` suffixes) plus the paragraph splits that markup introduced. Stripping markers and collapsing whitespace, the two are character-identical at 1554 chars."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "package-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:26  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:28  - ##CONTENT-THE-PROTOCOL `spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md` — the full",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:34  - ##CONTENT-THE-REJECTED-DESIGNS `spec/flows/managed-blocks/rejected-designs.md` — four designs that",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:38  - ##CONTENT-THE-ADOPTION-GUIDE `spec/flows/managed-blocks/adoption-guide.md` — migrating an",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:42  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/65-flow-managed-blocks.md` — boot snippet loaded at",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/vibe.toml:15  [boot_snippet]",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/vibe.toml:16  source = \"spec/boot/65-flow-managed-blocks.md\"",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:1",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/adoption-guide.md:1",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/rejected-designs.md:1",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md:1",
+     "confirmed: Counted on disk. `find packages/org.vibevm.world/managed-blocks -type f` returns seven files: LICENSE.md, README.md, vibe.toml, spec/boot/65-flow-managed-blocks.md and the three spec/flows/managed-blocks/*.md — i.e. exactly three content documents plus one boot snippet, matching the four bullets at README:28/34/38/42. `find vibedeps/flow-managed-blocks -type f` returns the same seven names, so a consumer receives all four. The boot snippet is declared as such in vibe.toml:15-16 (`[boot_snippet]` / `source = \"spec/boot/65-flow-managed-blocks.md\"`), which is what makes it a snippet rather than a fourth document."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:28  - ##CONTENT-THE-PROTOCOL `spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md` — the full",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:29    protocol: the co-tenant law, marker design (unique, greppable,",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:55  ## The co-tenant law {#co-tenant}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:74  ## Marker design {#markers}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:108  ### Version the marker format itself {#marker-version}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:125  ## Well-formedness: absent, present, malformed {#state-machine}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:152  ## The three verbs {#verbs}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:188  ## Classify at plan time, not mid-write {#plan-time}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:205  ## The byte-identical no-op {#no-op}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:221  ## Multi-tool cohabitation {#cohabitation}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:83  | ##ROW-MARKER-UNIQUE **Unique** @impl/done | The marker string must not plausibly occur in host content. Namespace it with the tool's name — `# >>> toolname >>>`, `<toolname>`, `# BEGIN toolname`. A generic `# BEGIN` will collide. @impl/done |",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:84  | ##ROW-MARKER-GREPPABLE **Greppable** @impl/done | Locatable by a plain line-anchored text scan — no format parser, no model. See the next section on why. @impl/done |",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:85  | ##ROW-MARKER-PAIRED **Paired** @impl/done | A distinct open and close, so a byte scan yields an unambiguous region, not a single sentinel whose end must be guessed. @impl/done |",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:86  | ##ROW-MARKER-SELF-DOCUMENTING **Self-documenting** @impl/done | The first line *inside* the block carries a do-not-edit notice, so a human reading the host file learns the region is managed without consulting docs. @impl/done |",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:1  # Managed Blocks Protocol {#root}",
+     "confirmed: Every promised element resolves to a section of the named file. `grep -nE '^#{1,3} ' packages/.../MANAGED-BLOCKS-PROTOCOL.md` returns: §problem 13, §co-tenant 55, §markers 74, §marker-version 108, §state-machine 125, §verbs 152, §placement 171, §plan-time 188, §no-op 205, §cohabitation 221, §re-derive 264, §summary 288. The four marker properties the README enumerates are the four table rows at 83-86 in that order — Unique, Greppable, Paired, Self-documenting — and 'versioned' is the §marker-version subsection at 108, i.e. it is a section rather than a fifth table row. The file is present in the installed payload (vibedeps/.../MANAGED-BLOCKS-PROTOCOL.md) and word-identical to the package source modulo PROP-043 markup (10687 chars either way after stripping)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-REJECTED-DESIGNS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:34  - ##CONTENT-THE-REJECTED-DESIGNS `spec/flows/managed-blocks/rejected-designs.md` — four designs that",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:35    look reasonable and are wrong (sidecar, model-based detection,",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:36    auto-repair, whole-file ownership), each with its full why, plus the",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:13  ## A sidecar file instead of a block {#sidecar}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:51  ## Model-based or heuristic block detection {#model-detection}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:81  ## Auto-repairing a malformed block {#auto-repair}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:114  ## Whole-file ownership {#whole-file}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:147  ## The malformed-state drill {#drill}",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/rejected-designs.md:1  # Rejected designs {#root}",
+     "confirmed: `grep -nE '^## ' rejected-designs.md` returns exactly the four rejected designs in the README's order plus the drill: §sidecar 13, §model-detection 51, §auto-repair 81, §whole-file 114, §drill 147, §summary 186. Each carries an explicit '*Why it is rejected.*' paragraph (lines 22, 58, 89) or the '*Why it is mostly rejected — and the narrow case where it is fine.*' variant at 121 for whole-file. The installed copy exists at vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/rejected-designs.md and is word-identical modulo markup (6971 chars each after stripping)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-ADOPTION-GUIDE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:38  - ##CONTENT-THE-ADOPTION-GUIDE `spec/flows/managed-blocks/adoption-guide.md` — migrating an",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:39    overwriting tool onto a block, a fixture table that pins the state",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:40    machine, and what belongs inside the block versus a tool-owned file",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:12  ## Migrating from whole-file overwrite {#migrating}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:78  ## Testing the state machine {#testing}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:87  | Fixture | Marker content | Expected verdict |",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:115  ## What belongs inside the block {#what-belongs}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:129  ##PUT-A-LARGE-PAYLOAD-IN-A-TOOL-OWNED-FILE When the payload is large, put it in a **tool-owned file** — a file",
+     "vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/adoption-guide.md:1  # Adoption guide {#root}",
+     "confirmed: All three promised parts resolve: §migrating at adoption-guide.md:12, the fixture table header at 87 under §testing (78), and §what-belongs at 115 with the pointer-to-a-tool-owned-file rule at 129. The fixture table has ten rows (lines 89-98). Installed copy present at vibedeps/.../adoption-guide.md, word-identical modulo markup (6573 chars each after stripping)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:42  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/65-flow-managed-blocks.md` — boot snippet loaded at",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:43    session start: the one-line law, when to read the protocol, and the",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:44    never-do list. @impl/done",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:14  Own exactly one delimited block; never touch a byte outside it.",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:17  ## When to read the protocol {#when}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:35  ## Never {#never}",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/vibe.toml:15  [boot_snippet]",
+     "spec/boot/STATIC.md:853  <!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md -->",
+     "spec/boot/STATIC.md:855  # Flow: Managed Blocks {#root}",
+     "spec/boot/STATIC.md:882  ## Never {#never}",
+     "confirmed: Three of the three claimed contents are sections of the snippet: the law fence at 65-flow-managed-blocks.md:14, '## When to read the protocol {#when}' at 17, '## Never {#never}' at 35. That it is loaded at session start is observable in the host rather than only asserted: `grep -n 'managed-blocks' spec/boot/STATIC.md` puts the provenance marker at line 853 and the snippet body at 855-889 of the compiled static lane, and the host's own boot contract (the `<vibevm>` block at CLAUDE.md:211-228) instructs the session to read `spec/boot/STATIC.md` first and in full. So the never-list is in the read set of every session in this repository."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:58  ##UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:59  snippet. @impl/done",
+     "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its",
+     "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+     "crates/vibe-cli/src/commands/uninstall.rs:5  //! declaration, and regenerates every node's boot artifacts so the",
+     "crates/vibe-cli/src/commands/uninstall.rs:119      if mode.is_in_place() {",
+     "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
+     "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+     "crates/vibe-workspace/src/install/bootgen.rs:119  /// Used by `vibe uninstall` (after a slot is removed) and, later, by",
+     "confirmed: Settled for the package's own files; not settled through `files_written`. `vibe uninstall`'s implementation (crates/vibe-cli/src/commands/uninstall.rs) removes the whole materialised slot — `vibedeps::remove_slot(...)` at line 123, or `remove_in_place_slot` at 120 — and then calls `regenerate_boot(&workspace)` at line 144, which recompiles STATIC.md/INDEX.md from what is left, so the snippet's text leaves the boot lane too. That is the whole footprint here, because `grep -n 'files_written' vibe.lock` returns 36 hits and every one is `files_written = []` (the managed-blocks entry is at vibe.lock:320-328, with `files_written = []` on line 327); crates/vibe-cli/tests/cli_pkg_cycle.rs:130-131 asserts that emptiness on purpose ('files_written is empty under the loading model'). The half I could not settle: nothing in the code path removes anything from a user-owned file, so 'every file the package wrote' is true only because the package writes no user-owned file — I found no test that asserts post-uninstall absence of the slot directory."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:61  ##USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files are never touched — which is, fittingly, the",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:62  whole point of the practice. @impl/done",
+     "crates/vibe-workspace/src/boot_artifacts.rs:80  /// The agent instruction files a node carries at its root. vibevm owns",
+     "crates/vibe-workspace/src/boot_artifacts.rs:81  /// only a `<vibevm>` block inside each (PROP-012); the rest of every file",
+     "crates/vibe-workspace/src/boot_artifacts.rs:82  /// belongs to the developer and any other tool sharing it.",
+     "crates/vibe-workspace/src/boot_artifacts.rs:419                      // Co-tenant content — append the block after it,",
+     "crates/vibe-workspace/src/boot_artifacts.rs:420                      // preserving every existing byte (PROP-012 §2.3).",
+     "crates/vibe-workspace/src/boot_artifacts.rs:421                      let mut out = content.clone();",
+     "crates/vibe-workspace/src/boot_artifacts/tests.rs:509      // The hand-authored content is preserved verbatim, ahead of the block.",
+     "crates/vibe-workspace/src/boot_artifacts/tests.rs:510      assert!(content.starts_with(\"# My own instructions\\n\\nKeep me.\\n\"));",
+     "confirmed: Measured on this repository's own git history rather than asserted. `git log --oneline -- CLAUDE.md | wc -l` = 25 commits have touched CLAUDE.md; `git log --oneline -S'</vibevm>' -- CLAUDE.md` returns exactly one (dd5c7172, the commit that first added the block) and `git log --numstat -S'STATIC.md' -- CLAUDE.md` returns one more (61dfacfc) whose CLAUDE.md numstat is `2 2` — two lines changed, both inside the block. So 23 of 25 commits changed only the human's region and the two that touched the block changed nothing outside it. Second, independent selector: `git log --oneline -G'^[+-].*spec/boot/' -- CLAUDE.md` returns five commits (c8a1aa8f, b59aba8d, cadca122, ff38fdec, 88fbf4dd) — this one over-counts badly, because the human's own prose above the block cites `spec/boot/` paths, so a diff line matching that pattern is usually the human editing their own text. The code side: boot_artifacts.rs:419-421 takes the append path with `let mut out = content.clone();` under the comment 'Co-tenant content — append the block after it, preserving every existing byte', and boot_artifacts/tests.rs:509-510 asserts the hand-authored prefix survives verbatim."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-TOOL-DESIGN-LESSONS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:66  - ##COMPOSES-TOOL-DESIGN-LESSONS `flow:tool-design-lessons` — the sibling package for tool authors;",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:67    managed blocks is one deep-dive lesson from it, extracted so it can",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:68    be installed on its own. @impl/done",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md:60  - ##COMPOSES-MANAGED-BLOCKS `flow:managed-blocks` — the deep dive on writing safely inside a",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:197  ##s5-mechanics-managed-blocks-pointer (The",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:199  lesson of their own — see `flow:managed-blocks`.) @impl/done",
+     "vibedeps/flow-tool-design-lessons/0.1.0/README.md:1",
+     "confirmed: The claimed sibling exists and points back. `ls -d packages/org.vibevm.world/tool-design-lessons` resolves; `grep -rn 'managed.block\\|managed blocks' packages/org.vibevm.world/tool-design-lessons/v0.1.0/` returns three hits, of which README.md:60 is the reciprocal composition entry (`##COMPOSES-MANAGED-BLOCKS \\`flow:managed-blocks\\` — the deep dive on writing safely inside a`) and self-updating-tools.md:197-199 is the in-text extraction note ending 'see `flow:managed-blocks`.'. So the extraction the fact describes is recorded on both sides. Both packages are separately installed — `ls vibedeps/` lists flow-managed-blocks and flow-tool-design-lessons as distinct slots — which is the 'installed on its own' half. Note that neither package declares the other in `[compatibility] requires_kinds`; managed-blocks' vibe.toml:12 is `requires_kinds = []`, so the composition is editorial, not a resolver dependency."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "COMPOSES-ATTRIBUTION-POLICY-AND-WAL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:69  - ##COMPOSES-ATTRIBUTION-POLICY-AND-WAL `flow:git-attribution-policy` and `flow:wal` — their instruction files",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:70    are exactly the kind of shared, hand-authored file this protocol",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:71    protects. A tool that writes an attribution snippet or a WAL redirect",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:72    into `CLAUDE.md` must do it as a block, not an overwrite. @impl/done",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:246  3. Draft boot lines (CLAUDE.md, AGENTS.md, or equivalent) so every",
+     "vibedeps/flow-managed-blocks/0.1.0/README.md:59  - `flow:attribution-policy` and `flow:wal` — their instruction files",
+     "confirmed: Both named packages exist (`ls -d packages/org.vibevm.world/git-attribution-policy packages/org.vibevm.world/wal` both resolve, and `ls vibedeps/` shows flow-git-attribution-policy and flow-wal installed). The claim is then observable in this repository's own CLAUDE.md: the WAL redirect the fact talks about is at CLAUDE.md:3 ('then `spec/WAL.md`') and the attribution/commit-discipline pointer at CLAUDE.md:5 — both at the very top of the file, 206+ lines above the `<vibevm>` block at 211, i.e. hand-authored co-tenant content that every `vibe` operation preserves. `grep -rn 'CLAUDE.md' packages/org.vibevm.world/wal/*/` returns WAL-PROTOCOL.md:246, 'Draft boot lines (CLAUDE.md, AGENTS.md, or equivalent) so every'. One drift-shaped observation about the shipped payload, not the rule: the installed copy at vibedeps/flow-managed-blocks/0.1.0/README.md:59 still reads `flow:attribution-policy` where the package source reads `flow:git-attribution-policy` — the vibedeps snapshot predates the rename, and `ls vibedeps/` confirms the live slot is flow-git-attribution-policy. This was the only content difference between the package README and the installed README when I diffed them with markup stripped."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-CONFLICT-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:73  - ##COMPOSES-CONFLICT-PROTOCOL `flow:conflict-protocol` — a malformed block is a conflict surfaced",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:74    to the human, never silently resolved; both practices refuse to guess",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:75    when two writers disagree, and both hard-stop instead of auto-fixing. @impl/done",
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:12  ##WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY What is forbidden is resolving a contradiction silently. @impl/done",
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:43  ##THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE The human decides in",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:108  ##A-MALFORMED-BLOCK-IS-WHERE-THE-TOOL-MUST-STOP-AND-DEFER A malformed block is exactly the case",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:112  ##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done",
+     "crates/vibe-cli/src/exit_code.rs:74      }",
+     "crates/vibe-cli/src/exit_code.rs:75      // A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped —",
+     "confirmed: The kinship is stated on both sides and is implemented once. conflict-protocol's boot snippet line 13 is '##WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY What is forbidden is resolving a contradiction silently.' and line 47 is the deferral to the human; rejected-designs.md:108/112 is managed-blocks' own version ('A malformed block is exactly the case where the tool must stop and defer' / 'Hard stop, precise report, human decides'). The host implements the kinship literally at the exit-code level: crates/vibe-cli/src/exit_code.rs:74-75 comments that 'A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped' and the surrounding code maps it to `PACKAGE_CONFLICT` (exit 3) rather than a generic failure. `ls vibedeps/flow-conflict-protocol` resolves, so the sibling is installed here too. `ls packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/` returns CONFLICT-PROTOCOL.md, failure-modes.md, uncertainty-protocol.md."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "practice-crystallized-from-the-origin-projects-law": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:79  ##practice-crystallized-from-the-origin-projects-law The practice is crystallized from the origin project's",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:80  managed-redirect-block law — the rule that a tool owns one delimited,",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:81  machine-findable region of a shared file and never touches a byte",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:82  outside it, with a hard stop on any malformed state. @spec/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:1  # PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files {#root}",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:36  - ##FIX-MANAGED-BLOCK The fix is the standard managed-block discipline (the general problem and the co-tenant law: the `managed-blocks` flow's `spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#problem`) — the shape `ssh`, shell-rc installers, and countless config tools already use: vibevm owns one small, clearly-delimited, **machine-findable** region of each instruction file, and never touches a byte outside it. @impl/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:47  ##ONE-BLOCK-LAW **Decision.** `vibe` owns exactly one **managed block** inside each agent instruction file — a contiguous region bounded by an opening and a closing marker. @impl/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:49  - ##OUTSIDE-PRESERVED `vibe` reads and rewrites only the content *between* the markers; every byte outside the block is treated as another tenant's property and preserved verbatim across every `vibe` operation. @impl/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:72  - ##PLAIN-TEXT-SCAN The markers are located by a **plain line-anchored text scan** — no markdown parse, no model in the loop. \"Programmatically findable without an LLM\" is a hard requirement: the markers gate a mutating write, so detection must be deterministic and trivial. @impl/done",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
+     "confirmed: The origin project is this one and the law is PROP-012, whose title line reads 'PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files'. Each clause of the README sentence has a PROP-012 counterpart: 'one delimited region' → PROP-012:47 ('`vibe` owns exactly one **managed block** inside each agent instruction file'); 'never touches a byte outside it' → PROP-012:49; 'machine-findable' → PROP-012:72 ('located by a **plain line-anchored text scan**'); 'hard stop on any malformed state' → PROP-012:82. The direction of provenance is explicit and runs host → flow: PROP-012:36 cites the flow as the general statement of the rule it is an instance of, and `git log --oneline --all -i --grep='PROP-012'` shows two commits named `refactor(spec): cite managed-blocks from PROP-012` (343a36cc) and `refactor(spec): cite managed-blocks from PROP-012's redirect block` (5cba505b) — the citation was added to the older document after the flow was extracted."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ORIGIN-MARKERS-ARE-ONE-EXAMPLE-AND-THE-RULE-IS-GENERIC": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:84  ##ORIGIN-MARKERS-ARE-ONE-EXAMPLE-AND-THE-RULE-IS-GENERIC The origin's own",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:85  markers (`<vibevm>`) and host file (`CLAUDE.md`) appear here only as",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:86  one worked example among others (shell rc, ssh config); the rule is",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:87  generic to any tool and any shared file. @impl/done",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:92  <toolname>",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:102  # >>> toolname managed block >>>",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:106  ```",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:232  <toolA>",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:237  # >>> toolB >>>",
+     "confirmed: Checked by counting the origin's own strings inside the package: `grep -rn 'vibevm' packages/org.vibevm.world/managed-blocks/v0.1.0/` outside the README's own background section returns nothing — the protocol's worked blocks use the placeholder `<toolname>` (MANAGED-BLOCKS-PROTOCOL.md:92) and the rc-style `# >>> toolname managed block >>>` (line 102, closing at 106), and the cohabitation example uses `<toolA>` (232) and `# >>> toolB >>>` (237). So the generic claim holds in the shipped text. The claim that the origin's markers are 'one worked example among others' is however not exemplified inside this package at all — the string `<vibevm>` does not appear in any of the five files (`grep -c '<vibevm>' packages/org.vibevm.world/managed-blocks/v0.1.0/**/*.md` = 0 in every file). The two named alternative host genres both exist as real code in the host: `CLAUDE.md` via crates/vibe-workspace/src/boot_artifacts.rs and a shell rc via crates/vibe-cli/src/commands/vvm/env.rs (see the example-a-shell-installer-appends-to-bashrc row); I found no ssh_config writer — `grep -rniE 'ssh_config|ssh config' crates/ tools/ --include='*.rs'` returns nothing."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "collections-spirit-is-the-redbook": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:89  ##collections-spirit-is-the-redbook The collection's spirit is the",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:90  book *AI-native development*, which ships in Russian inside",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:91  `flow:redbook` at `spec/book/ru/`. @spec/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:1",
+     "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.md:1",
+     "confirmed: The named path exists in both live version slots: `ls -d packages/org.vibevm.world/redbook/*/spec/book/ru` returns v0.1.0 and v0.2.0, each holding chapter-1-two-process-model.md, chapter-2-shared-state-and-files.md, chapter-3-memory-individual.md. `ls vibedeps/` shows flow-redbook installed, so a consumer of this repository receives the book too. I did not verify the book's language beyond its directory name `ru` and the Russian filenames' subject matter; the claim 'in Russian' rests on the `ru` path segment."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md:95  ##license-line UPL-1.0. See `LICENSE.md`. @impl/done",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "vibedeps/flow-managed-blocks/0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: Three independent places agree: README:95 says UPL-1.0, the shipped LICENSE.md:3 reads 'The Universal Permissive License (UPL), Version 1.0', and vibe.toml:7 is `license = \"UPL-1.0\"`. The installed copy carries the same LICENSE.md — `find vibedeps/flow-managed-blocks -type f` shows it at 1833 bytes, byte-identical in size to the package's own (also 1833), and a stripped comparison of the two files matched at 1817 chars. This also matches the host's recorded license state in CLAUDE.md's operating-facts ledger."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  }
+ }
+}
