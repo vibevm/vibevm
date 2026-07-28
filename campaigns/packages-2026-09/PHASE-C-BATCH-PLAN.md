@@ -222,6 +222,39 @@ world batch closes, the per-anchor cost is re-measured and they split if it is
 higher than C1's; a derived number in a plan goes stale and nothing recomputes it,
 so this one is recomputed on purpose.
 
+## 4.5 The perimeter law — written after C1 cost it three times {#perimeter}
+
+**Every brief states the perimeter, and the perimeter is almost never one
+package.** C1 produced three wrong absences, and not one of them was a worker's
+error: each brief confined the search to `core-ai-native`'s crates, and each time
+the thing being looked for was somewhere else.
+
+| what was "missing" | where it actually was |
+|---|---|
+| BROWNFIELD's three registries | `rust-ai-native-cli/src/lib.rs:26,28,30` — the language stack's CLI |
+| PROP-014's committed index, schema, xtask driver, `vibe trace` | the **host**: `specmap.json` (3.1 MB), `schemas/specmap.jtd.json`, `xtask/src/specmap.rs`, `vibe trace` |
+| PROP-014's adoption into the host spec tree | `PROP-031` cites it five times by qualified URI (this one was the reviewer's, not a worker's) |
+
+The shape is structural rather than accidental, and it follows from how these
+packages are built: **a mechanism's SPEC lives in `core-ai-native`, its ENGINE in
+`core-ai-native`'s library crates, its DRIVER in each language stack's CLI, and its
+DEPLOYMENT in the consuming project.** A fact can be true at any of those four
+layers and invisible at the other three.
+
+So a brief names all of them by default:
+
+```
+packages/org.vibevm.ai-native/**   crates/**   xtask/**   spec/**   schemas/**
+specmap.json  specmap.toml  vibe.toml  vibe.lock  vibedeps/**
+campaigns/packages-2026-09/harvest/*.md
+```
+
+Two rules follow. **A `not-found` is a fact about the search perimeter until the
+perimeter has been checked** — it is never, on its own, evidence of absence. And a
+worker must be told to *say where* when it finds something outside the nominal
+package, because that relocation is the most valuable single thing a delegated
+search returns.
+
 ## 5. Evidence, and how a harvest file is cited {#evidence}
 
 A verdict's `ev[]` cites the harvest file by path — `harvest/rust-ai-native-lang-floor.md` —
