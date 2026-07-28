@@ -1,0 +1,811 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:17  ## The committed target manifest {#manifest}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:64  ## The fan-out procedure {#procedure}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:86  ## Fail-loud semantics {#fail-loud}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:144  ## Deletions and history rewrites do not propagate {#no-propagate}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:159  ## Reference implementation {#reference}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:204  ## Pin the invariant with a test {#never-force-test}",
+     "confirmed: All eight named parts exist as headings, in the stated order: §manifest, §procedure, §fail-loud, §drift-check (107), §bring-home (122), §no-propagate, §reference, §never-force-test. Unlike the daily-loop's scope paragraph, this one names every section the file contains with no omissions. Installed copy carries the same eight (lines 13, 52, 70, 89, 101, 118, 131, 169)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:1  # Source Mirrors Protocol {#root}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:10  serves is in [`SOURCE-MIRRORS-PROTOCOL.md`](SOURCE-MIRRORS-PROTOCOL.md);",
+     "confirmed: Same-directory relative links, both targets present in the package and in `vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/`. Completes the three-way cross-reference triangle among the flow's documents — each cites the other two, and all six links resolve in both trees."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-HOST-SET-LIVES-IN-A-SMALL-COMMITTED-FILE": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:22  schema = 1",
+     "mirrors.toml:24  [[target]]",
+     "spec/common/PROP-016-source-mirrors.md:22  ##MANIFEST-REGISTRY `mirrors.toml` at the repo root is the committed, shared, credential-free target registry (its schema and the `push` / `self-pull` mode semantics are the flow's `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#manifest`). vibevm's current set: @spec/done",
+     "xtask/src/mirror.rs:41  const MANIFEST: &str = \"mirrors.toml\";",
+     "xtask/src/mirror.rs:86      let path = root.join(MANIFEST);",
+     "confirmed: Every clause instantiated: `mirrors.toml` is 37 lines (small), sits at the repo root (`root.join(MANIFEST)` where `root` is `repo_root()`), is committed (2 commits in its history), and is TOML — the format this workspace already reads everywhere. PROP-016:22 states the same and cites THIS section as the authority for the schema, which is the extraction relationship in one line."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-MANIFEST-IS-REVIEWED-LIKE-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:22  ##MANIFEST-REGISTRY `mirrors.toml` at the repo root is the committed, shared, credential-free target registry (its schema and the `push` / `self-pull` mode semantics are the flow's `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#manifest`). vibevm's current set: @spec/done",
+     "spec/common/PROP-016-source-mirrors.md:42  ##ADD-HOST Adding a host is one `[[target]]` block, committed — the set is living. @spec/done",
+     "confirmed: 'Committed' holds and 'shows up in a diff' follows: `git log --oneline --follow -- mirrors.toml` returns 2 commits (5a1d3139 creation, 350cd8ce the URL rewrite), both ordinary reviewable commits. But there is no review MECHANISM to check — this repository has a single author, `.github/` does not exist so there is no CODEOWNERS or required-review setting, and no PR has ever been opened. PROP-016 §2 does mirror the manifest's content verbatim inside the spec, which is a second place a change would have to be reflected — the terraform plan at line 789 records checking that `mirrors.toml` matches the §2 block verbatim."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-MACHINE-LOCAL-GIT-REMOTE-CANNOT-SERVE-THIS-ROLE": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:16  # This file is the SHARED, committed target list — a machine-local git remote",
+     "mirrors.toml:17  # can be neither shared nor verified. It carries NO credentials: auth is the",
+     "xtask/src/mirror.rs:23  //! remote-tracking ref of every configured remote that points at the same URL",
+     "xtask/src/mirror.rs:24  //! (e.g. `origin` → the GitVerse target). Pushing by raw URL — the manifest's",
+     "confirmed: The host states the identical argument in its own manifest header ('a machine-local git remote can be neither shared nor verified'), and the code keeps the two apart deliberately: pushes go by URL from the manifest, and the configured remotes are consulted only afterwards to refresh tracking refs (mirror.rs:22-29, 209-252). The host does keep both remotes configured — `git remote -v` shows origin and github pointing at the two target URLs — but they are convenience, not the target list; PROP-016:15 calls `origin` 'a single-host convenience remote'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:16  # This file is the SHARED, committed target list — a machine-local git remote",
+     "mirrors.toml:28  refs = [\"main\", \"tags\"]",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:41  | Shared with every contributor | No — lives in one `.git/config` | Yes — checked into the tree |",
+     "confirmed: The mechanism holds: `mirrors.toml` is committed on `main` and `main` fans out to both hosts, so anyone who clones either host gets the target list — the host's own header calls it 'the SHARED, committed target list'. The 'every contributor' side is vacuous here: one author across 2117 commits, no PRs, no CONTRIBUTING, no `.github/`, so there is no contributor to share it with and the property has never done any work."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-REQ-VERIFIABLE-IN-CI": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:62  - ##CMD-HEALTH-MIRRORS `cargo xtask health --mirrors` — run the `--check` probe as an advisory `mirrors` block in the Discipline sweep; **off by default**, so the committed health snapshot stays deterministic and offline (mirror sync is network state, not a property of the source tree). @spec/done",
+     "xtask/src/main.rs:418      let (head, statuses) = mirror::sync_report(root)?;",
+     "xtask/src/main.rs:426              SyncState::InSync => (\"sync   \", \"in_sync\", serde_json::Value::Null),",
+     "confirmed: The 'or a sweep' half is fully realised: `cargo xtask health --mirrors` reads the manifest and renders a `mirrors` block into the Discipline sweep's human and JSON output (`mirror_health_section`, main.rs:413-430) — the manifest is exactly the file a sweep can read. The CI half cannot be exercised: `test -d .github` → NO, there is no workflow directory anywhere in the repository, and `ls deny.toml about.toml` (per the W6 harvest) finds nothing either. The host also deliberately keeps the probe OFF by default so the committed snapshot stays offline, which is the opposite of wiring it into automation."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:26  url = \"git@gitverse.ru:vibevm/vibevm.git\"",
+     "mirrors.toml:33  url = \"git@github.com:vibevm/vibevm.git\"",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:43  | Reviewed when a host changes | No — silent edit | Yes — shows up in a diff |",
+     "confirmed: There is a real instance of the diff property working: commit 350cd8ce (2026-07-13, `chore(repo): point all source URLs at the vibevm/vibevm repos`) rewrote both target URLs, and `git show 5a1d3139:mirrors.toml` confirms the pre-state was `git@gitverse.ru:anarchic/vibevm.git` and `git@github.com:anarchic-pro/vibevm.git`. The host change is therefore visible, dated and attributable in the manifest's history — exactly what the row claims and what a `.git/config` edit would not give. Whether it was REVIEWED is a different question with no mechanism here (single author, no PRs)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-MANIFEST-CARRIES-NO-CREDENTIALS": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:17  # can be neither shared nor verified. It carries NO credentials: auth is the",
+     "mirrors.toml:26  url = \"git@gitverse.ru:vibevm/vibevm.git\"",
+     "mirrors.toml:33  url = \"git@github.com:vibevm/vibevm.git\"",
+     "xtask/src/mirror.rs:32  //! carries only URLs, no secrets.",
+     "spec/common/PROP-016-source-mirrors.md:18  ##AUTH-SSH-ONLY Authentication is the maintainer's per-host SSH keys in the agent — never a token, never in the manifest. @spec/done",
+     "confirmed: Checked by reading the whole file, not by grep: `mirrors.toml` is 37 lines and every non-comment line is `schema`, `[[target]]`, `name`, `url`, `mode`, `refs` or `region`. Both URLs are SSH `git@host:org/repo.git` form with no embedded userinfo, no token, no password — there is no HTTPS-with-token URL anywhere. The parser reinforces it: `load_targets` reads only those keys and would ignore anything else. Three host artefacts assert the property independently (manifest header, engine header, PROP-016 ##AUTH-SSH-ONLY), and PROP-016 §3 ##CRED-SEPARATION keeps the publish token strictly out of the source path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AUTHENTICATION-IS-THE-MAINTAINERS-PER-HOST-KEYS": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:18  # maintainer's per-host SSH keys in the agent. Add a target by appending a",
+     "xtask/src/mirror.rs:31  //! Auth is the maintainer's per-host SSH keys in the agent; `mirrors.toml`",
+     "spec/common/PROP-016-source-mirrors.md:18  ##AUTH-SSH-ONLY Authentication is the maintainer's per-host SSH keys in the agent — never a token, never in the manifest. @spec/done",
+     "spec/boot/90-user.md:21  - ##GITHUB-SSH **GitHub SSH (source / dev):** на этой машине есть SSH-ключ с полным доступом к GitHub от имени `olegchir` (`ssh -T git@github.com` → \"Hi olegchir! … successfully authenticated\"). Он используется для **dev-операций с исходниками** — `cargo xtask mirror` / push / fetch в `vibevm/vibevm` по **SSH-урлам**, не HTTPS. @impl/done",
+     "confirmed: Per-host and in the agent, both recorded and verified on this machine: `spec/boot/90-user.md:20` for GitVerse (key `olegchir@UNIT-2040`, `ssh -T git@gitverse.ru` confirms auth) and :21 for GitHub (`ssh -T git@github.com` → 'Hi olegchir! … successfully authenticated'), the latter naming `cargo xtask mirror` explicitly as the consumer and SSH URLs over HTTPS. Nothing in the tree: `mirror.rs` never reads a credential — it shells out to `git` and lets the agent answer. PROP-016 §3 separates this from the `~/.vibe/github.publish.token` used only by `vibe registry publish`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ADDING-A-HOST-IS-ONE-TARGET-BLOCK": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:18  # maintainer's per-host SSH keys in the agent. Add a target by appending a",
+     "mirrors.toml:19  # [[target]] block; `mode = \"self-pull\"` marks a host that mirrors itself (we",
+     "spec/common/PROP-016-source-mirrors.md:42  ##ADD-HOST Adding a host is one `[[target]]` block, committed — the set is living. @spec/done",
+     "xtask/src/mirror.rs:100          let mode = match t.get(\"mode\").and_then(|v| v.as_str()).unwrap_or(\"push\") {",
+     "xtask/src/mirror.rs:110              None => vec![MAINLINE.to_string()],",
+     "confirmed: The host restates the sentence almost verbatim in two places, and the parser makes it literally true: only `name` and `url` are required (`str_field` errors without them), `mode` defaults to `push` and `refs` defaults to `[main]`, so a minimal new host is two lines inside a `[[target]]` header. No code change, no registration, no schema bump. Unexercised — the manifest's 2-commit history contains no addition after creation."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-SELF-PULL-TARGET-IS-ONLY-VERIFIED": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:306              Mode::SelfPull => match remote_main(root, &t.url)? {",
+     "xtask/src/mirror.rs:307                  Some(sha) if sha == head => println!(\"  sync   {} (self-pull)\", t.name),",
+     "xtask/src/mirror.rs:308                  Some(sha) => println!(\"  BEHIND {} (self-pull, at {})\", t.name, short(&sha)),",
+     "mirrors.toml:19  # [[target]] block; `mode = \"self-pull\"` marks a host that mirrors itself (we",
+     "spec/common/PROP-016-source-mirrors.md:73  2. ##open-self-pull **`self-pull` adoption.** No target uses `self-pull` yet; the mode exists for the first host that ships a built-in mirror. @spec/work",
+     "confirmed: Implemented exactly as specified, with the same mode string: the `Mode::SelfPull` arm issues only `remote_main` (an `ls-remote`) and never `push`, reporting `sync` when level, `BEHIND` when not, `EMPTY` when the host has no `main`. Note the host's vocabulary is richer than the flow's here — the flow says only 'verifies it is level', the host distinguishes three states. Unadopted, and the host says so: PROP-016 §5 open question 2 records that no target uses `self-pull` yet. Both declared targets are `mode = \"push\"`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FAN-OUT-PUSHES-MAINLINE-TO-EVERY-PUSH-TARGET": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:270  fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {",
+     "xtask/src/mirror.rs:282      for t in targets {",
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "xtask/src/mirror.rs:285                  for r in &t.refs {",
+     "xtask/src/mirror.rs:286                      let args = push_args(&t.url, r);",
+     "confirmed: `fan_out` loops every target, and for each `Mode::Push` target loops its `refs`, pushing each — so with the host's manifest one run issues four pushes (gitverse main, gitverse tags, github main, github tags), which matches the live-run transcript in the task brief and the host's own record of `cargo xtask mirror` running three times in one session (terraform plan, line 785). Non-push targets are skipped by the match arm rather than filtered, so the count of targets in the header line (`fanning main @ <sha> out to 2 target(s)`) includes self-pull ones."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-shape-is-always-the-same-four-steps": {
+    "v": "drift",
+    "ev": [
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "xtask/src/mirror.rs:286                      let args = push_args(&t.url, r);",
+     "xtask/src/mirror.rs:287                      let out = git(root, &args)?;",
+     "xtask/src/mirror.rs:289                          println!(\"  ok     {} {r}\", t.name);",
+     "xtask/src/mirror.rs:297                          eprintln!(",
+     "DRIFT: the host's push path is TWO steps, not four — build the argv, run it, report `ok` or `FAIL`. There is no fetch and no ancestry check before the push, because `remote_main` (the `ls-remote`) is called only from `probe` and the `Mode::SelfPull` arm, never from `Mode::Push`. The protection is git's own server-side non-fast-forward rejection rather than a client-side gate, so the OUTCOME matches — a diverged target is refused and nothing is forced — while the SHAPE this fact asserts does not. Ruled on the shape, because that is what the sentence claims is «always the same»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STEP-FETCH": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:157      let out = git(root, &[\"ls-remote\", url, &format!(\"refs/heads/{MAINLINE}\")])?;",
+     "xtask/src/mirror.rs:331          let state = match remote_main(root, &t.url)? {",
+     "xtask/src/mirror.rs:306              Mode::SelfPull => match remote_main(root, &t.url)? {",
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "confirmed: The host has the read-only-by-URL probe the step describes and implements it more cheaply than a fetch — `remote_main` runs `git ls-remote <url> refs/heads/main`, which reads the target's tip without transferring objects. But it is NOT called on the fan-out's push path: `grep`ing the call sites of `remote_main` gives exactly two, `probe` (line 331, serving `--check` and `health --mirrors`) and the `Mode::SelfPull` arm (line 306). The `Mode::Push` arm goes straight to `push_args`. So step 1 exists in the tool but not in the fan-out."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STEP-VERIFY-ANCESTRY": {
+    "v": "drift",
+    "ev": [
+     "xtask/src/mirror.rs:287                      let out = git(root, &args)?;",
+     "xtask/src/mirror.rs:296                      } else {",
+     "xtask/src/mirror.rs:302                          failures.push(format!(\"{}:{r}\", t.name));",
+     "xtask/src/mirror.rs:332              Some(sha) if sha == head => SyncState::InSync,",
+     "xtask/src/mirror.rs:333              Some(sha) => SyncState::Drift(sha),",
+     "DRIFT, and it runs in two directions rather than one. (1) There is NO client-side ancestry gate before the push — `grep -rn 'merge-base' xtask/src/` → 0 hits — where the flow's reference script does exactly that at `fanout-mechanics.md:181`. The host pushes and lets git's server-side non-fast-forward rejection abort the target, so «do not touch it» is honoured by the remote refusing rather than by the client declining. (2) Where the host DOES compare — `probe`, serving `--check` and `health --mirrors` — it tests EQUALITY, not ancestry: `Some(sha) if sha == head => InSync`, everything else `Drift`. So a target legitimately BEHIND mainline is reported as drifted. Neither reading matches the prescribed ancestor test, and the second produces false positives where the first produces none at all."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STEP-PUSH-FAST-FORWARD-ONLY": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "xtask/src/mirror.rs:263      if git_ref == \"tags\" {",
+     "xtask/src/mirror.rs:264          vec![\"push\", url, \"--tags\"]",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "mirrors.toml:28  refs = [\"main\", \"tags\"]",
+     "confirmed: Exactly implemented. `push_args` emits a bare `git push <url> <branch>` for a branch ref and `git push <url> --tags` for the literal `tags` — no `--force`, no `-f`, no `+`-prefixed refspec, which is what makes the push fast-forward-only (git's default refusal does the enforcing). Both targets declare `refs = [\"main\", \"tags\"]`, so 'main and tags' is what actually goes. Asserted by `push_args_never_force` over four ref shapes; `grep -rn -- '--force' xtask/src/` finds no force flag on any executable path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STEP-REPORT": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:289                          println!(\"  ok     {} {r}\", t.name);",
+     "xtask/src/mirror.rs:298                              \"  FAIL   {} {r} -- {}\",",
+     "xtask/src/mirror.rs:307                  Some(sha) if sha == head => println!(\"  sync   {} (self-pull)\", t.name),",
+     "xtask/src/mirror.rs:357              SyncState::InSync => println!(\"  sync   {}\", s.name),",
+     "xtask/src/mirror.rs:359                  println!(\"  DRIFT  {} at {}\", s.name, short(sha));",
+     "confirmed: All three tokens exist in the host verbatim — `ok`, `sync`, `DRIFT` — but they are split across two verbs rather than being one report vocabulary. On the fan-out path (`fan_out`) the only outcomes are `ok` and `FAIL`, plus `sync`/`BEHIND`/`EMPTY` for self-pull targets; `DRIFT` appears only in `--check` (`verify`), never in a fan-out. And a fan-out cannot report `sync` for a push target — an already-level push still prints `ok`, so 'already level' is indistinguishable from a real transfer. The live-run transcript in the task brief shows exactly this: four `ok` lines, two `track` lines, no `sync`. `FAIL` and `track` are host vocabulary the flow does not mention."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-PUSH-IS-BY-URL-FROM-THE-MANIFEST": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "xtask/src/mirror.rs:24  //! (e.g. `origin` → the GitVerse target). Pushing by raw URL — the manifest's",
+     "xtask/src/mirror.rs:25  //! form — leaves `refs/remotes/<remote>/<branch>` untouched, so without this",
+     "mirrors.toml:16  # This file is the SHARED, committed target list — a machine-local git remote",
+     "confirmed: `push_args` takes the URL straight from `Target.url`, which `load_targets` read from the manifest — no remote name is ever used for a push. The host discovered the consequence and documented it in the module header: pushing by raw URL leaves the tracking ref stale, which is why `refresh_tracking` exists (PROP-016 ##HIST-TRACKING-REFS, 2026-06-14, records `git status` falsely reading 'ahead of origin/main' right after a green rollout). That side-effect is itself proof the push is by URL. The host does keep two git remotes configured, but they are consulted only to update tracking refs, never to choose a target."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-FAN-OUT-IS-THE-ONLY-WAY-HISTORY-REACHES-A-HOST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:34  - ##CMD-ROUTINE-PUSH Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @impl/done",
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "spec/boot/90-user.md:13  - ##SRC-MULTI-HOMED **vibevm source repo (this repository) — multi-homed:** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. Roll a change out to both with `cargo xtask mirror` (the target list is `mirrors.toml`), NOT `git push origin` (which only hits GitVerse). See [PROP-016](../common/PROP-016-source-mirrors.md). @impl/done",
+     "spec/common/PROP-016-source-mirrors.md:15  - ##HOST-GITVERSE **GitVerse** — `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`), region **RU**. `origin` on the maintainer's machine points here — a single-host convenience remote; fan-out is the manifest, not `git push origin`. @spec/done",
+     "confirmed: The host contradicts the exclusivity in writing and in practice, while asserting it in three other places — a genuine internal split, so I report all four documents. Against: 90-user.md:34 lists `git push origin main` as a routine proven command, and CLAUDE.md:191 makes `Push to origin/main` step 4 of the END SESSION contract. For: 90-user.md:13 says roll out with `cargo xtask mirror`, 'NOT `git push origin` (which only hits GitVerse)'; 90-user.md:35 calls the fan-out 'the standard rollout, preferred over a bare `git push origin`'; PROP-016:15 says 'fan-out is the manifest, not `git push origin`'. The reflog measures which won: on `refs/remotes/origin/main`, 226 empty-message entries (the `git update-ref` signature `refresh_tracking` emits after a fan-out) against 69 `update by push` (the message git writes only for a push through a named remote), and on github/main 275 against 61. The web-UI half is uncontested: 0 `Merge pull request` commits in 2117, no `.github/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-NON-FAST-FORWARD-MEANS-THE-HOST-CARRIES-A-MAIN-YOU-LACK": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:12  //!   fast-forward-only, **never `--force`**; a non-fast-forward means a target",
+     "xtask/src/mirror.rs:13  //!   diverged (someone wrote it directly) → fail loud, reconcile by hand. A",
+     "xtask/src/mirror.rs:315              \"mirror: {} push(es) failed -- a non-fast-forward means a target diverged \\",
+     "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
+     "confirmed, with the inference encoded twice in the host — in the module header and in the runtime bail message, in near-identical words. RECORDED as the caveat a reader needs: because the host has no client-side ancestry gate, it cannot actually DISTINGUISH a non-fast-forward from any other push failure — `fan_out` treats every non-zero `git push` exit as a `FAIL` and the bail message asserts divergence for all of them, so a network or auth failure would be reported with this diagnosis. No such event appears in the observable history. RECORDED also on method, and it applies to every wording match in this package: the host's text is 23 days OLDER than the flow's, so agreement in words is self-citation and only the host's CODE settles a behavioural claim."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-fan-outs-response-is-fixed": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:281      let mut failures = Vec::new();",
+     "xtask/src/mirror.rs:313      if !failures.is_empty() {",
+     "xtask/src/mirror.rs:319          );",
+     "confirmed: 'Fixed' means no configurability, and there is none: `fan_out` has no flags, no env-var branches and no retry logic — the failure handling is one accumulate-and-bail path. `run_mirror` takes only `check: bool` and `from: Option<&str>` (mirror.rs:69), neither of which alters divergence behaviour. The three parts are the next three rows, and the host implements all three."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RESPONSE-ABORT-THAT-TARGET": {
+    "v": "drift",
+    "ev": [
+     "xtask/src/mirror.rs:297                          eprintln!(",
+     "xtask/src/mirror.rs:298                              \"  FAIL   {} {r} -- {}\",",
+     "xtask/src/mirror.rs:302                          failures.push(format!(\"{}:{r}\", t.name));",
+     "xtask/src/mirror.rs:317              failures.len(),",
+     "xtask/src/mirror.rs:318              failures.join(\", \")",
+     "DRIFT on the half of the message contract the host cannot meet. Implemented: «abort that target» and «naming the host» — the per-ref `FAIL` line names the target and ref and prints git's stderr, and the final bail lists every failed `<target>:<ref>` pair. NOT implemented, and not implementable on the current shape: the host never names «the commits it has that mainline lacks», because `fan_out` performs no `ls-remote` and no `merge-base` and therefore does not know the target's tip, let alone the commit range. The operator gets git's raw rejection text instead. `--check` does surface the target's sha (`DRIFT  {name} at {sha}`) but never a commit list. This is the downstream consequence of the missing ancestry gate, carried separately at `##INVARIANT-THE-ANCESTRY-GATE`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RESPONSE-NEVER-FORCE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "xtask/src/mirror.rs:263      if git_ref == \"tags\" {",
+     "xtask/src/mirror.rs:264          vec![\"push\", url, \"--tags\"]",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "confirmed: 'No force path to reach for' is literally true: `push_args` is the sole argv builder, has two total branches, and neither can emit a force under any input — the `git_ref` value is the only variable and it is placed as a bare refspec. `grep -rn -- '--force|force_with_lease|force-push|forcePush' xtask/src/` returns 10 hits, all doc comments, error messages or the test assertion. The test guards all three force spellings (`--force`, `-f`, `+`-prefix) across four ref shapes, and `xtask` is a workspace member so it runs."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:281      let mut failures = Vec::new();",
+     "xtask/src/mirror.rs:296                      } else {",
+     "xtask/src/mirror.rs:302                          failures.push(format!(\"{}:{r}\", t.name));",
+     "xtask/src/mirror.rs:313      if !failures.is_empty() {",
+     "confirmed: Implemented exactly, and it is a deliberate structure rather than an accident: a failed push does NOT propagate with `?` — the error branch pushes an identifier into `failures` and the loop continues to the next ref and the next target, with the `bail!` deferred until after the loop at line 313. So every healthy target still receives its push in the same run. Contrast with the failure modes that DO short-circuit: `git(root, &args)?` at line 287 propagates if the git binary cannot be spawned, and `local_main`/`named_remotes` failures are handled before the loop starts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
+     "spec/boot/STATIC.md:1156  - Never resolve a divergence by clobbering the target. A diverged",
+     "spec/boot/STATIC.md:1157    target is investigated and reconciled into mainline, never silently",
+     "confirmed: Second of three rows in this batch carrying this anchor id — the identical blockquote appears in SOURCE-MIRRORS-PROTOCOL.md:84 (as prose), daily-loop.md:119 and here at fanout-mechanics.md:100, so an anchor-uniqueness checker will see the id three times across three files of one package. The rule itself is enforced by the absence of a force path and reaches every session through the boot lane's §never. No divergence has occurred here to investigate."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RECONCILIATION-IS-DELIBERATE-AND-MANUAL": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
+     "xtask/src/mirror.rs:409               diverged; reconcile by hand, never --force: {}\",",
+     "spec/boot/STATIC.md:1146    treat it as a signal to investigate — fetch, inspect, reconcile",
+     "confirmed: 'Manual' is exact: both bail messages say 'reconcile by hand', and there is no automatic reconciliation anywhere in `mirror.rs` — the only merge it performs is the `--ff-only` in `pull_from`, which by definition cannot reconcile a divergence and bails when it fails. The cross-document citation `[daily-loop.md §drift](daily-loop.md#drift)` resolves: that heading exists at daily-loop.md:87 (installed copy line 71). Unexercised — no divergence in the observable history."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "a-check-mode-answers-is-everyone-level": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:78      if check {",
+     "xtask/src/mirror.rs:79          verify(&root, &targets)",
+     "xtask/src/mirror.rs:368      if !drift.is_empty() {",
+     "spec/common/PROP-016-source-mirrors.md:60  - ##CMD-CHECK `cargo xtask mirror --check` — verify every target equals mainline; push nothing (read-only, non-zero exit on drift). @spec/done",
+     "mirrors.toml:12  #   cargo xtask mirror --check      verify every target is in sync (push nothing)",
+     "confirmed: All three properties hold. Read-only: `verify` calls `probe`, whose only git verbs are `rev-parse` and `ls-remote` — no push, no fetch, no ref write. Mutually exclusive with the fan-out: `run_mirror` branches `if check { verify } else { fan_out }`, so `--check` can never push. Non-zero exit on drift: `bail!` at 369-373 when any target drifted or is missing. PROP-016:60 and the manifest header state the same contract in the same words."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CHECK-FETCHES-EACH-TARGET-AND-COMPARES-TO-MAINLINE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:327  fn probe(root: &Path, targets: &[Target]) -> Result<(String, Vec<TargetStatus>)> {",
+     "xtask/src/mirror.rs:328      let head = local_main(root)?;",
+     "xtask/src/mirror.rs:331          let state = match remote_main(root, &t.url)? {",
+     "xtask/src/mirror.rs:157      let out = git(root, &[\"ls-remote\", url, &format!(\"refs/heads/{MAINLINE}\")])?;",
+     "confirmed, with two precisions recorded that pull in opposite directions. `probe` resolves local mainline once, then for each target reads the remote tip and compares (`mirror.rs:344-349`, shared by `--check` and `health --mirrors`). (1) It does not fetch — `remote_main` runs `git ls-remote`, which reads the tip without transferring objects. That is strictly cheaper and strictly more read-only than a fetch, so it OVER-satisfies the claim rather than falling short. (2) The comparison is equality against local head rather than ancestry, so «compares to mainline» means «equals mainline» here, and a target merely behind is classified `Drift`. The false-positive consequence is carried as drift at `##STEP-VERIFY-ANCESTRY`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SYNC-MEANS-LEVEL-DRIFT-NAMES-A-HOST-THAT-MOVED": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:357              SyncState::InSync => println!(\"  sync   {}\", s.name),",
+     "xtask/src/mirror.rs:359                  println!(\"  DRIFT  {} at {}\", s.name, short(sha));",
+     "xtask/src/mirror.rs:375      println!(\"mirror --check: all targets in sync.\");",
+     "xtask/src/mirror.rs:363                  println!(\"  EMPTY  {} (no {MAINLINE})\", s.name);",
+     "confirmed: Both tokens are emitted verbatim with the claimed meanings, and `--check` adds the summary line 'all targets in sync.' when nothing drifted. Two host extensions the flow does not describe: a third state `EMPTY` for a target with no `main` (also counted as drift for the exit code, line 364), and `DRIFT` carrying the offending short sha. Precision point: because the comparison is equality, `DRIFT` names any host that is not level — including one merely behind — not only 'a host that has moved'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CHECK-WRITES-NOTHING-AND-IS-SAFE-AS-A-PRE-FLIGHT": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:78      if check {",
+     "xtask/src/mirror.rs:79          verify(&root, &targets)",
+     "xtask/src/mirror.rs:157      let out = git(root, &[\"ls-remote\", url, &format!(\"refs/heads/{MAINLINE}\")])?;",
+     "spec/common/PROP-016-source-mirrors.md:62  - ##CMD-HEALTH-MIRRORS `cargo xtask health --mirrors` — run the `--check` probe as an advisory `mirrors` block in the Discipline sweep; **off by default**, so the committed health snapshot stays deterministic and offline (mirror sync is network state, not a property of the source tree). @spec/done",
+     "confirmed: 'Writes nothing' is verifiable by enumerating `verify`'s git calls: `rev-parse` (local read) and `ls-remote` (remote read) and nothing else — no push, no fetch, no `update-ref`. The 'inside a sweep' use is realised: `health --mirrors` calls the same `probe` through `sync_report` (mirror.rs:344-349) and renders it as an advisory block. The host adds a caveat the flow does not: the probe is a network call and is therefore OFF by default so the committed health snapshot stays deterministic and offline. The 'pre-flight before a fan-out' use has no recorded instance."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-WEB-MERGE-PUTS-THAT-HOSTS-MAIN-AHEAD": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:18  //! - `--from <name>` — fast-forward local mainline to a host's accepted-PR",
+     "xtask/src/mirror.rs:19  //!   merge (`git fetch` + `git merge --ff-only`) before fanning out: the bridge",
+     "spec/common/PROP-016-source-mirrors.md:61  - ##CMD-FROM `cargo xtask mirror --from <name>` — fast-forward mainline to a host's accepted-PR merge before fanning out (the bridge for a PR merged via that host's web UI). @spec/done",
+     "confirmed: The host's tooling is built on exactly this premise — `--from` exists because a web merge leaves the host ahead, and `pull_from` fast-forwards local mainline TO the host, which only makes sense if the host is ahead. But the situation has never arisen: `git log --oneline --grep='Merge pull request'` → 0 over 2117 commits, `.github/` absent, one author. Both tracking refs have never been ahead of local `main` in the visible reflog — they advance in lockstep with it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "IT-IS-NOT-INTEGRATED-UNTIL-IT-IS-BROUGHT-HOME": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1142  - A web-UI merge on a host (a clicked \"Merge\" button) is **not**",
+     "spec/boot/STATIC.md:1143    integrated until it has been brought home into mainline first; only",
+     "spec/boot/STATIC.md:1159  - Never treat a web-UI merge as integrated until its commits are in",
+     "xtask/src/mirror.rs:75      if let Some(name) = from {",
+     "confirmed: The rule reaches every session twice through the compiled boot lane (§in-session at 1142 and §never at 1159), and the tooling enforces the ordering it implies: `run_mirror` runs `pull_from` before any fan-out, so a `--from` run cannot publish the host's merge onward until it is in mainline. No instance — no web merge has ever occurred here. The claim is a definition ('integrated' means 'in mainline') rather than a mechanism, so what is checkable is the ordering, and that holds."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "do-that-first-then-fan-out": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:398      let fetch = git(root, &[\"fetch\", target.url.as_str(), MAINLINE])?;",
+     "xtask/src/mirror.rs:405      let merge = git(root, &[\"merge\", \"--ff-only\", \"FETCH_HEAD\"])?;",
+     "xtask/src/mirror.rs:413      println!(\"mirror --from {name}: local {MAINLINE} fast-forwarded; fanning out...\");",
+     "mirrors.toml:13  #   cargo xtask mirror --from NAME  fast-forward local mainline to a host's",
+     "confirmed: The host packaged the three-command sequence into one verb and kept it command-for-command identical: `git fetch <url> main` then `git merge --ff-only FETCH_HEAD` then fall through to `fan_out` — same commands, same order, fetching by URL from the manifest exactly as the snippet does. It adds two preconditions the snippet leaves implicit (clean tree at 384-386, HEAD must be `main` at 391-393) and a progress line before fanning out. Unexercised — no web merge has occurred."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-FF-ONLY-IS-LOAD-BEARING": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:405      let merge = git(root, &[\"merge\", \"--ff-only\", \"FETCH_HEAD\"])?;",
+     "xtask/src/mirror.rs:406      if !merge.status.success() {",
+     "xtask/src/mirror.rs:408              \"--from: local {MAINLINE} cannot fast-forward to {name}'s {MAINLINE} -- histories \\",
+     "xtask/src/mirror.rs:409               diverged; reconcile by hand, never --force: {}\",",
+     "spec/common/PROP-016-source-mirrors.md:65  - ##FROM-FF-ONLY `--from`'s `git merge --ff-only` enforces the same at runtime. @spec/done",
+     "confirmed: Load-bearing in the strict sense: the flag is the only thing standing between `--from` and an implicit merge commit, and the host wired its failure to a hard `bail!` with the diagnosis and the instruction the fact prescribes ('histories diverged; reconcile by hand, never --force'). PROP-016:65 names it as the runtime half of the never-force guarantee, alongside the compile-time half (`push_args_never_force`). Note the host is stricter than the flow's own drift procedure, which suggests a plain `git merge FETCH_HEAD` at daily-loop.md:113 — `--from` will not do that."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-HOST-YOU-PULLED-FROM-BECOMES-A-NO-OP": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:282      for t in targets {",
+     "xtask/src/mirror.rs:287                      let out = git(root, &args)?;",
+     "xtask/src/mirror.rs:289                          println!(\"  ok     {} {r}\", t.name);",
+     "confirmed: Structurally true and observable in the ordinary case: `fan_out` pushes every target unconditionally with no skip logic, and an already-up-to-date `git push` exits 0 and transfers nothing, so a level host is a no-op that still reports `ok`. The live-run transcript in the task brief shows this — four `ok` lines with no distinction between transfer and no-op, which is the same gap noted on the STEP-REPORT row (the flow's `sync` state has no fan-out equivalent). The `--from` scenario specifically is unexercised."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "two-things-the-fan-out-will-not-carry": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "confirmed: Both exclusions follow from the same fact — `push_args` emits only additive refspecs. `grep -rn -- 'push --delete|--delete|:refs/|update-ref -d' xtask/src/mirror.rs` → 0 hits for a delete refspec, and no force spelling exists either, so neither a deletion nor a rewrite has a path to travel. The two are the next two rows. 'Deliberately' is supported by the host's own comment calling the absence 'the load-bearing **never `--force`**' invariant (mirror.rs:255)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-NO-PROPAGATE-DELETE-A-BRANCH": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:264          vec![\"push\", url, \"--tags\"]",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:124  | Delete a branch | **No** | An accidental deletion must not cascade to every host |",
+     "confirmed: No deletion path exists: `push_args` emits `git push <url> <ref>` or `git push <url> --tags`, both purely additive, and `grep -rn -- '--delete|--prune|:refs/heads' xtask/src/` returns 0 hits — there is no `--mirror` or `--prune` flag anywhere, which is what would make deletions cascade. Also note the reverse direction is closed too: the fan-out never reads a host's branch list, so a deletion ON a host cannot even be observed by the tool, let alone relayed."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-NO-PROPAGATE-REWRITE-HISTORY": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:315              \"mirror: {} push(es) failed -- a non-fast-forward means a target diverged \\",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+     "confirmed: The mechanism is the same absent force path, and the outcome is the fail-loud bail. The host adds a policy layer above the mechanism: PROP-000:164 lists history rewrites and force-push among the red lines that stop and ask before proceeding, and `spec/boot/90-user.md:34` repeats it for this repository ('Force-push and history rewrite are NOT done without owner approval'). No rewrite appears in the observable history — both tracking-ref reflogs advance monotonically with no rewind across 295 and 336 entries."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DELETING-A-BRANCH-EVERYWHERE-IS-A-PER-HOST-ACT": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:127  Deleting a branch everywhere is a deliberate, per-host act. The fan-out",
+     "confirmed: The tool offers no deletion verb at all — `run_mirror` takes `check` and `from` and nothing else, and no code path emits a delete refspec — so a branch deletion on a host can only be done by hand, per host, exactly as the fact says. Unexercised in a narrow sense: only `main` and tags are mirrored, so no non-mainline branch exists on any host to delete."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-FAN-OUT-ONLY-EVER-ADVANCES-REFS": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:264          vec![\"push\", url, \"--tags\"]",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "xtask/src/mirror.rs:241          match git(root, &[\"update-ref\", &refname, &sha]) {",
+     "xtask/src/mirror.rs:230      // The push was fast-forward-only and succeeded, so every matching host's",
+     "confirmed: Every git write verb the fan-out issues is additive or forward-moving: `git push <url> <branch>` (fast-forward-only by git's default), `git push <url> --tags` (additive), and a local `git update-ref` that sets a tracking ref to the just-pushed commit — which the code comments justify precisely because the push was fast-forward-only and succeeded. No delete, no rewind, no force spelling anywhere in the file. Observable: 295 + 336 tracking-ref reflog entries across the two mirrors, all forward."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-FAN-OUT-IS-ABOUT-FIFTEEN-LINES-OF-SH": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:167  #!/bin/sh",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:192  done",
+     "xtask/src/mirror.rs:270  fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {",
+     "confirmed: The claim is true of the reference script: the fence spans lines 166-193 with 27 lines inside it, of which roughly 15 are executable statements once the shebang, five comment lines and four blanks are removed. It is not true of the host's own implementation, which is the point worth recording — `xtask/src/mirror.rs` is 506 lines of Rust (with 90 lines of tests) covering the same job plus `--check`, `--from`, `self-pull`, tracking-ref refresh and the `health --mirrors` entry point. The host did not port the script; it wrote a different artefact, so 'about fifteen lines' describes the minimum viable form, not what this project runs."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THERE-IS-NO-FORCE-IN-IT-BY-LAW": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:186      # Fast-forward-only push. No '+', no --force, ever.",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:187      if git push \"$url\" \"$branch:$branch\" && git push --tags \"$url\"; then",
+     "xtask/src/mirror.rs:255  /// fan-out's push command is built, so the load-bearing **never `--force`**,",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "confirmed: True of the script as written (the push line is a bare `git push \"$url\" \"$branch:$branch\"` with an in-line comment naming the prohibition) and carried into the host's port: `push_args`'s doc comment calls the absence 'the load-bearing **never `--force`**' invariant and explains it lives in one place so it stays checkable. The host's push refspec is slightly simpler than the script's — `git push <url> main` rather than `main:main` — with the same additive semantics."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ADAPT-READ-TARGETS-TO-THE-PROJECTS-MANIFEST-FORMAT": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:85  fn load_targets(root: &Path) -> Result<Vec<Target>> {",
+     "xtask/src/mirror.rs:89      let doc: toml::Value =",
+     "xtask/src/mirror.rs:92      for t in doc",
+     "xtask/src/mirror.rs:98          let name = str_field(t, \"name\")?;",
+     "confirmed: The host did exactly this: `load_targets` is the `read_targets` slot, implemented against the format this workspace already reads — TOML parsed with the `toml` crate into a typed `Vec<Target>` rather than the script's whitespace-delimited `\"<name> <url> <mode>\"` lines. It also produces more than the script's three fields (it carries `refs` too) and errors loudly on a missing `name`/`url` or an unknown `mode`, which the script does not. PROP-016:22 states the manifest's schema is the flow's §manifest, so the adaptation is recorded."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-two-invariants-to-preserve-when-you-port-it": {
+    "v": "drift",
+    "ev": [
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "xtask/src/mirror.rs:286                      let args = push_args(&t.url, r);",
+     "DRIFT at one of two, on the only port available to check — this repository. PRESERVED: the absence of a force path, and hardened beyond the flow's ask into a unit test (`push_args_never_force`), which `PROP-016:64` calls «runnable capital, not prose». NOT PRESERVED: the ancestry gate — `grep -rn 'merge-base' xtask/src/` → 0 hits, and the `Mode::Push` arm goes straight from `push_args` to `git push` where the script does an `ls-remote` and an ancestor test (`fanout-mechanics.md:180-184`). RECORDED, and it is the honest frame for this whole file: the port predates the document stating these invariants by 23 days, so it was never in a position to follow it. What this measures is not a port that ignored its instructions but a document that generalised an origin and then asked for more than the origin does."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "INVARIANT-THE-ANCESTRY-GATE": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:181      if [ -n \"$remote_head\" ] && ! git merge-base --is-ancestor \"$remote_head\" \"$branch\"; then",
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "xtask/src/mirror.rs:285                  for r in &t.refs {",
+     "xtask/src/mirror.rs:286                      let args = push_args(&t.url, r);",
+     "xtask/src/mirror.rs:287                      let out = git(root, &args)?;",
+     "DRIFT: the host does not have this invariant, and the search that establishes it is exhaustive. `grep -rn 'merge-base' xtask/src/` returns 0 hits across the whole crate; the `Mode::Push` arm builds the argv and runs the push with nothing between; and `remote_main`, the only `ls-remote` caller, is invoked solely from `probe` and the `Mode::SelfPull` arm. So the pre-push ancestry check the flow's own reference script performs client-side (`fanout-mechanics.md:181`) does not exist here. Widened to `crates/**` for any ancestry check in the mirror path — none; `merge-base` appears nowhere in the workspace's mirror code. The protective OUTCOME survives, because git refuses a non-fast-forward server-side and no force flag can override it — but the failure then arrives as a generic push failure rather than a named divergence, which is what `##RESPONSE-ABORT-THAT-TARGET` records as unmeetable. CHRONOLOGY, recorded because it changes what this drift means: `xtask/src/mirror.rs` is commit `5a1d3139` of 2026-06-14 and the package is `ff4ccdf7` of 2026-07-07, so the implementation predates the document stating the invariant by 23 days. The flow generalised an origin that never had the gate, then prescribed it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:254  /// The argv for pushing one ref to a target URL — the single place the",
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "xtask/src/mirror.rs:264          vec![\"push\", url, \"--tags\"]",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "confirmed: Preserved and strengthened. The host concentrated the argv construction into one pure function specifically so the absence stays checkable (the doc comment says so), then pinned it with `push_args_never_force` over four ref shapes and all three force spellings. `grep -rn -- '--force|force_with_lease|force-push|forcePush' xtask/src/` returns 10 hits, all comments, messages or the assertion. This is the one of the two invariants the port kept, and it kept it better than the script, which relies on a CI grep."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-RULE-WITH-NO-CHECKER-IS-A-WISH": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:426      fn push_args_never_force() {",
+     "spec/common/PROP-016-source-mirrors.md:64  - ##NEVER-FORCE-TESTED The never-`--force` invariant is **runnable capital**, not prose: `push_args` is a pure function and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape. @spec/done",
+     "Cargo.toml:27      \"xtask\",",
+     "confirmed BY the failures it classifies, per §judged — and this batch is an unusually clean natural experiment for it. CHECKED rule: never-`--force` has `push_args_never_force`, a real unit test in a workspace member, and `PROP-016:64` records it as «runnable capital, not prose». It held: no force path exists anywhere in the mirror code. UNCHECKED rules from the same flow, and both failed. «Never push directly to a replica host» has no checker, and the reflogs show 130 named-remote pushes (69 origin, 61 github). The ancestry gate has no checker, and was not ported at all. So within one small package, the invariant with a test survived and the two without tests did not — which is the maxim demonstrating itself on its own family."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "build-the-push-command-in-one-place-and-assert": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:254  /// The argv for pushing one ref to a target URL — the single place the",
+     "xtask/src/mirror.rs:255  /// fan-out's push command is built, so the load-bearing **never `--force`**,",
+     "xtask/src/mirror.rs:256  /// fast-forward-only invariant (PROP-016 §4, the `CLAUDE.md` force-push red",
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "confirmed: The 'one place' half is implemented deliberately and documented as such — `push_args` is called from exactly one site (`fan_out`, line 286) and its doc comment states the purpose is to keep the invariant 'in one checkable spot'. The 'or a CI step' half is unavailable here: `test -d .github` → NO, there is no workflow directory, so the fenced CI grep at fanout-mechanics.md:212-217 has no host counterpart. The host took the test branch instead — see the next row, which is the option the fact itself calls better."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BETTER-STILL-UNIT-TEST-A-PURE-PUSH-ARGUMENT-FUNCTION": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "xtask/src/mirror.rs:426      fn push_args_never_force() {",
+     "xtask/src/mirror.rs:430          for git_ref in [\"main\", \"tags\", \"release\", \"v1.0\"] {",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "Cargo.toml:27      \"xtask\",",
+     "confirmed: The single closest correspondence in the batch — the host implements the 'better still' option clause for clause. Pure function: `push_args` takes two `&str` and returns a `Vec<&str>` with no I/O. Unit test: `push_args_never_force`. Never contains: the assertion checks `--force`, `-f` and `a.starts_with('+')` — the exact three spellings named. For any ref shape: four shapes, `main`, `tags`, `release`, `v1.0`, covering both `push_args` branches. Real test suite: `xtask` is a workspace member. Given the extraction direction (host 2026-06-14, package 2026-07-07), this sentence is the abstracted description of what the host had already built."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-INVARIANT-IS-RUNNABLE-CAPITAL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:64  - ##NEVER-FORCE-TESTED The never-`--force` invariant is **runnable capital**, not prose: `push_args` is a pure function and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape. @spec/done",
+     "xtask/src/mirror.rs:260  /// than overwriting a diverged target. The `push_args_never_force` test",
+     "xtask/src/mirror.rs:261  /// turns that guarantee from prose into runnable capital.",
+     "Cargo.toml:27      \"xtask\",",
+     "confirmed: The phrase 'runnable capital' appears in the host in two places — PROP-016:64 and the `push_args` doc comment at mirror.rs:261 ('turns that guarantee from prose into runnable capital') — and the code comment is the older of the two texts, predating the flow package by 23 days, so this is the host's phrase that the flow carries rather than the reverse. Runnable in fact: `xtask` is a workspace member, so the test executes in the workspace test run rather than being an orphaned file."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-TARGET-SET-IS-A-COMMITTED-CREDENTIAL-FREE-MANIFEST": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:16  # This file is the SHARED, committed target list — a machine-local git remote",
+     "mirrors.toml:17  # can be neither shared nor verified. It carries NO credentials: auth is the",
+     "spec/common/PROP-016-source-mirrors.md:22  ##MANIFEST-REGISTRY `mirrors.toml` at the repo root is the committed, shared, credential-free target registry (its schema and the `push` / `self-pull` mode semantics are the flow's `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#manifest`). vibevm's current set: @spec/done",
+     "confirmed: Committed, credential-free and shared all hold: 2 commits in the manifest's history, every line read and no secret in any of them, and the file rides `main` to both hosts. PROP-016:22 uses three of the same adjectives ('committed, shared, credential-free'). 'CI-visible' is the clause with nothing behind it — `.github/` does not exist, so no CI reads this file; the sweep entry point `health --mirrors` does, but it is off by default. 'Reviewed like code' has no mechanism either (single author, no PRs)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT": {
+    "v": "drift",
+    "ev": [
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "xtask/src/mirror.rs:286                      let args = push_args(&t.url, r);",
+     "xtask/src/mirror.rs:287                      let out = git(root, &args)?;",
+     "xtask/src/mirror.rs:289                          println!(\"  ok     {} {r}\", t.name);",
+     "xtask/src/mirror.rs:298                              \"  FAIL   {} {r} -- {}\",",
+     "DRIFT at two of four, carrying the body rows it summarises per W1's summary-restatement precedent. PRESENT: push fast-forward-only by URL (`push_args` takes `t.url` straight from the manifest with no force spelling anywhere), and report (`ok` / `FAIL`). ABSENT from the push path: fetch (`remote_main` is never called from the `Mode::Push` arm) and verify-ancestry (`grep -rn 'merge-base' xtask/src/` → 0 hits). The host relies on git's server-side non-fast-forward refusal in place of a client-side gate, so the summary asserts a four-step shape the origin implementation runs as two."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD": {
+    "v": "drift",
+    "ev": [
+     "xtask/src/mirror.rs:302                          failures.push(format!(\"{}:{r}\", t.name));",
+     "xtask/src/mirror.rs:313      if !failures.is_empty() {",
+     "xtask/src/mirror.rs:315              \"mirror: {} push(es) failed -- a non-fast-forward means a target diverged \\",
+     "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
+     "DRIFT on one clause of four, and the three that hold are worth naming because they are the load-bearing ones. IMPLEMENTED: the per-target abort with the other targets still served; the non-zero exit; and «reconcile by hand, never --force» stated in the failure message itself. NOT IMPLEMENTED: «names the divergence» — the message names the failed `<target>:<ref>` pairs but never the commits the host has that mainline lacks, because the fan-out never learns the target's tip. Unexercised in this repository: no non-fast-forward has occurred, so the whole path is judged from the code rather than from an event."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:78      if check {",
+     "xtask/src/mirror.rs:79          verify(&root, &targets)",
+     "xtask/src/mirror.rs:405      let merge = git(root, &[\"merge\", \"--ff-only\", \"FETCH_HEAD\"])?;",
+     "spec/common/PROP-016-source-mirrors.md:60  - ##CMD-CHECK `cargo xtask mirror --check` — verify every target equals mainline; push nothing (read-only, non-zero exit on drift). @spec/done",
+     "spec/common/PROP-016-source-mirrors.md:61  - ##CMD-FROM `cargo xtask mirror --from <name>` — fast-forward mainline to a host's accepted-PR merge before fanning out (the bridge for a PR merged via that host's web UI). @spec/done",
+     "confirmed: Both halves exist as named verbs with the prescribed semantics and are documented in PROP-016 §4 in matching words. `--check` is read-only (only `rev-parse` and `ls-remote`) and mutually exclusive with the fan-out by construction; `--from` runs `git merge --ff-only FETCH_HEAD` and only then falls through to `fan_out`, so 'before fanning out' is enforced by control flow. Neither has a recorded invocation in the perimeter beyond the terraform plan's note of three plain `cargo xtask mirror` runs (line 785)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:264          vec![\"push\", url, \"--tags\"]",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+     "confirmed: Both exclusions follow from `push_args` emitting only additive refspecs: no `--delete`, no `--mirror`, no `--prune`, no force spelling anywhere in `xtask/src/` (greped for each). 'A safety choice' is supported by the host layering a policy on top of the mechanism — PROP-000:164 puts history rewrites and force-push among the red lines that stop and ask, and 90-user.md:34 repeats it for this repository. Neither event appears in the observable history."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-REFERENCE-FAN-OUT-HAS-NO-FORCE-PATH": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:186      # Fast-forward-only push. No '+', no --force, ever.",
+     "xtask/src/mirror.rs:426      fn push_args_never_force() {",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "spec/common/PROP-016-source-mirrors.md:64  - ##NEVER-FORCE-TESTED The never-`--force` invariant is **runnable capital**, not prose: `push_args` is a pure function and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape. @spec/done",
+     "confirmed: 'No force path' holds of the script and of the host's port. 'Pin that absence with a test or a CI grep' — the host took the test branch: `push_args_never_force` exists, runs (workspace member), and is recorded in PROP-016:64 and independently re-verified in the terraform campaign plan at line 788. The CI-grep branch is unavailable here (`.github/` does not exist), so the disjunction is satisfied by exactly one of its two arms. The '~15 lines' half describes the script, not the host's 506-line Rust implementation."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}

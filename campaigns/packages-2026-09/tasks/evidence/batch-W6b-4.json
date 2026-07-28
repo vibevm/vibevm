@@ -1,0 +1,704 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:15  ## The problem {#problem}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:46  ## The model {#model}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:111  ## What the model buys {#buys}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:126  ## What the model costs {#costs}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:159  ## Re-derive for your project {#re-derive}",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:3  **Scope of this document.** This file defines *the problem* that",
+     "confirmed: A self-description checked against the file's own heading list: all five named parts exist, in the stated order, and the sub-parenthetical ('a single-writer mainline with every host as a downstream read-replica') matches §mainline and §replicas. The installed copy carries the same scope paragraph and the same five headings (lines 11, 28, 73, 88, 112)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:1  # Fan-out mechanics {#root}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:8  the fan-out live in [`fanout-mechanics.md`](fanout-mechanics.md); the",
+     "confirmed: Unlike the boot snippet's `../flows/…` pointers, these two are same-directory relative links and resolve inside the package AND inside `vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/`, where both siblings sit next to this file. The harvest's source-1 join reports 22 relative citations across the four W6 packages with 0 broken, consistent with this."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:25  name = \"gitverse\"",
+     "mirrors.toml:32  name = \"github\"",
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "confirmed: The host is the concrete instance of the framing: exactly two hosts, both declared in `mirrors.toml`, both named in PROP-016 §1 as 'two public hosts'. `git remote -v` confirms two remotes and no third. Note the framing's abstraction ('host A'/'host B') is the extracted form of what the host already had — the manifest predates the package by 23 days."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-reasons-are-real": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:14  them **host A** and **host B**. The reasons are real: one audience",
+     "confirmed: A list lead with no content of its own; the three reasons it introduces are the next three rows, and two of the three have host instances while one does not. Nothing in the host perimeter asserts or denies that the reasons are 'real' as a class — grepped `spec/common/PROP-016-source-mirrors.md`, `spec/common/PROP-000.md`, `mirrors.toml` for a rationale paragraph; PROP-016 §1 gives regions but no justification narrative."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "REASON-AUDIENCE-PER-HOST": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:29  region = \"ru\"",
+     "mirrors.toml:36  region = \"us\"",
+     "spec/common/PROP-016-source-mirrors.md:15  - ##HOST-GITVERSE **GitVerse** — `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`), region **RU**. `origin` on the maintainer's machine points here — a single-host convenience remote; fan-out is the manifest, not `git push origin`. @spec/done",
+     "spec/common/PROP-016-source-mirrors.md:16  - ##HOST-GITHUB **GitHub** — `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), region **US**. @spec/done",
+     "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
+     "confirmed: The host implements exactly this reason and records it as the decision's rationale: `mirrors.toml` carries a `region` key per target (a field the flow's own example manifest calls `audience` — see fanout-mechanics.md:33/40, so the host renamed it), and PROP-016 ##HIST-AUTHORED states the pairing 'US↔GitHub, RU↔GitVerse' as the owner decision of 2026-06-14. Both hosts are public and 'canonical for reading', i.e. audience-facing."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "REASON-A-HOST-MAY-DISAPPEAR": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:15  reaches host A and another reaches host B; one host may disappear and",
+     "confirmed: No host statement of this reason. Grepped `spec/common/PROP-016-source-mirrors.md`, `spec/common/PROP-000.md`, `spec/boot/90-user.md`, `mirrors.toml`, `xtask/src/mirror.rs` for 'disappear|survive|vanish|durab|resilien|blocked|dark' → 0 hits bearing on host loss. Widened to `spec/common/PROP-*` generally and `campaigns/**`; the only adjacent host record is `spec/boot/90-user.md:15` (##LEGACY-REGISTRY), which keeps a superseded registry repo readable — a different concern (packages, not source). PROP-016 §1 gives audience/jurisdiction as the reasons and does not mention host loss. The reason ships to consumers verbatim in the installed copy."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:29  region = \"ru\"",
+     "mirrors.toml:36  region = \"us\"",
+     "spec/common/PROP-016-source-mirrors.md:16  - ##HOST-GITHUB **GitHub** — `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), region **US**. @spec/done",
+     "confirmed: The jurisdiction half is instantiated: two hosts in two jurisdictions (gitverse.ru / github.com), tagged `region = \"ru\"` and `region = \"us\"` in the manifest and RU/US in PROP-016 §1. The 'review community per host' half has no instance — no PR has ever been merged from either host (`git log --oneline --grep='Merge pull request'` → 0 over 2117 commits), and no `.github/` or CONTRIBUTING exists. 'Mirror-of-record' is not a term the host uses anywhere: grepped the perimeter → 0 hits."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BOTH-MUST-CARRY-THE-SAME-HISTORY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "mirrors.toml:6  # canonical for READING in its region; nobody writes a target directly.",
+     "spec/common/PROP-000.md:110  - ##HOST-SOURCE-GITVERSE **vibevm tool source: multi-homed.** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. **No host is primary** — mainline is the maintainer's local `main`, every host is a downstream read-replica, and rollout is the fast-forward-only fan-out `cargo xtask mirror` ([PROP-016](PROP-016-source-mirrors.md), 2026-06-14, which supersedes the single-source-of-truth reading recorded here before it). @impl/done",
+     "mirrors.toml:28  refs = [\"main\", \"tags\"]",
+     "mirrors.toml:35  refs = [\"main\", \"tags\"]",
+     "confirmed: 'Both canonical for reading' is stated identically in three host artefacts. 'Same history' is checkable and holds today: both targets declare the same `refs = [\"main\", \"tags\"]` and both tracking refs sit at cd376302, equal to local `main`. Caveat worth the reviewer's attention: `refs` covers `main` and tags only, so any other branch (this repository has 5 non-fractality local branches, e.g. `cultural-backup`, `refactor/qualified-address-restructure`) is not mirrored to either host — 'the same history' is scoped to mainline plus tags, and the repository has exactly 1 tag (`pre-cultural-refactor`)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-NAIVE-WAY-IS-TO-LET-EACH-ACCEPT-WRITES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "confirmed: The strongest source-2 evidence in the problem statement: PROP-016 ##HIST-AUTHORED records that the 2026-06-14 decision superseded 'the abandoned bidirectional-multi-master sketch' — the host considered exactly the naive approach this fact describes and rejected it, so this is a real prior state of the project rather than a hypothetical. It also superseded 'the interim multi-push-remote'. Searched the git history for the sketch itself: `git log --oneline --follow -- mirrors.toml` returns only 5a1d3139 (creation, 2026-06-14) and 350cd8ce, so the sketch was never committed as a manifest."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THAT-IS-MULTI-MASTER-REPLICATION": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "xtask/src/mirror.rs:5  //! there is no multi-master conflict: every target is a downstream read-replica",
+     "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
+     "confirmed: The host names 'multi-master' by that term in both the manifest header and the engine's module header, and PROP-016 records the bidirectional-multi-master sketch as abandoned. Direction again: both host texts date to 2026-06-14 (5a1d3139), the package to 2026-07-07 (ff4ccdf7) — the host is the source of the phrasing. The 'force-overwritten' branch of the dilemma is what the never-`--force` law closes off (mirror.rs:262-268)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVERY-ADDED-HOST-MULTIPLIES-THE-RACE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:24  must merge them or one must be force-overwritten. Every added host",
+     "confirmed: A scaling claim about the rejected alternative, so it has no observable under the adopted model. The host's target set has been 2 since the manifest was created — `git log --oneline --follow -- mirrors.toml` returns exactly 2 commits (5a1d3139 creation with 2 targets, 350cd8ce a URL rewrite), and `git show 5a1d3139:mirrors.toml` shows the same two names with the older `anarchic` / `anarchic-pro` org paths — so no host has ever been added or removed and the scaling behaviour is untested here either way. Searched PROP-016 for a scaling caveat → §5 open question 3 contemplates 'if the target set grows large' but says nothing about races."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "A-DIVERGENCE-MEANS-CONFLICT-ARCHAEOLOGY-ON-PUBLISHED-HISTORY": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
+     "xtask/src/mirror.rs:409               diverged; reconcile by hand, never --force: {}\",",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:25  multiplies the race. The moment a divergence appears, a human is doing",
+     "confirmed: The implementation agrees that a divergence hands the work to a human — both bail messages say 'reconcile by hand' — which is the mechanism the fact describes, but the cost claim ('the most expensive kind') is an evaluation with no observable. No divergence has ever occurred here to price: the two tracking-ref reflogs advance through the same SHA sequence with no rewind, and the 4 merge commits in 2117 are all local-branch merges. Searched `spec/common/PROP-000.md` §commits and the git-practices lane for a cost statement about published-history rewrites — PROP-000:164 lists history rewrites among the red lines that stop and ask, which is a policy, not a cost measurement."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-FIX-IS-STRUCTURAL-NOT-OPERATIONAL": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "spec/common/PROP-016-source-mirrors.md:66  - ##RED-LINE-BY-CONSTRUCTION This honours the `CLAUDE.md` force-push red line by construction. @spec/done",
+     "confirmed: The host's own word for it is 'by construction' (PROP-016:66), and the construction is visible: `push_args` has two branches and neither can express a force, so the guarantee is a property of the code's shape rather than of operator discipline. Contrast with the operational half of the same system, which is NOT structural — nothing prevents `git push origin main`, and the reflogs show 130 such pushes (69 origin, 61 github). So the structural claim holds for `--force` and not for 'only via the fan-out'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ADOPT-THE-HUB-AND-SPOKE-SHAPE": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "xtask/src/mirror.rs:2  //! `mirrors.toml` (the benevolent-dictator / hub-and-spoke model, no primary).",
+     "spec/common/PROP-016-source-mirrors.md:8  - ##model-pointer The **general model** — why multi-homing a git source across several hosts invites multi-master divergence, and how a single-writer mainline with every host as a downstream read-replica dissolves it (the benevolent-dictator / hub-and-spoke shape, the never-`--force` law, what it buys and costs, the maintainer's daily loop) — is the `source-mirrors` flow this project depends on: `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL#root` (fan-out mechanics and the reference script: `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root`; the maintainer's day: `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root`). @spec/done",
+     "confirmed: The exact compound term 'benevolent dictator / hub-and-spoke' appears in three host artefacts (manifest header, engine module header, PROP-016 §model-pointer). PROP-016:8 is also the host pointing BACK at this document as the authority for the model it already implemented — the citation direction records the extraction. The 'Linux-kernel workflow' attribution is package-side only: grepped the host perimeter for 'kernel|Linus|Torvalds' → 0 hits outside `packages/` and `vibedeps/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MAINLINE-IS-THE-MAINTAINERS-INTEGRATED-LOCAL-MAIN": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "xtask/src/mirror.rs:4  //! Mainline is the maintainer's integrated local `main` — single-writer, so",
+     "xtask/src/mirror.rs:152  fn local_main(root: &Path) -> Result<String> {",
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "confirmed: Word-for-word in `mirrors.toml`, `mirror.rs` and PROP-016, and enforced in code: `local_main` resolves `main` in the working tree, and `pull_from` refuses to run from any other branch (mirror.rs:391-393). `git branch -vv` shows local `main` at cd376302 tracking `origin/main`, and `git status` is clean at session start."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MAINLINE-HAS-NO-PRIMARY-HOST": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "spec/common/PROP-016-source-mirrors.md:15  - ##HOST-GITVERSE **GitVerse** — `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`), region **RU**. `origin` on the maintainer's machine points here — a single-host convenience remote; fan-out is the manifest, not `git push origin`. @spec/done",
+     "spec/common/PROP-000.md:110  - ##HOST-SOURCE-GITVERSE **vibevm tool source: multi-homed.** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. **No host is primary** — mainline is the maintainer's local `main`, every host is a downstream read-replica, and rollout is the fast-forward-only fan-out `cargo xtask mirror` ([PROP-016](PROP-016-source-mirrors.md), 2026-06-14, which supersedes the single-source-of-truth reading recorded here before it). @impl/done",
+     "confirmed: 'Replicated equally' holds in the manifest (identical mode and refs for both targets) and in `fan_out`, which iterates the target array with no privileged position. The one place a primary could creep in is `git`'s own configuration, and the host names it and defuses it explicitly: `origin` points at GitVerse and PROP-016:15 calls that 'a single-host convenience remote'. Local `main` tracks `origin/main` (`git branch -vv`), which is the residue of that convenience; PROP-000:110 records that the current 'no host is primary' reading superseded an earlier single-source-of-truth reading."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ONE-SERIAL-WRITER-MEANS-TWO-WRITES-CANNOT-RACE": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "xtask/src/mirror.rs:4  //! Mainline is the maintainer's integrated local `main` — single-writer, so",
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "confirmed: 'Exactly one writer' is literally true here: `git log --format='%an' | sort -u` returns a single author across all 2117 commits, and `git log --oneline --merges` returns 4 merges, all local-branch. Delegated work does not weaken this — `CLAUDE.md`'s operating-facts ledger records that fractality workers cannot run git and the boss commits and merges the `fractality/<id>` branch, so writes stay serialized through one tree. No divergence appears anywhere in the observable history."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-MULTI-MASTER-PROBLEM-IS-ABSENT-BY-CONSTRUCTION": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "xtask/src/mirror.rs:5  //! there is no multi-master conflict: every target is a downstream read-replica",
+     "spec/common/PROP-016-source-mirrors.md:66  - ##RED-LINE-BY-CONSTRUCTION This honours the `CLAUDE.md` force-push red line by construction. @spec/done",
+     "confirmed: The host uses the same 'by construction' framing and it is checkable: the manifest declares no writable-on-both-sides target (both are `mode = \"push\"`, and `self-pull` — the only other mode — is verify-only per mirror.rs:306-310), so there is no configuration in which two hosts both accept fan-out writes. PROP-016 §5 open question 2 confirms `self-pull` has no adopter, so today's construction is push-only from one tree."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-cost-of-both-repos-canonical-is-paid-once": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:41  **absent by construction, not patched after the fact.** The cost of",
+     "confirmed: Same evaluative claim as the README's ##the-cost-is-paid-once-in-the-model, and the host still says nothing about it: `grep -rn -i 'conflict resolution|paid once' spec/common/ spec/boot/ mirrors.toml xtask/src/mirror.rs CLAUDE.md` → 0 hits. What IS observable is the absence of conflict-resolution work: zero divergences in the visible history, so no continuous cost has been paid. That is consistent with the claim without settling the counterfactual it rests on."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "EACH-HOST-IS-CANONICAL-FOR-READING-AND-A-REPLICA-FOR-WRITING": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:6  # canonical for READING in its region; nobody writes a target directly.",
+     "xtask/src/mirror.rs:6  //! that is canonical for *reading* in its region, and nobody writes a target",
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "spec/boot/90-user.md:34  - ##CMD-ROUTINE-PUSH Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @impl/done",
+     "confirmed: The 'canonical for reading' half is stated verbatim in three host artefacts (and the host renamed the flow's `audience` key to `region` in doing so). The 'nobody writes a target directly' half is the sentence the host wrote and then did not keep: `spec/boot/90-user.md:34` sanctions `git push origin main` as a routine command, and the tracking-ref reflogs record 69 `update by push` entries on origin/main (2026-07-12..17) and 61 on github/main (2026-07-12..16 and 2026-07-26) — the reflog message git writes only for a push through a named remote. Note this is a direct write from the SAME single writer, so it does not create a divergence; it bypasses the fan-out rather than the model."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-DIRECT-WRITE-OR-A-FORCE-PUSH-MAKES-A-TARGET-DIVERGE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:12  //!   fast-forward-only, **never `--force`**; a non-fast-forward means a target",
+     "xtask/src/mirror.rs:13  //!   diverged (someone wrote it directly) → fail loud, reconcile by hand. A",
+     "xtask/src/mirror.rs:315              \"mirror: {} push(es) failed -- a non-fast-forward means a target diverged \\",
+     "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
+     "confirmed: The implementation encodes exactly this causal reading twice — in the module header and in the runtime bail message — attributing a non-fast-forward to 'someone wrote it directly'. Worth the reviewer's attention as a precision point: a direct write by the SAME maintainer from the SAME mainline (which is what the 130 `update by push` reflog entries record) advances the target to a commit mainline already has, so it does not diverge. The fact's claim holds for a write that introduces commits mainline lacks; the host's own practice is the benign case."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-MODEL-DETECTS-DIVERGENCE-AND-FAILS-LOUD": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:331          let state = match remote_main(root, &t.url)? {",
+     "xtask/src/mirror.rs:333              Some(sha) => SyncState::Drift(sha),",
+     "xtask/src/mirror.rs:359                  println!(\"  DRIFT  {} at {}\", s.name, short(sha));",
+     "xtask/src/mirror.rs:370              \"mirror --check: {} target(s) drifted from mainline: {}\",",
+     "mirrors.toml:11  #                                   (fast-forward-only, fail-loud, never --force)",
+     "confirmed: Detection is implemented in `probe` (mirror.rs:327-342), which `ls-remote`s each target's `refs/heads/main` and classifies InSync / Drift(sha) / Missing; `verify` renders it and `bail!`s with a non-zero exit listing every drifted target. Nothing reconciles automatically anywhere in the file. One precision point for the reviewer: `probe` compares for EQUALITY with local head, not ancestry, so a target that is merely behind mainline is reported `DRIFT` by `--check` — see the STEP-VERIFY-ANCESTRY row for the same gap on the push path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
+     "xtask/src/mirror.rs:409               diverged; reconcile by hand, never --force: {}\",",
+     "spec/boot/STATIC.md:1147    *into* mainline, then re-fan. Never overwrite the host to make the",
+     "spec/common/PROP-016-source-mirrors.md:66  - ##RED-LINE-BY-CONSTRUCTION This honours the `CLAUDE.md` force-push red line by construction. @spec/done",
+     "confirmed: The instruction is in the runtime output on both divergence paths, and no clobber path exists to take instead. The rule also reaches every session through the compiled boot lane (STATIC.md:1145-1148). Unexercised: no divergence has occurred in this repository's observable history, so 'investigate' has never had to happen. This anchor id also appears on two other rows in this batch (daily-loop.md and fanout-mechanics.md both carry a blockquote with the same id) — the reviewer should expect three rows sharing it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-CHANGE-REACHES-MAINLINE-ONLY-BY-THE-MAINTAINER-INTEGRATING-IT": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:7  # Contributions arrive as PRs / branches / email patches on ANY host, are",
+     "mirrors.toml:8  # integrated into local mainline, then fanned out from here.",
+     "xtask/src/mirror.rs:7  //! directly (contributions arrive as PRs / branches / email patches on any",
+     "xtask/src/mirror.rs:8  //! host, are integrated into local mainline, then fanned out from here). This",
+     "confirmed: `git log --format='%an' | sort -u` returns one author across 2117 commits, and all 4 merge commits are local-branch merges — every commit on mainline was made by the maintainer's tree. `CLAUDE.md`'s operating-facts ledger records that delegated fractality workers cannot run git at all and the boss commits and merges the `fractality/<id>` branch, which preserves the property under delegation. Zero commits arrived by any other route."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PROPOSALS-ARRIVE-HOWEVER-IS-CONVENIENT": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:7  # Contributions arrive as PRs / branches / email patches on ANY host, are",
+     "xtask/src/mirror.rs:7  //! directly (contributions arrive as PRs / branches / email patches on any",
+     "spec/common/PROP-016-source-mirrors.md:61  - ##CMD-FROM `cargo xtask mirror --from <name>` — fast-forward mainline to a host's accepted-PR merge before fanning out (the bridge for a PR merged via that host's web UI). @spec/done",
+     "confirmed: The host states the same policy in two artefacts and provides the tool for one of the routes (`--from`). But no proposal has ever arrived by any of them: `git log --oneline --grep='Merge pull request'` → 0 over 2117 commits; `git log --oneline --merges` → 4, all local-branch; no `.github/` directory, no CONTRIBUTING file, and a single author throughout. Widened to `campaigns/**` and `spec/**` for any record of a received contribution → nothing. The policy is declared and unexercised."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ACCEPTING-ONE-MEANS-BRINGING-ITS-COMMITS-INTO-MAINLINE": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:8  # integrated into local mainline, then fanned out from here.",
+     "mirrors.toml:13  #   cargo xtask mirror --from NAME  fast-forward local mainline to a host's",
+     "mirrors.toml:14  #                                   accepted-PR merge, then fan out everywhere",
+     "xtask/src/mirror.rs:75      if let Some(name) = from {",
+     "xtask/src/mirror.rs:76          pull_from(&root, &targets, name)?;",
+     "confirmed: The order the fact prescribes is enforced by control flow: `run_mirror` calls `pull_from` before it reaches `verify`/`fan_out` (mirror.rs:69-83), so `--from` cannot fan out before bringing home. The manifest header documents the same two-step. What is missing is any acceptance to observe: no PR merge, no `--from` invocation recorded anywhere in the perimeter, and 4 merge commits all local-branch. Widened to `campaigns/**`, `spec/terraforms/**` for a record of `--from` being used → the only mirror-run record found is the terraform plan's note that `cargo xtask mirror` ran three times in one session (line 785), with no `--from`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-SURFACE-WEB-PR-UI": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:7  # Contributions arrive as PRs / branches / email patches on ANY host, are",
+     "spec/common/PROP-016-source-mirrors.md:61  - ##CMD-FROM `cargo xtask mirror --from <name>` — fast-forward mainline to a host's accepted-PR merge before fanning out (the bridge for a PR merged via that host's web UI). @spec/done",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:64  | A host's web PR UI | **Inbox** and review surface |",
+     "confirmed: The host assigns the web PR UI exactly this role in PROP-016 §4 (`--from` is 'the bridge for a PR merged via that host's web UI'), so the role is declared. No instance: `git log --oneline --grep='Merge pull request'` → 0 over 2117 commits, `.github/` does not exist, and the 4 merge commits are all local-branch. Both hosts do have a web UI (PROP-016:15/16 give the web URLs), so the surface exists and has never been used as an inbox."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-SURFACE-LOCAL-MAIN": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "mirrors.toml:8  # integrated into local mainline, then fanned out from here.",
+     "xtask/src/mirror.rs:405      let merge = git(root, &[\"merge\", \"--ff-only\", \"FETCH_HEAD\"])?;",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:65  | The maintainer's local `main` | **Merge authority** |",
+     "confirmed: Every merge in this repository's history was performed in the maintainer's local tree: `git log --oneline --merges` returns 4 (8628f1cb, 8ed8e222, 893e314b, 79938abb), all local-branch merges, and `git log --format='%an' | sort -u` returns one author. The only code path that merges anything is `pull_from`, which runs `git merge --ff-only` in the local tree and refuses unless HEAD is `main`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-SURFACE-HOST-AFTER-FAN-OUT": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "xtask/src/mirror.rs:321      println!(\"mirror: all push targets synced.\");",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:66  | Every host after fan-out | **Read-replica** of that authority |",
+     "confirmed: Checkable now: after the last fan-out both `refs/remotes/origin/main` and `refs/remotes/github/main` sit at cd376302, equal to local `main` — each host holds exactly the authority's history and nothing else. The terraform campaign plan (line 785-787) records `cargo xtask mirror` running three times in one session with the tracking-ref refresh observed live in its output, which is the same state transition."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-WEB-PR-UIS-ARE-INBOXES-NOT-THE-MERGE-AUTHORITY": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:6  # canonical for READING in its region; nobody writes a target directly.",
+     "mirrors.toml:7  # Contributions arrive as PRs / branches / email patches on ANY host, are",
+     "spec/boot/STATIC.md:1142  - A web-UI merge on a host (a clicked \"Merge\" button) is **not**",
+     "spec/common/PROP-016-source-mirrors.md:61  - ##CMD-FROM `cargo xtask mirror --from <name>` — fast-forward mainline to a host's accepted-PR merge before fanning out (the bridge for a PR merged via that host's web UI). @spec/done",
+     "confirmed: The 'not the merge authority' half holds trivially: all 4 merges in the repository are local-branch merges by the single author, so no web UI has ever exercised merge authority. The 'are inboxes' half has no instance — zero PRs, no `.github/`, no CONTRIBUTING. The rule reaches every session through STATIC.md:1142-1144."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "this-is-exactly-the-kernels-workflow": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:69  authority*. This is exactly the kernel's \"patches by email, integrated",
+     "confirmed: The host shares the shape's name ('benevolent dictator / hub-and-spoke' in `mirrors.toml:3` and `xtask/src/mirror.rs:2`) but never makes the kernel attribution: grepped the whole host perimeter (`spec/**`, `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `mirrors.toml`, `xtask/**`, `crates/**`, `campaigns/**`) for 'kernel|Linus|Torvalds|mailing list' → 0 hits outside `packages/` and `vibedeps/`. The 'patches by email' route has no instance either: `git log --format='%an'` shows one author and there is no `git am` trace in the history."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "spec/common/PROP-016-source-mirrors.md:66  - ##RED-LINE-BY-CONSTRUCTION This honours the `CLAUDE.md` force-push red line by construction. @spec/done",
+     "confirmed: No divergence appears anywhere in the observable history: both tracking-ref reflogs advance monotonically through the same SHA sequence with no rewind, no `DRIFT` condition is recorded in any host document, and the 4 merge commits are all local-branch. There is also no reconciliation code — `mirror.rs` contains no automatic merge outside the explicitly opt-in `--from` path. Precision point: the impossibility rests on the single-writer premise, not on the tooling; nothing in the code prevents a second writer with push access from creating one, which is exactly why the fail-loud detection exists."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS": {
+    "v": "drift",
+    "ev": [
+     "mirrors.toml:28  refs = [\"main\", \"tags\"]",
+     "mirrors.toml:35  refs = [\"main\", \"tags\"]",
+     "spec/common/PROP-016-source-mirrors.md:42  ##ADD-HOST Adding a host is one `[[target]]` block, committed — the set is living. @spec/done",
+     "DRIFT on «without data loss», scoped by the host's own manifest — and this is the finding in this package with real operational consequence. Both targets declare `refs = [\"main\", \"tags\"]`, so what each host holds is mainline plus tags, and NOTHING ELSE. This repository carries `cultural-backup`, `cultural-refactor`, `refactor/qualified-address-restructure` and a set of `fractality/*` branches, and none of them exists on any host. So if the local machine were lost, those branches would be lost with it: the property this fact promises holds for mainline and fails for every other ref. The mainline half does check — both tracking refs equal local `main`, so each host does hold mainline's full history. Untested besides: no host has ever vanished or been removed (`git log --oneline --follow -- mirrors.toml` returns 2 commits, neither a deletion)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:29  region = \"ru\"",
+     "mirrors.toml:36  region = \"us\"",
+     "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
+     "spec/common/PROP-016-source-mirrors.md:42  ##ADD-HOST Adding a host is one `[[target]]` block, committed — the set is living. @spec/done",
+     "confirmed: The host implements the region axis literally — a `region` key per target (renamed from the flow's `audience`), RU and US, recorded as the owner's pairing decision in PROP-016 ##HIST-AUTHORED. 'Identical history' is currently true (both tracking refs at cd376302). 'Adding a host is one manifest entry' is stated by PROP-016:42 and by the manifest's own header (line 18-19), and is structurally true of `load_targets`, which reads an unbounded `[[target]]` array; it has never been exercised — the target set has been 2 since creation."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:426      fn push_args_never_force() {",
+     "xtask/src/mirror.rs:430          for git_ref in [\"main\", \"tags\", \"release\", \"v1.0\"] {",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "spec/common/PROP-016-source-mirrors.md:64  - ##NEVER-FORCE-TESTED The never-`--force` invariant is **runnable capital**, not prose: `push_args` is a pure function and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape. @spec/done",
+     "Cargo.toml:27      \"xtask\",",
+     "confirmed: The test exists, is over the push command specifically, and runs: `push_args` is pure (mirror.rs:262-268), the test asserts over four ref shapes, and `xtask` is a workspace member so the test is inside the workspace test gate rather than orphaned. PROP-016:64 uses the flow's own phrase 'runnable capital'. The cross-document citation this fact carries — `[fanout-mechanics.md §never-force-test](fanout-mechanics.md#never-force-test)` — resolves: that heading exists at fanout-mechanics.md:204 (installed copy line 169). The independently recorded confirmation `push_args_never_force` exists at mirror.rs:426 is in the terraform campaign plan at line 788."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ONE-HUMAN-SERIALIZES-EVERY-MERGE": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:90  Be honest about the bottleneck: **one human serializes every merge.**",
+     "confirmed: Literally true here: `git log --format='%an' | sort -u` returns one author across 2117 commits and all 4 merge commits were made in that one tree. `CLAUDE.md`'s operating-facts ledger records that fractality workers cannot run git and the boss commits and merges the worker branch, so even heavy delegation keeps merges serialized through the same human. The host never states this as a COST anywhere — grepped `spec/common/PROP-016-source-mirrors.md` for 'bottleneck|serializ|throughput' → 0 hits; PROP-016 records the model without its price."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "MAINLINE-ADVANCES-ONLY-AS-FAST-AS-THE-MAINTAINER-INTEGRATES": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:91  Mainline advances only as fast as the maintainer integrates. There is",
+     "confirmed: The premise holds (one author, one tree) but the rate claim has no host statement to check against: grepped `spec/common/PROP-016-source-mirrors.md`, `spec/common/PROP-000.md`, `CLAUDE.md` for any throughput or velocity statement about mainline → 0 hits. What is observable is that mainline has advanced briskly — 2117 commits, and the tracking-ref reflog shows fan-out activity on 20 distinct days between 2026-06-27 and 2026-07-29 — but that measures activity, not the bound the fact asserts. Note the counting surface for velocity (`CONTINUE.md`'s commit chain) is excluded as a citation target by this brief."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "there-is-no-parallel-write-path": {
+    "v": "drift",
+    "ev": [
+     "mirrors.toml:6  # canonical for READING in its region; nobody writes a target directly.",
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:92  no parallel write path — that is the whole point, and it is also the",
+     "DRIFT: inside the tooling the claim is exactly true, and outside it a parallel path exists, is sanctioned, and is used 130 times. In `xtask/src/mirror.rs` there is genuinely one write path — `fan_out`'s `Mode::Push` arm is the only place `git push` is invoked, and the `Mode::SelfPull` arm only `ls-remote`s. Outside it, `git push origin main` is sanctioned at `spec/boot/90-user.md:34` and PRESCRIBED as END SESSION step 4 at `CLAUDE.md:191`, and the reflogs record 69 such pushes to origin and 61 to github. RECORDED with the precision that keeps this honest: those writes originate from the same serialized mainline, so they are a parallel path TO THE HOSTS rather than INTO mainline, and they therefore do not create the race this model exists to prevent. The sentence as written is still false — there is a second way bytes reach a host — and the drift is on the sentence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-COST-CONCURRENT-WRITES": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:97  | Concurrent writes | Allowed, and they race | Serialized through one tree |",
+     "confirmed: The single-writer column is instantiated here (one author, 2117 commits, all merges local). The multi-master column describes the rejected alternative and has no instance to check — PROP-016:78 records the bidirectional-multi-master sketch as abandoned before it was ever committed (`git log --follow -- mirrors.toml` shows only the single-writer manifest from creation), so the host never ran the comparison it tabulates."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-COST-DIVERGENCE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:333              Some(sha) => SyncState::Drift(sha),",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:98  | Divergence | Possible; must be reconciled | Impossible by construction |",
+     "confirmed: No divergence has occurred here — both tracking-ref reflogs advance monotonically through the same SHA sequence, no rewind, and no host document records a DRIFT event. Consistent with the 'impossible' column. But the tooling carries a whole `SyncState::Drift` branch, a `DRIFT` report line and two bail messages for divergence, which is the model conceding it is impossible only while the single-writer premise holds — the reviewer should weigh 'impossible by construction' against a codebase that budgets for it. The multi-master column has no instance."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-COST-MERGE-THROUGHPUT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:99  | Merge throughput | Many writers | One writer (the bottleneck) |",
+     "confirmed: The 'one writer' side is factually the host's situation (`git log --format='%an' | sort -u` → one name across 2117 commits), but the host nowhere characterises it as a bottleneck or measures throughput: grepped `spec/common/PROP-016-source-mirrors.md`, `spec/common/PROP-000.md`, `CLAUDE.md`, `campaigns/**` for 'bottleneck|throughput' in a mirrors context → 0 hits. The multi-master side has no instance."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-COST-FAILURE-SURFACE": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:313      if !failures.is_empty() {",
+     "xtask/src/mirror.rs:315              \"mirror: {} push(es) failed -- a non-fast-forward means a target diverged \\",
+     "xtask/src/mirror.rs:370              \"mirror --check: {} target(s) drifted from mainline: {}\",",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:100  | Failure surface | Reconcile published history | A loud abort before any harm |",
+     "confirmed: The 'loud abort' column is implemented on both paths: `fan_out` bails with a non-zero exit naming every failed target, and `verify` bails naming every drifted one. 'Before any harm' holds structurally — the ancestry protection is git's own non-fast-forward refusal, which rejects the push server-side before anything is overwritten, and no force path exists to override it. Untested by a real event: no abort of either kind is recorded in this repository's observable history."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "for-a-small-team-the-trade-is-strongly-positive": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:102  For a **small-team or single-maintainer project**, the trade is",
+     "confirmed: The antecedent holds — this is a single-maintainer project (one author across 2117 commits) — so the fact's condition is satisfied. The consequent is an evaluation the host never makes: grepped `spec/common/PROP-016-source-mirrors.md` (including §6 version history, where a justification would live), `spec/common/PROP-000.md`, `CLAUDE.md` for any assessment of the trade → 0 hits. PROP-016:78 records the decision as 'Owner decision' with no cost-benefit argument attached."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-MODEL-MAKES-SERIALIZATION-THE-ONLY-WRITE-PATH": {
+    "v": "drift",
+    "ev": [
+     "mirrors.toml:6  # canonical for READING in its region; nobody writes a target directly.",
+     "xtask/src/mirror.rs:284              Mode::Push => {",
+     "xtask/src/mirror.rs:287                      let out = git(root, &args)?;",
+     "spec/boot/90-user.md:34  - ##CMD-ROUTINE-PUSH Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @impl/done",
+     "DRIFT on «only», with the same 130-push measurement as `##there-is-no-parallel-write-path` and the same mitigating precision. Within the tooling serialization IS the only write path: `fan_out`'s `Mode::Push` arm (`mirror.rs:284-305`) holds the file's sole `git push`, and the `Mode::SelfPull` arm only `ls-remote`s (`:306-310`). Outside it, `git push origin main` is not merely POSSIBLE but sanctioned (`90-user.md:34`) and prescribed (`CLAUDE.md:191`), and the reflogs record 130 of them (69 origin, 61 github). So «nothing can sneak around it» is false as stated; what stays true is that nothing sneaks around it INTO mainline, which is the property the model actually needs."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "when-a-project-outgrows-one-integrator-this-is-the-wrong-tool": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:72  1. ##open-server-side **Server-side mirroring.** When a host must originate writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host), add one-directional server-side mirroring (a GitHub Action mirroring GitHub→GitVerse, or GitVerse's own pull-mirror for the reverse). It touches CI secrets (an owner act), so it is deferred until needed. @spec/work",
+     "confirmed: The host has recorded exactly the prescribed escape hatch, in the prescribed form, as PROP-016 §5 open question 1: one-directional server-side mirroring, with both concrete implementations named (a GitHub Action GitHub→GitVerse, or GitVerse's pull-mirror), and deferred because it touches CI secrets. Its trigger condition as the host writes it is 'when a host must originate writes … e.g. heavy web-UI merging on one host', which is adjacent to but not identical with the fact's 'several full-time committers'. The condition has not been reached: one author, no PRs, no `.github/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RECORD-THAT-AS-A-REVISIT-TRIGGER": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:72  1. ##open-server-side **Server-side mirroring.** When a host must originate writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host), add one-directional server-side mirroring (a GitHub Action mirroring GitHub→GitVerse, or GitVerse's own pull-mirror for the reverse). It touches CI secrets (an owner act), so it is deferred until needed. @spec/work",
+     "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:19  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "DRIFT: the host has no revisit trigger for this decision, and the composed flow it installed forbids that. `grep -n -i 'revisit\\|parallel\\|integrator' spec/common/PROP-016-source-mirrors.md` returns 0 hits across all 81 lines, §6 version history included. What PROP-016 has instead is §5's three open questions, and they are DEFERRALS — «deferred until needed», «no target uses self-pull yet», «worth opening if the target set grows large» — not the metric + threshold + observation-point form that `vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:63` requires and this fact demands. The README's own `##COMPOSES-DECISION-RECORDS` carries the same gap, ruled the same way."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "re-derive-lead": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:25  name = \"gitverse\"",
+     "mirrors.toml:29  region = \"ru\"",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:33  audience = \"region-1\"",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:114  Do not copy the host names or the script verbatim — copy the *task*,",
+     "confirmed: The host's manifest is a derivation rather than a copy, which is what the fact asks for: it uses real host names (`gitverse`, `github`) not the flow's placeholders (`host-a`, `host-b`), and it renamed the flow's `audience` key to `region`. The reference script was not copied either — the host implemented the fan-out in Rust (`xtask/src/mirror.rs`, 506 lines) rather than porting the ~15-line `sh`. Direction caveat: the host derived nothing FROM this prompt, since the manifest and engine predate the package by 23 days; the prompt describes a derivation the host performed before the prompt existed."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
+     "spec/common/PROP-016-source-mirrors.md:8  - ##model-pointer The **general model** — why multi-homing a git source across several hosts invites multi-master divergence, and how a single-writer mainline with every host as a downstream read-replica dissolves it (the benevolent-dictator / hub-and-spoke shape, the never-`--force` law, what it buys and costs, the maintainer's daily loop) — is the `source-mirrors` flow this project depends on: `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL#root` (fan-out mechanics and the reference script: `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root`; the maintainer's day: `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root`). @spec/done",
+     "confirmed: PROP-016:8 restates this summary almost word for word ('why multi-homing a git source across several hosts invites multi-master divergence, and how a single-writer mainline with every host as a downstream read-replica dissolves it') while pointing at this very document as the authority — which is the extraction relationship visible in a single line. The 'dissolves rather than manages' claim is supported by the abandonment record at PROP-016:78 and by there being no reconciliation machinery in `mirror.rs` at all."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "mirrors.toml:7  # Contributions arrive as PRs / branches / email patches on ANY host, are",
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "confirmed: Four of the five clauses are confirmed on the host: one mainline, single-writer (one author / 2117 commits), no primary (both targets identical in the manifest), every host a replica (both `mode = \"push\"`, both tracking refs at cd376302), merge authority local (all 4 merges local-branch). The fifth — 'contributions arrive on any host as inboxes' — is declared by `mirrors.toml:7` and PROP-016:61 but has zero instances: no PR merges, no `.github/`, no CONTRIBUTING, one author."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-WHAT-IT-BUYS": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:29  region = \"ru\"",
+     "mirrors.toml:36  region = \"us\"",
+     "mirrors.toml:28  refs = [\"main\", \"tags\"]",
+     "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
+     "confirmed: Third clause fully confirmed (region per target, recorded as the owner's RU/US pairing). First clause: no divergence in the observable history, consistent but resting on the single-writer premise rather than on enforcement. Second clause partly scoped — every host holds mainline plus tags, not every branch, and no host has ever vanished or been offboarded (`git log --follow -- mirrors.toml` → 2 commits, neither a removal), so the recovery is untested. Detail per clause is on the three BUYS- rows above."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-WHAT-IT-COSTS": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:72  1. ##open-server-side **Server-side mirroring.** When a host must originate writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host), add one-directional server-side mirroring (a GitHub Action mirroring GitHub→GitVerse, or GitVerse's own pull-mirror for the reverse). It touches CI secrets (an owner act), so it is deferred until needed. @spec/work",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:142  - What it costs: one human serializes merges. Acceptable — and cheaper",
+     "DRIFT on the revisit-trigger clause, carrying the body rule per W1's summary-restatement precedent. What holds: the cost is factually this host's situation (one author, all 4 merges local-branch), and the escape hatch is recorded in the prescribed one-directional server-side form at `PROP-016` §5 open question 1. What does not: the revisit trigger this summary demands does not exist — `grep -n -i 'revisit\\|parallel\\|integrator' spec/common/PROP-016-source-mirrors.md` → 0 hits over all 81 lines. RECORDED: the «acceptable and cheaper than the alternative» evaluation is likewise absent from every host document searched, so the summary asserts a judgement the host never made."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:426      fn push_args_never_force() {",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "spec/common/PROP-016-source-mirrors.md:64  - ##NEVER-FORCE-TESTED The never-`--force` invariant is **runnable capital**, not prose: `push_args` is a pure function and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape. @spec/done",
+     "Cargo.toml:27      \"xtask\",",
+     "confirmed: The host adopted the flow's own phrase ('runnable capital') in PROP-016:64 and backs it with the artefact: a pure `push_args`, a unit test over four ref shapes asserting no `--force`, `-f` or `+`-prefixed refspec, inside a workspace member so the test runs. `grep -rn -- '--force' xtask/src/` finds no force flag on any executable path. Independently re-verified in the terraform campaign plan at line 788 ('`push_args_never_force` exists at `xtask/src/mirror.rs:426`'), which matches the line I read."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}

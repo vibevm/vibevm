@@ -1,0 +1,338 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-THE-SINGLE-WRITER-SOURCE-MIRRORS-DISCIPLINE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/vibe.toml:4  kind = \"flow\"",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/vibe.toml:8  description = \"Single-writer source mirrors: one mainline, hosts as read-replicas, manifest-driven fast-forward-only fan-out that fails loud\"",
+     "vibe.lock:57      \"flow:org.vibevm.world/source-mirrors@=0.1.0\",",
+     "spec/boot/STATIC.md:1114  <!-- vibe:static org.vibevm.world/source-mirrors — vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md -->",
+     "confirmed: Read the package `vibe.toml` (kind/name/group/version), matched it against `vibe.lock` (the host declares the dependency at line 57 and records the package block at 372-378, content_hash sha256:6775da62…), and confirmed the install landed: `find vibedeps/flow-source-mirrors -type f` returns 7 files (LICENSE.md, README.md, spec/boot/62-flow-source-mirrors.md, the three flow docs, vibe.toml) at the modern `spec/boot/` layout, and the compiled boot lane carries the provenance marker at STATIC.md:1114."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-naive-fix-is-multi-master-replication": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "xtask/src/mirror.rs:5  //! there is no multi-master conflict: every target is a downstream read-replica",
+     "vibedeps/flow-source-mirrors/0.1.0/README.md:5  one git host, the naive fix — let each host accept writes and mirror to",
+     "confirmed: The host names the same failure mode in two artefacts it wrote itself: the `mirrors.toml` header (lines 3-8) and the `xtask/src/mirror.rs` module header (lines 2-8). Direction matters here: `mirrors.toml` and `mirror.rs` landed 2026-06-14 (commit 5a1d3139 `feat(xtask): mirror — fan mainline out to all targets`) and the flow package was authored 2026-07-07 (ff4ccdf7 `feat(redbook): source-mirrors 0.1.0`), so the host is the SOURCE of this wording, not an independent witness. PROP-016:80 records the extraction explicitly. Sentence also present verbatim in the installed copy."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "this-flow-dissolves-the-failure-mode": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:48  ##THE-FIX-IS-STRUCTURAL-NOT-OPERATIONAL The fix is structural, not operational. @impl/done",
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "vibedeps/flow-source-mirrors/0.1.0/README.md:7  branch diverge. This flow dissolves that failure mode instead of",
+     "confirmed: The three structural claims this lead introduces (one mainline, every host a replica, ff-only fail-loud fan-out) are each independently checkable and are checked in the next three rows. The host artefact carrying the same structural framing is the `mirrors.toml` header, lines 3-8. No host document argues the 'dissolves vs manages' distinction in those words: grepped `spec/common/PROP-016-source-mirrors.md`, `spec/common/PROP-000.md`, `spec/boot/90-user.md`, `mirrors.toml`, `xtask/src/mirror.rs` for 'dissolve' → 0 hits."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "MODEL-ONE-MAINLINE-NO-HOST-PRIMARY": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "mirrors.toml:4  # maintainer's integrated local `main` — single-writer, so there is no",
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "spec/common/PROP-000.md:110  - ##HOST-SOURCE-GITVERSE **vibevm tool source: multi-homed.** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. **No host is primary** — mainline is the maintainer's local `main`, every host is a downstream read-replica, and rollout is the fast-forward-only fan-out `cargo xtask mirror` ([PROP-016](PROP-016-source-mirrors.md), 2026-06-14, which supersedes the single-source-of-truth reading recorded here before it). @impl/done",
+     "xtask/src/mirror.rs:42  const MAINLINE: &str = \"main\";",
+     "confirmed: Three host statements plus the implementation. PROP-000's foundational-decisions entry additionally records that this reading SUPERSEDED an earlier single-source-of-truth reading, i.e. the host changed model on 2026-06-14. In code, `MAINLINE` is a local constant and every operation (`fan_out`, `probe`, `pull_from`) resolves it through `rev_parse` against the local tree, never from a remote. `git remote -v` shows two configured remotes (origin→git@gitverse.ru:vibevm/vibevm.git, github→git@github.com:vibevm/vibevm.git) and `mirrors.toml` privileges neither."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:5  # multi-master conflict. Every target below is a downstream read-replica,",
+     "mirrors.toml:6  # canonical for READING in its region; nobody writes a target directly.",
+     "xtask/src/mirror.rs:5  //! there is no multi-master conflict: every target is a downstream read-replica",
+     "spec/common/PROP-016-source-mirrors.md:13  ##HOSTS-MODEL vibevm's source is multi-homed across two public hosts, both canonical for reading, kept in step under the source-mirrors single-writer model (mainline is the maintainer's integrated local `main`; no host is primary; every host is a downstream read-replica): @spec/done",
+     "confirmed: Both declared targets are `mode = \"push\"` (mirrors.toml:27 and :35) — write-only-from-mainline replicas; no target is declared a source. The manifest's stronger rider 'nobody writes a target directly' is not borne out in practice: the reflog of `refs/remotes/origin/main` carries 69 `update by push` entries (git writes that message only when a push goes through a NAMED remote — a `mirrors.toml`-driven push-by-URL updates no tracking ref at all) dated 2026-07-12..17, and `refs/remotes/github/main` carries 61, dated 2026-07-12..16 and 2026-07-26. Reported in full on the NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:11  #                                   (fast-forward-only, fail-loud, never --force)",
+     "xtask/src/mirror.rs:262  fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {",
+     "xtask/src/mirror.rs:266          vec![\"push\", url, git_ref]",
+     "xtask/src/mirror.rs:315              \"mirror: {} push(es) failed -- a non-fast-forward means a target diverged \\",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "confirmed: The 'never --force' half is settled by code, not prose: `grep -rn -- '--force|force_with_lease|force-push' xtask/src/` returns 10 hits, every one a doc comment, an error message, or the assertion in `push_args_never_force`; there is no force flag on any executable path. The 'fails loud' half: `fan_out` accumulates failures and `bail!`s at 313-320 naming the diverged targets. The 'only way history reaches a host' half is NOT settled — 130 named-remote pushes appear across the two tracking-ref reflogs (69 origin, 61 github)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-cost-is-paid-once-in-the-model": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:68  ##the-cost-of-both-repos-canonical-is-paid-once The cost of",
+     "vibedeps/flow-source-mirrors/0.1.0/README.md:13  The cost is paid once, in the model, not continuously, in conflict",
+     "confirmed as the package's own evaluative claim about its model, with no host observable either way — and the searches are worth keeping so a later session does not redo them. `grep -rn -i 'conflict resolution\\|paid once'` across `spec/common/PROP-016-source-mirrors.md`, `spec/common/PROP-000.md`, `spec/boot/90-user.md`, `mirrors.toml` and `xtask/src/mirror.rs` returns 0 hits. The host records the DECISION — `PROP-016:78`, accepted 2026-06-14 — but never this justification for it. The only support is the package's own protocol §mainline plus the installed copy of the same sentence; nothing in the consuming project weighs the cost in either direction."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "package-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/vibe.toml:16  source = \"spec/boot/62-flow-source-mirrors.md\"",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:1  # Source Mirrors Protocol {#root}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:1  # Fan-out mechanics {#root}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md:1  # Flow: Source Mirrors {#root}",
+     "confirmed: `find packages/org.vibevm.world/source-mirrors -type f` returns exactly 7 paths: LICENSE.md, README.md, vibe.toml, the boot snippet and the three flow documents — three content pieces plus a boot snippet as claimed, with LICENSE/README/vibe.toml as packaging. `find vibedeps/flow-source-mirrors -type f` returns the same 7 names, so a consumer receives all four content files."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:15  ## The problem {#problem}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:46  ## The model {#model}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:111  ## What the model buys {#buys}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:126  ## What the model costs {#costs}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:159  ## Re-derive for your project {#re-derive}",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:112  ## Re-derive for your project {#re-derive}",
+     "confirmed: All five promised sections exist as headings in the named file, in the promised order, and the installed copy carries them. The one sub-item the README names — 'contributions in via any inbox' — is §integration at line 87. The relative citation to `fanout-mechanics.md` at line 12 resolves inside the package and inside `vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/`."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-FANOUT-MECHANICS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:17  ## The committed target manifest {#manifest}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:64  ## The fan-out procedure {#procedure}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:86  ## Fail-loud semantics {#fail-loud}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:107  ## The read-only drift check {#drift-check}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:122  ## Bringing an accepted web merge home {#bring-home}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:204  ## Pin the invariant with a test {#never-force-test}",
+     "confirmed: Every promised part is a heading in the file. The '~15-line reference script' is the fenced block at lines 166-193 (27 fenced lines including shebang, comments and blanks; 15 lines of code by my count). The installed copy carries all of it at fanout-mechanics.md:13, :52, :70, :89, :101, :169. The README's list omits §no-propagate (package line 144), which the file also carries — that is an omission in the README's summary, not a missing part."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-DAILY-LOOP": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:22  ## A normal day {#normal-day}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:87  ## Handling reported drift {#drift}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:128  ## Onboarding a new host {#onboard}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:155  ## Offboarding a host {#offboard}",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/daily-loop.md:104  ## Onboarding a new host {#onboard}",
+     "confirmed: All four promised sections are headings in the named file; the file also carries §integrate (line 60), which the README folds into 'the maintainer's day'. The installed copy carries the same four (lines 18, 71, 104, 129)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/vibe.toml:16  source = \"spec/boot/62-flow-source-mirrors.md\"",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md:11  ## Core rule {#core-rule}",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md:46  ## Never {#never}",
+     "spec/boot/STATIC.md:1122  ## Core rule {#core-rule}",
+     "spec/boot/STATIC.md:1150  ## Never {#never}",
+     "confirmed: `[boot_snippet] source` in vibe.toml names exactly this file with `category = \"flow\"`; the file carries §core-rule and §never as claimed, plus §in-session which the README's one-line summary omits. The host's compiled static lane reproduces the whole snippet at STATIC.md:1114-1160, so the claim is verified end-to-end from manifest to what this repository actually boots. A markup-stripped word-stream diff of package vs. installed snippet returns IDENTICAL."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/uninstall.rs:5  //! declaration, and regenerates every node's boot artifacts so the",
+     "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+     "crates/vibe-cli/src/commands/uninstall.rs:202          \"\\nUninstalled {group}/{name}@{version} — removed its vibedeps/ slot, regenerated boot.\"",
+     "vibe.lock:377  files_written = []",
+     "confirmed: Read the uninstall command: it removes the `vibedeps/` slot and the declaration, then calls `regenerate_boot`, which is how the boot snippet leaves `spec/boot/STATIC.md`. What is NOT settled: this package's `files_written` is `[]` (vibe.lock:377), so 'every file the package wrote' has an empty referent here and the outcome is untested for `source-mirrors` — no uninstall of it appears in `git log`. Widened to `crates/vibe-cli/src/commands/` and `crates/vibe-workspace/src/install/` for a removal routine keyed on `files_written`; the removal is slot-scoped, not file-list-scoped."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-workspace/src/install/bootgen.rs:214  /// user-owned `00-core.md` / `90-user.md` are `Foundation` / `UserOverride`",
+     "spec/boot/INDEX.md:14  path = \"spec/boot/00-core.md\"",
+     "spec/boot/INDEX.md:38  path = \"spec/boot/90-user.md\"",
+     "confirmed: The host implements a user-owned band: `bootgen.rs` classifies `00-core.md` / `90-user.md` as `Foundation` / `UserOverride` by name convention, and the generated INDEX.md lists both as the host's own authored entries alongside the vibedeps entries — so the two user files survive every regeneration. What I did not find is a general guarantee or a named test for the claim: `grep -rn 'user_owned|user-owned' crates/*/src` returns exactly 1 hit (that doc comment). The uninstall path writes only the vibedeps slot and the generated boot artefacts, so it has no reach into user files, but that is a structural observation, not an asserted invariant."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THIS-FLOW-IS-MAINTAINER-FACING": {
+    "v": "confirmed",
+    "ev": [
+     "mirrors.toml:17  # can be neither shared nor verified. It carries NO credentials: auth is the",
+     "mirrors.toml:18  # maintainer's per-host SSH keys in the agent. Add a target by appending a",
+     "spec/common/PROP-016-source-mirrors.md:18  ##AUTH-SSH-ONLY Authentication is the maintainer's per-host SSH keys in the agent — never a token, never in the manifest. @spec/done",
+     "xtask/src/mirror.rs:31  //! Auth is the maintainer's per-host SSH keys in the agent; `mirrors.toml`",
+     "spec/boot/90-user.md:35  - ##CMD-MIRROR Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14: `cargo xtask mirror` — reads `mirrors.toml`, pushes `main` + tags to every target fast-forward-only, never `--force`. `cargo xtask mirror --check` verifies sync; `cargo xtask mirror --from <name>` pulls a host's accepted-PR merge into mainline first. This is the standard rollout, preferred over a bare `git push origin`. See [PROP-016](../common/PROP-016-source-mirrors.md). @impl/done",
+     "confirmed: The fan-out is gated on the maintainer's own SSH keys by construction — the manifest carries only URLs, so only a key-holder can run it, and all three host artefacts say so in the same words. `cargo xtask mirror` is documented in `spec/boot/90-user.md` under 'Proven commands on this machine', i.e. the maintainer's machine record, not a contributor guide. `git log --format='%an' | sort -u` returns a single author name across 2117 commits, so integrator and contributor are the same person here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-CONTRIBUTOR-NEEDS-ONLY-THE-TWO-NEVERS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1152  - Never push directly to a replica host — rollout goes through the",
+     "spec/boot/STATIC.md:1154  - Never `--force` any target, for any ref, for any reason. The",
+     "vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md:37  - Never push directly to a replica host — rollout goes through the",
+     "mirrors.toml:6  # canonical for READING in its region; nobody writes a target directly.",
+     "mirrors.toml:7  # Contributions arrive as PRs / branches / email patches on ANY host, are",
+     "confirmed on delivery, with the receiving surface never exercised — which is non-adoption of a workflow, not drift in the fact. Both nevers DO reach a consuming session: they sit in the compiled static boot lane every session reads, at `spec/boot/STATIC.md:1152-1155`. The «PR as inbox item» half has no host instance at all: `git log --oneline --grep='Merge pull request'` returns 0 results over 2117 commits, and `git log --oneline --merges` returns 4, every one a local branch merge (`8628f1cb`, `8ed8e222`, and the two relicense merges `893e314b` / `79938abb`). No contributor-facing document exists either — `ls CONTRIBUTING*` finds nothing and there is no `.github/`. A single-contributor repository has never had the contributor this fact addresses."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-ATOMIC-COMMITS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:114  ## Pushed history is frozen {#pushed}",
+     "vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md:31  4. Do not amend or force-push commits that are already pushed; create a",
+     "vibedeps/flow-source-mirrors/0.1.0/README.md:57  - `flow:atomic-commits` — pushed history is frozen; a fast-forward-only",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/vibe.toml:13  requires_kinds = []",
+     "confirmed on the shipped sentence, which names the flow correctly and cites a rule that flow really carries — with two gaps recorded. (1) The composition is PROSE ONLY: this package's `vibe.toml` has `requires_kinds = []` and no `[dependencies]` table, so nothing makes the composed flow arrive with it. (2) The INSTALLED copy of this very line says `flow:atomic-commits`, the older name, while the package says `flow:git-atomic-commits` and the slot on disk is `vibedeps/flow-git-atomic-commits/` — a markup-stripped word-stream diff over all five package files against their vibedeps copies returns exactly ONE difference, and this word is it. That is the SECOND package in this batch with a stale flow name in its installed README (`licensing`'s `##COMPOSES-ATTRIBUTION-POLICY` is the other), so it is a class rather than a typo, and both corrections run the same way: the shipped name is right."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "COMPOSES-WAL": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:77  describes; fan-out via `cargo xtask mirror` at phase checkpoints. `run/` of a",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:42  | ##ROW-MOMENT-END-OF-A-WORK-SESSION End of a work session @impl/done | Fan out as the wind-down step @impl/done |",
+     "DRIFT on the «fan out at wind-down» half, contradicted by the host's own wind-down contract in writing. `flow:wal` IS installed. But `CLAUDE.md`'s END SESSION command, step 4, prescribes «Push to `origin/main`» — the bare named-remote push that `spec/boot/90-user.md:35` and `PROP-016:59` BOTH name as not the standard rollout. So the host's session-end procedure instructs the opposite of what this composition claims happens at wind-down, and the two host documents disagree with each other about it. One host document does state the checkpoint cadence in this flow's terms: the terraform campaign plan at line 77. The «fanned out at <checkpoint>» WAL-entry half can only be observed inside `spec/WAL.md`, which this batch's citation rule excludes as a target; it was read and no entry uses that form, reported here as prose rather than as a ref."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-DECISION-RECORDS": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
+     "spec/common/PROP-016-source-mirrors.md:5  ##status-line **Status:** accepted 2026-06-14 — owner-requested; in force. The target set (§2) is **living** — it grows as hosts are added.",
+     "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:19  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "DRIFT on the revisit-trigger half, and the composed flow's own installed snippet is what makes it decidable rather than a preference. Recorded correctly: `PROP-016` carries an acceptance date, an in-force status, and a version history whose `##HIST-AUTHORED` entry states the owner decision, what it supersedes and its scope. Missing: `grep -n -i 'revisit\\|parallel\\|integrator' spec/common/PROP-016-source-mirrors.md` returns 0 hits over all 81 lines — so neither the host's mirror SET nor the single-writer choice carries a measurable revisit trigger, while `vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:63` forbids recording a decision with a missing one. The host installed the flow that forbids this and then did it. RECORDED, because it settles a question left open in `spec-genres`: two searches there disagreed about whether revisit triggers are a standard host field, and this is a second PROP without one, which makes `PROP-000` §3's fired-and-spent trigger the exception rather than the rule."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "practice-crystallized-from-the-origin-projects-law": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-016-source-mirrors.md:80  - ##HIST-EXTRACTED **2026-07-14 — general model extracted to the `source-mirrors` flow.** The problem statement, the hub-and-spoke model, what it buys and costs, the daily loop, and the fan-out mechanics moved into the installable `source-mirrors` package (reaching vibevm through the redbook dependency); this PROP was thinned to vibevm's concrete host set, the registry distinction, and the tooling. No behaviour changed — `mirrors.toml` and `cargo xtask mirror` are untouched. @spec/done",
+     "mirrors.toml:3  # Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the",
+     "xtask/src/mirror.rs:2  //! `mirrors.toml` (the benevolent-dictator / hub-and-spoke model, no primary).",
+     "confirmed: This is the one fact in the batch where the host's agreement is the strongest available evidence rather than the weakest, because this repository IS the origin project and says so in its own version history. Independent dates confirm the direction: `mirrors.toml` + `xtask/src/mirror.rs` were created 2026-06-14 (5a1d3139), the flow package was authored 2026-07-07 (ff4ccdf7 `feat(redbook): source-mirrors 0.1.0`), PROP-016 was thinned 2026-07-14 (2883b945 `refactor(spec): thin PROP-016 to vibevm's source-mirror setup`). The host's phrasing 'benevolent dictator / hub-and-spoke, no primary' predates the package's by 23 days."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "collections-spirit-is-the-redbook": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md:59  - `source-mirrors` — single-writer multi-homing; fail-loud",
+     "spec/boot/STATIC.md:1561  - `source-mirrors` — single-writer multi-homing; fail-loud",
+     "confirmed: `flow:redbook` is installed at `vibedeps/flow-redbook/0.2.0/` (v0.2.0, not the v0.1.0 its sibling slots carry) and `ls vibedeps/flow-redbook/0.2.0/spec/book/` returns `README.md` and `ru`, with 3 files under `ru/` (chapter-1-two-process-model.md, chapter-2-shared-state-and-files.md, chapter-3-memory-individual.md). The path the fact names exists and holds Russian chapters. The redbook's own boot snippet lists `source-mirrors` in its collection roster, and that roster reaches this repository's compiled boot lane at STATIC.md:1561 — the membership is observable in what the host boots."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "MAKE-DIVERGENCE-IMPOSSIBLE-AND-PROVE-THE-INVARIANT": {
+    "v": "confirmed",
+    "ev": [
+     "xtask/src/mirror.rs:426      fn push_args_never_force() {",
+     "xtask/src/mirror.rs:435                      .any(|a| *a == \"--force\" || *a == \"-f\" || a.starts_with('+')),",
+     "spec/common/PROP-016-source-mirrors.md:64  - ##NEVER-FORCE-TESTED The never-`--force` invariant is **runnable capital**, not prose: `push_args` is a pure function and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape. @spec/done",
+     "Cargo.toml:27      \"xtask\",",
+     "confirmed: The 'prove with a test' half is settled by code: `push_args` (mirror.rs:262-268) is the single place the push argv is built, and `push_args_never_force` (mirror.rs:425-440) asserts over four ref shapes ('main', 'tags', 'release', 'v1.0') that no arg is `--force`, `-f` or `+`-prefixed. `xtask` is a workspace member (Cargo.toml:27), so the test runs in the workspace test gate rather than sitting unreachable. The 'impossible by construction' half is model-level and is checked on the protocol rows."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+     "packages/org.vibevm.world/source-mirrors/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "vibedeps/flow-source-mirrors/0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: The relative link `[LICENSE.md](LICENSE.md)` resolves: the file exists in the package and ships to `vibedeps/flow-source-mirrors/0.1.0/LICENSE.md` (this package ships `LICENSE.md`, unlike the W6 sibling `dev-runtime-docs`, which ships a bare `LICENSE`). The manifest's `license = \"UPL-1.0\"` agrees with the file's own header. `CLAUDE.md`'s operating-facts ledger records that `packages/org.vibevm.*/**` were relicensed to UPL-1.0 by MT-05 firing #2 (merges 893e314 / 79938ab); both merges are present in this repository's `git log --merges`."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  }
+ }
+}
