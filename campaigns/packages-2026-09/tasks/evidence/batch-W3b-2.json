@@ -1,0 +1,716 @@
+{
+ "batch": "W3",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:5  ##scope-of-this-document **Scope of this document.** Why a decision without a revisit",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:13  ## Why decisions rot without triggers {#sacred-cows}",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:42  ## Anatomy of a measurable trigger {#anatomy}",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:75  ## Good and bad triggers {#good-bad}",
+     "confirmed: All five promised topics have a section, in the order the scope line gives them. Widened to the installed copy at vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/revisit-triggers.md (present). A scope statement about its own file has no host referent."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "record-shape-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:10  ##record-shape-pointer The record shape",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:11  itself lives in [`record-template.md`](record-template.md). @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:14  ## The template {#template}",
+     "confirmed: Same-directory relative link; resolves in the package and in the installed slot. The target does carry the shape (a fenced template at record-template.md:22-36). Counted in the harvest's source-1 join of 24 resolved citations, 0 broken."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "EVERY-DECISION-IS-CORRECT-RELATIVE-TO-DATA": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:15  ##EVERY-DECISION-IS-CORRECT-RELATIVE-TO-DATA Every decision is correct *relative to data*: 600 s is right while",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The VPN figure is the book's example, absent from this host. The relativity claim itself is exhibited once here: the licence decision was correct relative to a proprietary-EULA phase and changed when the owner's position changed, which PROP-000:47 records as 'The project's first phase shipped under a placeholder proprietary EULA; that phase is over.' Searched spec/ for a second decision the host records as having been correct-then-outgrown: PROP-000:110 (GitVerse ceasing to be the source of truth after PROP-016) is the nearest, and it carries no trigger."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "data-changes-and-the-decision-outlives-its-reason": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:18  ##data-changes-and-the-decision-outlives-its-reason Then the data changes —",
+     "spec/common/PROP-000.md:110  - ##HOST-SOURCE-GITVERSE **vibevm tool source: multi-homed.** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. **No host is primary** — mainline is the maintainer's local `main`, every host is a downstream read-replica, and rollout is the fast-forward-only fan-out `cargo xtask mirror` ([PROP-016](PROP-016-source-mirrors.md), 2026-06-14, which supersedes the single-source-of-truth reading recorded here before it). @impl/done",
+     "confirmed: The host records two decisions that outlived their reasons and were caught late rather than by a trigger. PROP-000:110 says PROP-016 'supersedes the single-source-of-truth reading recorded here before it' — the old reading survived in the spec until a later PROP replaced it, with no trigger on the original. The licence record is the second (:47, :57). Neither section had a revisit condition that fired; both were found by a campaign pass. Searched AUDIT.md's categories for a standing check on outlived reasons: PROP-013's C2 'Spec drift' is the nearest and is about contradictions, not expired re"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "two-failures-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:23  ##two-failures-lead Without a recorded revisit condition, one of two failures follows: @spec/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:25  - ##FAILURE-THE-SACRED-COW **The sacred cow.** The value is written down, so nobody dares",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:29  - ##FAILURE-THE-PERMANENT-RE-LITIGATION **The permanent re-litigation.** The opposite failure: with no",
+     "confirmed: Lead-in to exactly two bullets at 25-31; both present, and the pair is the mirror of the protocol's two-failure-modes-lead at DECISION-RECORDS-PROTOCOL.md:51 (re-derivation / re-litigation) — the two lists are different pairs, which is worth noting since re-litigation appears in both. Searched the host for either failure named as such: 0 hits for 'sacred cow' in spec/, CLAUDE.md, AUDIT.md or BACKLOG.md."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "FAILURE-THE-SACRED-COW": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:25  - ##FAILURE-THE-SACRED-COW **The sacred cow.** The value is written down, so nobody dares",
+     "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:141  - ##freeze-revisit **Revisit when:** never expected; the cycle-of-improvement premise is core. @spec/done",
+     "confirmed: The host writes the sacred-cow condition explicitly twice: PROP-000:23 'Never, in the scope of v1' and PROP-043:141 'never expected'. Both are deliberate rather than accidental — each gives a reason for the permanence — but by this fact's definition both make the record's authority the thing that stands. Beyond those two, 142 of 153 host Decision sections have no revisit condition at all, which is the same state without the declaration. Searched for 'sacred cow' as a host phrase: 0 hits outside this package."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FAILURE-THE-PERMANENT-RE-LITIGATION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:29  - ##FAILURE-THE-PERMANENT-RE-LITIGATION **The permanent re-litigation.** The opposite failure: with no",
+     "spec/WAL.md:69  ## Constraints — do not violate",
+     "confirmed: The host's defence against this failure is not the record but the WAL's Constraints section, a do-not-touch list read at session start (spec/WAL.md:69 — I cite the heading rather than the prose beneath it because CLAUDE.md rewrites this file at every session end). Its own count records 4 of 26 entries citing a spec anchor, so most constraints assert rather than cite. Searched spec/ and campaigns/ for a decision reopened repeatedly: the licence record was reopened once, correctly. No repeated re-litigation is logged in AUDIT.md or BACKLOG.md."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TRIGGER-FIXES-BOTH-AT-ONCE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:33  ##TRIGGER-FIXES-BOTH-AT-ONCE The trigger fixes both at once. @spec/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The host's one operating trigger does both things the fact claims: PROP-000:57 forbids reopening the licence decision until (a) or (b) occurs, and mandates it when they do. That is 1 instance against 153 Decision sections. Searched the other 10 host triggers for the same double effect: PROP-036:95 and PROP-043:98 state the mandate half; the two 'never' triggers state only the forbid half."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:35  ##TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X It tells every future reader *this",
+     "spec/boot/STATIC.md:295  - Never re-litigate a recorded decision without naming its trigger",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The forbid half reaches every host session through the compiled boot lane's Never list (STATIC.md:295-296). The mandate half has one host discharge: the licence trigger fired 2026-07-12 and the record was re-run and rewritten. Counted the stands-until form across the 11 host triggers: 8 state a condition X, 1 states a numeric threshold, 2 state 'never' — so 9 of 11 carry the stands-until shape, against 142 decisions with no such sentence at all."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NO-CONDITION-MEANS-A-SACRED-COW": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:39  ##NO-CONDITION-MEANS-A-SACRED-COW A decision without a revisit condition",
+     "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
+     "spec/common/PROP-000.md:100  - ##REG-M0 **Decision:** **M0:** local-directory registry only. No git. Registry is a path on disk with the layout from `VIBEVM-SPEC.md` §8.2. @spec/done",
+     "confirmed: Directly countable here: 142 of the host's 153 Decision-bearing sections carry no revisit condition, so by this fact's own definition the host's decisions are overwhelmingly in the sacred-cow state. The cited PROP-000 §7 record is representative — an M0/M1 registry model with no reason and no condition for revisiting. The rule reaches every session through the compiled Never list. I counted section by section rather than by file."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-TRIGGER-HAS-THREE-PARTS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:44  ##A-TRIGGER-HAS-THREE-PARTS A trigger has three parts: @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:46  | Part | Question it answers | Example |",
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+     "confirmed: The three-part requirement reaches every host session through the compiled table row. Applied part by part to all 11 host triggers: metric present in 1 (PACKAGES-ACTUALIZATION:116, the share of world units marked unverifiable); threshold present in 1 (the same, 'a third'); observation point present in 1 (PROP-043:255, the post-campaign fold §3.9) — and no single host trigger carries all three. Zero of eleven meet the full anatomy."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-PART-METRIC": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:48  | ##ROW-PART-METRIC **Metric** @impl/done | What signal is watched? @impl/done | p99 delivery latency @impl/done |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+     "confirmed: One host trigger names a watched signal: the proportion of `world` units landing `unverifiable`, which the campaign itself produces and counts. The other 10 name events or nothing. Searched the host for a monitoring surface a metric could be read from — crates/, xtask/, AUDIT.md, progress.toml: the host has measurable signals (specmap.json unit counts, floor timings recorded at PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1117, AUDIT.md's trend) but no trigger is written against them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PART-THRESHOLD": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:49  | ##ROW-PART-THRESHOLD **Threshold** @impl/done | What value crossing counts? @impl/done | below 100 s @impl/done |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+     "confirmed: Exactly one host trigger states a crossing value: 'a third'. I checked the other 10 individually — PROP-000:23 ('Never'), :57 (two events), PROP-036:95 (an event), PROP-043:98 (an event), :141 ('never expected'), :255 (an observation of confusion, unquantified), PROP-001:113 (a capability need), PACKAGES-ACTUALIZATION:132 (an event), :144 (an event), :1114 ('a NOTE is observed being ignored across sessions', unquantified) — none carries a numeric or comparative threshold."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PART-OBSERVATION-POINT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:50  | ##ROW-PART-OBSERVATION-POINT **Observation point** @impl/done | Where would one look? @impl/done | the network monitoring dashboard @impl/done |",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:255  - ##registers-revisit **Revisit when:** the post-campaign fold",
+     "confirmed: One host trigger names where to look: PROP-043:255-257 points at the post-campaign fold (§3.9) showing the mixed registers confusing report consumers or check tooling. The other 10 do not name a place. Widened to the host's actual observation surfaces to see whether a place existed that the triggers could have named: AUDIT.md (the health trend), specmap.json, progress.toml, and the campaign verdict tables all exist; no trigger references any of them except by implication."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ALL-THREE-OR-IT-IS-NOT-A-TRIGGER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:52  ##ALL-THREE-OR-IT-IS-NOT-A-TRIGGER All three, or it is not a trigger. @impl/done",
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "confirmed: Applied to the host's 11 revisit lines one at a time: 0 carry all three parts. Best cases are PACKAGES-ACTUALIZATION:116 (metric + threshold, observation point implicit in the campaign's own tables) and PROP-043:255 (observation point + an unquantified signal). By the strict reading of this fact the host has zero triggers; by the document's own §anatomy escape hatch at :58 (event triggers are the sanctioned non-numeric variant) it has eight. Both readings are recorded because the fact and its neighbour disagree about the strictness."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "why-each-of-the-three-parts-is-needed": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:54  ##why-each-of-the-three-parts-is-needed A metric without a threshold",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+     "confirmed: The host exhibits the third failure the fact names — an observation point nobody has. PROP-001:113-116's trigger is 'if and when we need one of' partial/sparse clone with custom filters, programmatic object reads, and a third item: three capability wishes with no place where the need would be observed. Searched the other 10 triggers for the metric-without-threshold and threshold-without-observation-point shapes: PROP-043:255 is the closest to the former (a signal with no crossing value). No host trigger is disabled by a missing threshold alone, because only one has a metric at all."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVENT-TRIGGERS-ARE-THE-SANCTIONED-NON-NUMERIC-VARIANT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:58  ##EVENT-TRIGGERS-ARE-THE-SANCTIONED-NON-NUMERIC-VARIANT **Event triggers** are the sanctioned variant for non-numeric",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:132  at the same rate as the prose). **Revisit when:** the discipline ships a",
+     "confirmed: This escape hatch is what most host triggers actually use: 8 of 11 are event-shaped, and several are unambiguous by the fact's own test — a crate published to crates.io (PROP-000:57a), a self-hosting mode shipping (PACKAGES-ACTUALIZATION:132), a superseded slot resurrected (:144), the artifacts ceasing to be committed (PROP-036:95), the XML storage frontend landing (PROP-043:98). Weaker on unambiguity: PROP-001:113's 'if and when we need', PROP-043:255's 'shows … confusing', and :1114's 'a NOTE is observed being ignored across sessions'. I classified each individually."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "event-trigger-examples": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:61  ##event-trigger-examples \"A compliance requirement mandates a NIST-approved hash\"; \"upstream",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The three examples are the book's, not the host's — greps for 'NIST', '24 months' and 'v1 API' over spec/ and crates/ return nothing outside this package. The host's own event triggers are of the same genre (a licence arriving that UPL-1.0 cannot absorb is the compliance-shaped one). Widened to spec/common/PROP-000.md §3's dependency-licence rules at :53-55, which state a constraint (no GPL/AGPL/LGPL) that a future event could violate — but that constraint carries no trigger of its own."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVENT-TRIGGERS-TAKE-THE-SAME-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:64  ##EVENT-TRIGGERS-TAKE-THE-SAME-TEST The test is the same — a stranger could answer yes-or-no today. @impl/done",
+     "spec/modules/vibe-cli/PROP-036-package-tree.md:95  - ##decision-artifacts-revisit **When to revisit:** if the artifacts stop being committed (generated",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+     "confirmed: Applied the stranger test to each of the 8 host event triggers. A stranger CAN answer today: PROP-036:95 (are STATIC.md/INDEX.md still committed? — yes, both are in the tree), PROP-000:57a (is any crate on crates.io? — no, `publish = false` per PROP-000:48), PACKAGES-ACTUALIZATION:144 (has a superseded slot been resurrected? — no). A stranger CANNOT: PROP-001:113 ('if and when we need' — need by whose judgement?), PROP-043:255 ('shows … confusing report consumers' — no threshold for confusion), :1114 ('a NOTE is observed being ignored across sessions' — no observer named). So 5 of 8 pass, 3 fa"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:66  ##UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE **Unobservable triggers** are as bad as none. @impl/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:157  ##RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE Re-derive the split when the underlying capabilities move —",
+     "confirmed: Three of the host's 11 triggers are unobservable by the stranger test (PROP-001:113, PROP-043:255, PACKAGES-ACTUALIZATION:1114) and two more refuse observation outright (PROP-000:23, PROP-043:141). The sharpest instance is inside `world` itself: two-process-model:157-158 says 'Re-derive the split when the underlying capabilities move — that is what the revisit discipline (flow:decision-records) is for', delegating its revisit to this flow while naming no metric, no threshold and no observation point — a trigger that cannot be checked, pointed at the document that forbids exactly that."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COLLECT-THE-SIGNAL-OR-REWRITE-THE-TRIGGER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:68  ##COLLECT-THE-SIGNAL-OR-REWRITE-THE-TRIGGER If the trigger names a",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+     "confirmed: The host's one metric-bearing trigger is written against a signal the project does collect — the campaign's own verdict tables produce the unverifiable count — so it is the rewritten-against-an-existing-signal case this fact prescribes. Searched for the opposite case (a host trigger naming an uncollected metric): none, because only one host trigger names a metric at all. Searched for a logged decision to start collecting a signal for a trigger's sake in AUDIT.md, BACKLOG.md and TASKS.md: none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "sweep-reports-unobservable-triggers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:72  ##sweep-reports-unobservable-triggers The periodic sweep",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:121  Report a table: anchor, trigger, state, evidence. End with the list",
+     "spec/common/PROP-013-periodic-health-audit.md:24  ## 2. vibevm's checklist — the known instances {#instances}",
+     "confirmed: The forward reference resolves: the sweep prompt at :112-124 does end with the unobservable list (:122-124). On the host the sweep does not exist: PROP-013 is the host's periodic audit, its checklist has 5 categories (A test integrity, B rot outside the gate, C drift, D debt, E discipline depth) and 15 rows at :29-56, and none concerns decision records or revisit triggers — D1 at :48 walks 'deferred'/'parked'/'Known issues' entries, which is a different debt class. `grep -rn 'revisit trigger|trigger sweep|sweep the spec tree'` over spec/ and CLAUDE.md returns 2 hits, both narrative rather than"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-P99-LATENCY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:79  | ##ROW-TRIGGER-P99-LATENCY \"p99 delivery latency drops below 100 s, per the monitoring dashboard\" @impl/done | Good @impl/done | Metric, threshold, observation point. @impl/done |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+     "confirmed: The example itself is the book's. The host's nearest equivalent is the terraform's §3.1 trigger, which carries the metric and the threshold but names no dashboard — its observation point is the campaign's own verdict tables, implied rather than stated. Searched the host for a monitoring dashboard of any kind that a trigger could cite: none exists (no monitoring surface in crates/, xtask/ or the campaign zone; the measurable surfaces are AUDIT.md, specmap.json and progress.toml)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-HOT-PATH-CPU": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:80  | ##ROW-TRIGGER-HOT-PATH-CPU \"hot-path CPU exceeds 80 % in the weekly perf run\" @impl/done | Good @impl/done | Fires from a run that already happens. @impl/done |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1117  **Cost, reported and not decided (per §8):** floor **154 s warm over 36 steps**,",
+     "confirmed: The host does have a recurring run whose numbers are recorded — the floor, measured at 154 s warm over 36 steps and written into the terraform at :1117 — so a fires-from-an-existing-run trigger is available here. No host trigger is written against it: the 11 revisit lines reference no recurring run. Widened to PROP-013's cadence (owner-triggered, floor once per milestone, :63) as another existing rhythm a trigger could hang on: unused by any trigger."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-UPSTREAM-SILENT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:81  | ##ROW-TRIGGER-UPSTREAM-SILENT \"upstream ships no release for 24 months\" @impl/done | Good @impl/done | Event; checkable from the repository today. @impl/done |",
+     "spec/common/PROP-013-periodic-health-audit.md:51  - ##D4-DEP-STALENESS **D4 · Dependency staleness** — `cargo update --dry-run`; `cargo audit` / `cargo outdated`. @spec/done",
+     "confirmed: The host has the checking mechanism this row's example needs — PROP-013's D4 row runs `cargo outdated` and `cargo audit` as a standing health-audit item — but no decision record is wired to it: none of the 11 triggers mentions a dependency's release cadence, and the host's two library-pick decisions (PROP-001 §2.1 shell-out-to-git, PROP-003 §2.2 libsolv) carry no upstream-silence condition. So the signal exists and is collected; nothing triggers on it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-COMPLIANCE-MANDATE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:82  | ##ROW-TRIGGER-COMPLIANCE-MANDATE \"a compliance mandate requires a NIST-approved hash\" @impl/done | Good @impl/done | Unambiguous external event. @impl/done |",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The host's closest instance of a compliance-shaped external event is PROP-000:57 branch (b), a dependency or contribution arriving under terms UPL-1.0 cannot absorb — unambiguous when it happens, and connected to the standing permissive-only rule at PROP-000:53-55. Notably the host's actual hash decision (PROP-002:42, sha256) carries no compliance trigger at all, although sha256 is the NIST-approved side of the book's example. Searched spec/ for 'NIST' or 'compliance': no host occurrence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-WHEN-IT-BREAKS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:83  | ##ROW-TRIGGER-WHEN-IT-BREAKS \"when it breaks\" @impl/done | Bad @impl/done | Breakage is undefined and arrives too late to be a review. @impl/done |",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+     "confirmed: `grep -rn 'when it breaks'` over spec/, CLAUDE.md and campaigns/ returns no host trigger using this literal form. The nearest host shape is need-based rather than breakage-based: PROP-001:113's 'if and when we need one of' followed by three capabilities — undefined in the same way (who decides the need, and when), though it does not wait for a break. Checked the other 10 triggers for a breakage condition: none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-LATER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:84  | ##ROW-TRIGGER-LATER \"later\" / \"at some point\" @impl/done | Bad @impl/done | Never fires. This is \"revisit: never\" in costume. @impl/done |",
+     "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:141  - ##freeze-revisit **Revisit when:** never expected; the cycle-of-improvement premise is core. @spec/done",
+     "confirmed: The host does not wear the costume — it writes 'never' openly, twice, each time with a stated reason (PROP-000:23 scopes it to v1 and names the escape route, a superseding PROP; PROP-043:141 grounds it in the cycle-of-improvement premise). `grep -rn 'revisit.*later|at some point'` inside the 11 host trigger lines returns no hit. So the host commits the outcome this row names while declining its euphemism."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-WHEN-WE-REFACTOR": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:85  | ##ROW-TRIGGER-WHEN-WE-REFACTOR \"when we refactor\" @impl/done | Bad @impl/done | Names an unrelated activity, not a signal about *this* decision. @impl/done |",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:255  - ##registers-revisit **Revisit when:** the post-campaign fold",
+     "confirmed: `grep -rn 'when we refactor'` over spec/ and campaigns/ returns no host trigger. Two host triggers do hang on a scheduled activity rather than a signal about the decision itself: PROP-043:255 waits for the post-campaign fold (§3.9) and PROP-036:95 waits on a change in how artifacts are generated. The first is the closer match to this row — it names an activity, though the activity is one that will actually examine the decision, which the row's example does not."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:86  | ##ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM \"if it becomes a problem\" @impl/done | Bad @impl/done | No metric, no threshold, no observer — pure vibes. @impl/done |",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:158  that is what the revisit discipline (flow:decision-records) is for. @impl/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+     "confirmed: `grep -rn 'if it becomes a problem'` over spec/ returns no literal host instance. Two things match the row's definition without its words: PROP-001:113's 'if and when we need one of' (no metric, no threshold, no observer) and — inside `world` itself — two-process-model:157-158, whose revisit is 'when the underlying capabilities move', delegated to this flow, with nothing measurable attached. Also PACKAGES-ACTUALIZATION:1114's 'a NOTE is observed being ignored across sessions' names no observer."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-MECHANICAL-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:88  ##THE-MECHANICAL-TEST The mechanical test: *\"when it breaks\" is not a trigger; a trigger",
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "confirmed: The measurable-signal requirement reaches every host session through the compiled table row. Applied mechanically to the host's 11 triggers: 1 is a measurable signal (a share of units crossing a third), 8 are events, 2 are refusals. So on the host's own tree the test fails 10 times and passes once. No checker enforces it — grep over crates/vibe-check/ for 'revisit' or 'trigger' returns no rule."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-FIVE-MINUTE-STRANGER-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:91  ##THE-FIVE-MINUTE-STRANGER-TEST If a stranger with access to the",
+     "spec/modules/vibe-cli/PROP-036-package-tree.md:95  - ##decision-artifacts-revisit **When to revisit:** if the artifacts stop being committed (generated",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:255  - ##registers-revisit **Revisit when:** the post-campaign fold",
+     "confirmed: I ran the five-minute test myself against each host trigger. Answerable in under five minutes from the repository: PROP-036:95 (are the boot artifacts still committed? — yes, spec/boot/STATIC.md and INDEX.md are in the tree), PROP-000:57a (is any crate published? — no, `publish = false`), PACKAGES-ACTUALIZATION:144 (has a superseded slot been resurrected? — no). Not answerable: PROP-001:113, PROP-043:98, :255, PACKAGES-ACTUALIZATION:132, :1114, and both 'never' lines. Score: 3 of 11 pass. PROP-043:255 names an observation point that does not exist yet (the post-campaign fold)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TRIGGERS-DO-NOT-FIRE-THEMSELVES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:97  ##TRIGGERS-DO-NOT-FIRE-THEMSELVES Triggers do not fire themselves. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "confirmed: Confirmed by the host's one firing: the licence trigger's condition was met on 2026-07-12 and the record was not updated then — it was caught later by a campaign pass, which spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1142 records as a correction to an earlier confirm. The host's only recurring re-reading mechanism is PROP-013's audit, owner-triggered with a floor of once per milestone, and its 15 checklist rows contain no decision-record item. Note this fact contradicts record-template.md:131-132 in the same package ('Either fires without anyone having to remember to wonder')."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "nothing-pages-anyone-for-a-decision-grade-signal": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:99  ##nothing-pages-anyone-for-a-decision-grade-signal Nothing pages anyone when p99",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "confirmed: This host has no alerting of any kind — searched crates/, xtask/, .github/ and the campaign zone for an alert, notification or paging mechanism: none exists, and the only recurring checks are human-run (the floor, `conform check`, the health audit at PROP-013's cadence). So the fact's premise holds here absolutely: every decision-grade signal in this repository is unpaged. The p99 example itself has no host referent."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RE-READING-IS-WHAT-FIRES-TRIGGERS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:103  ##RE-READING-IS-WHAT-FIRES-TRIGGERS The mechanism that actually",
+     "spec/common/PROP-013-periodic-health-audit.md:24  ## 2. vibevm's checklist — the known instances {#instances}",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:801  its own revisit trigger fired (UPL-1.0 relicense 2026-07-12, MT-05);",
+     "confirmed: The host's one fired trigger was in fact found by re-reading — a campaign pass over the spec tree, recorded at SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:801 and :1142 — which is exactly the mechanism this fact names, arrived at by a campaign rather than by a rhythm. The host's actual rhythm, PROP-013's health audit, does not read triggers: its 15 checklist rows (:29-56) cover tests, rot, drift, debt and discipline depth, and none of them is decision records. So the mechanism worked here once, ad hoc, outside any standing rhythm."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RHYTHM-OPPORTUNISTIC": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:106  - ##RHYTHM-OPPORTUNISTIC **Opportunistic:** whenever a session touches a document, glance",
+     "spec/boot/STATIC.md:273  3. Before changing any value governed by a record, read the record.",
+     "confirmed: The compiled boot lane carries the narrower duty (read the record before changing the value governed by it) but not the opportunistic glance — the boot snippet has no line corresponding to this one, so a host session never receives it. Searched CLAUDE.md, spec/boot/00-core.md and spec/boot/90-user.md for a touch-the-document-check-the-triggers instruction: none. The one host record whose trigger was noticed on a touch (the licence record) was touched by a campaign pass reading every file, not opportunistically."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RHYTHM-PERIODIC": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:108  - ##RHYTHM-PERIODIC **Periodic:** weekly, or at each milestone close — whichever",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:48  - ##D1-DEFERRED **D1 · Deferred & parked items** — walk every \"deferred\" / \"parked\" / \"Known issues\" entry in the WAL and the PROPs. @spec/done",
+     "a coherent prescription, and the host keeps exactly the rhythm it asks for without putting records on it: PROP-013's periodic health audit is owner-triggered with a floor of once per milestone — the fact's own «whichever rhythm the project already keeps» — and its 15 checklist rows contain no decision-record item. Non-adoption of one item in an existing rhythm, not a rhythm the host denies."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SWEEP-OUTPUT-IS-A-REVIEW-QUEUE-NOT-AN-EDIT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:126  ##SWEEP-OUTPUT-IS-A-REVIEW-QUEUE-NOT-AN-EDIT The sweep's output is a review queue, not an edit. @impl/done",
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "confirmed: The host runs the report-not-edit pattern for its health audit — findings go to AUDIT.md as an append-only chronicle with a disposition per finding, and BACKLOG.md holds findings deliberately not acted on (BACKLOG.md:1 'what the mega-refactor found and did not do'). But no decision-record sweep feeds either queue: `grep -rn 'revisit'` over AUDIT.md and BACKLOG.md finds no trigger review. So the discipline this fact prescribes exists on the host for a different subject."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FIRING-A-TRIGGER-IS-A-HUMAN-DECISION-POINT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:128  ##FIRING-A-TRIGGER-IS-A-HUMAN-DECISION-POINT Firing a trigger",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The host's one fired trigger was resolved by the owner, not by a session: the commit that rewrote the licence record (71d8383b) quotes the owner's in-session ruling («Лицензия теперь UPL, на самом деле») as the input. That matches the fact. Widened to CLAUDE.md's Rule 4 posture (routine proceeds; non-routine stops and asks) as the host's general mechanism for human decision-points: it exists and covers this class, though it names commits and pushes rather than records. Commit refs stated here because the ev grammar has no form for them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RE-OPEN-THE-RECORD-NEVER-SILENTLY-EDIT-THE-VALUE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:134  ##RE-OPEN-THE-RECORD-NEVER-SILENTLY-EDIT-THE-VALUE Re-open the record — do not silently edit the value. @impl/done",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. See [`LICENSE.md`](../../LICENSE.md) at the repo root for the terms. The scope is *this* repository's shipped surface — the host tree and every `packages/org.vibevm.*` package; separately-developed products carry their own licences and are not governed here. The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The host's single instance follows the rule and also demonstrates the failure it guards against, in sequence. The VALUE changed on 2026-07-12 (the tree relicensed to UPL-1.0) while the RECORD kept saying proprietary EULA for roughly six weeks — the silent edit — and the record was only re-opened later, in commit 71d8383b, whose body says 'The licence record still described a proprietary EULA six weeks after the tree went UPL-1.0'. The re-opened record now names the fired state and carries a new trigger. Searched the other 10 host triggers for a value that has moved ahead of its record: none id"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-failure-to-avoid": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:136  ##the-failure-to-avoid The failure to",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. See [`LICENSE.md`](../../LICENSE.md) at the repo root for the terms. The scope is *this* repository's shipped surface — the host tree and every `packages/org.vibevm.*` package; separately-developed products carry their own licences and are not governed here. The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "confirmed by instantiation, which is the strongest form available for a warning. This host committed exactly the failure once, at scale and on the record: the licence changed in the tree on 2026-07-12 and PROP-000 §3 went on describing the superseded posture for roughly six weeks, so the spec testified to a reason that no longer produced the value."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "drift-manufactured-where-it-was-to-be-prevented": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:141  ##drift-manufactured-where-it-was-to-be-prevented That is drift manufactured at the exact point built to",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1142  c3b's file-level confirm although its trigger had fired on 2026-07-12 —",
+     "confirmed: The host has a written instance of the doubled failure this fact names: not only did the licence record drift from the tree, but a verification pass then CONFIRMED the drifted record under a file-level sweep — recorded at SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1142 as needing correction. Drift at the point built to prevent it, and then at the point built to detect that. Widened to AUDIT.md for the same class logged as a finding: the campaign document is where it lives."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "procedure-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:144  ##procedure-lead Procedure: @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:146  1. ##STEP-NAME-THE-FIRED-STATE **Name the fired state.** \"The trigger fired: p99 has been at",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:161  4. ##STEP-COMMIT-CITING-THE-ANCHOR **Commit citing the anchor.** The commit body names the trigger",
+     "confirmed: Lead-in to four numbered steps at 146-163; all four present, step 3 branching into two outcomes at 154-160. Searched the host for the procedure restated or codified: not in CLAUDE.md, spec/boot/, PROP-013's audit checklist or the campaign task templates. The one host firing followed the procedure's shape without any document prescribing it."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "STEP-NAME-THE-FIRED-STATE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:146  1. ##STEP-NAME-THE-FIRED-STATE **Name the fired state.** \"The trigger fired: p99 has been at",
+     "spec/boot/STATIC.md:274  Re-open it only by naming its trigger state (\"the trigger fired:",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The step reaches every host session through the compiled boot lane (STATIC.md:273-275). The host discharged it once, in the record itself rather than only in the conversation: PROP-000:57 opens by naming the old trigger and its firing date. `grep -rn 'trigger fired|fired on|trigger has not fired'` over spec/, CLAUDE.md and the batch plan returns 5 hits — 2 prescribing text, 3 this one episode. One instance in the whole repository."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:150  2. ##STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA **Re-run the decision with current data.** The old rejected",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, so a consumer of any part of vibevm gets one permissive licence and no per-package archaeology. @spec/done",
+     "confirmed: The host's one re-run produced a fresh why dated to the decision day (PROP-000:50, 'Owner's call, taken 2026-07-12 and executed the same day'). The first-look-at-the-old-losers half could not be discharged: PROP-000 §3 has no Considered-and-rejected field, so there were no recorded losers to reconsider — which is the cost of the missing field made concrete. Checked the other 2 three-field host records (PROP-000 §1, PROP-001 §2.1) for recorded losers to reconsider: both also lack the field."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STEP-LAND-ONE-OF-TWO-OUTCOMES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:153  3. ##STEP-LAND-ONE-OF-TWO-OUTCOMES **Land one of two outcomes:** @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:154  - ##OUTCOME-REAFFIRMED **Reaffirmed.** The decision stands on new data. Refresh the",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:157  - ##OUTCOME-CHANGED **Changed.** Rewrite the record in place — new decision, new",
+     "confirmed: Both outcomes are defined at 154-160 and the pair is exhaustive as written. The host's one firing landed the CHANGED outcome: the licence decision itself changed, the record was rewritten in place, and a new two-branch trigger was set. Searched for a reaffirmed outcome anywhere in the host: none — no host record carries a refreshed why plus a new trigger under an unchanged decision."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "OUTCOME-REAFFIRMED": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:154  - ##OUTCOME-REAFFIRMED **Reaffirmed.** The decision stands on new data. Refresh the",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "no host instance — the one fired trigger landed the CHANGED branch — but the sub-rule this outcome carries, «a fired trigger is spent», is written into the host's one re-opened record, which set a NEW trigger rather than keeping the spent one."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "OUTCOME-CHANGED": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:157  - ##OUTCOME-CHANGED **Changed.** Rewrite the record in place — new decision, new",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. See [`LICENSE.md`](../../LICENSE.md) at the repo root for the terms. The scope is *this* repository's shipped surface — the host tree and every `packages/org.vibevm.*` package; separately-developed products carry their own licences and are not governed here. The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, so a consumer of any part of vibevm gets one permissive licence and no per-package archaeology. @spec/done",
+     "confirmed: Scored the host's one CHANGED outcome clause by clause. New decision: yes (:47). New why: yes (:50). New trigger: yes (:57). Old winner joins the rejections with its reason: NO — the proprietary EULA is mentioned in the decision line ('that phase is over') rather than recorded as a rejected alternative, and the section has no such field. Dated line in the version history: NO — PROP-000 has no `## Version history` section at all. Git keeps the old text: yes, commit 71d8383b. So 3 of 5 clauses discharged."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STEP-COMMIT-CITING-THE-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:161  4. ##STEP-COMMIT-CITING-THE-ANCHOR **Commit citing the anchor.** The commit body names the trigger",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).",
+     "spec/common/PROP-000.md:321  4. ##INV-ATOMIC-COMMITS **One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @spec/done",
+     "confirmed: The host's practice is measurable: 520 of 2061 commits carry a `spec://` citation, and PROP-000's Invariants item 4 requires the reference 'where relevant'. The one commit that re-opened a record, 71d8383b, names the fired state in its body ('c3b confirmed LICENSE-REVISIT under a file-level sweep although its trigger had already fired on 2026-07-12') and names the anchor by id rather than by a `spec://` URI. So the step was discharged in substance; the anchor form was an id, not an address. Commit refs stated here because the ev grammar has no form for them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-DELETE-A-RECORD-REWRITE-IT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:165  ##NEVER-DELETE-A-RECORD-REWRITE-IT Never delete a record when a decision changes — rewrite it. @impl/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: The host obeyed it in its one case: `git log -S'LICENSE-REVISIT' -- spec/common/PROP-000.md` shows the anchor surviving the rewrite (the only commit that added or removed the string is d639bcf5, a re-marking pass, not the content rewrite), so the record was rewritten rather than deleted and re-created. Searched git history for deleted record anchors in spec/common/ and spec/modules/: no record anchor removal surfaced. Commit refs stated here because the ev grammar has no form for them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "why-rewriting-keeps-citations-live": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:167  ##why-rewriting-keeps-citations-live The",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).",
+     "confirmed: All three clauses check out for the host's one rewrite. The anchor ##LICENSE-REVISIT is unchanged across the rewrite. Inbound citations stayed live — CLAUDE.md:5 cites spec://vibevm/common/PROP-000#commits into the same document and still resolves, and 520 commits carry spec:// citations of this shape. The old text is in git (commit 71d8383b's diff). Searched for a broken inbound citation caused by a record rewrite anywhere in spec/: none found."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-NO-CONDITION-MEANS-A-SACRED-COW": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:173  - ##SUM-NO-CONDITION-MEANS-A-SACRED-COW A decision without a revisit condition becomes a sacred cow — or a",
+     "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
+     "confirmed: Restates NO-CONDITION-MEANS-A-SACRED-COW (:39) and TRIGGER-FIXES-BOTH-AT-ONCE (:33); consistent with both. Host measurement, counted section by section: 142 of 153 Decision-bearing sections in spec/common/ + spec/modules/** carry no revisit condition, and 2 of the 11 that do declare the decision permanent. The rule reaches every session through the compiled Never list."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-WHAT-A-TRIGGER-IS-MADE-OF": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:175  - ##SUM-WHAT-A-TRIGGER-IS-MADE-OF A trigger is metric + threshold + observation point, or an",
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+     "accurate to this document, which sanctions the event variant at :58-64. Recorded because it is the more useful observation: the COMPILED boot row the host actually reads (STATIC.md:255) requires metric + threshold + observation point with NO event alternative — so the consumer receives the stricter rule and never learns the sanctioned variant, while 8 of its own 11 triggers are event-shaped. The host writes in a form its own boot lane would reject and its package permits."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:178  - ##SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE Unobservable triggers are as bad as none: collect the signal or",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:158  that is what the revisit discipline (flow:decision-records) is for. @impl/done",
+     "confirmed: Host tally under the five-minute stranger test I ran per trigger: 3 of 11 answerable today, 5 unobservable (PROP-001:113, PROP-043:98, :255, PACKAGES-ACTUALIZATION:132, :1114), 2 refusals, 1 metric-bearing. The in-corpus counter-instance stays the sharpest: two-process-model:157-158 delegates its revisit to this flow and supplies nothing observable. No host record has ever been rewritten to attach an existing signal (searched AUDIT.md, BACKLOG.md, TASKS.md and the campaign zone)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-TRIGGERS-FIRE-BY-BEING-RE-READ": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:180  - ##SUM-TRIGGERS-FIRE-BY-BEING-RE-READ Triggers fire by being re-read: opportunistically on touch,",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:801  its own revisit trigger fired (UPL-1.0 relicense 2026-07-12, MT-05);",
+     "confirmed: The host keeps the human-reopening half (the licence record was reopened on an owner ruling) and does not keep either re-reading rhythm for records: PROP-013's audit runs at milestone close with 15 checklist rows and none of them reads a trigger, and no host document instructs an opportunistic glance. The one firing was found by a campaign sweep of the whole spec tree — a re-read, but a one-off. Delegation of such sweeps is established practice here (CLAUDE.md's delegation-first section), just never pointed at records."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:183  - ##SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD A fired trigger re-opens the record, never silently edits the",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. See [`LICENSE.md`](../../LICENSE.md) at the repo root for the terms. The scope is *this* repository's shipped surface — the host tree and every `packages/org.vibevm.*` package; separately-developed products carry their own licences and are not governed here. The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:214  ## 7. Version history {#history}",
+     "confirmed: Scored against the host's single instance: re-opened rather than silently edited — eventually yes, after roughly six weeks during which the value had moved and the record had not; rewritten in place — yes; changelog line — no, PROP-000 carries no `## Version history` section, unlike the 15 documents that do (PROP-008:214 is one); git as history — yes. Searched for a second fired trigger to score: there is none in this repository."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
