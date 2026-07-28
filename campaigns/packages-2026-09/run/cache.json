@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:58:39Z",
+  "updated_at": "2026-07-28T21:59:51Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -50375,7 +50375,265 @@
       },
       "marker_count": 19,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "3c6ed891d520198c57af2d49c4002da9ae5fe4987ad443054d5609be5d8323e2",
+        "verdicts": {
+          "PACKAGE-INSTALLS-A-SECOND-TEST-TIER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:5  ##PACKAGE-INSTALLS-A-SECOND-TEST-TIER A `flow` package that installs a **second test tier** into a project:",
+              "manual-tests/README.md:3  This directory holds **human-runnable** smoke-tests for vibevm —",
+              "manual-tests/README.md:10  These are not a substitute for `cargo test`. They are the *last mile*.",
+              "spec/boot/STATIC.md:1555  - `manual-tests` — human-runnable walkthroughs for the integration",
+              "vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md:3  This project keeps a **second test tier**: human-run markdown",
+              "confirmed: Read the package README in full. Host tier exists in three homes: `ls manual-tests/` = 8 M<milestone> tests + README.md; `ls spec/manual-tests/` = MT-01/MT-02/MT-03; `ls packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/` = 13 MT files + mt-01-packet.toml + trial/. The harvest and the task brief both say the fractality home holds 'at least MT-05'; the measured contents are MT-01..MT-05, MT-C2-01..MT-C2-05 and MT-C3-01..MT-C3-03 — thirteen tests, not one. Installed reality: `ls -R vibedeps/flow-manual-tests/0.1.0/` shows LICENSE.md, README.md, vibe.toml, spec/boot/44-flow-manual-tests.md and spec/flows/manual-tests/{MANUAL-TESTS-PROTOCOL,authoring-rules,test-template}.md."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-automated-suite-is-fast-and-hermetic-because-it-substitutes": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:9  ##the-automated-suite-is-fast-and-hermetic-because-it-substitutes The automated suite is fast and hermetic because it substitutes fakes",
+              "spec/common/PROP-000.md:190  - ##MT-HERMETIC-SUITE **vibevm's real-world surfaces.** `cargo test --workspace` uses fakes, tempdirs, and local bare repositories for speed and hermeticity (the flow's `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#why-second-tier`). @spec/done",
+              "manual-tests/README.md:16  - **After touching an integration surface** (git backend, CLI arg",
+              "confirmed: Searched the host for the same three substitutions. `spec/common/PROP-000.md` §14 `##MT-HERMETIC-SUITE` names all three in the host's own vocabulary — fakes, tempdirs, local bare repositories — and cites this flow's `#why-second-tier` anchor by qualified spec:// URI. `manual-tests/README.md:18-19` adds 'unit tests use fakes and tempdirs; the real world is messier'."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "that-is-the-good-refactor-loop-and-why-it-cannot-prove-the-real-surfaces": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:13  ##that-is-the-good-refactor-loop-and-why-it-cannot-prove-the-real-surfaces That is what makes it a good",
+              "manual-tests/README.md:23  `cargo test` stays the fast feedback loop for refactors; these",
+              "spec/common/PROP-000.md:191  - ##MT-LAST-MILE The manual tier is the last mile for what only the real world has here: SSH auth against GitVerse, the lockfile `source_uri` exactly as a downstream consumer receives it, the `~/.vibe/` layout on a user's actual filesystem, and a human confirming the CLI output says what they meant. @spec/done",
+              "confirmed: The host's PROP-000 `##MT-LAST-MILE` enumerates the same four surfaces in the same order (auth, consumer-facing artifact, per-user layout, human judgement) instantiated to vibevm — SSH auth against GitVerse, lockfile `source_uri`, `~/.vibe/` layout, CLI output. `manual-tests/README.md:23` names the refactor-loop half of the trade."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-MANUAL-TIER-IS-THAT-LAST-MILE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:19  ##THE-MANUAL-TIER-IS-THAT-LAST-MILE The manual tier is that last mile. @impl/done",
+              "manual-tests/README.md:10  These are not a substitute for `cargo test`. They are the *last mile*.",
+              "spec/common/PROP-000.md:191  - ##MT-LAST-MILE The manual tier is the last mile for what only the real world has here: SSH auth against GitVerse, the lockfile `source_uri` exactly as a downstream consumer receives it, the `~/.vibe/` layout on a user's actual filesystem, and a human confirming the CLI output says what they meant. @spec/done",
+              "confirmed: grep -rniE 'last mile' across the perimeter. The phrase is the host's own, in two durable places: `manual-tests/README.md:10` (italicised, created 2026-04-22) and PROP-000 `##MT-LAST-MILE`. Both predate the package README, which git records as first added 2026-07-12 (`69708287 refactor(packages): move the remaining packages to org.vibevm.world`)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:21  ##THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES It",
+              "manual-tests/README.md:10  These are not a substitute for `cargo test`. They are the *last mile*.",
+              "manual-tests/README.md:23  `cargo test` stays the fast feedback loop for refactors; these",
+              "spec/boot/STATIC.md:899  proves the world. It complements the automated suite — it never",
+              "confirmed: The brief asks whether the tier is claimed as a complement to `cargo test` and whether the host says the same. It does, twice and unprompted: `manual-tests/README.md:10` 'not a substitute for `cargo test`' and :23-24 '`cargo test` stays the fast feedback loop for refactors; these scripts are for the slower, higher-confidence pass'. The second sentence is near-verbatim the flow's own `##DELETING-AN-AUTOMATED-TEST-GETS-THE-TRADE-BACKWARDS` wording. Installed lane carries the rule at spec/boot/STATIC.md:899."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:24  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
+              "vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md:3  This project keeps a **second test tier**: human-run markdown",
+              "vibe.lock:332  name = \"manual-tests\"",
+              "confirmed: `ls -R vibedeps/flow-manual-tests/0.1.0/` returns exactly four content files — spec/boot/44-flow-manual-tests.md plus spec/flows/manual-tests/{MANUAL-TESTS-PROTOCOL,authoring-rules,test-template}.md — matching 'three pieces of content plus a boot snippet'; LICENSE.md, README.md and vibe.toml are the package envelope. Note the README's own bullet list under this lead has FOUR items (lines 26, 31, 37, 40), the fourth being the boot snippet — so the list enumerates 3 content + 1 snippet, consistent with the lead sentence. vibe.lock:337 records `files_written = []` for this package, so vibedeps/ is the substitute per batch plan §2.3. Source-3 note measured while resolving these refs: the installed payload under vibedeps/flow-manual-tests/0.1.0/ is ANCHOR-STRIPPED — `grep -c '##[A-Za-z]'` returns 0 for all five installed files (README.md, the boot snippet and the three flow documents) against 123 anchors in the package source, and the @impl/done markers are gone too. What a consumer receives is the prose without the fact anchors, so a source-3 citation can only ever land on the rendered sentence, never on the anchor id."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-FULL-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:26  - ##CONTENT-THE-FULL-PROTOCOL `spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md` — full protocol:",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md:14  ## Why a second tier exists {#why-second-tier}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md:118  ## Re-derive for your project {#re-derive}",
+              "vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md:1  # Manual-Tests Protocol {#root}",
+              "confirmed: Read MANUAL-TESTS-PROTOCOL.md in full and checked every promised section is present: #why-second-tier (14), #what (47), #not (61), #when (72), #who (82), #directory (100), #re-derive (118), #summary (139). All six promised topics plus the re-derive prompt are there. The file is also present in the installed payload."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-AUTHORING-RULES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:31  - ##CONTENT-THE-AUTHORING-RULES `spec/flows/manual-tests/authoring-rules.md` — the four rules with",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:16  ## Rule 1 — Clean slate is mandatory {#clean-slate}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:50  ## Rule 2 — Self-contained walkthrough {#self-contained}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:88  ## Rule 3 — Platform coverage {#platform}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:126  ## Rule 4 — Exit discipline {#exit}",
+              "confirmed: Read authoring-rules.md in full; all four rules present with the promised names and each carries a fenced worked fragment (lines 29-35, 66-77, 98-112, 134-141 and 154-164). Present in the installed payload at vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/authoring-rules.md."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-TEST-TEMPLATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:37  - ##CONTENT-THE-TEST-TEMPLATE `spec/flows/manual-tests/test-template.md` — the copy-ready",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:13  ## The skeleton {#skeleton}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:82  ## Clause by clause {#clauses}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:108  ## Worked example {#example}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:118  # acme — first-run smoke test",
+              "confirmed: Read test-template.md in full: #skeleton (13), #clauses (82) with seven CLAUSE- anchors, #example (108) whose worked example is a first-run smoke test for an invented CLI named `acme`. All three promised pieces present; file present in the installed payload."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:40  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/44-flow-manual-tests.md` — boot snippet loaded at session",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:15  ## When to propose writing one {#when}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:31  ## Agent pre-runs, human signs off {#roles}",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:46  ## Never {#never}",
+              "spec/boot/STATIC.md:892  <!-- vibe:static org.vibevm.world/manual-tests — vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md -->",
+              "confirmed: All three promised sections present in the snippet. The 'loaded at session start' half is checkable on the host: `grep -n 'manual-tests' spec/boot/INDEX.md` returns nothing, but `spec/boot/STATIC.md:892` carries the provenance marker naming the vibedeps source, and the snippet body follows at 894-940 — so this flow reaches the host through the STATIC (priority) lane, not the INDEX manifest."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:56  ##UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot",
+              "vibe.lock:337  files_written = []",
+              "manual-tests/M1.5-gate-v2-per-package-smoke.md:1  # M1.5-gate v2 — per-package registry smoke test (GitHub `vibespecs`)",
+              "confirmed, settled in the code as it was for the four earlier twins in this phase. `crates/vibe-cli/src/commands/uninstall.rs` removes the vibedeps slot, drops the lockfile entry and the `[requires]` declaration, then regenerates the boot artefacts so the snippet leaves the compiled lane, and its module doc says exactly that. `files_written` is `[]` here as for all 36 packages, so the slot plus the boot contribution IS the whole written surface. RECORDED: the symmetric-uninstall behaviour is exercised for OTHER packages by two host manual tests (`M1.5-gate-multi-package-smoke.md`, `M1.5-gate-v2-per-package-smoke.md`), and no test names this package as its uninstall subject."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:59  ##USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files are never touched. @impl/done",
+              "spec/boot/STATIC.md:892  <!-- vibe:static org.vibevm.world/manual-tests — vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md -->",
+              "CLAUDE.md:1  # vibevm — read this first",
+              "confirmed on the same code path as its four twins, and this package's own case is the cleanest of them: the ONE host file it contributes to is `spec/boot/STATIC.md`, a generated artefact carrying its `vibe:static` provenance marker, and CLAUDE.md's own vibevm block states the contract — «rewritten on `vibe install`. Text outside the <vibevm> markers is yours.» The host's user-owned boot file, `spec/boot/90-user.md`, is a separate static entry the regeneration preserves. The worker is right that no checker ENFORCES the rule for this package; the evidence is that the only file it writes is generated."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-CAMPAIGN-PLANS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:63  - ##COMPOSES-CAMPAIGN-PLANS `flow:campaign-plans` — a campaign's whole-campaign acceptance",
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:212  ### 12 — Whole-campaign acceptance {#s12-acceptance}",
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:146  ##RUN-THE-ACCEPTANCE-SCRIPT-BEFORE-WRITING-THE-REPORT Before writing it, run the whole-campaign acceptance script",
+              "confirmed as a composition whose referent resolves — `campaign-plans` exists, is installed, and does define the whole-campaign acceptance script this pairing names. RECORDED: the pairing has no host instance to check, because the host side of it is missing. `find campaigns -iname '*accept*'` returns nothing and `grep -rniE 'acceptance script|whole-campaign acceptance' campaigns/` returns no hits — the live campaign carries no acceptance script at all, which is the same gap ruled drift in W4 at `campaign-plans`' own `COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT`. The defect is filed there; this composition claim is not what fails."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-HEALTH-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:68  - ##COMPOSES-HEALTH-AUDIT `flow:health-audit` — unexecuted manual tests the index marks",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:67  ## B — Rot outside the gate {#b-rot}",
+              "spec/common/PROP-013-periodic-health-audit.md:34  ##CAT-B **B — Rot outside the gate.** @spec/done",
+              "AUDIT.md:78  **`fixtures/manual-test-packages/` carries retired schema.**",
+              "confirmed: the category exists on both sides — `health-audit`'s checklist row B and the host's own PROP-013 `##CAT-B` — so the composition's referents resolve. RECORDED: it is not instantiated, and two of its preconditions are themselves absent. `grep -niE 'manual.test' AUDIT.md` returns three lines, all one finding about `fixtures/manual-test-packages/` carrying retired schema — fixture rot, not an unexecuted required run or a rotted Expected block. And the index marks no runs required, while no audit has run since 2026-06-12."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-DECISION-RECORDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:72  - ##COMPOSES-DECISION-RECORDS `flow:decision-records` — a manual test that exists because of an",
+              "manual-tests/M1.6-mirror-vendor-smoke.md:5  Prove Phase B v0 of [PROP-002](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md) end-to-end on a real machine. Three distinct contracts get exercised together because they form the cohesive \"mirrors are now useful for actual installs\" story:",
+              "manual-tests/M1.17-workspace-publish-smoke.md:6  repos end to end. Covers the selective-publish walk of PROP-007",
+              "manual-tests/M1.15-git-source-smoke.md:12  → shallow-clone fall-back the GitHub case forces (PROP-002 §2.4.1,",
+              "confirmed, with a precise distinction the worker drew and worth keeping. Host manual tests DO cite decision records densely — M1.15, M1.16, M1.17, M1.5-gate-v2 and M1.6 each name the PROP whose contract the test proves. But every one of those is a FEATURE PROP the test was written to prove, not an incident that spawned the test, which is the direction this composition describes. The nearest instance runs the other way and lives in another home: `MT-05-dogfood-relicense.md:82` records a finding DISCOVERED by the run. The composition's referent resolves and its direction has no host instance."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "crystallized-from-the-origin-projects-manual-test-protocol": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:78  ##crystallized-from-the-origin-projects-manual-test-protocol The tier crystallized in the origin project's manual-test protocol —",
+              "spec/common/PROP-000.md:185  ## 14. Manual-test protocol {#manual-tests}",
+              "manual-tests/README.md:23  `cargo test` stays the fast feedback loop for refactors; these",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:54  - ##NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED **Never tag a milestone with the index's required runs",
+              "confirmed: This is the provenance claim the brief asked me to measure rather than assume, and git settles it. `git log --diff-filter=A --format='%h %ad %s' --date=short -- manual-tests/README.md` → `803eef91 2026-04-22 docs(manual-tests): add manual-test protocol and M1.1 smoke script`. The same commit is the origin of PROP-000 §14 (`git log -S'Manual-test protocol' -- spec/common/PROP-000.md` bottoms out at 803eef91). The package README was first added 2026-07-12 by `69708287 refactor(packages): move the remaining packages to org.vibevm.world`. So the host's protocol predates the package by roughly three months, and the host section is literally titled 'Manual-test protocol' — the phrase the anchor uses. The host's own PROP-000 §14 is the 'origin project's manual-test protocol' this anchor names."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "collections-spirit-is-the-redbook": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:83  ##collections-spirit-is-the-redbook Its spirit is the collection's",
+              "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
+              "confirmed: `ls packages/org.vibevm.world/redbook/*/spec/book/ru/` resolves and lists Russian-language chapters (chapter-1-two-process-model.md, chapter-2-shared-state-and-files.md, chapter-3-memory-individual.md and further). The path the anchor names (`flow:redbook` at `spec/book/ru/`) exists with Russian content, so both halves of the pointer check out. Note the anchor's own line number is 83 by grep, not 82 as a paginated read of the file suggests."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/README.md:90  ##license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @impl/done",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+              "vibedeps/flow-manual-tests/0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+              "confirmed: `ls packages/org.vibevm.world/manual-tests/v0.1.0/` → LICENSE.md present alongside README.md, spec/ and vibe.toml, so the relative link resolves. Its line 3 names UPL-1.0 and line 1 is the copyright holder. The same LICENSE.md is present in the installed payload at vibedeps/flow-manual-tests/0.1.0/. Consistent with the CLAUDE.md operating-facts ledger recording the canonical packages/org.vibevm.* surface as fully UPL-1.0."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T21:59:51Z",
+        "verify_batch": "W5"
+      }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md": {
       "content_hash": "14baaf6cbd3f48ba5423cfd7733187bcb5817a7e76caabf136e598c8c7c497a3",
