@@ -73,6 +73,21 @@ either, because it filters rows by their `file` field.
 | table landed, judged | the batch's files stop appearing as `unopened` | nothing |
 | worker died before writing | no `ev-*.json` for that package | re-commission from the brief; nothing lost but tokens |
 
+**Tell every worker to flush one output file per SUBJECT file, the moment that
+file's anchors are complete.** This is not a preference. Three W7 workers ran on
+identical briefs: two wrote per-file partials and their work was judgeable while
+they were still running; the third held everything in memory and after five times
+its siblings' runtime had written nothing at all, so the phase's last package sat
+blocked on an agent whose entire output was unrecoverable. A worker that flushes
+per file cannot lose more than one file's work, and the boss can start judging
+before it finishes. Add the exact output paths to the brief so there is nothing to
+decide mid-run.
+
+**A worker that has gone quiet for several times its siblings' runtime is not
+working — it is stuck.** Re-commission rather than wait. If the original returns
+later it costs nothing: `make-slice.py` filters by `--file`, so two independent
+passes over the same package are two tables to choose between, not a conflict.
+
 Before reading any table, **verify it**, and if the boss has edited a file the
 table cites, **repair it**:
 
