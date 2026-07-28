@@ -1740,6 +1740,43 @@ command that would have tested it.
   **counting-unit slips, not arithmetic** — names against sites, headline against
   itemisation, units against terminators. *State the unit with every count.*
 
+- **2026-07-28 · F-097 CLOSED by DRIFT-038 (`7b0ec6aa`), and its own count was
+  right about the wrong denominator.** 50 edits over 29 files; zero live dead
+  package references remain. The recorded 21 files / 33 references was **exact
+  for `flow:`-prefixed sites inside `packages/`** — and 12 more live sites sat
+  in backticks, in bold and undelimited, with 5 further in the host's
+  `PROP-003`, which no sweep had scanned. **Following B15's own warning about
+  delimiter-anchored greps is what turned 33 into 50.**
+
+  **Nine occurrences were left deliberately, and the reason is the finding's
+  sharpest edge: a path is not a name.** The flow *directory*
+  (`spec/flows/atomic-commits/`), the *document*
+  (`conventional-commits.md`) and a `spec://` URI's flow and document segments
+  all keep the short name and are correct — one URI spells the dead string twice
+  while being entirely right. A blanket replace would have corrupted paths three
+  ways. The other four are in `redbook/v0.1.0`, a superseded slot that is frozen
+  history and is not edited.
+
+- **2026-07-28 · F-103 and F-110 CLOSED by DRIFT-039 (`521bb6cd`) — and the fix
+  was the layout, not the links.** The eight broken links were **already correct
+  for the installed form**: from a consumer's `spec/boot/`, `../flows/…`
+  resolves. Rewriting them would have fixed five packages and broken every
+  consumer. What was wrong was that the in-package layout did not mirror the
+  installed one, so the snippets moved `boot/` → `spec/boot/` and their five
+  manifests followed.
+
+  **F-110 dissolved without an edit.** All five READMEs already named the
+  snippet `spec/boot/NN-…`, disagreeing with their own manifests — **they were
+  right and the layout had never caught up to them.** A finding recorded as "the
+  README contradicts the manifest" was actually "the manifest contradicts the
+  README", and only doing the fix revealed which.
+
+  *Checked and found false before it was written: the layout is not collateral
+  from the `git-*` rename. `520e7478` carried it forward; all three renamed
+  members had it before.* What the rename did expose is that
+  `git-attribution-policy`, renamed by the same commit, already used
+  `spec/boot/` — the family was split against itself.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

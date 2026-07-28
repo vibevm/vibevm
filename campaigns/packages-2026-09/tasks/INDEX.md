@@ -2,6 +2,8 @@
 
 | id | title | executor | status |
 |---|---|---|---|
+| DRIFT-039 | a boot snippet resolves from its own package | reviewer | **done** — F-103 + F-110 closed; 5 moves, 8/8 links resolve, 0 README edits |
+| DRIFT-038 | four package names that no reader could install | reviewer | **done** — F-097 closed; 50 edits / 29 files; 9 left deliberately |
 | MARKUP-B16 | three `-mcp` packages + two family umbrellas + `redbook` | opus | **done** — 281 units, **0 unmarked**; **Phase B closed, corpus at ZERO**; rulings 59–61, 45 struck |
 | MARKUP-B15 | the git family + `wal-specspaces` + `dev-runtime-docs` | opus | **done** — 409 units, **0 unmarked**; **band broken** (1.025) and explained; rulings 57–58 |
 | MARKUP-B14 | `sync-from-code` + `licensing` + `manual-tests` | opus | **done** — 479 units, **0 unmarked**; band held twice running (1.089); rulings 53–56; F-102 fixed under it |
