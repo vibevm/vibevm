@@ -1,0 +1,206 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md": {
+   "PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md:16  ##AUDIENCE-IS-ECOSYSTEM-DESIGNERS **Audience: ecosystem designers** — anyone defining a namespace for",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:11  ##written-for-ecosystem-designers It is written for **ecosystem",
+     "spec/boot/STATIC.md:1005  This project ships the **qualified-naming** practice for *ecosystem",
+     "vibe.lock:352  name = \"qualified-naming\"",
+     "confirmed: The audience sentence is identical across README, protocol and this snippet. Source 3 settles 'ships': the package is in the lockfile at vibe.lock:350-358 and its snippet is compiled into the host's static boot lane, so the sentence a consumer reads is this sentence. The host's boot lane carries this package's snippet: `spec/boot/STATIC.md:1001` is the provenance marker `<!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->` and lines 1003–1044 are the snippet's compiled text. `grep -o 'vibe:static [^ ]*' spec/boot/STATIC.md | sort -u` returns 27 distinct slots over 31 contributions, and every one is written `org.vibevm.world/<name>` — the qualified form, in generated state, not hand-written. `spec/boot/INDEX.md` does not name qualified-naming (`grep -c 'qualified' spec/boot/INDEX.md` → 0); it is delivered through the static lane, not as an `[[entry]]`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md:19  ##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE This is a design-time",
+     "spec/boot/STATIC.md:1008  rule: read it once while shaping identifiers, not on every session.",
+     "DRIFT, self-defeating by construction, and the package's own manifest is where the fix was available. This sentence says the practice need not be read every session; it sits inside `spec/boot/STATIC.md`, the static lane `CLAUDE.md` instructs every session to read «first and in full», so it IS read every session. Making it true required routing the snippet through a conditional or dynamic entry — PROP-009's loading model supports exactly that — and this package's `[boot_snippet]` declares no `when` condition, so it compiles unconditionally like everything else. The provenance marker is at `spec/boot/STATIC.md:1001`. Ruled the same way as its README twin `##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:16  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:1  # Qualified Naming Protocol {#root}",
+     "spec/boot/STATIC.md:1014  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
+     "DRIFT on the pointer, W1's dangling family — seventh package in a row, and this snippet carries three. The instruction survives compilation into the host's boot lane word for word and the cited document exists in the package and the installed slot, so the content half is exact. The link is relative — `../flows/qualified-naming/…` — and resolves from `spec/boot/` to `spec/flows/qualified-naming/`, which does not exist: `ls -d spec/flows` returns «No such file or directory» and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms. So the one instruction that says «before the first name is minted» points a session at nothing."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "retrofitting-a-group-is-a-migration": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:36  - ##REFACTOR-LAW Address refactors — rename a package, move a group, rename a cited anchor — MUST be",
+     "spec/common/PROP-029-fully-qualified-addresses.md:37  - ##REFACTOR-TODAY The reference implementation today is a scripted `sed` transform with grep verification and",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:183  - ##MIG-CANONICAL **Canonical packages.** `flow-wal`, `flow-sync-from-code`, `flow-atomic-commits` migrate to",
+     "confirmed: The host ran the migration and recorded its shape. PROP-008 §3 is a whole Migration section (canonical packages re-grouped, test orgs re-laid-out, manifests renamed, lockfile schema bumped to v5, VIBEVM-SPEC §7.1 edited); PROP-029 §3 turns the procedure into a law requiring grep-zero of the old coordinate. The host performed exactly the operation this law governs, and it is in the history. `git log --oneline -S'org.vibevm.world/qualified-naming' -- packages/org.vibevm.world/redbook/` returns one commit, `69708287` (2026-07-12) — 'refactor(packages): move the remaining packages to org.vibevm.world', body: 'Relocate the 23 non-discipline packages … out of the org.vibevm junk-drawer into their own group org.vibevm.world'. `git show 69708287 -- packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml` shows the file created with `group = \"org.vibevm.world\"` and `version = \"0.1.0\"` — the version line did not restart at the group change. Both coordinates survive on disk to compare: `packages/org.vibevm.fractality/fractality/v0.1.0/.vibe/cache/org.vibevm/qualified-naming/v0.1.0/vibe.toml` carries `group = \"org.vibevm\"` / `version = \"0.1.0\"` and the sibling `…/.vibe/cache/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml` carries `group = \"org.vibevm.world\"` / `version = \"0.1.0\"`. Recorded as measurement, not as a reading: `(group, name)` differs between the two, so they are two identities by the tuple rule, and PROP-029 `##SCOPE-GROUP-CHANGE` explicitly hands the identity semantics to PROP-008 while keeping the mechanical-substitution procedure for itself."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LAW-EVERY-ARTIFACT-CARRIES-A-GROUP": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:41  ##GROUP-MANDATORY **Decision.** `[package]` gains a **mandatory** `group` field: @impl/done",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:61  - ##NAME-UNIQUE-IN-GROUP `name` becomes unique **within a `group`** (was: within a `kind`, `VIBEVM-SPEC.md`",
+     "crates/vibe-core/src/package_ref.rs:95  /// `(group, name)` identifies a package without `kind`.",
+     "vibe.lock:353  group = \"org.vibevm.world\"",
+     "spec/boot/STATIC.md:1020  - Every artifact carries a **group**; identity is the tuple",
+     "confirmed: All three clauses are separately checkable and all three hold. Mandatory group: Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree. Identity tuple: Lockfile measurement (re-run): `vibe.lock` carries 36 `[[package]]` blocks and 36 each of `kind = `, `name = `, `group = `, `version = `, `content_hash = `, `source_kind = `, `files_written = ` at column 0 — the identity tuple is present on every entry with no exceptions. (group, name) unique: PROP-008 ##NAME-UNIQUE-IN-GROUP changes uniqueness from within-a-kind to within-a-group, and crates/vibe-core/src/package_ref.rs states the same in the Group doc comment."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "LAW-A-RENAME-IS-A-NEW-IDENTITY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:63  - ##GROUP-CHANGE-NEW-PACKAGE Changing a package's `group` is a new package, not a rename — same discipline as",
+     "spec/common/PROP-029-fully-qualified-addresses.md:45  - ##SCOPE-GROUP-CHANGE Changing a package's `group` is a **new package**, not a rename (PROP-008 §2.2). <status",
+     "spec/boot/STATIC.md:1023  - A **rename is a new identity** — versions never transfer, and no",
+     "confirmed, and the host performed EXACTLY the operation this law governs — correctly, which is why the near-miss is worth recording. Commit `69708287` (2026-07-12), «refactor(packages): move the remaining packages to `org.vibevm.world`», relocated 23 packages out of the `org.vibevm` junk-drawer into their own group while keeping `version = \"0.1.0\"`; both manifests survive to compare under `packages/org.vibevm.fractality/fractality/v0.1.0/.vibe/cache/`. That reads at first like a version transferring across a rename, and it is not: `(group, name)` differs, so by this package's own tuple rule they are TWO identities, and `org.vibevm.world/redbook@0.1.0` is a new package's first version that happens to carry the number 0.1.0. Nothing transferred; a distinct identity started where every identity starts. `PROP-029` `##SCOPE-GROUP-CHANGE` hands the semantics to `PROP-008` while keeping the mechanical procedure, which is the same reading."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:1  //! Index-backed short-name resolution at the CLI input boundary",
+     "crates/vibe-cli/src/commands/short_name.rs:125  pub fn qualify(",
+     "crates/vibe-index/src/index/by_name.rs:1  //! `by-name/<name>.json` — the candidate-set file for one bare package",
+     "spec/boot/STATIC.md:1025  - **Short names resolve only at the human CLI boundary**, once,",
+     "confirmed: Every clause has a code surface. 'At the boundary, once': short_name.rs::qualify is called on CLI-supplied pkgrefs before the depsolver. 'Against an index': crates/vibe-index/src/index/by_name.rs is the by-name/<name>.json candidate-set layer built for exactly this, one GET per registry. 'Manifests and lockfiles store the qualified form': Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "LAW-COLLISION-AND-CONFLICT-ARE-DISTINCT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/exit_code.rs:22  pub const PACKAGE_CONFLICT: u8 = 3;",
+     "crates/vibe-cli/src/exit_code.rs:33  pub const AMBIGUOUS_PACKAGE: u8 = 7;",
+     "crates/vibe-cli/src/commands/short_name.rs:37      Ambiguous(Vec<Group>),",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:132  ##TWO-FAILURE-CLASSES **Decision.** Two distinct failure classes, with distinct handling. This terminology is",
+     "confirmed: Distinct codes (3 vs 7) and distinct types (InstallError::AmbiguousPackage vs the depsolver's conflict path) exist in the host, with a unit test pinning the 7. The 'one short name, two groups' definition is literal in the code: ShortNameOutcome::Ambiguous carries a Vec<Group>, so the candidate set IS a set of groups and nothing else. PROP-008 ##TWO-FAILURE-CLASSES fixes the terminology."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "grammar-and-forms-pointer": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:1  # Reference grammar {#root}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:25  ref      := [ kind \":\" ] [ group \"/\" ] name [ \"@\" version ]",
+     "spec/boot/STATIC.md:1031  Grammar and forms: [`ref-grammar.md`](../flows/qualified-naming/ref-grammar.md).",
+     "DRIFT, second of this snippet's three dangling `../flows/…` pointers. The target exists and does carry both a grammar production and a forms table, so the promise is kept inside the package, and the pointer reaches the host's boot lane verbatim. It resolves nowhere in the consuming project, because the host has no `spec/flows/` directory."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "fork-by-fork-rationale-pointer": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:9  ##four-forks Four forks: flat versus grouped, enforce versus recommend, where short",
+     "spec/boot/STATIC.md:1032  Fork-by-fork rationale: [`naming-forks.md`](../flows/qualified-naming/naming-forks.md).",
+     "DRIFT, third of three. The target exists and carries four forks each with a `##CHOSEN-*` resolution, so the content is as promised; the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:13  - ##ADDR-NO-BARE-ON-DISK Nothing on disk stores a bare name. @spec/done",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:195  - ##REJ-SHORT-IN-MANIFESTS **Short names inside manifests.** Rejected (§2.6). Manifests store the qualified",
+     "crates/vibe-cli/src/commands/short_name.rs:7  //! Manifests and the lockfile only ever store the qualified form; the",
+     "spec/boot/STATIC.md:1036  - Never store a short (unqualified) name in a manifest, lockfile, or",
+     "confirmed: This is the single most measurable fact in the package and it measures clean. PROP-029 ##ADDR-NO-BARE-ON-DISK states the identical rule in four words ('Nothing on disk stores a bare name'), and the host obeys it. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree. Lockfile measurement (re-run): `vibe.lock` carries 36 `[[package]]` blocks and 36 each of `kind = `, `name = `, `group = `, `version = `, `content_hash = `, `source_kind = `, `files_written = ` at column 0 — the identity tuple is present on every entry with no exceptions. A separate regex over quoted pkgref strings found 50 of them (10 in `root_dependencies`, 40 in `dependencies` lists), and all 50 fullmatch `(flow|feat|stack|tool|mcp):[a-z0-9._-]+/[a-z0-9-]+@…` — 0 bare. Group histogram: org.vibevm.world 34, org.vibevm.ai-native 12, org.vibevm 2, org.vibevm.fractality 2. Harvest precision, not a correction. The W7 harvest's s2-naming runs `grep -coE '\"?(flow|feat|stack|tool|mcp):[a-z0-9.]+/[a-z0-9-]+' vibe.lock` and reports 38; I re-ran it verbatim and reproduce 38 exactly, and `grep -cE '^\\s*name = \"' vibe.lock` reproduces 36, and `sed -n '174,180p' vibe.lock` prints the addressable-specs block as shown. The number is a LINE count under a group character class with no hyphen, so it does not enumerate every qualified string: `grep -cE '(flow|feat|stack|tool|mcp):org\\.vibevm\\.ai-native/' vibe.lock` returns 12 further lines the class cannot match, and the same expression widened to `[a-z0-9._-]+` returns 50. Both readings support the harvest's conclusion — the count of BARE pkgref strings is 0 under either — but the exhaustive figure for this row is 50 qualified strings, not 38."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/content_hash.rs:1  //! Content-addressed package identity.",
+     "crates/vibe-core/src/content_hash.rs:17  /// mirror-switch or host-migration that changes `source_url` but not the",
+     "spec/boot/STATIC.md:1038  - Never reuse a `name@version` coordinate for different content: a",
+     "confirmed as a rule adopted and never enforced — unenforced is not violated, and no reuse has occurred. The mechanism the rule would need EXISTS: every lockfile entry carries a sha256 `content_hash` (36/36 measured) and `ContentHash`'s own doc comment states the mirror-invariance the rule depends on. What does not exist is a gate: no code compares a newly published coordinate's bytes against a previously published release of the same coordinate. `crates/vibe-publish/` and `crates/vibe-registry/` were searched for a reuse or immutability guard and have none; `crates/vibe-check/` has no such check either. RECORDED, and it is the sibling package's maxim landing on this one: `tool-design-lessons` says «a rule with no checker is a wish», and this is a rule with no checker."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:153          ShortNameOutcome::Ambiguous(groups) => {",
+     "crates/vibe-cli/src/commands/short_name.rs:200              msg.contains(\"`vibe install com.acme/wal`\"),",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:141    - ##collision-interactive interactive TTY — print the alternatives and fail with a hint pointing at the",
+     "spec/boot/STATIC.md:1040  - Never resolve a naming ambiguity interactively — fail with the",
+     "confirmed: The collision arm of short_name.rs::qualify returns an Err carrying a rendered candidate list and a re-run hint; there is no branch that asks the operator to choose. The 'no interactive menu' half is measurable and I measured it. `grep -rn 'dialoguer::Select\\|Select::new\\|FuzzySelect' crates/ --include='*.rs'` returns 12 hits in 5 files — `init/prompts.rs`, `mcp/install.rs`, `vvm/remove.rs`, `vvm/source.rs` — and none in the install or short-name path. `grep -rn 'use dialoguer' crates/ --include='*.rs'` shows `crates/vibe-cli/src/commands/install/mod.rs` imports `Confirm` only. The collision path in `short_name.rs` returns an `Err` carrying a rendered candidate list; there is no branch that offers a choice. PROP-008 ##collision-interactive states the same rule in the same words ('no interactive pick: the choice must be recorded deliberately, not clicked')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:63  - ##GROUP-CHANGE-NEW-PACKAGE Changing a package's `group` is a new package, not a rename — same discipline as",
+     "spec/common/PROP-029-fully-qualified-addresses.md:45  - ##SCOPE-GROUP-CHANGE Changing a package's `group` is a **new package**, not a rename (PROP-008 §2.2). <status",
+     "spec/boot/STATIC.md:1042  - Never treat a change of group or name as a rename — it is a new",
+     "confirmed in writing and in the one instance available. Stated in the host twice and in the same words — `PROP-008` `##GROUP-CHANGE-NEW-PACKAGE` and `PROP-029` `##SCOPE-GROUP-CHANGE`. Performed once: commit `69708287` moved 23 packages to a new group and the result is two distinct `(group, name)` identities rather than one renamed package, which is precisely what this rule requires. The version numbers coinciding at 0.1.0 is not a transfer — see `##LAW-A-RENAME-IS-A-NEW-IDENTITY` for the full reading."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}

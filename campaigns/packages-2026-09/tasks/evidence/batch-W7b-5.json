@@ -1,0 +1,667 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:14  ## The grammar {#grammar}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:47  ## The forms {#forms}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:76  ## Worked examples {#examples}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:106  ## What gets stored {#storage}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:130  ## Error shapes {#errors}",
+     "confirmed: All five promised parts are present as sections, in the order the scope sentence lists them, and nothing else substantive is in the file besides the summary. The host has the same five subjects across PROP-008 §2.4 (grammar + forms table + where-legal), §2.6 (storage) and §2.7 (collision error shape, with a worked message), so the decomposition is not idiosyncratic to the package."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "protocol-document-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:1  # Qualified Naming Protocol {#root}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:122  ## Law 4 — short names live only at the boundary {#short-names}",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:171  ##error-shape-detail-pointer Error-shape detail — what a good collision message must contain — is in",
+     "confirmed: Same-directory relative link, target present in the package and in the installed copy. The division of labour is real and reciprocal: the protocol points back here for error-shape detail (##error-shape-detail-pointer → ref-grammar.md#errors) while keeping the rationale, and this file carries no rationale for the storage rule beyond citing it. The campaign's source-1 join over W7 reports 35 relative .md citations resolved, 0 broken."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "a-reference-has-up-to-four-parts": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:396  /// pkgref := [ <kind> \":\" ] [ <group> \"/\" ] <name> [ \"@\" <version> ]",
+     "crates/vibe-core/src/package_ref.rs:431      pub kind: Option<PackageKind>,",
+     "crates/vibe-core/src/package_ref.rs:435      pub name: PackageName,",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:82  ##PKGREF-GRAMMAR **Decision.** The pkgref grammar gains an optional `group` segment and makes the `kind` prefix",
+     "confirmed: The four parts are literally the four fields of the host's PackageRef struct — kind, group, name, version — with the same optionality: kind and group are Option, name and version are not (version defaults to VersionSpec::Latest rather than being absent). PROP-008 ##PKGREF-GRAMMAR states the same production. This is one of the tightest grammar-to-type matches in the package."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "PART-AN-OPTIONAL-TYPE-TAG": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:431      pub kind: Option<PackageKind>,",
+     "crates/vibe-core/src/package_ref.rs:473          let (kind, after_kind) = match prefix.split_once(':') {",
+     "crates/vibe-core/src/package_ref/tests.rs:107  fn parse_short_bare() {",
+     "confirmed: Optional in the type (Option<PackageKind>) and optional in the parser (split_once(':') falls through to None when absent). Both directions are tested: parse_short_bare asserts kind == None for `wal`, and parse_short_with_kind asserts kind == Some(PackageKind::Flow) for `flow:wal`. The tag's value set is closed — PackageKind has five variants (flow, feat, stack, tool, mcp) and `parse_rejects_bad_kind` pins that an unknown tag errors, which is narrower than this file's `kind := ident`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "PART-AN-OPTIONAL-GROUP-QUALIFIER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:434      pub group: Option<Group>,",
+     "crates/vibe-core/src/package_ref.rs:477          let (group, name_str) = match after_kind.split_once('/') {",
+     "crates/vibe-core/src/package_ref/tests.rs:127  fn parse_qualified() {",
+     "confirmed: Optional in the type and in the parser, exactly as stated. Worth recording the scope of 'optional', because the host narrows it: the doc comment on the field says None occurs 'only for an unresolved short CLI ref; a manifest pkgref is always qualified', and `vibe uninstall` rejects a group-less ref outright. So the group is optional in the GRAMMAR and mandatory in every persisted position — which is what §storage later says."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "PART-A-MANDATORY-NAME": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:435      pub name: PackageName,",
+     "crates/vibe-core/src/package_ref/tests.rs:238  fn parse_rejects_bad_name() {",
+     "crates/vibe-core/src/package_ref.rs:559  pub(crate) fn validate_package_name(name: &str) -> Result<()> {",
+     "confirmed: Mandatory in the type — PackageName, not Option<PackageName> — and enforced at the parse seam: parse_rejects_bad_name asserts that `org.vibevm/` (group with an empty name) is an error, and PackageRef::parse errors on empty input. The one place the host's grammar is NARROWER than this document's. `ref-grammar.md`'s EBNF gives `name := ( lower | digit | \"_\" | \"-\" )+`; the host's `validate_package_name` in `crates/vibe-core/src/package_ref.rs` is kebab-case only — no underscore, no leading or trailing hyphen, no doubled hyphen — and its test `name_rejects_invalid` in `crates/vibe-core/src/package_ref/tests.rs` asserts `\"with_underscore\"` is rejected. The `group` production matches: `Group::parse` accepts `a`–`z`, `0`–`9`, `_`, `-` per dot-separated segment, and `group_accepts_valid` accepts `org.vibevm_internal`. So the underscore is legal in a host group and illegal in a host name."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "PART-AN-OPTIONAL-VERSION-REQUIREMENT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:327      Latest,",
+     "crates/vibe-core/src/package_ref.rs:466          let (prefix, version_part) = match trimmed.split_once('@') {",
+     "crates/vibe-core/src/package_ref/tests.rs:148  fn parse_bare_semver_is_caret_per_cargo() {",
+     "confirmed: Optional and modelled explicitly: VersionSpec::Latest is the absent case ('No version given — resolve to the latest stable'), and the parser splits on '@' with None falling through to Latest. The 'requirement' word is accurate in the host — VersionSpec::Req wraps semver::VersionReq, and parse_bare_semver_is_caret_per_cargo pins that a bare `0.3.0` means caret, i.e. a requirement rather than a pin, matching this file's own io.acme/logger@^2.1 example."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THREE-AXES-THREE-SEPARATORS": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:466          let (prefix, version_part) = match trimmed.split_once('@') {",
+     "crates/vibe-core/src/package_ref.rs:473          let (kind, after_kind) = match prefix.split_once(':') {",
+     "crates/vibe-core/src/package_ref.rs:477          let (group, name_str) = match after_kind.split_once('/') {",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:88  ##PKGREF-SEPARATOR The `group`↔`name` separator is `/` (`:` is taken by `kind`, `@` by version). @impl/done",
+     "confirmed: The strongest single match in this file: PackageRef::parse is three successive split_once calls on '@', then ':', then '/', with no lookahead, no backtracking and no ambiguity resolution — which is precisely 'the parser never has to guess which axis a token belongs to'. PROP-008 ##PKGREF-SEPARATOR gives the same reason for the same choice ('The group↔name separator is / (: is taken by kind, @ by version)')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-DELIMITER-CHARACTERS-ARE-A-DESIGN-CHOICE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/workspace-and-qualified-naming.md:76  - ##fork-separator **Separator `group`↔`name`.** Chosen: `/` → `flow:org.vibevm.world/wal`. `:` is taken by",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:113  - ##JOINER-UNDERSCORE `naming = \"fqdn\"` maps a pkgref to the repository name `<group>_<name>`",
+     "spec/common/PROP-029-fully-qualified-addresses.md:26  - ##CARRIER-REPO-SWAP The flat repo-name carrier swaps `/`→`_` because GitHub / GitVerse names allow only",
+     "confirmed: The host proves the point by varying the character while keeping the axes distinct: PROP-008 ##JOINER-UNDERSCORE swaps the group↔name joiner from '/' to '_' for repository names because a repo name cannot contain '/', and picks '_' precisely because it is 'the one character in neither the group nor the name, so the coordinate stays algorithmically splittable' — distinctness preserved, character changed. PROP-029 ##CARRIER-REPO-SWAP records the same swap as a carrier rule. The design record's ##fork-separator shows the choice being made rather than assumed."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PICK-THREE-THAT-DO-NOT-COLLIDE-AND-NEVER-OVERLOAD-ONE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/workspace-and-qualified-naming.md:76  - ##fork-separator **Separator `group`↔`name`.** Chosen: `/` → `flow:org.vibevm.world/wal`. `:` is taken by",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:113  - ##JOINER-UNDERSCORE `naming = \"fqdn\"` maps a pkgref to the repository name `<group>_<name>`",
+     "confirmed: The host made exactly this mistake-avoidance call and recorded the near-miss: the design record's ##fork-separator says npm-scope (@org/) was rejected as a group separator 'because @ doubling with version would confuse' — an overload of '@' across two axes, rejected for the reason this fact gives. ##JOINER-UNDERSCORE makes the same argument against '.' for repo names: 'A dot would be ambiguous — groups are dotted reverse-DNS, so <group>.<name> hides the boundary.'"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-FORM-BARE-NAME": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:403  /// - `wal` — short; CLI-only sugar, resolved to the qualified form at the",
+     "crates/vibe-core/src/package_ref/tests.rs:107  fn parse_short_bare() {",
+     "crates/vibe-cli/src/commands/short_name.rs:125  pub fn qualify(",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:94  | ##ROW-SHORT `wal` @impl/done | short — CLI sugar @impl/done | resolved via the index (§2.6) @impl/done |",
+     "confirmed: The form parses (parse_short_bare pins kind None, group None, is_qualified false), is resolved exactly once at the boundary (short_name.rs::qualify), and is never persisted (206/206 requires keys and 50/50 lockfile pkgrefs qualified, 0 bare). PROP-008's own forms table row ##ROW-SHORT says the same: 'short — CLI sugar … resolved via the index'."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FORM-KIND-AND-NAME": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-core/src/package_ref/tests.rs:118  fn parse_short_with_kind() {",
+     "crates/vibe-cli/src/commands/short_name.rs:135              kind: pkgref.kind,",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:95  | ##ROW-SHORT-KIND `flow:wal` @impl/done | short + kind @impl/done | resolved via the index; kind validated",
+     "DRIFT on the row's validation column. The form parses and is carried through resolution — `parse_short_with_kind` pins `kind Some(Flow)` for `flow:wal`, and `qualify()` COPIES the kind onto the qualified ref rather than dropping it, so the tag survives all the way to a resolved reference. What never happens is the check the row promises: nothing compares that kind against the resolved manifest's kind, and `KindMismatch` appears in no `.rs` file. The tag is carried faithfully to a destination that ignores it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FORM-GROUP-QUALIFIED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:399  /// - `org.vibevm/wal` — qualified; the form written into manifests.",
+     "crates/vibe-core/src/package_ref/tests.rs:127  fn parse_qualified() {",
+     "vibe.lock:353  group = \"org.vibevm.world\"",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:92  | ##ROW-QUALIFIED `org.vibevm.world/wal` @impl/done | qualified — the form written into manifests (see §2.6,",
+     "confirmed: 'Anywhere' is checkable in all three positions and holds in all three: CLI (PackageRef::parse accepts it and qualify() passes it through untouched when is_qualified()), manifests (206/206 requires keys are in this form), lockfiles (36/36 entries decompose it into group + name fields, and 50/50 dependency strings spell it out). The example coordinate in this row is the host's own real package name."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FORM-KIND-AND-GROUP-QUALIFIED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:400  /// - `flow:org.vibevm/wal` — qualified, with a `kind` prefix (validated",
+     "crates/vibe-core/src/package_ref/tests.rs:138  fn parse_qualified_with_kind() {",
+     "vibe.lock:15      \"flow:org.vibevm.fractality/delegation-first@^0.1.0\",",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:93  | ##ROW-QUALIFIED-KIND `flow:org.vibevm.world/wal` @impl/done | qualified + kind @impl/done | resolved exactly;",
+     "confirmed: This is the form the host's own persisted state actually uses: all 50 pkgref strings in vibe.lock's root_dependencies and dependencies lists are `kind:group/name@version`, and all 206 [requires.packages] keys carry the kind prefix too. parse_qualified_with_kind pins the round trip. So the 'fully explicit form' is not merely legal everywhere in this host — it is what is written everywhere."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FORM-VERSIONED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref/tests.rs:262          \"org.vibevm/wal@^0.3\",",
+     "crates/vibe-core/src/package_ref.rs:371      pub fn is_exact_pin(&self) -> bool {",
+     "vibe.lock:15      \"flow:org.vibevm.fractality/delegation-first@^0.1.0\",",
+     "confirmed: The form parses and round-trips (display_round_trips_every_form covers `org.vibevm/wal@^0.3` and `flow:org.vibevm/wal@=0.3.0`), and the host writes it in every dependency edge. One precision worth recording: the example's bare `@0.6.0` does NOT mean a specific release in the host — VersionSpec::parse treats bare semver as caret per Cargo, and is_exact_pin() is true only for `=X.Y.Z`. So the row's own example would be a requirement, not the specific release the 'where legal' column describes. Also, `wal` in this host is at 0.2.0, not 0.6.0."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "two-rules-govern-the-table": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:59  - ##RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY **Manifests and lockfiles accept the qualified forms only.** A",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:62  - ##RULE-THE-CLI-ACCEPTS-ALL-FORMS **The CLI accepts all forms.** It is the one place a human is present,",
+     "confirmed: Structural claim, checked structurally: exactly two bullets follow, and between them they assign every one of the five rows' 'where legal' values — the two bare/kind-only rows to CLI, the three qualified rows to anywhere. The host carries the same two rules as PROP-008 ##SHORT-CLI-ONLY (never written to a manifest) and the forms table's own 'Context' column (CLI sugar vs the form written into manifests)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:98  - ##SHORT-CLI-ONLY **The short form is CLI-only sugar.** It is never written to a manifest (§2.6). @impl/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:13  - ##ADDR-NO-BARE-ON-DISK Nothing on disk stores a bare name. @spec/done",
+     "crates/vibe-cli/src/commands/short_name.rs:7  //! Manifests and the lockfile only ever store the qualified form; the",
+     "confirmed: The most measurable rule in the package and it measures clean, on two independent selectors. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree. Lockfile measurement (re-run): `vibe.lock` carries 36 `[[package]]` blocks and 36 each of `kind = `, `name = `, `group = `, `version = `, `content_hash = `, `source_kind = `, `files_written = ` at column 0 — the identity tuple is present on every entry with no exceptions. A separate regex over quoted pkgref strings found 50 of them (10 in `root_dependencies`, 40 in `dependencies` lists), and all 50 fullmatch `(flow|feat|stack|tool|mcp):[a-z0-9._-]+/[a-z0-9-]+@…` — 0 bare. Group histogram: org.vibevm.world 34, org.vibevm.ai-native 12, org.vibevm 2, org.vibevm.fractality 2. Harvest precision, not a correction. The W7 harvest's s2-naming runs `grep -coE '\"?(flow|feat|stack|tool|mcp):[a-z0-9.]+/[a-z0-9-]+' vibe.lock` and reports 38; I re-ran it verbatim and reproduce 38 exactly, and `grep -cE '^\\s*name = \"' vibe.lock` reproduces 36, and `sed -n '174,180p' vibe.lock` prints the addressable-specs block as shown. The number is a LINE count under a group character class with no hyphen, so it does not enumerate every qualified string: `grep -cE '(flow|feat|stack|tool|mcp):org\\.vibevm\\.ai-native/' vibe.lock` returns 12 further lines the class cannot match, and the same expression widened to `[a-z0-9._-]+` returns 50. Both readings support the harvest's conclusion — the count of BARE pkgref strings is 0 under either — but the exhaustive figure for this row is 50 qualified strings, not 38."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RULE-THE-CLI-ACCEPTS-ALL-FORMS": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-core/src/package_ref/tests.rs:256  fn display_round_trips_every_form() {",
+     "crates/vibe-cli/src/commands/short_name.rs:125  pub fn qualify(",
+     "crates/vibe-cli/src/commands/uninstall.rs:153  fn require_group(pkgref: &PackageRef) -> Result<&Group> {",
+     "DRIFT on «the CLI», which is not uniform in this host. The PARSER does accept all five forms and round-trips each — `display_round_trips_every_form` iterates `wal`, `flow:wal`, `org.vibevm/wal`, `flow:org.vibevm/wal`, `org.vibevm/wal@^0.3` and `flow:org.vibevm/wal@=0.3.0`, and carries `#[verifies(\"spec://vibevm/modules/vibe-registry/PROP-008#pkgref\", r = 1)]`. But `vibe uninstall` REJECTS the two unqualified forms outright via `require_group`. So the host is «boundary only» for install and «nowhere» for uninstall — a split neither this rule nor Fork 3 anticipates, and a user who may type `vibe install wal` may not type `vibe uninstall wal`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES": {
+    "v": "drift",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:196  - ##REJ-KIND-DISAMBIGUATOR **kind prefix as a disambiguator.** Rejected (§2.4). With `name` unique within",
+     "crates/vibe-core/src/package_ref.rs:499      /// `kind` prefix is never part of it — `kind` is metadata, not identity.",
+     "crates/vibe-cli/src/commands/short_name.rs:37      Ambiguous(Vec<Group>),",
+     "DRIFT on the first half, with the second half settled unusually well. NEVER DISAMBIGUATES is enforced by the types themselves: `qualified_name()` excludes kind from the identity string, and `ShortNameOutcome::Ambiguous` carries `Vec<Group>` — the candidate set is groups only, so kind cannot enter disambiguation even in principle — and `PROP-008` `##REJ-KIND-DISAMBIGUATOR` rejects the alternative explicitly. VALIDATES has no implementation at all: `KindMismatch` exists in no `.rs` file. A sentence whose two halves are «does X, never Y» is drift when X is absent, even where Y is airtight. Root at `##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH": {
+    "v": "drift",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts",
+     "crates/vibe-core/src/package_ref.rs:428      /// one; it is validated against the resolved manifest (a `KindMismatch`)",
+     "spec/design/workspace-and-qualified-naming.md:81  - ##fork-kind-prefix-optional **`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed,",
+     "DRIFT: stated three times in this repository and implemented zero times, with the search widened twice and the widening stated. `grep -rn 'KindMismatch' --include='*.rs' --include='*.md' .` (excluding `target/` and `.vibe/cache/`) returns 3 hits and NONE is code — a doc comment in `crates/vibe-core/src/package_ref.rs`, `PROP-008` `##KIND-VALIDATION`, and a design record. No code anywhere compares a pkgref's kind prefix against the resolved manifest's kind. And the reserved exit code is dead: `TYPE_MISMATCH: u8 = 4` carries `#[allow(dead_code)]` and is referenced exactly once, at its own declaration. So the kind tag is parsed, carried through resolution and never checked against anything. This is the root of three drifts in this file; the neighbouring «never disambiguates» half is settled in the types and confirmed separately."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-REAL-AMBIGUITY-IS-ALWAYS-A-GROUP-COLLISION": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:37      Ambiguous(Vec<Group>),",
+     "crates/vibe-cli/src/commands/short_name.rs:104          let _ = writeln!(msg, \"  {}. {group}/{name}\", i + 1);",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:196  - ##REJ-KIND-DISAMBIGUATOR **kind prefix as a disambiguator.** Rejected (§2.4). With `name` unique within",
+     "confirmed: Settled by the type, not by prose: the only ambiguity the host can produce is ShortNameOutcome::Ambiguous(Vec<Group>) — a list of groups — and the message it renders offers only group-qualified alternatives, never a kind-qualified one. PROP-008 ##KIND-VALIDATION reaches the same conclusion from the same premise ('flow:org.vibevm.world/wal and feat:org.vibevm.world/wal cannot co-exist'), and §4 records the kind-as-disambiguator alternative as rejected."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "invented-groups-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:84  com.example.shop/cart         # qualified — the form a manifest stores",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:91  io.acme/logger@^2.1           # a version *requirement*, not a pin;",
+     "spec/common/PROP-029-fully-qualified-addresses.md:44  - ##SCOPE-FIXTURES **Test fixtures and grammar examples** (`spec://demo/…`, `spec://com.example.shop/…`, and",
+     "confirmed of the section it leads, which is what it claims: every coordinate in the worked-examples block uses `com.example.shop` or `io.acme`, neither of which exists in this repository as a package. RECORDED for precision: it is not true of the whole FILE — the forms table one section earlier uses the real `org.vibevm.world/wal` coordinate three times — so product-neutrality is a property of the examples rather than of the document. The host draws the same line and enforces it: `PROP-029` `##SCOPE-FIXTURES` explicitly quarantines `spec://demo/…` and `spec://com.example.…` addresses."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "manifest-fragment-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:99  \"com.example.shop/cart\" = \"1.4.0\"",
+     "vibe.toml:6  [requires.packages]",
+     "vibe.toml:19  \"flow:org.vibevm.world/wal-specspaces\" = \"^0.1.0\"",
+     "confirmed: The illustrated shape is the host's real shape: a [requires.packages] table whose keys are quoted qualified pkgrefs and whose values are version requirements. The host writes one extra element the example omits — the `kind:` prefix on the key — so the real form is `\"flow:org.vibevm.world/wal-specspaces\" = \"^0.1.0\"` against the example's `\"com.example.shop/cart\" = \"1.4.0\"`. Both are legal per this file's own forms table. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-HUMAN-TYPED-THE-SHORT-NAMES-THE-TOOL-STORED-THE-QUALIFIED-ONES": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:4  //! `vibe install wal` — a bare, unqualified pkgref — is resolved here",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:123  - ##RESOLVE-ONCE-WRITE-QUALIFIED `vibe install wal` resolves the collision once, at the top level, and writes",
+     "spec/common/PROP-029-fully-qualified-addresses.md:13  - ##ADDR-NO-BARE-ON-DISK Nothing on disk stores a bare name. @spec/done",
+     "confirmed: The claimed absence is exactly what the host's manifests show, and it is the measurement two independent selectors agree on. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree. PROP-008 ##RESOLVE-ONCE-WRITE-QUALIFIED describes the same round trip ('vibe install wal resolves the collision once, at the top level, and writes org.vibevm.world/wal into [requires]')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-single-storage-rule-stated-once": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:110  > ##PERSISTED-STATE-IS-QUALIFIED-ONLY **Persisted state is qualified-only.** Every reference written to a",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:131  - ##SHORT-NAMES-ARE-NEVER-STORED **Never stored.** The moment a short name is resolved, the tool",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:41  - ##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE Never store a short (unqualified) name in a manifest, lockfile,",
+     "DRIFT on «stated once», counted within the package itself. The blockquote here is a single normative statement and the intent is sound, but the same rule is also stated at `QUALIFIED-NAMING-PROTOCOL.md` `##SHORT-NAMES-ARE-NEVER-STORED`, at the boot snippet's `##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE`, in the README's law bullet, and twice more in the two summaries — six statements of one rule across the package. RECORDED, because the restatements are not a defect in themselves: a flow that ships a README, a snippet and three documents will restate its laws by design, and what this anchor claims is the one thing that arrangement makes false."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PERSISTED-STATE-IS-QUALIFIED-ONLY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:13  - ##ADDR-NO-BARE-ON-DISK Nothing on disk stores a bare name. @spec/done",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:98  - ##SHORT-CLI-ONLY **The short form is CLI-only sugar.** It is never written to a manifest (§2.6). @impl/done",
+     "crates/vibe-cli/src/commands/short_name.rs:7  //! Manifests and the lockfile only ever store the qualified form; the",
+     "vibe.lock:353  group = \"org.vibevm.world\"",
+     "confirmed: The single most measurable fact in the whole package, and it measures clean on two independent selectors, across all three of the positions the rule names. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree. Lockfile measurement (re-run): `vibe.lock` carries 36 `[[package]]` blocks and 36 each of `kind = `, `name = `, `group = `, `version = `, `content_hash = `, `source_kind = `, `files_written = ` at column 0 — the identity tuple is present on every entry with no exceptions. A separate regex over quoted pkgref strings found 50 of them (10 in `root_dependencies`, 40 in `dependencies` lists), and all 50 fullmatch `(flow|feat|stack|tool|mcp):[a-z0-9._-]+/[a-z0-9-]+@…` — 0 bare. Group histogram: org.vibevm.world 34, org.vibevm.ai-native 12, org.vibevm 2, org.vibevm.fractality 2. Harvest precision, not a correction. The W7 harvest's s2-naming runs `grep -coE '\"?(flow|feat|stack|tool|mcp):[a-z0-9.]+/[a-z0-9-]+' vibe.lock` and reports 38; I re-ran it verbatim and reproduce 38 exactly, and `grep -cE '^\\s*name = \"' vibe.lock` reproduces 36, and `sed -n '174,180p' vibe.lock` prints the addressable-specs block as shown. The number is a LINE count under a group character class with no hyphen, so it does not enumerate every qualified string: `grep -cE '(flow|feat|stack|tool|mcp):org\\.vibevm\\.ai-native/' vibe.lock` returns 12 further lines the class cannot match, and the same expression widened to `[a-z0-9._-]+` returns 50. Both readings support the harvest's conclusion — the count of BARE pkgref strings is 0 under either — but the exhaustive figure for this row is 50 qualified strings, not 38. PROP-029 ##ADDR-NO-BARE-ON-DISK states the identical rule in four words: 'Nothing on disk stores a bare name.'"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "consequences-worth-making-explicit": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:117  - ##CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE A **lockfile** entry carries the full tuple: `group`,",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:122  - ##CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES The **dependency graph** is built entirely from",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:126  - ##CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED A **published package's own `[requires]`** is",
+     "confirmed: Structural claim, checked structurally: exactly three bullets follow. All three are independently observable in this host — 36/36 lockfile entries carry the full tuple, 50/50 dependency strings are qualified, and 149 qualified requires keys across the 174 published-package manifests under packages/ are qualified with 0 bare — so the enumeration is not merely tidy, each element is separately true here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE": {
+    "v": "confirmed",
+    "ev": [
+     "vibe.lock:351  kind = \"flow\"",
+     "vibe.lock:353  group = \"org.vibevm.world\"",
+     "vibe.lock:354  version = \"0.1.0\"",
+     "vibe.lock:356  content_hash = \"sha256:97167929d8547c5d0c67f491e65a3054c6d7f7e8ae4c7b9fd9a08215b84c075e\"",
+     "crates/vibe-core/src/content_hash.rs:17  /// mirror-switch or host-migration that changes `source_url` but not the",
+     "confirmed: The entry shape is exactly as described, on every entry. Lockfile measurement (re-run): `vibe.lock` carries 36 `[[package]]` blocks and 36 each of `kind = `, `name = `, `group = `, `version = `, `content_hash = `, `source_kind = `, `files_written = ` at column 0 — the identity tuple is present on every entry with no exceptions. The registry-is-a-fetch-detail clause is separately confirmed: source_url is its own field beside content_hash, and ContentHash's doc comment says a 'mirror-switch or host-migration that changes source_url but not the bytes leaves identity intact'. The host has actually run that case — every entry's source_url was repointed from a second working copy to this one by a `vibe update`, recorded in the campaign plan's LOG, and identity did not change."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:9  //! into the dependency graph — every transitive `[requires.packages]`",
+     "crates/vibe-resolver/src/sat.rs:160  /// carries back into a key. The naive solver always emits the",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:124  - ##NO-TRANSITIVE-COLLISIONS **Consequence — no transitive collisions.** Every package's `[requires]` is",
+     "confirmed: Both halves are settled, and the second is the interesting one: 'enforced by the storage rule, not by a separate check' predicts that no collision check exists in the graph layer, and none does. crates/vibe-resolver/src/ (lib.rs, naive.rs, sat.rs, activation.rs) has no ambiguity variant at all — SolveError's failure modes are VersionConflict, ConflictsDeclared and capability errors. The solver instead treats an unqualified ref as an internal contract break (conflict_key in sat.rs). Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:46  \"flow:org.vibevm.world/qualified-naming\" = \"=0.1.0\"",
+     "vibedeps/flow-redbook/0.2.0/vibe.toml:46",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:124  - ##NO-TRANSITIVE-COLLISIONS **Consequence — no transitive collisions.** Every package's `[requires]` is",
+     "confirmed: Checked at exactly the position the claim is about — a published package's manifest as a consumer receives it. Of the 62 manifests under vibedeps/, 52 [requires.packages] keys are present and all 52 carry a group; 0 are bare. The redbook slot is the concrete case: its installed manifest requires this very package as \"flow:org.vibevm.world/qualified-naming\", so the host inherited a qualified name from another author's manifest rather than a short one. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-MACHINE-FACING-FAILURE-MUST-BE-ACTIONABLE-WITHOUT-PROSE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/exit_code.rs:71  pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {",
+     "crates/vibe-cli/src/exit_code.rs:63      pub fn exit_code(&self) -> u8 {",
+     "crates/vibe-cli/src/exit_code.rs:33  pub const AMBIGUOUS_PACKAGE: u8 = 7;",
+     "confirmed: The host's dispatch is by TYPE, not by message text, which is what 'without reading prose' requires: as_exit_code downcasts the error and walks the cause chain to pick a number, and InstallError::exit_code() maps variants to constants. No code path anywhere parses an error string to decide an exit code — I read exit_code.rs end to end and every branch is a downcast_ref or a match on a variant."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "two-shapes-matter": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:137  ##a-collision-must **A collision** (one short name, several owners) must: @impl/done",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:157  ##A-CONFLICT-IS-A-DIFFERENT-FAILURE-WITH-A-DIFFERENT-CODE **A conflict** (unsatisfiable versions) is a",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:132  ##TWO-FAILURE-CLASSES **Decision.** Two distinct failure classes, with distinct handling. This terminology is",
+     "confirmed: Structural claim, checked structurally: the section presents exactly two shapes, a collision and a conflict, each with requirements and a worked message. The host's failure taxonomy for this subject is the same two and no others — PROP-008 ##TWO-FAILURE-CLASSES, realised as InstallError::AmbiguousPackage (exit 7) in vibe-cli and SolveError::VersionConflict / ConflictsDeclared (exit 3) in vibe-resolver."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "a-collision-must": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:139  1. ##COLLISION-EXIT-WITH-THE-COLLISION-CODE exit with the collision code — distinct from the conflict code, so a",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:141  2. ##COLLISION-LIST-EVERY-CANDIDATE list **every** candidate, each with its exact qualified form; and @impl/done",
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:142  3. ##COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT tell the human precisely what to type or record next. @impl/done",
+     "crates/vibe-cli/src/commands/short_name.rs:97  fn render_collision(name: &str, candidates: &[Group]) -> String {",
+     "confirmed: Three numbered requirements follow, and the host satisfies all three in one function plus one constant: render_collision builds the numbered candidate list and the re-run hint, and the returned InstallError::AmbiguousPackage maps to exit code 7. The definition 'one short name, several owners' is literal in the signature — candidates is &[Group], a list of owners."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COLLISION-EXIT-WITH-THE-COLLISION-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/exit_code.rs:33  pub const AMBIGUOUS_PACKAGE: u8 = 7;",
+     "crates/vibe-cli/src/exit_code.rs:22  pub const PACKAGE_CONFLICT: u8 = 3;",
+     "crates/vibe-cli/src/exit_code.rs:123      fn ambiguous_package_maps_to_seven() {",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:143  - ##EXIT-CODE-7 A new exit code **`7`** (\"ambiguous package\") is assigned, distinct from `3` (\"package",
+     "confirmed: Implemented and tested. AMBIGUOUS_PACKAGE = 7 and PACKAGE_CONFLICT = 3 are distinct constants in one catalogue; InstallError::exit_code() maps the variant to 7; as_exit_code returns 3 for the conflict-shaped case; and the unit test ambiguous_package_maps_to_seven asserts the mapping end to end from an anyhow::Error. PROP-008 ##EXIT-CODE-7 is the contract. One thing the boss should know: PROP-008 §5 still lists ##OPEN-EXIT-CODE-7 as an open question marked @spec/work, so the host does not yet consider the number frozen — which bears on this file's later 'stable' clause."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COLLISION-LIST-EVERY-CANDIDATE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:104          let _ = writeln!(msg, \"  {}. {group}/{name}\", i + 1);",
+     "crates/vibe-cli/src/commands/short_name.rs:43  fn distinct_sorted<'a>(groups: impl Iterator<Item = &'a Group>) -> Vec<Group> {",
+     "crates/vibe-cli/src/commands/short_name.rs:188      fn render_collision_numbers_every_candidate() {",
+     "confirmed: 'Every' and 'qualified form' both hold: render_collision loops the whole candidate slice with no truncation, printing `{group}/{name}` per line, and distinct_sorted gives a stable de-duplicated list so nothing is dropped by ordering. The test render_collision_numbers_every_candidate asserts both entries appear. What differs from this file's own worked example is the annotation: the example shows a registry per candidate ('(registry shop-public)'), and PROP-008's example message shows '(registry vibespecs)' too, but render_collision emits no registry — the candidate type is Vec<Group>, which cannot carry one. So the host lists every candidate and less about each than both specs illustrate."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:112              \"Re-run with the qualified form, e.g. `vibe install {first}/{name}`.\",",
+     "crates/vibe-cli/src/exit_code.rs:56            fix: re-run with the group-qualified `<group>/<name>` form shown above)\"",
+     "crates/vibe-cli/src/commands/short_name.rs:200              msg.contains(\"`vibe install com.acme/wal`\"),",
+     "confirmed: Satisfied twice over. render_collision ends with a copy-ready command naming the first candidate, and the test asserts the exact string `vibe install com.acme/wal` appears. On top of that the error variant's own Display appends a Class-F fix tail — 'fix: re-run with the group-qualified <group>/<name> form shown above' — so the actionable instruction survives even if the rendered body is truncated by a caller."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-CANDIDATE-LIST-IS-THE-WHOLE-POINT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:104          let _ = writeln!(msg, \"  {}. {group}/{name}\", i + 1);",
+     "crates/vibe-cli/src/commands/short_name.rs:112              \"Re-run with the qualified form, e.g. `vibe install {first}/{name}`.\",",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:141    - ##collision-interactive interactive TTY — print the alternatives and fail with a hint pointing at the",
+     "confirmed: The design supports the copy-and-record workflow literally: each candidate is printed on its own line in exactly the form a manifest key takes, and the hint shows the same string embedded in a runnable command. PROP-008 ##collision-interactive gives the same rationale — 'the choice must be recorded deliberately, not clicked'. Whether it is 'the whole point' is a judgement I am not making; the mechanism it describes is present."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THERE-IS-NO-INTERACTIVE-MENU": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:153          ShortNameOutcome::Ambiguous(groups) => {",
+     "crates/vibe-cli/src/commands/install/mod.rs:25  use dialoguer::Confirm;",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:141    - ##collision-interactive interactive TTY — print the alternatives and fail with a hint pointing at the",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:142    - ##collision-unattended `--unattended` / full-auto — fail-fast; the resolver never guesses. @impl/done",
+     "confirmed: A measurable absence, and I measured it rather than asserting it. The 'no interactive menu' half is measurable and I measured it. `grep -rn 'dialoguer::Select\\|Select::new\\|FuzzySelect' crates/ --include='*.rs'` returns 12 hits in 5 files — `init/prompts.rs`, `mcp/install.rs`, `vvm/remove.rs`, `vvm/source.rs` — and none in the install or short-name path. `grep -rn 'use dialoguer' crates/ --include='*.rs'` shows `crates/vibe-cli/src/commands/install/mod.rs` imports `Confirm` only. The collision path in `short_name.rs` returns an `Err` carrying a rendered candidate list; there is no branch that offers a choice. The host goes one step further than this fact requires: PROP-008 ##collision-unattended makes the unattended and full-auto paths fail-fast on the same collision, so there is no mode in which a choice is made for the operator."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-CONFLICT-IS-A-DIFFERENT-FAILURE-WITH-A-DIFFERENT-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-resolver/src/lib.rs:421      VersionConflict {",
+     "crates/vibe-cli/src/exit_code.rs:22  pub const PACKAGE_CONFLICT: u8 = 3;",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:135  - ##CONFLICT-DEF **Conflict (a dependency conflict).** The depsolver cannot satisfy version constraints —",
+     "confirmed: Different type and different code, in different crates: SolveError::VersionConflict lives in crates/vibe-resolver/src/lib.rs while InstallError::AmbiguousPackage lives in crates/vibe-cli/src/exit_code.rs, and the two reach the process as 3 and 7. PROP-008 ##CONFLICT-DEF defines the conflict class the same way ('The depsolver cannot satisfy version constraints')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "a-conflict-names-the-incompatible-constraints": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-resolver/src/lib.rs:421      VersionConflict {",
+     "crates/vibe-resolver/src/lib.rs:422          package: String,",
+     "crates/vibe-resolver/src/lib.rs:433      ConflictsDeclared { package: String, against: String },",
+     "confirmed: The constraints are named: VersionConflict's payload is package + existing + new_constraint, and its message reads 'version conflict on `{package}`: already chose `{existing}`, but a later constraint requires `{new_constraint}`', with the actionable tail 'Pin a single constraint that satisfies both, or use [[override]] to break the tie'. What it does NOT name is the packages that imposed them — the payload has one package field, the subject of the conflict, and no requirer fields. This file's own worked example does name both requirers ('com.example.shop/cart requires ^2.1 / org.example.tools/audit requires <2.0'). The sibling variant ConflictsDeclared does carry both sides (package + against), so the host names the imposers for a declared incompatibility and not for a version contradiction."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-caller-that-cannot-tell-them-apart-will-retry-wrongly": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/exit_code.rs:71  pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {",
+     "crates/vibe-cli/src/exit_code.rs:33  pub const AMBIGUOUS_PACKAGE: u8 = 7;",
+     "crates/vibe-cli/src/exit_code.rs:22  pub const PACKAGE_CONFLICT: u8 = 3;",
+     "confirmed: The premise the argument protects against is defused in this host — the two are tellable apart by number and by type, so the failure mode described cannot occur here. The claim itself is a counterfactual about a system that merged them, and nothing in this repository observes such a system: I found no caller that branches on either code at all. grep over tools/, xtask/ and .claude/skills/ for a check of exit status 3 or 7 returns nothing, so the codes are currently exercised only by the CLI's own tests."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DISTINCT-STABLE-CODES-KEEP-AUTOMATION-CORRECT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/exit_code.rs:123      fn ambiguous_package_maps_to_seven() {",
+     "crates/vibe-cli/src/exit_code.rs:33  pub const AMBIGUOUS_PACKAGE: u8 = 7;",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:202  1. ##OPEN-EXIT-CODE-7 Exit code `7` — finalise the assignment against `VIBEVM-SPEC.md` §9.4 and confirm no",
+     "confirmed on distinctness, and on stability in the only sense the code can offer. DISTINCT: exit 3 versus exit 7, declared as constants in one catalogue file and dispatched by type, so the two failures cannot be confused by a caller. STABLE: the numbers are pinned by unit tests — `ambiguous_package_maps_to_seven` and `malformed_redirect_block_maps_to_three` — so a silent change goes red, which is the strongest guarantee available without a compatibility contract. RECORDED: the host's own contract has NOT frozen them — `PROP-008` §5 keeps `##OPEN-EXIT-CODE-7` as an open question — so the numbers are test-pinned rather than promised, and automation relying on them is relying on a test."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:396  /// pkgref := [ <kind> \":\" ] [ <group> \"/\" ] <name> [ \"@\" <version> ]",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:82  ##PKGREF-GRAMMAR **Decision.** The pkgref grammar gains an optional `group` segment and makes the `kind` prefix",
+     "crates/vibe-core/src/package_ref/tests.rs:256  fn display_round_trips_every_form() {",
+     "confirmed: Faithful restatement of the body, and the production is byte-comparable with the host's: PROP-008 ##PKGREF-GRAMMAR and the module header of crates/vibe-core/src/package_ref.rs both carry '[ <kind> \":\" ] [ <group> \"/\" ] <name> [ \"@\" <version> ]'. The distinctness claim is what the parser relies on — three successive split_once calls — and display_round_trips_every_form pins that every form survives a parse/render round trip."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-core/src/package_ref.rs:403  /// - `wal` — short; CLI-only sugar, resolved to the qualified form at the",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:98  - ##SHORT-CLI-ONLY **The short form is CLI-only sugar.** It is never written to a manifest (§2.6). @impl/done",
+     "crates/vibe-cli/src/commands/uninstall.rs:153  fn require_group(pkgref: &PackageRef) -> Result<&Group> {",
+     "confirmed on both halves, and the first is corroborated by the host's own words: «CLI-only sugar» is verbatim in the `PackageRef` doc comment. The qualified forms are what every persisted position carries, measured on two independent selectors — 206/206 `[requires.packages]` keys across 237 manifests and 50/50 lockfile pkgref strings, 0 bare in either. RECORDED as the precision this summary loses: «CLI» is not uniform here, since `vibe uninstall` rejects both sugar forms outright via `require_group`. That gap is carried as drift at `##RULE-THE-CLI-ACCEPTS-ALL-FORMS`, where it belongs."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE": {
+    "v": "drift",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:196  - ##REJ-KIND-DISAMBIGUATOR **kind prefix as a disambiguator.** Rejected (§2.4). With `name` unique within",
+     "crates/vibe-cli/src/commands/short_name.rs:37      Ambiguous(Vec<Group>),",
+     "DRIFT, inheriting the body row's split per W1's summary-restatement precedent. «Never disambiguates» is settled in the host's types — the candidate set is `Vec<Group>`, `qualified_name()` excludes kind, and `PROP-008` §4 rejects the alternative explicitly. «Validates the resolved type» has no implementation: `grep -rn 'KindMismatch'` returns three hits and none is code."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:13  - ##ADDR-NO-BARE-ON-DISK Nothing on disk stores a bare name. @spec/done",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:124  - ##NO-TRANSITIVE-COLLISIONS **Consequence — no transitive collisions.** Every package's `[requires]` is",
+     "crates/vibe-cli/src/commands/short_name.rs:7  //! Manifests and the lockfile only ever store the qualified form; the",
+     "confirmed: Faithful restatement and the best-evidenced line in the file. Both clauses hold in the host: the storage rule is measured clean on two independent selectors, and the causal claim is the host's own (PROP-008 ##NO-TRANSITIVE-COLLISIONS derives no-transitive-collisions from the same rule). Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree. Lockfile measurement (re-run): `vibe.lock` carries 36 `[[package]]` blocks and 36 each of `kind = `, `name = `, `group = `, `version = `, `content_hash = `, `source_kind = `, `files_written = ` at column 0 — the identity tuple is present on every entry with no exceptions. A separate regex over quoted pkgref strings found 50 of them (10 in `root_dependencies`, 40 in `dependencies` lists), and all 50 fullmatch `(flow|feat|stack|tool|mcp):[a-z0-9._-]+/[a-z0-9-]+@…` — 0 bare. Group histogram: org.vibevm.world 34, org.vibevm.ai-native 12, org.vibevm 2, org.vibevm.fractality 2."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/short_name.rs:104          let _ = writeln!(msg, \"  {}. {group}/{name}\", i + 1);",
+     "crates/vibe-cli/src/commands/short_name.rs:153          ShortNameOutcome::Ambiguous(groups) => {",
+     "crates/vibe-resolver/src/lib.rs:421      VersionConflict {",
+     "crates/vibe-cli/src/exit_code.rs:33  pub const AMBIGUOUS_PACKAGE: u8 = 7;",
+     "confirmed: Faithful restatement. Lists candidates in copy-ready qualified form: yes, one numbered `{group}/{name}` line each, with a runnable re-run hint. Fails: yes, the arm returns Err and no Select exists in the install path. Separate failure with a separate code: yes, SolveError::VersionConflict in another crate, exit 3 against exit 7. The one word I could not settle is 'stable' — PROP-008 §5's ##OPEN-EXIT-CODE-7 is still an open question marked @spec/work, so the number is test-pinned but not specification-frozen."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}

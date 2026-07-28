@@ -1,0 +1,519 @@
+[
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "package-installs-the-qualified-naming-discipline",
+    "marker": "@impl/done",
+    "claim": "This is a flow-kind package whose deliverable is the qualified-naming discipline for package ecosystems.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:2  name = \"qualified-naming\"",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:4  kind = \"flow\"",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:8  description = \"Qualified naming for package ecosystems: mandatory groups, identity tuples, short names only at",
+      "vibe.lock:352  name = \"qualified-naming\"",
+      "spec/boot/STATIC.md:1001  <!-- vibe:static org.vibevm.world/qualified-naming —"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "The package's own manifest declares kind=flow and a description that restates all four laws. The host's lockfile carries it as a real installed flow at vibe.lock:350-358 (kind, name, group org.vibevm.world, version 0.1.0, sha256 content hash). Source 3, re-measured rather than taken from the harvest, and the READING IS STATED because it decides the answer. The slot exists: `vibedeps/flow-qualified-naming/0.1.0/` holds 7 files and a `find`-diff against `packages/org.vibevm.world/qualified-naming/v0.1.0/` shows the two file lists are identical. `vibe.toml` is byte-identical. The five `.md` files are NOT byte-identical: the installed copies are the PRE-markup revision — no `<status/>` element, no `##ANCHOR` fact ids, no `@stage/state` markers, and the paragraph splits Phase B introduced are absent. On a RAW-BYTE reading source 3 differs from source 1 for all five documents. On a WORD-STREAM reading after stripping this campaign's own additions they agree, and that is the reading the campaign's own join applies: `python campaigns/packages-2026-09/tasks/source23-boot-join.py` reports 31 contributions in `spec/boot/STATIC.md`, 17 clean and 14 on the problem list, and `org.vibevm.world/qualified-naming` is NOT among the 14 — INSTALLED + SOURCED + same word stream. The consequence worth recording either way: no `spec://…#ANCHOR` this campaign minted exists in the copy a consumer receives, so the fact-grain addresses are unreachable from the installed slot."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "LAW-A-MANDATORY-GROUP-ON-EVERY-ARTIFACT",
+    "marker": "@impl/done",
+    "claim": "The discipline installs a mandatory group on every artifact.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:24  - ##LAW-EVERY-ARTIFACT-CARRIES-A-GROUP Every artifact carries a **group**; identity is the tuple",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:48  ##IDENTITY-BEGINS-WITH-A-MANDATORY-GROUP Identity begins with a **mandatory** `group`: a dot-separated string",
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:41  ##GROUP-MANDATORY **Decision.** `[package]` gains a **mandatory** `group` field: @impl/done",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:3  group = \"org.vibevm.world\"",
+      "vibe.lock:353  group = \"org.vibevm.world\""
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Stated in three of the package's own files, and implemented in the host as a required field: PROP-008 ##GROUP-MANDATORY makes [package].group mandatory. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree. Direction of the match, per the harvest's warning. This flow was extracted FROM this project: PROP-008's `##discipline-line` names the flow by `spec://` address and calls the PROP 'vibevm's IMPLEMENTED instance of them', and `spec/design/workspace-and-qualified-naming.md` is the 2026-05-20 owner design session the flow's `naming-forks.md` condenses. So a host document agreeing with this fact is provenance; a host CODE surface implementing it is independent."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "LAW-IDENTITY-IS-THE-TUPLE",
+    "marker": "@impl/done",
+    "claim": "Identity is the tuple (group, name, version, content-hash).",
+    "evidence": [
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:59  ##IDENTITY-TUPLE **Decision.** Package identity becomes `(group, name, version, content_hash)`. `kind` **leaves",
+      "crates/vibe-core/src/content_hash.rs:15  /// **identity** component of the `(group, name, version, content_hash)`",
+      "vibe.lock:351  kind = \"flow\"",
+      "vibe.lock:356  content_hash = \"sha256:97167929d8547c5d0c67f491e65a3054c6d7f7e8ae4c7b9fd9a08215b84c075e\""
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "PROP-008 ##IDENTITY-TUPLE fixes the same four-element tuple, adding that kind LEAVES it. The code carries the same sentence where prose cannot drift from it: crates/vibe-core/src/content_hash.rs documents the hash as the identity component of (group, name, version, content_hash). Lockfile measurement (re-run): `vibe.lock` carries 36 `[[package]]` blocks and 36 each of `kind = `, `name = `, `group = `, `version = `, `content_hash = `, `source_kind = `, `files_written = ` at column 0 — the identity tuple is present on every entry with no exceptions. A separate regex over quoted pkgref strings found 50 of them (10 in `root_dependencies`, 40 in `dependencies` lists), and all 50 fullmatch `(flow|feat|stack|tool|mcp):[a-z0-9._-]+/[a-z0-9-]+@…` — 0 bare. Group histogram: org.vibevm.world 34, org.vibevm.ai-native 12, org.vibevm 2, org.vibevm.fractality 2."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "LAW-SHORT-NAMES-ONLY-AT-THE-CLI-BOUNDARY",
+    "marker": "@impl/done",
+    "claim": "Short names are allowed only at the human CLI boundary.",
+    "evidence": [
+      "crates/vibe-cli/src/commands/short_name.rs:1  //! Index-backed short-name resolution at the CLI input boundary",
+      "crates/vibe-cli/src/commands/short_name.rs:7  //! Manifests and the lockfile only ever store the qualified form; the",
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:121  ##SHORT-AT-BOUNDARY **Decision.** A short name (`wal`, `flow:wal`) is resolved **only at the CLI input"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "A whole host module exists for this rule and nothing else: crates/vibe-cli/src/commands/short_name.rs resolves a bare pkgref once, 'before the depsolver runs and before the pkgref is merged into [requires].packages'. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "LAW-COLLISION-KEPT-DISTINCT-FROM-CONFLICT",
+    "marker": "@impl/done",
+    "claim": "A collision is kept strictly distinct from a conflict.",
+    "evidence": [
+      "crates/vibe-cli/src/exit_code.rs:22  pub const PACKAGE_CONFLICT: u8 = 3;",
+      "crates/vibe-cli/src/exit_code.rs:33  pub const AMBIGUOUS_PACKAGE: u8 = 7;",
+      "crates/vibe-cli/src/exit_code.rs:58      AmbiguousPackage(String),",
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:143  - ##EXIT-CODE-7 A new exit code **`7`** (\"ambiguous package\") is assigned, distinct from `3` (\"package"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Two exit codes and two error variants exist in the host: PACKAGE_CONFLICT=3 and AMBIGUOUS_PACKAGE=7 in crates/vibe-cli/src/exit_code.rs, with InstallError::AmbiguousPackage its own variant and the unit test ambiguous_package_maps_to_seven asserting the mapping. PROP-008 ##EXIT-CODE-7 is the host contract. This is the package's strongest code surface."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "AUDIENCE-IS-ECOSYSTEM-DESIGNERS",
+    "marker": "@impl/done",
+    "claim": "The audience is ecosystem designers — anyone defining a namespace for packages, plugins, extensions or artifacts.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:5  ##PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE This project ships the **qualified-naming** practice for",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:11  ##written-for-ecosystem-designers It is written for **ecosystem",
+      "spec/boot/STATIC.md:1569  - `qualified-naming` — namespaces for package ecosystems (for"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "The audience sentence is word-for-word identical in README, boot snippet and protocol. It also reaches the consumer: the host's compiled boot lane summarises the flow in the redbook contents list as 'namespaces for package ecosystems (for ecosystem designers)'."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE",
+    "marker": "@impl/done",
+    "claim": "This is a design-time discipline read once while shaping identifiers, not a per-session rule.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:9  ##IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE It is a design discipline, not a runtime",
+      "spec/boot/STATIC.md:1008  rule: read it once while shaping identifiers, not on every session."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "The text half is settled — identical in the boot snippet and reaching the host verbatim. The behavioural half I could not settle, and it points the other way: the sentence saying 'not on every session' sits inside spec/boot/STATIC.md, the static lane CLAUDE.md tells every session to read 'first and in full'. So the assertion is delivered on every session boot. The host's boot lane carries this package's snippet: `spec/boot/STATIC.md:1001` is the provenance marker `<!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->` and lines 1003–1044 are the snippet's compiled text. `grep -o 'vibe:static [^ ]*' spec/boot/STATIC.md | sort -u` returns 27 distinct slots over 31 contributions, and every one is written `org.vibevm.world/<name>` — the qualified form, in generated state, not hand-written. `spec/boot/INDEX.md` does not name qualified-naming (`grep -c 'qualified' spec/boot/INDEX.md` → 0); it is delivered through the static lane, not as an `[[entry]]`."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "get-the-namespace-right-before-the-first-name-is-minted",
+    "marker": "@spec/done",
+    "claim": "Get the namespace right before the first name is minted; retrofitting a group onto a shipped flat registry is costly.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:19  ##retrofitting-a-group-is-a-migration Retrofitting a group onto a",
+      "spec/common/PROP-029-fully-qualified-addresses.md:36  - ##REFACTOR-LAW Address refactors — rename a package, move a group, rename a cited anchor — MUST be",
+      "spec/common/PROP-029-fully-qualified-addresses.md:37  - ##REFACTOR-TODAY The reference implementation today is a scripted `sed` transform with grep verification and"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "located",
+    "searched": "The host paid this and wrote down the price: PROP-029 §3 exists so address refactors are 'expressible as deterministic substitutions over fully-qualified strings, verified by grep-zero of the old coordinate', with the reference implementation today a scripted sed transform plus a specmap re-mint. The host performed exactly the operation this law governs, and it is in the history. `git log --oneline -S'org.vibevm.world/qualified-naming' -- packages/org.vibevm.world/redbook/` returns one commit, `69708287` (2026-07-12) — 'refactor(packages): move the remaining packages to org.vibevm.world', body: 'Relocate the 23 non-discipline packages … out of the org.vibevm junk-drawer into their own group org.vibevm.world'. `git show 69708287 -- packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml` shows the file created with `group = \"org.vibevm.world\"` and `version = \"0.1.0\"` — the version line did not restart at the group change. Both coordinates survive on disk to compare: `packages/org.vibevm.fractality/fractality/v0.1.0/.vibe/cache/org.vibevm/qualified-naming/v0.1.0/vibe.toml` carries `group = \"org.vibevm\"` / `version = \"0.1.0\"` and the sibling `…/.vibe/cache/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml` carries `group = \"org.vibevm.world\"` / `version = \"0.1.0\"`. Recorded as measurement, not as a reading: `(group, name)` differs between the two, so they are two identities by the tuple rule, and PROP-029 `##SCOPE-GROUP-CHANGE` explicitly hands the identity semantics to PROP-008 while keeping the mechanical-substitution procedure for itself."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "a-flat-namespace-fails-three-ways",
+    "marker": "@spec/done",
+    "claim": "A flat namespace reads well on day one and fails three ways.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:23  ##it-fails-in-three-predictable-ways It reads beautifully on",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:16  ##fork-1-question The root fork: is an artifact addressed by a bare `name` unique across",
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:21  - ##flat-namespace vibevm's package namespace is flat: a pkgref is `<kind>:<name>`, and `name` is \"globally"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "partial",
+    "searched": "The protocol enumerates the same three and naming-forks.md Fork 1 scores them in a table. The host states only ONE of the three: PROP-008 ##flat-namespace says a pkgref was <kind>:<name> and 'this does not scale — two unrelated authors will both want flow:wal'. That is the collision framing; the squatting and trust-delegation framings appear nowhere in spec/ (checked: grep -rn -i 'squat' over spec/ and crates/ returns nothing). Direction of the match, per the harvest's warning. This flow was extracted FROM this project: PROP-008's `##discipline-line` names the flow by `spec://` address and calls the PROP 'vibevm's IMPLEMENTED instance of them', and `spec/design/workspace-and-qualified-naming.md` is the 2026-05-20 owner design session the flow's `naming-forks.md` condenses. So a host document agreeing with this fact is provenance; a host CODE surface implementing it is independent."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "FAILURE-SQUATTING",
+    "marker": "@spec/done",
+    "claim": "Squatting turns good short names into a land-grab.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:26  - ##FAILURE-SQUATTING **Squatting.** The good short names are a finite commons. The first",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:25  | ##ROW-ASPECT-SQUATTING-PRESSURE Squatting pressure @spec/done | high — names are a finite commons @spec/done"
+    ],
+    "src": [
+      1
+    ],
+    "found": "located",
+    "searched": "Source 1 only, and the absence is measured rather than assumed: grep -rn -i 'squat' over spec/ and crates/ (--include='*.md' --include='*.rs') returns no hits, so the host never uses the concept. The package expands it in the protocol and scores it in the forks table ('high — names are a finite commons' vs 'low — squatting is local to a group'). The host is a single-owner registry with four org.vibevm* groups, so squatting is not observable here even in principle."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "FAILURE-A-BARE-NAME-NAMES-NO-OWNER",
+    "marker": "@spec/done",
+    "claim": "A bare name names no owner, so trust cannot be delegated.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:30  - ##FAILURE-TRUST-AMBIGUITY **Trust ambiguity.** In a flat namespace `logger` has no owner you",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:26  | ##ROW-ASPECT-TRUST-DELEGATION Trust delegation @spec/done | per-artifact — the name names no owner @spec/done",
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:28  - ##GROUP-NOT-REGISTRY `group` is **not** the registry. `group` is an attribute of the *package* (exactly as"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "partial",
+    "searched": "The ownership half is in the host: PROP-008 ##GROUP-NOT-REGISTRY says group 'is an attribute of the *package* … not of the repository serving it', which is the same point argued for a different purpose (defending PROP-002 §3.4). The trust-delegation consequence — that a bare name forces trust to be re-established per artifact — is restated nowhere in the host; a sweep of spec/ for 'delegat' returns hits only about the delegation-first flow, an unrelated subject."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "FAILURE-TRANSITIVE-NAME-COLLISION",
+    "marker": "@spec/done",
+    "claim": "Two dependencies deep in a graph can want one name meaning different things.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:35  - ##FAILURE-TRANSITIVE-COLLISIONS **Transitive collisions.** Two dependencies deep in your graph both",
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:124  - ##NO-TRANSITIVE-COLLISIONS **Consequence — no transitive collisions.** Every package's `[requires]` is",
+      "crates/vibe-cli/src/commands/short_name.rs:9  //! into the dependency graph — every transitive `[requires.packages]`"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "located",
+    "searched": "The host states the inverse as something it has bought — PROP-008 ##NO-TRANSITIVE-COLLISIONS — and the code header gives the mechanism: resolution 'never recurses into the dependency graph — every transitive [requires.packages] key is already group-qualified by construction'. Manifest sweep (re-run this session): 237 `vibe.toml` files carry a `[package]` or `[requires.packages]` section under this repository — 174 under `packages/**`, 62 under `vibedeps/**`, plus the host root. Selector 1, a Python TOML-section walk, found 237/237 carrying a `group = ` line (0 without) and 206 `[requires.packages]` keys, every one containing a `/` (0 bare). Selector 2, an independent grep `grep -rn --include=vibe.toml -E '^\\s*\"?(flow|feat|stack|tool|mcp):' packages/ vibedeps/ vibe.toml | wc -l` returned 206, and the narrowed form that would catch a kind-prefixed bare key `-E '^\\s*\"?(flow|feat|stack|tool|mcp):[a-z0-9-]+\"?\\s*='` returned 0. Selector 1 over-counts if a `[requires.packages]` header is followed by non-key prose; selector 2 over-counts if a `kind:` string appears at line start outside that section — a section breakdown showed all 206 sit in `[requires.packages]`, so the two agree."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "groups-fix-all-three-structurally",
+    "marker": "@spec/done",
+    "claim": "Groups fix all three failures structurally.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:43  ##A-GROUPED-NAMESPACE-FIXES-ALL-THREE A group-qualified namespace makes squatting local, trust",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:46  ##SQUATTING-AND-TRUST-PROPERTIES-ARE-STRUCTURAL The"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "partial",
+    "searched": "One of the three is checkable in the host and checks out: the transitive-collision fix, measured as 206/206 qualified requires keys and 50/50 qualified lockfile pkgrefs, 0 bare. The other two are not observable here — the host has four groups (org.vibevm, org.vibevm.world, org.vibevm.ai-native, org.vibevm.fractality) and one owner, so no stranger has ever squatted a name and no trust has ever had to be delegated across owners."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "THIS-PACKAGE-IS-THAT-FIX-AS-A-STANDING-CONTRACT",
+    "marker": "@impl/done",
+    "claim": "This package makes the grouped-namespace fix into a standing contract.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:15  [boot_snippet]",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:16  source = \"spec/boot/67-flow-qualified-naming.md\"",
+      "spec/boot/STATIC.md:1001  <!-- vibe:static org.vibevm.world/qualified-naming —"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "I read 'standing contract' as the two mechanical questions: does the package declare a boot snippet, and does that snippet reach a consumer's session unprompted? Both yes. The host's boot lane carries this package's snippet: `spec/boot/STATIC.md:1001` is the provenance marker `<!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->` and lines 1003–1044 are the snippet's compiled text. `grep -o 'vibe:static [^ ]*' spec/boot/STATIC.md | sort -u` returns 27 distinct slots over 31 contributions, and every one is written `org.vibevm.world/<name>` — the qualified form, in generated state, not hand-written. `spec/boot/INDEX.md` does not name qualified-naming (`grep -c 'qualified' spec/boot/INDEX.md` → 0); it is delivered through the static lane, not as an `[[entry]]`."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "package-contents-lead",
+    "marker": "@impl/done",
+    "claim": "The package ships three pieces of content plus a boot snippet.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:1  # Qualified Naming Protocol {#root}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:1  # Reference grammar {#root}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:1  # Flow: Qualified Naming {#root}"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "find over packages/org.vibevm.world/qualified-naming/v0.1.0 returns exactly 7 files: README.md, LICENSE.md, vibe.toml, the boot snippet and the three flow documents — so 'three pieces of content plus a boot snippet' is the entire payload with nothing unlisted. The same seven arrive installed: a find-diff against vibedeps/flow-qualified-naming/0.1.0/ shows identical file lists."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "CONTENT-THE-PROTOCOL",
+    "marker": "@impl/done",
+    "claim": "QUALIFIED-NAMING-PROTOCOL.md carries why flat names fail, the mandatory group, the identity tuple, rename-is-new-identity, short-names-at-the-boundary-only, collision versus conflict, and a re-derive prompt.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:18  ## The problem: flat names {#problem}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:46  ## Law 1 — every artifact carries a group {#group}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:73  ## Law 2 — identity is a tuple {#identity}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:95  ## Law 3 — a rename is a new identity {#rename}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:122  ## Law 4 — short names live only at the boundary {#short-names}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:150  ## Law 5 — collision and conflict are distinct failures {#collision}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:174  ## Re-derive for your project {#re-derive}"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "Checked item by item against the file's heading list rather than trusting the summary: all seven promised subjects are present as sections, in the order the README lists them, and the re-derive prompt is a five-step fenced block. The file is shipped and installed (identical file lists against vibedeps/flow-qualified-naming/0.1.0/)."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "CONTENT-THE-REF-GRAMMAR",
+    "marker": "@impl/done",
+    "claim": "ref-grammar.md carries the EBNF-ish grammar, the forms table with where-legal per form, worked examples with invented groups, the qualified-only storage rule, and the shape a collision error must take.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:14  ## The grammar {#grammar}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:47  ## The forms {#forms}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:76  ## Worked examples {#examples}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:106  ## What gets stored {#storage}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:130  ## Error shapes {#errors}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:49  | Form | Example | Where legal |"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "All five promised parts are present as sections, and the forms table does carry a 'Where legal' column. One detail I checked rather than assumed: 'worked examples with invented groups' is true of the Worked-examples section (com.example.shop, io.acme) but not of the whole file — the forms table one section earlier uses the real org.vibevm.world/wal coordinate."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "CONTENT-THE-NAMING-FORKS",
+    "marker": "@impl/done",
+    "claim": "naming-forks.md condenses the design lore — flat vs grouped (the Cargo-vs-Maven precedent), enforce vs recommend, where short names live, rename as alias vs new identity — each fork resolved with reasons.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:14  ## Fork 1 — flat versus grouped {#flat-vs-grouped}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:54  ## Fork 2 — enforce style versus recommend it {#enforce-vs-recommend}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:86  ## Fork 3 — where do short names live {#short-names}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:122  ## Fork 4 — rename: alias table versus new identity {#rename}",
+      "spec/design/workspace-and-qualified-naming.md:109  ## 6. Cargo vs Maven — the precedent lore"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "located",
+    "searched": "Four forks, four ##CHOSEN-* resolutions, each with reasoning paragraphs — verified section by section. The Cargo-vs-Maven precedent the README credits is a real host document: spec/design/workspace-and-qualified-naming.md §6 is an eight-row Cargo/Maven comparison table captured in the 2026-05-20 owner session, and §5's 'Naming forks' list resolves the same forks. Direction of the match, per the harvest's warning. This flow was extracted FROM this project: PROP-008's `##discipline-line` names the flow by `spec://` address and calls the PROP 'vibevm's IMPLEMENTED instance of them', and `spec/design/workspace-and-qualified-naming.md` is the 2026-05-20 owner design session the flow's `naming-forks.md` condenses. So a host document agreeing with this fact is provenance; a host CODE surface implementing it is independent."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "CONTENT-THE-BOOT-SNIPPET",
+    "marker": "@impl/done",
+    "claim": "spec/boot/67-flow-qualified-naming.md is a boot snippet loaded at session start, carrying when the practice applies, the laws in one breath, and the never-do list.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:12  ## When this applies {#when}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:22  ## The laws in one breath {#laws}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:39  ## Never {#never}",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:16  source = \"spec/boot/67-flow-qualified-naming.md\"",
+      "spec/boot/STATIC.md:1001  <!-- vibe:static org.vibevm.world/qualified-naming —"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "All three promised sections are in the snippet and the manifest's [boot_snippet] source points at it. 'Loaded at session start' is the checkable half and it holds. The host's boot lane carries this package's snippet: `spec/boot/STATIC.md:1001` is the provenance marker `<!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->` and lines 1003–1044 are the snippet's compiled text. `grep -o 'vibe:static [^ ]*' spec/boot/STATIC.md | sort -u` returns 27 distinct slots over 31 contributions, and every one is written `org.vibevm.world/<name>` — the qualified form, in generated state, not hand-written. `spec/boot/INDEX.md` does not name qualified-naming (`grep -c 'qualified' spec/boot/INDEX.md` → 0); it is delivered through the static lane, not as an `[[entry]]`."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE",
+    "marker": "@impl/done",
+    "claim": "Uninstalling removes every file the package wrote, including the boot snippet.",
+    "evidence": [
+      "crates/vibe-cli/src/commands/uninstall.rs:1  //! `vibe uninstall <group>/<name>` — remove an installed package.",
+      "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+      "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+      "vibe.lock:357  files_written = []"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "The removal half is settled in code: crates/vibe-cli/src/commands/uninstall.rs removes the vibedeps/ slot, drops the lockfile entry and the [requires] declaration, and calls regenerate_boot so the snippet leaves the computed boot sequence. What I could not settle as phrased is 'every file the package wrote': under PROP-009 the package writes no files at all — files_written = [] on all 36 lockfile entries, and crates/vibe-cli/tests/cli_pkg_cycle.rs asserts 'files_written is empty under the loading model'. The footprint is the deterministic slot, so the sentence describes a delivery model the host no longer uses."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "USER-OWNED-FILES-ARE-NEVER-TOUCHED",
+    "marker": "@impl/done",
+    "claim": "Uninstall never touches user-owned files.",
+    "evidence": [
+      "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
+      "crates/vibe-cli/src/commands/uninstall.rs:139          manifest.write(project_root.join(Manifest::FILENAME))?;",
+      "crates/vibe-cli/src/commands/uninstall.rs:164  fn drop_from_manifest_requires(manifest: &mut Manifest, group: &Group, name: &str) -> bool {"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "partial",
+    "searched": "Every write in the uninstall path is enumerable and I enumerated all of them by reading the command end to end: the vibedeps/ slot is removed, vibe.lock is rewritten, boot artifacts are regenerated, and the project's own vibe.toml IS edited — drop_from_manifest_requires strips the pkgref from [requires].packages and [requires].git_packages and the manifest is written back. vibe.toml is user-owned by any ordinary reading, so the claim holds for prose files and not for the manifest. Nothing outside those four paths is written."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "COMPOSES-TOOL-DESIGN-LESSONS",
+    "marker": "@spec/done",
+    "claim": "flow:tool-design-lessons is the sibling practice for authors who publish into a namespace; together the two cover both sides of the registry boundary.",
+    "evidence": [
+      "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:1",
+      "spec/boot/STATIC.md:1271  <!-- vibe:static org.vibevm.world/tool-design-lessons —",
+      "spec/boot/STATIC.md:1571  - `tool-design-lessons` — paid-for lessons for self-updating tools"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "The named sibling is a real package (packages/org.vibevm.world/tool-design-lessons/v0.1.0/), is installed (vibedeps/flow-tool-design-lessons/0.1.0/ exists), and contributes its own snippet to the same host boot lane. Both flows are live in the same consumer, which is what 'together they cover both sides' requires. Whether the division of subject matter is actually clean is a judgement I did not make."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "COMPOSES-DECISION-RECORDS",
+    "marker": "@spec/done",
+    "claim": "flow:decision-records is the practice for resolving each fork for your own ecosystem and recording it with a why and a revisit trigger.",
+    "evidence": [
+      "packages/org.vibevm.world/decision-records/v0.1.0/vibe.toml:1",
+      "spec/boot/STATIC.md:235  <!-- vibe:static org.vibevm.world/decision-records —",
+      "spec/design/workspace-and-qualified-naming.md:70  ## 5. The fork-by-fork decision record"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "located",
+    "searched": "The named package exists, is installed and contributes to the host boot lane. The composition is also exercised: spec/design/workspace-and-qualified-naming.md §5 IS a fork-by-fork decision record covering exactly these forks, and the live campaign plan's decisions carry the Why / Considered-and-rejected / Revisit-when triple the flow prescribes."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "COMPOSES-ADDRESSABLE-SPECS",
+    "marker": "@spec/done",
+    "claim": "The same one-authoritative-address-per-fact instinct applied to artifact identity: a spec:// anchor names one fact as (group, name) names one package.",
+    "evidence": [
+      "packages/org.vibevm.world/addressable-specs/v0.1.0/vibe.toml:1",
+      "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:**",
+      "spec/common/PROP-029-fully-qualified-addresses.md:22  | ##CARRIER-SPEC-URI `spec://` authority (the `<module>` segment) @spec/done | `<group>/<name>` — the name is"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "located",
+    "searched": "The kinship is wired, not merely asserted: PROP-029's status line builds on PROP-008's group field AND on the addressable-specs #modules unit in one sentence, and its carriers table makes the spec:// authority literally <group>/<name> — the same coordinate as a pkgref, byte-identical wherever a / is legal. Mechanical grammar check over `spec://` refs, since PROP-029 `##CARRIER-SPEC-URI` makes the `spec://` authority carry the same `<group>/<name>` coordinate as a pkgref. Windows and counts: `spec/**/*.md` — 201 occurrences, of which 99 are the bare token `spec://` used in prose about the scheme, 60 are `<dotted-group>/<name>`, 32 are the host authority `spec://vibevm/…` that PROP-029 `##SCOPE-HOST` sanctions, and 10 are neither: 4×`spec://X` (a placeholder in spec/design/structural-loader.md), 2×`spec://term-common/`, 1×`spec://demo/` and 1×`spec://com.example.shop/` (both inside PROP-029's own `##SCOPE-FIXTURES` sentence, which declares them out of scope), 1×`spec://vibeterm/`, 1×`spec://-`. `crates/**/*.rs` — 1480 occurrences, 1339 host-authority, 31 qualified, 76 the bare token, and 34 others: 10×`spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules` in live `#[spec(deviates = …)]` attributes (a real package named without its group — `crates/vibe-cli/src/main.rs`, `crates/vibe-registry/src/lib.rs`, `crates/vibe-resolver/src/activation.rs` and six more), the rest test/doc placeholders (`spec://p/D`, `spec://x/y`, `spec://a/b`, `spec://pkg/doc`, `spec://project/…`, `spec://otherproject/x/y`)."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "discipline-crystallized-from-the-origin-projects-law",
+    "marker": "@spec/done",
+    "claim": "The discipline is crystallized from the origin project's qualified-naming law and its Cargo-vs-Maven precedent study: flat systems hit squatting and trust problems that grouped systems avoid, at the cost of verbosity.",
+    "evidence": [
+      "spec/modules/vibe-registry/PROP-008-qualified-naming.md:22  - ##prior-art Maven solved exactly this with `groupId` (reverse-FQDN) for global uniqueness; npm with",
+      "spec/design/workspace-and-qualified-naming.md:109  ## 6. Cargo vs Maven — the precedent lore",
+      "spec/design/workspace-and-qualified-naming.md:122  | ##ROW-PREC-NAMING Top-level naming @doc/done | Flat crate names on crates.io @doc/done | `groupId:artifactId`",
+      "spec/design/workspace-and-qualified-naming.md:129  - ##DRAWN-GROUPID **groupId: adopted as `group`** — but as a package attribute, not a registry attribute, which"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "located",
+    "searched": "The origin project is this one and the study is on disk: spec/design/workspace-and-qualified-naming.md §6 compares Cargo and Maven across eight aspects including 'Top-level naming — Flat crate names on crates.io' vs 'groupId:artifactId — reverse-FQDN groupId', and ##DRAWN-GROUPID records the adoption as a package attribute. PROP-008 ##prior-art states the same precedent in one line. Direction of the match, per the harvest's warning. This flow was extracted FROM this project: PROP-008's `##discipline-line` names the flow by `spec://` address and calls the PROP 'vibevm's IMPLEMENTED instance of them', and `spec/design/workspace-and-qualified-naming.md` is the 2026-05-20 owner design session the flow's `naming-forks.md` condenses. So a host document agreeing with this fact is provenance; a host CODE surface implementing it is independent."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "reverse-fqdn-descends-from-suns-java-package-naming",
+    "marker": "@spec/done",
+    "claim": "The reverse-FQDN convention descends from Sun's 1995 Java package naming, which borrowed DNS's global uniqueness by writing domains backwards.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:61    Java packages in 1995 for exactly this reason. But whether a group",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:67  ##reverse-fqdn-piggybacks-on-dns-uniqueness Reverse-FQDN is worth recommending because it"
+    ],
+    "src": [
+      1
+    ],
+    "found": "located",
+    "searched": "Source 1 only, and the absence is measured. grep -rn '1995' over spec/ and crates/ (--include='*.md' --include='*.rs') returns nothing. Widened to the convention itself: 'reverse-FQDN' returns 19 hits across PROP-005, PROP-008, spec/modules/README.md, spec/design/workspace-and-qualified-naming.md and six code sites including crates/vibe-core/src/package_ref.rs and crates/vibe-index/src/types/kinds.rs — every one adopting the convention, none attributing it to Sun or to 1995. The date is an external historical claim and nothing in this repository bears on it."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "collections-spirit-is-the-redbook",
+    "marker": "@spec/done",
+    "claim": "The collection's spirit is the book AI-native development, which ships in Russian inside flow:redbook at spec/book/ru/.",
+    "evidence": [
+      "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:46  \"flow:org.vibevm.world/qualified-naming\" = \"=0.1.0\"",
+      "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:1  Подробности об использовании документа — в разделе [Safe Harbor](safeharbor.md).",
+      "vibe.toml:28  \"flow:org.vibevm.world/redbook\" = { version = \"^0.2.0\", link = \"static-transitive\" }"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/ returns three Russian chapters (chapter-1-two-process-model.md, chapter-2-shared-state-and-files.md, chapter-3-memory-individual.md) and the same three arrive installed under vibedeps/flow-redbook/*/spec/book/ru/. The membership half is checkable too and holds: redbook's manifest exact-pins this very package at =0.1.0, and the host depends on redbook — which is how qualified-naming reaches this consumer at all."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "A-NAME-IS-THE-CHEAPEST-INTERFACE-IN-A-SYSTEM",
+    "marker": "@spec/done",
+    "claim": "A name is the cheapest interface in a system and the only one every other component depends on, so it is the one worth getting right first.",
+    "evidence": [
+      "spec/common/PROP-029-fully-qualified-addresses.md:31  - ##ADDR-REFACTOR-PRECONDITION For vibevm that is the precondition for **deterministic, non-LLM address",
+      "spec/common/PROP-029-fully-qualified-addresses.md:39  - ##REFACTOR-DEPENDS-ON-LAW The engine is only possible while §1 holds — the day one bare name lands on disk, a"
+    ],
+    "src": [
+      1,
+      2
+    ],
+    "found": "partial",
+    "searched": "The aphorism is the package's own — a sweep for 'cheapest interface' across spec/, crates/, CLAUDE.md, AGENTS.md and GEMINI.md returns nothing. The operational half is settled in the host and sharply: PROP-029 makes the fully-qualified address the precondition for deterministic non-LLM refactoring and names the failure mode as 'the day one bare name lands on disk, a rename needs a resolver again'. Everything else depending on the name is exactly the host's stated position; the 'cheapest' comparative is not something I can measure."
+  },
+  {
+    "file": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "anchor": "license-line",
+    "marker": "@impl/done",
+    "claim": "The package is UPL-1.0, per its LICENSE.md.",
+    "evidence": [
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+      "packages/org.vibevm.world/qualified-naming/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+      "vibedeps/flow-qualified-naming/0.1.0/vibe.toml:7"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "The manifest declares license = \"UPL-1.0\", LICENSE.md:3 reads 'The Universal Permissive License (UPL), Version 1.0', and the README's relative link [LICENSE.md](LICENSE.md) resolves — the file is in the package root. Source 3: the licence ships, vibedeps/flow-qualified-naming/0.1.0/LICENSE.md exists and the installed manifest carries the same declaration (vibe.toml is byte-identical between source and installed copy)."
+  }
+]
