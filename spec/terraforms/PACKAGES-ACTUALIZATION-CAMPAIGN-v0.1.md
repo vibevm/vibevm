@@ -2249,6 +2249,35 @@ command that would have tested it.
   reasoning: the numbered order appears nowhere outside this document, and the one
   raid this repository executed ordered its cards `D/H → C → F → G → traces`.
 
+- **2026-07-28 · C7 CLOSED — 99 verdicts, zero drift, and F-116 turns out to be
+  about a family rather than a fault.** The three `discipline-mcp-*` briefs judged
+  entirely from machine evidence: the trio diff plus each server's own sources.
+
+  **Every count in all three briefs is exactly right.** Rust claims eighteen tools
+  and thirteen discipline adapters; its crate carries **18** distinct tool-name
+  literals and eighteen less the five tcg ops is thirteen. TypeScript and Go each
+  claim seventeen and twelve; each crate carries **17**. The gap between the
+  projections is precisely `ledger_render`, which rust ships and both siblings say
+  they do not — **three documents agreeing about a difference, which is the opposite
+  of drift.** The parity map's eighteen rows map one-for-one onto the registered
+  names, and the enumeration test the lead claims exists is real and says exactly
+  what the lead says: `the_tool_set_is_exactly_the_declared_inventory` asserts
+  `names == TOOL_NAMES` in stable order, so the list cannot drift from the code
+  without a red test.
+
+  **F-116's three normative items are all reproduced, and none of them is a false
+  statement.** `REPORTS-CARRY-THE-RUNS-ENTIRE-STORY` and `parity-map-lead` are in
+  rust and go and **absent from TypeScript**; the `force`-class clause inside
+  `HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS` is **stated by rust alone**.
+  An omission is not a wrong fact: every anchor that exists is true where it stands,
+  which is why the batch reads 99/99 while the finding stands. **The finding is
+  about the family, not about any of its members** — and that distinction is only
+  available because the three were compared rather than read.
+
+  *No worker was spawned for this batch.* The instrument built for C4 named the trio
+  and answered C7 in a second; the remaining evidence was four greps and one test.
+  A batch whose files are near-identical copies is cheaper to diff than to delegate.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

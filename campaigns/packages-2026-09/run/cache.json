@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T09:58:27Z",
+  "updated_at": "2026-07-28T10:47:01Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -8030,7 +8030,286 @@
       },
       "marker_count": 52,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "e2c83fbfe0a8aeb2806ceb198861f721026f5d0c15956bfaf971f25a0b41572b",
+        "verdicts": {
+          "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:5  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the count is exact and the difference between projections is coherent: 17 distinct tool-name literals in this server's own sources, against 18 in rust and 17 in each sibling — the gap is precisely `ledger_render`, which rust ships and the other two say they do not"
+            ]
+          },
+          "SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:9  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TRANSPORT-IS-THE-VENDORED-MCP-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:12  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-GO-ORACLE-STANDS-ON-GO-TYPES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:15  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:21  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:26  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "REPORTS-CARRY-THE-RUNS-ENTIRE-STORY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:30  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the capture guard it rests on is verified: `mcp-core::capture` redirects at process level into a file and restores on Drop (C1a, MCP-CORE-v0.1 34/34). **This anchor is absent from the TypeScript brief**, which is F-116's first normative item"
+            ]
+          },
+          "parity-map-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:37  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the enumeration test the lead claims exists is real and is exactly what it says: `the_tool_set_is_exactly_the_declared_inventory` asserts the descriptor list equals `TOOL_NAMES` in stable order. **This anchor is absent from the TypeScript brief** — see campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — which is F-116's second normative item"
+            ]
+          },
+          "ROW-INIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:42  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `init` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-FLOOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:43  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `floor` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CONFORM-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:44  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `conform_check` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CONFORM-FREEZE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:45  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `conform_freeze` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-SPECMAP-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:46  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `specmap_check` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-SPECMAP-WRITE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:47  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `specmap_write` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TRACE-EXPLAIN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:48  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `trace_explain` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TEST-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:49  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `test_gate` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TRIPWIRE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:50  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `tripwire` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-HEALTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:51  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `health` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-FAST-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:52  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `fast_loop` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CODEMOD-ADD-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:53  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `codemod_add_cell` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-VALIDATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:54  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `tcg_validate` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:55  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `tcg_scope` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-COMPLETE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:56  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `tcg_complete` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-TYPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:57  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `tcg_type` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-BENCH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:58  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  the tool `tcg_bench` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:60  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-GO-UMBRELLA-HAS-NO-LEDGER-COMMAND": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:63  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TWELVE-THIN-ADAPTERS-OVER-THE-LIB-FNS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:68  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "17 tools less the five tcg ops leaves twelve discipline adapters, which is the number stated"
+            ]
+          },
+          "EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:73  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:77  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the prohibition is structural rather than documentary — a `Tool`'s `run(&mut self, args: &Value) -> ToolOutput` gives it no input channel, so nothing CAN prompt (C1a). The `force`-class clause inside this fact is **stated by rust alone**; the sibling briefs carry the fact without it, which is an omission in the family rather than a false statement in either"
+            ]
+          },
+          "ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:82  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:87  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:93  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:98  the fact under judgement",
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T10:47:01Z",
+        "verify_batch": "C7"
+      }
     },
     "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md": {
       "content_hash": "1056b506ebb5c71eea6422568e42e816296f41f223ca8965a57890907f523d12",
@@ -8513,7 +8792,278 @@
       },
       "marker_count": 52,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "167ad4d101b7d33b33903b0069873a14f3bffad1c58564346d3349870af807a7",
+        "verdicts": {
+          "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:5  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the count is exact and the difference between projections is coherent: 18 distinct tool-name literals in this server's own sources, against 18 in rust and 17 in each sibling — the gap is precisely `ledger_render`, which rust ships and the other two say they do not"
+            ]
+          },
+          "SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:9  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TRANSPORT-IS-THE-VENDORED-MCP-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:13  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:16  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:21  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "REPORTS-CARRY-THE-RUNS-ENTIRE-STORY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:25  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the capture guard it rests on is verified: `mcp-core::capture` redirects at process level into a file and restores on Drop (C1a, MCP-CORE-v0.1 34/34). **This anchor is absent from the TypeScript brief**, which is F-116's first normative item"
+            ]
+          },
+          "parity-map-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:32  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the enumeration test the lead claims exists is real and is exactly what it says: `the_tool_set_is_exactly_the_declared_inventory` asserts the descriptor list equals `TOOL_NAMES` in stable order. **This anchor is absent from the TypeScript brief** — see campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — which is F-116's second normative item"
+            ]
+          },
+          "ROW-INIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:37  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `init` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-FLOOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:38  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `floor` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CONFORM-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:39  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `conform_check` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CONFORM-FREEZE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:40  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `conform_freeze` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-SPECMAP-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:41  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `specmap_check` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-SPECMAP-WRITE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:42  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `specmap_write` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TRACE-EXPLAIN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:43  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `trace_explain` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TEST-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:44  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `test_gate` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TRIPWIRE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:45  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `tripwire` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-HEALTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:46  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `health` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-FAST-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:47  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `fast_loop` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CODEMOD-ADD-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:48  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `codemod_add_cell` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-LEDGER-RENDER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:49  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `ledger_render` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-VALIDATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:50  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `tcg_validate` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:51  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `tcg_scope` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-COMPLETE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:52  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `tcg_complete` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-TYPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:53  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `tcg_type` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-BENCH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:54  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  the tool `tcg_bench` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:56  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THIRTEEN-THIN-ADAPTERS-OVER-THE-LIB-FNS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:61  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "18 tools less the five tcg ops leaves thirteen discipline adapters, which is the number stated"
+            ]
+          },
+          "EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:64  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:69  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the prohibition is structural rather than documentary — a `Tool`'s `run(&mut self, args: &Value) -> ToolOutput` gives it no input channel, so nothing CAN prompt (C1a). The `force`-class clause inside this fact is **stated by rust alone**; the sibling briefs carry the fact without it, which is an omission in the family rather than a false statement in either"
+            ]
+          },
+          "ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:75  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:80  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:85  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:88  the fact under judgement",
+              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/  18 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init ledger_render specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T10:47:01Z",
+        "verify_batch": "C7"
+      }
     },
     "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md": {
       "content_hash": "538a94f3409c696f8c7af85851337a8c5ef6d1dd82674a831b77fecf18ae7110",
@@ -8996,7 +9546,270 @@
       },
       "marker_count": 50,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "1b51f505a3fa474375e7c4024a65001e325ee6552f21ee5e5fd30cb9daba958d",
+        "verdicts": {
+          "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:5  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the count is exact and the difference between projections is coherent: 17 distinct tool-name literals in this server's own sources, against 18 in rust and 17 in each sibling — the gap is precisely `ledger_render`, which rust ships and the other two say they do not"
+            ]
+          },
+          "SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:9  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TRANSPORT-IS-THE-VENDORED-MCP-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:12  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-TS-ORACLE-IS-THE-COMPILER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:16  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:20  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:25  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "ROW-INIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:33  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `init` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-FLOOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:34  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `floor` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CONFORM-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:35  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `conform_check` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CONFORM-FREEZE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:36  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `conform_freeze` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-SPECMAP-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:37  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `specmap_check` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-SPECMAP-WRITE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:38  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `specmap_write` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TRACE-EXPLAIN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:39  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `trace_explain` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TEST-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:40  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `test_gate` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TRIPWIRE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:41  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `tripwire` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-HEALTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:42  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `health` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-FAST-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:43  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `fast_loop` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-CODEMOD-ADD-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:44  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `codemod_add_cell` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-VALIDATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:45  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `tcg_validate` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:46  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `tcg_scope` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-COMPLETE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:47  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `tcg_complete` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-TYPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:48  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `tcg_type` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "ROW-TCG-BENCH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:49  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  the tool `tcg_bench` is registered by name, and its CLI twin is the invocation this row pairs it with"
+            ]
+          },
+          "THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:51  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-TS-UMBRELLA-HAS-NO-LEDGER-COMMAND": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:54  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TWELVE-THIN-ADAPTERS-OVER-THE-LIB-FNS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:59  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "17 tools less the five tcg ops leaves twelve discipline adapters, which is the number stated"
+            ]
+          },
+          "EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:64  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:68  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the prohibition is structural rather than documentary — a `Tool`'s `run(&mut self, args: &Value) -> ToolOutput` gives it no input channel, so nothing CAN prompt (C1a). The `force`-class clause inside this fact is **stated by rust alone**; the sibling briefs carry the fact without it, which is an omission in the family rather than a false statement in either"
+            ]
+          },
+          "ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:73  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:78  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:83  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          },
+          "THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md:86  the fact under judgement",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/  17 distinct tool-name literals: codemod_add_cell conform_check conform_freeze fast_loop floor health init specmap_check specmap_write tcg_bench tcg_complete tcg_scope tcg_type tcg_validate test_gate trace_explain tripwire",
+              "the three briefs' anchor sets were diffed mechanically — campaigns/packages-2026-09/harvest/discipline-mcp-three-way-diff.md — and this anchor is shared by all three projections, so the claim is stated identically wherever it is stated"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T10:47:01Z",
+        "verify_batch": "C7"
+      }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md": {
       "content_hash": "2adbf3408d880eea04649e2328a8e6b37d5d79a858cfbc6c9ab9ab22f2026b9e",
