@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:48:48Z",
+  "updated_at": "2026-07-28T21:51:30Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -46887,7 +46887,302 @@
       },
       "marker_count": 21,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "5153595e4fd86e82d5e93955cd79c2b1d4174872e1370357af28e5f6a2590ef0",
+        "verdicts": {
+          "PACKAGE-INSTALLS-THE-PERIODIC-HEALTH-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock:50      \"flow:org.vibevm.world/health-audit@=0.1.0\",",
+              "vibe.lock:302  name = \"health-audit\"",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "AUDIT.md:5  run appends a dated section; findings carry forward until they are",
+              "spec/boot/STATIC.md:745  <!-- vibe:static org.vibevm.world/health-audit — vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md -->",
+              "confirmed: Checked all three legs. Source 3: the package is in vibe.lock's dependency list and has its own [[package]] block; its boot snippet is compiled into spec/boot/STATIC.md:745-800 with a provenance marker; the payload sits at vibedeps/flow-health-audit/0.1.0/ (8 files, `find vibedeps/flow-health-audit -type f`). Source 2: AUDIT.md exists at the repository root, 24363 bytes, three dated run sections (`grep -nE '^## ' AUDIT.md` -> lines 20, 154, 191) and is appended to, not rewritten (see the append-only row). Perimeter widened beyond the package to: AUDIT.md, spec/common/PROP-013-periodic-health-audit.md, BACKLOG.md, TASKS.md, ROADMAP.md, discipline/ (DEBT.md + registry/debt.json), tools/self-check.sh, CLAUDE.md/AGENTS.md/GEMINI.md, .claude|.agents|.opencode/skills/, vibedeps/, spec/boot/STATIC.md, spec/boot/INDEX.md, vibe.lock, campaigns/, crates/, and `git log` on AUDIT.md."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:13  - ##GATE-DEF vibevm's per-commit gate is `tools/self-check.sh` (`cargo fmt --check`, `cargo test --workspace`, `cargo clippy -D warnings`, `vibe check`). @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+              "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+              "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+              "tools/self-check.sh:9  #   3. `cargo clippy --workspace ...`     — zero warnings under `-D warnings`.",
+              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+              "AUDIT.md:219  **`cargo xtask specmap --check` was red on a clean checkout of `main` —",
+              "confirmed: The host names its gate as tools/self-check.sh and its blind spots in PROP-013 §1 by pointing at this flow's #blind-spots anchor. The self-check header enumerates 10 steps (fmt/test/clippy/vibe check/conform/sync-engines/package gates/self-trace/mcp gates), all per-commit regression checks. The strongest host instance of the split is AUDIT.md 2026-06-12-01: `cargo xtask specmap --check` was RED on a clean checkout of main and the per-commit panel had certified a pre-rewrite tree — a defect the gate could not report on itself."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:9  **The gate is the floor; the audit is what the gate cannot see.**",
+              "spec/boot/STATIC.md:755  **The gate is the floor; the audit is what the gate cannot see.**",
+              "spec/common/PROP-013-periodic-health-audit.md:13  - ##GATE-DEF vibevm's per-commit gate is `tools/self-check.sh` (`cargo fmt --check`, `cargo test --workspace`, `cargo clippy -D warnings`, `vibe check`). @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+              "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+              "confirmed: The law reaches the host verbatim through the compiled boot lane (spec/boot/STATIC.md:755) and the installed snippet (vibedeps/.../42-flow-health-audit.md:9). Source 2: tools/self-check.sh:2 calls itself 'the floor invariants every commit on `main` is supposed to satisfy' — the host's own word for the same thing — and PROP-013 §1 names the audit as what that floor cannot see."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE": {
+            "v": "drift",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
+              "DRIFT, and the worker's own evidence settles it against the claim — this row was returned `located` because the search DID answer the question. The last audit run in `AUDIT.md` is 2026-06-12 (`git log -1 --date=short -- AUDIT.md` → `3656f362 2026-06-12`, and `grep -nE '^## ' AUDIT.md` shows no later section). `grep -noE '(SHIPPED|COMPLETE)[^)]*\\(20[0-9]{2}-[0-9]{2}-[0-9]{2}\\)' ROADMAP.md` returns 15 dated ship lines, and **the two most recent — M1.26 and M1.24 — are both SHIPPED (2026-07-07), after the last audit, with no audit section between**. `git log --oneline --since=2026-06-12 | wc -l` is 1 546. Two milestones declared done on an un-audited base is the flow's own `#never` broken twice, on the artefact the flow itself specifies."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:16  source = \"spec/boot/42-flow-health-audit.md\"",
+              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:21  path = \"spec/skills/health-audit\"",
+              "confirmed: `find packages/org.vibevm.world/health-audit -type f` returns exactly 8: LICENSE.md, README.md, spec/boot/42-flow-health-audit.md, three files under spec/flows/health-audit/, spec/skills/health-audit/SKILL.md, vibe.toml. That is three flow documents + one skill + one boot snippet + README + LICENSE + manifest, matching the claim. The installed payload at vibedeps/flow-health-audit/0.1.0/ carries the same 8 minus vibe.toml's absence — it has 8 files too, including vibe.toml, and no extra files."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:39  ## The four blind spots {#blind-spots}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:78  ## `AUDIT.md` is the durable home {#audit-md}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:129  ## Disposition and carry-forward {#disposition}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:155  ## The checklist is living {#living}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:203  ## Why not the simpler options {#why-not}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:225  ## Re-derive for your project {#re-derive}",
+              "confirmed: Walked the protocol's section headings (`grep -nE '^## ' HEALTH-AUDIT-PROTOCOL.md`): #gate-vs-audit, #blind-spots, #categories, #audit-md, #finding, #disposition, #living, #cadence, #why-not, #re-derive, #summary. Every element the README names is present as its own section. The installed copy carries the same headings (anchors stripped)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-AUDIT-CHECKLIST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:25  ## A — Test integrity {#a-test-integrity}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:67  ## B — Rot outside the gate {#b-rot}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:99  ## C — Drift {#c-drift}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:150  ## D — Debt accumulation {#d-debt}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:34  - ##A1-LOOK-FOR **Look for.** Production paths exercised only through a proxy, or not",
+              "confirmed: The four groups are present as sections; 13 sub-rows (A1-A3, B1-B2, C1-C4, D1-D4) each carry exactly three anchored items named LOOK-FOR / AID / BAD (39 anchors, verified by `grep -noE '##[A-Z0-9]+-(LOOK-FOR|AID|BAD)' audit-checklist.md | wc -l` = 39). Source 2: PROP-013 §2 carries a host instance of every one of those 13 rows at lines 30-51."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "CONTENT-RUNNING-AN-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:18  ## The run, step by step {#steps}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:59  ## The `AUDIT.md` section format {#format}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:97  ## A worked run — \"Acme API\" {#worked-example}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:149  - ##SUM-THE-SEVEN-STEPS Seven steps: open a dated section → walk the checklist breadth-first",
+              "confirmed: Counted the numbered steps in §steps: 7 (anchors STEP-OPEN-A-DATED-SECTION, STEP-WALK-THE-CHECKLIST-BREADTH-FIRST, STEP-RECORD-EVERY-FINDING-AS-YOU-GO, STEP-CARRY-FORWARD-AND-RE-JUDGE, STEP-FIX-THE-CHEAP-FINDINGS-AND-FILE-THE-REST, STEP-RECONCILE-THE-CHECKPOINT, STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY). The worked example is on 'Acme API', a pytest+ruff+GitHub-Actions REST service — invented, not this repository. src [1] only: this row is the package describing its own file."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "CONTENT-THE-SKILL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:20  name = \"health-audit\"",
+              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:21  path = \"spec/skills/health-audit\"",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md:16  ##PRODUCE-A-DRAFT-AND-DO-NOT-COMMIT-WITHOUT-APPROVAL You produce a **draft** `AUDIT.md`",
+              "confirmed: The skill is declared in the package manifest ([[skill]] name/path/description) and the file exists at the declared path. Source 3: it installs to vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md (`ls` confirms). It does NOT reach any harness skill home — see the USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE row for the three-directory search."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:16  source = \"spec/boot/42-flow-health-audit.md\"",
+              "spec/boot/STATIC.md:745  <!-- vibe:static org.vibevm.world/health-audit — vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md -->",
+              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:1  # Flow: Health Audit {#root}",
+              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:9  **The gate is the floor; the audit is what the gate cannot see.**",
+              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:16  The audit is **owner-triggered**, with a floor of **at least once per",
+              "spec/boot/STATIC.md:786  ## Never {#never}",
+              "confirmed: Traced the snippet end to end. Declared in vibe.toml [boot_snippet]; installed at vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md (54 lines, 0 anchors); compiled into spec/boot/STATIC.md at lines 745-800 behind a `vibe:static` provenance marker naming the vibedeps path. Note on the boot lane: the snippet is in the STATIC lane, NOT in spec/boot/INDEX.md — `grep -n 'health-audit' spec/boot/INDEX.md` returns nothing, and INDEX.md holds only 7 entries. Per CLAUDE.md's vibevm block the STATIC lane is read first and in full, so the snippet does reach session boot; it simply does not travel via INDEX."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock:307  files_written = []",
+              "confirmed, settled in the code as it was for the three W4 twins rather than left open. `crates/vibe-cli/src/commands/uninstall.rs` removes the vibedeps slot, drops the lockfile entry and the `[requires]` declaration, then regenerates the boot artefacts so the snippet leaves the compiled lane — and its module doc states exactly that, citing `spec://vibevm/modules/vibe-workspace/PROP-009-loading-model`. The worker is right that `files_written` is `[]` for this package as for all 36, so there is no per-file write record to remove; the whole written surface IS the slot plus the boot contribution, and both are removed. Not exercised — no uninstall was run."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "AUDIT-MD-IS-PROJECT-STATE-NOT-PACKAGE-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock:307  files_written = []",
+              "spec/common/PROP-013-periodic-health-audit.md:76  - ##HIST-DRAFT-1 **2026-05-23 — draft 1, in force.** Owner-requested after the M1.19 session surfaced a milestone-grade defect — `vibe init` scaffolding broken projects — that the per-commit gate and ~800 hermetic tests missed. … The first (seed) run is recorded in [`AUDIT.md`](../../AUDIT.md). @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:78  - ##HIST-EXTRACTED **2026-07-14 — general methodology extracted to the `health-audit` flow.** … moved into the installable `health-audit` package (reaching vibevm through the redbook dependency); this PROP was thinned to vibevm's gate, its known findings, its discipline-depth category E, and its open questions. No process changed. @spec/done",
+              "confirmed: Four independent checks agree. (a) vibe.lock:307 `files_written = []` for health-audit — the installer records writing no project files. (b) AUDIT.md's whole git history is 5 commits, all hand-authored docs commits: b98227ce docs(audit): 2026-05-23 seed inventory / 9283132f docs(terraform): Phase 6 close-out / 21d47694 docs(audit): 2026-06-12 run / f11ed38a docs(audit): same-day dispositions / 3656f362 docs(audit): AUD-0016 dispositioned fixed. No install-shaped commit touches it. (c) AUDIT.md predates the package: it was seeded 2026-05-23, and PROP-013 records the flow's extraction on 2026-07-14. (d) `find vibedeps/flow-health-audit -type f` lists no AUDIT.md."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-CAMPAIGN-PLANS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+              "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
+              "confirmed as a composition claim whose referent resolves: `campaign-plans` exists, is installed, and is a co-member of the same umbrella. The composition is one-directional and has no host instance, and the worker measured both halves precisely — `campaign-plans` never names `flow:health-audit` or `AUDIT.md` (its three `audit` hits are all the verb), and no campaign mandate in either zone cites an `AUDIT.md` finding as its seed. The one P1 filed in-run went to the discipline debt registry as INT-0002 rather than becoming a campaign. That is the practice going unadopted in one direction, not the claim being contradicted."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+              "AUDIT.md:27  WAL's standing Known-issues list.",
+              "AUDIT.md:355  ### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)",
+              "AUDIT.md:357  **WAL and CONTINUE cited commit hashes that no longer exist**",
+              "confirmed: The composition holds on the host but is one-directional in the corpus. Package side: `grep -rn -i 'audit' packages/org.vibevm.world/wal/ --include='*.md'` returns ZERO hits — the wal flow never mentions the audit. Host side is where it is real: PROP-013 §3 ##RECONCILE-WAL states the rule in the host's own words, the seed run says its findings came partly from the checkpoint's standing Known-issues list, and finding 2026-06-12-12 is a recorded instance of checkpoint drift being fixed by an audit run. Per the campaign's citation rule I did not cite spec/WAL.md or CONTINUE.md; I did read both to confirm the reconciliation is real, and PROP-013:64 is the durable statement of the same fact."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-DECISION-RECORDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:78  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. \"Later\" is not a trigger. @impl/done |",
+              "AUDIT.md:102  ### 2026-05-23-08 · C4 · P3 · accepted",
+              "AUDIT.md:104  **Legacy `vibespecs/flow-*` repos archived, not deleted.** The M1.19",
+              "AUDIT.md:339  ### 2026-06-12-10 · E3 · P3 · accepted",
+              "AUDIT.md:344  60 s budget; revisit at the first breach or when vibe-cli decomposes.",
+              "discipline/DEBT.md:22  ## accepted (2)",
+              "discipline/DEBT.md:24  - **DBT-0006** `external-drift` [P3] — Legacy vibespecs/flow-* repos archived, not deleted",
+              "confirmed: Verified against both accepted findings in AUDIT.md and against the machine registry. 2026-05-23-08 carries the reason ('archive is the reversible tidy') and the trigger ('Re-judge next run'). 2026-06-12-10 carries the reason (the crate fits the 60 s budget) and a measurable trigger ('revisit at the first breach or when vibe-cli decomposes'). The same two entries appear in discipline/registry/debt.json as DBT-0006 and DBT-0010-family with dedicated `accepted_reason` and `sunset` fields — DBT-0022's sunset reads 're-open if the stray rewrite recurs in a future run'. Package side: decision-records does not name health-audit (`grep -rn 'health-audit' packages/org.vibevm.world/decision-records/` = 0 hits); the shared machinery is the When-to-revisit field at DECISION-RECORDS-PROTOCOL.md:78."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-ATTRIBUTION-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:76  checklist (if you run `flow:health-audit` or similar): @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:78  > ##THE-AUDIT-CHECKLIST-LINE Attribution: repo-wide grep for the pattern set; check surfaces",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:79  > added since last audit (new CI steps, new scaffolds, new doc",
+              "confirmed: This is the one composition claim with a reciprocal statement in the named package. git-attribution-policy's enforcement-checklist.md carries a whole section '## The periodic audit line {#audit}' at line 70 whose lead says 'Put one line in the project's periodic audit checklist (if you run `flow:health-audit` or similar)' and whose quoted row is the grep-the-pattern-set-since-last-audit row this README describes. `grep -rn 'health-audit' packages/org.vibevm.world/ --include='*.md'` (excluding the package itself, .vibe/cache and nested vibedeps) returns 7 hits across 5 packages: git-attribution-policy, licensing, manual-tests, redbook, secrets-hygiene. Host side: no such attribution row exists on PROP-013 §2's checklist — its rows are A1-D4 plus E1-E4, none of them attribution."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "practice-crystallized-in-the-origin-projects-law": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:76  - ##HIST-DRAFT-1 **2026-05-23 — draft 1, in force.** Owner-requested after the M1.19 session surfaced a milestone-grade defect — `vibe init` scaffolding broken projects — that the per-commit gate and ~800 hermetic tests missed. … The first (seed) run is recorded in [`AUDIT.md`](../../AUDIT.md). @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:18  - ##M119-INIT-DEFECT The M1.19 session shipped a milestone — eight phases, ~800 hermetic tests green, the gate passing on every commit — in which `vibe init` scaffolded **broken projects**: it wrote `naming = \"kind-name\"`, so a freshly-initialised project could not install any package at all. @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:19  - ##M119-TEST-ASSERTED-BROKEN The defect survived the entire milestone; a `cli_init` test even *asserted the broken value as correct*, staying green the whole time. @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:20  - ##M119-CAUGHT-BY-SMOKE It was caught only by a live smoke run during the registry migration. @spec/done",
+              "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
+              "AUDIT.md:48  **`vibe init` / `vibe registry add` scaffolded `kind-name`.** PROP-008",
+              "AUDIT.md:56  ### 2026-05-23-03 · A3 · P2 · fixed (`cc32d7e`)",
+              "AUDIT.md:58  **A test encoded the `vibe init` bug as correct.**",
+              "confirmed: The origin project is this repository, and the story is checkable to the finding. PROP-013 ##HIST-DRAFT-1 dates the law to 2026-05-23, owner-requested after M1.19; ##M119-INIT-DEFECT and ##M119-TEST-ASSERTED-BROKEN give the two halves ('eight phases, ~800 hermetic tests green' and 'a `cli_init` test even asserted the broken value as correct'). AUDIT.md's seed run records both as findings 2026-05-23-02 (A1, P1) and -03 (A3, P2). The README's 'hundreds of tests' and PROP-013's '~800 hermetic tests' agree. One discrepancy worth the reviewer's eye: both -02 and -03 record their fix as commit `cc32d7e`, and that hash no longer resolves — see the ROW-DISP-FIXED row."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NO-AMOUNT-OF-GATE-CATCHES-A-TEST-THAT-GUARDS-A-BUG": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:19  - ##M119-TEST-ASSERTED-BROKEN The defect survived the entire milestone; a `cli_init` test even *asserted the broken value as correct*, staying green the whole time. @spec/done",
+              "AUDIT.md:56  ### 2026-05-23-03 · A3 · P2 · fixed (`cc32d7e`)",
+              "AUDIT.md:58  **A test encoded the `vibe init` bug as correct.**",
+              "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
+              "confirmed: The host's instance is exact: `crates/vibe-cli/tests/cli_init.rs::init_writes_default_registry` asserted `primary.naming == NamingConvention::KindName` and stayed green while the behaviour was wrong (AUDIT.md:59-61). PROP-013 ##A3-WRONG-BEHAVIOR records it as the standing known instance of the A3 row. The gate that missed it is the same tools/self-check.sh in force today. What the host has NOT demonstrated is 'only a periodic judgment sweep does' — PROP-013:20 records that the defect was actually caught by a live smoke run during the registry migration, not by an audit; the audit came after, as the response."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "collections-spirit-is-the-redbook": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/README.md:59  | ##ROW-HEALTH-AUDIT `health-audit` @0.1.0 @impl/done | The periodic judgment sweep over what the per-commit gate is blind to; a skill and an append-only trend. @impl/done |",
+              "spec/boot/STATIC.md:1553  - `health-audit` — the periodic judgment sweep over what the gate",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:65  - ##MEMBER-HEALTH-AUDIT `health-audit` — the periodic judgment sweep over what the gate",
+              "confirmed: `ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/` returns three chapters: chapter-1-two-process-model.md, chapter-2-shared-state-and-files.md, chapter-3-memory-individual.md — so the path exists and carries Russian book content. The redbook lists health-audit as a member in both its README table and its boot snippet, and that membership reaches the host: spec/boot/STATIC.md:1553 carries the same one-liner in the compiled boot lane. `ls vibedeps/flow-redbook/*/spec/book/ru/` returns the same three chapters, so the book reaches the consumer too."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "packages/org.vibevm.world/health-audit/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+              "confirmed: vibe.toml declares `license = \"UPL-1.0\"` and LICENSE.md line 3 reads 'The Universal Permissive License (UPL), Version 1.0'; line 1 is 'Copyright (c) 2026 Oleg Chirukhin'. The installed payload carries the same LICENSE.md (`find vibedeps/flow-health-audit -type f` lists it). Consistent with the host CLAUDE.md ledger line stating the packages/org.vibevm.* surface is fully UPL-1.0."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T21:51:30Z",
+        "verify_batch": "W5"
+      }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md": {
       "content_hash": "c4054902635e8eb335aa835aef3827895d9e8660952d42029e4955f00d478060",
