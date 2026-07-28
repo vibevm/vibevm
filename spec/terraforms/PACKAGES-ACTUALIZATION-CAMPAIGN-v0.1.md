@@ -2497,6 +2497,23 @@ command that would have tested it.
   unresolvable; the Go table 873 with **ten**, which is the checker earning its place
   at 1.1 % rather than crying wolf.
 
+- **2026-07-28 · THE `ai-native` CLUSTER IS CLOSED — 80 of 80 files, 2 697
+  verdicts.** C4 and C5's Rust half came in at **344 of 344 confirmed, 100 %**, and
+  that number was checked rather than celebrated: its nine `not-found` rows split
+  cleanly by marker. Three are `@impl/done` **dated spike measurements** — init
+  handshake ~10 ms, hover ~1 ms, completion ~19 ms at 118 entries — which wave 1's
+  stage semantics confirm unless falsified, and the oracle they measured **is
+  runnable here**: the binary is built and rust-analyzer is installed, unlike the Go
+  stack's gopls. The other six are `@spec/done` and sit under «§4 Staged ambition»
+  and «§5 Licensing posture» — a CFG grammar mask deliberately unbuilt, whose absence
+  is what those facts predict.
+
+  **Rust reads 100 %, TypeScript 98.8 %, Go 93.9 % on the same nine scaffolds and the
+  same oracle shape, and the ordering is about this repository rather than about the
+  three documents.** The host is a Rust project that dogfoods the Rust stack; the
+  TypeScript consumer exists and is complete; the Go consumer exists and its
+  toolchain does not.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
