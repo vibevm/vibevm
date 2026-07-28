@@ -1,0 +1,615 @@
+{
+ "batch": "W2c",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:15  ## The two wrong metaphors {#wrong-metaphors}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:71  ## Coprocessors {#coprocessors}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:123  ## What a productive cycle looks like {#cycle}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:102  ## The boundary moves; one thing does not {#boundary}",
+     "confirmed: A scope declaration checkable only against the file it scopes. Enumerated every `##` heading: §wrong-metaphors (15), §coprocessors (71), §boundary (102), §cycle (123), §dated (149), §re-derive (160), §summary (178). All four promised parts are present and nothing else is, except the re-derive prompt and the summary. The 'standing consequences' the scope promises are carried in the boot snippet's §consequences rather than here, and §boundary + §summary restate them."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "every-other-flow-is-a-consequence": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1526  The book's core — the four IPC requirements and the memory model:",
+     "spec/boot/STATIC.md:1528  - `two-process-model` — the foundation: human and AI as",
+     "vibe.lock:61      \"flow:org.vibevm.world/two-process-model@=0.1.0\",",
+     "confirmed: The dependency direction supports the weaker reading: `redbook`'s lockfile entry (vibe.lock:33-64) requires all 22 members including this one, and the redbook's boot snippet lists this flow first and calls it 'the foundation' (STATIC.md:1524-1529). What is NOT recorded anywhere in the host is an edge FROM another member TO this one: `grep -n 'two-process-model' vibe.lock` returns only the redbook `dependencies` line and this package's own `[[package]]` block, so no sibling declares it as a dependency. 'Consequence' is therefore an editorial relation, asserted in this package's README §composit"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "everyone-begins-with-one-of-two-mental-models": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:22  ### Boss and subordinate {#boss}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:47  ### Human and tool {#tool}",
+     "confirmed: A universal empirical claim about all practitioners; nothing in this repository can bear on it. What is checkable is that the file names exactly two and then treats them (§boss at 22, §tool at 47). Searched the host perimeter for any survey, citation, or measurement supporting the 'everyone begins with' generalisation — `grep -rn 'mental model' CLAUDE.md spec/ AUDIT.md BACKLOG.md campaigns/packages-2026-09/harvest/` returns nothing of the kind. No support beyond the package's own assertion."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "BOTH-FAIL-AND-BOTH-FAIL-THE-SAME-WAY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:63  ##THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD In both models the human takes on **one hundred percent of the",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:61  ### The shared mistake {#shared-mistake}",
+     "confirmed: Internally consistent: the file names the shared failure mode in a dedicated section (§shared-mistake, 61-69) and the mode is the same for both — the human carrying 100% of the cognitive load. The claim that the metaphors fail in practice is not measurable in this repository; searched CLAUDE.md, AUDIT.md, BACKLOG.md and the campaign harvest for a recorded failure attributed to either metaphor, and found none."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "the-boss-and-subordinate-loop": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:24  ##the-boss-and-subordinate-loop The human formulates the task, the AI executes, the human inspects,",
+     "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+     "confirmed: A definition of the metaphor rather than a claim about the world; the file states the loop and the host runs a four-beat loop of the same shape for delegated work (CLAUDE.md:118-126: worker executes → boss reads the diff as a PR → boss runs the gate → boss commits). Noted without arguing it: the host's loop is the one this document labels 'boss and subordinate' at the mechanical level, and §cycle (128-138) labels a nearly identical sequence 'productive' — the difference the document draws is who does steps 1 and 3, not the shape."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-loop-is-familiar": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:27  ##the-loop-is-familiar Familiar — most of the industry runs on it. @spec/done",
+     "confirmed: An unattributed claim about industry practice. Widened past the package to the whole perimeter looking for any citation, benchmark or survey that would bear on 'most of the industry' — searched `packages/org.vibevm.world/**`, `packages/org.vibevm.ai-native/**`, `research/*-demo/`, and the ATLAS evidence files that the ai-native cluster uses for exactly this kind of claim (`grep -rln 'ATLAS' packages/`): the ai-native packages carry a cited evidence atlas, this `world` package carries none, and nothing in it or the host cites a source for this sentence. Nothing on the perimeter bears on the cla"
+    ],
+    "src": [
+     1
+    ]
+   },
+   "THE-AI-IS-A-BAD-SUBORDINATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+     "spec/boot/STATIC.md:286  constraint — so it re-litigates: \"600 s looks arbitrary, propose",
+     "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, …",
+     "confirmed: Two of the three sub-claims are load-bearing across the host and are asserted there independently: zero cross-session memory (STATIC.md:1342, CLAUDE.md:161-165, and the entire WAL/CONTINUE ritual which exists because of it) and confident wrong re-derivation (STATIC.md:284-289, decision-records' own rationale: the agent 're-litigates: \"600 s looks arbitrary, propose 300 s\"'). The middle sub-claim — that it does not ask clarifying questions — is contradicted in one host location: `spec/boot/00-core.md:60` instructs the agent to mark REVIEW and surface the question rather than invent, i.e. the ho"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-DEEPER-FAILURE-IS-LOAD-DISTRIBUTION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:35  ##THE-DEEPER-FAILURE-IS-LOAD-DISTRIBUTION The deeper failure is load distribution. @spec/done",
+     "CLAUDE.md:11  **The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; the cheap worker slots sit idle, already paid for, …",
+     "confirmed: The claim is a diagnosis, and the host holds the same diagnosis in its own words: `CLAUDE.md:9-31` frames the whole delegation-first directive as a load-distribution problem — the expensive process is scarce, the cheap slots idle, and misrouting is what the directive exists to prevent. That is the host agreeing with the shape of the argument, arrived at from a cost premise rather than this document."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-HUMAN-CARRIES-ALL-OF-THE-THINKING": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:37  ##THE-HUMAN-CARRIES-ALL-OF-THE-THINKING In this model the human",
+     "CLAUDE.md:11  … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) …",
+     "confirmed: The four named items (planning, decomposition, verification, big picture) are the same four the host reserves for its expensive tier at CLAUDE.md:11 — so the host agrees on WHERE the thinking sits, but not that this is a failure: it treats the concentration as correct and cheapens it by delegating execution, rather than distributing the thinking as this document proposes. Searched for a host location that distributes planning or decomposition to a worker: the delegation-rules four-axis calculus is invoked from CLAUDE.md:11 but the never-delegate set and 'always review' obligation keep judgment"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-ai-contributes-fast-hands": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:41  ##the-ai-contributes-fast-hands The AI contributes fast hands. @spec/done",
+     "CLAUDE.md:122    (fmt is self-check's fail-fast first gate). A background `fractality wait <id>`",
+     "confirmed: A one-line characterisation of the metaphor. The host's one recorded delegated run reads exactly this way and says so: CLAUDE.md:107-126 describes a worker that executed ~40 mechanical edits faithfully with '0 stale values' while the boss supplied fmt and two behavioural judgments — hands fast, judgment elsewhere. The host does not treat that as a defect."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "fast-hands-are-an-expensive-goal": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:11  **The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; the cheap worker slots sit idle, already paid for, …",
+     "confirmed: This is the one economics claim in the document that the host has acted on, and it acted on it in exactly this direction: `CLAUDE.md:9-31` routes the mechanical work to a cheap worker slot (GLM-5.2 via the fractality launcher) precisely because spending the strongest available model on it is waste. The operating-facts ledger records the mechanics that make it real (profiles, packet schema, the launcher, the standing owner grant that runs are not treated as paid). So the host both states and implements the argument."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-ai-as-a-very-good-autocomplete": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:49  ##the-ai-as-a-very-good-autocomplete The AI as a very good autocomplete: start a function, it finishes;",
+     "confirmed: A definition of the second metaphor, with no host counterpart: this repository's agent surface is session-and-task shaped (boot contract, campaign packets, delegated worktree runs), not completion shaped. Searched the perimeter for any completion/autocomplete workflow — `grep -rni 'autocomplete\\|completion' CLAUDE.md spec/ crates/ xtask/ DEV-GUIDE.md` returns only shell-completion generation in the CLI, which is a different sense of the word. Nothing bears on the claim."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "A-TOOL-HAS-NO-NOTION-OF-THE-PROJECT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:9  ##boot-sequence-lead Every session starts here. In order: @impl/done",
+     "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+     "spec/boot/00-core.md:12  3. ##BOOT-STEP-PROPS Read the relevant PROP/FEAT under `spec/common/` and `spec/modules/` for the task at hand. @impl/done",
+     "confirmed: The host's countermeasure is the evidence: `spec/boot/00-core.md:7-13` exists to give each session a notion of the project before it acts — read the boot lane, then the WAL, then the governing PROP/FEAT, and only then start work. A four-step ritual is not built unless the default is the absence the claim names. The project is months-long and measurable: `git log --oneline | wc -l` and the campaign zones (`campaigns/progress-2026-08/` archived, `campaigns/packages-2026-09/` live) span two waves."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "A-TOOL-OPTIMIZES-LOCALLY-AND-DESTROYS-GLOBAL-CONSISTENCY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1358  - Never optimize locally (one file, one function) at the cost of",
+     "spec/boot/STATIC.md:31  Each fact has exactly one authoritative anchor. Never copy a",
+     "spec/boot/STATIC.md:32  normative value into a second file — cite the anchor instead. Two",
+     "spec/WAL.md:22  W1's thirty-two drifts are one law broken by its own consumer (attribution's",
+     "confirmed: The host both forbids the behaviour (its own loaded copy of this flow's Never list, STATIC.md:1358-1359) and has measured an instance of the damage: `spec/WAL.md:21-24` records that thirteen of W1's thirty-two drifts are one law restated in eight further host locations, 88 lines across 50 files — a single-source-of-truth violation, i.e. exactly the quiet global-consistency loss the claim names, found by measurement rather than argument. addressable-specs' single-source rule (STATIC.md:29-34) is the standing guard."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "EVERY-INVOCATION-IS-A-DISCONNECTED-ACT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+     "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). …",
+     "confirmed: The host treats disconnection as the operating assumption, not a hazard: the WAL is rewritten each session because nothing carries over (00-core.md:41), and `CLAUDE.md:167-197` specifies a whole wind-down ritual whose stated point is that 'any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation'. The ritual is exercised — 28 `docs(wal)` and 10 `docs(continue)` commits in the last 400."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:63  ##THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD In both models the human takes on **one hundred percent of the",
+     "CLAUDE.md:11  **The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; … the ~5%-boss / ~95%-worker target, …",
+     "confirmed: The host carries a numeric split of the same shape — CLAUDE.md:11's '~5%-boss / ~95%-worker target' — which is this claim's inversion applied to the expensive reasoning process rather than to the human. What the host does NOT contain is any measurement of human load, so the second half ('the human is not built for sustained 100% load') has no support here. Searched CLAUDE.md, spec/boot/90-user.md, AUDIT.md and BACKLOG.md for any recorded owner-load or fatigue observation: none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BOTH-MODELS-WASTE-THE-ACTUAL-OPPORTUNITY": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:11  … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) …",
+     "spec/boot/STATIC.md:1318  system's strength is the combination, and each side is assigned only",
+     "confirmed: The host distributes work by architecture, and the distinction the claim draws — thinking, not typing — is precisely the one CLAUDE.md:11 makes when it counts 'reads-and-summarizes' as delegable alongside typing. But the host's actual split routes thinking UP to the scarce tier and typing DOWN, i.e. it distributes typing and concentrates thinking, which is the opposite of the claim's prescription read literally. Searched for a host mechanism that distributes reasoning itself: the delegation-rules DECISION-MATRIX and the RLM need-gate (`fractality gate`) are the candidates and both are describe"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "picture-a-cpu-and-a-gpu": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:73  ##picture-a-cpu-and-a-gpu Picture a system with two processors of *different architectures*",
+     "confirmed: An analogy, not a claim about this repository. Searched the whole perimeter for the CPU/GPU framing to see whether the host reuses it — `grep -rni 'GPU' CLAUDE.md AGENTS.md GEMINI.md spec/ crates/ campaigns/packages-2026-09/harvest/` returns nothing outside the package's own tree and vibedeps/. The host uses the neutral word 'coprocessors' (STATIC.md:1316) and 'two processes' (00-core.md:38) without the hardware analogy. Nothing bears on the analogy's aptness."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "the-cpu-and-the-gpu-each-win-elsewhere": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:76  ##the-cpu-and-the-gpu-each-win-elsewhere The CPU wins on sequential logic",
+     "confirmed: A statement about computer hardware. No source in this repository bears on it, and none is cited by the package. Widened as above (`grep -rni 'GPU\\|parallelism' ` over the perimeter excluding vibedeps/ and .vibe/cache/): nothing. Recorded as outside the perimeter rather than absent from it."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "NEITHER-IS-BETTER-THE-POWER-IS-THE-SPLIT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1318  system's strength is the combination, and each side is assigned only",
+     "spec/boot/STATIC.md:1319  the work it is structurally good at.",
+     "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow … — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
+     "«the power is the split» is verbatim in the host's loaded lane (STATIC.md:1318-1319). «Neither is better» reads against the host's conflict hierarchy only if the two are the same axis, and they are not: Human > Spec > Tests > Code > WAL ranks AUTHORITY IN A DISAGREEMENT, and this flow's own sibling gives the architectural reason — persistent human memory is the one channel the agent cannot reach. Nothing in the host ranks either process as the better worker."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "ROW-HUMAN": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:84  | ##ROW-HUMAN **Human** @spec/done | persistent memory (weeks, years); intent and the \"spirit\" of a decision; … | throughput (reads and writes slowly); mechanical consistency (typos, forgotten twin files); holding many details at once (7±2); routine repetition; work under fatigue @spec/done |",
+     "spec/boot/STATIC.md:1323  - The **human process** is optimized for: persistent memory across",
+     "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+     "confirmed: The 'Strong at' column matches the boot snippet's human-process bullet almost item for item (STATIC.md:1323-1326), and the host's reading-layer stack puts the human's memory at the top with conflict priority (00-core.md:40). The 'Weak at' column is where the row outruns anything checkable: '7±2' is Miller's number used without citation, and this `world` package ships no evidence atlas (unlike the ai-native cluster, whose ATLAS files carry cited claims). Searched `packages/org.vibevm.world/**` for any appendix/ATLAS/citations file: none exists. So the strengths are corroborated and the weakness"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-AI": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:85  | ##ROW-AI **AI** @spec/done | throughput (thousands of consistent lines per minute); mechanical consistency within a session; … | persistent memory (none across sessions); the spirit of a decision (follows the letter); long-range coherence; decisions needing context beyond the window; catching its own errors; volition — it cannot want the project to succeed @spec/done |",
+     "spec/boot/STATIC.md:1327  - The **AI process** is optimized for: throughput (thousands of",
+     "CLAUDE.md:122    (fmt is self-check's fail-fast first gate). A background `fractality wait <id>`",
+     "confirmed: Both columns have host support, unusually for a table row. Strengths: the boot snippet's AI bullet (STATIC.md:1327-1331) and the observed delegated run (CLAUDE.md:107-126 — ~40 edits, 0 stale values). Weaknesses: 'no persistent memory across sessions' is the premise of the whole WAL/CONTINUE apparatus; 'catching its own errors' is directly observed in the same ledger — the worker's own acceptance check false-failed (E-BUG-001, CLAUDE.md 'acceptance is advisory until the diff is read') and the boss found fmt and two behavioural defects the worker did not. 'Volition' is not checkable and I did n"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-TWO-COLUMNS-ARE-COMPLEMENTARY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:84  | ##ROW-HUMAN **Human** @spec/done | persistent memory (weeks, years); … | throughput (reads and writes slowly); mechanical consistency (typos, forgotten twin files); …",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:85  | ##ROW-AI **AI** @spec/done | throughput (thousands of consistent lines per minute); mechanical consistency within a session; … | persistent memory (none across sessions); …",
+     "spec/boot/STATIC.md:1332  - These profiles are **complementary**: the weaknesses of one are the",
+     "confirmed: Checked the table rather than trusting the summary: 'throughput' and 'mechanical consistency' appear in Human-Weak and AI-Strong; 'persistent memory' appears in Human-Strong and AI-Weak; 'the spirit of a decision' likewise. The inversion holds for four of the six pairs and no entry appears strong in both columns, so the observation is accurate to its own table. The host's loaded lane carries the same conclusion at STATIC.md:1332-1334."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-WEAKNESSES-OF-EACH-ARE-THE-STRENGTHS-OF-THE-OTHER": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1332  - These profiles are **complementary**: the weaknesses of one are the",
+     "spec/boot/STATIC.md:1333    strengths of the other. Assign work with the grain, never against",
+     "confirmed: Same check as the row above, run pair by pair over TWO-PROCESS-MODEL.md:84-85. The sentence is also carried word-for-word in the host's loaded boot lane, so this is one of the few facts in the file that the consuming project restates as a standing instruction rather than as background."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "the-human-holds-the-picture-the-ai-holds-the-details": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+     "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:35  - ##AI-ONLY-HOLDING-EVERY-DETAIL-OF-A-FILE Holding every detail of a file simultaneously (within the context",
+     "confirmed: The host's reading-layer stack encodes exactly this asymmetry: the human's head is the durable top layer, the WAL is volatile and rewritten every session (00-core.md:40-41). The 'holds the details' half is the AI-only zone item in the sibling document (cognitive-load-split.md:35-36), qualified there by 'within the context window' — a qualification this sentence drops."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROUTING-WITH-THE-GRAIN-BEATS-EITHER-PARTICIPANT-ALONE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1333    strengths of the other. Assign work with the grain, never against",
+     "CLAUDE.md:125    fmt + 2 behavioural edge cases — exactly the \"boss verifies + finishes the",
+     "CLAUDE.md:126    tail\" split.",
+     "confirmed: The host has one recorded end-to-end trial of grain-routing and its own summary of it is at CLAUDE.md:123-126: the worker executed a ~40-edit migration faithfully, the boss supplied formatting and two judgments — 'exactly the \"boss verifies + finishes the tail\" split'. That is a single observation, recorded by the host itself, not a controlled comparison against either participant working alone; the ledger reports no baseline."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "ROUTING-AGAINST-THE-GRAIN-EXHAUSTS-THE-HUMAN": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:99  ##ROUTING-AGAINST-THE-GRAIN-EXHAUSTS-THE-HUMAN A system that routes against it gets an exhausted",
+     "spec/WAL.md:28  **The 138-row reviewing debt is PAID.** Sixty `partial` rows had been sorted by",
+     "confirmed: The 'drifting machine' half has a measured host instance: `spec/WAL.md:28-31` records 138 delegated rows that were classified by rule instead of searched and had to be re-read individually, and the worker brief opens with the same lesson (`campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:137-139`: '138 rows were sorted by filename in the last cluster and every one of them had to be read again'). That is drift under supervision, caused by mis-routing. The 'exhausted human' half has no measurement anywhere in the perimeter — searched CLAUDE.md, spec/boot/90-user.md, AUDIT.md, BACKLOG.md fo"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-line-shifts-with-capability-criticality-and-the-hour": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:11  … The decidable calculus it sits above — *delegate when verification is cheaper than generation*, scored on four axes (error cost / context / verifiability / size) with the verdict steps and per-model playbooks — is the `delegation-rules` flow it pulls, …",
+     "confirmed: Two of the three variables are parameterised in the host: model capability appears as the delegation-rules 'per-model playbooks' and as the named `big`/`small` slots in the profile (CLAUDE.md operating-facts ledger), and criticality appears as the 'error cost' axis of the four-axis score (CLAUDE.md:11). The third — hour of the day — has no representation anywhere: `grep -rni 'time of day\\|hour of the day\\|fatigue' CLAUDE.md spec/ packages/org.vibevm.world/` returns nothing outside this document. So two of three, hence partial."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "DO-NOT-FREEZE-THE-TABLE-INTO-DOGMA": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "spec/boot/STATIC.md:288  re-litigation. A recorded trigger is what keeps the immunity from",
+     "spec/boot/STATIC.md:289  hardening into dogma.",
+     "confirmed: The anti-dogma instruction has a delivery mechanism installed in the host and it uses the same word: decision-records requires a 'When to revisit' trigger on every record (STATIC.md:255) and states its purpose as keeping immunity from 'hardening into dogma' (STATIC.md:288-289). What I did not find is a recalibration of THIS table in the host: `grep -rn 'responsibility split\\|recalibrat' spec/ CLAUDE.md` returns nothing, and `spec/boot/90-user.md` (the user-owned snippet where a project-specific split would live per the §re-derive prompt) carries communication style, repo access and clean-room "
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "ONE-ASSIGNMENT-NEVER-MOVES-THE-HUMAN-OWNS-COHERENCE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1338  1. **The human owns coherence.** Consistency across sessions, global",
+     "spec/boot/STATIC.md:1529    coprocessors; the human owns coherence; files are the IPC.",
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. …",
+     "CLAUDE.md:209  Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).",
+     "confirmed: Three host locations, one of them dated by an incident: the loaded boot lane (STATIC.md:1338), the redbook members table (STATIC.md:1529), and `CLAUDE.md:203-209`, where the RESUME SESSION contract forbids the session from acting on the recorded next step and records that the rule was added on 2026-06-12 'after exactly that misfire'. A rule added after a coherence loss is stronger evidence than a rule stated at design time."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "the-ai-cannot-own-coherence": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+     "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+     "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+     "confirmed: The premise (no cross-session existence) is asserted throughout the host, and the conclusion is operationalised in a way that only makes sense if it holds: `spec/boot/00-core.md:15` routes a stale-WAL situation to the human rather than to the agent's own judgment, and the WAL layer is explicitly volatile (00-core.md:41). Searched for any host mechanism that gives the agent cross-session state — `grep -rn 'auto-memory\\|MEMORY.md' CLAUDE.md` finds only the rule forbidding it (CLAUDE.md:161-165)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "EVERYTHING-ELSE-EXISTS-TO-MAKE-THAT-JOB-CHEAP": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+     "spec/boot/STATIC.md:22  compare, fix. Twenty tokens, exact hit — no guessing what",
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "spec/boot/STATIC.md:1559  - `licensing` — a deliberate licence posture; permissive-only",
+     "all three mechanisms the fact names by name are installed in this host and all three reduce the cost of the human's coherence job: the checkpoint (STATIC.md:1373-1378), addressable specs priced at twenty tokens per correction (STATIC.md:20-23), and the conflict rules (STATIC.md:185-196). The three named examples are what «everything else» is glossed by here."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "the-cycle-lead": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+     "CLAUDE.md:119    a PR → `git apply` it into the host tree (worker touches disjoint files → it",
+     "CLAUDE.md:120    applies clean) → boss runs the real gate (`self-check`) → boss commits +",
+     "confirmed: The host's delegated-run protocol is a literal instance and states the 'cannot' explicitly: 'Workers **cannot** run git — the boss commits/merges the `fractality/<id>` branch' (CLAUDE.md operating-facts, packets bullet), and the review path at CLAUDE.md:117-122 hands each step to the side that can perform it. The loop closes at 'boss commits + pushes'."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "CYCLE-THE-HUMAN-DECIDES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. …",
+     "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+     "confirmed: The checkpoint-read is boot step 2 in the host's own boot file, and the RESUME SESSION ritual makes the decision explicitly the owner's and explicitly the gate before any work (CLAUDE.md:203-209). 'Minutes, not hours' is a duration claim with no host record; nothing in the perimeter times a session's decision phase, and I did not find a timing artifact (`ls campaigns/packages-2026-09/run/` holds mirror/ and verdict data, no timings)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "CYCLE-THE-AI-GENERATES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1346  3. **Precise tasks beat broad ones.** A task that cites the exact",
+     "CLAUDE.md:110    edit-and-verify task pays a full `cargo build` — hand such a worker a",
+     "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:80  Return a JSON array. One object per marked fact, in document order:",
+     "confirmed: The host's delegation packets are this step made concrete: `[task] goal/acceptance`, `[workspace]`, `[output]`, `[budget]`, `[routing]` (CLAUDE.md operating-facts, packets bullet), with the golden example at `…/fractality/v0.1.0/spec/examples/hello-glm.toml`. The campaign's own worker briefs are the same shape — this brief specifies the exact files, the authoritative anchor list, and the output path. One divergence from the claim: workers here produce evidence and diffs, and 'the updated shared state' (WAL, CONTINUE) is written by the boss, since 'Workers **cannot** run git'."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "CYCLE-THE-HUMAN-VERIFIES": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+     "CLAUDE.md:119    a PR → `git apply` it into the host tree (worker touches disjoint files → it",
+     "CLAUDE.md:120    applies clean) → boss runs the real gate (`self-check`) → boss commits +",
+     "CLAUDE.md:106    `diff` / `grep` is the real gate — acceptance is advisory until the diff is read.",
+     "confirmed: The strongest source-2 match in this file. The host's recorded review path is verbatim 'read the diff as a PR' (CLAUDE.md:118-119), the gate is run by the boss (120), and the boss commits (120-121). CLAUDE.md:105-106 adds the reason in the host's own words: a worker's self-reported acceptance is 'advisory until the diff is read'. This campaign runs the same rule — `campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:11-13` reserves the verdict for a reviewer who reads every row."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "CYCLE-THE-STATE-CARRIES-OVER": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+     "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
+     "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
+     "confirmed: Both carriers exist, are current, and the precedence between them is stated identically in the host's rule (CLAUDE.md:188) and in the installed wal flow (STATIC.md:1377-1378). The 'not anyone's memory' clause is enforced by CLAUDE.md:161. Verified the carrying actually happens across sessions: the last 400 commits contain 28 `docs(wal)` and 10 `docs(continue)`, and the current WAL's `_Updated` line is today's date."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "the-unproductive-mirror-image": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1347     spec section costs twenty tokens to act on; \"finish the module\"",
+     "spec/boot/STATIC.md:1348     costs a re-derivation of the whole context and invites drift.",
+     "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:137  - Never classify a group of facts by one rule to save time. **138 rows were sorted",
+     "confirmed: The mechanism the anecdote illustrates is asserted in the host's loaded lane (STATIC.md:1346-1348) and the host has one measured instance of an under-specified delegation going wrong: 138 rows classified by rule rather than searched, all of which had to be re-read (WORLD-WORKER-BRIEF.md:137-139, `spec/WAL.md:28-31`). That is 'the human re-does the work', not 'a mixed diff' — the specific failure the anecdote describes (unasked changes to adjacent code) has no recorded host instance. Searched `git log --format=%s -400` and BACKLOG.md for a revert or a split-diff caused by scope creep: none name"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-DIFFERENCE-IS-WHETHER-THE-HUMAN-DID-STEPS-ONE-AND-THREE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:125    fmt + 2 behavioural edge cases — exactly the \"boss verifies + finishes the",
+     "CLAUDE.md:106    `diff` / `grep` is the real gate — acceptance is advisory until the diff is read.",
+     "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:11  reads every row and decides `confirmed` / `drift` /",
+     "confirmed: The host holds the same causal claim in two places and has acted on it in both directions: when step 3 was done properly the delegated migration landed with only fmt and two edge cases to fix (CLAUDE.md:123-126); when step 1 was under-specified — five briefs pointing the search at the wrong place — the result was five wrong absences (`WORLD-WORKER-BRIEF.md:47-51`, 'not one of them was a worker's error: each brief pointed the search at the wrong place'). Both are the host's own attribution, recorded before this row was written."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "the-model-fits-the-current-generation": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:11  … It carries the directive in full — the scarce-resource thesis and the ~5%-boss / ~95%-worker target, delegate-by-default, GLM-5.2 as the `big` worker slot, first-level swarm and RLM handling, the never-delegate set, and the obligations (always review; surface the analysis out loud; announce the harness). …",
+     "CLAUDE.md:114    `state=failed exit=1` **though the work may be complete** — never discard on",
+     "confirmed: The 'not yet autonomous' half is the host's operating assumption and it is instrumented: an always-review obligation and a never-delegate set (CLAUDE.md:11), plus a recorded case where the worker's own status was wrong in both directions ('failed' on complete work, CLAUDE.md:112-115). The 'real partner' half is supported by the same ledger's outcome (~40 edits, 0 stale values). Whether this generalises beyond the two models named here (Claude, GLM-5.2) is not checkable from the repository."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "the-model-will-change": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:154  ##the-model-will-change It will",
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "confirmed: A prediction, unfalsifiable at the moment of writing. What is checkable is whether the package equipped it with the revisit machinery its own collection requires: decision-records demands a measurable trigger (metric + threshold + where observed, STATIC.md:255) and this document supplies none — the following unit (RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE) names 'when the underlying capabilities move', which is not a metric with a threshold. Searched the package for any dated review or trigger record: `grep -rn 'revisit\\|trigger' packages/org.vibevm.world/two-process-model/` returns only that"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:235  <!-- vibe:static org.vibevm.world/decision-records — vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->",
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "spec/boot/STATIC.md:295  - Never re-litigate a recorded decision without naming its trigger",
+     "the flow it delegates to is installed and does carry exactly the revisit discipline claimed (STATIC.md:250-255, 291-300). A GAP is recorded rather than counted against this fact: decision-records demands a MEASURABLE trigger — metric + threshold + where observed — and forbids a record without one («a fact with decoration, not a record»); the split this document defines has none, «when the underlying capabilities move» names no metric and no threshold, and no four-field record for it exists anywhere in the package. The fact points at the mechanism and does not claim a record exists, so the gap is a finding about the package's application of its own sibling, not a falsification here."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:328  This project ships the **DISCOVERY collaborative-research prompt**, a",
+     "spec/boot/STATIC.md:330  structured co-inquiry. The artifact lives at",
+     "spec/boot/STATIC.md:332  It is a **payload for a fresh session**, not standing instructions —",
+     "confirmed: The host installs a flow built on the same distinction and states it in the same terms: the discovery-prompt artifact is 'a payload for a fresh session, not standing instructions' (STATIC.md:328-333), i.e. a task handed to an agent rather than a result pasted into the project. This document practises it — the §re-derive block (lines 167-176) is a task to paste, ending 'Do not apply until I approve.' Widened to check whether the host has used it: `grep -rn 'responsibility split' spec/ CLAUDE.md` finds no derived split, so the prompt is shipped and not exercised here."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "re-derive-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:167  ```",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:174  as a draft for the project's boot file. Do not apply until I",
+     "spec/boot/STATIC.md:332  It is a **payload for a fresh session**, not standing instructions —",
+     "confirmed: The promised block is present immediately after the lead (fenced code, lines 167-176) and it is a paste-ready instruction ending in an approval gate — 'Propose it as a draft for the project's boot file. Do not apply until I approve.' The 'fresh session' framing matches the discovery-prompt flow's own handling of payload prompts (STATIC.md:332-333). One thing the prompt asks for that this host does not have: it says 'Read spec/flows/two-process-model/ end to end', and that directory does not exist here — the installed copy is under `vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-m"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:63  ##THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD In both models the human takes on **one hundred percent of the",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:61  ### The shared mistake {#shared-mistake}",
+     "confirmed: A summary row; checked it against the body it summarises (§shared-mistake, 61-69) and it restates it faithfully, including the 100% figure. Note the summary says '100% of the thinking' where the body says '100% of the cognitive load' — same referent, different noun. No host source bears on the metaphors themselves (see the BOTH-FAIL row); this row inherits that."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1316  are two coprocessors with radically different architectures working",
+     "spec/boot/STATIC.md:1332  - These profiles are **complementary**: the weaknesses of one are the",
+     "spec/boot/STATIC.md:1529    coprocessors; the human owns coherence; files are the IPC.",
+     "confirmed: The three content words of this summary — coprocessors, complementary, with the grain — all appear in the host's loaded boot lane (STATIC.md:1316, 1332-1334), and the redbook's own one-line description of this flow uses 'coprocessors' too (STATIC.md:1528-1529). This is the sentence the host has most thoroughly absorbed."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1338  1. **The human owns coherence.** Consistency across sessions, global",
+     "spec/boot/STATIC.md:1529    coprocessors; the human owns coherence; files are the IPC.",
+     "CLAUDE.md:209  Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).",
+     "confirmed: The invariant half is carried in two host locations and reinforced by a dated incident rule (CLAUDE.md:209). The moving half is exhibited by the delegation-first directive itself, which CLAUDE.md:9 dates as newly installed and describes as shifting what the expensive process does — the boundary moved while the coherence assignment did not. Both halves observable in the same file."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SUM-THE-PRODUCTIVE-CYCLE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+     "CLAUDE.md:120    applies clean) → boss runs the real gate (`self-check`) → boss commits +",
+     "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+     "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
+     "confirmed: All four beats are present in the host's own recorded loop (owner decides at the resume gate, worker generates, boss reads the diff and runs self-check, WAL/CONTINUE carry over). The conditional clause is the interesting one and the host tests it: the shared state IS maintained (WAL `_Updated` today, 28 `docs(wal)` commits in 400), and where it was not — the 138 rows classified rather than searched — the human's step 3 stopped being cheap and became a re-read of every row (`spec/WAL.md:28-31`)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1526  The book's core — the four IPC requirements and the memory model:",
+     "spec/boot/STATIC.md:1549  The project-practice wave — running a project over the long haul:",
+     "spec/boot/STATIC.md:1557  - `secrets-hygiene` — surface-secrets never printed or persisted;",
+     "the summary restates a fact confirmed above, and its scope is honestly wider than the collection's structure supports: the redbook's installed members list is split into «the book's core — the four IPC requirements and the memory model» (10 members) plus a project-practice wave and a cultural-extraction wave (13 more), and licensing, qualified-naming, managed-blocks and source-mirrors serve project governance and tool authoring rather than the session cycle. Recorded as a measurement, not counted as drift: rhetorical scope in a summary line is not the class of defect this phase measures, and W2a's metaphor rows were judged the same way."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
