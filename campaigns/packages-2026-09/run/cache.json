@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:25:29Z",
+  "updated_at": "2026-07-28T21:27:17Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -28392,7 +28392,425 @@
       },
       "marker_count": 30,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "c44be62d2bafb8c88fc9c12da7c5230e67e86669f053e450b32a27ecaa606eb6",
+        "verdicts": {
+          "LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:69  This project executes large changes as **campaigns**: multi-commit",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree {#root}",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+              "confirmed: The snippet is compiled into the host's static boot lane verbatim, so every session reads this sentence. The host behaves that way: `ls spec/terraforms/` = 2 ratified plans, `ls campaigns/` = 2 zones (packages-2026-09 live, progress-2026-08 archival), plus 25 further plans in `legacy-spec/terraforms/`. All the large work in this repository is planned this way; I found no counter-example of a multi-session change carried without a plan document."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "PROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:75  When the owner commissions work that spans **more than one session or",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3  <status stage=\"impl\" state=\"work\" comment=\"RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase A open\"/>",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:446  - **2026-07-26 · RATIFIED; PHASE A OPEN.** Owner ratified in session",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:17  > «Пожалуйста, запланируй проверку всех пакетов внутри `org.vibevm.world` и",
+              "confirmed: The live wave-2 plan is the practice in the strongest form the repository has: the owner's commissioning words themselves say «запланируй» (plan it), the plan was written and then ratified before any package file was touched, and the LOG's first entry is the ratification, not a code change. The plan-before-tree ordering is visible in the ordering of the LOG: RATIFIED at :446 precedes every measurement entry."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-plan-carries-five-roles": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:77  touching the tree. The plan is one document carrying five roles: the",
+              "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:200  **Both plans carry all five roles the flow names**, as top-level sections:",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3022  ## 9. REPORT {#report}",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1295  ## 11. REPORT (filled at close-out against §8) {#report}",
+              "confirmed: Verified the harvest's table myself by listing both plans' `^## ` headings. Wave 2: §0 Mandate, §1 Baseline, §5 Phases, §6 Predictions, §7 LOG, §8 Deferrals, §9 REPORT. Wave 1: §0 Mandate, §1 Baseline, §5 Phases, §8 Predictions, §9 LOG, §10 Deferrals, §11 REPORT. All five roles are present as sections of one file in both — the harvest is right. One qualification the harvest does not make: the roles are not wholly inside the file. Both campaigns keep their deferral content in `campaigns/<id>/deferrals.md` and their working state in `campaigns/<id>/run/`, so the in-file §Deferrals sections are empty placeholders."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROLE-PLAN": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:78  recipe (PLAN), the frozen starting numbers (BASELINE), falsifiable",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:218  ## 5. Phases {#phases}",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:99  ## 5. Phases {#phases}",
+              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:263  ## 8 — Phases",
+              "confirmed: Both live plans carry the PLAN role as `## 5. Phases`, with per-phase numbered steps; the archived plans carry it as `## 8 — Phases` in the canonical numbering. The word PLAN is not used as a section name anywhere in the host — `grep -nE '^## .*\\bPLAN\\b' spec/terraforms/*.md legacy-spec/terraforms/*.md` returns 0. The role is carried by the Phases section, not by a section called PLAN."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROLE-BASELINE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:78  recipe (PLAN), the frozen starting numbers (BASELINE), falsifiable",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:40  | **total** | **37** | **294** | **28 733** | |",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:39  ## 1. Baseline (verified at authoring time, 2026-07-24) {#baseline}",
+              "confirmed: Both live plans open with a dated Baseline section of exact counts. Wave 2's is a table totalling 37 packages / 294 files / 28 733 lines. The 'frozen' half is observably not absolute: the same section carries in-place corrections made at ratification (703 specmark sites where the plan had said 247; seven packages carrying crates/, not eight), each marked as a correction with its date. The campaign zone also carries a machine-written `campaigns/packages-2026-09/baseline.json`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROLE-PREDICTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:79  expectations (PREDICTIONS), the running record (LOG), and the closing",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:413  ## 6. Predictions (falsifiable, campaign-wide) {#predictions}",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:415  **A5 is adopted, so each prediction names the step that tests it.** Wave 1's",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:327  ## 8. Predictions (falsifiable, campaign-wide) {#predictions}",
+              "confirmed: Both live plans carry the section with 'falsifiable' in the heading. Wave 2's six predictions each carry a bolded '**Tested by:**' clause naming the step that tests them, adopted as amendment A5 in response to wave 1's REPORT finding that prediction 1 was never exercised by any step. That is the role in its strongest observed form in this repository."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROLE-LOG": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:79  expectations (PREDICTIONS), the running record (LOG), and the closing",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:339  ## 9. LOG (execution ledger — append per batch/wave/phase) {#log}",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1780  - **2026-07-28 · PHASE C OPENED — C0: the harvest exists, and the phase is",
+              "confirmed: Both live plans name the section LOG, and wave 1's heading equates it with the execution ledger. Measured wave 2's LOG size: `grep -cE '^- \\*\\*2026-' …` = 98 dated entries between :444 and :3018, i.e. the LOG is roughly 2 570 of the file's ~3 025 lines. It is the running record in fact, not just in name."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROLE-REPORT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:80  verdict (REPORT). Format:",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1295  ## 11. REPORT (filled at close-out against §8) {#report}",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1297  _Filled 2026-07-26. Scored against §8 as written, not as one would like it to",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3024  *(empty — filled at close-out against §6)*",
+              "confirmed: Wave 1's REPORT is filled and scores all six predictions one by one with an explicit verdict word each (CONFIRMED ×5, FALSIFIED ×1), plus a `### What the predictions did not cover, and should next time {#report-gaps}` subsection. Wave 2's REPORT is an empty placeholder because the campaign is live — that is the role present and reserved, not absent."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "format-pointer": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:81  [`../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md`](../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md).",
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
+              "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
+              "vibe.lock:191  files_written = []",
+              "DRIFT: the fact's SUBJECT is the pointer. `../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` resolves inside the package and inside the install slot, and not from `spec/boot/STATIC.md:127` where the host actually reads it — `ls spec/` returns WAL.md boot common design manual-tests modules terraforms, with no `flows`. W1's 69-dangling family; the format document itself ships and says what the snippet says it says."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "write-the-plan-to-run-cold-lead": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:85  Write the plan so a fresh session — or a different person — executes",
+              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:7  > **Read-first / boot.** This plan is written to be executed cold. Boot the",
+              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:16  rewritten accordingly). vibe-tcg-ts is explicitly OUT — a",
+              "campaigns/packages-2026-09/PHASE-C-RESUME.md:1  # Phase C — resume, with the `ai-native` cluster closed {#root}",
+              "confirmed: The cold-start declaration is standard in the archived plans (a `_Status: … cold-executable: …_` clause or a 'Read-first / boot' blockquote). Neither live plan carries such a clause: `grep -niE 'cold-executable|executed cold|cold context' spec/terraforms/*.md` returns 0. What the live campaign has instead is a per-phase cold-resume document written by hand — `campaigns/packages-2026-09/PHASE-C-RESUME.md`, and `PHASE-C-KICKOFF.md` before it — plus the generated `run/RESUME.md`. The property is practised; the plan is not the artifact that carries it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COLD-MANDATE-QUOTED-VERBATIM-AND-DATED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:86  it with no memory of the planning conversation: the owner's mandate",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:15  ## 0. Mandate (owner's words, 2026-07-25, recorded verbatim) {#mandate}",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:13  ## 0. Mandate (owner's words, 2026-07-24, recorded verbatim) {#mandate}",
+              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:20  Mandate (owner, 2026-07-07): take everything listed in",
+              "confirmed: This is the single best-observed fact in the package. Both live plans open with `## 0. Mandate (owner's words, <date>, recorded verbatim)` and quote the owner in Russian inside a blockquote — the wording is untranslated and unparaphrased. The archived DEFERRALS-CLOSEOUT-PLAN carries the same shape as a plain paragraph. Wave 2's plan then reads the mandate for a second requirement it does not state literally ('Two things are being asked, and only the first is obvious'), which is interpretation recorded next to the verbatim text rather than in place of it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:87  quoted verbatim and dated, baseline and exit state as exact counts,",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:40  | **total** | **37** | **294** | **28 733** | |",
+              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:15  ## 0. Target arithmetic",
+              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:7  *Execution record: all six phases ran to the exit state in one session — baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files, exactly §0's arithmetic). 19 commits (`254b974` … `475fa75`). …",
+              "DRIFT on its second half, over the whole live window. The baseline half holds — both live plans open with a dated exact-count section, wave 2's a table of 37 packages / 294 files / 28 733 lines. The exit half has no live instance at all: `grep -niE 'exit state' spec/terraforms/*.md` returns 0, and neither plan states campaign-level arithmetic reconciling which of its units end where. The archive shows the host once did it completely — SHRINK-PLAN's §0 reads 130 = 68 + 28 + 24 + 8 + 2 and its execution record closes at exactly 10. Adopted, then dropped: 0 of 2 live campaigns, which is the whole window."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COLD-FACTS-VERIFIED-AT-WRITING-TIME": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:88  current-state facts verified at writing time, decisions with their",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:50    (781 counting the superseded `core-ai-native` v0.7.0). That is the join",
+              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:130  ## 5 — Current-state facts (verified at authoring; do not re-discover)",
+              "confirmed: The rule is named in the host's section titles themselves: `grep -rlE '^## .*Current-state facts' legacy-spec/terraforms/*.md` = 14 archived plans; both live plans fold it into `## 1. Baseline (verified at authoring time, <date>)`. Note the harvest flags this anchor as one of the six 'words differ' between package and installed copy in the boot-lane join: it sits alone on line 37 of the source, so the join's `strip_markup` counts it as prose. The compiled host lane at STATIC.md:88 carries the same sentence, so the difference is the instrument, not the text."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COLD-DECISIONS-WITH-REJECTED-OPTIONS-AND-REASONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:89  rejected options and reasons, a literal quick-start block, and a",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:111  consumer that does not behave as promised. **Considered and rejected:**",
+              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:104  Options considered:",
+              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:105  - (α) vibe rewrites cross-package path-deps at materialise time — real",
+              "confirmed: Wave 2's §3 carries three decisions, each with a '**Decision.**' / '**Why:**' / '**Considered and rejected:**' / '**Revisit when:**' shape — decision-records' template fields used inline in a campaign plan, which is exactly what the composition line claims. The archived DEFERRALS-CLOSEOUT-PLAN §D1 is the fuller form: three lettered options, the chosen one marked, each rejection given its reason (α 'belongs in the PROP-025 family as future work', β 'breaks PROP-011; rejected')."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COLD-A-LITERAL-QUICK-START-BLOCK": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:89  rejected options and reasons, a literal quick-start block, and a",
+              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:734  ## 8. Quick-start (for the executing session)",
+              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:738  bash tools/self-check.sh; echo \"EXIT=$?\"          # must be 0",
+              "campaigns/packages-2026-09/PHASE-C-RESUME.md:21  cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09",
+              "DRIFT, and I measured it myself before ruling: `grep -ci 'quick.start'` returns **0 in both live plans**. The section exists in 7 archived plans under its canonical title and in neither live one, and `grep -rniE 'quick.start' campaigns/packages-2026-09/*.md` is 0 as well. The live campaign's nearest equivalent is a per-phase resume document, not a plan-level block a cold session runs first. The host has a quick-start habit — it keeps one in its checkpoint — but not where this rule puts it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:90  runnable whole-campaign acceptance script. Wrong current-state facts",
+              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:339  ## 12 — Whole-campaign acceptance",
+              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:342  bash tools/self-check.sh; echo \"EXIT=$?\"                       # exit 0",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:308  ## 7. The exit gate, restated as five checks {#gate}",
+              "DRIFT, same shape and the same window: 8 archived plans carry `## … Whole-campaign acceptance`, 0 live plans and 0 campaign zones do. What the live campaign has instead is a five-check prose exit gate at PHASE-C-BATCH-PLAN.md:308-318, of which one check names a command and check 4 says outright «No shipped command counts this; the phase writes the script that does». A prose gate is not the runnable script this rule requires, and the archived PACKAGE-TREE-PLAN §12 shows the host knows the difference."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WRONG-CURRENT-STATE-FACTS-ARE-THE-MOST-EXPENSIVE-PLAN-BUG": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:91  are the most expensive class of plan bug — verify while writing.",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:56    about unmeasured numbers should re-measure.)*",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:53    **rust family alone** — `rust-ai-native-lang` + `rust-ai-native-mcp` measure",
+              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:23  Everything else reaches zero. **Correction (2026-06-12, Phase 0 execution):** the authoring premise that three `file-length` entries were stale (`commands/search.rs` 566, `output.rs` 556, `git_registry.rs` 554 \"post-fmt\") is **falsified** — those figures were non-blank-line counts; the rule counts physical lines (`text.lines().count()` in the frontend), and the real sizes are 609 / 612 / 608. …",
+              "confirmed: Two independent host instances, both self-recorded. Wave 2's own baseline was wrong by a factor of ~3 (247 specmark sites where the true figure is 703) and the correction says so in place, ending 'A plan's own numbers are the first thing a campaign about unmeasured numbers should re-measure.' The archived SHRINK-PLAN §0 carries the same class of error, caught by a Phase 0 probe. Both corrections were made cheaply, in the plan, before the affected phase ran — the cost claim is directionally supported but nothing in the host measures a plan bug's cost against other bug classes."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:95  Phase 0 is spikes and probes — no commits — and it gates everything",
+              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:305  ## 3. Phase 0 — probes and spikes (no commits; gate for everything after)",
+              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501  ## 5. Wave 0 — spikes (no commits; gates for everything after)",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
+              "DRIFT on the antecedent, not on the rule: **neither live campaign has a Phase 0 at all.** I checked both plans' phase headings directly — wave 2 runs A, B, C, D, E, T, F, G and wave 1 runs A, B, L, C, D, E, F, G, and `grep -c 'Phase 0'` returns 0 in each. Five archived plans do carry one, with the no-commits clause almost verbatim in the heading. So a rule stated as «every campaign opens with a phase that produces no commits» is broken by the two campaigns this repository is currently running. The live campaign's only self-named spike, C0, is a batch inside Phase C and it committed."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:96  after. Every later phase ends with the project's full gate panel",
+              "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:41  any phase is a safe stop; the floor must be green at every phase boundary._",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:782    bigger than diagnosed.** Two commits, floor green on the committed tree,",
+              "campaigns/packages-2026-09/PHASE-C-RESUME.md:16  | tree | clean, in sync with `origin/main`, mirrored to both hosts |",
+              "DRIFT on two of its three clauses. The gate-panel clause holds — `tools/self-check.sh` is real and the floor is asserted at batch and phase closes in wave 2's LOG. The safe-stop law is stated in 12 archived plans and **0 live ones**. And «the plan plus its execution ledger are the resume pointer» is not how the live campaign resumes: it uses PHASE-C-RESUME.md and a generated run/RESUME.md instead. Correcting the harvest I wrote while ruling on it: its «5 times in wave 2 and 11 in wave 1» is a LINE count over a pattern that also matches `self-check`; the occurrence count of gate-panel wording is 4 and 5, and the bare word `floor` is 32 and 10 — the opposite ordering. State the unit with the count; the harvest now does."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:99  [`../flows/campaign-plans/phase-gates.md`](../flows/campaign-plans/phase-gates.md);",
+              "spec/boot/STATIC.md:101  [`../flows/campaign-plans/execution-ledger.md`](../flows/campaign-plans/execution-ledger.md).",
+              "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md:1  # Phase Gates {#root}",
+              "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md:1  # The Execution Ledger {#root}",
+              "DRIFT, same family and the same reason: this fact is two pointers and nothing else. Both targets ship and both carry what is promised — phase mechanics and the record half — so the CONTENT claim is true; the paths are what fail, resolving to a `spec/flows/` the consuming project does not have. Third of the three `../flows/` pointers in this snippet; the other rules that merely contain such a link are judged on their rules."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "BOUNDARY-RUN-THE-FULL-GATE-PANEL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:105  1. Run the full gate panel; the floor must be green.",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:889    propagated by `sync-engines` (33 pairs, 6 sets, clean), floor green on 25 steps.",
+              "campaigns/packages-2026-09/PHASE-C-RESUME.md:15  | gate | `progress check --exhaustive` **clean, 259 files, 0 warnings** |",
+              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:712  - Close panel: self-check 22 steps exit 0; corpus 9/9 (cold 2 538 ms,",
+              "confirmed: The gate panel is real and named: `tools/self-check.sh` exists and its step vocabulary appears 58 times in the file. The archived MCP-SOVEREIGNTY records a close panel with the full run ('self-check 22 steps exit 0; corpus 9/9'). In the live campaign the panel is recorded per batch in LOG prose ('floor green on 25 steps') and per phase in the resume document's gate row, which reports the campaign-specific `progress check --exhaustive` rather than the whole floor."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:106  2. Write the phase's commit-map entry in the execution ledger —",
+              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:694  ### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE",
+              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
+              "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
+              "DRIFT: `grep -niE 'commit map|commit-map'` over both live plans and both campaign zones returns **0 hits**, against 3 archived plans that carry the form completely — MCP-SOVEREIGNTY §13 has six `### Wave N — EXECUTED (date); commit map` sections, one entry per commit with hash, subject, what it did and what it confirmed. The live plans cite hashes inside LOG prose — 17 unique in wave 2, 20 in wave 1, re-measured and matching — but never as a per-phase map, and 17 against 189 commits in the zone is the same gap counted from the other end."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "BOUNDARY-REFRESH-THE-STATUS-LINE": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:108  3. Refresh the plan's status line (\"Phase N landed, floor green,",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1780  - **2026-07-28 · PHASE C OPENED — C0: the harvest exists, and the phase is",
+              "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
+              "DRIFT, and the live plan contradicts itself inside one file. Its status line at :5 reads PHASE A OPEN while its own LOG at :1780 records PHASE C OPENED and the generated `campaigns/packages-2026-09/run/RESUME.md:5` says Phase C — three statements of the campaign's state in durable files, no two agreeing. Wave 1 is stale the same way: «AUTHORED 2026-07-24 · IN FLIGHT … Phase D OPEN … next: the two escalations» on a campaign whose §11 REPORT is filled and dated 2026-07-26 and which wave 2's own header calls closed out. Neither plan refreshes the line at a boundary; the rule even supplies the sentence to write."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "BOUNDARY-ESCALATE-OWNER-ONLY-DECISIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:110  4. Escalate anything only the owner can decide as a review point:",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:608    updated to \"B and L closed\". **Review point (OPEN):** the campaign plan",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:512  - **RESOLVED review point (owner, 2026-07-24, in session) — the WAL",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:513    and the boot files:** «spec/WAL.md не должен участвовать в проверке,",
+              "confirmed: the mechanism is adopted and exercised in the prescribed form. Wave 1 carries 6 `**RESOLVED …**` entries with the owner's ruling quoted verbatim in the original Russian and dated, several marked «in session», and at least one stated OPEN first with the question and «Owner call before L5» — the full OPEN→RESOLVED sequence the rule describes. Wave 2 carries 0 of either label and records owner rulings in LOG prose instead («Owner ruling 2026-07-26: «не перевыпускай пакет…»»), which is the same content in a different shape. One of two live campaigns using the label is too small a window to call systematic, and the rule is demonstrably in live use rather than merely shipped."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-START-PHASE-ONE-ON-A-RED-SPIKE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:115  - Never start Phase 1 while a Phase 0 spike is red — a red spike",
+              "legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:349  ## 5. Phase 0 — spikes (no commits; a red spike rewrites the decision here first)",
+              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:118  Crate disposition (corrected by the Phase 0 topology spike): the FOUR",
+              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:839    production shape: JSON-RPC 2.0, **line-delimited** stdio (NOT",
+              "confirmed: One archived plan puts the rule in its own Phase 0 heading almost verbatim. Two archived plans carry the rule fired: DEFERRALS-CLOSEOUT's §D1 crate disposition was rewritten in place by the Phase 0 topology spike ('the FOUR neutral-engine crates'), and MCP-SOVEREIGNTY's S1 spike finding says 'the draft's D3 said LSP-style framing and was WRONG' with the decision corrected before the transport was authored. Both corrections are in the plan file, in place, exactly as the rule prescribes. No live plan has a Phase 0, so the rule has no live instance."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-COMMIT-DURING-PHASE-ZERO": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:117  - Never commit during Phase 0. Spikes leave findings, not tree",
+              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:519  - Exit gate: S1–S4 findings recorded in §11; no tree changes survive",
+              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:836  ### Wave 0 — spike findings (2026-07-07, no tree changes)",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:172  No verdicts. Two jobs:",
+              "confirmed, judged on its own sentence rather than on its family — and the neighbouring fact is ruled drift for the antecedent this one does not assert. This rule names Phase 0; the host has no Phase 0 in either live campaign, so there is no Phase 0 in which it could have been broken, and the five archived plans that DO have one obey it literally: MCP-SOVEREIGNTY's Wave 0 exit gate reads «findings recorded in §11; no tree changes survive the spikes» and its ledger section for that wave is the only one carrying no hashes. RECORDED SO IT IS NOT LOST: the live campaign's C0 is titled a spike («### C0 — spike: the harvest…», «No verdicts») and it committed — `a90cc387` touching run/cache.json and run/state/corpus.json, two of whose three files are campaign state rather than findings. C0 is a batch inside Phase C. The neighbouring `PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER` carries that failure, because it asserts the opening phase exists."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-DO-DISCOVERED-WORK-SILENTLY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:119  - Never do discovered work silently \"while I was here\" — it enters",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1786    **The size correction first, because it is the same slip B16 named.** The",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:236  2. **DEFERRED as a re-mint — and then it turned out no re-mint was needed.**",
+              "campaigns/packages-2026-09/deferrals.md:4  tasks, postponed doc chapters. A tail earns a line **only** if someone decided",
+              "confirmed: `grep -rniE 'while I was here' spec/ legacy-spec/ campaigns/` returns 0 — the phrase is the flow's, not the host's. The behaviour it names is observably recorded rather than silent: wave 2's LOG carries 98 dated entries, and discoveries are written into them as corrections with their reason (the Phase C size correction at :1786; Phase A step 2's 'DEFERRED as a re-mint — and then it turned out no re-mint was needed', which records both the deferral and its reversal). The two dispositions the rule offers — enter the phase, or defer by name — both have live instances, the second in `campaigns/packages-2026-09/deferrals.md`, which admits a line 'only if someone decided to leave it.'"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-CLOSE-A-CAMPAIGN-WITHOUT-THE-REPORT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:121  - Never close a campaign without the report checking every",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1297  _Filled 2026-07-26. Scored against §8 as written, not as one would like it to",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1314  row. *A prediction that no step of the plan forces you to run is one you will",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:415  **A5 is adopted, so each prediction names the step that tests it.** Wave 1's",
+              "confirmed: Wave 1 closed with a REPORT scoring all six predictions individually, each with a bolded verdict and the observed number, plus a `#report-gaps` subsection for what the predictions never addressed. It also scored one prediction against the process rather than the number, and that lesson became wave 2's amendment A5 — the report producing a durable change in the next campaign is the claim's own mechanism, observed end to end. The archived PACKAGE-TREE-PLAN carries the same shape as a 'Prediction scorecard (§7)' inside its execution record."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:124  - Never carry a deferral outside the plan file — the deferrals",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1293  *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3020  *(empty)*",
+              "BACKLOG.md:19  | ##REL-DEFERRALS `campaigns/<id>/deferrals.md` | **one campaign's** tails; dies with the zone | the next campaign's mandate (`campaign-plans` law) |",
+              "DRIFT of the sharpest kind available to this campaign — the host's own written contract contradicts the flow AND cites the flow by name while doing it. Both live plans' in-document Deferrals sections are empty, wave 1's stating the destination outright; the real ledgers are `campaigns/progress-2026-08/deferrals.md` (131 lines) and `campaigns/packages-2026-09/deferrals.md`. `BACKLOG.md:19` names the `campaign-plans` law in a four-way routing table and `:23-26` gives the reason — «It lives at the repository root because a campaign zone is disposable». The rule's SECOND half is confirmed by the same evidence: the next campaign's mandate does drain from the ledger. It is the «in the plan file» half that the host has deliberately and documentedly abandoned."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T21:27:17Z",
+        "verify_batch": "W4"
+      }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
       "content_hash": "c71f34595f5b66b3a06b11ca117ff87af8af56b616d5145b213f931ec20d0106",
