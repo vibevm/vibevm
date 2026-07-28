@@ -1852,6 +1852,21 @@ command that would have tested it.
   loudly. The journal was opened at C rather than back-filled; B's steps are not
   reconstructed, because a record is not invented after the fact.
 
+- **2026-07-28 · F-119 — the book cites a chapter that was never written, in the
+  live slot as well as the frozen one.** `redbook`'s chapter 1 links to
+  `safeharbor.md` from `spec/book/ru/chapter-1-two-process-model.md`; the file
+  exists nowhere in the repository, and the citation stands in **both** `v0.1.0`
+  and `v0.2.0`. The v0.1.0 copy is frozen history and is not edited (§3.3); the
+  v0.2.0 copy ships to consumers. It is the **only** broken citation in the whole
+  `world` tree — 187 relative citations resolved, 2 broken, and both are this one.
+
+  It was invisible to Phase B and to the exit gate for the same reason: the
+  campaign's `exclude` globs drop `redbook/*/spec/book/ru/`, so the observed corpus
+  is 121 of the tree's 154 files. **Inside the corpus the join is clean — 185
+  citations, 0 broken** — which is the §3.1 source-1 result the `world` cluster
+  rests on, and it is clean *because* the one defect sits in a file nothing
+  measures. A scope that excludes a shipped directory does not stop shipping it.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
