@@ -1,0 +1,464 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:3  **Scope of this document.** The operational side of the",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:12  | Permissive | MIT, Apache-2.0, BSD-2/3-Clause, ISC, Unlicense, Zlib, UPL-1.0 | **allowed** |",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:24  1. **Find the licence.** The package's manifest field, its",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:50  - **Automate the listing.** A licence-lister run in CI over the full",
+     "confirmed: Scope statement checked against the document's own sections in the installed copy: which pass/fail at :8-20 (the table plus the LGPL note), how to check before adopting at :22-36, keeping the check honest at :48-59. All three present. A fourth section the scope line does not mention — the forbidden-licence escalation at :61-68 — is also there."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "GUIDANCE-NOT-LEGAL-ADVICE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:6  over time. Guidance, not legal advice.",
+     "confirmed: The same disclaimer as the README's and the protocol's, in its shortest form; note it carries @impl/done here where the README's identically-named anchor carries @spec/done. No host counterpart — `grep -rn -i 'legal advice'` across CLAUDE.md, README.md, LICENSE.md, spec/, docs/ and campaigns/ finds it only inside this package and vibedeps/."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-CLASS-PERMISSIVE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:12  | Permissive | MIT, Apache-2.0, BSD-2/3-Clause, ISC, Unlicense, Zlib, UPL-1.0 | **allowed** |",
+     "spec/common/PROP-000.md:53  - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+     "LICENSE.md:42  vibevm links against third-party Rust crates distributed under permissive",
+     "LICENSE.md:43  licenses (MIT, Apache-2.0, BSD, or equivalent); their terms are unaffected by",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "confirmed: The host's allow-list is a subset of this one and adds nothing outside it: PROP-000.md:53 says 'MIT / Apache-2.0 / BSD or equivalent', :216 says 'MIT / Apache-2.0 / BSD / Unlicense only'. Neither names ISC, Zlib or UPL-1.0 explicitly, though UPL-1.0 is the host's own product licence. One classification actually made against this class: PROP-003-dep-evolution.md:92 clears libsolv as 'dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3'. LICENSE.md:42-43 asserts the whole graph sits in this class."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-CLASS-WEAK-COPYLEFT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:13  | Weak copyleft | MPL-2.0, EPL | **case by case** — file-level copyleft usually does not taint consumers, but confirm the use |",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/boot/STATIC.md:815    (GPL / AGPL / LGPL) is forbidden by default; weak copyleft",
+     "confirmed: The host carries the MPL-2.0 half with the same reasoning (PROP-000.md:216, 'MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers') and it reaches the boot at spec/boot/STATIC.md:815-816. EPL appears nowhere in the host: `grep -rn 'EPL' spec/ CLAUDE.md ROADMAP.md VIBEVM-SPEC.md` = 0 hits outside vibedeps/, so the second licence in this class is unmirrored. And the 'confirm the use' step has never run — no MPL-2.0 or EPL dependency is recorded anywhere and no case-by-case call appears in any decision record."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-CLASS-STRONG-COPYLEFT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:14  | Strong copyleft | GPL-2.0/3.0, AGPL, LGPL | **forbidden by default** — an owner exception, if any, is explicit and recorded |",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:95  5. ##WHY-LICENSING **Licensing.** `git` is GPL v2, but shell-out is `exec` not",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:98     `libgit2` is GPL v2 with a Linking Exception (permissive for our",
+     "confirmed: The class and its members match the host's (PROP-000.md:54, :216) and the default has been enforced once by class: PROP-003-dep-evolution.md:90 forbids 'any LGPL-licensed shim' and :92 refuses libdnf5. The exception clause has no granted instance — I searched spec/ for a recorded copyleft exception and found none. What I did find is two recorded NON-exceptions, where a GPL artifact was cleared by reasoning rather than exempted: PROP-001-git-backend.md:95-96 clears shelling out to GPL-v2 `git` because 'shell-out is `exec` not linkage', and :98 notes libgit2's GPL-with-Linking-Exception while choosing to avoid the question entirely."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-CLASS-UNCLEAR-OR-MISSING": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:15  | Unclear / missing | no licence file, \"all rights reserved\", custom terms | **treat as forbidden** until clarified — no licence means no rights |",
+     "crates/vibe-index/Cargo.toml:2  name = \"vibe-index\"",
+     "crates/vibe-index/Cargo.toml:7  publish = false",
+     "spec/common/PROP-000.md:48  - ##NO-CRATES-IO Crates in this workspace set `license-file = \"LICENSE.md\"` and `publish = false` so none of them can be accidentally pushed to crates.io. @spec/done",
+     "confirmed: No host instance of a DEPENDENCY in this class, and I could not produce one: `cargo metadata --offline` exits 101 and Cargo.lock carries no licence field, so an unlicensed crate in the graph would be undetectable here. There is, however, a host artifact that would land in this class if judged by the same rule from outside: crates/vibe-index/Cargo.toml declares no licence field at all (I read its [package] table, lines 1-13; line 7 is `publish = false`). It is covered in practice by the workspace LICENSE.md and by `publish = false` (PROP-000.md:48), but a consumer reading only that manifest sees 'no licence file' — the first entry in this row's own list."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "why-lgpl-is-in-the-forbidden-row": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:17  The `LGPL` entry is deliberately in the forbidden row: even though its",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "confirmed: The host reaches the same placement and gives a compatible reason on a real case. PROP-000.md:54 puts LGPL in the flat-forbidden list; PROP-003-dep-evolution.md:92 rejects libdnf5 specifically as 'LGPL-2.1-or-later' with the reason 'its license places a copyleft obligation on every consumer' — the consumer-obligation framing rather than the static-linking one, applied to a C library that would in fact have been linked. Note the host's rule is stricter than this row explains: 'forbidden, period' at :54, with no accidental-violation escape."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-FIND-THE-LICENCE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:24  1. **Find the licence.** The package's manifest field, its",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "confirmed: The one recorded pre-adoption check on this host did exactly this and cited its source: PROP-003-dep-evolution.md:92 finds libsolv's licence in the repository's own LICENSE.BSD file, links it, and reports the dual licensing. The 'most restrictive wins' tiebreak has no host instance — libsolv's dual BSD-3-Clause / FreeBSD are both permissive, so the tiebreak never fired. The general mechanism the host points readers at for finding licences is `cargo metadata` (LICENSE.md:44), which reads the manifest field."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-CLASSIFY-IT-AGAINST-THE-TABLE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:27  2. **Classify it** against the table. Permissive → proceed.",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "confirmed: PROP-003-dep-evolution.md:92 performs both branches in one paragraph against the host's own table (PROP-000 §3, which it cites by name): libsolv classified permissive → proceed; libdnf5 classified LGPL-2.1-or-later → stop, expressed as 'We MUST NOT link against'. The surfacing half is satisfied by where the classification lives — a PROP the owner reads, with the refusal in the Decision line at :90 — rather than by an explicit escalation. The case-by-case branch has never run here (no MPL-2.0 or EPL dependency recorded)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-CHECK-THE-TRANSITIVE-SET": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:30  3. **Check the transitive set, not just the direct dependency.** A",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+     "confirmed as a correctly-specified step that this host has never run and cannot run from this checkout — never-adopted, which §standard does not count as drift. The ecosystem's listing here is `cargo metadata`, which `LICENSE.md:44` names as the authoritative list, and `cargo metadata --format-version 1 --offline` exits 101 with «failed to download `block2 v0.6.2`», so it needs the network. No cached substitute exists: `ls deny.toml about.toml` reports both missing, there is no vendored licence manifest, and `grep -c 'license' Cargo.lock` = 0, so the lockfile records no licence for any package and a grep of it would count NAMES. RECORDED: the host makes claims that would need this step — `LICENSE.md:42-43` and `Cargo.toml:106` both assert the graph is permissive — and that failure is carried as drift at the snippet's `##NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-RECORD-THE-OUTCOME": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:34  4. **Record the outcome** where dependency decisions live — an",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:95  5. ##WHY-LICENSING **Licensing.** `git` is GPL v2, but shell-out is `exec` not",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:98     `libgit2` is GPL v2 with a Linking Exception (permissive for our",
+     "spec/common/PROP-000.md:180  - ##MIRROR-PINNED **Where pinned:** … This PROP-000 entry is the decision record; the spec carries the operational definition. @spec/done",
+     "confirmed: Both host licence checks are recorded where dependency decisions live, which here is the module PROP that takes the dependency. PROP-003-dep-evolution.md:92 is headed '**License audit (load-bearing).**' and carries the licence, the link, the classification and the reason. PROP-001-git-backend.md:95-100 is the fifth numbered reason in the backend decision, titled '**Licensing.**'. PROP-000.md:180 confirms the host reads these entries as the decision records. Both cases are exactly the 'non-obvious licence' the step targets — a dual-licensed C library and a GPL-v2 tool cleared on an exec-not-linkage argument."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "REJECT-FOR-LICENCE-ABANDONMENT-SECURITY-OR-API-NEVER-FOR-WEIGHT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:40  Reject a dependency for its licence, its abandonment, its security",
+     "spec/common/PROP-000.md:214  ##reject-reasons-lead **Legitimate reasons to reject a dep:** @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/common/PROP-000.md:217  - ##REJECT-ABANDONED abandoned upstream, @spec/done",
+     "spec/common/PROP-000.md:218  - ##REJECT-SECURITY demonstrated security issues (CVE history, unpatched known exploit), @spec/done",
+     "spec/common/PROP-000.md:219  - ##REJECT-ERGONOMICS fundamentally bad API ergonomics that would propagate into our own interfaces. @spec/done",
+     "spec/common/PROP-000.md:221  ##TOO-HEAVY-NOT-REASON \"Too heavy\" alone is **not** a reason. @spec/done",
+     "confirmed: The four-plus-one shape matches the host's list exactly and in the same order: spec/common/PROP-000.md:214 is the same lead-in, :216-219 the same four reasons, :221 the same weight exclusion ('\"Too heavy\" alone is **not** a reason'). PROP-000 predates the package, so this is the extraction source. Of the four admitted reasons only the licence one has a recorded instance here (PROP-003-dep-evolution.md:92); the weight exclusion has one too, and it is the stronger of the two — see the next rows."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "weight-is-not-a-reason-to-under-specify-a-load-bearing-component": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:42  being \"heavy\". Binary size, crate/package count, and transitive",
+     "spec/common/PROP-000.md:208  - ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. @spec/done",
+     "spec/common/PROP-000.md:209  - ##PICK-STRONGEST Pick the strongest available library for the job — for both the Rust CLI and any future Java / frontend side. @spec/done",
+     "spec/common/PROP-000.md:212  - ##WHY-DEBT Under-specifying a load-bearing component to save megabytes creates ongoing architectural debt that is much more expensive to repay than the weight it saves. … @spec/done",
+     "spec/common/PROP-000.md:223  - ##READMISSIBLE **Concrete consequences:** libraries previously rejected on footprint grounds are re-admissible. Notable: `libsolv` (C, with Rust bindings), `git2` (wrapping `libgit2`), bundled native C deps, embedded interpreters when justified. @spec/done",
+     "confirmed: The host states the debt argument in the same terms at spec/common/PROP-000.md:212 — 'Under-specifying a load-bearing component to save megabytes creates ongoing architectural debt that is much more expensive to repay than the weight it saves' — with the positive rule at :209 ('Pick the strongest available library for the job'). And it acted on it: :223 declares previously footprint-rejected libraries re-admissible by name (libsolv, git2, bundled native C deps, embedded interpreters), and :224 orders the size argument pruned out of PROP-001 §2.1."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "KEEP-THE-TWO-CONVERSATIONS-SEPARATE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:45  Keep the two conversations separate: licence discipline here, weight",
+     "spec/common/PROP-000.md:208  - ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/common/PROP-000.md:221  ##TOO-HEAVY-NOT-REASON \"Too heavy\" alone is **not** a reason. @spec/done",
+     "confirmed: The host keeps them separate structurally, in the same document: PROP-000 §3 is the licence posture (lines 45-57) and the dependency-weight decision is a different, later section (lines 208-224). Weight is not merely deprioritised there but excluded as a decision factor (:208), and the licence reason sits inside the reject-list (:216) with weight explicitly outside it (:221). I found no place in the host where a weight argument is made on licence grounds or vice versa."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AUTOMATE-THE-LISTING": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:50  - **Automate the listing.** A licence-lister run in CI over the full",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:52  fact that fails loudly when a forbidden licence enters. A rule with",
+     "discipline/registry/INTENT.md:63  | INT-0030 | `cargo deny` in CI | open |",
+     "discipline/registry/intent.json:424     \"text\": \"cargo deny in CI (automated license check per PROP-000 §3)\",",
+     "discipline/registry/intent.json:428     \"state\": \"rescoped\",",
+     "discipline/registry/intent.json:432      \"note\": \"cargo deny — couples to the CI decision (INT-0017); the license policy itself is enforced by review per PROP-000 §3.\"",
+     "ROADMAP.md:1018  - **`cargo deny` in CI.** Licence-check automated: fail the build if a",
+     "ROADMAP.md:1019    dep with a non-permissive licence sneaks in. Matches PROP-000 §3's",
+     "ROADMAP.md:1020    \"permissive only\" rule.",
+     "discipline/registry/INTENT.md:73  INT-0028 CHANGELOG), **1 rejected** (INT-0017 CI matrix — the no-CI",
+     "discipline/registry/INTENT.md:74  posture is a standing Rule-4 owner decision), **27 rescoped** to their",
+     "confirmed: The host has no automated listing, and it declined one on the record — this is the most decisive source-2 finding in the batch. There is no gate: `ls deny.toml about.toml` reports both missing, `find` for workflow files outside refs/ returns nothing and there is no .github/ directory, and Cargo.lock carries no licence field. The host WANTED this exact check: ROADMAP.md:1018-1020 lists '**`cargo deny` in CI.** Licence-check automated: fail the build if a dep with a non-permissive licence sneaks in. Matches PROP-000 §3's \"permissive only\" rule.' It became INT-0030 in the discipline registry, and INT-0030 is not merely open — intent.json:428 marks it `rescoped` with the resolution note at :432: 'cargo deny — couples to the CI decision (INT-0017); the license policy itself is enforced by review per PROP-000 §3.' The coupling is to a standing no-CI owner decision (INTENT.md:73-74). Note the human view at INTENT.md:63 still shows the row as `open` while intent.json says `rescoped` — the two registry views disagree. The harvest reports the missing deny.toml/about.toml; it does not have the INT-0030 record, which is where the host's reasoning lives. I found it by widening to discipline/, which is outside the stated perimeter."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RE-AUDIT-ON-A-SCHEDULE": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:54  - **Re-audit on a schedule.** A dependency can relicense between",
+     "spec/common/PROP-000.md:53  - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done",
+     "DRIFT, and like `##COMPOSES-HEALTH-AUDIT` in this package's README it is source 1 against source 1 — the line does not exist in the flow this one points at. Host: `grep -n -i 'licen\\|copyleft\\|GPL\\|permissive' AUDIT.md` returns ZERO hits across 458 lines and three dated run sections (headings at 20, 154, 191). The host's audit contract has one dependency category, `spec/common/PROP-013-periodic-health-audit.md:51` (D4 · Dependency staleness), and it names `cargo update --dry-run`, `cargo audit` and `cargo outdated` — versions and CVEs, not licences. The referenced flow: `grep -rn -i 'licen' vibedeps/flow-health-audit/` hits only that package's own LICENSE.md, README and vibe.toml, so its `audit-checklist.md` carries no licence line either. The schedule this fact prescribes has no home in either place."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:57  - **Point the product's carve-out at the generated list**, never a",
+     "LICENSE.md:40  ### Third-party dependencies and reference materials",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "LICENSE.md:45  for the authoritative list). Reference materials under `refs/` belong to their",
+     "VIBEVM-SPEC.md:1122  ### 10.3 Required external dependencies (all permissive licenses) {#required-external-dependencies}",
+     "confirmed: The host's carve-out points at a command, not a table: LICENSE.md:44-45 says '(see `cargo metadata` for the authoritative list)'. It survived the relicensing unchanged in substance — the same pointer is in git ba572c1e:LICENSE.md line 23. The rule's own drift prediction is visible elsewhere in this repository as a control: VIBEVM-SPEC.md:1122-1133 IS a hand-maintained list of ten dependencies with their licences, and it has drifted — it still names `git2`, `reqwest`, `tokio` and `dialoguer` as required, against a workspace whose actual third-party block is at Cargo.toml:107 onward. The carve-out sensibly does not point there."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "sometimes-the-best-or-only-library-is-copyleft": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:63  Sometimes the best-or-only library for a job is copyleft. That is an",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:95  5. ##WHY-LICENSING **Licensing.** `git` is GPL v2, but shell-out is `exec` not",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:98     `libgit2` is GPL v2 with a Linking Exception (permissive for our",
+     "confirmed: This exact situation arose here, twice, and both are recorded. PROP-003-dep-evolution.md:92 calls libdnf5 'the most ergonomic layer over libsolv' — the best library for the job — and it is LGPL-2.1-or-later. PROP-001-git-backend.md:95-98 confronts the same with `git` itself (GPL v2) and libgit2 (GPL v2 with a Linking Exception), where the only-library condition is close to literal for a git-backed registry. So the premise of this whole section has two host instances."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THAT-IS-AN-OWNER-DECISION-NOT-AN-AGENT-DECISION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:64  owner decision, not an agent decision. Surface it with the trade-off",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "confirmed: Both host cases were resolved WITHOUT escalating to the owner, because both were resolved as refusals under the standing rule rather than as requests for an exception. PROP-003-dep-evolution.md:90 states the refusal in the Decision line and :92 gives the reason; PROP-001-git-backend.md:95-100 clears its GPL question by an exec-not-linkage argument. Neither surfaces a choice for the owner to make. That is consistent with PROP-000.md:54's 'forbidden, period', which leaves an agent nothing to escalate — but it means the escalation path this line prescribes has never been exercised here, so I cannot say how the host would handle a genuine best-or-only copyleft adoption."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "surface-it-with-the-trade-off-stated-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:64  owner decision, not an agent decision. Surface it with the trade-off",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:65  stated: the capability gained, the licence obligation incurred, and",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "confirmed: Lead-in to the three trade-off items below. The nearest host instance states two of the three but is a refusal rather than a surfaced choice: PROP-003-dep-evolution.md:92 names the capability ('the most ergonomic layer over libsolv') and the obligation ('places a copyleft obligation on every consumer'), then decides rather than asking. No artifact in the perimeter presents a copyleft adoption to the owner as an open question."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "TRADE-OFF-THE-CAPABILITY-GAINED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:65  stated: the capability gained, the licence obligation incurred, and",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "confirmed: Stated in the host's one relevant case: PROP-003-dep-evolution.md:92 names what libdnf5 would have given — 'its API is the most ergonomic layer over libsolv' — before rejecting it. The capability is described in enough detail to be weighed, which is what this item asks for, even though the weighing ended in a refusal rather than a request."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "TRADE-OFF-THE-LICENCE-OBLIGATION-INCURRED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:65  stated: the capability gained, the licence obligation incurred, and",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:95  5. ##WHY-LICENSING **Licensing.** `git` is GPL v2, but shell-out is `exec` not",
+     "confirmed: Stated in both host cases, and in each it is the deciding factor. PROP-003-dep-evolution.md:92 gives the obligation concretely — LGPL-2.1-or-later 'places a copyleft obligation on every consumer' — rather than naming the licence and stopping. PROP-001-git-backend.md:95-96 reasons about the obligation that would attach to GPL-v2 `git` and why exec does not incur it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "TRADE-OFF-THE-ALTERNATIVES": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:65  stated: the capability gained, the licence obligation incurred, and",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:95  5. ##WHY-LICENSING **Licensing.** `git` is GPL v2, but shell-out is `exec` not",
+     "confirmed: All three alternative kinds appear across the host's two cases. Permissive competitor: PROP-003-dep-evolution.md:96 works through `resolvo` (pure-Rust, BSD-3-Clause) at length as the alternative SAT engine and says why it was not picked first. Reimplementation: :90 chooses 'a *thin* in-tree FFI layer' over the LGPL shim — writing the wrapper rather than taking it. Doing without: PROP-001-git-backend.md:95-100 drops programmatic git entirely in favour of shell-out, which the entry frames as leaving 'the entire conversation at the door'."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-OWNER-MAY-GRANT-A-RECORDED-SCOPED-EXCEPTION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:67  without). The owner may grant a recorded, scoped exception — or not.",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:14  | Strong copyleft | GPL-2.0/3.0, AGPL, LGPL | **forbidden by default** — an owner exception, if any, is explicit and recorded |",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "confirmed as a correctly-drawn escape hatch that this host has deliberately narrowed shut — stricter than the flow is not a contradiction of it. `PROP-000.md:54` reads «GPL / AGPL / LGPL are forbidden, period.», with no exception clause at all, where this flow's table assumes «an owner exception, if any, is explicit and recorded». No exception has ever been granted or refused here: `grep -rn -i 'exception' spec/common/ spec/modules/` surfaces only libgit2's upstream «Linking Exception» at `PROP-001-git-backend.md:98`, which is a term of that licence rather than an owner grant, and the search was widened to `CLAUDE.md`'s operating-facts ledger, `AUDIT.md` and the discipline registries with the same result. A host that leaves an agent nothing to escalate has also left this clause nothing to do."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-ADOPT-A-FORBIDDEN-LICENCE-SILENTLY": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:68  Never adopt it silently.",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/boot/STATIC.md:842  - Never add a GPL / AGPL / LGPL dependency by default — surface it as",
+     "confirmed: No forbidden licence appears to have been adopted at all here, silently or otherwise — the two encounters (PROP-003-dep-evolution.md:90-92, PROP-001-git-backend.md:95-100) both end in refusal or avoidance, and both are written down. But I cannot certify the negative: the graph itself is unmeasured, because `cargo metadata --offline` exits 101 and Cargo.lock carries no licence field, so a forbidden transitive licence would be invisible from this checkout and, with no CI gate, invisible to the project too. The rule reaches every session at spec/boot/STATIC.md:842 in its 'surface it as an owner decision' form."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-THE-ALLOW-DENY-CLASSES": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:72  - Permissive allowed, weak copyleft case-by-case, strong copyleft and",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/boot/STATIC.md:813  - Every third-party dependency stays **permissive-only** — MIT /",
+     "spec/boot/STATIC.md:815    (GPL / AGPL / LGPL) is forbidden by default; weak copyleft",
+     "confirmed at three of four classes, with the fourth a gap in the HOST's rule rather than in this fact. Matching: permissive-allowed, MPL-2.0 case-by-case and GPL/AGPL/LGPL forbidden are all at `PROP-000.md:216` and all three reach the boot at `spec/boot/STATIC.md:813-816`. The fourth class — unclear or missing licences treated as forbidden — has no host counterpart at all: `grep -rn -i 'unclear\\|no licence\\|no license file\\|all rights reserved' spec/common/PROP-000.md` returns nothing, and neither the boot snippet nor `VIBEVM-SPEC.md:1135` mentions it. RECORDED, because the gap has a live shape: `crates/vibe-index/Cargo.toml` declares no licence field of any kind, so a consumer applying this fourth class from outside would land the host's own crate in it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-CHECK-THE-WHOLE-TRANSITIVE-GRAPH": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:74  - Check the whole transitive graph before adopting; the most",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+     "confirmed as prescribed and never instanced, with the environment's own limit stated rather than guessed at. No transitive check has been run: `cargo metadata --format-version 1 --offline` exits 101, `grep -c 'license' Cargo.lock` = 0, and there is no `deny.toml`, `about.toml` or cached listing in the perimeter. The two recorded host checks (`PROP-003-dep-evolution.md:92`, `PROP-001-git-backend.md:95-100`) are single-package judgements on direct dependencies, not graph sweeps. RECORDED on the second clause: the most-restrictive-governs tiebreak also has no instance, because the one dual-licensed case — libsolv's BSD-3-Clause / FreeBSD — is permissive on both sides and so never forces the choice."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-WEIGHT-IS-NEVER-A-LICENCE-REASON": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:76  - Weight is never a licence reason — keep those conversations",
+     "spec/common/PROP-000.md:208  - ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. @spec/done",
+     "spec/common/PROP-000.md:221  ##TOO-HEAVY-NOT-REASON \"Too heavy\" alone is **not** a reason. @spec/done",
+     "spec/common/PROP-000.md:223  - ##READMISSIBLE **Concrete consequences:** libraries previously rejected on footprint grounds are re-admissible. Notable: `libsolv` (C, with Rust bindings), `git2` (wrapping `libgit2`), bundled native C deps, embedded interpreters when justified. @spec/done",
+     "confirmed: Held by the host in its strongest available form. PROP-000.md:208 removes weight from the decision entirely, :221 restates it negatively, and :223 shows the separation enforced retroactively: libraries once rejected on footprint grounds are declared re-admissible, which only makes sense if weight was never a legitimate ground. The licence conversation stays in §3 (lines 45-57) and the weight conversation in the later section (208-224); nothing in the host mixes them."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-AUTOMATE-AND-RE-AUDIT": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:78  - Automate the listing in CI and re-audit on a schedule; point the",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "discipline/registry/INTENT.md:63  | INT-0030 | `cargo deny` in CI | open |",
+     "discipline/registry/intent.json:428     \"state\": \"rescoped\",",
+     "discipline/registry/intent.json:432      \"note\": \"cargo deny — couples to the CI decision (INT-0017); the license policy itself is enforced by review per PROP-000 §3.\"",
+     "ROADMAP.md:1018  - **`cargo deny` in CI.** Licence-check automated: fail the build if a",
+     "DRIFT, one of three realised, carrying the re-audit body rule per W1's summary-restatement precedent. DONE: the carve-out points at the generated list (`LICENSE.md:44`). NOT DONE, and this half is non-adoption rather than drift — no automated listing exists, and the intent to add `cargo deny` was recorded and then declined: `ROADMAP.md:1018` became INT-0030, marked `rescoped` in `discipline/registry/intent.json:428` with the note at `:432` that the policy «is enforced by review per PROP-000 §3», coupled to the standing no-CI owner decision at `INTENT.md:73-74`. NOT DONE, and this half IS drift — the scheduled re-audit has no home in the host (AUDIT.md: 0 licence hits in 458 lines) NOR in the `health-audit` flow it would live in. One third realised on the host that authored the sentence."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:80  - A forbidden licence is only ever adopted by an explicit, recorded",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:14  | Strong copyleft | GPL-2.0/3.0, AGPL, LGPL | **forbidden by default** — an owner exception, if any, is explicit and recorded |",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "confirmed on the same evidence as the body rule it summarises, and untested here for the same reason: no forbidden licence has been adopted, so no exception has been needed. Both host encounters end in refusal and both are written down — `PROP-003-dep-evolution.md:90-92` refuses an LGPL shim by class, and `PROP-001-git-backend.md:95-100` clears GPL-v2 `git` on an exec-not-linkage argument rather than by exception. The host's rule admits no exception path at all (`PROP-000.md:54`), which is stricter than this line contemplates and therefore cannot violate it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}

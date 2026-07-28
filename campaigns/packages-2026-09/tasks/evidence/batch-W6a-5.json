@@ -1,0 +1,276 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/eula-template.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:3  **Scope of this document.** A copy-ready skeleton for the",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:11  # <Product> — Proprietary License (EULA placeholder)",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:55  - **Reservation line.** \"All rights reserved\" plus \"No license …",
+     "confirmed: Scope checked against the installed copy's own structure: the skeleton is a fenced block at :10-51, the clause commentary at :53-76. Both present as described. Two further sections the scope line omits: an adaptation table at :78-85 and a promotion section at :87-94."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "IT-IS-A-STARTING-DRAFT-NOT-LEGAL-ADVICE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:5  clause commentary. It is a starting draft, not legal advice — have a",
+     "confirmed: The third disclaimer in this package, worded for a template rather than a protocol. No host counterpart — `grep -rn -i 'legal advice\\|lawyer' CLAUDE.md README.md LICENSE.md spec/ docs/` returns nothing outside the package and vibedeps/. Notably the host's own placeholder (git ba572c1e:LICENSE.md) carried no such caveat, so the instance derived from this template dropped the disclaimer, as a real LICENSE.md should."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CLAUSE-RESERVATION-LINE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:55  - **Reservation line.** \"All rights reserved\" plus \"No license …",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:13  Copyright (c) <year> <owner>. All rights reserved.",
+     "confirmed: The host's placeholder had both halves in the template's order: git ba572c1e:LICENSE.md line 3 'Copyright © 2026 Oleg Chirukhin. All rights reserved.' and line 5 ending 'No license, express or implied, is granted by distribution of this source tree.' Today's LICENSE.md keeps neither, correctly — UPL-1.0 grants rather than reserves. Git blobs are not citable refs so the template lines are cited and the correspondence recorded here."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CLAUSE-THE-INTERIM-GRANT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:59  - **The interim grant.** Read-for-evaluation and build-locally are the",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:20  Until a formal End-User License Agreement is executed, the following",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:23  - You may read the source for evaluation.",
+     "confirmed: The host's placeholder used the template's list unchanged — two permissions and four NOT clauses, git ba572c1e:LICENSE.md lines 9-13, matching eula-template.md:23-28 one for one including the ordering. The 'adjust the list to the actual posture' advice was therefore not exercised: the host took the default. That is itself the observable — the template's default was fit for purpose in the one instance derived from it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CLAUSE-THE-RELICENSE-INTENT-CLAUSE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:64  - **The relicense-intent clause.** The honest core. It names the",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:66  final. It promises a *direction*, never a date. Removing it turns",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:30  The owner intends to relicense <Product> under a permissive",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: Every element is verifiable against this host's outcome. Named target: the placeholder said '… the Universal Permissive License 1.0'; LICENSE.md:3 is UPL-1.0 today. Not final: the clause said so, and PROP-000.md:57 preserves that wording in the revisit trigger. Direction not date: the trigger was a condition ('when the owner decides to relicense'), recorded as 'fired on 2026-07-12' — a resolution by decision, not by schedule. `grep -rn -i 'relicens' spec/ CLAUDE.md ROADMAP.md CHANGELOG.md` surfaces no promised date anywhere across the three months the placeholder stood."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CLAUSE-THE-THIRD-PARTY-SECTION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:69  - **The third-party section.** Separated by a rule so no reader",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:71  permissive ones. It points at the *generated* dependency list, not",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:39  ### Third-party dependencies",
+     "LICENSE.md:38  ---",
+     "LICENSE.md:40  ### Third-party dependencies and reference materials",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "confirmed: Present in both the host's placeholder and its successor, with the separator intact across the relicensing. Today: LICENSE.md:38 is a horizontal rule, :40 the heading, :44 the `cargo metadata` pointer. The placeholder had the identical shape (git ba572c1e:LICENSE.md lines 19-23). So the one structural element the swap had to preserve — the carve-out — was preserved, which is what the separator exists to make possible."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CLAUSE-STUDY-ONLY-MATERIAL": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:73  - **Study-only material.** Anything vendored for reference but not",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:47  Reference material under <study-only paths> is the property of its",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:49  NOT part of the distribution — it must be removed before any",
+     "LICENSE.md:45  for the authoritative list). Reference materials under `refs/` belong to their",
+     "LICENSE.md:46  respective authors: `refs/book/` is the owner's own work; `refs/src/` holds",
+     "LICENSE.md:47  third-party open-source projects cloned for study only — they are NOT part of",
+     "LICENSE.md:48  the vibevm distribution and must be removed before any redistribution.",
+     "confirmed: The host names two paths and distinguishes their ownership, which is more than the template asks: LICENSE.md:46 separates `refs/book/` (the owner's own work) from `refs/src/` (third-party clones), and :47-48 carries the removal instruction. Both trees exist — `ls refs/` returns 8 entries and `ls refs/src/` 17 cloned upstream projects. CLAUDE.md:133 lists `refs/**` first among the strings deliberately left un-relicensed, so the carve-out and the operating ledger agree about the same material."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-WANT-PERMISSIVE-FROM-THE-START": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:82  | Permissive from the start | discard this template; use the target licence's official text and set the manifest field to its SPDX id |",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "spec/common/PROP-000.md:48  - ##NO-CRATES-IO Crates in this workspace set `license-file = \"LICENSE.md\"` and `publish = false` so none of them can be accidentally pushed to crates.io. @spec/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: The host reached the permissive end state and followed the first half literally — the placeholder was discarded and replaced with official UPL-1.0 text, byte-identical to the packages' copy (5086c5b5's message). It did NOT do the second half: no manifest here carries an SPDX id. `grep -rn '^license *=' Cargo.toml crates/*/Cargo.toml xtask/Cargo.toml` = 0 hits; all 18 declaring manifests point at the file instead. PROP-000.md:48 records that as deliberate and :57 names the SPDX swap as a future step gated on crates.io publication. The host was also not permissive 'from the start', so this row's precondition never held here."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:83  | Reserved with no opening planned | drop the relicense-intent clause — but only if that is genuinely the intent |",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:66  final. It promises a *direction*, never a date. Removing it turns",
+     "confirmed: The host is the positive control for the conditional: opening WAS genuinely the intent, the clause was kept, and the intent was honoured on 2026-07-12. The counterfactual half — dropping the clause — has no instance here and could not, since the host never held the reserved-indefinitely posture. Checked git ba572c1e:LICENSE.md for the clause's presence (line 15) and PROP-000.md:47 / :57 for the outcome."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-WANT-INTERNAL-USE-ALLOWED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:84  | Allow internal/organizational use | add an explicit internal-use grant to the interim list |",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:23  - You may read the source for evaluation.",
+     "confirmed: No instance and nothing on the widened perimeter bears on it. The host's placeholder took the template's interim list unmodified — two permissions, four NOT clauses, no internal-use grant (git ba572c1e:LICENSE.md lines 9-13). `grep -rn -i 'internal use\\|internal-use\\|organizational use' LICENSE.md README.md spec/ CLAUDE.md docs/` returns nothing. vibevm is a single-owner project with no organization to grant internal use to, so the adaptation had no occasion to fire."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-WANT-A-DIFFERENT-TARGET-LICENCE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:85  | A different target licence | name it in the relicense clause and keep the file's own text ready to swap in at relicense time |",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "packages/org.vibevm.world/licensing/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: Both halves are observable here even though the host did not want a DIFFERENT licence — it wanted the template's own example, UPL-1.0. Named in the clause: git ba572c1e:LICENSE.md line 15. Text kept ready to swap: this is the part with real evidence — the packages/org.vibevm.world/**/LICENSE.md files already carried canonical UPL-1.0 text before the host root did (the package families relicensed 2026-07-10, the root 2026-07-12), and 5086c5b5's message says the new root text is 'byte-identical to the packages' copy'. So the swap-in text existed inside the repository, ready, two days ahead of the swap."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AT-RELICENSE-TIME-THE-SWAP-IS-ONE-RECORDED-OPERATION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:89  At relicense time the placeholder is replaced wholesale by the target",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:91  `license` field moves to the target's SPDX identifier in the same",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "crates/vibe-core/Cargo.toml:7  license-file.workspace = true",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: One of the three clauses held, one was structurally inapplicable, one was late. Wholesale replacement: yes — `git show --stat 5086c5b5` is one file, 44 insertions / 21 deletions on a 25-line file, and the message says 'not edited into it' in substance ('Replace the placeholder with the canonical UPL-1.0 text'). Manifest SPDX ids in the same commit: no field moved because none exists — Cargo.toml:55 is `license-file`, inherited as `license-file.workspace = true` by 18 of 19 crates, so the file swap propagated automatically; PROP-000.md:57 marks the SPDX swap as a future crates.io-gated step. Recorded as a dated decision: yes, but thirteen days later, in 71d8383b (2026-07-25), not in the relicensing commit."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-placeholder-is-not-itself-the-destination": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:93  placeholder's job was to hold the posture honestly until that moment;",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: Confirmed by the host's own closing language. PROP-000.md:47 ends the entry with 'The project's first phase shipped under a placeholder proprietary EULA; that phase is over', and :57 marks the revisit trigger 'fired on 2026-07-12 and is spent'. A posture recorded as a phase, with a spent trigger, is a way-station on the record rather than by assertion. The placeholder held for 86 days (2026-04-17 to 2026-07-12)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-THE-SKELETON-CAPTURES-THE-POSTURE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:98  - The skeleton captures the proprietary-with-relicense-intent posture:",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:13  Copyright (c) <year> <owner>. All rights reserved.",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:20  Until a formal End-User License Agreement is executed, the following",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:30  The owner intends to relicense <Product> under a permissive",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:39  ### Third-party dependencies",
+     "confirmed: All four named elements were present in the one real instance derived from this skeleton. Mapping git ba572c1e:LICENSE.md against the installed template: reservation at its line 3 (template :13), interim grant at lines 7-13 (template :20-28), relicense clause at line 15 (template :30-33), third-party carve-out at lines 19-23 (template :37-50). Four for four, in the same order, with only the wrapping and the product name differing."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-FILL-THE-PLACEHOLDERS-AND-KEEP-THE-CLAUSE-ONLY-IF-TRUE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:101  - Fill the placeholders; keep the relicense clause only if opening is",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:66  final. It promises a *direction*, never a date. Removing it turns",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: Both halves check on this host. The placeholders were filled — <Product> became vibevm, <year>/<owner> became 2026 / Oleg Chirukhin, <the target license> became the Universal Permissive License 1.0, <study-only paths> became refs/book/ and refs/src/. And the clause was true: the intent it stated was carried out on 2026-07-12 (PROP-000.md:47), which is the only way to test 'only if that is the truth' after the fact."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-POINT-AT-THE-GENERATED-LIST-AND-NAME-STUDY-ONLY-MATERIAL": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:103  - Point the third-party section at the generated list; name study-only",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:44  respective code. See <the dependency manifest> for the authoritative",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:47  Reference material under <study-only paths> is the property of its",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "LICENSE.md:45  for the authoritative list). Reference materials under `refs/` belong to their",
+     "LICENSE.md:47  third-party open-source projects cloned for study only — they are NOT part of",
+     "LICENSE.md:48  the vibevm distribution and must be removed before any redistribution.",
+     "confirmed: Both done in the host's LICENSE.md and both carried across the relicensing unchanged: :44-45 points at `cargo metadata` rather than a table, and :45-48 names refs/book/ and refs/src/ with the removal instruction. The contrast case is in the same repository — VIBEVM-SPEC.md:1122-1133 is a hand-maintained dependency list and it has drifted (it still names git2, reqwest, tokio and dialoguer as required), which is exactly the failure the generated-list rule avoids."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-AT-RELICENSE-TIME-SWAP-WHOLESALE-AND-MOVE-EVERY-FIELD": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:105  - At relicense time, swap in the target's official text wholesale and",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "crates/vibe-core/Cargo.toml:7  license-file.workspace = true",
+     "crates/vibe-index/Cargo.toml:7  publish = false",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: Swap wholesale: done — 5086c5b5 replaced the file rather than editing it, 44 insertions / 21 deletions, one file changed. Move every manifest field: not done and not applicable, because no manifest holds a licence VALUE to move. Cargo.toml:55 holds a path (`license-file = \"LICENSE.md\"`), inherited on line 7 by 18 of 19 crate manifests; crates/vibe-index/Cargo.toml holds nothing. The design makes the file the single statement, so the swap moved all 19 at once. PROP-000.md:57 is the host's own note that this step becomes real only if a crate is published to crates.io."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-IT-IS-A-DRAFT-TO-HAND-A-LAWYER": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:107  - It is a draft to hand a lawyer, not legal advice.",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:5  clause commentary. It is a starting draft, not legal advice — have a",
+     "confirmed: No evidence that a lawyer ever reviewed anything here. `grep -rn -i 'lawyer\\|counsel\\|legal review\\|solicitor' LICENSE.md README.md CLAUDE.md spec/ docs/ CHANGELOG.md ROADMAP.md` returns nothing outside this package and vibedeps/, and the MT-05 dogfood spec records an owner sign-off, not a legal one. The host used the template's output as its actual LICENSE.md for 86 days without any recorded review — which is a fact about the host, not a defect in the sentence."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  }
+ }
+}

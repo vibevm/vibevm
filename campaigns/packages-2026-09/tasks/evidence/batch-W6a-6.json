@@ -1,0 +1,226 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md": {
+   "DRAFTING-OR-REVIEWING-A-LICENSING-POSTURE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:8  You are drafting or reviewing a project's licensing posture from the",
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:9  `flow:licensing` protocol. Produce a draft for the owner; the licence",
+     "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:19  [[skill]]",
+     "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:20  name = \"draft-eula\"",
+     "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:21  path = \"spec/skills/draft-eula\"",
+     "confirmed: F-092 is CLOSED on this file and I confirmed rather than re-discovered it: the YAML frontmatter occupies lines 1-4 (`name:` and `description:` only), carries no ##ANCHOR, and the first anchored fact is at line 10 — `grep -oE '##[A-Za-z][A-Za-z0-9_.:-]*' SKILL.md | wc -l` = 14, matching the mirror's fact_count of 14 with 0 unmarked, so DRIFT-037's 2026-07-27 close is holding. The installed copy keeps the same frontmatter shape at vibedeps/…/SKILL.md:1-4. STANDING FACT for all 14 rows in this file: the skill ships and installs but is materialised into NO harness this host runs. `ls .claude/skills/` = 5 entries (rust-ai-native-sweep, rust-ai-native-terraform, typescript-ai-native-sweep, typescript-ai-native-terraform, vibevm); `ls .agents/skills/` and `ls .opencode/skills/` = the same four without vibevm. draft-eula is in none; `grep -rn 'draft-eula' .claude/ .agents/ .opencode/` returns nothing; the host has no spec/skills/ directory. So no agent here has ever invoked this procedure as a skill — the same result W5a recorded for the sibling health-audit skill. The one licence review this repository did perform (the 2026-07-12 relicensing) was carried out without it."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "PRODUCE-A-DRAFT-THE-DECISION-IS-THE-OWNERS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:9  `flow:licensing` protocol. Produce a draft for the owner; the licence",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, … @spec/done",
+     "CLAUDE.md:129    fractality, delegation-rules, wal-specspaces) were relicensed by MT-05 firing #2",
+     "CLAUDE.md:130    (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:10  **Owner authorization:** RP1 (resolved 2026-07-09) names exactly this",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:42     (branches + review before merge; a licence FIELD swap the owner",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:77  **PASS — signed off by the owner, 2026-07-10** (firing #2 + the",
+     "confirmed: The rule the skill states is one the host has actually kept, three times, without the skill. Every relicensing here carries an explicit prior owner authorisation: PROP-000.md:50 (\"Owner's call, taken 2026-07-12\"), CLAUDE.md:129-130 (the package families via MT-05 firing #2), MT-05-dogfood-relicense.md:10 ('Owner authorization: RP1 (resolved 2026-07-09)'), :42 ('the owner decision already happened, RP1') and :77 (owner sign-off). The 2026-07-12 execution was delegated to a worker, but under a pre-existing owner decision — the agent produced the change, not the decision, which is precisely this line's split."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STATE-PLAINLY-GUIDANCE-NOT-LEGAL-ADVICE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:11  State plainly that this is guidance, not legal advice.",
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:3  description: Draft or review a project's license posture — the placeholder EULA with relicense intent, the permissive-only dependency check, and the third-party carve-out. …",
+     "confirmed: The instruction is in the skill and in its `description` frontmatter ('Guidance, not legal advice.', line 3), so it would reach a harness's skill listing if the skill were ever materialised. No host artifact carries such a statement: `grep -rn -i 'legal advice' LICENSE.md README.md CLAUDE.md spec/ docs/` finds nothing outside this package. Since the skill has never run here, there is no output to check the instruction against."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "DETERMINE-THE-POSTURE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:15  1. **Determine the posture.** Ask (or infer from context) which the",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, … @spec/done",
+     "spec/common/PROP-000.md:51  - ##LICENSE-SPEC-DEFERS `VIBEVM-SPEC.md` §1 explicitly defers the *produced* software's license to the owner; the owner's choice is UPL-1.0. @spec/done",
+     "confirmed: The host's posture was determined the way this step prescribes, twice, and recorded both times. The first determination is preserved as a deferral chain: PROP-000.md:51 notes VIBEVM-SPEC.md §1 'explicitly defers the *produced* software's license to the owner', so the question was routed to the owner rather than assumed. The second: PROP-000.md:50, an owner's call with a date. Both landed on postures this step enumerates — the placeholder first, permissive open second."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "DRAFT-THE-LICENSE-FILE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:19  2. **Draft the `LICENSE.md`.** For the placeholder, fill the skeleton",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md:11  # <Product> — Proprietary License (EULA placeholder)",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "spec/common/PROP-000.md:48  - ##NO-CRATES-IO Crates in this workspace set `license-file = \"LICENSE.md\"` and `publish = false` so none of them can be accidentally pushed to crates.io. @spec/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: Both branches of this step have a host instance and the permissive branch is half-followed. Placeholder branch: the host's first LICENSE.md is a filled instance of the skeleton (git ba572c1e:LICENSE.md against eula-template.md:11-50). Permissive branch: 'official text verbatim' was followed exactly — 5086c5b5's message says 'byte-identical to the packages' copy' — but 'set the manifest field to its SPDX id' was not, because no manifest here holds an SPDX id (Cargo.toml:55 is a `license-file` path, and `grep -rn '^license *=' Cargo.toml crates/*/Cargo.toml xtask/Cargo.toml` = 0 hits). PROP-000.md:48 records the pointer form as deliberate; :57 gates the SPDX swap on a future crates.io publish."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CHECK-DEPENDENCIES": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:26  3. **Check dependencies.** Run the ecosystem's licence listing over",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "confirmed: This step cannot be completed in this repository and never has been. The ecosystem's listing is `cargo metadata` (which LICENSE.md:44 names as authoritative) and `cargo metadata --format-version 1 --offline` exits 101 with 'error: failed to download `block2 v0.6.2`' — it requires the network. No cached substitute exists: `grep -c 'license' Cargo.lock` = 0, so the lockfile records no licence for any package and a grep of it counts NAMES; `ls deny.toml about.toml` reports both missing; there is no about.hbs, no vendored licence manifest, and no CI. Widened to xtask/ (`ls xtask/src/` = batch_review, bin, codegen.rs, conform.rs, main.rs, mirror.rs, specmap.rs, sync_engines.rs — no licence task) and to the discipline registries, where the intent to add such a check is INT-0030, rescoped. The only per-dependency classification ever recorded here is PROP-003-dep-evolution.md:92, a single direct dependency, not a graph sweep."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SYNC-THE-STATEMENTS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:31  4. **Sync the statements.** Ensure the `LICENSE.md`, every manifest",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "crates/vibe-core/Cargo.toml:7  license-file.workspace = true",
+     "README.md:162  ## License",
+     "README.md:164  vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the moment; the eventual target is UPL 1.0. Third-party dependencies are permissive-only (MIT / Apache-2.0 / BSD / Unlicense; MPL-2.0 case-by-case; GPL / AGPL / LGPL forbidden) per [PROP-000 §3](spec/common/PROP-000.md).",
+     "CLAUDE.md:132    `license-file.workspace`). The `\"EULA\"` strings that remain are all **off-limits",
+     "CLAUDE.md:135    `\"EULA\"`), the `licensing` package (legitimate eula-template), and",
+     "CLAUDE.md:136    `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:",
+     "confirmed: Run by hand, this step produces a finding on this host today. The manifests agree by construction (all 18 declaring ones point at LICENSE.md rather than naming a licence). The README does not: README.md:164 says 'vibevm itself ships under the proprietary EULA placeholder … the eventual target is UPL 1.0' over a LICENSE.md that has been UPL-1.0 since 2026-07-12, and it links to the very file it contradicts. It is prose rather than a badge — `grep -n 'badge\\|shields.io' README.md` = 0 hits, this repository has no badges — but it is the README statement the step means. It is also NOT among the deliberately-stale strings CLAUDE.md:132-137 enumerates (refs/**, vibedeps/** + .vibe/cache/**, fixtures/** + crates/** test data, the licensing package, VIBEVM-SPEC.md + specs), unlike VIBEVM-SPEC.md:8, which says the same thing and IS listed. So: one unrecorded disagreement, found exactly where this step says to look."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:34  5. **Point the carve-out at the generated list**, and name any",
+     "LICENSE.md:40  ### Third-party dependencies and reference materials",
+     "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+     "LICENSE.md:45  for the authoritative list). Reference materials under `refs/` belong to their",
+     "LICENSE.md:47  third-party open-source projects cloned for study only — they are NOT part of",
+     "LICENSE.md:48  the vibevm distribution and must be removed before any redistribution.",
+     "confirmed: Both halves are already satisfied in the host's LICENSE.md and were satisfied before this skill existed. Generated list: :44-45, '(see `cargo metadata` for the authoritative list)'. Study-only material named for removal: :45-48, naming refs/book/ and refs/src/ and ending 'must be removed before any redistribution'. `ls refs/src/` confirms 17 third-party clones actually present. Both clauses were in the placeholder too (git ba572c1e:LICENSE.md lines 21-25) and survived the wholesale swap."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "present-as-a-draft-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:39  Present as a draft: the proposed `LICENSE.md`, the manifest field",
+     "confirmed: Lead-in to the four output items below. No draft has ever been produced by this skill here — it is materialised into none of the three skill homes (.claude/skills/ 5 entries, .agents/skills/ 4, .opencode/skills/ 4, draft-eula in none) and `grep -rn 'draft-eula' .claude/ .agents/ .opencode/ campaigns/ spec/` returns nothing outside the package, vibedeps/ and this campaign's own mirror. Widened to campaigns/ and to AUDIT.md looking for any recorded licence-posture draft; none exists."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "OUTPUT-THE-PROPOSED-LICENSE-FILE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:39  Present as a draft: the proposed `LICENSE.md`, the manifest field",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: No such draft exists. The one LICENSE.md change this repository has made was produced outside the skill: 5086c5b5, by a delegated worker in an isolated worktree under owner authorisation RP1, verified byte-exact against the canonical text. `git log -- LICENSE.md` has two commits and neither references the skill. Searched campaigns/ and spec/ for a proposed-licence draft artifact; none."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "OUTPUT-THE-MANIFEST-FIELD-VALUE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:39  Present as a draft: the proposed `LICENSE.md`, the manifest field",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "spec/common/PROP-000.md:48  - ##NO-CRATES-IO Crates in this workspace set `license-file = \"LICENSE.md\"` and `publish = false` so none of them can be accidentally pushed to crates.io. @spec/done",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; … @spec/done",
+     "confirmed: No draft exists to check, but the step's premise is worth recording: on this host the manifest field value would be a PATH, not a licence. Cargo.toml:55 is `license-file = \"LICENSE.md\"`, inherited by 18 of 19 crates; `grep -rn '^license *=' Cargo.toml crates/*/Cargo.toml xtask/Cargo.toml` = 0 hits, so there is no SPDX value to report. PROP-000.md:48 records the choice and :57 names the condition under which an SPDX value would appear. So the output item is well-defined only for projects that state a licence value in the manifest, which this one does not."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "OUTPUT-THE-DEPENDENCY-CHECK-RESULT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:39  Present as a draft: the proposed `LICENSE.md`, the manifest field",
+     "LICENSE.md:42  vibevm links against third-party Rust crates distributed under permissive",
+     "LICENSE.md:43  licenses (MIT, Apache-2.0, BSD, or equivalent); their terms are unaffected by",
+     "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+     "confirmed: No dependency-check result exists and none can be produced from this checkout — `cargo metadata --offline` exits 101, Cargo.lock has no licence field, and there is no deny.toml, about.toml or CI. The nearest artifacts are two blanket assertions with no listing behind them: LICENSE.md:42-43 tells readers the dependencies are permissive, and Cargo.toml:106 comments the third-party block as '(all permissive licenses — PROP-000 §3)'. Neither calls out violations because neither is a check. Widened to AUDIT.md (0 licence hits in 458 lines) and to the discipline debt/intent registries, where the automated check is INT-0030, rescoped with the note that the policy 'is enforced by review'."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "OUTPUT-THE-SYNC-STATUS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:39  Present as a draft: the proposed `LICENSE.md`, the manifest field",
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:41  and the sync status. Do not apply the licence choice or any",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "README.md:164  vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the moment; the eventual target is UPL 1.0. Third-party dependencies are permissive-only (MIT / Apache-2.0 / BSD / Unlicense; MPL-2.0 case-by-case; GPL / AGPL / LGPL forbidden) per [PROP-000 §3](spec/common/PROP-000.md).",
+     "CLAUDE.md:132    `license-file.workspace`). The `\"EULA\"` strings that remain are all **off-limits",
+     "confirmed: No draft exists, but the sync status is computable by hand and it is not clean: LICENSE.md:3 (UPL-1.0) versus README.md:164 (proprietary EULA placeholder, eventual target UPL 1.0) is a live disagreement, unrecorded in CLAUDE.md:132-137's enumerated off-limits set. The manifests are in sync by construction. So the one output item this row names has a determinate, non-clean value on this host that nothing currently reports."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "DO-NOT-APPLY-WITHOUT-THE-OWNERS-EXPLICIT-APPROVAL": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md:41  and the sync status. Do not apply the licence choice or any",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, … @spec/done",
+     "CLAUDE.md:129    fractality, delegation-rules, wal-specspaces) were relicensed by MT-05 firing #2",
+     "CLAUDE.md:130    (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed",
+     "CLAUDE.md:131    2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:10  **Owner authorization:** RP1 (resolved 2026-07-09) names exactly this",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:42     (branches + review before merge; a licence FIELD swap the owner",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:77  **PASS — signed off by the owner, 2026-07-10** (firing #2 + the",
+     "spec/boot/STATIC.md:844  - Never relicense the product, or any part of it, without the owner's",
+     "confirmed: Kept on all three occasions, though never via this skill. Host root: PROP-000.md:50 attributes the 2026-07-12 relicense to the owner's call, and 5086c5b5's body ends 'Owner authorisation: RP1.' Package families: CLAUDE.md:129-131 attributes 893e314 and 79938ab to MT-05 firing #2 with the run id recorded. The dogfood spec is explicit that approval preceded execution — MT-05-dogfood-relicense.md:42, 'the owner decision already happened, RP1' — and :77 records the sign-off. The same prohibition reaches every session here through the boot lane at spec/boot/STATIC.md:844, which is how it bound the sessions that did the work without the skill. I searched for a counter-example (`git log -- LICENSE.md`, `grep -rn -i 'relicens' CLAUDE.md spec/`) and found none."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
