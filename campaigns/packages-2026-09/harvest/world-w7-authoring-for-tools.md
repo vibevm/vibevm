@@ -47,6 +47,26 @@ INSTALLED, SOURCED and word-identical to what the host boots. This is the only
 world batch where source 3 is clean across the whole batch — W4 had three
 WORDS-DIFFER, W5 one, W6 one NO-SOURCE.
 
+> **CORRECTION (2026-07-29). «Word-identical to what the host boots» is true of
+> the BOOT SNIPPET and false of the package's markdown files, and the difference
+> is measurable rather than a matter of reading.** `cmp` of
+> `tool-design-lessons`' five files against their installed slot reports DIFFERS
+> on all five; their normalised md5 is the SAME on all five once the campaign's
+> own `##ANCHOR ` prefixes, ` @stage/state` markers and the `<status …/>` line are
+> stripped. The consequence was measured, not inferred: a re-implementation of
+> `compute_content_hash` over `vibedeps/flow-tool-design-lessons/0.1.0` returns
+> `sha256:fc250e20…7004`, which is exactly `vibe.lock:406`, while the same hash
+> over `packages/…/v0.1.0` returns `sha256:6e2c9663…bd4c`. **The installed
+> reality is the PRE-markup revision**, and the lockfile agrees with the slot
+> rather than with the package tree.
+>
+> So the join's «clean» verdict means the PROSE agrees, which is what the join
+> compares, and it does not mean the trees are byte-identical. Where a fact turns
+> on source 3, say which reading you applied — prose-identical or byte-identical.
+> The same over-claim appeared in W6's harvest for `licensing`, `source-mirrors`
+> and `spec-genres`, so it is a standing property of this join and not a W7
+> mistake.
+
 **The host has no `spec/flows/` directory**, so the `../flows/…` pointers in these
 boot snippets resolve nowhere in the consuming project. It is a fact about the
 pointer, not about the rule the pointer sits under.
