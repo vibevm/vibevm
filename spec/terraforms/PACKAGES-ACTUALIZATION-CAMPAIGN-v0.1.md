@@ -1976,6 +1976,43 @@ command that would have tested it.
   instance** — two mechanism documents, each ending with a self-cleaning rule that
   neither obeys and nothing checks.
 
+- **2026-07-28 · C1c — BROWNFIELD, where the protocol is mostly built and the
+  brief was too narrow.** 63 verdicts: **51 confirmed / 9 drift / 3
+  unverifiable**. The registries this protocol specifies are real, and the
+  delegated search could not see them because **my brief confined it to
+  `core-ai-native`'s crates** — the machinery lives in the language stack's CLI.
+  `rust-ai-native-cli/src/lib.rs:26,28,30` defines
+  `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly
+  as named here, and `init.rs` / `test_gate.rs` / `tripwire.rs` / `ledger.rs` are
+  the commands that write and read them. The worker marked those rows `partial`
+  and listed what it had searched, which is what made the gap visible in one pass
+  rather than becoming thirty wrong verdicts. **A `not-found` is a fact about the
+  search perimeter until the perimeter is checked.**
+
+  Three of the four amendments this document claims to make **landed and were
+  verified in place**: the Charter carries `##AXIOM-A6-REALITY-BEFORE-ASPIRATION`
+  in the words given here, PROP-014 §edges carries the lifecycle status and the
+  `conflicts_with` edge marked «*(Brownfield amendment:)*», and the Playbook reads
+  «Discipline v0.2 · status: BETA». **The fourth amends GUIDE-SPEC-AUTHORING,
+  which is not in the repository** — the same missing document F-120 is about,
+  now with a second dependant.
+
+  The drift is where the protocol needs artifacts nothing produces:
+  characterization goldens (no capture path anywhere, so B4's «truth of record»
+  and the redefinition of phase gates as «snapshots unchanged» both rest on
+  nothing), the REPORT exit numbers, the anti-entrenchment close-quota, and the
+  `disputed` status's heuristic detection — the status exists in PROP-014's enum
+  and nothing can assign it. **Three facts are `unverifiable` rather than drift**:
+  the three adjudication outcomes govern a human decision that has never been made
+  here, the characterization definition has no tests to be a definition of, and
+  Phase 6's closing rule has never been applied. Each is sound and unexercised,
+  and calling any of them confirmed would report an untested policy as a working
+  one.
+
+  **And the closing fact is the third instance of F-121** — «any field, status or
+  policy not exercised by Playbook v0.2 Phase 2 is removed», `@impl/done`,
+  contradicted above it by five things that do not exist.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

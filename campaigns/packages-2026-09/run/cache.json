@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T06:24:40Z",
+  "updated_at": "2026-07-28T06:30:32Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -276,7 +276,516 @@
       },
       "marker_count": 64,
       "unit_count": 12,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "68301a694ffb5adf791920e751b91e03bc13fc91861a7d528cfe52288d2c793f",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "the document declares itself Beta and the Playbook it revises carries the same 'Discipline v0.2 · status: BETA' line"
+            ]
+          },
+          "CLOSES-THE-HEALTHY-BASELINE-GAP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:1  //! The xfail-strict test gate (BROWNFIELD-PROTOCOL §4).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:41  \"passing\" | \"failing-known\" | \"flaky\" | \"obsolete\" => {}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:10  /// `conform-baseline.json`: frozen pre-existing findings, by",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "UNFINISHEDNESS-IS-A-MODELED-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:136  /// Lifecycle status (brownfield amendment); absent = ratified.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:25  pub struct BaselineEntry {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:36  struct DebtEntry {",
+              "located directly in the surface, as recorded"
+            ]
+          },
+          "mars-was-empty-real-codebases-are-inhabited": {
+            "v": "confirmed",
+            "ev": [
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "amendments-carried-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:136  /// Lifecycle status (brownfield amendment); absent = ratified.",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "AMENDMENT-CHARTER-GAINS-A6": {
+            "v": "confirmed",
+            "ev": [
+              "spec/00-MANIFESTO.md:56 — `##AXIOM-A6-REALITY-BEFORE-ASPIRATION` **A6 — Reality before aspiration.** The Charter carries the axiom this document says it gains, in the words this document gives it"
+            ]
+          },
+          "AMENDMENT-GUIDE-SPEC-AUTHORING-LIFECYCLE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:119  /// From the unit's kind line (GUIDE-SPEC-AUTHORING §3); absent on legacy-",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:138  pub enum SpecUnitStatus {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:7  //!   GUIDE-SPEC-AUTHORING §1–4).",
+              "the amended document does not exist. `find -iname '*SPEC-AUTHORING*'` over the repository returns nothing, and 01-PATTERN-CARD-FORMAT.md says it 'supersedes part of GUIDE-SPEC-AUTHORING-v0.1'. Three of this document's four amendments landed in documents that are here; this one amends a document that is not (F-120)"
+            ]
+          },
+          "AMENDMENT-PROP-014-STATUS-AND-CONFLICTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:200  /// Lifecycle status (brownfield amendment); absent = ratified.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:11  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#spec-units\");",
+              "spec/mechanisms/PROP-014-…md:199 carries the amendment verbatim and marked as such — '*(Brownfield amendment:)* spec units additionally carry a lifecycle status (`ratified` | `planned` | `disputed` | `retired`), and a spec↔spec edge `conflicts_with`…'"
+            ]
+          },
+          "AMENDMENT-PLAYBOOK-REVISED-TO-V0-2": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:1  //! The specmap orphan ratchet — the Phase 2 \"flip\" (PLAYBOOK",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:8  //!    test passed; promote it via the explicit protocol (PLAYBOOK §7.2).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:64  /// Crates exempt from the orphan ratchet (PLAYBOOK `#phase2`). A crate",
+              "spec/03-RAID-PLAYBOOK.md's status line reads 'Discipline v0.2 · status: BETA · T1' — the revision this document claims to make"
+            ]
+          },
+          "on-an-unfinished-project-lead": {
+            "v": "confirmed",
+            "ev": [
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "problem-a-tests-fail-and-have-failed": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:41  \"passing\" | \"failing-known\" | \"flaky\" | \"obsolete\" => {}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:194  { \"test\": \"vibe-cli::cli_live_e2e install_github_smoke_alone\", \"status\": \"failing-known\", \"debt\": \"DBT-0002\" },",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "problem-b-ratified-units-unimplemented-by-plan": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:100  Some(\"planned\") => (Some(SpecUnitStatus::Planned), None),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:142  #[serde(rename = \"planned\")]",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:48  Planned => \" [PLANNED]\".to_string(),",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "problem-c-intentions-must-survive-migration": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:101  { \"id\": \"DBT-0017\", \"kind\": \"stale-doc\", \"severity\": \"P3\", \"title\": \"roadmap staleness\",",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "problem-d-drift-and-mutually-exclusive-statements": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:189  /// a freshly-built one — the regeneration-time drift report:",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:101  Some(w) if w.starts_with(\"disputed(#\") && w.ends_with(')') => {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:207  fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "demanding-global-health-never-starts": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:29  /// Load the baseline; an absent file is an empty baseline (the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:65  /// **not** listed is gated: its `pub` items must carry an own edge or a",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "BOTH-FAILURE-MODES-ARE-A1-VIOLATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:7  /// One finding with its A1 chain.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:32  /// Why the rule exists — the axiom trace rendered into SARIF.",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "PRINCIPLE-B1-INVENTORY-NOT-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:147  pub fn evaluate(baseline: &[BaselineEntry], results: &BTreeMap<String, RunStatus>) -> GateReport {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:50  /// Diff findings against the baseline: `(new, stale)` — new ones",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:52  /// only shrink, so pruning is the legal direction).",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "PRINCIPLE-B2-ASPIRATION-LEGAL-ONLY-WHEN-LABELED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:100  Some(\"planned\") => (Some(SpecUnitStatus::Planned), None),",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/lib.rs:30  pub const DEFAULT_INTENT_REGISTRY: &str = \"discipline/registry/intent.json\";",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "PRINCIPLE-B3-CONTRADICTION-IS-DATA": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:108  (Some(SpecUnitStatus::Disputed), Some(other.to_string()))",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:98  { \"id\": \"DBT-0015\", \"kind\": \"disputed-spec\", \"severity\": \"P2\", \"title\": \"fixed already\",",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "PRINCIPLE-B4-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:150  /// crate — the differential / characterization oracle the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:179  or characterization oracle against prior behavior (R-040; card \\",
+              "no characterization suite exists: grep for golden over the language stack's whole CLI returns no file. The principle names golden transcripts as the independent pin, and there are none to pin with"
+            ]
+          },
+          "PRINCIPLE-B5-MONOTONE-UTILITY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:19  //! Design rule inherited from B5 (monotone utility): scanners degrade —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:5  //! B5 (monotone utility): a file `syn` cannot parse becomes a warning,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:19  //! Frontier behaviour (B5, no cliffs): facts are extracted for the",
+              "located directly in the surface, as recorded"
+            ]
+          },
+          "principles-mechanize-what-vibevm-does-socially": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:38  severity: String,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:40  disposition: String,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:96  \"disposition\": \"filed\",",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "DEBT-REGISTRY-IS-MACHINE-READABLE-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:49  let file: DebtFile = serde_json::from_str(debt_json).context(\"parsing debt.json\")?;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:31  struct DebtFile {",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "registries-are-committed-human-diffable-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:3  //! Diff a nextest run against the project's tests-baseline registry (`discipline/registry/tests-baseline.json`",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/lib.rs:26  pub const DEFAULT_TESTS_BASELINE: &str = \"discipline/registry/tests-baseline.json\";",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:18  //! `.ledger/` is git-ignored.",
+              "located directly in the surface, as recorded"
+            ]
+          },
+          "REGISTRY-TESTS-BASELINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:25  pub struct BaselineEntry {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:41  \"passing\" | \"failing-known\" | \"flaky\" | \"obsolete\" => {}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:29  pub debt: Option<String>,",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "REGISTRY-DEBT-JSON": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:37  id: String,",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:114  const DEBT_VIEW: &str = \"discipline/DEBT.md\";",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:98  &[\"open\", \"accepted\", \"filed\", \"fixed\"],",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "REGISTRY-INTENT-JSON": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/lib.rs:30  pub const DEFAULT_INTENT_REGISTRY: &str = \"discipline/registry/intent.json\";",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:115  const INTENT_VIEW: &str = \"discipline/INTENT.md\";",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:108  &[\"open\", \"rescoped\", \"done\", \"rejected\"],",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "TRIPWIRES-ARE-CHEAP-AND-MECHANICAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:60  if let Some(glob_src) = wire.strip_prefix(\"touch:\") {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:7  //! (matched here) and `rev:<spec-uri>` (needs specmap revisions —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:27  pub unevaluated: Vec<String>,",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "test-gate-diffs-the-run-against-the-baseline-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:68  pub fn parse_nextest_output(output: &str) -> BTreeMap<String, RunStatus> {",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:19  eprintln!(\"test-gate: running `cargo nextest run --workspace --no-fail-fast` …\");",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:38  let results = testgate::parse_nextest_output(&combined);",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "GATE-FAILS-ON-NEWLY-FAILING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:172  (\"passing\", RunStatus::Fail) => {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:155  if *status == RunStatus::Fail {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:143  self.newly_failing.is_empty() && self.unexpectedly_passing.is_empty()",
+              "located directly in the surface, as recorded"
+            ]
+          },
+          "GATE-FAILS-ON-UNEXPECTEDLY-PASSING-UNPROMOTED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:160  (\"failing-known\", RunStatus::Pass) => {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:133  /// (promote via the explicit protocol instead).",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:94  eprintln!(\"  UNEXPECTEDLY PASSING (unpromoted — see PLAYBOOK §7.2): {test}\");",
+              "located directly in the surface, as recorded"
+            ]
+          },
+          "FLAKY-ENTRIES-ARE-QUARANTINED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:164  (\"flaky\", s) => {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:135  /// `flaky` entries and their observed status — informational.",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:77  eprintln!(\"  flaky (never gating): {test} — {status}\");",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "DRIVE-BY-FIXES-ARE-PROHIBITED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:160  (\"failing-known\", RunStatus::Pass) => {",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:6  //! `` `req r2` ``, `` `req r1 planned` ``, `` `req r2 disputed(#other)` ``",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:49  let text = \"### R {#req-x}\\n`req r2`\\n\\nMUST hold.\\n\\n### P {#req-y}\\n`req r1 planned`\\n\\n### D {#req-z}",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "STATUS-PLANNED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:100  Some(\"planned\") => (Some(SpecUnitStatus::Planned), None),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:48  Planned => \" [PLANNED]\".to_string(),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:390  assert!(text.contains(\"[PLANNED]\"), \"{text}\");",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "STATUS-DISPUTED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:101  Some(w) if w.starts_with(\"disputed(#\") && w.ends_with(')') => {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:207  fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:98  { \"id\": \"DBT-0015\", \"kind\": \"disputed-spec\", \"severity\": \"P2\", \"title\": \"fixed already\",",
+              "the STATUS is real — PROP-014:199 carries `disputed` in the lifecycle enum — and the DETECTION the fact describes is not: no heuristic pass and no LLM detection exist anywhere, which the document's own open question (#OPEN-CONFLICT-HEURISTIC-PRECISION) treats as still to be tuned. A status nothing can assign is half a mechanism"
+            ]
+          },
+          "ADJUDICATION-HAS-THREE-OUTCOMES": {
+            "v": "unverifiable",
+            "ev": [
+              "a rule about what an OWNER's adjudication may conclude. It governs a human decision, records it nowhere, and no adjudication has been run against this corpus — grep for adjudicat / supersede / scope-split returns 0. Neither confirmed nor falsified: it has no instances"
+            ]
+          },
+          "WHILE-DISPUTED-EDGES-ARE-FROZEN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:119  Some(Some(rev)) => {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:122  suspects.push(Suspect {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:49  Disputed => format!(",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME": {
+            "v": "drift",
+            "ev": [
+              "no tool captures a characterization transcript: grep for golden over rust-ai-native-cli/src/ returns no file at all, and there is no CLI output, exit-code or file-tree snapshot path. The inventory step this fact describes has no implementation"
+            ]
+          },
+          "CHARACTERIZATION-IS-A-STABILITY-ORACLE-NOT-A-CORRECTNESS-CLAIM": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:171  pub struct CellHasOracle;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:178  \"no replacement of a non-trivial cell merges without a differential \\",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:224  \"add a differential or characterization test in \\",
+              "a definition of what characterization tests mean, and there are none in this package to mean it about. The definition is sound and untested; recording it confirmed would report an unexercised concept as a working one"
+            ]
+          },
+          "PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED": {
+            "v": "drift",
+            "ev": [
+              "the redefinition rests on snapshots that do not exist (see CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME). A phase gate cannot mean 'characterization snapshots unchanged' where nothing captures one; the floor's actual gate is fmt/test/clippy/conform/specmap"
+            ]
+          },
+          "RATCHET-FILE-IS-THE-FRONTIER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:7  //! - `specmap.toml`'s `exempt` list (see [`crate::config::Config`]) names",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:64  /// Crates exempt from the orphan ratchet (PLAYBOOK `#phase2`). A crate",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/specmap.toml:30  exempt = [",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "contract-per-tool-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:19  //! Design rule inherited from B5 (monotone utility): scanners degrade —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:19  //! Frontier behaviour (B5, no cliffs): facts are extracted for the",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "CONTRACT-SPECMAP-AND-TRACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:139  \"no tagged code item matches `{target}` (neither exactly nor as a suffix); \\",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:140  untagged items are outside the migrated frontier — facts only\"",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:138  0 => bail!(",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "CONTRACT-CONFORM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:59  /// Run every rule over the facts; report findings only inside `scope`",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:82  findings.retain(|f| f.file.starts_with(prefix));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:68  .filter(|f| !baseline.findings.contains(&f.fingerprint))",
+              "located directly in the surface, as recorded"
+            ]
+          },
+          "CONTRACT-EXPLAIN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:214  \"\\n— provenance: computed at {}, epoch {}, producer {producer}\\n\",",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:94  bail!(\"no spec unit with URI `{uri}` in the index\");",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:103  out.push_str(\"  edges: none (uncovered unit)\\n\");",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "A-TOOL-THAT-ERRORS-OUTSIDE-THE-FRONTIER-IS-FORBIDDEN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:20  //! an unparseable file becomes a warning entry, never a hard error.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:231  /// unparseable sources). B5: the indexer degrades, never errors, outside the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:437  fn unparseable_source_degrades_to_a_warning() {",
+              "located directly in the surface, as recorded"
+            ]
+          },
+          "PHASE-6-CLOSES-WITH-ASPIRATION-RECONCILIATION": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:108  &[\"open\", \"rescoped\", \"done\", \"rejected\"],",
+              "a phase-exit rule for a terraform campaign. No such campaign has run to Phase 6 in this package — there is no intent registry populated here at all — so the rule has never been applied and nothing shows whether it closes anything"
+            ]
+          },
+          "REPORT-PUBLISHES-THE-EXIT-NUMBERS": {
+            "v": "drift",
+            "ev": [
+              "none of the four published numbers has a producer: grep for burn-down / half-life / shrinkage / unaccounted over the package returns 0, and no REPORT generator exists"
+            ]
+          },
+          "EVERYTHING-PLANNED-LANDS-OR-IS-LET-GO": {
+            "v": "drift",
+            "ev": [
+              "the fact claims the property is CHECKABLE, and nothing computes it: there is no code that reconciles intent entries against outcomes. A checkable property with no checker is the WISH the Charter's own A5 forbids"
+            ]
+          },
+          "DEBT-ENTRIES-CARRY-SUNSETS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:36  struct DebtEntry {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:40  disposition: String,",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "ANTI-ENTRENCHMENT-CLOSE-QUOTA": {
+            "v": "drift",
+            "ev": [
+              "the close-quota does not exist: grep for quota / flatline / entrench over the package returns 0 for every term. The mechanism that is supposed to stop debt becoming a museum is itself unbuilt"
+            ]
+          },
+          "ACCEPTED-DEBT-BUDGET-PER-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:1  //! Budget-and-bans rules — the guide's quantitative gates: unsafe",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:137  pub struct FileLength {",
+              "the machinery for this lives in the language stack's CLI rather than in core-ai-native, which is why a search confined to core's crates could not see it: rust-ai-native-cli/src/lib.rs:26,28,30 define `discipline/registry/tests-baseline.json`, `debt.json` and `intent.json` exactly as this protocol names them, and init.rs / test_gate.rs / tripwire.rs / ledger.rs are the four commands that write and read them"
+            ]
+          },
+          "PRIOR-ART-PYTEST-XFAIL-STRICT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:1  //! The xfail-strict test gate (BROWNFIELD-PROTOCOL §4).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:27  /// the only xfail home) fire everywhere. A site covered by a reasoned",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "PRIOR-ART-BASELINES-AND-RATCHETS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:15  //! - [`baseline`] — the ratchet baseline (`conform-baseline.json`):",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:17  //!   the file only shrinks.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:1  //! The specmap orphan ratchet — the Phase 2 \"flip\" (PLAYBOOK",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "PRIOR-ART-SRE-ERROR-BUDGETS": {
+            "v": "confirmed",
+            "ev": [
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "PRIOR-ART-VIBEVM-AUDIT-AND-PROP-013": {
+            "v": "confirmed",
+            "ev": [
+              "the ancestor is real and lives in the CONSUMING repository, not in this package: spec/common/PROP-013-periodic-health-audit.md and AUDIT.md are both in vibevm, which is where a prior-art citation of them would point"
+            ]
+          },
+          "PRIOR-ART-FEATHERS-CHARACTERIZATION-TESTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:179  or characterization oracle against prior behavior (R-040; card \\",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "OPEN-CONFLICT-HEURISTIC-PRECISION": {
+            "v": "confirmed",
+            "ev": [
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "OPEN-QUOTA-K-AND-DEBT-BUDGETS": {
+            "v": "confirmed",
+            "ev": [
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "OPEN-INTENT-AUTO-LINK-TO-ROADMAP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:103  \"tripwires\": [\"touch:ROADMAP.md\"] }",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "OPEN-INDEX-ABSORPTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:25  pub const INDEX_REL_PATH: &str = \"specmap.json\";",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:167  Specmap {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:22  //! Orphans are computed at gate time and deliberately not serialised",
+              "@spec/done — a recorded design or prior-art statement. Its absence from code is not evidence against it; a citation of prior art is falsified by being wrong about the prior art, not by a grep"
+            ]
+          },
+          "UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:23  /// One `tests-baseline.json` entry (extra fields tolerated).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:39  #[serde(default, deny_unknown_fields)]",
+              "the THIRD instance of the same self-falsifying closing rule (F-121, after ENGINE-CONFORM and LEDGER-INTENT). It says any field, status or policy not exercised by Playbook v0.2 Phase 2 is removed, marks itself @impl/done, and is contradicted above it by the close-quota, the adjudication outcomes, the golden transcripts, the REPORT exit numbers and the disputed-status detection — none of which exist. Nothing enforces it"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T06:30:32Z",
+        "verify_batch": "C1"
+      }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
       "content_hash": "dc043662c20520236ea40b8626d6d19416e1834a1cc27b6b4de541a695365147",
