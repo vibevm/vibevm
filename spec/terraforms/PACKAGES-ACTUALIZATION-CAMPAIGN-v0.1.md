@@ -2816,6 +2816,116 @@ command that would have tested it.
   said so. The rule is now in both checkpoints: do not edit a file a running worker
   cites, and do not read a table while its worker may still be writing.
 
+- **2026-07-28 · The wind-down that invalidated its own evidence.** W2's four
+  tables were verified clean at 3 unresolvable when the last session sealed them.
+  Re-verified at the opening of this one they read **65**. Not one of the 62 new
+  ones is a fiction: `CONTINUE.md` was overwritten wholesale by `8406eb2a` and
+  `spec/WAL.md`'s `_Updated:` line rewritten by `0f2991d1` — both *after* the
+  tables were returned and committed — and `git show 100617b3:spec/WAL.md | sed
+  -n 3p` still carries the quote verbatim. `repair-refs.py` re-pointed 51 by
+  single-hit search; the remaining 14 are named rather than repaired (8 quote
+  text the rewrite deleted, 2 became ambiguous, 3 are the grammar cases already
+  recorded). **This is the third instance of the boss moving a file under a
+  citing worker and the first where the workers had already finished, so nobody
+  could re-anchor.** W1's lesson — do not edit a file a running worker cites —
+  does not cover a wind-down that rewrites the two files the whole batch is
+  about. The tool's first real `--apply` also exposed a defect of its own: it
+  re-dumped every table at a fixed indent, turning 51 repaired coordinates into
+  4 481 changed lines. Fixed to measure the file's own indent first; the same run
+  now produces 53.
+
+- **2026-07-28 · W2a and W2b CLOSED — `flow:wal` complete at 260 of 260, 86.5 %.**
+  225 confirmed / 27 drift / 8 unverifiable across seven files. **W2a is 81.1 %
+  (90/16/5), the lowest file-set in the cluster so far, and the reason is
+  structural: this flow's facts describe `spec/WAL.md`, and `spec/WAL.md` is on
+  disk and measurable line by line.** Where W1's git flows could only be checked
+  against a commit log, W2a's required-sections contract can be checked against
+  the artefact it specifies.
+
+  **Six of W2a's sixteen drifts are that contract, each measured over the
+  fourteen most recent revisions of the host's WAL rather than over today's:**
+
+  | rule | measurement |
+  |---|---|
+  | `_Updated: <ISO 8601 UTC>` "always and without exception" | bare calendar date in **14 of 14** revisions, 0 timestamps |
+  | Current phase — "one or two lines" | **25-50 lines** in every revision; 50 today |
+  | Next — "the single next action" | **4-5 numbered items** in every revision, no default marked, numbering repeats 3 |
+  | Constraints — each why "citing a spec anchor or issue" | **4 of 26 entries (15 %)**; `spec://` occurs **0 times** in the file in all 8 revisions measured |
+  | In progress — "cite spec anchors (`spec://…`)" | same zero |
+  | Session context — "one-paragraph orientation" | **41-65 lines** of retrospective |
+
+  The size target is the seventh: 18 972 bytes is over 3 000 tokens on either
+  conversion, though under the 5 000 hard limit. W1's precedent settles the shape
+  — `HEADER-TARGET-LENGTH-AND-HARD-LIMIT` was judged drift on exactly this kind
+  of measurement, and its summary restatement with it.
+
+  **Two more are the flow's own §what, written for a one-file model that §files
+  replaced two sections earlier in the same document.** The WAL is neither "the
+  only persistent memory" — `CLAUDE.md`, 1 585 compiled boot lines, the spec tree
+  and `CONTINUE.md` are all persistent memory the agent reads every session, and
+  `CONTINUE.md` is specified by this very package — nor "read first": the host
+  reads it third and says so in two independent files. **The instruction to read
+  it first is itself compiled at line 1382 of a 1585-line lane the host reads
+  before opening the WAL.**
+
+  **And two are canonicity, with dates.** `wal` 0.2.0 landed 2026-07-07
+  (`ec6b5b5a`, subject «the canonical WAL convention»). `core-ai-native` v0.8.0 —
+  the Discipline's next release after that — landed 2026-07-17 (`bfb72da7`), ten
+  days later, is the installed slot, and still ships a complete
+  `06-WAL-CONVENTION.md` with the same two files, the same canonicity rule and
+  the same supersession, marked «OPTIONAL but preferred», containing zero
+  occurrences of `defer`, `flow:wal` or `org.vibevm.world/wal`. **The next
+  release came; it did not defer.** The host installs and boots both.
+
+- **2026-07-28 · F-129 — the wal package ships two wind-downs and they
+  contradict each other.** `session-end-hook.md` orders «the full hook, steps
+  1-6»: confirm the stopping state, rewrite the WAL, collapse, overwrite
+  `CONTINUE.md`, propose the commit, report. `cold-resume.md` §wind-down orders
+  **five** steps in a different sequence — overwrite `CONTINUE.md` **first**,
+  rewrite the WAL second, commit, push, chat TL;DR — with **no stopping-state
+  step and no collapse step**. A third fact, `WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK`,
+  asserts the two are the same procedure. All three are `@impl/done`, all three
+  are in one package, and both step lists reach the consumer.
+
+  **The host implements `cold-resume.md`'s five exactly, in order** — including
+  the chat TL;DR word for word — so what reads as a consumer dropping two steps
+  is a consumer obeying the other half of the package. This also corrects the
+  harvest, which recorded the wind-down report as «flow asks four items, host
+  asks four items, none of them the same»: the host's four **are** this flow's
+  own `EXTEND-THE-REPORT-INTO-A-WIND-DOWN-TLDR` list, verbatim. What the host
+  lacks is the *base* report, and two of its four items land elsewhere — REVIEW
+  markers at `spec/boot/00-core.md:60`, discovered issues in the WAL's Known
+  issues via the host's own step 2. Filed, not fixed; closing it is an edit
+  inside a published slot, so F-122's territory.
+
+- **2026-07-28 · What W2b's drifts are measured on, and what was deliberately
+  NOT counted.** Three of the eleven rest on history rather than on today's tree:
+  the WAL's `_Updated:` line is left **byte-identical by 10 of the 17** recent
+  commits that edited its body — 58 %, the majority case, and the bare-date
+  format is *why* there is nothing to bump within a day; the implicit hook fires
+  on **28 of 37** active days since 2026-06-01, so nine ended with commits and no
+  WAL commit; and `CONTINUE.md` is overwritten wholesale at **all seven**
+  wind-downs and patched between them in **7 of the last 14** commits touching
+  it. The cold-start order is reversed in writing on both sides: the flow says
+  `CONTINUE.md` first then the WAL, `CLAUDE.md:205` runs the boot sequence to the
+  WAL and reads `CONTINUE.md` second, and `CONTINUE.md`'s own resume prompt lists
+  itself first.
+
+  **`morning-routine.md` is unadopted end to end — the host has no morning ritual
+  and no weekly re-read — and that is NOT counted as per-fact drift.** The line
+  drawn, and it is the line the rest of `world` will be judged on: *a human's
+  daily read leaves no repository artefact, and the flow never claims the host
+  performs one; only where the host's own written contract contradicts the flow
+  is it drift.* Two of forty-two facts qualify, both about the cold-start read
+  order. The whole-document non-adoption is a finding for the report, not
+  forty-two drifts.
+
+  Two rule pairs were judged **differently on purpose**, because their own words
+  differ: `NEVER-APPEND-TO-THE-WAL` prohibits appending only, and the host never
+  appends — confirmed; `REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND` names patching
+  too, and `CLAUDE.md`'s step 2 says «Update … bump … refresh» — drift. Same for
+  `NEVER-APPEND-TO-CONTINUE` against `CONTINUE-IS-OVERWRITTEN-WHOLESALE`.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
