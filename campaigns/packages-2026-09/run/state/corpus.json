@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-27T20:50:06Z",
+  "updated_at": "2026-07-28T03:25:41Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -1805,7 +1805,7 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/boot/58-flow-dev-runtime-docs.md",
+      "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -1907,7 +1907,7 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/boot/30-flow-atomic-commits.md",
+      "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -2060,7 +2060,7 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/boot/32-flow-autonomy.md",
+      "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -2111,7 +2111,7 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/boot/31-flow-conventional-commits.md",
+      "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -3012,7 +3012,7 @@
       "campaign": {}
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/boot/20-flow-sync-from-code.md",
+      "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md",
       "effective": {
         "stage": "impl",
         "state": "done"

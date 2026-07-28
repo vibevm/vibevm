@@ -42,8 +42,13 @@ exceed one unit per terminator. Measured on three consecutive batches — 25
 manufactured bullets → +23 units, 10 → +6, 4 → +2. B15 broke the band; B16 was
 *predicted in advance* to be insensitive to it and was.
 
+**Both queued wave-level DRIFTs landed 2026-07-28** — F-097, F-103 and F-110 are
+closed. Five packages moved their boot snippet to `spec/boot/`, so all 27
+`world` packages now share one layout and every in-package link resolves.
+
 **Next: nothing is running.** See §Next — every remaining item needs the owner
-or is explicitly off-limits.
+or is explicitly off-limits. **Phase C is the plan's next phase and its entry
+gate is met**; it is ~11 900 markers without verdicts and was not started.
 
 ## Constraints — do not violate
 
@@ -206,18 +211,13 @@ Nothing running; the task queue is empty and the tree is clean.
 **Phase B is done. Every item below needs the owner or is off-limits — no
 batch remains to run autonomously.**
 
-1. **Two wave-level DRIFTs are queued and neither is dispatched.** Both are fact
-   corrections under sync-from-code, which requires surfacing the draft to the
-   owner **before** applying:
-   - **F-097** — four dead package names. **16 sites by meaning in B15 alone**,
-     three of them H1 titles and four unusable `vibe install`/`uninstall` lines.
-     ⚠️ **Do not build the site list from a delimiter-anchored grep**: two sites
-     carry no `flow:` prefix and no backticks, and the review tool's C12 sees
-     only ten of the sixteen.
-   - **F-103 + F-110** — the bare-`boot/` family. **8 of 8 relative links broken**
-     across five packages, and all five READMEs name a `spec/boot/` path their
-     manifests contradict. Packages with `spec/boot/` have zero broken links, so
-     the trait and the defect coincide exactly.
+1. ~~Two wave-level DRIFTs.~~ **BOTH LANDED 2026-07-28, surfaced under
+   sync-from-code and applied on the owner's approval.** DRIFT-038 (`7b0ec6aa`)
+   retired the four dead package names — 50 edits over 29 files, zero live dead
+   references left, nine deliberately kept because **a path is not a name**.
+   DRIFT-039 (`521bb6cd`) moved five boot snippets `boot/` → `spec/boot/`, which
+   made 8 of 8 broken links resolve **and dissolved F-110 with zero README
+   edits** — the READMEs had been right all along.
 2. **Open findings needing the owner**: F-087, F-088, F-078 (DRIFT-035 written,
    deliberately not dispatched), and PROP-043 §2 — the spec names what a unit
    **is** and never what structure **is**, a boundary two DRIFTs have now moved
