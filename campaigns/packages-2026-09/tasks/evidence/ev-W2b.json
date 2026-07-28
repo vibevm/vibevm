@@ -26,7 +26,7 @@
   "evidence": [
    "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:11  The WAL is written for the next session on the *same* project rhythm:",
    "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    1,
@@ -160,7 +160,7 @@
   "claim": "Item 1: a short TL;DR / executive summary at the top.",
   "evidence": [
    "CLAUDE.md:179     - A short TL;DR / executive summary at the top.",
-   "CONTINUE.md:7  ## TL;DR",
+   "CONTINUE.md:22  ## TL;DR",
    "CONTINUE.md:9  **The 138-row reviewing debt is paid.** Every one was read individually and judged"
   ],
   "src": [
@@ -195,7 +195,7 @@
   "evidence": [
    "CLAUDE.md:181     - The active blocker (if any) and the exact human action that unblocks it.",
    "CONTINUE.md:31  Nothing is blocked. Tree clean, in sync with `origin/main`, mirrored to both hosts.",
-   "spec/WAL.md:175  ## Next"
+   "spec/WAL.md:222  ## Next"
   ],
   "src": [
    2,
@@ -519,7 +519,7 @@
    "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
    "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:73  2. **Rewrite `spec/WAL.md`** per",
    "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
-   "spec/WAL.md:56  ## Constraints — do not violate"
+   "spec/WAL.md:71  ## Constraints — do not violate"
   ],
   "src": [
    2,
@@ -880,7 +880,7 @@
   "evidence": [
    "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
    "CONTINUE.md:45  **Never decrement these; re-measure.** One command now prints all of it:",
-   "CONTINUE.md:48  python campaigns/packages-2026-09/tasks/summary.py"
+   "CONTINUE.md:11  python campaigns/packages-2026-09/tasks/summary.py"
   ],
   "src": [
    2,
@@ -944,7 +944,7 @@
   "marker": "@impl/done",
   "claim": "Summary: CONTINUE.md at the repo root is the cold reader's tour — TL;DR, state, blocker, recipe, findings, map, decisions, commits, quick-start — overwritten wholesale, never appended.",
   "evidence": [
-   "CONTINUE.md:7  ## TL;DR",
+   "CONTINUE.md:22  ## TL;DR",
    "CONTINUE.md:99  ## The recipe that closed W1, to run again on W2 {#recipe}",
    "CONTINUE.md:192  ## The findings this session opened {#findings}",
    "CONTINUE.md:278  ## Repository map {#map}",
@@ -1200,7 +1200,7 @@
   "claim": "If the WAL says 'all tests pass' and you remember the timeout test is flaky, the WAL is wrong: fix it before the next agent session reads and trusts it.",
   "evidence": [
    "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:25  channel the agent cannot reach directly. If the WAL says \"all tests",
-   "spec/WAL.md:193  ## Known issues"
+   "spec/WAL.md:246  ## Known issues"
   ],
   "src": [
    1,
@@ -1448,7 +1448,7 @@
   "marker": "@spec/done",
   "claim": "These three species — internal contradictions, stale REVIEW markers, orphan anchors — drift silently.",
   "evidence": [
-   "spec/WAL.md:75  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
+   "spec/WAL.md:100  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
    "CONTINUE.md:301  ## Standing traps {#traps}"
   ],
   "src": [
@@ -1643,9 +1643,9 @@
   "marker": "@impl/done",
   "claim": "Never leave a known divergence in place 'for later' — the very next session will read and trust it.",
   "evidence": [
-   "spec/WAL.md:75  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
-   "spec/WAL.md:76    acts on it, and the verdict at least pointed at a real defect. When restating,",
-   "spec/WAL.md:77    restate the reason too, and say which way the correction runs.",
+   "spec/WAL.md:100  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
+   "spec/WAL.md:101    acts on it, and the verdict at least pointed at a real defect. When restating,",
+   "spec/WAL.md:102    restate the reason too, and say which way the correction runs.",
    "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
   ],
   "src": [
@@ -1929,7 +1929,7 @@
   "marker": "@impl/done",
   "claim": "If any stopping-state check fails, say so explicitly at the end of the session — do not silently paper over a broken state in the WAL.",
   "evidence": [
-   "spec/WAL.md:193  ## Known issues",
+   "spec/WAL.md:246  ## Known issues",
    "spec/boot/STATIC.md:226  - Never resolve a spec-vs-code disagreement by assuming the code is",
    "CONTINUE.md:42  | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |"
   ],
@@ -1950,7 +1950,7 @@
    "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
    "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
    "spec/boot/STATIC.md:1406     messages; the WAL is a checkpoint, not a journal.",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    2,
@@ -1984,8 +1984,8 @@
   "evidence": [
    "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
    "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
-   "spec/WAL.md:160  - Earlier: M1.17 / M1.18 / M1.19."
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:192  - Earlier: M1.17 / M1.18 / M1.19."
   ],
   "src": [
    2,
@@ -2002,13 +2002,13 @@
   "evidence": [
    "spec/WAL.md:1  # WAL — Project Continuation State",
    "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
-   "spec/WAL.md:6  ## Current phase",
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
-   "spec/WAL.md:162  ## In progress",
-   "spec/WAL.md:175  ## Next",
-   "spec/WAL.md:193  ## Known issues",
-   "spec/WAL.md:235  ## Session context",
+   "spec/WAL.md:14  ## Current phase",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:194  ## In progress",
+   "spec/WAL.md:222  ## Next",
+   "spec/WAL.md:246  ## Known issues",
+   "spec/WAL.md:298  ## Session context",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:74  ## Required sections {#sections}"
   ],
   "src": [
@@ -2024,9 +2024,9 @@
   "marker": "@impl/done",
   "claim": "A long Done section with implementation notes is a bug; collapse each completed unit into a single line — the details live in commits.",
   "evidence": [
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
-   "spec/WAL.md:144  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read",
-   "spec/WAL.md:160  - Earlier: M1.17 / M1.18 / M1.19."
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:176  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read",
+   "spec/WAL.md:192  - Earlier: M1.17 / M1.18 / M1.19."
   ],
   "src": [
    1,
@@ -2041,7 +2041,7 @@
   "marker": "@impl/done",
   "claim": "Anything that ballooned into multiple paragraphs probably belongs in a spec, not in the WAL; move it out and leave a short pointer.",
   "evidence": [
-   "spec/WAL.md:84    until the perimeter has been checked.** Full path list: batch plan §4.5.",
+   "spec/WAL.md:109    until the perimeter has been checked.** Full path list: batch plan §4.5.",
    "spec/WAL.md:237  **The debt's own result is one sentence: no row moved because a worker's evidence",
    "CONTINUE.md:259  ## Decisions still in force {#decisions}"
   ],
@@ -2255,8 +2255,8 @@
   "marker": "@impl/done",
   "claim": "Report item: any Known Issue that was discovered.",
   "evidence": [
-   "spec/WAL.md:193  ## Known issues",
-   "spec/WAL.md:195  - **Opened 2026-07-28 by the reviewing pass, all on the owner, none blocking:**",
+   "spec/WAL.md:246  ## Known issues",
+   "spec/WAL.md:258  - **Opened 2026-07-28 by the reviewing pass, all on the owner, none blocking:**",
    "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update."
   ],
   "src": [
@@ -2320,7 +2320,7 @@
   "evidence": [
    "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
    "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
-   "spec/WAL.md:235  ## Session context"
+   "spec/WAL.md:298  ## Session context"
   ],
   "src": [
    2,
@@ -2354,7 +2354,7 @@
   "evidence": [
    "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
    "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    2,
@@ -2371,7 +2371,7 @@
   "evidence": [
    "CONTINUE.md:42  | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |",
    "CONTINUE.md:45  **Never decrement these; re-measure.** One command now prints all of it:",
-   "spec/WAL.md:193  ## Known issues"
+   "spec/WAL.md:246  ## Known issues"
   ],
   "src": [
    1,
@@ -2456,7 +2456,7 @@
    "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
    "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
    "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. …",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    2,

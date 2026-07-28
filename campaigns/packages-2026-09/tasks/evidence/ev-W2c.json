@@ -308,7 +308,7 @@
       "spec/boot/STATIC.md:65  <!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->",
       "spec/boot/STATIC.md:75  When the owner commissions work that spans **more than one session or",
       "spec/boot/STATIC.md:76  more than a handful of commits**, propose a campaign plan before",
-      "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**"
+      "spec/WAL.md:16  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**"
     ],
     "src": [
       2,

@@ -265,7 +265,7 @@
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a brief *why*, citing a spec anchor or issue: `match_by_hash(): DO NOT TOUCH — fragile reconnection logic, issue #12`. The most valuable",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:91  5. ##SECTION-IN-PROGRESS **In progress** — what is open, with enough detail that the next session can pick it up. Cite spec anchors (`spec://…`). @impl/done",
    "spec/WAL.md:69  ## Constraints — do not violate",
-   "spec/WAL.md:209  ## Next"
+   "spec/WAL.md:222  ## Next"
   ],
   "src": [
    1,
@@ -2427,7 +2427,7 @@
   "evidence": [
    "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
    "spec/WAL.md:1  # WAL — Project Continuation State",
-   "spec/WAL.md:162  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    1,
@@ -2478,7 +2478,7 @@
   "evidence": [
    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:179  > Грубое правило: для английского текста 1 токен ≈ ¾ слова, то есть 500 токенов — это примерно 375 слов, или около одной страницы обычного текста. Для русского текста токены «дороже», потому что кириллица кодируется менее эффективно — один русский токен в среднем покрывает…",
    "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
-   "spec/WAL.md:162  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    1,
@@ -2629,7 +2629,7 @@
   "evidence": [
    "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
    "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm…",
-   "spec/WAL.md:162  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    1,
@@ -3253,7 +3253,7 @@
   "marker": "@impl/done",
   "claim": "What the next session must do first lives in `spec/WAL.md`.",
   "evidence": [
-   "spec/WAL.md:209  ## Next",
+   "spec/WAL.md:222  ## Next",
    "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
    "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done"
   ],

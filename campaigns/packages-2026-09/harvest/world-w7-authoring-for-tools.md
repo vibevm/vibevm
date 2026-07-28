@@ -55,6 +55,38 @@ pointer, not about the rule the pointer sits under.
 
 ### managed-blocks — the law is executed on three files in this repository {#s2-blocks}
 
+> **CORRECTION (2026-07-29), and it is the same failure this campaign has now
+> made four times: a truncated `grep` list read as if it were the output.** Two
+> of this section's code greps below list fewer files than the command returns.
+> **Run them; do not read the lists.**
+>
+> - `grep -rln 'managed.block\|MANAGED_BLOCK\|BLOCK_START\|marker' crates/vibe-workspace/src/ --include='*.rs'` returns **13**, not the 6 listed. The seven
+>   dropped are `boot_artifacts.rs`, `install/bootgen.rs`,
+>   `install/bootgen/hybrid_emit.rs`, `install/tests_hybrid.rs`, `lib.rs`,
+>   `publish.rs`, `publish/staging.rs`.
+> - `grep -rln 'vibevm>' crates/ --include='*.rs'` returns **10**, not 6. The four
+>   dropped are `boot_artifacts.rs`, `install/bootgen.rs`, `install.rs`, `lib.rs`.
+>
+> The list named `boot_artifacts/tests.rs` and NOT `boot_artifacts.rs` — that is,
+> it dropped **the entire implementation**: the marker constants, `BlockLocation`,
+> `locate_block`, `write_managed_block`, the legacy-migration branch and the
+> no-op guard. A worker trusting the list would have reported the flow's whole
+> state machine unimplemented. Identical in shape to the W5 harvest's dropped
+> `crates/vibe-publish/src/token.rs`.
+>
+> **ADDITION — there is a SECOND managed-block implementation in this repository,
+> and neither grep above can see it** (wrong crate, different marker vocabulary).
+> `crates/vibe-cli/src/commands/vvm/env.rs` writes into a shell rc file with
+> `const BLOCK_BEGIN: &str = "# >>> vibevm (VVM) — managed, do not edit by hand >>>"`
+> and a matching `BLOCK_END`. It turns four facts from illustration into
+> observation, and the two writers share no constant, helper or import — which is
+> the flow's cohabitation claim demonstrated inside one repository. It also
+> diverges on three measured points: it scans with `text.find()` rather than
+> line-anchored; **it has no malformed state at all** — `split_block` falls
+> through to «no block» on a duplicated or reversed pair, where the primary
+> implementation returns `Malformed` and refuses to write; and its do-not-edit
+> notice sits in the marker rather than on the first line inside.
+
 ```console
 $ grep -n '<vibevm>\|</vibevm>' CLAUDE.md AGENTS.md GEMINI.md
 CLAUDE.md:211:<vibevm>

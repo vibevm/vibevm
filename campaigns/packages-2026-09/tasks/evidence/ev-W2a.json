@@ -354,7 +354,7 @@
    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md:65  - ##COMPOSES-WAL `flow:wal` — a campaign checkpoint updates the WAL's standing line",
    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md:66    at every phase boundary; the plan file, not the WAL, carries the",
    "spec/boot/STATIC.md:65  <!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->",
-   "spec/WAL.md:6  ## Current phase"
+   "spec/WAL.md:14  ## Current phase"
   ],
   "src": [
    1,
@@ -408,9 +408,9 @@
   "marker": "@spec/done",
   "claim": "A well-written WAL tells the agent and the author's future self where work stopped, what is safe to change, and what is explicitly off-limits.",
   "evidence": [
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:162  ## In progress",
-   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:194  ## In progress",
+   "spec/WAL.md:222  ## Next",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a"
   ],
   "src": [
@@ -609,7 +609,7 @@
   "claim": "Honour every constraint in the WAL's Constraints section verbatim; violate only after explicit in-session confirmation from the user.",
   "evidence": [
    "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section",
-   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:71  ## Constraints — do not violate",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a"
   ],
   "src": [
@@ -665,7 +665,7 @@
   "evidence": [
    "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
    "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
    "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update."
   ],
   "src": [
@@ -830,9 +830,9 @@
   "marker": "@impl/done",
   "claim": "`spec/WAL.md` is the living checkpoint holding phase, constraints, done, open and next; rewritten at every session end; canonical where it and any snapshot disagree.",
   "evidence": [
-   "spec/WAL.md:6  ## Current phase",
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:162  ## In progress",
+   "spec/WAL.md:14  ## Current phase",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:194  ## In progress",
    "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
    "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done"
   ],
@@ -938,7 +938,7 @@
   "evidence": [
    "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
    "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    1,
@@ -967,9 +967,9 @@
   "marker": "@spec/done",
   "claim": "A good whiteboard carries three lines — where we are, what we are doing, what must not be touched; a bad one carries three hundred lines of stale history.",
   "evidence": [
-   "spec/WAL.md:6  ## Current phase",
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:162  ## In progress"
+   "spec/WAL.md:14  ## Current phase",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:194  ## In progress"
   ],
   "src": [
    1,
@@ -987,7 +987,7 @@
    "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
    "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
    "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    1,
@@ -1089,7 +1089,7 @@
   "marker": "@impl/done",
   "claim": "Not a changelog: history belongs in `git log` and spec changelogs.",
   "evidence": [
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
    "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
    "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit."
   ],
@@ -1107,7 +1107,7 @@
   "marker": "@impl/done",
   "claim": "Not a to-do list: the Next section names one next action; the backlog belongs in an issue tracker.",
   "evidence": [
-   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:222  ## Next",
    "spec/WAL.md:187  3. **Then W3…W7.** 3 743 anchors remain in `world`.",
    "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did"
   ],
@@ -1143,13 +1143,13 @@
   "claim": "A well-formed `spec/WAL.md` has the eight sections that follow.",
   "evidence": [
    "spec/WAL.md:1  # WAL — Project Continuation State",
-   "spec/WAL.md:6  ## Current phase",
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
-   "spec/WAL.md:162  ## In progress",
-   "spec/WAL.md:175  ## Next",
-   "spec/WAL.md:193  ## Known issues",
-   "spec/WAL.md:235  ## Session context"
+   "spec/WAL.md:14  ## Current phase",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:194  ## In progress",
+   "spec/WAL.md:222  ## Next",
+   "spec/WAL.md:246  ## Known issues",
+   "spec/WAL.md:298  ## Session context"
   ],
   "src": [
    1,
@@ -1181,9 +1181,9 @@
   "marker": "@impl/done",
   "claim": "Current phase — one or two lines naming what the project is working on right now.",
   "evidence": [
-   "spec/WAL.md:6  ## Current phase",
-   "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
-   "spec/WAL.md:56  ## Constraints — do not violate"
+   "spec/WAL.md:14  ## Current phase",
+   "spec/WAL.md:16  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
+   "spec/WAL.md:71  ## Constraints — do not violate"
   ],
   "src": [
    1,
@@ -1198,9 +1198,9 @@
   "marker": "@impl/done",
   "claim": "Constraints — the do-not-touch list, each entry carrying a brief why citing a spec anchor or issue; the most valuable content in the WAL, because without the written line an enthusiastic session improves what was deliberately left alone.",
   "evidence": [
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:58  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
-   "spec/WAL.md:71  - **Never classify a group of rows by one rule to save time.** That is how 138 rows",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:73  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
+   "spec/WAL.md:96  - **Never classify a group of rows by one rule to save time.** That is how 138 rows",
    "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section"
   ],
   "src": [
@@ -1217,9 +1217,9 @@
   "marker": "@impl/done",
   "claim": "Done — completed work collapsed to one-line summaries, not five lines of notes.",
   "evidence": [
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
-   "spec/WAL.md:144  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read",
-   "spec/WAL.md:162  ## In progress"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:176  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read",
+   "spec/WAL.md:194  ## In progress"
   ],
   "src": [
    1,
@@ -1234,9 +1234,9 @@
   "marker": "@impl/done",
   "claim": "In progress — what is open, with enough detail that the next session can pick it up; cite spec anchors (`spec://…`).",
   "evidence": [
-   "spec/WAL.md:162  ## In progress",
+   "spec/WAL.md:194  ## In progress",
    "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for",
-   "spec/WAL.md:175  ## Next"
+   "spec/WAL.md:222  ## Next"
   ],
   "src": [
    1,
@@ -1251,7 +1251,7 @@
   "marker": "@impl/done",
   "claim": "Next — the single next action; if several candidates, list them briefly and mark the default.",
   "evidence": [
-   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:222  ## Next",
    "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one",
    "spec/WAL.md:187  3. **Then W3…W7.** 3 743 anchors remain in `world`.",
    "spec/WAL.md:188  3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential"
@@ -1269,9 +1269,9 @@
   "marker": "@impl/done",
   "claim": "Known issues — open problems not being worked on right now, so future sessions don't re-discover them.",
   "evidence": [
-   "spec/WAL.md:193  ## Known issues",
-   "spec/WAL.md:229  - **F-092** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.",
-   "spec/WAL.md:231  - **`specmap` ratchet** — 37 gated orphans host-side, unmoved.",
+   "spec/WAL.md:246  ## Known issues",
+   "spec/WAL.md:292  - **F-092** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.",
+   "spec/WAL.md:294  - **`specmap` ratchet** — 37 gated orphans host-side, unmoved.",
    "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did"
   ],
   "src": [
@@ -1287,7 +1287,7 @@
   "marker": "@impl/done",
   "claim": "Session context (optional) — one-paragraph orientation: what file to open first, what to run, what to avoid.",
   "evidence": [
-   "spec/WAL.md:235  ## Session context",
+   "spec/WAL.md:298  ## Session context",
    "spec/WAL.md:237  **The debt's own result is one sentence: no row moved because a worker's evidence",
    "spec/WAL.md:250  **The standard had been in use for 690 rows and had never been stated**, which is",
    "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one"
@@ -1322,7 +1322,7 @@
   "claim": "In agent mode — unattended for hours — nobody asks; the WAL is executed literally.",
   "evidence": [
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:112  ## Constraints — do not violate",
-   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:71  ## Constraints — do not violate",
    "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section",
    "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update."
   ],
@@ -1341,7 +1341,7 @@
   "claim": "The agent-grade example is not bureaucracy: it is the difference between an agent that quietly optimises the timeout back to 300 s and one that does what is needed.",
   "evidence": [
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:113  - Timeout: 600s, not 300s → spec://oproto/PROP-003#verification.timeout",
-   "spec/WAL.md:71  - **Never classify a group of rows by one rule to save time.** That is how 138 rows"
+   "spec/WAL.md:96  - **Never classify a group of rows by one rule to save time.** That is how 138 rows"
   ],
   "src": [
    1,
@@ -1356,8 +1356,8 @@
   "marker": "@impl/done",
   "claim": "The more autonomy the agent has, the more precise the WAL must be — coarse context suffices for one supervised step; hours unattended demand every constraint explicit and spec-anchored.",
   "evidence": [
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:58  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:73  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
    "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for",
    "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)"
   ],
@@ -1411,7 +1411,7 @@
   "marker": "@impl/done",
   "claim": "Update trigger: when switching context mid-session — checkpoint the outgoing work before pivoting, or its state is lost.",
   "evidence": [
-   "spec/WAL.md:162  ## In progress",
+   "spec/WAL.md:194  ## In progress",
    "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for"
   ],
   "src": [
@@ -1482,7 +1482,7 @@
   "marker": "@spec/done",
   "claim": "Every token in the WAL is a tax paid per session.",
   "evidence": [
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
    "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work."
   ],
   "src": [
@@ -1499,8 +1499,8 @@
   "claim": "Target: ≤ 3 000 tokens, roughly one page of plain text.",
   "evidence": [
    "spec/WAL.md:1  # WAL — Project Continuation State",
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
   ],
   "src": [
    1,
@@ -1515,8 +1515,8 @@
   "marker": "@impl/done",
   "claim": "Hard limit: 5 000 tokens — past that the WAL hoards history; collapse done items, move stable facts to specs, split epics.",
   "evidence": [
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
-   "spec/WAL.md:144  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read"
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:176  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read"
   ],
   "src": [
    1,
@@ -1669,7 +1669,7 @@
   "marker": "@impl/done",
   "claim": "Even when the convention is declined the invariant binds, and the fallback resume path is `git log` plus a fresh look at the tree: commit messages carry session summaries, a plan's status line carries campaign state, each session re-derives the rest.",
   "evidence": [
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
    "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:18  ##WAL-IS-PREFERRED *It is **preferred** because the alternative — resumption"
   ],
@@ -1789,8 +1789,8 @@
   "marker": "@impl/done",
   "claim": "Summary: keep it under a page; stable facts move to specs; constraints are the highest-value content — more autonomy demands more precision.",
   "evidence": [
-   "spec/WAL.md:56  ## Constraints — do not violate",
-   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:71  ## Constraints — do not violate",
+   "spec/WAL.md:174  ## Done (collapsed — see `git log`)",
    "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section"
   ],
   "src": [
@@ -1882,7 +1882,7 @@
    "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
    "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
    "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
-   "spec/WAL.md:6  ## Current phase"
+   "spec/WAL.md:14  ## Current phase"
   ],
   "src": [
    1,
@@ -1897,8 +1897,8 @@
   "marker": "@impl/done",
   "claim": "Output: one line giving the current phase and its status.",
   "evidence": [
-   "spec/WAL.md:6  ## Current phase",
-   "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
+   "spec/WAL.md:14  ## Current phase",
+   "spec/WAL.md:16  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:81  2. ##SECTION-CURRENT-PHASE **Current phase** — one or two lines naming what the project is"
   ],
   "src": [
@@ -1915,10 +1915,10 @@
   "marker": "@impl/done",
   "claim": "Output: up to three bullets naming what needs attention — blockers, risks, pending decisions.",
   "evidence": [
-   "spec/WAL.md:193  ## Known issues",
-   "spec/WAL.md:229  - **F-092** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.",
-   "spec/WAL.md:231  - **`specmap` ratchet** — 37 gated orphans host-side, unmoved.",
-   "spec/WAL.md:56  ## Constraints — do not violate"
+   "spec/WAL.md:246  ## Known issues",
+   "spec/WAL.md:292  - **F-092** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.",
+   "spec/WAL.md:294  - **`specmap` ratchet** — 37 gated orphans host-side, unmoved.",
+   "spec/WAL.md:71  ## Constraints — do not violate"
   ],
   "src": [
    1,
@@ -1933,7 +1933,7 @@
   "marker": "@impl/done",
   "claim": "Output: one line giving the next priority step.",
   "evidence": [
-   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:222  ## Next",
    "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:93  6. ##SECTION-NEXT **Next** — the single next action. Several candidates? List them"
   ],

@@ -710,7 +710,7 @@
    "spec/boot/STATIC.md:1263    throwaway debug code, record in the WAL:",
    "spec/boot/STATIC.md:1264    `<file>: temporary, do not sync to spec`.",
    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:57  ##record-the-skip-in-the-wal-lead Record the skip",
-   "spec/WAL.md:62  ## Constraints — do not violate"
+   "spec/WAL.md:71  ## Constraints — do not violate"
   ],
   "src": [
    1,
@@ -1096,7 +1096,7 @@
    "spec/boot/STATIC.md:1264    `<file>: temporary, do not sync to spec`.",
    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:77    - src/verify.rs: temporary trace logging for issue #42, do NOT sync.",
    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:62  - src/verify.rs: temporary trace logging for #42 reproduction,",
-   "spec/WAL.md:62  ## Constraints — do not violate"
+   "spec/WAL.md:71  ## Constraints — do not violate"
   ],
   "src": [
    1,
@@ -2770,7 +2770,7 @@
    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:62  - src/verify.rs: temporary trace logging for #42 reproduction,",
    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:76    ## Constraints",
    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:77    - src/verify.rs: temporary trace logging for issue #42, do NOT sync.",
-   "spec/WAL.md:62  ## Constraints — do not violate"
+   "spec/WAL.md:71  ## Constraints — do not violate"
   ],
   "src": [
    1,
@@ -2785,7 +2785,7 @@
   "marker": "@impl/done",
   "claim": "The WAL entry is what keeps the next session honest.",
   "evidence": [
-   "spec/WAL.md:62  ## Constraints — do not violate",
+   "spec/WAL.md:71  ## Constraints — do not violate",
    "packages/org.vibevm.world/wal/v0.2.0/README.md:7  ##WAL-IS-A-SHORT-CHECKPOINT-FILE-THAT-BRIDGES-SESSIONS The WAL",
    "spec/boot/STATIC.md:1263    throwaway debug code, record in the WAL:",
    "spec/boot/STATIC.md:1264    `<file>: temporary, do not sync to spec`."
@@ -3911,7 +3911,7 @@
   "claim": "The problem this solves: a central WAL describes one project.",
   "evidence": [
    "spec/WAL.md:1  # WAL — Project Continuation State",
-   "spec/WAL.md:6  ## Current phase",
+   "spec/WAL.md:14  ## Current phase",
    "packages/org.vibevm.fractality/WAL.md:1  # fractality — WAL (project continuation state)",
    "SPECSPACES.md:3  Sub-projects hosted in this repository that are worked on as",
    "SPECSPACES.md:4  independent projects, each with its own boot contract, WAL, and"
