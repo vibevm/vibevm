@@ -19,7 +19,7 @@ Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 
 **5 392 verdicts written, sealed and committed — 78.7 % of the phase, 1 455
 anchors owed.** `ai-native` measures **2 470 / 207 / 20 — 91.6 %**; `world` has
-fallen to **89.1 %** as W4 and W5 landed. Two commands print the truth and
+fallen to **89.3 %** as W4 and W5 landed (2 407 / 270 / 18 over 80 files). Two commands print the truth and
 supersede every figure in this file:
 `tasks/batch-progress.py` (owed vs judged, per batch) and `tasks/summary.py`.
 
