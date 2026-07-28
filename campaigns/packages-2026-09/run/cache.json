@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T19:20:24Z",
+  "updated_at": "2026-07-28T19:50:42Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -34509,7 +34509,628 @@
       },
       "marker_count": 59,
       "unit_count": 12,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "d0baa15f7e83c474faf72a9259dfedf5be554851c2e3f3f4d9f21156ed749856",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:11  ## The three zones {#zones}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:47  ## The dominating asymmetry: memory {#memory}",
+              "confirmed: A scope declaration; checked against the file's own headings. §zones (11) with three sub-zones, §both (38) for the shared work in its shape, §memory (47) for the asymmetry and its four consequences, plus §delegation (127) and §summary (140) which the scope does not announce. All three promised parts present."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "HUMAN-ONLY-MEANING-AND-ITS-CONNECTION-TO-REALITY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+              "spec/boot/STATIC.md:1349  4. **Verification is asymmetric.** The AI checks formal properties",
+              "spec/boot/STATIC.md:1350     (builds, tests, lint); the human checks semantics (does it do what",
+              "confirmed: The host reserves semantics for the human in its loaded boot lane (STATIC.md:1349-1352, 'do not let a machine sign off on meaning') and gives the human's head conflict priority over every written layer (00-core.md:40). Checked whether any host gate claims to verify meaning: `tools/self-check.sh` runs fmt/test/clippy/`vibe check`/`cargo xtask conform check` — all formal; none asserts semantics."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "HUMAN-ONLY-ARCHITECTURE-AT-THE-LEVEL-OF-INTENT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1356  - Never take an architectural decision that outlives the session",
+              "spec/boot/STATIC.md:1357    without surfacing it to the human — decisions are the human's zone.",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:11  … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** …",
+              "confirmed: Three host locations converge: the Never rule in the loaded lane (STATIC.md:1356-1357), Rule 4's ask-first line (00-core.md:24), and CLAUDE.md:11, which keeps architecture on the non-delegated side even when delegating everything else. Note the vocabulary split this row depends on: the very next zone assigns 'architectural decisions at the level of small detail' to the AI (cognitive-load-split.md:28), so the boundary is the grain, and the host's `CLAUDE.md:11` uses the unqualified word 'architecture' for the human/boss tier."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "HUMAN-ONLY-TASK-PRIORITIES": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. …",
+              "spec/boot/STATIC.md:1338  1. **The human owns coherence.** Consistency across sessions, global",
+              "spec/boot/STATIC.md:1339     architecture, priorities, and the sense that \"the system behaves",
+              "confirmed: 'Priorities' is named explicitly in the loaded boot lane's first consequence (STATIC.md:1338-1339) and the host enforces it procedurally: RESUME SESSION restores context and stops, and the recorded next step is only a candidate (CLAUDE.md:203-209). `TASKS.md` and `BACKLOG.md` exist as the owner-curated ordering surfaces (CLAUDE.md:152-158), with BACKLOG explicitly for 'findings the work surfaced and deliberately did not act on'."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "HUMAN-ONLY-SENSING-WRONG-BEHAVIOUR-BEFORE-A-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1339     architecture, priorities, and the sense that \"the system behaves",
+              "spec/boot/STATIC.md:1340     wrong\" are human work. Never assume them; losing coherence is this",
+              "confirmed: The phrase is in the host's loaded lane word for word (STATIC.md:1339-1340). Looked for a host mechanism that captures a pre-test suspicion: `spec/boot/00-core.md:60` (`<!-- REVIEW: … -->`, conservative interpretation, flag in the report) is the closest and is agent-side; `BACKLOG.md` (95 lines, severity-triaged P1/P2/P3) is the human-side register for findings not yet acted on. Neither is a test, which is the point of the row."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "HUMAN-ONLY-CARRYING-CONTEXT-BETWEEN-SESSIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+              "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+              "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+              "the zone assigns the RESPONSIBILITY, and the host assigns it the same way: the human owns coherence across sessions (STATIC.md:1338), and staleness is routed back to the human (00-core.md:15). The file channel is the mechanism that responsibility is discharged through, not a competing owner — the same package's files-as-ipc.md makes the files the channel and this document makes the human its keeper."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "HUMAN-ONLY-MAINTAINING-GLOBAL-COHERENCE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1338  1. **The human owns coherence.** Consistency across sessions, global",
+              "spec/boot/STATIC.md:1529    coprocessors; the human owns coherence; files are the IPC.",
+              "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+              "confirmed: Same three-location support as the boot snippet's consequence #1, plus the conflict-protocol hierarchy that makes the human the terminal arbiter of any inconsistency between layers (STATIC.md:185-196). Searched for a machine coherence check that would contradict the exclusivity: `cargo xtask conform check` and `vibe check` verify structural/spec conformance, not global coherence of intent."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "HUMAN-ONLY-DECIDING-WHEN-A-SPECIFICATION-IS-STALE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "spec/boot/STATIC.md:1253  4. On approval, apply + commit (`docs(spec): sync <section> with code`).",
+              "confirmed: The host routes both staleness paths to the human. Time-based staleness: 00-core.md:15 sends the agent to the user before destructive work on a >24h WAL. Content-based staleness: the sync-from-code protocol lets the agent DETECT that the spec lags the code and draft the correction, but forbids applying it — 'Surface the spec-diff draft to the user. **Do not apply.**' (STATIC.md:1252). So detection is delegable, the decision is not, which is exactly this row."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "HUMAN-ONLY-TALKING-TO-USERS": {
+            "v": "unverifiable",
+            "ev": [
+              "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add any project-specific conventions that should be read at session boot. @impl/done",
+              "UNVERIFIABLE: the subject cannot be exercised in this repository. vibevm has no external user-facing channel in the tree — no issue tracker, no support docs, no feedback intake or user-research artefact — so there is no observation of who talks to users, and none of the three sources can settle it. Recorded in its own words rather than by a blanket rule."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "HUMAN-ONLY-ETHICAL-CALLS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/90-user.md:40  ##CLEAN-ROOM-RULE **`eth-sri/type-constrained-code-generation` (PLDI'25, https://github.com/eth-sri/type-constrained-code-generation) is inspiration-only — NEVER a code source.** …",
+              "spec/boot/00-core.md:28  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+              "confirmed: The host's licence/IP calls are owner directives written into the user-owned boot snippet, not agent decisions: the clean-room rule for third-party research code is dated and attributed to the owner (spec/boot/90-user.md, 'owner directive, 2026-07-07'), and it instructs the agent to hold the same posture 'until the owner explicitly clears its license/patent status'. Token discipline in the same file is framed the same way. `spec/boot/00-core.md:28` fences the owner's book. All three are the human making the call and the agent carrying it."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "AI-ONLY-ARCHITECTURE-AT-THE-LEVEL-OF-SMALL-DETAIL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:11  … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** …",
+              "the routine/non-routine line the row draws is the host's own (spec/boot/00-core.md:24, Rule 4: routine proceeds, non-routine stops and asks), and small-detail decisions are taken without asking every session. Recorded rather than counted against it: the host's delegation directive names «architecture» unqualified in its never-delegate set, with no small-detail carve-out, so the two host documents draw the line in different vocabulary."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "AI-ONLY-GENERATING-LARGE-CONSISTENT-VOLUMES": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:123    map-guided migration faithfully (0 stale values); the only boss fixes were",
+              "spec/boot/STATIC.md:1327  - The **AI process** is optimized for: throughput (thousands of",
+              "confirmed: The host has one measured instance and recorded its outcome in its own ledger: a delegated `worktree` run performed a ~40-edit map-guided migration with '0 stale values' (CLAUDE.md:107-126). It also records the cost the claim omits — 'in minutes' did not hold, because a worktree worker gets a cold `target/` and pays a full build, so the run was long and blew `max_turns` at 80. Consistency delivered; the speed clause qualified by the host's own note."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "AI-ONLY-RECALLING-THE-EXACT-SYNTAX-OF-A-THOUSAND-APIS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1329     session, broad shallow erudition (syntax of dozens of languages,",
+              "spec/boot/STATIC.md:1330     APIs of hundreds of libraries), routine transformations, formal",
+              "the capability is real and uncontested. Recorded: the same package states it at a different order of magnitude in its boot snippet — «dozens of languages, APIs of hundreds of libraries» (STATIC.md:1329-1330) against this row's «a thousand APIs». Neither figure is measured anywhere in the perimeter; both are the same claim wearing different rhetoric."
+            ],
+            "src": [
+              3
+            ]
+          },
+          "AI-ONLY-MECHANICAL-REFACTORS-ACROSS-THE-CODEBASE": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:123    map-guided migration faithfully (0 stale values); the only boss fixes were",
+              "spec/common/PROP-031-algorithmic-refactoring.md:1  # PROP-031 — Algorithmic refactoring: the codemod engine and the write-side of the model {#root}",
+              "confirmed: Two host sources. The measured one: the delegated wal-test migration, ~40 edits across the tree, executed by a GLM worker (CLAUDE.md:107-126). The designed one: `spec/common/PROP-031-algorithmic-refactoring.md` specifies a codemod engine for exactly this class of change, and `spec/common/PROP-033-refactoring-registry.md` its registry — both marked `@spec/done` design proposals, not implemented (PROP-031's status line: 'Design proposal v0.1 — not implementation-locked'). So the practice is observed and the tooling is specified but not built."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "AI-ONLY-BOILERPLATE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1330     APIs of hundreds of libraries), routine transformations, formal",
+              "CLAUDE.md:11  … (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) …",
+              "confirmed: The host's delegate-by-default rule covers this class explicitly ('codes, bulk-edits', CLAUDE.md:11) and the loaded lane names routine transformations as the AI's zone. What I could not find is an instance: `git log --format='%s' -400` shows no commit attributed to a delegated boilerplate run, and the one recorded delegation (CLAUDE.md:107-126) was a migration, not scaffolding. `vibe init` generates package scaffolding programmatically (crates/vibe-cli/src/commands/init/package.rs:166 writes a boot-snippet template), which is tooling rather than an AI process."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "AI-ONLY-FORMAL-CHECKS": {
+            "v": "confirmed",
+            "ev": [
+              "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+              "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+              "tools/self-check.sh:9  #   3. `cargo clippy --workspace ...`     — zero warnings under `-D warnings`.",
+              "tools/self-check.sh:10  #   4. `vibe check --path . --quiet`      — spec linter clean against the",
+              "confirmed: The three named checks are the first three gates of the host's shippability script, in that order, plus a spec linter and a discipline gate (`tools/self-check.sh:7-12`, documented at `DEV-GUIDE.md:330-334`). Note the host's own qualification of who runs them: `CLAUDE.md:120` puts the gate on the boss side after applying a worker's diff, and `CLAUDE.md:121` records that workers do not run `cargo fmt` at all — so in this host the formal checks are automated but not delegated to the worker process."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "AI-ONLY-HOLDING-EVERY-DETAIL-OF-A-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:173  - ##read-set-records-existence Crucially the read-set records *what exists and where*, **not what is currently in context**: compaction evicts the *text* but not the *fact*, and reads are cheap (files sit in `vibedeps`). @spec/done",
+              "spec/design/structural-loader.md:50  ##READ-SET-SURVIVES-COMPACTION This survives context compaction because **these instructions are re-read at boot**, so the habit of consulting the read-set is restored even after the conversation is summarized. @spec/done",
+              "confirmed: The parenthetical qualification is the load-bearing part and the host has engineered around it: PROP-035 §read-set and `spec/design/structural-loader.md:46-50` design a file-based read-set precisely because the window does NOT hold everything for the life of a session — 'compaction evicts the *text* but not the *fact*'. So the host confirms the ability within the window and records its boundary."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "ROW-WRITING-SPECS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "spec/boot/STATIC.md:1253  4. On approval, apply + commit (`docs(spec): sync <section> with code`).",
+              "spec/boot/STATIC.md:268  1. Propose recording it at the governing anchor, with all four",
+              "spec/boot/STATIC.md:269     fields, **before the session ends** — an unrecorded decision does",
+              "confirmed: The split is procedural in this host and runs in both directions: the agent drafts and the human approves in sync-from-code (STATIC.md:1248-1253) and in decision-records ('Propose recording it… If the why or the trigger is not known, ask. Do not invent data', STATIC.md:266-272). The AI's 'gap-finding' half is visible in the same rule — 'do not record a two-field stub' is a gap the agent is expected to surface rather than fill. `docs(spec)` is 82 of the last 400 commits."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-CODE-REVIEW": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1349  4. **Verification is asymmetric.** The AI checks formal properties",
+              "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+              "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+              "CLAUDE.md:120    applies clean) → boss runs the real gate (`self-check`) → boss commits +",
+              "confirmed: The host's delegated-review protocol implements exactly this two-column split: the formal column is `tools/self-check.sh` (fmt/test/clippy/vibe check/conform), the semantic column is the boss reading the diff 'as a PR' (CLAUDE.md:118-120). The host adds a caution the row does not: a worker's own acceptance result is 'advisory until the diff is read' (CLAUDE.md:106), i.e. the formal column is trusted only when the boss runs it."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-DEBUGGING": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:115    \"failed\"; review the worktree first. **`show`/`ps` usage (in/out tokens) does",
+              "CLAUDE.md:116    not flush until terminal** — `in=0/out=0` mid-run is *not* a stall; judge",
+              "CLAUDE.md:117    liveness by `runs/<id>/worker-stdout.jsonl` growth + `git -C runs/<id>/wt",
+              "confirmed: The host has one recorded debugging episode with the roles reversed from the row: the human diagnosed the false stall and the false 'failed' state and wrote the liveness heuristic into the ledger (CLAUDE.md:112-118) — hypothesis AND evidence both on the human side, because the failing component was the delegation harness itself. The row's shape is otherwise unexercised here: `packages/org.vibevm.fractality/plans/external/E-BUG-001.md` is the host's bug-report genre and its fields are 'what happened · what I wanted · what I got · why they differ · ideas on the cause' — hypothesis-first, matchin"
+            ],
+            "src": [
+              2
+            ]
+          },
+          "ROW-DOCUMENTATION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1248  1. Read `git diff HEAD` and reconstruct the *intent* behind each change.",
+              "spec/boot/STATIC.md:1249  2. Draft a diff against the relevant spec section. Include: new value,",
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "confirmed: This is the sync-from-code protocol verbatim, installed in the host's own boot lane: generate the update FROM THE DIFF (`Read git diff HEAD`, STATIC.md:1248), draft against the spec section, surface without applying, commit on approval as `docs(spec): sync <section> with code`. Both columns of the row are steps in one installed procedure. Checked whether the sanctioned commit subject has been used: `git log --format=%s -600 | grep -c '^docs(spec): sync'` returns 0 — the protocol is installed and its named commit form has not appeared in the last 600 commits, though `docs(spec)` overall runs 82"
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "THE-AI-HAS-NO-MEMORY-BETWEEN-SESSIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+              "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+              "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). …",
+              "confirmed: This is the premise the host's entire session apparatus is built on and it says so: the wind-down contract exists because the next reader is 'a fresh context (different machine, new session, post-compaction)' (CLAUDE.md:169), the WAL is rewritten each session (00-core.md:41), and CLAUDE.md:161-165 forbids relying on harness auto-memory. Checked for a counter-instance — any host mechanism that gives an agent recall across sessions: none; the closest, the read-set (PROP-035 §read-set), is a FILE, which is the claim's own escape hatch."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "EVERY-SESSION-IS-A-NEW-PROCESS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:9  ##boot-sequence-lead Every session starts here. In order: @impl/done",
+              "spec/boot/00-core.md:13  4. ##BOOT-STEP-START-WORK Only then start work. @impl/done",
+              "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). …",
+              "confirmed: The host's boot contract is only coherent under this claim: every session re-reads the whole boot lane, the WAL, and the governing PROPs before acting (00-core.md:7-13), and the RESUME command re-runs that sequence and then verifies repository state empirically rather than trusting anything remembered (CLAUDE.md:203-205). A process that knew the previous ones would not need step 1."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "imagine-a-developer-who-never-returns": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:54  ##imagine-a-developer-who-never-returns Imagine a",
+              "confirmed: An illustration of the preceding claim, not a separate assertion; nothing in the repository can confirm or refute a metaphor. Checked that the host reuses the same figure so the illustration is at least shared: `grep -rn 'new teammate\\|next human' CLAUDE.md packages/org.vibevm.world/` finds the sibling phrasing at cognitive-load-split.md:120-122 ('the AI's next session, your future self, the next human') and at CLAUDE.md:161 ('A teammate who clones the repo'), which is the same device in the host's voice."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "tomorrow-a-different-one-arrives": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:58  ##tomorrow-a-different-one-arrives Tomorrow a different one arrives, equally",
+              "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). …",
+              "confirmed: Continuation of the metaphor. Its literal counterpart in the host is CLAUDE.md:169's 'fresh context (different machine, new session, post-compaction)', and the whole CONTINUE.md genre exists for that reader — CLAUDE.md:178-188 enumerates what the cold reader must be told (branch state, blocker, next-steps recipe, repository map, decisions in force, recent commit chain)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WHATEVER-THE-DOCUMENTATION-SAYS-IS-ALL-THE-NEW-ARRIVAL-KNOWS": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+              "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+              "spec/boot/STATIC.md:285  from what it can read, and the code shows the value, not the",
+              "confirmed: The host states the same closure twice: CLAUDE.md:161 (a cloning teammate sees only the repo) and, in the installed decision-records snippet, 'It re-derives from what it can read' (STATIC.md:284-287). The second is the stronger form — it names what happens when the reading is incomplete: the agent re-litigates a settled value."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "a-stale-doc-yields-the-old-hash-function": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation … @impl/done",
+              "vibe.lock:416  content_hash = \"sha256:074b2b8c1158507bc37dcff3177acbf396732a74b87ae3a8308c825c8e907980\"",
+              "confirmed: The illustration has a real analogue in this host and it points the other way, which is the useful finding: vibevm's hash choice IS documented at its governing anchor (PROP-002 §2.1, `##IDENTITY-TUPLE`, marked `**Decision.**`) and the spec and the artifact agree — the spec says `sha256:<hex>`, the lockfile writes `sha256:…` (vibe.lock:416, and 36 of them). Checked for drift between them: `grep -rn 'blake3' crates/ Cargo.toml` returns nothing, so no undocumented switch has happened. The scenario's premise is absent here because the documented-decision practice held."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "four-consequences-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:70  ### Record decisions, not facts {#decisions-not-facts}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:84  ### Unwritten knowledge does not exist {#unwritten}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:98  ### The context window is finite working memory {#window}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:112  ### Write for the whole system {#whole-system}",
+              "confirmed: Counted the `###` headings following line 68: exactly four (70, 84, 98, 112), matching the announced number. Each has an installed host counterpart, which is why the 'load-bearing' qualifier is checkable rather than rhetorical: decision-records (STATIC.md:235), the file-only channel (CLAUDE.md:161), the read-set/compaction design (PROP-035 §read-set), and the three-readers rule (CLAUDE.md:148-165). The README's own summary of this file uses the same count."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "BLAKE3-ALONE-IS-A-FACT": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock:416  content_hash = \"sha256:074b2b8c1158507bc37dcff3177acbf396732a74b87ae3a8308c825c8e907980\"",
+              "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+              "spec/boot/STATIC.md:240  600 s\") is recoverable from the code in a second. The reason it is",
+              "confirmed: The distinction is checkable here and it holds: the host's hash choice is recoverable from an artifact in one grep (`vibe.lock:416`, 51 files under crates/ mentioning sha256), exactly as the claim predicts for the fact half. The installed decision-records snippet states the same rule with a different example — 'A fact (\"timeout is 600 s\") is recoverable from the code in a second' (STATIC.md:239-240) — so the collection uses one distinction and two illustrations."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "BLAKE3-WITH-ITS-REASON-IS-A-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:241  600 s cannot be recovered at all — unless it was written down when",
+              "spec/boot/STATIC.md:253  | **Why** | Concrete and cited: a measurement, a constraint, an incident — with data. |",
+              "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. …",
+              "confirmed: The rule the illustration teaches is installed and specified (a why must cite 'a measurement, a constraint, an incident — with data', STATIC.md:253). The host's own hash decision is the natural test and it is a partial pass: PROP-002 §2.1 records the Decision and the mechanism in full but gives no Why for sha256 over any alternative, no Considered-and-rejected, and no revisit trigger — searched the section and the surrounding PROP for those three fields and found none. So the host carries the fact plus the mechanism, and not the reason the rule asks for."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "RECORD-DECISIONS-THE-FIRST-KIND-RECORDS-ITSELF": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+              "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
+              "spec/boot/STATIC.md:300    trigger — that is a fact with decoration, not a record.",
+              "confirmed: The instruction is the opening sentence of an installed sibling flow, in the host's own boot lane (STATIC.md:239), and that flow sharpens it into a test — a record without a reason or a trigger 'is a fact with decoration, not a record' (STATIC.md:299-300). The host's spec tree uses the `**Decision.**` form at governing anchors (e.g. PROP-002 §2.1) rather than a separate ADR directory, matching STATIC.md:257-259."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "full-practice-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:235  <!-- vibe:static org.vibevm.world/decision-records — vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->",
+              "spec/boot/STATIC.md:250  | Field | Requirement |",
+              "vibe.lock:46      \"flow:org.vibevm.world/decision-records@=0.1.0\",",
+              "confirmed: The pointer resolves in three ways: the package exists (`packages/org.vibevm.world/decision-records/`), it is a resolved dependency of the redbook (vibe.lock:46), and it is installed with its snippet compiled into the host's boot lane (STATIC.md:235-300). Note this pointer is written as a bare flow name rather than a relative link, so unlike the boot snippet's three `../flows/…` pointers it does not dangle."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "human-teams-survive-on-tribal-knowledge": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+              "confirmed: The premise and the same named character appear in the host's loaded boot lane, contributed by the decision-records flow (STATIC.md:284) — so the collection shares one illustration across two packages, and this host reads it every session. The claim about human teams is not otherwise checkable here; vibevm is a single-maintainer repository (`git log --format='%an' -400 | sort -u` → one author)."
+            ],
+            "src": [
+              3
+            ]
+          },
+          "THE-AI-CANNOT-ASK-VASYA": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+              "spec/boot/STATIC.md:285  from what it can read, and the code shows the value, not the",
+              "spec/boot/STATIC.md:286  constraint — so it re-litigates: \"600 s looks arbitrary, propose",
+              "confirmed: Word-for-word in the host's loaded boot lane, contributed by decision-records (STATIC.md:282-289), with the consequence spelled out — the agent re-derives from what it can read and re-litigates the settled value. That is the same sentence this document asserts, installed as a standing instruction in the consuming project rather than only stated in the source package."
+            ],
+            "src": [
+              3
+            ]
+          },
+          "KNOWLEDGE-NOT-IN-A-FILE-DOES-NOT-EXIST-FOR-THE-AI": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, …",
+              "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context.",
+              "spec/boot/STATIC.md:286  constraint — so it re-litigates: \"600 s looks arbitrary, propose",
+              "confirmed: The host has both halves, and the second one is dated by damage: CLAUDE.md:165 says the reverse move 'has already silently cost a teammate context' — an incident, not a principle. The 'decides without it, confidently' half is the re-litigation behaviour the decision-records snippet describes (STATIC.md:284-289). The host's countermeasure is a default (write it into the repo when unsure), which only makes sense under this claim."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "WRITE-EVERY-DECISION-DOWN": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:268  1. Propose recording it at the governing anchor, with all four",
+              "spec/boot/STATIC.md:269     fields, **before the session ends** — an unrecorded decision does",
+              "spec/boot/STATIC.md:270     not survive the session boundary.",
+              "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. …",
+              "confirmed: The instruction is installed with a deadline attached — record it at the governing anchor before the session ends (STATIC.md:266-272) — and the wal flow adds the in-session variant: 'If the user makes a decision that affects future sessions, propose adding it to the WAL… Do not silently file it as \"remembered.\"' (STATIC.md:1394-1396). The host practises it visibly: `CLAUDE.md`'s operating-facts ledger carries an owner grant to append verified operational facts immediately 'so no future session re-learns it'."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "THE-WINDOW-HOLDS-EVERYTHING": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:171  - ##READ-SET **The read-set (surviving compaction).** To honour \"read once\" across an agent's context compaction, a persistent, file-based **read-set** (`.vibe/session/read-set.json` or equivalent) records `{ specpath, content_hash }` on each read; …",
+              "spec/design/structural-loader.md:46  ## The read-set — read once, survive compaction {#read-set}",
+              "the claim's own section is «The context window is finite working memory» and its next sentence is what it means: everything in play competes for one budget. The host agrees and engineers around the finiteness rather than denying it — the control plane is priced per token, and PROP-035's read-set exists precisely because the corpus is larger than any window. The claim's consequence, not its refutation."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "LONG-SESSIONS-PUSH-EARLY-CONTENT-INTO-THE-IGNORED-ZONE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:39  buried mid-document. Models attend to the edges of context (\"Lost in",
+              "spec/boot/STATIC.md:40  the Middle\", Liu et al. 2023/2024); a mid-file invariant is an",
+              "spec/boot/STATIC.md:41  invariant the reader statistically skipped.",
+              "confirmed: The claim is carried in the host's own loaded boot lane WITH the citation this document omits: the addressable-specs contribution names 'Lost in the Middle, Liu et al. 2023/2024' (STATIC.md:38-41) and uses the same word, 'statistically'. So the corpus supplies the source; this unit states it unsourced. The host's counter-design is the read-set (PROP-035 §read-set) plus the placement rule at STATIC.md:36-41."
+            ],
+            "src": [
+              3
+            ]
+          },
+          "SHORT-SESSIONS-BEAT-LONG-ONES-AND-CONSTRAINTS-GO-AT-THE-EDGES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:38  Critical constraints live at the START or END of a file, never",
+              "spec/boot/STATIC.md:39  buried mid-document. Models attend to the edges of context (\"Lost in",
+              "spec/boot/STATIC.md:41  invariant the reader statistically skipped.",
+              "the placement half is installed verbatim as a standing rule in the host's boot lane (STATIC.md:36-41, with the «Lost in the Middle» citation this document omits) and the host observes it — the four rules and the delegation directive at the top of CLAUDE.md, the session commands at the bottom. The short-session half carries an empirical figure (five of thirty minutes against one of two and a half hours) that nothing in this repository measures; a fact with a confirmed half is not unverifiable, and the unmeasured half is recorded here rather than counted."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "write-specs-for-the-ai-is-half-the-truth": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+              "confirmed: The host completes the same half-truth in the same direction and reaches the human reader first: CLAUDE.md:161's justification for in-repo memory is the cloning TEAMMATE, not the agent. `CLAUDE.md:148-158` lists the canonical homes as documents for people (CLAUDE.md/AGENTS.md/GEMINI.md, MEMORY.md, TASKS.md, BACKLOG.md) alongside the spec tree."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "you-will-not-remember-and-the-teammate-never-knew": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:240  600 s\") is recoverable from the code in a second. The reason it is",
+              "spec/boot/STATIC.md:241  600 s cannot be recovered at all — unless it was written down when",
+              "CLAUDE.md:161  … A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+              "confirmed: The 600-second example is the collection's shared illustration and it is in the host's loaded lane via decision-records (STATIC.md:239-242), which also appears in the addressable-specs contribution at STATIC.md:20-21 ('the spec says 600 s, you wrote 300 s'). The 'new teammate' half is CLAUDE.md:161 in the host's own voice."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "WRITE-EVERY-LOAD-BEARING-FILE-FOR-THREE-READERS": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+              "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+              "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+              "confirmed: All three readers are named in the host's own rules: the AI's next session and the owner returning cold (CLAUDE.md:169, 'a cold reader'), and the next human (CLAUDE.md:161, 'a teammate who clones the repo'). The 'one source' clause is enforced structurally — CLAUDE.md/AGENTS.md/GEMINI.md are kept identical (CLAUDE.md:150), and `MEMORY.md` is a pointer rather than a second copy. Counter-note: the host maintains three identical instruction files, which is one source maintained in three places, not one file."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO": {
+            "v": "drift",
+            "ev": [
+              "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+              "DRIFT, and the contradiction is inside the collection before it reaches the host. This fact says one text serves all three readers «for free». The sibling package's session-end-hook.md says the opposite in its own words — «The report is for the human's quick scan. The WAL is for the next session's agent. They serve different readers.» — and specifies two separate artefacts for the same state. The host implements the sibling: CLAUDE.md:178-192 requires the machine-readable CONTINUE.md AND, on top of it, a separate chat TL;DR scannable in one screen, «detailed enough that the user can verify nothing was missed without opening the files». The transfer is not free here; it is paid for with a second rendering, specified as a mandatory step."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ASK-WHETHER-THE-WORK-IS-BOUNDED-MECHANICAL-AND-CHECKABLE": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:11  … The decidable calculus it sits above — *delegate when verification is cheaper than generation*, scored on four axes (error cost / context / verifiability / size) with the verdict steps and per-model playbooks — is the `delegation-rules` flow it pulls, …",
+              "confirmed: The host runs a strictly more specified version of the same test: four scored axes — error cost, context, verifiability, size — where 'verifiability' and 'size' are this row's 'checkable' and 'bounded' (CLAUDE.md:11). The calculus is installed as `flow:delegation-rules` at `spec://org.vibevm.fractality/delegation-rules/flows/delegation-rules/DECISION-MATRIX#root` and its boot snippet is in the compiled lane (`spec/boot/INDEX.md` lists `vibedeps/flow-delegation-rules/0.1.0/spec/boot/77-flow-delegation-rules.md`). The host's decision rule is 'verification cheaper than generation', which subsumes"
+            ],
+            "src": [
+              2
+            ]
+          },
+          "IF-YES-IT-GOES-TO-THE-AI-WHOLE": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:11  **The directive is now installed.** … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) …",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, …",
+              "confirmed: The host's default is stronger than the row's conditional — delegate by default rather than only on a yes — and it hands over whole units: a packet carries `[task] goal/acceptance` and a worktree, and the one recorded run was a whole ~40-edit migration, not a slice (CLAUDE.md:107-126). The 'whole' has two named limits in the host: the never-delegate set and Rule 4's ask-first list, which stops non-routine work before delegation (CLAUDE.md:31)."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "ASK-WHETHER-IT-NEEDS-MEMORY-TASTE-OR-A-LASTING-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1356  - Never take an architectural decision that outlives the session",
+              "spec/boot/STATIC.md:1357    without surfacing it to the human — decisions are the human's zone.",
+              "CLAUDE.md:31  … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.",
+              "confirmed: The 'outlives the session' test is the exact wording of the host's loaded Never rule (STATIC.md:1356) and the host applies it as a pre-delegation gate, not only a pre-action one (CLAUDE.md:31). 'Memory of why' maps to the decision-records requirement to read the record before changing a governed value (STATIC.md:273-275). 'Taste' has no host mechanism; searched CLAUDE.md and spec/ for an aesthetic or judgment gate and found only the human-review obligation."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "IF-YES-THE-HUMAN-DECIDES-AND-MAY-DELEGATE-THE-TYPING": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "spec/boot/STATIC.md:1253  4. On approval, apply + commit (`docs(spec): sync <section> with code`).",
+              "spec/boot/STATIC.md:268  1. Propose recording it at the governing anchor, with all four",
+              "confirmed: Two installed flows implement exactly the decide-here-type-there split: sync-from-code lets the agent draft the spec change and forbids applying it until the human approves (STATIC.md:1248-1253), and decision-records lets the agent PROPOSE the record while requiring it to ask rather than invent the missing why (STATIC.md:268-272). In both, the typing is delegated and the decision is not."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "SUM-THREE-ZONES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:13  ### Only the human (the AI can, but badly) {#human-only}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:26  ### Only the AI (the human can, but wastefully) {#ai-only}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
+              "spec/boot/STATIC.md:1349  4. **Verification is asymmetric.** The AI checks formal properties",
+              "confirmed: The three zones exist as three sections (13, 26, 38) and the summary's characterisations match their contents: the human-only list is meaning/coherence/decisions, the AI-only list is throughput/mechanics/formal checks. 'Split by nature, not by halves' is visible in the shared table itself (40-45), where no row divides a task in two — each assigns a different KIND of contribution. The host's loaded lane states the same principle for the shared case (STATIC.md:1349-1352)."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-ZERO-CROSS-SESSION-MEMORY-DOMINATES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, …",
+              "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). …",
+              "confirmed: Three of the four listed consequences have direct host instantiations: record decisions (STATIC.md:239 + PROP-002 §2.1's `**Decision.**` form), unwritten-is-nonexistent (CLAUDE.md:161-165), three readers (CLAUDE.md:161/169/188). The fourth — keep sessions short — has no host support at all; as in the SHORT-SESSIONS row, `grep -rni 'short session\\|session length' CLAUDE.md spec/ campaigns/` returns nothing outside this document, and the host's wind-down apparatus presumes long sessions. Partial for that one item."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "SUM-DELEGATE-MECHANICAL-WORK-KEEP-DECISIONS-HUMAN": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:11  … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** …",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work … stops for the owner *before* it is delegated, …",
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "confirmed: Both halves are host policy and both are instrumented. Delegate whole: the delegate-by-default directive plus the packet/worktree mechanism (CLAUDE.md:9-31 and the operating-facts ledger). Keep decisions human: Rule 4's ask-first list applied BEFORE delegation (CLAUDE.md:31) and the do-not-apply gate in sync-from-code (STATIC.md:1252). This is the row of the file the host conforms to most completely."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T19:50:42Z",
+        "verify_batch": "W2c"
+      }
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md": {
       "content_hash": "435b720e8b356b069eca43b2f38947b0f19aa715b51a90e843638a78b4814f3b",
