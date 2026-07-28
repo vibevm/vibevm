@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-29 (**Phase C — W1-W3 closed, W4 at 12 of 15 files, W5's
-evidence gathered; the phase is past 70 %**)_
+_Updated: 2026-07-29 (**Phase C — W1-W4 CLOSED, W5 at 14 of 21 files, W6's
+workers commissioned; the phase is past 78 %**)_
 
 **Every number below is reproduced by two commands; run them rather than quoting
 this file.**

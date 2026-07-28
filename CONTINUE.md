@@ -1,8 +1,8 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written 2026-07-28, refreshed **mid-flight 2026-07-29** (**Phase C: W1-W3 closed
-and W4 at 12 of 15 files; the phase is past 70 %**). `spec/WAL.md` is the
-canonical living state and supersedes this snapshot wherever they diverge._
+_Written 2026-07-28, refreshed **mid-flight 2026-07-29** (**Phase C: W1-W4 CLOSED,
+W5 at 14 of 21 files; the phase is past 78 %**). `spec/WAL.md` is the canonical
+living state and supersedes this snapshot wherever they diverge._
 
 > **MID-FLIGHT CHECKPOINT, not a wind-down.** W4 is open and W5's evidence is
 > gathered. **Do not re-derive any number in this file — run the two commands:**
@@ -64,10 +64,16 @@ Per package, closed: `two-process-model` 96.6 % · `wal-specspaces` 93.5 % ·
 
 | batch | packages | files | anchors | state |
 |---|---|---:|---:|---|
-| **W4** | campaign-plans, discovery-prompt, comparative-research, redbook | 15 | 564 | **12/15 judged, 417 anchors** |
-| **W5** | operating-modes, health-audit, manual-tests, secrets-hygiene | 21 | 697 | **evidence gathered, 0 judged** |
-| **W6** | licensing, source-mirrors, spec-genres, dev-runtime-docs | 19 | 572 | harvest written, no workers yet |
+| **W4** | campaign-plans, discovery-prompt, comparative-research, redbook | 15 | 564 | **CLOSED — 474 / 89 / 1, 84.0 %** |
+| **W5** | operating-modes, health-audit, manual-tests, secrets-hygiene | 21 | 697 | **14/21 judged, 417 anchors** |
+| **W6** | licensing, source-mirrors, spec-genres, dev-runtime-docs | 19 | 572 | **workers commissioned 2026-07-29** |
 | **W7** | managed-blocks, qualified-naming, tool-design-lessons | 15 | 603 | harvest written, no workers yet |
+
+**W5's closed packages:** `health-audit` 217/217 at 88.5 %, `manual-tests`
+123/123 at 91.1 %. **Left in W5:** operating-modes' PROTOCOL (52) and
+writing-a-codeword (37), then all five `secrets-hygiene` files (191).
+**W6's four `ev-W6a…d.json` were commissioned and may already be on disk — do
+not read a table before its completion notification arrives.**
 
 **All four world harvests exist and are committed** —
 `harvest/world-w4-plans-and-inquiry.md`, `-w5-project-practice-i.md`,
