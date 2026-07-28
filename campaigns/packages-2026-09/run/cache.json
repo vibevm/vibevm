@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T13:57:48Z",
+  "updated_at": "2026-07-28T14:02:07Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -28543,7 +28543,150 @@
       },
       "marker_count": 10,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "dfd0f2e39a19cc7ad2f22be3b90fb6d435f206d64a7d3247218e7bffab052b8b",
+        "verdicts": {
+          "PACKAGE-INSTALLS-THE-CONVENTIONAL-COMMITS-MESSAGE-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:11  type(scope): short imperative subject line",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:9  type(scope): short imperative subject line",
+              "spec/boot/STATIC.md:514  <!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md -->",
+              "spec/boot/STATIC.md:518  Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "the package ships the format and the host runs it: 397 of 400 typed headers, and the snippet is compiled into the always-loaded lane twice"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THIS-IS-THE-MESSAGE-FORMAT-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:37  ##FORMAT-DOES-NOT-ENFORCE-ATOMICITY Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/vibe.toml:8  description = \"The Conventional Commits message format: a typed header (type(scope): subject), a why-not-what body, the allowed-type set, scope convention, worked examples, and anti-patterns\"",
+              "vibedeps/flow-git-conventional-commits/0.1.0/README.md:7  This is the message **format** only. The complementary discipline — **atomicity**, one commit =",
+              "spec/boot/STATIC.md:740  Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "five files and not one of them asserts a rule beyond message shape; the restriction survives into the installed copy and the compiled lane"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "ATOMICITY-IS-THE-SEPARATE-ATOMIC-COMMITS-PACKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock:246  name = \"git-atomic-commits\"",
+              "vibe.lock:276  name = \"git-conventional-commits\"",
+              "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
+              "vibedeps/flow-git-conventional-commits/0.1.0/README.md:8  one logical idea — is the separate `flow:atomic-commits` package. You can follow this format and",
+              "spec/boot/STATIC.md:742  Commits *and* a violation of the atomic rule. Atomicity is the separate `atomic-commits` flow;",
+              "two distinct lockfile packages with their own source urls and hashes, each pinned separately by the umbrella. recorded for the source-3 ledger and not charged here: the INSTALLED copy and both compiled copies in the host lane say the pre-rename `atomic-commits` where the package says `git-atomic-commits`, so a booting session is told to look for a flow under a name no package carries. The fact's own text is correct; the stale artifact is the installer's, and it belongs to the same class as F-122 — one coordinate, two contents"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "EACH-DISCIPLINE-IS-ADOPTABLE-ON-ITS-OWN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:40  ##A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE A `feat: add foo, bar, and baz` message is valid Conventional",
+              "vibe.lock:279  source_url = \"file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/git-conventional-commits/v0.1.0\"",
+              "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
+              "vibe.lock:296      \"flow:org.vibevm.world/git-conventional-commits@=0.1.0\",",
+              "no dependency edge runs between the two flows, so either installs alone; this host installs both through the umbrella and therefore does not exercise the adopt-either case, which is a property of the packaging rather than an observed behaviour"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:1  # Commit message format {#root}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:1  # Flow: Conventional Commits {#root}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/vibe.toml:16  source = \"spec/boot/31-flow-conventional-commits.md\"",
+              "five files on disk, the two the lead names both present, and the installed slot carries the same five"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-FULL-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:11  ## Header {#header}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:28  ### Allowed types {#types}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:49  ### Scope {#scope}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:68  ## Body {#body}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:118  ## Worked examples {#examples}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:176  ## Anti-patterns {#antipatterns}",
+              "six for six: every promised content is a real section of the 200-line flow document, and all six survive into the installed copy"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/vibe.toml:16  source = \"spec/boot/31-flow-conventional-commits.md\"",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/vibe.toml:20  link = \"static\"",
+              "spec/boot/STATIC.md:514  <!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md -->",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:41      installed: vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:52  resolve is the *package-side* path: the installed copies were written from",
+              "the file exists at the declared path and its text is compiled verbatim into the host lane. The path divergence — installed at `boot/`, shipped at `spec/boot/` — is DRIFT-039's, already mechanised by the harvest, and the worker compared the two by hand instead: they differ only by markup and by the stale sibling name"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-ATOMIC-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock:286  name = \"git-practices\"",
+              "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
+              "vibe.lock:296      \"flow:org.vibevm.world/git-conventional-commits@=0.1.0\",",
+              "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @spec/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).",
+              "the composition is realised in the lockfile, and it is a family of four rather than a pair — which the host's own restatement also says"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The",
+              "CLAUDE.md:128    canonical `packages/org.vibevm.*/**` (redbook family, discipline stack,",
+              "manifest field, shipped LICENSE and installed copy agree on UPL-1.0, corroborated by the host's licence ledger"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T14:02:07Z",
+        "verify_batch": "W1e"
+      }
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md": {
       "content_hash": "50a43c9c90d59b8a8020753610d6e26909bf475e4b918e65aebcf5510416e73c",
@@ -28566,7 +28709,200 @@
       },
       "marker_count": 13,
       "unit_count": 5,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "50a43c9c90d59b8a8020753610d6e26909bf475e4b918e65aebcf5510416e73c",
+        "verdicts": {
+          "EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:518  Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)",
+              "spec/boot/STATIC.md:712  Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)",
+              "spec/boot/00-core.md:22  2. ##RULE-CONVENTIONAL-COMMITS **Conventional Commits** — short subject, long explanatory body answering *why*. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "both halves hold at scale: 397 of 400 typed headers in the window and 2 022 of 2 024 over the whole history, the two exceptions being merge commits. Recorded and charged elsewhere: CLAUDE.md:5 says these rules load «verbatim from spec/boot/INLINE.md» and that file does not exist — F-128"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "HEADER-SUBJECT-LENGTH-MOOD-AND-CASE": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:721  - Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:12  - Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:112  **82 of 400 break the hard limit of 72 — 20.5 %, longest at 89.** And **297 of 400",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:127  **It is broken 42 times in 400 — 10.5 % — and every one of them is the same word,",
+              "spec/boot/00-core.md:22  2. ##RULE-CONVENTIONAL-COMMITS **Conventional Commits** — short subject, long explanatory body answering *why*. @impl/done",
+              "**two of the three clauses are broken systematically, and the numbers are the host's own history.** Length: 82 of 400 subjects exceed the hard limit of 72 — 20.5 % — and **297 of 400 exceed the stated 60 — 74.3 %**, which is three subjects in four. Case: 42 of 400 capitalise the first word after the prefix, every one of them the word `Phase`.",
+              "mood is the third clause and it is measured for the first time here: only 4 subjects in 400 take the past-tense shape the rule names, but **144 of 400 — 36 % — open with `the`/`a`/`an`**, a noun phrase that does not complete the flow's own test sentence «If applied, this commit will …».",
+              "and the host's own restatement carries none of it: spec/boot/00-core.md:22 reduces this rule to «short subject», CLAUDE.md:5 names the flow without numbers, and PROP-000:162 only points at the URI — the 60/72/lowercase content reaches a session only through the compiled lane. **nothing in this repository enforces any rule of this flow**, and the perimeter was searched: no `.github/` at all, no non-sample hook in `.git/hooks`, no commitlint or husky or commit-msg config outside vendored third-party clones, no hook key in `.claude/settings*.json`, and tools/self-check.sh's ten invariants read no commit message. The only `commit_msg` identifiers in crates/ are message BUILDERS. Every rule in this flow is, in this tree, unchecked"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "HEADER-THE-ALLOWED-TYPE-SET": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:13  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:97  **Three commits carry a type outside the allowed table**: `tools` twice",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:99  feat · fix · chore · docs · build · test · refactor · perf · style · ci · revert.",
+              "the eleven-member set is identical across the snippet, the flow document's table and the installed copy. Host conformance measured over the whole history rather than the window: **7 of 2 024 commits carry a type outside the table** — `tools` twice and `spec` five times — which is 0.35 %, isolated rather than a practice, and named here by hash. `ci` and `revert` have never been used, and the CI row explains why"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:724  - `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:15  - `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:92  the remaining three use a comma-separated multi-scope — `docs(wal,continue)`,",
+              "0 of 400 omit the scope, and the 3 exceptions are comma-separated multi-scopes the grammar does not admit — 0.75 %, named by hash. The scope histogram shows the host reaching for crate-level narrowness routinely rather than defaulting to a blanket area scope"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:728  A blank line after the subject, then a free-form body that answers *why*, not *what* — the",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:19  A blank line after the subject, then a free-form body that answers *why*, not *what* — the",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "spec/boot/00-core.md:22  2. ##RULE-CONVENTIONAL-COMMITS **Conventional Commits** — short subject, long explanatory body answering *why*. @impl/done",
+              "the blank-line clause measured for the first time: **0 of 400 commits put content on line 2** — every bodied commit separates subject from body with exactly one blank line — and 399 of 400 carry a body at all. The «why not what» clause is a judgement no command settles; 49 of 400 bodies cite a `spec://` URI"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CITE-SPEC-URIS-WHERE-RELEVANT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:729  diff already shows what changed. Cite `spec://…` URIs where relevant. Full format — the",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:20  diff already shows what changed. Cite `spec://…` URIs where relevant. Full format — the",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:142  Cited by spec://vibevm/modules/vibe-registry/PROP-001#freshness.",
+              "measured: 49 of 400 bodies carry a `spec://` citation, 12.3 %. «Where relevant» makes the ratio undecidable and the count is offered as the observation rather than as conformance — which is the honest reading of a qualified rule"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:1  # Commit message format {#root}",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:26  **Eleven relative citations, none broken.** Every protocol document a boot snippet",
+              "spec/boot/STATIC.md:731  [`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md).",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:22  [`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md).",
+              "**the sibling pointer is dangling for every consumer.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host",
+              "the target it names lives only under packages/ and vibedeps/; a booting session that follows the link from the compiled lane lands on nothing"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-SUMMARISE-WHAT-CHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:735  - Never write a subject that summarises *what* changed — write *why*.",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:26  - Never write a subject that summarises *what* changed — write *why*.",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:88  - ##SKIP-WHAT-THE-DIFF-ALREADY-SHOWS **Do not describe what the diff already shows.** \"This commit",
+              "the rule's text is settled in all three carriers. Conformance is a judgement no command decides — whether a subject states what-changed or why needs a reader — and the worker said so rather than manufacturing a proxy. **nothing in this repository enforces any rule of this flow**, and the perimeter was searched: no `.github/` at all, no non-sample hook in `.git/hooks`, no commitlint or husky or commit-msg config outside vendored third-party clones, no hook key in `.claude/settings*.json`, and tools/self-check.sh's ten invariants read no commit message. The only `commit_msg` identifiers in crates/ are message BUILDERS. Every rule in this flow is, in this tree, unchecked"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-CAPITALISE-OR-OMIT-THE-TYPE": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:736  - Never capitalise the first word after the `type(scope):` prefix, and never omit the type.",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:27  - Never capitalise the first word after the `type(scope):` prefix, and never omit the type.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:123       42 Phase",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:127  **It is broken 42 times in 400 — 10.5 % — and every one of them is the same word,",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:130  names, not capitalised words. *The check that would enforce this rule has to know",
+              "**the capitalisation half is broken 42 times in 400 — 10.5 %.** Every one is the word `Phase`, which is why the naive count of 111 is wrong: 69 of those are identifiers such as `C4` and `F-122`, and the checker that would enforce this rule has to know the difference, which is a fair part of why it has none.",
+              "the omission half holds: over the whole history only 2 subjects lack a type and both are merge commits"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "FORMAT-DOES-NOT-ENFORCE-ATOMICITY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:740  Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:31  Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "vibe.lock:246  name = \"git-atomic-commits\"",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:150  A file count is not an idea count, and the atomic rule is explicitly *one idea, not",
+              "the separation is real in the tree and not merely asserted: atomicity ships as its own package with its own snippet compiled separately, and this package contains no atomicity rule in any of its five files"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:741  (one commit = one logical idea). A `feat: add foo, bar, and baz` message is valid Conventional",
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:32  (one commit = one logical idea). A `feat: add foo, bar, and baz` message is valid Conventional",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:153  long tail of 38 commits over ten files, the largest at 130.",
+              "the teaching example does not occur in the history, as expected of a teaching example; the substance — that format-validity and atomicity are independent axes — is corroborated by 397 of 400 format-valid against 38 of the same 400 touching more than ten files"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:33  Commits *and* a violation of the atomic rule. Atomicity is the separate `atomic-commits` flow;",
+              "spec/boot/STATIC.md:742  Commits *and* a violation of the atomic rule. Atomicity is the separate `atomic-commits` flow;",
+              "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
+              "vibe.lock:296      \"flow:org.vibevm.world/git-conventional-commits@=0.1.0\",",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:57  **Each of the four member flows appears TWICE in the host's boot lane** — once",
+              "«run together» is realised: both flows are pinned by the umbrella and both snippets compiled into the same lane. recorded for the source-3 ledger and not charged here: the INSTALLED copy and both compiled copies in the host lane say the pre-rename `atomic-commits` where the package says `git-atomic-commits`, so a booting session is told to look for a flow under a name no package carries. The fact's own text is correct; the stale artifact is the installer's, and it belongs to the same class as F-122 — one coordinate, two contents"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T14:02:07Z",
+        "verify_batch": "W1e"
+      }
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md": {
       "content_hash": "75cfebaf5998c0fbc28288657ef276ef5c6a378ae14101b10e53082331f7d17e",
@@ -28589,7 +28925,669 @@
       },
       "marker_count": 71,
       "unit_count": 17,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "75cfebaf5998c0fbc28288657ef276ef5c6a378ae14101b10e53082331f7d17e",
+        "verdicts": {
+          "ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:3  All commits in this project follow the [Conventional Commits](https://www.conventionalcommits.org/)",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:97  **Three commits carry a type outside the allowed table**: `tools` twice",
+              "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @spec/done",
+              "2 022 of 2 024 subjects match the grammar, the 2 exceptions being merge commits. The 7 out-of-table types are a breach of this package's own table rather than of the Conventional Commits specification the sentence names, and they are charged on the type-set row",
+              "worth recording: «in this project» was written for a host spec and now ships in a standalone package, so the phrase names whichever consumer installs it"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "this-document-is-the-shape-body-and-scope-convention": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:14  type(scope): short imperative subject line",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:49  ### Scope {#scope}",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:68  ## Body {#body}",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:4  specification. This document is the message shape, body structure,",
+              "the three promised contents are three real sections, and the installed copy carries all three"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "HEADER-TARGET-LENGTH-AND-HARD-LIMIT": {
+            "v": "drift",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:13  - **Target length:** ≤ 60 characters. **Hard limit:** 72. Git web",
+              "spec/boot/STATIC.md:721  - Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:112  **82 of 400 break the hard limit of 72 — 20.5 %, longest at 89.** And **297 of 400",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:113  break the soft limit of 60 — 74.3 %**, which is the number nobody had measured: the",
+              "tools/self-check.sh:6  # Invariants checked, in order:",
+              "**both limits are broken, and the stated one is broken as a practice.** 82 of 400 exceed the hard 72 — 20.5 %, longest 89 — and **297 of 400 exceed the 60 the rule targets, 74.3 %**. A rule that three subjects in four break is not a target this repository observes. **nothing in this repository enforces any rule of this flow**, and the perimeter was searched: no `.github/` at all, no non-sample hook in `.git/hooks`, no commitlint or husky or commit-msg config outside vendored third-party clones, no hook key in `.claude/settings*.json`, and tools/self-check.sh's ten invariants read no commit message. The only `commit_msg` identifiers in crates/ are message BUILDERS. Every rule in this flow is, in this tree, unchecked"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "HEADER-IMPERATIVE-MOOD": {
+            "v": "drift",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:17  - **Imperative mood.** \"add\", not \"added\"; \"fix\", not \"fixes\"; \"refactor\",",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:18    not \"refactored\". The subject completes the sentence *\"If applied,",
+              "spec/boot/STATIC.md:721  - Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:11  type(scope): short imperative subject line",
+              "**measured for the first time by this batch, and it is the largest single format gap found.** The failure the rule literally names is nearly absent — 4 subjects in 400 take a past-tense or third-person shape — but **144 of 400, 36 %, open with `the`, `a` or `an`**: noun phrases that do not complete the rule's own test sentence «If applied, this commit will …». The three commonest first words after the prefix are `the` (97), `a` (45) and `Phase` (42), and none of the three is a verb"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "HEADER-LOWERCASE": {
+            "v": "drift",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:20  - **Lowercase.** Including the first word after the `type(scope):`",
+              "spec/boot/STATIC.md:736  - Never capitalise the first word after the `type(scope):` prefix, and never omit the type.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:127  **It is broken 42 times in 400 — 10.5 % — and every one of them is the same word,",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:130  names, not capitalised words. *The check that would enforce this rule has to know",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:131  the difference, which is why the rule has no checker.*",
+              "**42 of 400 — 10.5 % — capitalise the first word after the prefix, and every one is `Phase`.** The naive count returns 111 and is wrong, because 69 of those are identifiers; the distinction is exactly what a checker for this rule would have to make, and none exists. The worker verified that no-checker claim independently rather than taking the harvest's word for it"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-FEAT": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:28  | `feat`     | New user-visible functionality. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the cell is in all three carriers; `feat` is the second most used type in the repository at 527 of 2 024"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-FIX": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:29  | `fix`      | Bug fix. Name what broke and what it now does. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the cell is in all three carriers; `fix` runs 96 over the full history. The body obligation it adds has no mechanical test and none was manufactured"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-CHORE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:30  | `chore`    | Housekeeping with no behaviour change. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the cell is in all three carriers; `chore` runs 142 over the full history"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-DOCS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:31  | `docs`     | Documentation, including spec updates. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the cell is in all three carriers; `docs` is by a wide margin the most used type here — 977 of 2 024. Its «including spec updates» clause is corroborated twice over: `spec` is the second commonest scope, and the five out-of-table `spec` TYPE commits are the same content this cell says belongs under `docs`"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-BUILD": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:32  | `build`    | Build system, external dependency, toolchain pin. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:88        2 tools · 2 style · 1 spec · 1 build",
+              "1 of 400 in the window looked like the rarest in-table type, and the widening corrects it: `build` runs 54 over the full history and is simply idle during a documentation-heavy stretch. This is the wrong-absence the perimeter law warns about, caught before it reached a verdict"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:33  | `test`     | Add or fix tests; no production-code change. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the cell is in all three carriers; `test` runs 62 over the full history"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-REFACTOR": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:34  | `refactor` | Internal restructuring; no behaviour change. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the cell is in all three carriers; `refactor` runs 140 over the full history, the fourth most used"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-PERF": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:35  | `perf`     | Performance improvement. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the cell is in all three carriers, and the widening shows the window contains every instance there is: `perf` runs 3 across the whole repository"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-STYLE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:36  | `style`    | Formatting / whitespace; no semantic change. |",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:88        2 tools · 2 style · 1 spec · 1 build",
+              "the cell is in all three carriers; `style` runs 14. Worth recording: formatting churn IS caught by a checker here — `cargo fmt --all --check` is the floor's first invariant — even though the commit type naming it is not"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-CI": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:37  | `ci`       | CI or pipeline configuration. |",
+              "spec/boot/STATIC.md:723    `ci` `revert`.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:99  feat · fix · chore · docs · build · test · refactor · perf · style · ci · revert.",
+              "tools/self-check.sh:4  # trivial to wire into a CI matrix later. See `DEV-GUIDE.md` §6.",
+              "the type is unexercised — 0 uses in 2 024 commits — because the thing it names does not exist: this repository has no CI of any kind, and its own self-check script describes itself as designed to be wired into a CI matrix later"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TYPE-REVERT": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:38  | `revert`   | Revert a previous commit; reference the reverted SHA in the body. |",
+              "spec/boot/STATIC.md:723    `ci` `revert`.",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:161  Reverts 1a2b3c4. The retry loop was masking real rate-limit bugs",
+              "the type is in the table and the flow's own worked example demonstrates the SHA reference. The obligation is unexercised: 0 revert commits in 2 024, so no body exists to inspect. A stated obligation with no instance is not a false statement"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "USE-EXACTLY-ONE-TYPE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:40  Use exactly one. If a commit feels like two types at once, it is",
+              "spec/boot/STATIC.md:722  - `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:92  the remaining three use a comma-separated multi-scope — `docs(wal,continue)`,",
+              "measured directly rather than inferred: 0 subjects in 400 carry a second typed prefix. The related failure the host does show is multi-SCOPE, not multi-type, and it is charged on the scope rows"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "TWO-TYPES-AT-ONCE-MEANS-TWO-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:40  Use exactly one. If a commit feels like two types at once, it is",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:41  two commits.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:94  `[a-z0-9._/-]+` scope does not admit and which the «narrowest accurate subsystem»",
+              "the rule's trigger is «feels like two types», a judgement about the change rather than the message, and the worker said so instead of manufacturing a proxy: a commit that should have been split would look format-perfect"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SCOPE-NAMES-THE-MOST-AFFECTED-SUBSYSTEM": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:45  Scope names the most affected subsystem — a crate, a package, a",
+              "spec/boot/STATIC.md:724  - `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "all four categories the cell allows are represented in the host's scope histogram — crates, packages, modules and documentation areas. Recorded: the boot snippet says «narrowest accurate» where this document says «most affected» — two different tests on the same field, one per carrier"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "examples-of-scope-from-this-project": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:46  module, a documentation area. Examples from this project:",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:47  `core`, `install`, `wal`, `registry`, `spec`, `build`.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:86  $ git log -400 --format=%s | sed -nE 's/^([a-z]+)(\\([^)]*\\))?!?: .*/\\1/p' | sort | uniq -c | sort -rn",
+              "**this row is the perimeter law working.** In the 400-commit window only four of the six named scopes occur and `core` and `build` read as zero; widened to the full history all six occur — `core` 36, `install` 20, `wal` 178, `registry` 32, `spec` 205, `build` 1. Two wrong absences avoided by widening once"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CHOOSE-THE-NARROWEST-ACCURATE-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:49  Choose the **narrowest accurate** scope. `feat(wal): add morning",
+              "spec/boot/STATIC.md:724  - `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:94  `[a-z0-9._/-]+` scope does not admit and which the «narrowest accurate subsystem»",
+              "the rule is carried by both the snippet and this document, so a session gets it twice. The three comma multi-scope commits are precisely the case it decides, and against them the histogram shows crate-level narrowness used routinely — 0.75 % breach, isolated and named"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-narrower-form-hits-the-log-filter-correctly": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:49  Choose the **narrowest accurate** scope. `feat(wal): add morning",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:51  because readers filter the log by scope and the narrower form hits",
+              "marked @spec/done — a justification rather than a rule. Its premise, that readers filter the log by scope, is a claim about how humans read this repository and nothing records or automates it; the measurable side is consistent with the advice, `wal` outnumbering `core` five to one"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "scope-is-optional-in-the-grammar-but-omit-it-only-with-reason": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:54  Scope is optional in the strict Conventional Commits grammar, but",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:55  omit it only when the change legitimately has no scope (e.g. a",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:84  $ git log -400 --format=%s | grep -cE '^[a-z]+!?: '",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:85  0",
+              "the permissive branch looked unexercised at 0 of 400 and the widening found it: **35 scope omissions over the full history**. Recorded: this document permits omission while the snippet's Never list forbids omitting the TYPE and says nothing about the scope — consistent, but only this document tells a reader the scope is optional"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-BLANK-LINE-AFTER-THE-SUBJECT-THEN-A-FREE-FORM-BODY": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:60  A single blank line after the subject, then a free-form body.",
+              "spec/boot/STATIC.md:728  A blank line after the subject, then a free-form body that answers *why*, not *what* — the",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:137  records: 400  empty-body: 1",
+              "measured: 0 of 400 records put content on line 2, so every one of the 399 bodied commits uses exactly one blank line. Body line counts from the same pass: median 20, min 2, max 54"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "INCLUDE-WHY-THIS-CHANGE-WAS-MADE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:64  - **Why this change was made.** Link to the spec section, issue,",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:65    measurement, or conversation that drove it. Use `spec://…` URIs",
+              "spec/boot/STATIC.md:729  diff already shows what changed. Cite `spec://…` URIs where relevant. Full format — the",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "the `spec://` clause is measurable and holds at 49 of 400; the main clause — that the body states a REASON — has no token to count and no marker convention to key on, and the worker reported the bound rather than inventing a test"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "INCLUDE-WHAT-FOLLOWS-FROM-IT": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:68  - **What follows from it.** Consequences that are invisible in",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:69    the diff: \"this unblocks FEAT-007\"; \"after this, old callers",
+              "«consequences invisible in the diff» has no token to grep and the example phrasings are illustrative rather than required, so counting them would measure the examples. Recorded: this clause is not carried by the boot snippet, so a session reading only the compiled lane never sees it"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:71  - **What was considered and rejected.** One line each. Future-you",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:72    re-opens this conversation every six months unless the log says",
+              "the closest proxy is 25 of 400 bodies mentioning a rejected or considered alternative — a lower bound on the vocabulary and not a measure of the rule, as the worker says. What is missing is any way to know how many commits had an alternative worth recording"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SKIP-WHAT-THE-DIFF-ALREADY-SHOWS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:78  - **Do not describe what the diff already shows.** \"This commit",
+              "spec/boot/STATIC.md:728  A blank line after the subject, then a free-form body that answers *why*, not *what* — the",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/README.md:6  message format: a typed header (`type(scope): subject`) and a body that explains *why* a change",
+              "the most-repeated rule in the package, reaching the host twice through the compiled lane. Conformance needs a reader; the only countable result is that no body in 400 opens with the anti-pattern phrasing the cell quotes"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:81  - **Do not include implementation details that will change on",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:82    the next refactor.** They rot faster than the surrounding prose",
+              "a prediction about what will rot, which no command evaluates. Recorded: not carried by the boot snippet, and the repository's staleness machinery governs documents rather than commit messages"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "BODY-LENGTH-IS-FREE-FORM": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:87  Free-form. A three-line body is fine for a small fix. A twenty-line",
+              "spec/boot/STATIC.md:728  A blank line after the subject, then a free-form body that answers *why*, not *what* — the",
+              "measured, and the distribution is what «free-form» predicts: n=399, min 2, median 20, max 54 — a 27-fold spread with no clustering at any limit, which a hidden convention would not produce"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-THREE-LINE-BODY-IS-FINE-FOR-A-SMALL-FIX": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:87  Free-form. A three-line body is fine for a small fix. A twenty-line",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:123  fix(wal): stop crashing on missing _Updated line",
+              "a permission rather than a claim, and the measurement is more interesting than the verdict: 11 of 399 bodies run to three lines or fewer and **not one of them is a `fix`** — the short-body shape is used here, never for the case the sentence names. The flow's own worked small-fix example carries four lines, not three"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-TWENTY-LINE-BODY-IS-FINE-FOR-A-MILESTONE-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:87  Free-form. A three-line body is fine for a small fix. A twenty-line",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:88  body is fine for a milestone commit where the reasoning matters.",
+              "what the flow offers as the generous end of the range is this repository's typical commit: the median body is exactly 20 lines and 274 of 399 run to 15 or more"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "brevity-at-the-expense-of-the-why-costs-every-future-read": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:89  Length is not a virtue, but brevity at the expense of the *why* is",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:90  a cost paid on every future read.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "marked @spec/done — a rationale about a cost paid on future reads, which leaves no trace. The failure mode it warns about is close to absent here: one commit in 400 has no body at all"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "PREFER-PARAGRAPHS-WHEN-THE-REASONING-IS-CONTINUOUS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:94  Prefer paragraphs over bullet lists when the reasoning is",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:95  continuous. Bullets are for enumerations of genuinely parallel",
+              "measured: 388 of 399 bodies — 97 % — are pure prose with no bullet or numbered line. The preference the rule states is what the host's log overwhelmingly does"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "BULLETS-ARE-FOR-GENUINELY-PARALLEL-ITEMS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:95  continuous. Bullets are for enumerations of genuinely parallel",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:96  items — three rejected alternatives, four affected callers. Do not",
+              "the population is measurable at 11 of 399 and «genuinely parallel» is a judgement about each list's items; the worker declined to open them, correctly — a per-commit reading would have been a verdict rather than a search"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "DO-NOT-BULLET-A-SINGLE-PARAGRAPH-OF-PROSE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:96  items — three rejected alternatives, four affected callers. Do not",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:97  bullet a single paragraph of prose into pieces.",
+              "the violation is not distinguishable by any command from a legitimate enumeration, since both are lines starting with a dash. The bound is the same population of 11"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "ROW-ANTI-UPDATES": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:161  | `updates`                         | No type, no scope, no *why*.        | `docs(spec): add freshness TTL rationale`   |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "the bare `updates` subject has never been written here — 0 across 2 024 commits — and the prescribed fix form is itself the commonest type/scope pairing in the log"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-ANTI-WIP": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:162  | `wip`                             | Not a finished thought.             | Squash into the next real commit.           |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "0 occurrences as a subject and 0 as a type prefix. Recorded, and worth carrying: the prescribed fix is squashing, which the sibling autonomy flow puts behind an ask-first red line — the two flows' advice meets here, and the adjacency is recorded without being resolved"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-ANTI-FIXED-BUG": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:163  | `fixed bug`                       | Nothing learned from the log.       | Name the bug and what drove the fix.        |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "0 occurrences of the literal subject, and the past-tense form it exemplifies is near-absent — 4 subjects in 400 — against 96 `fix` commits historically, none of which uses this shape"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-ANTI-THREE-IDEAS": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:164  | `feat: add foo, bar, and baz`     | Three ideas, one commit.            | Split.                                      |",
+              "spec/boot/STATIC.md:741  (one commit = one logical idea). A `feat: add foo, bar, and baz` message is valid Conventional",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "0 occurrences of the literal subject. The nearest real instances of the shape are the three comma multi-scope headers and the file-count tail, neither of which is the anti-pattern itself"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-ANTI-HUGE-REFACTOR": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:165  | `feat(core): huge refactor`       | Behaviour change rolled into refactor. | Two commits: refactor first, feature second. |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "0 occurrences of the literal subject, and the repository does keep the two types separate in its headers — 527 `feat` against 140 `refactor`. Whether any single `feat` commit smuggled a refactor is a diff-level question and was left unopened rather than guessed"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-ANTI-CAPITALISED-VAGUE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:166  | `Fix: handle edge case`           | Capitalised, vague, no scope.       | `fix(verify): handle empty sender_id`       |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:123       42 Phase",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:127  **It is broken 42 times in 400 — 10.5 % — and every one of them is the same word,",
+              "each of the three faults measured separately: the capitalised TYPE form never occurs (0 of 2 024), the missing scope occurs 35 times historically and 0 in the window, and the capitalised first word after the prefix — the same fault one position right — occurs 42 times in 400. **The row's exact shape is absent while its underlying fault is the host's most frequent measured format break**"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONVENTIONAL-COMMITS-DOES-NOT-ENFORCE-ATOMICITY": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:170  Conventional Commits does not by itself enforce atomicity. A commit",
+              "spec/boot/STATIC.md:740  Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "tools/self-check.sh:6  # Invariants checked, in order:",
+              "tools/self-check.sh:36  #  10. the mcp package gates            — the three MCP servers, likewise.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:150  A file count is not an idea count, and the atomic rule is explicitly *one idea, not",
+              "the claim as written is settled. Its widening is the batch's biggest result and it is filed rather than charged here: **nothing in this repository enforces any rule of this flow**, and the perimeter was searched: no `.github/` at all, no non-sample hook in `.git/hooks`, no commitlint or husky or commit-msg config outside vendored third-party clones, no hook key in `.claude/settings*.json`, and tools/self-check.sh's ten invariants read no commit message. The only `commit_msg` identifiers in crates/ are message BUILDERS. Every rule in this flow is, in this tree, unchecked"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:170  Conventional Commits does not by itself enforce atomicity. A commit",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:171  with the subject `feat(core): add foo, bar, and baz` is syntactically",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:153  long tail of 38 commits over ten files, the largest at 130.",
+              "neither literal occurs in the history. The corroboration that the two axes are independent is 397 of 400 format-valid against 38 of the same 400 touching more than ten files, with the harvest's own caveat that a file count is not an idea count"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "BOTH-RULES-ONE-IDEA-PER-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:175  1. The commit carries exactly one idea (atomic).",
+              "spec/boot/STATIC.md:567  **One commit = one logical change**, not one file changed.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:150  A file count is not an idea count, and the atomic rule is explicitly *one idea, not",
+              "the rule is present in all three carriers and in the host lane through the sibling flow. Its conformance is not settleable and the worker said exactly why — a file count is not an idea count, and the atomic rule explicitly permits a fifteen-file commit with one reason"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:176  2. The message announces that idea in the Conventional Commits shape",
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:177     (`type(scope): subject` + *why* body).",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "both components measured: 397 of 400 header and 399 of 400 body in the window, 2 022 of 2 024 header over the whole history. The «why» qualifier on the body is not measurable and is not claimed"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "PASS-BOTH-AND-THE-COMMIT-IS-WELL-FORMED": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-git-conventional-commits/0.1.0/spec/flows/conventional-commits/conventional-commits.md:179  Pass both, and the commit is well-formed.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:150  A file count is not an idea count, and the atomic rule is explicitly *one idea, not",
+              "a conjunction that inherits the weaker conjunct: the shape half is measured, the atomicity half has no test in this repository, so no commit can be SHOWN to pass both — not because any fails. What is missing is precisely that test, and nothing in the tree supplies it"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T14:02:07Z",
+        "verify_batch": "W1e"
+      }
     },
     "packages/org.vibevm.world/git-practices/v0.1.0/README.md": {
       "content_hash": "128cd2b381c7d9add73d3656fff82203ab675a22a318ca0faf6eb1c12a292023",
