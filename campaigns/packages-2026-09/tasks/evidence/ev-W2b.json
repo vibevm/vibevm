@@ -59,9 +59,9 @@
   "evidence": [
    "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:15  …The cold reader needs the tour — where",
    "CLAUDE.md:169  …The job is to capture *everything a cold reader would need* into durable repository state.",
-   "CONTINUE.md:257  ## Repository map {#map}",
-   "CONTINUE.md:271  ## Quick start {#quick-start}",
-   "CONTINUE.md:238  ## Decisions still in force {#decisions}"
+   "CONTINUE.md:278  ## Repository map {#map}",
+   "CONTINUE.md:292  ## Quick start {#quick-start}",
+   "CONTINUE.md:259  ## Decisions still in force {#decisions}"
   ],
   "src": [
    1,
@@ -78,7 +78,7 @@
   "evidence": [
    "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
    "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
-   "CONTINUE.md:257  ## Repository map {#map}"
+   "CONTINUE.md:278  ## Repository map {#map}"
   ],
   "src": [
    2,
@@ -94,8 +94,8 @@
   "claim": "The WAL and CONTINUE.md together pass the discipline's acceptance test: a stranger with only the repository resumes work without asking.",
   "evidence": [
    "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:19  `CONTINUE.md` is that tour. The pair together passes the discipline's",
-   "CONTINUE.md:327  ## The resume prompt {#prompt}",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
+   "CONTINUE.md:348  ## The resume prompt {#prompt}",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
   ],
   "src": [
    1,
@@ -211,9 +211,9 @@
   "claim": "Item 4: the exact next-steps recipe — commands, file paths, line numbers — for whoever picks up cold.",
   "evidence": [
    "CLAUDE.md:182     - Exact next-steps recipe (commands, file paths, line numbers) for whoever picks up cold.",
-   "CONTINUE.md:78  ## The recipe that closed W1, to run again on W2 {#recipe}",
-   "CONTINUE.md:92  3. **`verify-evidence.py` BEFORE reading a word**, then `repair-refs.py` if a file",
-   "CONTINUE.md:124  `CLAUDE.md:5`, `AGENTS.md:5`, `GEMINI.md:5`, `spec/boot/00-core.md:21`, and"
+   "CONTINUE.md:99  ## The recipe that closed W1, to run again on W2 {#recipe}",
+   "CONTINUE.md:113  3. **`verify-evidence.py` BEFORE reading a word**, then `repair-refs.py` if a file",
+   "CONTINUE.md:145  `CLAUDE.md:5`, `AGENTS.md:5`, `GEMINI.md:5`, `spec/boot/00-core.md:21`, and"
   ],
   "src": [
    2,
@@ -229,9 +229,9 @@
   "claim": "Item 5: non-obvious findings of the session — API quirks, config gotchas, vendor-specific surprises.",
   "evidence": [
    "CLAUDE.md:183     - Any non-obvious findings discovered this session (API quirks, config gotchas, vendor-specific surprises).",
-   "CONTINUE.md:171  ## The findings this session opened {#findings}",
-   "CONTINUE.md:280  ## Standing traps {#traps}",
-   "CONTINUE.md:294  9. **Set `PYTHONIOENCODING=utf-8`** before any Python that prints this corpus;"
+   "CONTINUE.md:192  ## The findings this session opened {#findings}",
+   "CONTINUE.md:301  ## Standing traps {#traps}",
+   "CONTINUE.md:315  9. **Set `PYTHONIOENCODING=utf-8`** before any Python that prints this corpus;"
   ],
   "src": [
    2,
@@ -247,8 +247,8 @@
   "claim": "Item 6: a repository map — top-level layout and what each directory or component holds.",
   "evidence": [
    "CLAUDE.md:184     - A repository map (top-level layout + what each crate / directory holds).",
-   "CONTINUE.md:257  ## Repository map {#map}",
-   "CONTINUE.md:260  crates/           the vibe workspace — cli, resolver, registry, progress-core, check, mcp, wire, llm"
+   "CONTINUE.md:278  ## Repository map {#map}",
+   "CONTINUE.md:281  crates/           the vibe workspace — cli, resolver, registry, progress-core, check, mcp, wire, llm"
   ],
   "src": [
    2,
@@ -264,8 +264,8 @@
   "claim": "Item 7: the architectural and policy decisions still in force, in long form.",
   "evidence": [
    "CLAUDE.md:185     - The list of important architectural / policy decisions still in force, in long form.",
-   "CONTINUE.md:238  ## Decisions still in force {#decisions}",
-   "CONTINUE.md:240  - **Delegation goes to the harness's built-in `opus5` subagents, not fractality**"
+   "CONTINUE.md:259  ## Decisions still in force {#decisions}",
+   "CONTINUE.md:261  - **Delegation goes to the harness's built-in `opus5` subagents, not fractality**"
   ],
   "src": [
    2,
@@ -281,8 +281,8 @@
   "claim": "Item 8: the recent commit chain — last ~25, oneline format — so the cold reader sees velocity and direction.",
   "evidence": [
    "CLAUDE.md:186     - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.",
-   "CONTINUE.md:297  ## The recent commit chain {#commits}",
-   "CONTINUE.md:300  dbd20c74 chore(campaign): the derived corpus projection catches up"
+   "CONTINUE.md:318  ## The recent commit chain {#commits}",
+   "CONTINUE.md:321  dbd20c74 chore(campaign): the derived corpus projection catches up"
   ],
   "src": [
    2,
@@ -298,7 +298,7 @@
   "claim": "Item 9: quick-start commands for the workspace.",
   "evidence": [
    "CLAUDE.md:187     - Quick-start commands for the workspace.",
-   "CONTINUE.md:271  ## Quick start {#quick-start}",
+   "CONTINUE.md:292  ## Quick start {#quick-start}",
    "CONTINUE.md:274  cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09"
   ],
   "src": [
@@ -317,7 +317,7 @@
    "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
    "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
    "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
   ],
   "src": [
    2,
@@ -715,7 +715,7 @@
   "evidence": [
    "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.",
    "spec/boot/STATIC.md:1418     recorded \"next step\" is a candidate, not authorisation.",
-   "CONTINUE.md:327  ## The resume prompt {#prompt}"
+   "CONTINUE.md:348  ## The resume prompt {#prompt}"
   ],
   "src": [
    2,
@@ -796,7 +796,7 @@
    "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
    "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
    "CONTINUE.md:3  _Written 2026-07-28 (**Phase C: the reviewing debt is CLOSED and `world` batch W1",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
   ],
   "src": [
    2,
@@ -811,8 +811,8 @@
   "marker": "@impl/done",
   "claim": "When the WAL and CONTINUE.md disagree — and they will, whenever a session updates the WAL without a full wind-down — trust the WAL and flag the divergence in your report.",
   "evidence": [
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
-   "CONTINUE.md:387  the WAL wins.",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "CONTINUE.md:422  the WAL wins.",
    "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:20  3. ##FLAG-A-CONTINUE-DIVERGENCE-AND-TREAT-THE-WAL-AS-CANONICAL If `CONTINUE.md` exists at the repository root and disagrees with"
   ],
   "src": [
@@ -829,7 +829,7 @@
   "claim": "The same precedence rule covers any other snapshot: a plan document's status line, a README's 'current state' paragraph.",
   "evidence": [
    "spec/boot/STATIC.md:108  3. Refresh the plan's status line (\"Phase N landed, floor green,",
-   "CONTINUE.md:155  > plan» status line)."
+   "CONTINUE.md:176  > plan» status line)."
   ],
   "src": [
    1,
@@ -844,8 +844,8 @@
   "marker": "@impl/done",
   "claim": "The living checkpoint beats a frozen snapshot, always.",
   "evidence": [
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
-   "CONTINUE.md:387  the WAL wins.",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "CONTINUE.md:422  the WAL wins.",
    "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
    "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge."
   ],
@@ -912,8 +912,8 @@
   "marker": "@impl/done",
   "claim": "Never treat CONTINUE.md as overriding the WAL.",
   "evidence": [
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
-   "CONTINUE.md:387  the WAL wins.",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "CONTINUE.md:422  the WAL wins.",
    "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
    "spec/boot/STATIC.md:1378    supersedes it wherever they diverge."
   ],
@@ -945,12 +945,12 @@
   "claim": "Summary: CONTINUE.md at the repo root is the cold reader's tour — TL;DR, state, blocker, recipe, findings, map, decisions, commits, quick-start — overwritten wholesale, never appended.",
   "evidence": [
    "CONTINUE.md:7  ## TL;DR",
-   "CONTINUE.md:78  ## The recipe that closed W1, to run again on W2 {#recipe}",
-   "CONTINUE.md:171  ## The findings this session opened {#findings}",
-   "CONTINUE.md:257  ## Repository map {#map}",
-   "CONTINUE.md:238  ## Decisions still in force {#decisions}",
-   "CONTINUE.md:297  ## The recent commit chain {#commits}",
-   "CONTINUE.md:271  ## Quick start {#quick-start}"
+   "CONTINUE.md:99  ## The recipe that closed W1, to run again on W2 {#recipe}",
+   "CONTINUE.md:192  ## The findings this session opened {#findings}",
+   "CONTINUE.md:278  ## Repository map {#map}",
+   "CONTINUE.md:259  ## Decisions still in force {#decisions}",
+   "CONTINUE.md:318  ## The recent commit chain {#commits}",
+   "CONTINUE.md:292  ## Quick start {#quick-start}"
   ],
   "src": [
    1,
@@ -1449,7 +1449,7 @@
   "claim": "These three species — internal contradictions, stale REVIEW markers, orphan anchors — drift silently.",
   "evidence": [
    "spec/WAL.md:75  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
-   "CONTINUE.md:280  ## Standing traps {#traps}"
+   "CONTINUE.md:301  ## Standing traps {#traps}"
   ],
   "src": [
    1,
@@ -1516,7 +1516,7 @@
   "evidence": [
    "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
    "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
-   "CONTINUE.md:297  ## The recent commit chain {#commits}"
+   "CONTINUE.md:318  ## The recent commit chain {#commits}"
   ],
   "src": [
    2,
@@ -1612,7 +1612,7 @@
   "claim": "Never fix a stale WAL from memory alone — reconstruct from `git log` and `git diff` first; memory is reconstructive, not archival.",
   "evidence": [
    "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
-   "CONTINUE.md:287  4. **An absence you assert is not an absence you checked.**",
+   "CONTINUE.md:308  4. **An absence you assert is not an absence you checked.**",
    "CONTINUE.md:45  **Never decrement these; re-measure.** One command now prints all of it:"
   ],
   "src": [
@@ -1646,7 +1646,7 @@
    "spec/WAL.md:75  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
    "spec/WAL.md:76    acts on it, and the verdict at least pointed at a real defect. When restating,",
    "spec/WAL.md:77    restate the reason too, and say which way the correction runs.",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
   ],
   "src": [
    1,
@@ -1711,9 +1711,9 @@
   "claim": "Summary: on a cold start read CONTINUE.md first for the tour, the WAL for the truth.",
   "evidence": [
    "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
-   "CONTINUE.md:337  Перед началом прочитай, в этом порядке:",
+   "CONTINUE.md:366  Перед началом прочитай, в этом порядке:",
    "CONTINUE.md:338    1. CONTINUE.md — целиком, особенно §in-flight, §w1-reading и §standard",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
   ],
   "src": [
    2,
@@ -1879,7 +1879,7 @@
   "marker": "@impl/done",
   "claim": "Step 1 check: tests that were passing are still passing.",
   "evidence": [
-   "CONTINUE.md:276  bash tools/self-check.sh ; echo \"EXIT=$?\"",
+   "CONTINUE.md:297  bash tools/self-check.sh ; echo \"EXIT=$?\"",
    "CONTINUE.md:42  | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |"
   ],
   "src": [
@@ -1895,7 +1895,7 @@
   "marker": "@impl/done",
   "claim": "Step 1 check: files that were supposed to be generated exist.",
   "evidence": [
-   "CONTINUE.md:277  cargo xtask mirror --check",
+   "CONTINUE.md:298  cargo xtask mirror --check",
    "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
    "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->"
   ],
@@ -2043,7 +2043,7 @@
   "evidence": [
    "spec/WAL.md:84    until the perimeter has been checked.** Full path list: batch plan §4.5.",
    "spec/WAL.md:237  **The debt's own result is one sentence: no row moved because a worker's evidence",
-   "CONTINUE.md:238  ## Decisions still in force {#decisions}"
+   "CONTINUE.md:259  ## Decisions still in force {#decisions}"
   ],
   "src": [
    1,
@@ -2220,8 +2220,8 @@
   "marker": "@impl/done",
   "claim": "Report item: what decisions were made this session and why.",
   "evidence": [
-   "CONTINUE.md:238  ## Decisions still in force {#decisions}",
-   "CONTINUE.md:240  - **Delegation goes to the harness's built-in `opus5` subagents, not fractality**",
+   "CONTINUE.md:259  ## Decisions still in force {#decisions}",
+   "CONTINUE.md:261  - **Delegation goes to the harness's built-in `opus5` subagents, not fractality**",
    "spec/boot/STATIC.md:408  - **Commit log as decision record.** The message is the only place"
   ],
   "src": [

@@ -246,7 +246,7 @@
    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:9  ##CONVENTION-KEEPS-STATE-IN-TWO-FILES *This",
    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:49  ##CONTINUE-IS-A-SNAPSHOT-THE-WAL-SUPERSEDES-IT It is a *snapshot*; the WAL supersedes it. @impl/done",
    "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
   ],
   "src": [
    1,
@@ -535,7 +535,7 @@
   "evidence": [
    "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
    "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
    "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
   ],
   "src": [
@@ -833,7 +833,7 @@
    "spec/WAL.md:6  ## Current phase",
    "spec/WAL.md:56  ## Constraints — do not violate",
    "spec/WAL.md:162  ## In progress",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
    "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done"
   ],
   "src": [
@@ -1686,7 +1686,7 @@
   "marker": "@spec/done",
   "claim": "The fallback works, but costs three places instead of one, no single canonical 'now', tokens burned every session on re-derivation — and constraints missed first.",
   "evidence": [
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:18  ##WAL-IS-PREFERRED *It is **preferred** because the alternative — resumption"
   ],
   "src": [
@@ -1881,7 +1881,7 @@
   "evidence": [
    "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
    "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
-   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
    "spec/WAL.md:6  ## Current phase"
   ],
   "src": [
