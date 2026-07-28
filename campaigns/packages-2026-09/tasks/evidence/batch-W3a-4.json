@@ -1,0 +1,545 @@
+{
+ "batch": "W3",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-THE-ADDRESSABLE-SPECIFICATIONS-PRACTICE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/vibe.toml:4  kind = \"flow\"",
+     "vibe.lock:175  kind = \"flow\" name = \"addressable-specs\" group = \"org.vibevm.world\" version = \"0.1.0\"",
+     "spec/boot/STATIC.md:5  <!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->",
+     "specmap.toml:14  namespace = \"vibevm\"",
+     "confirmed: Manifest kind (`kind = \"flow\"`), lockfile entry (vibe.lock:174-182, version 0.1.0, source_kind local, `files_written = []`), and the compiled static lane, where this package is the FIRST contribution at STATIC.md:5. `find vibedeps/flow-addressable-specs -type f` returns 7 files — the same 7 the package ships. Widened into the host to measure whether the three named things are actually installed: (a) `spec://` occurs 145 times across spec/common + spec/modules (121 lines; the harvest's 117 is a `grep -c` LINE count, so the two numbers agree once the units are named) plus 1502 in crates/ and 947"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SPEC-FILES-ARE-THE-IPC-CHANNEL-NOT-DOCUMENTATION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:82  | ##ROW-REQ-ADDRESSABILITY **Addressability** @impl/done | every statement in every file is precisely citable, so a correction costs twenty tokens, not a re-derivation @impl/done | flow:addressable-specs @impl/done |",
+     "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers,…",
+     "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:33  ### Адресуемость",
+     "confirmed: Searched the sibling flow this claim depends on: two-process-model's `files-as-ipc.md` carries the four-requirement table and Addressability is its first row (line 82; the summary at line 125 lists 'addressability, atomicity, conflict rules'). The host restates the model in its own boot file — `00-core.md:38` calls the reading layers «vibevm's instance of the two-process-model flow» and cites it by `spec://` URI, and `00-core.md:42` says the Spec layer is 'addressable via `spec://…` URIs'. Widened to the source the flow names: redbook chapter 2 (Russian) heads its four-IPC-requirements section"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "paraphrase-costs-hundreds-of-tokens-an-anchor-costs-twenty": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:52  Первый способ заставляет AI: найти, что такое «верификация» в контексте проекта; найти, что именно «неправильно»; сгенерировать гипотезу о том, что человек имел в виду; попробовать исправить. На это…",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:56  Второй способ: AI открывает файл по пути, находит секцию по якорю, читает конкретное значение, сравнивает с тем, что написал в коде, исправляет. Двадцать токенов. Точное попадание.",
+     "spec/boot/STATIC.md:22  compare, fix. Twenty tokens, exact hit — no guessing what \"verification\" means or which part is \"wrong\".",
+     "confirmed: The claim is a token-economics assertion, not a repository fact, so I looked for where it is stated and whether it is exercised. The book chapter the flow names states both halves in Russian at lines 52 and 56 («сотни токенов» vs «Двадцать токенов. Точное попадание»). The compiled boot lane restates it verbatim in the host at STATIC.md:22-23. I did not find a measurement of the token cost anywhere in the perimeter: `grep -rn 'twenty tokens' spec/ crates/ CLAUDE.md` returns nothing outside the compiled STATIC.md, so the number is asserted, not measured, in this repository. What IS measurable is"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "PACKAGE-IS-THAT-DIFFERENCE-AS-A-STANDING-CONTRACT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:5  <!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->",
+     "spec/boot/STATIC.md:17  ## The correction contract {#correction-contract}",
+     "spec/boot/STATIC.md:54  ## Never {#never}",
+     "confirmed: 'Standing contract' is checkable as: does the rule arrive on every session boot, unconditionally? It does — the boot snippet is compiled into `spec/boot/STATIC.md` (the always-read priority lane), at line 5, ahead of every other contribution, and it carries a `## The correction contract {#correction-contract}` heading and a `## Never {#never}` list. Widened to check whether the entry is conditional: `spec/boot/INDEX.md` has no `when` guard for this slot, and CLAUDE.md:3 makes reading `spec/boot/` unconditional. I did not find a separate enforcement mechanism (no lint gates the paraphrase-vs-UR"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "package-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/vibe.toml:15  [boot_snippet] source = \"spec/boot/15-flow-addressable-specs.md\" category = \"flow\"",
+     "spec/boot/STATIC.md:5  <!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->",
+     "confirmed: `find packages/org.vibevm.world/addressable-specs/v0.1.0 -type f` returns exactly 6 files: README.md, LICENSE.md, vibe.toml, spec/boot/15-flow-addressable-specs.md and the three documents under spec/flows/addressable-specs/. So three content documents plus one boot snippet, as claimed. The manifest declares only the boot snippet (`[boot_snippet] source = \"spec/boot/15-flow-addressable-specs.md\"`); the three content documents are shipped, not declared. `find vibedeps/flow-addressable-specs -type f` returns the same 7 (the 6 plus LICENSE.md), so the consumer receives all four."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:14  ## Specs are IPC, not documentation {#ipc}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:72  ## The URI scheme {#uri-scheme}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:94  ## Anchors {#anchors}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:125  ## Module names: reverse DNS {#modules}",
+     "confirmed: Opened the named file and checked each of the seven promised contents against its headings: `## Specs are IPC, not documentation {#ipc}` (14) and `## Why addressability is requirement #1 {#why}` (34); `## The URI scheme {#uri-scheme}` (72); `## Anchors {#anchors}` (94); `## Module names: reverse DNS {#modules}` (125); `## Single source of truth {#single-source}` (170) and `## Placement: Lost in the Middle {#placement}` (199); `## The graph consequence {#graph}` (217); `## Re-derive for your project {#re-derive}` (244). All seven present. The file is also present verbatim in the installed slot "
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-AUTHORING-RULES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:15  ## The unit of meaning {#unit}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:38  ## Normativity is marked, not implied {#normativity}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:105  ## Deviations are first-class {#deviations}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:126  ## Size budgets {#budgets}",
+     "confirmed: Checked each promised topic against the file's headings: `## The unit of meaning {#unit}` (15), `## Normativity is marked, not implied {#normativity}` (38) which names RFC-2119 at line 43, `## Deviations are first-class {#deviations}` (105), `## Size budgets {#budgets}` (126), `## Changelog lines {#changelog}` (160), `## Anchor stability {#anchor-stability}` (177) whose first fact is 'Anchors are immutable once cited'. Six of six named topics present. Present verbatim in the installed slot."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-SPEC-TREE-LAYOUT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:14  ## The reference tree {#tree}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:58  ## PROP vs FEAT {#prop-vs-feat}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:78  ## What goes where {#what-goes-where}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:95  ## The `.human/` private buffer {#human-buffer}",
+     "confirmed: Checked each promised topic: `## The reference tree {#tree}` (14), `## PROP vs FEAT {#prop-vs-feat}` (58), `## What goes where {#what-goes-where}` (78) whose body is a two-column Fact/Home table, `## The `.human/` private buffer {#human-buffer}` (95) whose enforcement rule at 110 is 'physical invisibility beats logical prohibition'. Four of four present. Widened into the host to see whether the layout is adopted: `ls .human` and `ls .claudeignore` both return 'No such file or directory', `grep -n human .gitignore` returns nothing, and `find spec -name 'FEAT-*'` returns 0 against 42 PROP docume"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md:13  ## The correction contract {#correction-contract}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md:29  ## Single source of truth {#single-source}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md:40  ## Placement {#placement}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md:60  ## Never {#never}",
+     "confirmed: The snippet's own headings are `## The correction contract {#correction-contract}` (13), `## Single source of truth {#single-source}` (29), `## Placement {#placement}` (40), `## Never {#never}` (60) — four of four as promised. 'Loaded at session start' is checkable in the host: STATIC.md:5 carries the provenance marker naming this exact file as the source, and the compiled block runs STATIC.md:7-63 word-identical to the snippet with only the `##ID` fact tokens stripped. CLAUDE.md:3 makes reading `spec/boot/` part of every session's first act."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its //! `vibedeps/` slot, drops its lockfile entry and its `[requires]` //! declaration, and regenerates every node's boot artifacts so the //! package no longer appears in the computed boot sequence.",
+     "crates/vibe-cli/src/commands/uninstall.rs:142  // Regenerate every node's boot artifacts from the remaining // materialised state — the uninstalled package is gone from boot. regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+     "crates/vibe-cli/src/commands/uninstall.rs:202  \"\\nUninstalled {group}/{name}@{version} — removed its vibedeps/ slot, regenerated boot.\"",
+     "vibe.lock:181  files_written = []",
+     "confirmed: Read the host's own uninstall implementation rather than trusting the README. `uninstall.rs` removes the `vibedeps/` slot, drops the lockfile entry and the `[requires]` declaration, then calls `regenerate_boot`, so the package's contribution disappears from the compiled boot artifacts — which is how the boot snippet is removed here, since `files_written = []` (vibe.lock:181) means the install wrote no file into the host tree in the first place. So the claim holds, but by a different mechanism than 'removes the files it wrote': under PROP-009 the package writes no host file at all, and uninstal"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-workspace/src/boot.rs:79  /// The file's category. The user-owned `00-core.md` / `90-user.md` /// are `Foundation` / `UserOverride` by name convention; any other /// authored boot file is the node's own mid-band content (`None`).",
+     "crates/vibe-workspace/src/install/bootgen.rs:212  /// Discover a node's own authored boot files — every `*.md` in its /// `spec/boot/`, minus the generated `INLINE.md` / `INDEX.md`. The /// user-owned `00-core.md` / `90-user.md` are `Foundation` / `UserOverride` /// by name convention; any other authored file is mid-band (`None`).",
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+     "confirmed: Searched the boot engine for what it considers user-owned: `bootgen.rs` discovers a node's authored boot files as 'every `*.md` in its `spec/boot/`, minus the generated `INLINE.md` / `INDEX.md`', and classifies `00-core.md` / `90-user.md` as Foundation / UserOverride by name convention. On disk the host's `spec/boot/` holds exactly 00-core.md, 90-user.md (authored) and INDEX.md, STATIC.md (generated, each carrying a 'generated by vibe, do not edit' banner at line 1). I found no code path that writes to an authored boot file. Widened to `grep -rn 'user-owned' crates/` — two hits, both in the bo"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-TWO-PROCESS-MODEL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:78  requirement is delivered by its own flow in this collection: @impl/done",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:82  | ##ROW-REQ-ADDRESSABILITY **Addressability** @impl/done | every statement in every file is precisely citable, so a correction costs twenty tokens, not a re-derivation @impl/done | flow:addressable-specs @impl/done |",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:125  - ##SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW Four requirements — addressability, atomicity, conflict rules, visibility — each a sibling flow. @impl/done",
+     "vibe.lock:61  \"flow:org.vibevm.world/two-process-model@=0.1.0\",",
+     "confirmed: Opened the composed flow. `files-as-ipc.md:78` says each requirement is delivered by its own flow; the table's first row (82) is Addressability delivered by `flow:addressable-specs`, and the summary at 125 names 'addressability, atomicity, conflict rules' — four requirements, addressability first, exactly as claimed. Both packages are installed here (`vibe.lock` lists `flow:org.vibevm.world/two-process-model@=0.1.0`). One thing the composition is NOT: the addressable-specs manifest declares no dependency on it — `vibe.toml` has `requires_kinds = []` and no `[requires]` table, so the compositio"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-ATOMIC-COMMITS": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:24  ##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done",
+     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:22  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
+     "spec/boot/STATIC.md:25  The same contract binds the agent: when citing the spec — in chat, commit bodies, code markers, review notes — cite the anchor, never a paraphrase and never a line number.",
+     "DRIFT: the behaviour is real and the attribution is wrong. 515 commits in this repository carry a `spec://` URI in their message, so commit bodies do cite anchors. But the RULE requiring it lives in `flow:git-conventional-commits` (31-flow-conventional-commits.md:24), not in `flow:git-atomic-commits` — and git-atomic-commits' own boot snippet says so at its line 22, drawing the format/atomicity line this claim erases. Both flows are installed, so the misattribution is checkable against the shipped payload. Same defect W2d found in sync-from-code's BOUNDARY-FLOW-ATOMIC-COMMITS."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "COMPOSES-CONFLICT-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:32  ## The REVIEW contract {#review}",
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:34  ##IF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY If you believe the spec is wrong: **implement the spec anyway**, add a marker at the point of disagreement — @impl/done",
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md:143  the resolution in the spec's changelog so the next full re-read has an anchor. @impl/done",
+     "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+     "confirmed: The composed flow does carry a REVIEW contract (`## The REVIEW contract {#review}`, boot snippet line 32) and does tie corrections to anchors — `failure-modes.md:143-145` requires noting the resolution 'in the spec's changelog so the next full re-read has an anchor', and `##PREVENTION-BEATS-RECOVERY-ONE-HOME-PER-VALUE` at 147 says give every normative value one home and cite it. What I could not find is the marker template requiring an anchor: the template at 35-flow-conflict-protocol.md:38 is `<!-- REVIEW: <what you would change> because <reason> -->` — reason, not anchor. Widened into the ho"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-WAL": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a brief *why*, citing a spec anchor or issue: `match_by_hash(): DO NOT TOUCH — fragile reconnection logic, issue #12`. The most valuable",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:91  5. ##SECTION-IN-PROGRESS **In progress** — what is open, with enough detail that the next session can pick it up. Cite spec anchors (`spec://…`). @impl/done",
+     "spec/WAL.md:69  ## Constraints — do not violate",
+     "spec/WAL.md:209  ## Next",
+     "DRIFT: the composition is specified on both sides and does not happen. `flow:wal`'s WAL-PROTOCOL.md:83 does require each Constraints entry to carry a why «citing a spec anchor or issue», and this README claims the resumed session therefore lands on the exact unit. Measured on the host's own WAL: `spec://` occurs 0 times in `spec/WAL.md` (2 today, both campaign prose ABOUT the absence), and 4 of its 26 constraint entries cite an anchor in any notation. The Next section cites repository paths, not anchors."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-DECISION-RECORDS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:89  ##RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR **At the spec anchor that governs the value.** @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:126  anchor — `spec://<project>/<doc>#<anchor>` or any stable path-plus-anchor form — so comments and commits can point at it. @impl/done",
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+     "confirmed: The composed flow states it: `##RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR` (DECISION-RECORDS-PROTOCOL.md:89) and line 126-127 requires the record be addressable as `spec://<project>/<doc>#<anchor>` 'so comments and commits can point at it'. The host does this: `spec/common/PROP-000.md` files each decision under an anchored heading (`## 1. Language: Rust {#language}`) with `##LANG-RUST **Decision:**` at 16, `##LANG-WHY **Why:**` at 18 and `##LANG-REVISIT **When to revisit:**` at 23, and `spec/boot/00-core.md:49` then cites the result as `spec://vibevm/common/PROP-000#language` rather than restating "
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "practice-extracted-from-the-book": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:33  ### Адресуемость",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:94  Ещё один практический момент, вытекающий из исследований внимания LLM: критическая информация внутри спеки должна размещаться **в начале или конце файла**. Стэнфордское исследование «Lost in the Middle» (Liu et al., [препринт…",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:187  Важная деталь: управляющие файлы нужно *экономить по размеру*. BOOT.md — 500 токенов. WAL — до 3000. Спека модуля — до 5000. Если спека разрастается — разбивай на подмодули. Если WAL разрастается — это сигнал, что в проекте…",
+     "confirmed: Opened the chapter and checked each of the four named subsections. Addressability: `### Адресуемость` at line 33 (with the worked `spec://com.example.shop`-style example and a `{#verification.timeout}` heading at 75). Lost-in-the-Middle: line 94 states the start-or-end placement rule and cites Liu et al. 2023 preprint / 2024 article with the up-to-30% figure; the bibliography repeats it at 398. Control-plane budgets: line 187 gives 'BOOT.md — 500 токенов. WAL — до 3000. Спека модуля — до 5000', and 177 gives the same 500 for BOOT.md. Practical file structure: `## Практическая структура файлов`"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CHAPTER-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+     "vibe.lock:28  \"flow:org.vibevm.world/redbook@=0.2.0\",",
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+     "confirmed: `ls packages/org.vibevm.world/redbook/*/spec/book/ru/` returns chapter-1-two-process-model.md, chapter-2-shared-state-and-files.md, chapter-3-memory-individual.md under both v0.1.0 and v0.2.0; the chapter-2 title line is Russian. `flow:org.vibevm.world/redbook@=0.2.0` is in vibe.lock, so v0.2.0 is the installed one. Widened for a non-Russian copy: `ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/` returns only `ru`, so 'in Russian' is the whole of it, not a default among translations."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "BOTTLENECK-IS-TELLING-THE-MACHINE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:36  ##THE-HUMANS-ROLE-IS-COHERENCE-MANAGEMENT The human's role in the two-process system is coherence management: notice that the agent deviated from the spec, and correct it. @spec/done",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:42  ##THE-BOTTLENECK-IS-TELLING-THE-MACHINE The bottleneck is telling the machine — feedback latency is where working days go to die. @spec/done",
+     "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…",
+     "confirmed: The protocol states the same pair at `##THE-HUMANS-ROLE-IS-COHERENCE-MANAGEMENT` (36) and `##THE-BOTTLENECK-IS-TELLING-THE-MACHINE` (42), so the README line is that document's summary. For the operative half — 'every fact pointable in one URI' — the host goes further than heading anchors: PROP-031 §ANT-STABLE-IDENTITY records 'Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids', and the per-fact `##ID` grammar means 5266 spec units are addressable in specmap.json, not just the 857 anchored headings. `spec/boot/00-core.md:"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+     "vibedeps/flow-addressable-specs/0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+     "confirmed: The manifest declares `license = \"UPL-1.0\"` and `LICENSE.md` exists in the package and is shipped into the installed slot. `grep -c EULA packages/org.vibevm.world/addressable-specs/v0.1.0/LICENSE.md` returns 0, so the file is the UPL text and not a leftover template — consistent with the host CLAUDE.md ledger's 'our shipped surface is fully UPL-1.0'."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  },
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md": {
+   "EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:9  Every normative statement in this project's spec tree is **addressable**: it lives under a stable `{#kebab-anchor}` and is cited by URI, never by paraphrase.",
+     "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…",
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the `group` field) and the **addressable-specs**…",
+     "DRIFT on coverage, confirmed on form. Form: 519 distinct heading anchors, 0 non-kebab, 0 malformed. Coverage: 857 of 982 headings carry an anchor — and the 125 that do not are not scattered. ALL 23 headings in `spec/boot/` and ALL 8 in `spec/WAL.md` are unanchored, which means the boot lane every session reads first and the checkpoint it reads second are the two least addressable files in the tree. The WAL's Constraints section — the most normative content the flow's sibling names — cannot be cited at all."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CORRECTION-CITES-THE-VIOLATED-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:19  When the human corrects the agent, the correction cites the violated anchor: \"you are violating `spec://…#verification.timeout` — the spec says 600 s, you wrote 300 s\". Resolve the URI, read the unit,",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1579  - **2026-07-28 · Reported and NOT a finding: the dotted anchor.** B14 reported that `review-workflow.md` teaches naming an anchor `{#verification.timeout}`, which `##FACT-ID-GRAMMAR` (`[A-Za-z][A-Za-z0-9_-]*`) rejects. **It does not survive checking.** The grammar governs *fact ids*; heading `{#anchor}`s share",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:80  - ##IR-ADDRESS-DEPTH **Addressing depth.** A `spec://…#a.b.c` fragment is a **path down the tree** (`a` → `b` → `c`), which already matches addressable-specs' dotted anchors (`#verification.timeout`). Sections at any depth are addressable. @impl/done",
+     "confirmed: Looked for an instance of the contract being exercised in this repository's own history, not just restated. Found several. `git log --format='%H %s %b' | grep -cE '##[A-Z][A-Z0-9-]{4,}'` returns 22 commits whose body names a fact anchor; the clearest is c94b9b0e 'fix(spec-uri): a normative fact is citable from code', whose body opens '`##FACT-ID-GRAMMAR` already says a fact is addressable as `spec://…#<ID>` … The URI parser never implemented that sentence' — a code change argued entirely from one cited anchor. The campaign plan records a correction running the other way at line 1579: a report "
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RESOLVE-READ-COMPARE-FIX": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:19  When the human corrects the agent, the correction cites the violated anchor: \"you are violating `spec://…#verification.timeout` — the spec says 600 s, you wrote 300 s\". Resolve the URI, read the unit, compare, fix. Twenty tokens, exact hit — no guessing what",
+     "crates/vibe-spec/src/resolver.rs:1  //! The file resolver — `spec://` authority + doc-path → a file on disk //! (PROP-035 §6, the `doc_path → file` half). //!",
+     "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+     "spec/boot/STATIC.md:62  - Never invent an anchor — resolve the URI and read the unit before acting on it.",
+     "confirmed: The four-step loop is restated in the host's compiled boot lane, and the first step is mechanised: `crates/vibe-spec/src/resolver.rs` is the `doc_path → file` half of PROP-035 §6, so a `spec://` address resolves to a file on disk by code, not by convention. The `Never` list's last entry (STATIC.md:62) makes the same demand negatively — 'resolve the URI and read the unit before acting on it'. Widened for whether the loop has a gate: `grep -rn 'dangling-edge' packages/…/core-ai-native-specmap/src/index.rs` shows the engine warns when an edge names an anchor no unit carries, which catches step 1 "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "twenty-tokens-exact-hit": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:22  compare, fix. Twenty tokens, exact hit — no guessing what \"verification\" means or which part is \"wrong\".",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:56  Второй способ: AI открывает файл по пути, находит секцию по якорю, читает конкретное значение, сравнивает с тем, что написал в коде, исправляет. Двадцать токенов. Точное попадание.",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:58  | ##ROW-TOKEN-COST Token cost @spec/done | hundreds, spent on search and hypothesis @spec/done | about twenty @spec/done |",
+     "confirmed: The number is asserted in three places that all trace to one source: this snippet, its compiled copy at STATIC.md:22, and the protocol's cost table row `##ROW-TOKEN-COST` (PROTO:58, 'about twenty'), all of which restate the book chapter's «Двадцать токенов. Точное попадание» (line 56 of chapter-2-shared-state-and-files.md). Widened for an independent measurement: `grep -rn 'twenty tokens\\|20 tokens' spec/ crates/ campaigns/ CLAUDE.md` finds no counted instance anywhere in the perimeter — no session log, no campaign harvest, no crate measures the cost of a correction. The claim is consistently "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-SAME-CONTRACT-BINDS-THE-AGENT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:25  The same contract binds the agent: when citing the spec — in chat, commit bodies, code markers, review notes — cite the anchor, never a paraphrase and never a line number.",
+     "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+     "crates/vibe-cli/src/commands/install/flag_tests.rs:98  #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
+     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:24  ##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done",
+     "confirmed: Checked each of the four named surfaces. Commit bodies: 515 commits carry `spec://` (`git log --oneline --grep='spec://' | wc -l`), 22 name a `##FACT-ID`. Code markers: `grep -rln 'spec://' crates/ --include=*.rs` returns 470 files, and specmap.json counts 912 edges minted from them — 677 `implements`, 223 `verifies`, 12 `deviates` — all carrying a full `spec://…#anchor`, never a line number. The two forms are `specmark::scope!(\"spec://…\")` and `#[verifies(\"spec://…\")]`. Review notes: `grep -rn '<!-- REVIEW' spec/ crates/ campaigns/` returns no marker in use, so that surface has no instance. T"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:31  Each fact has exactly one authoritative anchor. Never copy a",
+     "specmap.json:62437  \"code\": \"duplicate-anchor\", \"file\": \"spec/boot/STATIC.md\", \"line\": 67, \"message\": \"anchor `{#root}` already used earlier in this file — spec://…#root is ambiguous\"",
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
+     "DRIFT, reported by the host's own running detector: 59 `duplicate-anchor` warnings in `specmap.json`, every one inside the generated `spec/boot/STATIC.md`, where 27 packages each contribute `{#root}` and `{#never}`. `spec://…#root` addresses twenty-seven places in the lane read first every session. Same measurement as the protocol's longer form."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-COPY-A-NORMATIVE-VALUE-CITE-THE-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:31  Each fact has exactly one authoritative anchor. Never copy a normative value into a second file — cite the anchor instead. Two copies *will* diverge, and a later session cannot tell which one binds.",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this…",
+     "spec/boot/00-core.md:19  ##four-rules-lead See [`CLAUDE.md`](../../CLAUDE.md) (and its identical copies `AGENTS.md` / `GEMINI.md`) for the full text. Authoritative reference: [spec://vibevm/common/PROP-000#commits](../common/PROP-000.md#commits). Summary only: @impl/done",
+     "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
+     "confirmed: Both directions are instanced in the host. Applied: `CLAUDE.md:5` states the commit discipline in one sentence and then refuses to restate it — 'The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits]'; `spec/boot/00-core.md:19` does the same, calling its own list 'Summary only' under the same citation. Broken: `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` are byte-identical (md5 329017ba…, 228 lines / 2915 words each) — three copies of a normative file, and CLAUDE.md:150 says so in its own words, 'kept identical'. Widened to check the co"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "two-copies-will-diverge": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:33  copies *will* diverge, and a later session cannot tell which one binds.",
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md:146  ##PREVENTION-BEATS-RECOVERY-ONE-HOME-PER-VALUE Prevention beats recovery here: give every normative value exactly one home and cite it from everywhere else. @impl/done",
+     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:44  - ##RETIRED-SECTIONS-KEPT §3–§5 below describe the retired topology and stay as the",
+     "confirmed: Looked for a divergence this repository actually suffered. The campaign's own findings ledger records one: commit 9cabe34d 'docs(campaign): F-122 — one coordinate, two contents, 173 times' and a906a236 'docs(campaign): the rename left four names dead, not one', whose body reports 21 files and 33 references naming packages that no longer resolve after a rename — the copies stayed while the source moved. The sibling flow states the same law from the failure side (`##PREVENTION-BEATS-RECOVERY-ONE-HOME-PER-VALUE`, failure-modes.md:147). PROP-026:44 shows the host's alternative to deletion when a s"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "spec/common/PROP-000.md:316  ##INVARIANTS-STOP-RULE (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @spec/done",
+     "spec/WAL.md:69  ## Constraints — do not violate",
+     "spec/boot/STATIC.md:38  Critical constraints live at the START or END of a file, never buried mid-document. Models attend to the edges of context (\"Lost in",
+     "the host's one Invariants section is the last of PROP-000's 324 lines — the prescribed placement. Recorded and not counted, for the same reason as the protocol's INVARIANTS-GO-AT-THE-OPENING-OR-THE-END: the WAL's Constraints block sits mid-file because a DIFFERENT installed flow puts it there, `wal`'s §sections making it the third of eight required sections. Two flows in one boot lane, opposite advice."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "models-attend-to-the-edges-of-context": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:39  buried mid-document. Models attend to the edges of context (\"Lost in the Middle\", Liu et al. 2023/2024); a mid-file invariant is an invariant the reader statistically skipped.",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:94  Ещё один практический момент, вытекающий из исследований внимания LLM: критическая информация внутри спеки должна размещаться **в начале или конце файла**. Стэнфордское исследование «Lost in the Middle» (Liu et al., [препринт…",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:398  Nelson F. Liu et al., *«Lost in the Middle: How Language Models Use Long Contexts»* (TACL, 2024) — эмпирическое доказательство U-образной кривой внимания: начало и конец контекста «видны» модели, середина — нет.",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:201  ##MODELS-ATTEND-TO-THE-BEGINNING-AND-THE-END An empirical result, not a style preference: language models attend most reliably to the beginning and the end of a long context; facts placed in the middle lose retrieval accuracy, with drops of up to thirty percent measured (\"Lost in the Middle\", Liu et al., arXiv",
+     "confirmed: The citation resolves to a real paper and the flow reports it consistently: the book chapter cites 'Lost in the Middle' (Liu et al., arXiv preprint 2023, article 2024) with the up-to-30 % accuracy drop at line 94 and lists it in the bibliography at 398 as TACL 2024; the protocol repeats the same attribution and figure at 201-205. All three agree on year, venue and magnitude. Widened for an independent host measurement of the effect — `grep -rni 'lost in the middle' spec/ crates/ campaigns/` returns nothing outside the compiled STATIC.md, so the host restates the finding and does not test it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "POINTER-THE-PROTOCOL": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:34  ## Why addressability is requirement #1 {#why}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:72  ## The URI scheme {#uri-scheme}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:61  ##the-difference-is-an-order-of-magnitude The difference is an order of magnitude, paid on *every* correction, several times per session — in metered tokens and in minutes of a short human day. @spec/done",
+     "spec/boot/STATIC.md:45  - Why addressability is IPC requirement #1, the URI scheme, the token economics: [`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md`](../flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md) - Unit of meaning, normativity marking, deviations, size budgets,",
+     "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "POINTER-THE-AUTHORING-RULES": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:15  ## The unit of meaning {#unit}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:38  ## Normativity is marked, not implied {#normativity}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:105  ## Deviations are first-class {#deviations}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:126  ## Size budgets {#budgets}",
+     "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "POINTER-THE-SPEC-TREE-LAYOUT": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:58  ## PROP vs FEAT {#prop-vs-feat}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:78  ## What goes where {#what-goes-where}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:95  ## The `.human/` private buffer {#human-buffer}",
+     "spec/boot/STATIC.md:51  - PROP vs FEAT, what goes where, the `.human/` buffer: [`spec/flows/addressable-specs/spec-tree-layout.md`](../flows/addressable-specs/spec-tree-layout.md)",
+     "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:56  - Never cite a spec section by paraphrase when an anchor exists.",
+     "spec/boot/00-core.md:19  ##four-rules-lead See [`CLAUDE.md`](../../CLAUDE.md) (and its identical copies `AGENTS.md` / `GEMINI.md`) for the full text. Authoritative reference: [spec://vibevm/common/PROP-000#commits](../common/PROP-000.md#commits). Summary only: @impl/done",
+     "spec/boot/00-core.md:49  - ##CONV-LANGUAGE **Language:** Rust. See [spec://vibevm/common/PROP-000#language](../common/PROP-000.md#language). @impl/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the `group` field) and the **addressable-specs** flow, whose…",
+     "confirmed: Instances in the host where a paraphrase is deliberately accompanied by its anchor rather than standing alone: `00-core.md:19` labels its four-rule list 'Summary only' under `spec://vibevm/common/PROP-000#commits`; `00-core.md:49` states the language convention as a bare pointer to `spec://vibevm/common/PROP-000#language`; `PROP-029:5` builds on two other units and names both by URI in the same sentence. 145 `spec://` occurrences across spec/common + spec/modules and 1502 across crates/ say the habit is not occasional. Widened for the negative case — a normative claim restated without its anch"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-DUPLICATE-A-NORMATIVE-VALUE": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:57  - Never duplicate a normative value into a second file — cite its anchor.",
+     "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this…",
+     "specmap.json:62437  \"code\": \"duplicate-anchor\", \"file\": \"spec/boot/STATIC.md\", \"line\": 67, \"message\": \"anchor `{#root}` already used earlier in this file — spec://…#root is ambiguous\"",
+     "DRIFT, with two live duplications and a third measured by W1. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` are byte-identical copies of one 228-line contract — three copies, no reconciliation mechanism, which is exactly what the protocol calls «duplication is not redundancy». And the attribution flow's single-place law is stated in six host locations, 88 lines across 50 files. Both are deliberate and recorded, which makes them measured rather than accidental."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:59  - Never bury an invariant in the middle of a file.",
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "spec/WAL.md:69  ## Constraints — do not violate",
+     "spec/WAL.md:1  # WAL — Project Continuation State",
+     "the negative form of the rule above and judged with it: the host's own Invariants section obeys, and its one mid-file constraints block is placed there by the wal flow's required section order rather than by neglect."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:60  - Never rename or delete an anchor that has ever been cited — anchors are immutable; retire with a tombstone instead. - Never invent an anchor — resolve the URI and read the unit before",
+     "spec/modules/vibe-progress/templates/spec-task.md:32  - ##RULE-ANCHORS-IMMUTABLE **Anchors are immutable:** a relocated unit leaves a tombstone (`<!-- RETIRED: superseded by #new-anchor -->`); never rename or reuse. @spec/done",
+     "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no replacement; its text survives…",
+     "specmap.json:61204  \"message\": \"edge `progress_core::report` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#report`: no spec unit carries this anchor\"",
+     "restated in the host in two vocabularies (the spec-task template and PROP-031 §ANT-STABLE-IDENTITY) and unbroken: no anchor rename appears in history. The host's two document MOVES carried their anchors intact to the new address; what they failed to leave is a tombstone at the old one, which is filed on A-MOVED-UNIT-LEAVES-A-TOMBSTONE rather than counted twice here."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-INVENT-AN-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:62  - Never invent an anchor — resolve the URI and read the unit before acting on it.",
+     "specmap.json:61204  \"message\": \"edge `progress_core::report` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#report`: no spec unit carries this anchor\"",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:95  None => warnings.push(Warning { code: \"dangling-edge\".to_string(), message: format!( \"edge `{}` --{}--> `{}`: no spec unit carries this anchor\",",
+     "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+     "confirmed: This is the one rule in the Never list with a running detector in the host. The installed specmap engine emits `dangling-edge` for any edge whose URI 'no spec unit carries', and `specmap.json` currently records 5 of them — `crates/progress-core/src/report.rs:4`, `seal.rs:19`, `seal.rs:117`, `weave.rs:4` and `crates/vibe-cli/src/commands/progress/seal.rs:17`, all citing `spec://vibevm/modules/vibe-progress/PROP-043#report|#seal|#weave` against a document that has no such units. So the rule is both enforced and currently violated in five places, which is a stronger result than either alone. The "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
