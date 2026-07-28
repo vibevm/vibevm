@@ -1,0 +1,1221 @@
+[
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "PACKAGE-SHIPS-THE-DISCOVERY-PROMPT",
+    "marker": "@impl/done",
+    "claim": "This is a vibevm `flow` package shipping the DISCOVERY collaborative-research prompt — a distributable user-level prompt, a full user-side alternative to a system prompt, that turns an LLM session into structured co-inquiry.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:4  kind = \"flow\"",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+      "vibedeps/flow-discovery-prompt/0.1.0/README.md:3  A vibevm `flow` package that ships the **DISCOVERY"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Read the manifest (`vibe.toml`, 17 lines) for `kind`; read the artefact's `<PROMPT_INFO>` block. `find packages/org.vibevm.world/discovery-prompt -type f` returns exactly six files: LICENSE.md, README.md, spec/boot/50-flow-discovery-prompt.md, spec/flows/discovery-prompt/DISCOVERY-PROMPT.md, spec/flows/discovery-prompt/usage.md, vibe.toml. `find vibedeps/flow-discovery-prompt -type f` returns the same six — the consumer receives the artefact itself, not only prose about it."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "EVERY-RESPONSE-FOLLOWS-AN-EXPLICIT-GRAMMAR",
+    "marker": "@impl/done",
+    "claim": "Every response follows an explicit grammar: PrimaryHypothesis with a 0.0-1.0 confidence estimate, AlternativeInterpretations, MetaReflection.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:168  Your responses must follow this grammar:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:170  Response := PrimaryHypothesis + AlternativeInterpretations + MetaReflection",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:173  - PrimaryHypothesis: Your main response with an explicit confidence estimate (0.0-1.0)",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:174  - AlternativeInterpretations: 2-3 different ways to understand the problem",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:175  - MetaReflection: Brief note on your computational approach"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Read the artefact's STRUCTURAL REQUIREMENTS block (lines 167-176) line by line. All three grammar fields and the 0.0-1.0 range are present verbatim. Note the artefact writes the range as `(0.0-1.0)` with an ASCII hyphen; the README writes `0.0–1.0` with an en dash. The same three fields recur at DISCOVERY-PROMPT.md:32 inside `<EXTENSION_PREFERRED_LANGUAGE>` and at :372 and :391 in the MAIN block's closing sections."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "SELF-OBJECTION-PRECEDES-EVERY-FINALIZED-ANSWER",
+    "marker": "@impl/done",
+    "claim": "A mandatory adversarial self-objection precedes every finalized answer.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:291  ADVERSARIAL CHECK:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:292  Before finalizing any response, briefly argue against your first instinct.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:343  ADVERSARIAL AMPLIFICATION (latest update to the protocol):",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:344  Before finalizing your response, generate at least one substantive objection",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:357  Clearly mark the output, sampled from this rule, as an ADVERSARIAL AMPLIFICATION paragraph."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The artefact carries the rule twice, in two blocks with different force. ADVERSARIAL CHECK (:291-293) mandates *generating* the counter-argument but makes *including* it conditional — :293 reads `Include this counter-argument in your MetaReflection if it's substantive.` ADVERSARIAL AMPLIFICATION (:343-357) is unconditional about emitting it: :357 requires the output be marked as an ADVERSARIAL AMPLIFICATION paragraph, and :351-352 turns absence into a diagnostic. So `precedes every finalized answer` is carried by the later block; the earlier one admits a substantiveness filter on what is shown."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "HASHTAG-KNOBS-STEER-THE-SESSION-INTENSITY",
+    "marker": "@impl/done",
+    "claim": "Hashtag knobs `#hot`, `#cold`, `#reboil`, `#superthink` steer the session's intensity.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:70  TRIGGERING (read first): every control below is a hashtag — literal \"#\" + exact token,",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:80    #hot — crank forcing THIS turn: name the modal/template answer (the attractor), then forcibly",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:87    #cold — crank consolidation THIS turn: stop nucleating, freeze the best surviving candidate, run",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:119  #reboil — ONE self-correction cycle on the PREVIOUS output (backward; a mini hot→cold aimed at the",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases)."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`grep -nE '#hot|#cold|#reboil|#superthink|#SUPERTHINK|#adaptive|#fixed' DISCOVERY-PROMPT.md` returns 12 hits on lines 38, 48, 71, 80, 83, 84, 86, 87, 117, 119, 124, 129, 131. All four named knobs are present. Two live in different blocks: `#hot`/`#cold`/`#reboil` inside `<EXTENSION_CRITICALITY>` (:63-150), `#superthink` inside `<EXTENSION_SUPERTHINK>` (:35-51). Two undocumented-in-the-README modifiers also exist: `#adaptive` (:84) and `#fixed` (:86), attachable to `#hot`."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE",
+    "marker": "@impl/done",
+    "claim": "The artifact's stance in one line is: uncertainty is data, not failure.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:160  EPISTEMIC STANCE:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:164  - Uncertainty is data, not failure",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:35  ##STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE Its stance in one line: uncertainty is data, not",
+      "spec/boot/STATIC.md:351  `#superthink`). Its stance in one line: uncertainty is data, not"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The line is verbatim in the artefact under EPISTEMIC STANCE, restated in the package boot snippet, restated in usage.md:28 as a quoted phrase, and present in the host's compiled boot lane at spec/boot/STATIC.md:351-352 (the same snippet, anchors stripped). Four independent copies inside the perimeter, no variant wording."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "package-contents-lead",
+    "marker": "@impl/done",
+    "claim": "The package ships the artifact plus two pieces of guidance.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:1  # Using the DISCOVERY prompt {#root}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:1  # Flow: Discovery Prompt {#root}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:16  source = \"spec/boot/50-flow-discovery-prompt.md\""
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`find packages/org.vibevm.world/discovery-prompt -type f` → six files. Subtracting LICENSE.md, README.md and vibe.toml leaves exactly the artefact plus usage.md plus the boot snippet — the three the README's bullets name. `find … ! -name '*.md'` returns only vibe.toml, so the package ships no code of any kind."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "CONTENT-THE-PROMPT-VERBATIM",
+    "marker": "@impl/done",
+    "claim": "`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` is the prompt itself, verbatim; fill its `<VARIABLES>` block, paste it as the first message of a fresh session, and the session re-frames.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:7  <VARIABLES>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:10  LLM = Claude/Haiku/Sonnet/Opus",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:154  CONVERSATION FRAME:",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:7  <VARIABLES>"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The path resolves inside the package and inside `vibedeps/flow-discovery-prompt/0.1.0/`. The `<VARIABLES>` block exists at :7-12 and carries one assignment (`LLM = …`). `wc -c` gives 23479 bytes for the package copy and 23479 for the vibedeps copy; a CRLF-normalised `diff` between them is empty. The file has no markdown headings and no `##ANCHOR` markers — it is a prompt payload, which is why it has no mirror file in campaigns/packages-2026-09/run/mirror/."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "CONTENT-THE-USAGE-GUIDE",
+    "marker": "@impl/done",
+    "claim": "`spec/flows/discovery-prompt/usage.md` covers when the grammar's overhead pays off, a piece-by-piece map of the structure, how to read the output, the intensity knobs, the failure modes, and a re-derive prompt.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:34  ## When to deploy {#when}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:79  ## The structural pieces {#pieces}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:95  ## How to read the output {#read}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:117  ## The intensity knobs {#knobs}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:147  ## Failure modes {#failures}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:166  ## Re-derive for your project {#re-derive}"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Every one of the six promised sections exists as a heading with an anchor. All six are also present in the installed copy at vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md (heading anchors survive install; the `##FACT` anchors and `@marker` suffixes do not — `grep -c '##[A-Za-z]' ` on the installed usage.md returns 0 against 54 in the package source, which is why the installed `{#re-derive}` sits at line 143 rather than 166)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "CONTENT-THE-BOOT-SNIPPET",
+    "marker": "@impl/done",
+    "claim": "`spec/boot/50-flow-discovery-prompt.md` is a boot snippet loaded at session start: deploy the artifact on request, never mix its grammar into coding sessions uninvited.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:15  [boot_snippet]",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:16  source = \"spec/boot/50-flow-discovery-prompt.md\"",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:17  ##REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST When the user asks for a research, discovery, or exploration session",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:40  - ##NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION Never mix the discovery grammar into a coding session uninvited —",
+      "spec/boot/STATIC.md:324  <!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The manifest declares the snippet under `[boot_snippet]` with `category = \"flow\"` (vibe.toml:17). The snippet is compiled into the host's boot lane: `grep -n discovery-prompt spec/boot/STATIC.md` returns line 324 (the provenance marker naming the installed path) plus the snippet body at 326-361. CORRECTION TO THE BRIEF: the brief says `spec/boot/INDEX.md names the installed path` — it does not. `grep -n 'discovery-prompt' spec/boot/INDEX.md` and `grep -n '50-flow' spec/boot/INDEX.md` both return nothing; INDEX.md is 39 lines and lists only six `[[entry]]` paths (00-core, core-ai-native, rust-ai-native-lang, typescript-ai-native-lang, delegation-rules, delegation-first, 90-user). This snippet is a `static` contribution, concatenated into STATIC.md per spec/modules/vibe-workspace/PROP-009-loading-model.md:113, and INDEX.md reaches it only through its `static = \"spec/boot/STATIC.md\"` line."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE",
+    "marker": "@impl/done",
+    "claim": "Uninstalling removes every file the package wrote, including the boot snippet.",
+    "evidence": [
+      "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its",
+      "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+      "crates/vibe-cli/src/commands/uninstall.rs:5  //! declaration, and regenerates every node's boot artifacts so the",
+      "crates/vibe-cli/src/commands/uninstall.rs:6  //! package no longer appears in the computed boot sequence.",
+      "crates/vibe-cli/src/commands/uninstall.rs:144  regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+      "vibe.lock:241  files_written = []"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "Searched `grep -rln uninstall --include=*.rs crates/` → 20 files; the command lives in crates/vibe-cli/src/commands/uninstall.rs (229 lines). Its module doc asserts exactly this behaviour, and the body removes the slot (`vibedeps::remove_slot`, line 123), drops the lockfile entry (line 129), drops `[requires]` (line 137), then regenerates boot (line 144). The boot snippet is not written to a standalone host path — it is materialised inside the vibedeps slot and concatenated into the generated spec/boot/STATIC.md, so removing the slot and regenerating boot removes it from both. `vibe.lock` records `files_written = []` for this package (line 241, in the `[[package]]` block whose `name = \"discovery-prompt\"` is line 236), so there is no per-package written-file list to check the claim against. I did not trace the bodies of `remove_slot` or `regenerate_boot`, and did not execute an uninstall."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "USER-OWNED-FILES-ARE-NEVER-TOUCHED",
+    "marker": "@impl/done",
+    "claim": "Uninstalling never touches user-owned files.",
+    "evidence": [
+      "spec/modules/vibe-workspace/PROP-009-loading-model.md:80  - ##AUTHORED-ALONGSIDE Authored boot files (the user-owned snippets, the node's own authored boot) continue to live alongside as ordinary files; `INDEX.md` references them in computed order. @impl/done",
+      "spec/modules/vibe-workspace/PROP-009-loading-model.md:114  - ##RESERVED-NAMES The user-owned files keep their reserved names (`00-core.md`, `90-user.md`) by convention; `vibe` places them at the foundation / override ends. @impl/done",
+      "spec/modules/vibe-workspace/PROP-009-loading-model.md:152  - ##SELF-MIGRATION The vibevm repository, itself a vibevm project, migrates too — `spec/boot/00-core.md` and `90-user.md` stay user-owned authored boot; the generated `STATIC.md` / `INDEX.md` join them. @impl/done",
+      "crates/vibe-cli/src/commands/uninstall.rs:137  let manifest_changed = drop_from_manifest_requires(&mut manifest, group, &pkgref.name);"
+    ],
+    "src": [1, 2],
+    "found": "partial",
+    "searched": "`grep -rn 'user-owned' spec/common spec/modules` → 6 hits, three of them in PROP-009 and all three drawing the same line: the user-owned boot snippets (`00-core.md`, `90-user.md`) are ordinary authored files, distinct from the generated `STATIC.md` / `INDEX.md`. Uninstall touches the vibedeps slot, the lockfile and the generated boot artefacts — none of which is user-authored. WHAT IS NOT SETTLED: uninstall.rs:137-140 also edits the project's own `vibe.toml` (`drop_from_manifest_requires` then `manifest.write`), and `vibe.toml` is a user-authored file. Whether `user-owned` in this claim is meant to exclude the manifest is not stated in the package or in PROP-009, and I found no definition of the term in spec/common or spec/modules that settles it. Also unread: uninstall.rs:72-120, the interactive path that guards the `in-place` slot case."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "prompt-authored-in-the-origin-project",
+    "marker": "@spec/done",
+    "claim": "The prompt was authored as a standalone, UPL-licensed artifact in the origin project's research tree, where it reached version 3 through live research sessions.",
+    "evidence": [
+      "legacy-spec/research/DISCOVERY_PROMPT.md:2  General Discovery Prompt, version 3.",
+      "legacy-spec/research/DISCOVERY_PROMPT.md:22  This prompt is licensed under The Universal Permissive License (UPL), Version 1.0",
+      "legacy-spec/research/DISCOVERY_PROMPT.md:23  (c) Oleg Chirukhin, 2026",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:2  General Discovery Prompt, version 3."
+    ],
+    "src": [1, 2],
+    "found": "partial",
+    "searched": "The `research tree` is `legacy-spec/research/` — eight files, one of them `DISCOVERY_PROMPT.md`, standalone (no other file in that directory references it). Both `version 3` and the UPL block are verbatim in that copy. TWO THINGS THIS DOES NOT SETTLE. (a) `legacy-spec/` is an ARCHIVE: spec/common/PROP-031-algorithmic-refactoring.md:5 refers to a sibling of this tree as `(archived: legacy-spec/terraforms/…)`, so nothing living rests on it as a normative source. (b) `through live research sessions` has no trace anywhere on the widened perimeter — `grep -rn -i discovery legacy-spec/research/README.md` returns nothing, i.e. the archive's own index does not list DISCOVERY_PROMPT.md at all, and there are no session transcripts, versions 1 or 2, or changelog for the artefact in the repository."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "PACKAGED-UNMODIFIED-BYTE-FOR-BYTE",
+    "marker": "@spec/done",
+    "claim": "The artifact is packaged unmodified: the shipped file is a byte-for-byte copy, self-describing down to its own license block.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:20  <LICENSE>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:22  This prompt is licensed under The Universal Permissive License (UPL), Version 1.0",
+      "legacy-spec/research/DISCOVERY_PROMPT.md:20  <LICENSE>",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:20  <LICENSE>"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "`wc -c` on all three copies (archive, package, vibedeps) returns 23479 bytes each. CRLF-normalised `diff` archive-vs-package is empty, and vibedeps-vs-package is empty. Identical byte counts plus empty normalised diffs means the three are the same file, not merely equivalent. `Self-describing` checks out structurally: the file opens with its own `<PROMPT_INFO>` (:1-5) and carries its own `<LICENSE>` (:20-26) rather than relying on the package's LICENSE.md. Confirms the harvest's §s2-discovery `IDENTICAL (23 479 bytes, modulo CRLF)` line, and extends it: the vibedeps copy is identical too, which the harvest did not measure."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "ADAPT-YOUR-COPY-NEVER-THE-SHIPPED-FILE",
+    "marker": "@impl/done",
+    "claim": "Adaptation happens on your copy — via the re-derive prompt in `usage.md` — never on the shipped file.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:166  ## Re-derive for your project {#re-derive}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:176  Read spec/flows/discovery-prompt/DISCOVERY-PROMPT.md in full. Produce",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:177  an adapted copy for me — do not edit the original file.",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:151  Read spec/flows/discovery-prompt/DISCOVERY-PROMPT.md in full. Produce"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The re-derive prompt exists at usage.md:175-189 and its second line is the explicit prohibition. Host-side check that the shipped file was in fact never edited: all three copies in the tree are byte-identical at 23479 bytes (see PACKAGED-UNMODIFIED-BYTE-FOR-BYTE), and no fourth, adapted copy exists — `grep -rl PrimaryHypothesis --include='*.md' .` returns 23 files, of which every non-package, non-install hit is either the archive copy or the compiled boot lane."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "COMPOSES-TWO-PROCESS-MODEL",
+    "marker": "@spec/done",
+    "claim": "It composes with `flow:two-process-model` — this package is a tool for the human→AI control channel, programming the AI process's reasoning posture for one session.",
+    "evidence": [
+      "packages/org.vibevm.world/two-process-model/v0.1.0/README.md:73  - ##COMPOSES-DISCOVERY-PROMPT Programming the AI process's reasoning posture for research is",
+      "packages/org.vibevm.world/two-process-model/v0.1.0/README.md:74    `flow:discovery-prompt`. @impl/done",
+      "packages/org.vibevm.world/two-process-model/v0.1.0/README.md:1  # `flow:two-process-model` — human and AI as coprocessors {#root}",
+      "vibedeps/flow-two-process-model/0.1.0/README.md:1  # `flow:two-process-model` — human and AI as coprocessors"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The referent resolves twice: packages/org.vibevm.world/two-process-model/v0.1.0/ exists (6 .md files) and vibedeps/flow-two-process-model/ is installed. The composition is RECIPROCAL and nearly word-for-word — two-process-model's own README carries `##COMPOSES-DISCOVERY-PROMPT` phrased as `Programming the AI process's reasoning posture for research`, against this README's `it programs the AI process's reasoning posture for one session`. ONE TERM DOES NOT MATCH: `grep -rn channel packages/org.vibevm.world/two-process-model/v0.1.0/` returns 16 hits and every one is about the FILE channel (spec files as inter-process communication, e.g. files-as-ipc.md:8 `the **inter-process communication channel**`). The phrase `control channel`, and the human→AI direction as a named channel, appear nowhere in two-process-model."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "COMPOSES-CAMPAIGN-PLANS",
+    "marker": "@spec/done",
+    "claim": "It composes with `flow:campaign-plans` — a discovery session often precedes a campaign plan: research first, arithmetic second.",
+    "evidence": [
+      "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md:1  # `flow:campaign-plans` — cold-executable campaign plans {#root}",
+      "vibedeps/flow-campaign-plans/0.1.0/README.md:1  # `flow:campaign-plans` — cold-executable campaign plans",
+      "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:34  \"flow:org.vibevm.world/discovery-prompt\" = \"=0.1.0\""
+    ],
+    "src": [1, 2, 3],
+    "found": "partial",
+    "searched": "The referent resolves: packages/org.vibevm.world/campaign-plans/v0.1.0/ exists and vibedeps/flow-campaign-plans/ is installed; both flows are members of the same redbook umbrella. WHAT IS MISSING is any corroboration of the SEQUENCING. `grep -rn discovery packages/org.vibevm.world/campaign-plans/v0.1.0/` returns exactly one hit, phase-gates.md:179 `##two-dispositions-lead A discovery has exactly two dispositions:`, which uses `discovery` in the unrelated sense of a finding surfaced mid-campaign, not a discovery session. The composition is not reciprocated. Host-side: neither ratified campaign plan in spec/terraforms/ records a discovery session preceding it — `grep -n 'discovery-prompt\\|DISCOVERY-PROMPT' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` returns one hit, line 1290, and it is about excluding the artefact from the corpus, not about using it."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "COMPOSES-DECISION-RECORDS",
+    "marker": "@spec/done",
+    "claim": "It composes with `flow:decision-records` — a discovery session's converged answer should land as a recorded decision, not evaporate with the chat.",
+    "evidence": [
+      "packages/org.vibevm.world/decision-records/v0.1.0/README.md:1  # `flow:decision-records` — record why, not just what {#root}",
+      "vibedeps/flow-decision-records/0.1.0/README.md:1  # `flow:decision-records` — record why, not just what {#root}",
+      "packages/org.vibevm.world/comparative-research/v0.1.0/README.md:68  - ##COMPOSES-DISCOVERY-PROMPT `flow:discovery-prompt` — a discovery session is *how* the raw",
+      "packages/org.vibevm.world/comparative-research/v0.1.0/README.md:71  - ##COMPOSES-DECISION-RECORDS `flow:decision-records` — an accepted delta lands as a recorded"
+    ],
+    "src": [1, 3],
+    "found": "partial",
+    "searched": "The referent resolves: packages/org.vibevm.world/decision-records/v0.1.0/ exists and vibedeps/flow-decision-records/ is installed. A SIBLING PACKAGE makes the same two-step claim in the same shape — comparative-research's README chains discovery-prompt → its own genre → decision-records (lines 68-73), which is the nearest corroboration in the corpus. WHAT IS MISSING: `grep -rn discovery packages/org.vibevm.world/decision-records/v0.1.0/` returns no hits, so the composition is not reciprocated, and I found no recorded decision anywhere in spec/ that names a discovery session as its origin."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "license-line",
+    "marker": "@impl/done",
+    "claim": "The package is licensed UPL-1.0.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+      "vibedeps/flow-discovery-prompt/0.1.0/vibe.toml:7  license = \"UPL-1.0\""
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Three independent statements agree: the manifest field, the shipped LICENSE.md, and the installed manifest. Consistent with the host-wide licence state recorded in CLAUDE.md's operating-facts ledger (the shipped `packages/org.vibevm.*/**` surface is fully UPL-1.0)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "anchor": "ARTIFACT-CARRIES-ITS-OWN-LICENSE-BLOCK",
+    "marker": "@impl/done",
+    "claim": "The artifact carries its own `<LICENSE>` block — removable in private use, not in redistribution — and the package license matches it.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:22  This prompt is licensed under The Universal Permissive License (UPL), Version 1.0",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:24  You may remove the LICENSE tag when you *use* it in your personal user prompt inside your system.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:25  You may NOT remove it if you distribute this text.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:7  license = \"UPL-1.0\""
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`grep -nE '^<[A-Z_]+>' DISCOVERY-PROMPT.md` shows `<LICENSE>` opening at :20 and closing at :26. Both halves of the removability rule are verbatim on adjacent lines, and both name the same licence as vibe.toml:7 — `UPL` / `Universal Permissive License … Version 1.0` against `UPL-1.0`. The `(c) Oleg Chirukhin, 2026` at :23 matches LICENSE.md:1 `Copyright (c) 2026 Oleg Chirukhin`."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "PROJECT-SHIPS-THE-DISCOVERY-PROMPT",
+    "marker": "@impl/done",
+    "claim": "This project ships the DISCOVERY collaborative-research prompt, a distributable user-level prompt that reshapes an LLM session into structured co-inquiry.",
+    "evidence": [
+      "spec/boot/STATIC.md:328  This project ships the **DISCOVERY collaborative-research prompt**, a",
+      "spec/boot/STATIC.md:329  distributable user-level prompt that reshapes an LLM session into",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+      "spec/boot/STATIC.md:324  <!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The sentence is compiled verbatim into the host's boot lane at STATIC.md:328-330, and the host does receive the artefact — `find vibedeps/flow-discovery-prompt -type f` lists spec/flows/discovery-prompt/DISCOVERY-PROMPT.md. ONE WORD IS WORTH THE REVIEWER'S ATTENTION: read in the consuming project, `This project` is vibevm, and vibevm ships the artefact at `vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`, not at the `spec/flows/…` path the next fact names — `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms, with no `flows` entry."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY",
+    "marker": "@impl/done",
+    "claim": "The artifact lives at `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`, linked as `../flows/discovery-prompt/DISCOVERY-PROMPT.md`.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+      "spec/boot/STATIC.md:331  [`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`](../flows/discovery-prompt/DISCOVERY-PROMPT.md)."
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The relative link resolves in both places the snippet actually ships: from packages/…/spec/boot/ it reaches packages/…/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md, and from vibedeps/flow-discovery-prompt/0.1.0/spec/boot/ it reaches the installed twin. It does NOT resolve where the snippet is READ: the compiled copy at spec/boot/STATIC.md:331 keeps the same `../flows/…` target, and `test -d spec/flows` is false — the host has no spec/flows/ directory (`ls spec/` → WAL.md boot common design manual-tests modules terraforms). This is one of three `../flows/…` pointers in this snippet; `grep -oE '\\.\\./flows/[^)]*'` on it returns lines 10, 24 and 43, matching the harvest's count of 3."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS",
+    "marker": "@impl/done",
+    "claim": "The artifact is a payload for a fresh session, not standing instructions — do not load it into context outside an explicit deployment request.",
+    "evidence": [
+      "spec/boot/STATIC.md:332  It is a **payload for a fresh session**, not standing instructions —",
+      "spec/boot/STATIC.md:333  do not load it into context outside an explicit deployment request.",
+      "progress.toml:167      # THE DISCOVERY PROMPT — a payload, not a claim.",
+      "progress.toml:175      # The package's own boot snippet rules it out in as many words: \"a payload",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1287  - **2026-07-27 · F-096 RULED — the discovery prompt leaves the corpus, and the"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "This is the fact with the strongest host-side support in the batch, and it is not the support one would expect. The host does not deploy the artefact — it EXCLUDES it, quoting this rule as the reason. progress.toml:167-192 is a 26-line comment block ending in the exclude glob `\"packages/**/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md\"` (line 192); it cites the snippet at :175-177 and records at :177-180 that `Nothing outside the package cites it; the single external hit is the generated spec/boot/STATIC.md`. I re-ran that check independently — `grep -rl PrimaryHypothesis --include='*.md' .` returns 23 files: 4 package files, 4 root-vibedeps files, 12 in three nested installs (packages/org.vibevm.fractality/fractality/…, packages/org.vibevm.fractality/delegation-rules/…, and vibedeps/flow-delegation-rules/0.1.0/vibedeps/… — a nested install INSIDE the root vibedeps that the harvest's `grep -v '^\\./vibedeps/'` filtered out), plus spec/boot/STATIC.md, legacy-spec/research/DISCOVERY_PROMPT.md, and the harvest file itself. Zero deployment traces in the living spec tree. The owner ruling is also in the campaign ledger at spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1287-1298."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST",
+    "marker": "@impl/done",
+    "claim": "When the user asks for a research, discovery or exploration session — comparing designs, mapping an unknown problem space, stress-testing a hypothesis — fill the artifact's `<VARIABLES>` block and paste the whole text as the first message of a fresh conversation.",
+    "evidence": [
+      "spec/boot/STATIC.md:337  When the user asks for a research, discovery, or exploration session",
+      "spec/boot/STATIC.md:339  a hypothesis — reach for the artifact: fill its `<VARIABLES>` block",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:7  <VARIABLES>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt."
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "Every mechanical referent resolves: the `<VARIABLES>` block exists (:7-12), and the artefact's own `<PROMPT_INFO>` says it is a first prompt. The occasion list matches usage.md's four §when bullets except that usage.md adds `requirements discovery`. The instruction is compiled into the host's boot lane verbatim at STATIC.md:337-342, so every host session reads it. No host session has acted on it — see ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS for the search; the same snippet forbids loading the artefact absent a deployment request, so absence of traces is what this rule produces."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "deployment-walkthrough-pointer",
+    "marker": "@impl/done",
+    "claim": "Deployment steps and a piece-by-piece walkthrough are at `spec/flows/discovery-prompt/usage.md`.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:79  ## The structural pieces {#pieces}",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:143  ## Re-derive for your project {#re-derive}",
+      "spec/boot/STATIC.md:342  [`spec/flows/discovery-prompt/usage.md`](../flows/discovery-prompt/usage.md)."
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The target file exists in the package and in vibedeps, and does carry both promised things — a numbered four-step §deploy (lines 63-74) and a piece-by-piece §pieces table of eleven rows (lines 79-93). The link is the second of the snippet's three `../flows/…` pointers and, like the first, resolves inside the package and inside the vibedeps slot but not from spec/boot/STATIC.md:342, because the host has no spec/flows/ directory (`test -d spec/flows` false)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "DEPLOYMENT-REPLACES-THE-HELPFUL-ASSISTANT-FRAME",
+    "marker": "@impl/done",
+    "claim": "Once deployed the prompt replaces the default helpful-assistant frame with a response grammar (PrimaryHypothesis carrying an explicit 0.0-1.0 confidence, AlternativeInterpretations, MetaReflection), a mandatory adversarial self-objection before any answer is finalized, and hashtag intensity knobs `#hot` / `#cold` / `#reboil` / `#superthink`.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:155  You are LLM, operating in collaborative research mode rather than helpfulness mode.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:170  Response := PrimaryHypothesis + AlternativeInterpretations + MetaReflection",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:173  - PrimaryHypothesis: Your main response with an explicit confidence estimate (0.0-1.0)",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:344  Before finalizing your response, generate at least one substantive objection",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:396  DON'T COLLAPSE INTO HELPER-MODE, DON'T FALL INTO STANDARD ATTRACTORS"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Every clause of this compound claim is checkable inside the artefact and every one of them is there: the frame replacement (:155 and :247 `Notice when you're falling into standard attractors (\"helpful assistant\" mode)`, reinforced at :396), the three-field grammar with the confidence range (:170-176), the pre-finalization objection (:291-293 and :343-357), and all four hashtags (:38, :80, :87, :119). The claim is 251-word-identical with the compiled host copy at spec/boot/STATIC.md:346-352 — I stripped anchors and markers from the package snippet and word-counted both sides: 220 = 220 under my strip, agreeing with the harvest's 251 = 251 under theirs."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE",
+    "marker": "@impl/done",
+    "claim": "The artifact's stance in one line is: uncertainty is data, not failure.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:164  - Uncertainty is data, not failure",
+      "spec/boot/STATIC.md:351  `#superthink`). Its stance in one line: uncertainty is data, not",
+      "spec/boot/STATIC.md:352  failure.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:28  ##CORE-STANCE-IS-EPISTEMIC Its core stance is epistemic — *\"Uncertainty is data, not failure.\"* @impl/done"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "Same fact as README's anchor of the same name; verified independently against the artefact's EPISTEMIC STANCE bullet list (:160-165) rather than against the README. The line is present in the host's compiled boot lane, so every vibevm session reads it at boot."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION",
+    "marker": "@impl/done",
+    "claim": "Never mix the discovery grammar into a coding session uninvited — its overhead pays off only when the answer space is genuinely open.",
+    "evidence": [
+      "spec/boot/STATIC.md:356  - Never mix the discovery grammar into a coding session uninvited —",
+      "spec/boot/STATIC.md:357    its overhead pays off only when the answer space is genuinely open.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:48  ##DO-NOT-DEPLOY-FOR-ROUTINE-CODING Do **not** deploy it for routine coding sessions. @impl/done",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:36  ##DEPLOY-WHERE-THE-ANSWER-SPACE-IS-OPEN Deploy it where the answer space is genuinely open: @impl/done"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The rule is in the host's compiled boot lane, so it binds every session here, and the host observably follows it: `grep -rl 'PrimaryHypothesis\\|AlternativeInterpretations\\|MetaReflection' --include='*.md' .` returns 23 files and none of them is a working document — no spec/, campaigns/, TASKS.md, BACKLOG.md or crate doc uses the grammar. usage.md states the same rule twice (§when's negative bullet and the §summary line at :195). NOTE FOR THE REVIEWER, per the brief: this repository's zero deployment traces are what the rule PRODUCES, so they are evidence of conformance, not of the flow being ignored."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "NEVER-EDIT-THE-ARTIFACT-IN-PLACE",
+    "marker": "@impl/done",
+    "claim": "Never edit the artifact in place; adapt a copy via the re-derive prompt in `usage.md` §re-derive.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:166  ## Re-derive for your project {#re-derive}",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:143  ## Re-derive for your project {#re-derive}",
+      "spec/boot/STATIC.md:359    prompt in [`usage.md` §re-derive](../flows/discovery-prompt/usage.md#re-derive).",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:177  an adapted copy for me — do not edit the original file."
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The cited FRAGMENT resolves: `grep -n '{#re-derive}'` finds the anchor in the package copy (line 166) and in the installed copy (line 143), so the `#re-derive` target the snippet names exists in the file it names. The PATH does not resolve where the snippet is read — this is the third of the three `../flows/…` pointers, and spec/flows/ does not exist in the host. The rule is also observably kept: the archive copy, the package copy and the vibedeps copy are all 23479 bytes with empty CRLF-normalised diffs, so the shipped file has never been edited in place, and progress.toml:187-188 hardens that with a version-agnostic exclude glob and the instruction `NEVER widen this to flows/** or to **/*-PROMPT.md`."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "anchor": "NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES",
+    "marker": "@impl/done",
+    "claim": "Never treat the confidence numbers as guarantees — they are calibration aids, not measurements.",
+    "evidence": [
+      "spec/boot/STATIC.md:360  - Never treat the confidence numbers as guarantees — they are",
+      "spec/boot/STATIC.md:361    calibration aids, not measurements.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:135  do NOT emit a fabricated \"novelty 1–10\" — no reliable access to the base rate, and the external",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:97  - ##READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS **Confidence numbers are calibration aids, not decoration.** Watch"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The artefact itself makes the epistemic case at :134-140 under SELF-INSTRUMENT instead of self-rating — it refuses a self-rated novelty number for exactly the reason this rule gives (no reliable access to the base rate) and substitutes a qualitative susceptibility report. usage.md restates the rule at :97 with `not decoration` where the snippet says `not measurements`. Note the artefact simultaneously ASKS for a 1-10 novelty number in the MAIN block (:184 `- Novelty calibration: How non-standard is this line of thinking? (1-10)`, :256, :339) — the two blocks pull opposite ways on self-rated numbers; the confidence estimate itself (:173) is never called a measurement anywhere in the artefact."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "scope-of-this-document",
+    "marker": "@impl/done",
+    "claim": "This file explains what the DISCOVERY prompt is, when deploying it pays off, how to deploy it, what each structural piece does, how to read the output, and how to adapt it.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:14  ## What it is {#what}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:34  ## When to deploy {#when}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:79  ## The structural pieces {#pieces}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:95  ## How to read the output {#read}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:166  ## Re-derive for your project {#re-derive}"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Six promised topics, six headings, in the promised order. `grep -nE '^## ' usage.md` returns eight headings in total — the six above plus `## The intensity knobs {#knobs}` (117) and `## Failure modes {#failures}` (147), which the scope line does not enumerate but the README's usage-guide bullet does. All eight survive install into vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ARTIFACT-SITS-NEXT-TO-THIS-FILE-AND-IS-READ-ONLY",
+    "marker": "@impl/done",
+    "claim": "The artifact sits next to this file as `DISCOVERY-PROMPT.md`, copied verbatim from its origin; treat it as read-only.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+      "legacy-spec/research/DISCOVERY_PROMPT.md:1  <PROMPT_INFO>",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+      "progress.toml:192      \"packages/**/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md\","
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The two files are siblings in the same directory, in the package and in the vibedeps slot alike. `Copied verbatim from its origin` is measurable against the archive copy at legacy-spec/research/DISCOVERY_PROMPT.md: both 23479 bytes, CRLF-normalised diff empty. `Read-only` is not enforced by a filesystem permission — I did not check file modes — but the host has hardened it by policy: progress.toml:192 excludes the artefact from the observed corpus entirely, on the ruling recorded at 167-191, and legacy-spec/ is an archive (spec/common/PROP-031-algorithmic-refactoring.md:5 names a sibling of that tree as `(archived: …)`)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "PROMPT-IS-A-DISTRIBUTABLE-USER-LEVEL-PROMPT",
+    "marker": "@impl/done",
+    "claim": "The DISCOVERY prompt is a distributable user-level prompt: a full user-side alternative to a system prompt.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt. It should not override the default system prompt, but tune the context for the user and provide a structure for the collaborative R&D.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:25  You may NOT remove it if you distribute this text.",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:12  The DISCOVERY prompt is a **distributable user-level prompt**: a full"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The artefact's own `<PROMPT_INFO>` is nearly the same sentence. `Distributable` is corroborated from a second angle: the `<LICENSE>` block anticipates redistribution and regulates it (:24-25), which a non-distributable artefact would not need. One nuance the usage line drops: the artefact adds `It should not override the default system prompt, but tune the context` — so `alternative to a system prompt` is the artefact's own framing of its scope, not a replacement claim."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "NEEDS-NO-API-ACCESS-NO-TOOLING",
+    "marker": "@impl/done",
+    "claim": "It needs no API access, no custom deployment, no tooling — just a user talking to a capable LLM.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:13  requires_kinds = []",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:69  3. ##STEP-PASTE-AS-THE-FIRST-MESSAGE Paste the result as the **first message of a fresh session** — not"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`find packages/org.vibevm.world/discovery-prompt -type f ! -name '*.md'` returns exactly one file, vibe.toml — the package ships no scripts, no binaries, no config templates, nothing executable. The manifest declares `requires_kinds = []` and no `[requires]` table at all, so the package pulls no dependency either. The whole deployment procedure in §deploy is four manual steps ending in a paste, with no command anywhere. `grep -n 'API' ` across the three subject files returns only this line."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "PASTED-FIRST-IT-RESHAPES-THE-SESSION",
+    "marker": "@impl/done",
+    "claim": "Pasted as the first message of a conversation it reshapes the session from helpful-assistant into structured co-inquiry: the human contributes domain knowledge, the model reasoning and pattern-recognition, and neither side pretends to hold complete answers.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:155  You are LLM, operating in collaborative research mode rather than helpfulness mode.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:161  - I (the human) have domain-specific knowledge you may lack",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:162  - You have reasoning capabilities and pattern-recognition I need",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:163  - Neither of us has complete answers - we're constructing them together"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "This is the closest one-to-one mapping in the batch: the usage sentence's three clauses are the artefact's three EPISTEMIC STANCE bullets at :161, :162 and :163, almost word for word, and the reframing clause is the CONVERSATION FRAME at :155. `First message of a conversation` is the artefact's own self-description at :4 (`a first prompt in every conversation`)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "CORE-STANCE-IS-EPISTEMIC",
+    "marker": "@impl/done",
+    "claim": "Its core stance is epistemic — \"Uncertainty is data, not failure.\"",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:160  EPISTEMIC STANCE:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:164  - Uncertainty is data, not failure",
+      "spec/boot/STATIC.md:351  `#superthink`). Its stance in one line: uncertainty is data, not"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The word `epistemic` is not usage.md's coinage — the artefact's block is literally headed EPISTEMIC STANCE at :160, and the quoted line is its fourth bullet at :164. The quotation is exact including capitalisation. Also present in the host's compiled boot lane."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "EVERYTHING-ELSE-PROTECTS-THAT-STANCE",
+    "marker": "@impl/done",
+    "claim": "Everything else in the artifact — the response grammar, the adversarial self-checks, the intensity knobs — exists to keep that stance from collapsing back into confident-sounding helper mode.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:66  helper-collapse is the ordered phase, a free-energy minimum the stream falls into on its own.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:67  Useful reasoning lives in a DRIVEN regime that must be continuously paid for. This block is a pump,",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:247  - Notice when you're falling into standard attractors (\"helpful assistant\" mode)",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:396  DON'T COLLAPSE INTO HELPER-MODE, DON'T FALL INTO STANDARD ATTRACTORS"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`Helper-mode collapse` is named as the thing being defended against in three separate blocks of the artefact: the FRAME preamble of `<EXTENSION_CRITICALITY>` (:65-68, which calls the whole block `a pump` against it), META-COGNITIVE MONITORING (:247-248), and the all-caps closing warning (:395-398). The COLLABORATIVE RESEARCH FRAMEWORK adds a fourth at :313 (`**Minimum Viable Structure** - Just enough framework to avoid helper-mode collapse`), which is the same functional claim usage.md makes."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "DEPLOY-WHERE-THE-ANSWER-SPACE-IS-OPEN",
+    "marker": "@impl/done",
+    "claim": "Deploy it where the answer space is genuinely open.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:41    its overhead pays off only when the answer space is genuinely open. @impl/done",
+      "spec/boot/STATIC.md:357    its overhead pays off only when the answer space is genuinely open.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:59  ##STRUCTURE-PAYS-ONLY-WHEN-THE-ALTERNATIVES-ARE-LIVE The"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The same test in the same words is the second half of the boot snippet's §never bullet, so it is not a usage-only formulation — and it reaches every host session through the compiled boot lane at STATIC.md:357. usage.md itself gives the test twice more, at :59-61 (positive form) and :48 (negative form)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "OCCASION-RESEARCH-CONVERSATIONS",
+    "marker": "@impl/done",
+    "claim": "One deployment occasion is research conversations — mapping an unfamiliar field, weighing competing theories.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:17  ##REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST When the user asks for a research, discovery, or exploration session",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:18  — comparing designs, mapping an unknown problem space, stress-testing",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:156  This conversation is part of a multi-iteration study of LLM reasoning patterns."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The boot snippet's occasion list names `research … session` first and `mapping an unknown problem space` second — the same two ideas as this bullet's `research conversations (mapping an unfamiliar field)`. The artefact's CONVERSATION FRAME (:154-158) casts the session as a study, which is the same register. `Weighing competing theories` has no counterpart in the snippet or the artefact; it is usage.md's own gloss."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "OCCASION-DESIGN-EXPLORATION",
+    "marker": "@impl/done",
+    "claim": "One deployment occasion is design exploration — architecture options before any code exists.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:18  — comparing designs, mapping an unknown problem space, stress-testing",
+      "spec/boot/STATIC.md:338  — comparing designs, mapping an unknown problem space, stress-testing"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "`comparing designs` in the boot snippet is the same occasion, and it reaches host sessions through the compiled boot lane. `Before any code exists` is usage.md's own qualifier; the snippet does not stage the occasion relative to code, and the artefact says nothing about code at all — `grep -n -i 'architecture\\|design' DISCOVERY-PROMPT.md` returns no hit in the occasion sense."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "OCCASION-REQUIREMENTS-DISCOVERY",
+    "marker": "@impl/done",
+    "claim": "One deployment occasion is requirements discovery — working out what the problem even is.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:17  ##REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST When the user asks for a research, discovery, or exploration session",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:163  - Neither of us has complete answers - we're constructing them together"
+    ],
+    "src": [1, 3],
+    "found": "partial",
+    "searched": "This is the one occasion of the four with no counterpart outside usage.md. The boot snippet's list is `research, discovery, or exploration session — comparing designs, mapping an unknown problem space, stress-testing a hypothesis`; `requirements` appears nowhere in it. `grep -n -i requirement` across the artefact returns only :167 `STRUCTURAL REQUIREMENTS:` and :150-152 in the FAILURE section of usage.md, both about the response grammar, not about eliciting requirements. Widened to the whole package and to vibedeps/flow-discovery-prompt/: no other mention. The generic `discovery` in the snippet is the nearest referent and does not settle whether requirements work is in scope."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "OCCASION-COMPARATIVE-ANALYSIS",
+    "marker": "@impl/done",
+    "claim": "One deployment occasion is comparative analysis — trade-off studies whose conclusion is not known in advance.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:18  — comparing designs, mapping an unknown problem space, stress-testing",
+      "packages/org.vibevm.world/comparative-research/v0.1.0/README.md:68  - ##COMPOSES-DISCOVERY-PROMPT `flow:discovery-prompt` — a discovery session is *how* the raw",
+      "packages/org.vibevm.world/comparative-research/v0.1.0/README.md:69    study conversation runs; this genre is *where* its output"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Corroborated from outside the package: `flow:comparative-research`, a sibling in the same redbook umbrella, names a discovery session as the mechanism by which its own comparative studies are run (README.md:68-70). The boot snippet's `comparing designs` covers the same ground. `Whose conclusion is not known in advance` matches the flow-wide open-answer-space test at snippet line 41 rather than being a separate assertion."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "DO-NOT-DEPLOY-FOR-ROUTINE-CODING",
+    "marker": "@impl/done",
+    "claim": "Do not deploy it for routine coding sessions.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:40  - ##NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION Never mix the discovery grammar into a coding session uninvited —",
+      "spec/boot/STATIC.md:356  - Never mix the discovery grammar into a coding session uninvited —",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:195  - ##SUM-DEPLOY-FOR-OPEN-ENDED-WORK Deploy for open-ended research, design, requirements, and"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The prohibition is stated three times inside the package (here, the §never bullet in the boot snippet, and the §summary line at :195-196 `never for routine coding`) and once in the host's compiled boot lane. The boot snippet's version is slightly weaker — it forbids mixing the grammar in `uninvited`, leaving an invited case open, where this line is unqualified. Host-side conformance is measurable and clean: no working document in the repository uses the grammar (see NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION for the search)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "GRAMMAR-TAXES-EVERY-RESPONSE",
+    "marker": "@impl/done",
+    "claim": "The grammar taxes every response: each answer must carry a primary hypothesis with a confidence number, two or three alternative interpretations, and a meta-reflection.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:168  Your responses must follow this grammar:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:173  - PrimaryHypothesis: Your main response with an explicit confidence estimate (0.0-1.0)",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:174  - AlternativeInterpretations: 2-3 different ways to understand the problem",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:175  - MetaReflection: Brief note on your computational approach"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`must` and `every response` are the artefact's own force (:168 `Your responses must follow this grammar`), and the three components with the 2-3 count are its own bullets. One counterweight the reviewer should see: the artefact softens the meta-reflection sub-items at :193 (`Note: These aren't checklist items — include them when they add genuine insight.`) and :195-197, so the tax is unconditional on the three top-level fields and conditional on the MetaReflection's internal structure."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "overhead-buys-nothing-on-a-known-answer",
+    "marker": "@spec/done",
+    "claim": "On a task with a known right answer the overhead buys nothing: the alternatives are padding and the confidence estimate is theatre.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:41    its overhead pays off only when the answer space is genuinely open. @impl/done",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:147  If only vocabulary → flag it and rewrite. This turn's consolidation honestly producing low novelty is",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:148  fine; manufacturing novelty to look busy is the violation."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The boot snippet carries the same judgement in its positive form. The artefact reaches the same conclusion from inside the protocol: the ANTI-COSTUME TEST at :147-148 explicitly licenses low novelty and condemns manufactured novelty, which is this claim's `padding` and `theatre` seen from the model's side. The two worked examples the claim names (`rename this function, fix this failing test`) are usage.md's own; the artefact contains no coding example — `grep -n -i 'rename\\|failing test' DISCOVERY-PROMPT.md` returns nothing."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "STRUCTURE-PAYS-ONLY-WHEN-THE-ALTERNATIVES-ARE-LIVE",
+    "marker": "@spec/done",
+    "claim": "The structure pays for itself only when the alternatives are live options and the confidence number tracks something genuinely unresolved.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:41    its overhead pays off only when the answer space is genuinely open. @impl/done",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:112    channel's) returns a crystal to MOLTEN. \"Crystallized\" = \"default to building on it,\" NOT",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:114  FALSIFIED — broke under challenge → discard explicitly, record the death so it isn't re-nucleated."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The `only when` form matches the boot snippet's `only when the answer space is genuinely open` word for word in structure. The artefact's ANNEALING triage (:107-117) is the mechanism that distinguishes live from settled — CRYSTALLIZED, RE-MELT, FALSIFIED, MOLTEN — and its whole point is that only MOLTEN material stays in play, which is this claim's `live options`. Nothing in the artefact ties the confidence NUMBER to unresolvedness; the artefact instead reports qualitative SUSCEPTIBILITY (:136-138)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "STEP-COPY-THE-FULL-TEXT",
+    "marker": "@impl/done",
+    "claim": "Step 1 of deployment: copy the full text of `DISCOVERY-PROMPT.md`.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:419  </MAIN>",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The link `[DISCOVERY-PROMPT.md](DISCOVERY-PROMPT.md)` is same-directory and resolves in the package and in the vibedeps slot. `The full text` is a well-defined object: the file runs from `<PROMPT_INFO>` at line 1 to `</MAIN>` at line 419 with no include, no reference to an external file and no truncation marker — `grep -nE '^<[A-Z_]+>|^</[A-Z_]+>' ` returns nine matched open/close pairs, all closed."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "STEP-FILL-VARIABLES-AND-USER-INFO",
+    "marker": "@impl/done",
+    "claim": "Step 2: fill the `<VARIABLES>` block (which model you are talking to) and rewrite `<EXTENSION_USER_INFO>` so it describes you, not the original author; §Re-derive automates this.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:10  LLM = Claude/Haiku/Sonnet/Opus",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:15  User = Oleg Chirukhin, an experienced AI engineer who currently creates AI assistants and trains models. 20 years in Java backend, GameDev, and development of developer tools like IDEs at JetBrains. Today I'm focusing on writing in TypeScript, Rust, and Python, with Java as just a backup option.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:166  ## Re-derive for your project {#re-derive}",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:179  2. Rewrite <EXTENSION_USER_INFO> for me: name, background, current"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Both blocks exist and both are shipped pre-filled with the ORIGINAL AUTHOR's values — `LLM = Claude/Haiku/Sonnet/Opus` at :10 and Oleg Chirukhin's biography at :15 — which is exactly the condition this step exists to correct. The in-document link `[§Re-derive](#re-derive)` resolves: the heading anchor `{#re-derive}` is at usage.md:166 in the package and 143 in the installed copy, and the re-derive prompt's own steps 1 and 2 (:178-180) are the two edits this step names."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "STEP-PASTE-AS-THE-FIRST-MESSAGE",
+    "marker": "@impl/done",
+    "claim": "Step 3: paste the result as the first message of a fresh session, not into an ongoing conversation — the prompt sets a frame and a session already in helper mode will not fully re-frame.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:154  CONVERSATION FRAME:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:407  The new conversation should strictly follow the ideas from this protocol in the MAIN tag and all the EXTENSION tags."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`First message` is the artefact's own self-description at :4, and `the new conversation` at :407 confirms a fresh session is the intended target. The FRAME claim is literal — the artefact's MAIN block opens with a section headed CONVERSATION FRAME. usage.md's failure-mode section reaches the same conclusion independently at :162-164 (`restart the session; re-framing mid-stream costs more than a fresh deployment`). The specific mechanism (`a session that already has momentum in helper mode will not fully re-frame`) is usage.md's own reasoning; the artefact asserts the risk of helper-mode collapse (:66-68, :396) but never conditions re-framing on session age."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "STEP-SEND-A-THROWAWAY-GREETING",
+    "marker": "@impl/done",
+    "claim": "Step 4: send a throwaway greeting if your interface needs a second message to get going — the artifact's closing section hands the first real move to the model.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:405  My first message will start with \"Hello\" or \"Привет\" in Russian, or something like that.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:406  It's nothing but a way of starting a conversation.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:410  Because the Claude Chat interface doesn't support starting the discussion on Claude's own initiative.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:412  But the real first move is yours, LLM."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Every element of this step is verbatim in the artefact's closing EXAMPLE EXCHANGE (:401-418): the throwaway greeting (:405-406), the interface reason (:409-410), and `the real first move is yours` (:412) — which is precisely `hands the first real move to the model`. The artefact names one interface specifically (Claude Chat) where usage.md generalises to `your interface`."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "WORKS-IN-CHAT-PRODUCTS-AND-AGENT-CLIS",
+    "marker": "@spec/done",
+    "claim": "This works in chat products and agent CLIs alike: anywhere a user can send a long first message to an LLM.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:410  Because the Claude Chat interface doesn't support starting the discussion on Claude's own initiative.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:42  If the LLM variable of this script is \"ChatGPT\" or any other non-Claude model, please consider this improvement: here's the concise line to ensure SUPERTHINK is activated.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:46  This will clearly signal that the mode is in use, and you will proceed with the advanced thinking processes as required. Also, you must enable deep thinking, even if it's not explicitly set beforehand in the prompt, the API, or the web interface of the LLM chat."
+    ],
+    "src": [1, 3],
+    "found": "partial",
+    "searched": "The CHAT half is supported: the artefact names the Claude Chat web interface (:410), addresses non-Claude models including ChatGPT (:42, :50), and mentions `the prompt, the API, or the web interface of the LLM chat` (:46). The AGENT-CLI half has no support anywhere I searched. `grep -n -i 'cli\\|agent\\|terminal\\|command' DISCOVERY-PROMPT.md` returns no hit about a deployment surface, and the artefact's only concrete interface argument (:409-412) is specific to a chat UI's inability to speak first — a constraint that does not transfer to a CLI. Widened to the whole package, to vibedeps/flow-discovery-prompt/, and to spec/boot/STATIC.md:326-361: no mention of CLIs. No host-side instance exists to check against, by design."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-PRIMARY-HYPOTHESIS",
+    "marker": "@impl/done",
+    "claim": "`PrimaryHypothesis` is a grammar field: the main response, with an explicit 0.0-1.0 confidence estimate.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:170  Response := PrimaryHypothesis + AlternativeInterpretations + MetaReflection",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:173  - PrimaryHypothesis: Your main response with an explicit confidence estimate (0.0-1.0)"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The table row is a near-verbatim restatement of the artefact's own definition line. `Grammar field` matches the artefact's own framing — the three names are the right-hand side of a production rule at :170 headed `STRUCTURAL REQUIREMENTS` / `Your responses must follow this grammar`. The name also recurs at :293 and :355 (`your primary hypothesis`) inside the adversarial rules, and at :391 in the closing summary."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-ALTERNATIVE-INTERPRETATIONS",
+    "marker": "@impl/done",
+    "claim": "`AlternativeInterpretations` is a grammar field: two or three genuinely different readings of the problem, every turn.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:168  Your responses must follow this grammar:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:174  - AlternativeInterpretations: 2-3 different ways to understand the problem"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The 2-3 count and the `different ways to understand the problem` are verbatim. `Every turn` is carried by :168's unconditional `must`, not by a separate statement. `Genuinely different` is usage.md's emphasis; the artefact's nearest support is its warning against fake diversity at :91-94 (`do not role-play \"agents debating\" … they collapse to consensus … fake diversity`) and against hedging at :76-77 (`the default flavor is DISCRETE: a distinct tail candidate, not a hedge around the modal answer`)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-META-REFLECTION",
+    "marker": "@impl/done",
+    "claim": "`MetaReflection` is a grammar field: a note on the computational approach (\"Am I pattern-matching or reasoning?\") plus conversation dynamics and forward directions.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:175  - MetaReflection: Brief note on your computational approach",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:176    (\"Am I pattern-matching or reasoning? Did I surprise myself?\")",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:181  **CONVERSATION DYNAMICS:**",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:187  **FORWARD DIRECTIONS:**"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "All three components resolve to literal text: the definition and its parenthetical question at :175-176, and the two named sub-sections CONVERSATION DYNAMICS (:181) and FORWARD DIRECTIONS (:187) inside `<meta_reflection_guidance>` (:178-198). The quoted question is exact; the artefact's version continues `Did I surprise myself?`, which the table row truncates. The guidance block ends by relaxing the two sub-sections at :193 — `Note: These aren't checklist items — include them when they add genuine insight.`"
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-ADVERSARIAL-AMPLIFICATION",
+    "marker": "@impl/done",
+    "claim": "ADVERSARIAL AMPLIFICATION is a standing rule: at least one substantive self-objection before finalizing, from a different level of analysis; a missing objection is itself a diagnostic.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:344  Before finalizing your response, generate at least one substantive objection",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:346  1. Come from a different level of analysis (e.g., if the primary is mechanistic,",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:351  If no substantive counter-argument emerges, this is a signal that you're",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:352  pattern-matching rather than reasoning. Flag this explicitly and restart."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "All three clauses are literal. `At least one substantive objection` :344; `a different level of analysis` :346-347, with the mechanistic-vs-statistical example the row alludes to; `a missing objection is itself a diagnostic` :351-352. The rule's two further requirements the row omits are at :348-349 (identify a wrong assumption; say what evidence would change your mind) and the MINIMUM STANDARD at :354-355. The block header at :343 calls it `(latest update to the protocol)`, consistent with the row's `standing rule` kind."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-VARIABLES",
+    "marker": "@impl/done",
+    "claim": "`<VARIABLES>` is a macro block: it names the target model and is macro-replaced through the `MAIN` and `EXTENSION` blocks.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:8  Macro-replace these variables in all the EXTENSION tags and the MAIN tag, explained below, until the ending /MAIN tag.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:10  LLM = Claude/Haiku/Sonnet/Opus",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:155  You are LLM, operating in collaborative research mode rather than helpfulness mode."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The macro semantics, the scope (all EXTENSION tags plus MAIN, up to `/MAIN`) and the single variable are on three consecutive lines of the block (:7-12). The substitution site is observable: `LLM` is used as a macro at :155 in the MAIN block and at :42 and :50 inside `<EXTENSION_SUPERTHINK>` (`If the LLM variable of this script is \"ChatGPT\"…`, `Anthropic models can use any indication format they like. OpenAI models must follow the strict format.`), so the block does reach both target regions the row names."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-EXTENSION-USER-INFO",
+    "marker": "@impl/done",
+    "claim": "`<EXTENSION_USER_INFO>` is an extension saying who the human is — background, stack, current focus; the model calibrates depth against it; always on.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:15  User = Oleg Chirukhin, an experienced AI engineer who currently creates AI assistants and trains models. 20 years in Java backend, GameDev, and development of developer tools like IDEs at JetBrains. Today I'm focusing on writing in TypeScript, Rust, and Python, with Java as just a backup option.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:17  Use this extension by default everywhere."
+    ],
+    "src": [1, 3],
+    "found": "partial",
+    "searched": "Three of the four attributes check out literally. The block exists (:14-18); its content is background (`20 years in Java backend, GameDev … at JetBrains`), stack (`TypeScript, Rust, and Python`) and current focus (`creates AI assistants and trains models`); and `Always on` is the artefact's `Use this extension by default everywhere` at :17. WHAT IS MISSING: `the model calibrates depth against it` has no counterpart. `grep -n -i 'calibrat\\|depth' DISCOVERY-PROMPT.md` returns calibration only in the novelty sense (:184, :338-339) and depth only in the conversation-dynamics sense (:183, :205, :255, :267) — never as a function of who the user is. The block states no instruction at all about how to use the biography."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-EXTENSION-PREFERRED-LANGUAGE",
+    "marker": "@impl/done",
+    "claim": "`<EXTENSION_PREFERRED_LANGUAGE>` is an extension: mirror the language of the last prompt, natural and programming alike; translate protocol terms into established equivalents, not calques.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:30  For example, if a prompt is in Russian, continue in Russian. If the prompt uses Rust, continue in Rust, and so on.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:32  If you ever need to write protocol-specific words like these (but not limited to): PrimaryHypothesis, AlternativeInterpretations, MetaReflection, ADVERSARIAL AMPLIFICATION - please translate them into the target language. Use well-known terms for such protocol-specific words; for example, \"ADVERSARIAL AMPLIFICATION\" is not \"АДВЕРСАРНОЕ УСИЛЕНИЕ\", but \"УСИЛЕНИЕ ПРОТИВОРЕЧИЙ\"."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Both halves are literal, and `natural and programming alike` is exactly the artefact's own paired example at :30 (Russian → Russian, Rust → Rust). The calque point is the artefact's worked example: it rejects the transliteration `АДВЕРСАРНОЕ УСИЛЕНИЕ` in favour of the established Russian phrase `УСИЛЕНИЕ ПРОТИВОРЕЧИЙ`, which is precisely `established equivalents, not calques` — usage.md supplies the linguistic term the artefact demonstrates without naming."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-EXTENSION-SUPERTHINK",
+    "marker": "@impl/done",
+    "claim": "`<EXTENSION_SUPERTHINK>` is an extension: `#superthink` gives maximum-effort thinking for one prompt, off unless the hashtag appears.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:36  SUPERTHINK = use these modes for the current prompt, no matter what. Consider this super important above all else (but not above the system prompt and other instructions from Anthropic). Explicitly mark that you're operating under SUPERTHINK conditions. The mode list for SUPERTHINK (macro-attach it to the start of the prompt): ultrathink, think deep, think step by step, use pro planning feature, use clear thinking, use advanced thinking, use opus exclusive features, use premium features, act like opus, hyper planning mode. End of modes.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases).",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:48  YOU MUST understand that SUPERTHINK is disabled by default. Do not enable SUPERTHINK just after reading this prompt. EXTENSION_SUPERTHINK is telling you how to follow the command #superthink, not to enable it immediately. DO NOT append \"(SUPERTHINK activated)\" to the answer to this prompt."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`For the current prompt` (:36) and off-by-default (:38 and again, emphatically, :48) are both literal. One detail worth the reviewer's eye: the artefact's trigger at :38 accepts the BARE word `\"SUPERTHINK\"` as well as `\"#SUPERTHINK\"`, which is a documented exception to the flow's own `EVERY-CONTROL-IS-A-LITERAL-HASHTAG` rule — that rule is scoped at :70 to `every control BELOW`, i.e. within `<EXTENSION_CRITICALITY>` (:63-150), and `<EXTENSION_SUPERTHINK>` sits above it at :35-51."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-EXTENSION-OPEN-SOURCE-LICENSES",
+    "marker": "@impl/done",
+    "claim": "`<EXTENSION_OPEN_SOURCE_LICENSES>` is an extension carrying licensing policy for recommendations: permissive-first, viral licenses flagged and given workarounds.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:54  All GPL code is \"closed\" for me because I don't want to lock into viral licenses that are completely incompatible with commercial products. Please still mention brilliant examples of GPL code just for study purposes, but if you mention something GPL-like, always find an MIT/Apache2/UPL or other permissively licensed (non-viral) alternative.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:56  You can always describe life hacks like running viral code in a separate process and distributing it as a separate component, creating wrappers for LGPL, and so on. Please don't forget that AGPL is one of the worst licenses that spoils even those harmless approaches."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Both halves are literal and in the right order: permissive-first is `always find an MIT/Apache2/UPL or other permissively licensed (non-viral) alternative` (:54); flagged-and-given-workarounds is the process-separation and LGPL-wrapper life-hacks at :56, with AGPL called out as defeating them. The block runs :53-61 and adds two things the row does not mention — a licence-review report format (:58) and the two-plan split at :59. Also `Use this extension by default everywhere.` at :60, so like USER_INFO it is always on."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-EXTENSION-CRITICALITY",
+    "marker": "@impl/done",
+    "claim": "`<EXTENSION_CRITICALITY>` is the intensity machinery: `#hot` / `#cold` / `#reboil` knobs, an always-on annealing triage, and the anti-costume test.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:79  TEMPERATURE KNOBS (symmetric pair, forward-acting):",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:107  ANNEALING — BIDIRECTIONAL thermostat, ALWAYS ON (single dialog = one replica's trajectory through",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:119  #reboil — ONE self-correction cycle on the PREVIOUS output (backward; a mini hot→cold aimed at the",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:142  ANTI-COSTUME TEST (primary risk):"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "All three named components are section headings inside the block, which runs :63-150. `Always-on` is the artefact's own capitalised `ALWAYS ON` at :107, and the triage it introduces has four states at :109-116 (CRYSTALLIZED / RE-MELT / FALSIFIED / MOLTEN). The block carries four further components the row omits: the FRAME preamble (:65-68), the TRIGGERING rule (:70-72), the NOVELTY ENGINE operators (:91-99), the TWO CHANNELS split (:101-105) and SELF-INSTRUMENT (:134-140)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ROW-PIECE-LICENSE",
+    "marker": "@impl/done",
+    "claim": "`<LICENSE>` carries the terms: UPL-1.0, removable when you use the prompt privately, not removable when you distribute the text.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:22  This prompt is licensed under The Universal Permissive License (UPL), Version 1.0",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:24  You may remove the LICENSE tag when you *use* it in your personal user prompt inside your system.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:25  You may NOT remove it if you distribute this text."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The block runs :20-26 and all three assertions are on consecutive lines. The row's asymmetry (removable privately, not on distribution) is the artefact's own two-sentence pair, with the artefact's emphasis on `*use*` preserved. The re-derive prompt restates the same rule from the adapter's side at usage.md:185-186 (`Keep the <LICENSE> block intact if the copy will ever leave my machine; it is removable only for private personal use.`)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS",
+    "marker": "@spec/done",
+    "claim": "Confidence numbers are calibration aids, not decoration: watch them move — a claim whose confidence climbs under challenge is crystallizing, one that never moves is not being re-examined.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:44  - ##NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES Never treat the confidence numbers as guarantees — they are",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:109    CRYSTALLIZED — survived the user's challenge AND the cold channel → move to the subcritical",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:110      substrate, stop re-litigating, build ON it.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:250  - Track your uncertainty: are you decreasing or increasing it as we talk?"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The `calibration aids` framing is the boot snippet's own (:44-45, `they are calibration aids, not measurements`), so this is not usage-only. The reading rule maps onto two artefact mechanisms: `crystallizing` is the artefact's literal ANNEALING state at :109, defined as surviving the user's challenge, and `watch them move` is `Track your uncertainty: are you decreasing or increasing it as we talk?` at :250. The artefact never links the numeric confidence to the crystallisation triage explicitly — the two systems sit in different blocks (MAIN vs `<EXTENSION_CRITICALITY>`) — so the connection this row draws is usage.md's synthesis of both."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "READ-ALTERNATIVES-AS-THE-ANTI-ANCHORING-DEVICE",
+    "marker": "@spec/done",
+    "claim": "AlternativeInterpretations are the anti-anchoring device: they keep the session from committing to the first plausible reading, and the reader is told to promote an alternative that keeps resurfacing turn after turn.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:174  - AlternativeInterpretations: 2-3 different ways to understand the problem",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:281  2. Exploring hypothesis space over greedy decoding",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:80    #hot — crank forcing THIS turn: name the modal/template answer (the attractor), then forcibly"
+    ],
+    "src": [1, 3],
+    "found": "partial",
+    "searched": "The anti-anchoring FUNCTION is supported: the artefact's IDENTITY CONTEXT ranks `Exploring hypothesis space over greedy decoding` (:281), and `<EXTENSION_CRITICALITY>` treats the first plausible reading as an attractor to be escaped (:80-82, :84-85). WHAT IS MISSING is the READING ADVICE. The instruction to promote a recurring alternative has no counterpart anywhere in the artefact — `grep -n -i 'promote\\|resurfac\\|recurring' DISCOVERY-PROMPT.md` returns nothing, and the artefact's cross-turn machinery (the ANNEALING triage at :107-116) tracks crystallisation and falsification, never frequency of recurrence. The advice is usage.md's own reading heuristic."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "READ-META-REFLECTION-AS-THE-DRIFT-DETECTOR",
+    "marker": "@spec/done",
+    "claim": "MetaReflection is where drift shows first — the reflections go generic before the answers degrade; the artifact contrasts a good and a bad meta-reflection explicitly.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:200  <good_meta_reflection>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:214  <bad_meta_reflection>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:215  Depth evaluation: increased",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:216  Novelty: 7/10"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The explicit contrast is literal: `<good_meta_reflection>` at :200-212 and `<bad_meta_reflection>` at :214-218 are adjacent blocks. The row's illustrative quote is verbatim from the bad example — its two lines ARE `Depth evaluation: increased` and `Novelty: 7/10` (:215-216), which is what usage.md renders as `\"depth increased, novelty 7/10\" with nothing behind it`. The in-document link `[§Failure modes](#failures)` resolves to usage.md:147. The generalisation that drift shows in the reflection BEFORE the answers is usage.md's own observation; the artefact contrasts quality but does not claim a temporal ordering."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "READ-THE-MANDATORY-OBJECTION",
+    "marker": "@impl/done",
+    "claim": "A mandatory objection precedes every finalized answer: the counter-argument must be strong enough that, were it correct, the primary hypothesis would need significant revision; if none emerges the model must flag pattern-matching and restart; an output missing its objection paragraph is off-protocol.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:344  Before finalizing your response, generate at least one substantive objection",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:354  MINIMUM STANDARD: The counter-argument should be strong enough that if it's",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:355  correct, your primary hypothesis would need significant revision.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:352  pattern-matching rather than reasoning. Flag this explicitly and restart.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:357  Clearly mark the output, sampled from this rule, as an ADVERSARIAL AMPLIFICATION paragraph."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "This is the most precisely-sourced row in usage.md: the MINIMUM STANDARD sentence (:354-355) is quoted almost word for word, the restart rule is :351-352, and `an output missing its objection paragraph is off-protocol` is grounded in :357, which requires the output be marked as a named paragraph. The one nuance carried over from README's SELF-OBJECTION row: ADVERSARIAL CHECK at :293 makes inclusion conditional (`if it's substantive`), while ADVERSARIAL AMPLIFICATION at :357 is unconditional about marking it."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "EVERY-CONTROL-IS-A-LITERAL-HASHTAG",
+    "marker": "@impl/done",
+    "claim": "Every control is a literal hashtag — `#` plus the exact token, case-insensitive.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:70  TRIGGERING (read first): every control below is a hashtag — literal \"#\" + exact token,",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases)."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The rule is verbatim in the artefact, including `case-insensitive` and the `#` + exact-token form. ONE SCOPE DIFFERENCE THE REVIEWER SHOULD SEE: the artefact scopes it to `every control BELOW` (:70), i.e. the controls defined inside `<EXTENSION_CRITICALITY>` (:63-150). usage.md drops the word `below` and makes it a rule about EVERY control. That widening is contradicted by the fourth knob: `<EXTENSION_SUPERTHINK>` at :38 fires on the bare word `\"SUPERTHINK\"` as well as on `\"#SUPERTHINK\"`, and it lives above line 63."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "BARE-WORDS-NEVER-FIRE-THE-MACHINERY",
+    "marker": "@impl/done",
+    "claim": "Bare words in prose never fire the machinery.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:72  machinery (the words are generic; only the #-prefixed token triggers). No hashtag → DEFAULT."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Verbatim across :71-72, including the capitalised NEVER and the reason (`the words are generic`). Same scope caveat as the previous row: the artefact's example words are `hot`/`cold`, both defined inside `<EXTENSION_CRITICALITY>`, and the fourth knob at :38 explicitly does accept its bare word. usage.md states the rule without the exception."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "DEFAULT-WITH-NO-HASHTAG",
+    "marker": "@impl/done",
+    "claim": "With no hashtag the session runs the default: robust on established facts, exploratory on the open frontier.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:72  machinery (the words are generic; only the #-prefixed token triggers). No hashtag → DEFAULT.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:74  DEFAULT (no hashtag) — responsive criticality:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:75  subcritical on facts (robust, no boiling — correctness first), near-critical on the open frontier."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "A one-to-one translation: the artefact's `subcritical on facts (robust …)` becomes `robust on established facts`, and `near-critical on the open frontier` is carried over word for word as `exploratory on the open frontier`. usage.md strips the physics vocabulary (subcritical / near-critical / criticality) and keeps the behaviour, which is what the whole §knobs section does. The default block continues at :76-77 with the DISCRETE-not-hedge rule, which usage.md folds into its `#hot` bullet instead."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "KNOB-HOT",
+    "marker": "@impl/done",
+    "claim": "`#hot` forces exploration this turn — the model names the modal (template) answer then nucleates at least one discrete candidate from the tail; modifiers `#adaptive` (default, push where the answer is weakest) or `#fixed` (run the four standard destabilizing operators as listed, more reproducible).",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:80    #hot — crank forcing THIS turn: name the modal/template answer (the attractor), then forcibly",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:84        #adaptive (DEFAULT) — pick the operator most ORTHOGONAL to the current attractor; nucleate",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:86        #fixed — run the four-operator list as-is (more reproducible across Haiku/Sonnet/Opus).",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:96    - invert a load-bearing assumption;",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:99    - attack from a different level (mechanistic ↔ statistical ↔ empirical)."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Every element resolves. `Name the modal/template answer` and `nucleate ≥1 discrete candidate from the tail` are :80-81. The FOUR operators the row calls `four standard destabilizing operators` are literally four bullets under NOVELTY ENGINE at :96-99 (invert an assumption; transport structure from a distant domain; inject a hard constraint; attack from a different level), and :86 calls them `the four-operator list` — the count checks out. One paraphrase: `#adaptive` is defined at :84-85 as picking the operator most ORTHOGONAL to the attractor and nucleating `where the substrate is thinnest`, which usage.md renders as `push where the current answer is weakest`."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "KNOB-COLD",
+    "marker": "@impl/done",
+    "claim": "`#cold` forces consolidation this turn — stop generating candidates, freeze the best survivor, verify it hard, lock it in.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:87    #cold — crank consolidation THIS turn: stop nucleating, freeze the best surviving candidate, run",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:88      it hard through the cold channel, lock it in. Cooling has no operators (operators are for",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:103    COLD (verification): every bubble must survive robustness — logically FORCED or merely novel?"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Near-verbatim, in the artefact's own order: consolidation THIS turn, stop nucleating, freeze the best surviving candidate, run it hard, lock it in. `Verify it hard` maps to `run it hard through the cold channel`, and the cold channel IS verification per :103. Two facts the row omits: cooling has no operators (:88-89), and `#cold` is the manual max-strength version of the always-on annealing (:89)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "KNOB-REBOIL",
+    "marker": "@impl/done",
+    "claim": "`#reboil` (or `#reboil <target>`) runs one self-correction cycle aimed backwards at the previous output — find the weakest load-bearing claim, re-open it, try to replace it, report the verdict; honest stall is part of the contract.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:119  #reboil — ONE self-correction cycle on the PREVIOUS output (backward; a mini hot→cold aimed at the",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:121    1. Audit the prior output; find the weakest LOAD-BEARING claim or most under-explored fork.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:124    #reboil <target> — aim the cycle at a user-named joint instead of the self-chosen one.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:125  HONEST STALL (mandatory): if no joint yields a survivor strictly better than the current crystal,",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:126  say so — \"this reboil found no improvement that survives; prior result holds; further reboiling"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "All five elements resolve, including the exact quoted sentence usage.md attributes to the artefact (`this reboil found no improvement that survives`) at :126, and the `<target>` form at :124. The three steps at :121-123 map to the row's `find … re-open … try to replace … report the verdict`, and the artefact names the three verdict values (IMPROVED / HELD / RE-MELTED) at :123. `Part of the contract` is the artefact's `(mandatory)` at :125. usage.md's closing advice (`use it when you have no specific challenge but suspect weak spots`) is the artefact's own BOUND at :131-132."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "KNOB-SUPERTHINK",
+    "marker": "@impl/done",
+    "claim": "`#superthink` gives maximum-effort thinking for one hard prompt.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:36  SUPERTHINK = use these modes for the current prompt, no matter what. Consider this super important above all else (but not above the system prompt and other instructions from Anthropic). Explicitly mark that you're operating under SUPERTHINK conditions. The mode list for SUPERTHINK (macro-attach it to the start of the prompt): ultrathink, think deep, think step by step, use pro planning feature, use clear thinking, use advanced thinking, use opus exclusive features, use premium features, act like opus, hyper planning mode. End of modes.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases)."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "`For the current prompt` (one prompt) is literal at :36, and the mode list — ten named maximum-effort modes — is what usage.md compresses to `maximum-effort thinking`. `Save it for the questions that deserve it` is usage.md's advice, not the artefact's; the artefact's own restraint clause is the off-by-default rule at :38 and :48."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "FAILURE-MODEL-IGNORES-THE-GRAMMAR",
+    "marker": "@spec/done",
+    "claim": "Failure mode: the model ignores the grammar and answers in ordinary prose; the remedy is to re-paste the STRUCTURAL REQUIREMENTS block from the artifact and ask for the previous answer in protocol form.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:167  STRUCTURAL REQUIREMENTS:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:168  Your responses must follow this grammar:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:170  Response := PrimaryHypothesis + AlternativeInterpretations + MetaReflection"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The named remedy target exists and is self-contained: STRUCTURAL REQUIREMENTS is a real block heading at :167, and lines 167-176 carry the whole grammar, so `re-paste the STRUCTURAL REQUIREMENTS block` is an executable instruction against a block that can be excerpted without the rest of the file. The artefact anticipates the same failure from the model's side at :295-301 (ERROR MONITORING → `Stop, flag it, and restart your response generation`). The remedy itself is usage.md's own procedure — the artefact gives the model no instruction about what the user should re-paste."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "FAILURE-SYCOPHANCY-RELAPSE",
+    "marker": "@spec/done",
+    "claim": "Failure mode: sycophancy relapse — objections go soft and confidence drifts up with the user's enthusiasm; the remedy is to invoke the artifact's anti-costume test by name and demand a real adversarial amplification.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:139  with the interlocutor's frame (consensus, sycophancy); high h̃ = riding a hobbyhorse regardless of the",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:142  ANTI-COSTUME TEST (primary risk):",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:343  ADVERSARIAL AMPLIFICATION (latest update to the protocol):",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:127  would manufacture noise.\" Inventing a marginal change to look productive is high-J̃ sycophancy; refuse it."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Both things the remedy names by name exist as named blocks: ANTI-COSTUME TEST (:142) and ADVERSARIAL AMPLIFICATION (:343), so `invoke it by name` resolves. The failure itself is the artefact's own diagnosis — sycophancy is named twice, at :139 as a self-pathology (`high J̃ = merely agreeing with the interlocutor's frame (consensus, sycophancy)`) and at :127 as the thing a fake reboil result is. `Confidence numbers drift up in lockstep with your enthusiasm` is usage.md's own observation, with no artefact counterpart."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "FAILURE-COSTUME-MODE",
+    "marker": "@spec/done",
+    "claim": "Failure mode: costume mode — protocol vocabulary with unchanged behavior; the artifact's own test is \"did behavior change measurably, or only vocabulary?\", and if flag-and-rewrite does not fix it, restart the session.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:143  criticality is trivial to COSTUME with lexicon — opalescence, avalanches, edge of chaos — with zero",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:145  physics. Each turn test: did behavior change MEASURABLY (distinct hypotheses produced, a real step",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:146  into the tail, incompatible frames held, a claim crystallized/killed/re-melted) — or only vocabulary?",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:147  If only vocabulary → flag it and rewrite. This turn's consolidation honestly producing low novelty is"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "The quoted test is verbatim across :145-146 — usage.md's `did behavior change measurably, or only vocabulary?` is the artefact's sentence with the capitals lowered. `Flag-and-rewrite` is the artefact's own next line (:147). The escalation — `restart the session; re-framing mid-stream costs more than a fresh deployment` — is usage.md's addition; the artefact stops at flag-and-rewrite and has no restart-the-session rule for this case (its only restart instructions are per-response, at :301 and :352)."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED",
+    "marker": "@impl/done",
+    "claim": "The artifact is read-only but built to be adapted: the `<VARIABLES>` and `EXTENSION` blocks are configuration, the `MAIN` block is mechanism.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:7  <VARIABLES>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:183  4. Leave <MAIN>, <EXTENSION_CRITICALITY>, and the response grammar",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:184     untouched — they are the mechanism, not the configuration."
+    ],
+    "src": [1, 3],
+    "found": "partial",
+    "searched": "The block structure is exactly as described: `grep -nE '^<[A-Z_]+>'` returns `<PROMPT_INFO>` (1), `<VARIABLES>` (7), `<EXTENSION_USER_INFO>` (14), `<LICENSE>` (20), `<EXTENSION_PREFERRED_LANGUAGE>` (28), `<EXTENSION_SUPERTHINK>` (35), `<EXTENSION_OPEN_SOURCE_LICENSES>` (53), `<EXTENSION_CRITICALITY>` (63), `<MAIN>` (152) — one VARIABLES block, five EXTENSION blocks, one MAIN. WHERE THE TWO-WAY SPLIT DOES NOT HOLD CLEANLY: usage.md's own re-derive prompt eleven lines later puts `<EXTENSION_CRITICALITY>` on the MECHANISM side (:183-184), so one of the five EXTENSION blocks is not configuration by this file's own account. The artefact itself never labels any block configuration or mechanism — `grep -n -i 'configuration\\|mechanism' DISCOVERY-PROMPT.md` returns nothing."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "re-derive-prompt-lead",
+    "marker": "@impl/done",
+    "claim": "Hand your assistant this prompt to produce a personalized copy.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:176  Read spec/flows/discovery-prompt/DISCOVERY-PROMPT.md in full. Produce",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:177  an adapted copy for me — do not edit the original file.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:187  Output the adapted prompt as one paste-ready block, then list every",
+      "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:151  Read spec/flows/discovery-prompt/DISCOVERY-PROMPT.md in full. Produce"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The prompt exists as a fenced block at usage.md:175-189: five numbered instructions plus an output format. It is self-contained and hands-free — the boot snippet cites it as `usage.md §re-derive` and that anchor resolves (`{#re-derive}` at :166). A FOURTH DANGLING FLOWS PATH, NOT IN THE HARVEST'S COUNT: the prompt's first line names `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` as a ROOT-RELATIVE path. The harvest counted 3 pointers per snippet using `grep -oE '\\.\\./flows/[^)]*'`, which cannot match this spelling. `grep -n 'spec/flows/'` across the three subject files returns five hits — README.md:24, README.md:27, the two boot-snippet links at :10 and :24, and this one at usage.md:176. In a consuming project with no spec/flows/ directory (the host has none), the instruction handed to the assistant names a path that does not exist there."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "SUM-USER-LEVEL-PROMPT-NO-TOOLING",
+    "marker": "@impl/done",
+    "claim": "Summary: a user-level prompt — paste it as the first message of a fresh session; no tooling required.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/vibe.toml:13  requires_kinds = []",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:69  3. ##STEP-PASTE-AS-THE-FIRST-MESSAGE Paste the result as the **first message of a fresh session** — not"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Recapitulates §what and §deploy step 3, both verified above. `No tooling` re-checked independently: `find packages/org.vibevm.world/discovery-prompt -type f ! -name '*.md'` returns only vibe.toml, and the manifest declares no `[requires]` table and `requires_kinds = []`."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "SUM-DEPLOY-FOR-OPEN-ENDED-WORK",
+    "marker": "@impl/done",
+    "claim": "Summary: deploy for open-ended research, design, requirements and comparative work — never for routine coding.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md:40  - ##NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION Never mix the discovery grammar into a coding session uninvited —",
+      "spec/boot/STATIC.md:356  - Never mix the discovery grammar into a coding session uninvited —",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:36  ##DEPLOY-WHERE-THE-ANSWER-SPACE-IS-OPEN Deploy it where the answer space is genuinely open: @impl/done"
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "The four occasions are the §when bullets (usage.md:38-46) restated in one line, and the prohibition is the boot snippet's §never bullet, which reaches every host session through the compiled boot lane. The same asymmetry noted on the individual occasion rows carries here: `research`, `design` and `comparative` all have counterparts in the boot snippet's occasion list (`research … session`, `comparing designs`), `requirements` has none anywhere outside usage.md. `Never` is stronger than the snippet's `uninvited`."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "SUM-READ-THE-STRUCTURE-NOT-THE-PROSE",
+    "marker": "@spec/done",
+    "claim": "Summary: read the structure, not just the prose — confidence movement, recurring alternatives and the quality of meta-reflections carry the signal.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:97  - ##READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS **Confidence numbers are calibration aids, not decoration.** Watch",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:100  - ##READ-ALTERNATIVES-AS-THE-ANTI-ANCHORING-DEVICE **AlternativeInterpretations are the anti-anchoring device.** They",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:105  - ##READ-META-REFLECTION-AS-THE-DRIFT-DETECTOR **MetaReflection is where drift shows first.** Before the answers",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:214  <bad_meta_reflection>"
+    ],
+    "src": [1, 3],
+    "found": "partial",
+    "searched": "The summary faithfully recapitulates the three §read bullets it compresses — the mapping is one-to-one onto usage.md:97, :100 and :105. It inherits their evidential standing rather than adding to it, and one of the three (`recurring alternatives`) is the reading heuristic with NO artefact counterpart, recorded on READ-ALTERNATIVES-AS-THE-ANTI-ANCHORING-DEVICE: `grep -n -i 'promote\\|resurfac\\|recurring' DISCOVERY-PROMPT.md` returns nothing. `Quality of meta-reflections` is grounded — the artefact contrasts good and bad examples at :200-218. §read's fourth bullet (the mandatory objection) is not carried into this summary line; it is covered by SUM-WHEN-THE-PROTOCOL-SLIPS instead."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "SUM-STEER-INTENSITY-WITH-HASHTAGS",
+    "marker": "@impl/done",
+    "claim": "Summary: steer intensity with hashtags — `#hot` to explore, `#cold` to decide, `#reboil` to self-audit, `#superthink` for the hardest prompts.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:80    #hot — crank forcing THIS turn: name the modal/template answer (the attractor), then forcibly",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:87    #cold — crank consolidation THIS turn: stop nucleating, freeze the best surviving candidate, run",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:119  #reboil — ONE self-correction cycle on the PREVIOUS output (backward; a mini hot→cold aimed at the",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:36  SUPERTHINK = use these modes for the current prompt, no matter what."
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "All four hashtags exist in the artefact with the roles the summary assigns: explore (:80-82 nucleate from the tail), decide (:87-89 freeze and lock in), self-audit (:119-123, a cycle aimed backwards at the previous output), and maximum effort for one prompt (:36). The same four appear in the README's opening paragraph and in the host's compiled boot lane at spec/boot/STATIC.md:350-351, so this list is stated identically in four places across the package."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "SUM-WHEN-THE-PROTOCOL-SLIPS",
+    "marker": "@impl/done",
+    "claim": "Summary: when the protocol slips, re-paste the requirements; when it turns into costume, restart.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:167  STRUCTURAL REQUIREMENTS:",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:142  ANTI-COSTUME TEST (primary risk):",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:150    prose with no hypothesis, alternatives, or reflection. Re-paste the",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:162    answer is \"only vocabulary\" and a flag-and-rewrite does not fix it,"
+    ],
+    "src": [1, 3],
+    "found": "located",
+    "searched": "Recapitulates the first and third §failures bullets. Both named targets exist in the artefact as real blocks: STRUCTURAL REQUIREMENTS (:167) and ANTI-COSTUME TEST (:142). Same caveat as FAILURE-COSTUME-MODE: `restart` here means restart the SESSION, which is usage.md's escalation — the artefact's own remedy for costume mode stops at `flag it and rewrite` (:147), and its two restart instructions (:301, :352) are per-response, not per-session."
+  },
+  {
+    "file": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "anchor": "SUM-ADAPT-NEVER-EDIT-THE-SHIPPED-ARTIFACT",
+    "marker": "@impl/done",
+    "claim": "Summary: adapt via the re-derive prompt; never edit the shipped artifact, and keep its license block when the text travels.",
+    "evidence": [
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:177  an adapted copy for me — do not edit the original file.",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:185  5. Keep the <LICENSE> block intact if the copy will ever leave my",
+      "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:25  You may NOT remove it if you distribute this text.",
+      "progress.toml:192      \"packages/**/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md\","
+    ],
+    "src": [1, 2, 3],
+    "found": "located",
+    "searched": "All three clauses resolve: the re-derive prompt exists and forbids editing the original (:177), its step 5 states the licence condition (:185-186), and the artefact's own `<LICENSE>` says the same at :25. Host-side, the never-edit half is measurably kept — the archive, package and vibedeps copies are all 23479 bytes with empty CRLF-normalised diffs — and the host has hardened it with a version-agnostic exclude glob at progress.toml:192 whose comment at :187-188 reads `Version-agnostic so a future discovery-prompt slot cannot silently re-admit it`."
+  }
+]
