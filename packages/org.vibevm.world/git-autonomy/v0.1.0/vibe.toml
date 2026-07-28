@@ -13,7 +13,7 @@ min_vibe_version = "0.1.0"
 requires_kinds = []
 
 [boot_snippet]
-source = "boot/32-flow-autonomy.md"
+source = "spec/boot/32-flow-autonomy.md"
 category = "flow"
 # A non-negotiable commit rule — suggest the inline priority lane (PROP-009 §2.4).
 link = "static"
