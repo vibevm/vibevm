@@ -2697,6 +2697,77 @@ command that would have tested it.
   lines in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` — is one edit and the owner's,
   because those files are the ones the boot contract is written on.
 
+- **2026-07-28 · W1 CLOSED — 407 of 407, and the phase's falsifiable prediction is
+  in trouble at the first world batch.** The git family: **368 confirmed / 32 drift /
+  7 unverifiable — 90.4 %**, against `ai-native`'s 91.6 %. §5-C predicted that
+  **`world` measures higher**, on the reasoning that prose contracts are rarely
+  contradicted while mechanical claims can be wrong in ways prose cannot. The first
+  world batch reads *lower*, and the reason is the opposite of the one predicted:
+  these flows make claims about the consuming project, and this consumer is
+  measurable.
+
+  | file set | verdicts | conf | drift | unver | |
+  |---|---:|---:|---:|---:|---:|
+  | `git-attribution-policy` (5 files) | 132 | 109 | 16 | 7 | 82.6 % |
+  | `git-conventional-commits` (3) | 68 | 62 | 6 | 0 | 91.2 % |
+  | `git-atomic-commits` — core (3) | 101 | 93 | 8 | 0 | 92.1 % |
+  | `git-autonomy` + `git-practices` (4) | 54 | 52 | 2 | 0 | 96.3 % |
+  | `git-atomic-commits` — splitting (1) | 52 | 52 | 0 | 0 | 100 % |
+
+  **26 verdicts are self-referential — 6.4 %**, and amendment A2's counter fired for
+  the first time. They cluster where the corpus argues rather than states: claims
+  about pure-human teams, about what most humans do under deadline pressure, about
+  what an unmanaged repository accumulates. `tasks/summary.py --batch W1` prints it.
+
+  **Thirteen of the thirty-two drifts are one law, and it is the flow's own.**
+  `attribution-policy` states that the policy lives in exactly one always-loaded
+  place and nowhere else; the host compiles it into the boot lane twice and restates
+  it in eight further locations, and a repo-wide grep for the topic returns **88
+  lines across 50 files**. Every clause resting on that law falls with it — one
+  place to change, switching in one edit, and the escape hatch that says a project
+  adopts the alternative «by editing this snippet», whose only host copy sits inside
+  a file whose first line says it is generated and must not be edited.
+
+  **A second family runs through every package in the batch: the sibling pointer.**
+  A boot snippet ends by linking its own protocol as `../flows/<name>/<file>.md`.
+  Measured corpus-wide: **60 such pointers in the packages, 0 dangling; 120 in the
+  installed `vibedeps/` trees, 15 dangling; and 69 in the host's compiled boot lane,
+  all 69 dangling** — because the host has no `spec/flows/` directory at all and
+  `files_written = []` means no package will ever create one. The pointer resolves
+  for exactly one reader, the person browsing the package repository, and fails for
+  the reader it is written for.
+
+  **The rest are single defects worth naming.** «Explicit and enforced» is explicit
+  and unenforced — no hook, no CI, no audit line — in a flow that itself ships the
+  law «a policy with no checker is a wish». The never-item forbidding model names in
+  commits and comments is broken on the letter at scale (11 subjects, 354 message
+  lines, 263 code lines) while its sibling forbidding authorship claims is not
+  broken at all. The format flow's subject rules are broken as practice: **297 of
+  400 subjects exceed the 60 characters it targets — 74.3 %** — and 144 of 400 open
+  with an article rather than a verb, which is the first measurement of its
+  imperative-mood clause and the largest single format gap found. And
+  `atomic-commits` contradicts itself about an irreversible operation: its
+  frozen-history bullets forbid `--amend` and `rebase -i` flat where its own
+  snippet, its own summary and the host's rule 4 all permit them with explicit
+  approval.
+
+  **Seven unverifiable are honest and all of one kind** — assertions about
+  jurisdictions, regulation and employer policy that no source inside this
+  repository can settle, plus one uninstall behaviour whose file ledger is empty
+  for all 36 packages.
+
+  *On the instruments.* Five delegated tables, 1 645 refs, and after the checker's
+  fourth narrowing **0 unresolvable**. Forty-three refs failed at first and not one
+  was a fiction — every one was a notation the grammar does not admit (a bare path,
+  a line range recording an absence, an added code span, a double-escaped
+  backslash), and the brief now carries the grammar. Two workers reported that a
+  harvest file **changed under them mid-run** and that they had re-anchored every
+  citation to its current content; the boss had edited it while five workers were
+  citing it. That is the boss's defect, reported by the workers rather than by the
+  checker, and it bought `repair-refs.py` — which separates a real quote whose line
+  moved from a quote that is nowhere, and refuses to choose when a quote occurs in
+  several places.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
