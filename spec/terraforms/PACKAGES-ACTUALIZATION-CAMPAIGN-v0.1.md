@@ -2195,6 +2195,60 @@ command that would have tested it.
   outcome earned itself in one batch, naming a hundred and eighty-eight honest
   elisions without failing one of them.
 
+- **2026-07-28 · C2 CLOSED — 485 verdicts at 92.4 %, and the drift is all in one
+  place.** **448 confirmed / 34 drift / 3 unverifiable.** Four of the eleven files
+  are **zero-drift**: the RAID Playbook, the Sweep Playbook, the Campaign Form and
+  the WAL Convention, 148 facts between them and not one wrong.
+
+  | file | conf | drift | unver | |
+  |---|---:|---:|---:|---:|
+  | 03-RAID-PLAYBOOK / 04-SWEEP-PLAYBOOK / 05-CAMPAIGN-FORM / 06-WAL-CONVENTION | 148 | 0 | 0 | 100.0 % |
+  | appendix/ATLAS | 91 | 2 | 0 | 97.8 % |
+  | boot/10-flow-core-ai-native | 15 | 1 | 0 | 93.8 % |
+  | 00-MANIFESTO | 91 | 8 | 1 | 91.0 % |
+  | README | 23 | 3 | 0 | 88.5 % |
+  | 02-EXECUTABLE-SCAFFOLDS | 33 | 6 | 1 | 82.5 % |
+  | appendix/CONTRADICTION-MAP | 21 | 4 | 1 | 80.8 % |
+  | 01-PATTERN-CARD-FORMAT | 26 | 10 | 0 | 72.2 % |
+
+  **The playbooks confirm wholesale because they are implemented and because this
+  repository has run them.** `floor.rs` names the Sweep Playbook in its own module
+  doc; `health.rs:2` cites `…04-SWEEP-PLAYBOOK#collector` by URI, and the
+  collector's four contract lines — determinism, advisory, no-LLM, single-sourcing —
+  are four separate places in that file. The WAL Convention's 24-hour freshness rule
+  is a shipped checker (`vibe-check/src/checks/wal_freshness.rs`, threshold at
+  `lib.rs:292`) and its canonical sections are enforced by `wal_wellformed.rs`. Both
+  playbooks have **executed instances in this tree**: a closed raid whose §6
+  decisions cite RAID §1.1/§1.2/§1.4/§1.5 by number, and `terraform/{BASELINE,LOG,
+  REPORT}.md` + `adopt-v0.3/PREDICTIONS.md` as the Campaign Form's five artifacts,
+  built.
+
+  **The drift is one thing, said eleven ways: the Band-3 card-ops block has no
+  reader.** All 27 cards (3 stacks × 9) author it; a search for `card-ops` /
+  `Band-3` / `band_three` / `cards/INDEX` across every `.rs`, `.ts`, `.go`, `.py`
+  and `.js` in crates, xtask, packages, spec and schemas finds **no extractor at
+  all**. So the Manifesto's lazy-push harness, the weak-reader ~10-line cap, the
+  trigger-to-card resolution, the machine-extractable operational layer and the
+  «empty operational fields are a defect» rule are each authored on one side and
+  unimplemented on the other. `01-PATTERN-CARD-FORMAT` reads lowest in the batch for
+  exactly this reason.
+
+  **Three smaller ones worth their own line.** No card carries a `prediction` field,
+  so «every card carries a falsifiable prediction» is false of all 27. The sunset
+  R-050 that is supposed to expire the in-distribution law is cited everywhere and
+  scheduled nowhere. And the adoption plan does live outside the package, exactly as
+  claimed — at `terraform/`, while the fact names a `vibevm-terraform` that does not
+  exist.
+
+  *One verdict was restated during review, and the reason matters more than the
+  verdict.* Five `BUILD-ORDER-*` anchors came back `partial` and one, `BUILD-ORDER-I`,
+  came back `located` — so the default would have confirmed the sixth step of a
+  build order whose other five steps are drift, because a search happened to resolve
+  its card rather than its ordering. **The claim class was one; the accident of the
+  search was about to split it two ways.** Restated to drift on the siblings'
+  reasoning: the numbered order appears nowhere outside this document, and the one
+  raid this repository executed ordered its cards `D/H → C → F → G → traces`.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

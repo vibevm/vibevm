@@ -1,0 +1,2194 @@
+[
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "status-line",
+    "claim": "Document is Discipline v0.2, status BETA, tier T1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:50  ##beta-status BETA. @impl/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:154  ##guiding-layer-lead **Guiding layer (T1, language-independent):** @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "CATALOG-IS-THE-OPERATIONAL-CORE",
+    "claim": "The catalog operationalises Manifesto section 5's runnable-capital law.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:97  ## 5. Runnable capital: explanation must be executable {#runnable-capital}",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:103  ##EXPLANATION-MUST-BE-RUNNABLE-CAPITAL Therefore: **explanation capital must be runnable capital.** @impl/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:105  ##META-LAYER-SHIPS-SCAFFOLDS The meta-layer ships *executable scaffolds* — generators, typed builders, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "NINE-CLASSES-CARRY-COGNITION",
+    "claim": "Nine artifact classes carry author cognition a weak reader consumes.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:6  ## Scaffold cards (the nine executable-scaffold patterns)",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:63  ## 3. The nine scaffolds in Rust {#scaffolds}",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:105  ##META-LAYER-SHIPS-SCAFFOLDS The meta-layer ships *executable scaffolds* — generators, typed builders, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "EACH-PATTERN-IS-ALSO-A-CARD",
+    "claim": "Each pattern also ships as a per-language card in each stack's cards/.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:1  # CARD: scaffold-a-generators — Generators / Codegen {#root}",
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:1  # CARD: scaffold-a-generators — Generators / Codegen (Go) {#root}",
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-e-fast-loop.md:1  # CARD: scaffold-e-fast-loop — Per-Cell Fast Verification Loop (TypeScript) {#root}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "two-properties-at-once-lead",
+    "claim": "Lead-in: an executable scaffold has two properties at once.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:15  ##two-properties-at-once-lead An **executable scaffold** has two properties at once: @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "PROPERTY-RUNS-OR-MACHINE-CHECKS",
+    "claim": "Property one: it runs or machine-checks, emitting a pass/fail signal.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:44  /// Run the floor over the project at `root`. Green ⇒ `Ok(())`; any red step",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:139  bail!(\"floor: {} step(s) failed: {}\", red.len(), red.join(\", \"))",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:175  \"cell-has-oracle\""
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "PROPERTY-CARRIES-COGNITION",
+    "claim": "Property two: a weak reader uses it instead of re-deriving understanding.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md:11  ##INTENT Intent: Ship a small runnable model of a subsystem's behavior the reader can EXECUTE to understand or predict — ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:37  ##AUTHOR-MATERIALIZES-CAPITAL The strong author materializes expensive cognition into infrastructure — meta-layer, contracts, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "prose-fails-the-first-property",
+    "claim": "Prose about a pattern fails the runs-or-checks property.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:107  ##PROSE-IS-A-WISH Prose that *could* be a checker, a doctest, or a typed API is a WISH until it becomes one. @impl/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:53  - ##AXIOM-A5-RULE-IS-CODE **A5 — Rule = code.** Every rule ships a checker or is explicitly a WISH. ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "random-utility-fails-the-second-property",
+    "claim": "A random utility fails the carries-cognition property.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'random utility|utility that carries|not every utility' over packages/org.vibevm.ai-native/**, crates/**, xtask/**, spec/**, campaigns/** — 0 hits; no card, checker or doc states the negative case"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "SCAFFOLD-IS-UNDERSTANDING-WITH-A-PULSE",
+    "claim": "A scaffold is materialized understanding with a pulse.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:37  ##AUTHOR-MATERIALIZES-CAPITAL The strong author materializes expensive cognition into infrastructure — meta-layer, contracts, ..."
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'pulse' over packages/org.vibevm.ai-native/**, crates/**, spec/**, campaigns/** — 0 hits outside this line; the located line is the materialisation half of the metaphor, not the phrase"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "empirical-basis-esolang-follow-up",
+    "claim": "EsoLang follow-up: written strategy 12 to 12; executable library 12 to 64.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  _benchmark · high · refines:R3-010_ — The follow-up's causal core, directly relevant to the spec-vs-code debate. ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:25  - ##c-3-side-b **Side B:** EsoLang follow-up (benchmark): +Text ~0 effect (Sonnet 12→12); +Lib transformative (12→64). @spec/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:99  ##second-decisive-result The second decisive result: weak agents given a *written* distillation of a strong agent's strategy ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "mechanism-not-the-idea-but-the-code",
+    "claim": "Mid-tier models lack the reusable code, not the idea (R2C-008).",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy does not",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:101  ##mechanism-cannot-build-the-code The mechanism: mid-tier models do not lack the idea; they cannot build the reusable code ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "TRANSFER-TAG-LEGEND",
+    "claim": "Legend: E-strong, E-mid, E-hyp mark evidence strength.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:15  ##MATURITY-CLAIM-CLASSES *Some claims are benchmark-backed [E-strong], some are supported by adjacent evidence [E-mid], ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:38  - ##FIELD-EVIDENCE-AND-TRANSFER-STRENGTH **Evidence & Transfer-strength** — backing `findings.jsonl` IDs, evidence class, ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:8  | Card | Layer | Mechanism | Trigger mode | Transfer | Checker status |"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "transfer-to-modification-is-the-pilots-job",
+    "claim": "The result is about generation; modification transfer is the pilot's job.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:111  ##boundary-result-is-generation **The honest boundary on this:** that result is about *generation* against an unfamiliar target. @spec/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:113  ##boundary-transfer-is-e-mid Transfer to *comprehension and modification* of in-distribution Rust is [E-mid] — plausible, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:44  - ##C-7-OPEN-TRANSFER **Transfer generation→modification:** every scaffold's value is shown for *generation*; ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "floor-haiku-stayed-near-it",
+    "claim": "Even with the executable library, Haiku-4.5 stayed near the floor.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:144  - ##BOUNDARY-THERE-IS-A-FLOOR **There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-class, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "SCAFFOLDS-AMPLIFY-NOT-CREATE",
+    "claim": "Scaffolds amplify capability; they do not create it.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplify, ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md:25  ##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* sub-minute first signal per cell; ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:144  - ##BOUNDARY-THERE-IS-A-FLOOR **There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-class, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-A",
+    "claim": "Class A generators carry structural decisions; E-strong; card scaffold-a-generators.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:9  ##CLASSIFICATION Classification: layer=A (language-shape) + C (meta); mechanism=scaffold A. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:67  - ##SCAFFOLD-A-GENERATORS **A — Generators / codegen** (`scaffold-a-generators`). `build.rs` codegen, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-B",
+    "claim": "Class B typed builders carry protocol correctness as compiler-checked types; E-mid.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:9  ##CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold B. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:11  | `scaffold-b-typed-builders` | E | scaffold B | gate | [E-mid] | specified |",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:11  ##INTENT Intent: Make the statistically-likely wrong call un-representable, so a hallucinated edit fails `cargo check` ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-C",
+    "claim": "Class C runnable contracts carry invariants as executing assertions; E-mid.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:9  ##CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold C. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:12  | `scaffold-c-runnable-contracts` | E | scaffold C | inline | [E-mid] | specified |",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:11  ##INTENT Intent: Express pre/post-conditions and invariants as EXECUTING assertions or proofs attached to the unit ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-D",
+    "claim": "Class D differential oracles carry behavior as a runnable old-vs-new check; E-mid.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:13  ##CLASSIFICATION **Classification:** layer = E (Verification coupling); mechanism = scaffold class D. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | shipped: oracle-presence (`cell-has-oracle`, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:148  /// Class D — `cell-has-oracle`: every `#[cell]`-manifested type"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-E",
+    "claim": "Class E fast loop carries the substrate making all signals fast enough; E-strong.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md:9  ##CLASSIFICATION Classification: layer=E (verification) + H (weak-reader); mechanism=scaffold E. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:14  | `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | shipped (`rust-ai-native fast-loop`) |",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:1  //! `cargo fast-loop` — the Class-E `cell-fast-loop-present`"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-F",
+    "claim": "Class F structured diagnostics carry debugging cognition in the error text; E-mid.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md:9  ##CLASSIFICATION Classification: layer=E (verification) + C (meta); mechanism=scaffold F. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:15  | `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`error-enum/message-cites-req`, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:1  //! Diagnostics rules — Class G and Class F: every public seam shows"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-G",
+    "claim": "Class G doctests carry canonical usage as compiled examples; E-strong.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md:9  ##CLASSIFICATION Classification: layer=C (meta) + G (empirics); mechanism=scaffold G. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:16  | `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | shipped (`seam-has-doctest` + `pub-doctest`, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:13  /// Class G — `seam-has-doctest`: a public item declared at the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-H",
+    "claim": "Class H simulators carry subsystem semantics as a runnable model; E-strong.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md:9  ##CLASSIFICATION Classification: layer=E (verification) + H (weak-reader); mechanism=scaffold H. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:17  | `scaffold-h-simulators` | E+H | scaffold H | gate | [E-strong] | specified |",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (simulator in the transformative library, benchmark), ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "ROW-CLASS-I",
+    "claim": "Class I codemods carry a multi-file change as one checked operation; E-hyp.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:9  ##CLASSIFICATION Classification: layer=H (weak-reader) + A (language-shape); mechanism=scaffold I. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:18  | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`rust-ai-native codemod add-cell`); ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:1  //! `rust-ai-native codemod …` — scaffolded edit operations (discipline"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "row-details-live-in-the-card",
+    "claim": "Each row's full Applicability/Routine/Checker lives in its card.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:37  ```card-ops",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:65  ##TRIGGER **Trigger:** WHEN a diff modifies the body of an item bearing `#[spec(implements …)]`, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:28  - ##FIELD-APPLICABILITY-RECOGNITION **Applicability / Recognition** — THE central section: ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "BUILD-ORDER-E",
+    "claim": "E (fast loop) is built first: the substrate nothing pays off without.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md:47  raid_role: layer=infrastructure; order=after:cell-boundaries; batch=cell",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:71  - ##SCAFFOLD-E-PER-CELL-FAST-LOOP **E — Per-cell fast loop** (`scaffold-e-fast-loop`). Every cell independently compilable ..."
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'raid_role' over packages/org.vibevm.ai-native/**/spec/cards — every card declares its own order, but no artefact anywhere encodes the six-step catalog build order 1..6; searched core-ai-native/v0.8.0/{spec,crates}, the three -lang stacks, xtask/, crates/, spec/terraforms/, campaigns/"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "BUILD-ORDER-G-AND-F",
+    "claim": "Second: G doctests plus F diagnostics, the cheapest runnable capital.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:1  //! Diagnostics rules — Class G and Class F: every public seam shows",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:16  | `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | shipped (`seam-has-doctest` + `pub-doctest`, ..."
+    ],
+    "found": "partial",
+    "searched": "searched as for BUILD-ORDER-E: the G+F pairing is real in the conform engine (one rules file), but nothing states they come second in a build order"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "BUILD-ORDER-B-AND-C",
+    "claim": "Third: B typed builders plus C contracts convert hallucinations to failures.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:11  ##INTENT Intent: Make the statistically-likely wrong call un-representable, so a hallucinated edit fails `cargo check` ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:47  raid_role: layer=cells; order=after:naming-uniformity; batch=cell"
+    ],
+    "found": "partial",
+    "searched": "as above — the seam/cell ordering exists per card, the numbered catalog build order does not appear in any stack, host crate, xtask task or campaign plan"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "BUILD-ORDER-D",
+    "claim": "Fourth: D differential oracles, the modification-specific safety net.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:70  - ##SCAFFOLD-D-DIFFERENTIAL-ORACLES **D — Differential / characterization oracles** (`scaffold-d-differential-oracle`). ...",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:184  - **D2 — card-set & order (RAID §1.2).** No behavior-changing card here (all"
+    ],
+    "found": "partial",
+    "searched": "the executed raid orders its own card set (D/H → C → F → G → traces), which is not the catalog's order; no artefact carries the catalog build order"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "BUILD-ORDER-A-AND-H",
+    "claim": "Fifth: A generators plus H simulators, highest ceiling and highest cost.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:17  | `scaffold-h-simulators` | E+H | scaffold H | gate | [E-strong] | specified |"
+    ],
+    "found": "partial",
+    "searched": "both cards are still `specified` (no shipped checker), which is consistent with late build order but does not state it; no build-order artefact found in the perimeter"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "BUILD-ORDER-I",
+    "claim": "Sixth: I codemods, E-hyp; prototype and measure before committing.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:18  | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`rust-ai-native codemod add-cell`); ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:1  //! `rust-ai-native codemod …` — scaffolded edit operations (discipline",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "CHECKLIST-RUNS-OR-CHECKS",
+    "claim": "Checklist item: emits pass/fail or a typed signal, not prose.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:44  /// Run the floor over the project at `root`. Green ⇒ `Ok(())`; any red step",
+      "campaigns/packages-2026-09/harvest/rust-ai-native-lang-health.md:16  EXIT=0",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:45  - ##FIELD-CHECKER **checker** — the machine verification (conform tier / clippy lint / test), OR `WISH` if none yet ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "CHECKLIST-CARRIES-COGNITION",
+    "claim": "Checklist item: encodes a decision a weak reader would otherwise re-derive.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:21  ##BAND-3-SHIPPED-TO-WEAK-READER Band 3 is a machine-extractable block; the harness ships **only Band 3** to a weak reader ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:11  ##INTENT Intent: Where an artifact is mechanically derivable from a smaller spec, ship a program that EMITS it ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "CHECKLIST-FAST-ENOUGH",
+    "claim": "Checklist item: signal returns inside the per-cell budget, under about 60s.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:48  budget: active_rules=2; first_signal=cargo test -p <cell> (<60s)",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:126  let ok = crate::fast_loop::run_fast_loop(root, None, 60, false).is_ok();",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:147  \"fast-loop: {}/{} cell(s) within the {budget_secs}s budget \\"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "CHECKLIST-CANNOT-SILENTLY-LIE",
+    "claim": "Checklist item: drift makes it fail, never mislead (doctest vs comment).",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:73  - ##SCAFFOLD-G-EXECUTABLE-EXAMPLES **G — Executable examples / doctests** (`scaffold-g-doctests`). ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md:11  ##INTENT Intent: Ship one compiled, runnable example per public seam showing the ONE canonical way to use it — ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:153  /// exists\": a cell nobody's tests touch has no behavior net at"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "sharp-capability-line-hypothesis",
+    "claim": "Hypothesis: a capability line separates building a scaffold from using one.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:41  - ##C-6-RESOLUTION **Resolution:** **both true, scoped by reader capability.** ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "evidence-haiku-did-not-improve",
+    "claim": "Evidence: Haiku did not improve even with the executable library.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  _benchmark · high · refines:R3-010_ — The follow-up's causal core, directly relevant to the spec-vs-code debate. ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "WEAKEST-TIER-GETS-CONSUME-ONLY-SCAFFOLDS",
+    "claim": "Weakest tier gets consume-only G/H scaffolds and invoke-only codemods.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:45    5. For the weakest tier, expose ONLY fixed-parameter invocations (no free parameterization) until R4 validates parameterization.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:41  - ##C-6-RESOLUTION **Resolution:** **both true, scoped by reader capability.** ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:57  ##OVERLOADING-ROUTINE-IS-SPLIT-OR-CODEMOD If a card's Routine still overloads the weakest readers, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "02-EXECUTABLE-SCAFFOLDS.md",
+    "anchor": "prime-pilot-question",
+    "claim": "This build/use boundary is the prime pilot question, R4.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:41  - ##C-6-RESOLUTION **Resolution:** **both true, scoped by reader capability.** ... This is the open pilot question (R4). @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; this is the prime pilot (R4) question. ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "status-line",
+    "claim": "Document is Discipline v0.2, status BETA, tier T1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:50  ##beta-status BETA. @impl/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:154  ##guiding-layer-lead **Guiding layer (T1, language-independent):** @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "RAID-IS-THE-MACRO-RHYTHM",
+    "claim": "A raid is the Discipline's macro-rhythm.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:10  ##RAID-IS-A-SCHEDULED-CAMPAIGN *A raid is a scheduled campaign — scoped,",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:8  **raid** (03-RAID-PLAYBOOK) applies a card-set across a layer when per-edit"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "INLINE-PER-EDIT-VERSUS-RAID-PER-LAYER",
+    "claim": "Inline triggers fire per-edit; a raid applies cards across a whole layer.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:8  **raid** (03-RAID-PLAYBOOK) applies a card-set across a layer when per-edit",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:43  - ##FIELD-MODE **mode** — `inline | gate | raid | review` (where the trigger lives). @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "RAID-IS-ITSELF-SPEC-DRIVEN",
+    "claim": "A raid is spec-driven and follows the terraform's gate discipline.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:5  _Status: **EXECUTED** (Phases 0–5 done, floor-green throughout) · opened against",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:87  4. ##RAID-PHASE-CLOSES-WITH-THE-FLOOR-GREEN Each phase closes with the floor green (`rust-ai-native floor`) and"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "INLINE-HANDLING-IS-ALWAYS-PREFERRED",
+    "claim": "Inline, edit-time handling is always preferred over a raid.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md:39  mode: inline"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'inline .*preferred|prefer inline' over packages/org.vibevm.ai-native/**, crates/**, xtask/**, spec/**, campaigns/**, legacy-spec/** — 0 hits; the card registry records inline as cheapest but no artefact states the preference rule"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "escalate-to-a-raid-lead",
+    "claim": "Lead-in: escalate to a raid when any of four conditions holds.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md:17  ##escalate-to-a-raid-lead Escalate to a raid when: @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "ESCALATE-TRIGGER-IS-RAID-MODE",
+    "claim": "Escalate when a card's trigger is raid-mode by nature, meaningful only in bulk.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:23  - **raid** (scheduled/on-adoption): A, I.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:39  mode: raid            # bulk application; also offered as an on-demand command",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:43  - ##FIELD-MODE **mode** — `inline | gate | raid | review` (where the trigger lives). @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "ESCALATE-NEW-CARD-ADOPTED",
+    "claim": "Escalate when a new card is adopted and must be applied repo-wide.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:23  - **raid** (scheduled/on-adoption): A, I.",
+      "terraform/adopt-v0.3/PREDICTIONS.md:8  is adopted (phase start) and verdicts are filled in when evidence"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'new card is adopted|on-adoption' over packages/org.vibevm.ai-native/**, legacy-spec/**, terraform/**, spec/**, campaigns/** — the phrase 'on-adoption' appears only in the three cards/INDEX.md trigger-mode summaries; no executed raid in the tree was triggered by a card adoption"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "ESCALATE-DEBT-PAST-THRESHOLD",
+    "claim": "Escalate when debt passes a threshold and the A6 ledger trips a tripwire.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/tripwire.rs:58  pub fn run_tripwire(root: &Path, base: Option<&str>, debt_rel: &str) -> Result<()> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:79  ##TRIPWIRES-ARE-CHEAP-AND-MECHANICAL Tripwires are cheap and mechanical: a check that warns when a change touches ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:56  - ##AXIOM-A6-REALITY-BEFORE-ASPIRATION **A6 — Reality before aspiration.** Gates measure deltas against inventoried reality; ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "ESCALATE-ATTENTION-BUDGET-INSUFFICIENT",
+    "claim": "Escalate when the swarm's attention budget cannot hold a cross-cutting concern.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:47  - ##FIELD-BUDGET **budget** — active-rule cost + first-signal latency (feeds lazy-push: when NOT to load this card). @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:49  budget: active_rules=1; first_signal=regen+compile (<60s/crate)",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:121  ##RULES-NEVER-ALL-ACTIVE-AT-ONCE The resolution is that **rules are never all active at once.** @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "SKELETON-SCOPE-AND-FREEZE",
+    "claim": "Step 1: declare layers in scope and surfaces frozen for the raid.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:180  - **D1 — scope & freeze (RAID §1.1).** In scope: `crates/vibe-cli/src/commands/tree/**`",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:182  the raid: no behavior change to these surfaces — the raid adds tests, contracts,",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:73  ##raid-per-crate-in-dependency-order-lead Per the Raid Playbook skeleton (scope & freeze → card order → phases →"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "SKELETON-CARD-SET-AND-ORDER",
+    "claim": "Step 2: cards topologically sorted by Band-3 raid_role.order dependencies.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:47  raid_role: layer=cells; order=after:naming-uniformity; batch=cell",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:47  raid_role: layer=any; order=wraps-with:differential-oracle; batch=crate",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:184  - **D2 — card-set & order (RAID §1.2).** No behavior-changing card here (all"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "SKELETON-PER-LAYER-PHASES",
+    "claim": "Step 3: layer-by-layer phases (seams, cells, registry, tests), each gated green.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:47  raid_role: layer=seams; order=after:none; batch=seam",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:74  batches → differential safety → exit criteria), and per crate in"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "SKELETON-BATCH-UNITS-AND-CHECKPOINTS",
+    "claim": "Step 4: per-cell/per-crate batches with green-gate checkpoints; resumable, never one diff.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:196  - **D6 — resumable, per-file batches (RAID §1.4).** Each file/seam is a batch with",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md:47  raid_role: layer=infrastructure; order=after:cell-boundaries; batch=cell",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:203  - ##FINDING-R3-013 **R3-013** — Swarm contention: ownership aligns with file boundaries; deterministic toolchain kills phantom diffs"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "SKELETON-DIFFERENTIAL-SAFETY",
+    "claim": "Step 5: behavior-changing card applications carry a Class-D oracle or block.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:193  - **D5 — differential safety (RAID §1.5).** The build_tree fixture oracle is the",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:80  ##RAID-ROLE **Raid role:** layer = *behavior-preserving* phase (runs in any raid that rewrites implementations); ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:148  /// Class D — `cell-has-oracle`: every `#[cell]`-manifested type"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "SKELETON-EXIT-CRITERIA",
+    "claim": "Step 6: checkers green, debt ledger at zero, and a raid REPORT that feeds card revision.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:244  **Phase 5 — the raid REPORT.** What the sweep learned: cards that misfired, gaps",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:287  ## 12 — Whole-raid acceptance",
+      "terraform/discipline-sweep/REPORT-2026-06-17-grammar-refactor.md:1  # Discipline Sweep — grammar refactor of the new features (RAID REPORT)"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "ROLE-STRONG-AUTHOR-ORCHESTRATOR",
+    "claim": "The strong author authors the plan, sets scope and order, adjudicates review triggers.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:56  | Boss / high-level | **Fable** | markup passes, verification judgment, stitching, task authoring, ALL review |",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:178  ## 6 — Decisions",
+      "campaigns/packages-2026-09/PHASE-C-KICKOFF.md:11  **\"Fable + machine evidence\"** — the boss, not a worker. What *is* delegable is"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "ROLE-WEAK-SWARM",
+    "claim": "The weak swarm runs per-batch Band-3 routines, one batch per agent, meeting at merge.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:21  ##BAND-3-SHIPPED-TO-WEAK-READER Band 3 is a machine-extractable block; the harness ships **only Band 3** to a weak reader ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:203  - ##FINDING-R3-013 **R3-013** — Swarm contention: ownership aligns with file boundaries; deterministic toolchain kills phantom diffs",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:57  | Coder | **Opus** | IMPL tasks (DRIFT-NNN) exactly as written; stop-rule on ambiguity |"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "ROLE-TOOLCHAIN",
+    "claim": "The toolchain runs checkers per batch and emits Class-F diagnostics as percepts.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md:31  | ##ROW-TIER-T-SYN **T-syn** @impl/done | structure: items, attributes, imports, spans, hashes @impl/done | ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:1  //! Diagnostics rules — Class G and Class F: every public seam shows",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:72  - ##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`). ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "first-terraform-proved-the-machinery",
+    "claim": "The first pilot terraform proved phases -1 to 6, frozen baselines, green gates, a REPORT.",
+    "marker": "spec/done",
+    "evidence": [
+      "terraform/BASELINE.md:3  _PLAYBOOK-TERRAFORM-VIBEVM v0.2, Phase −1 (\"Inventory: freeze",
+      "terraform/REPORT.md:4  [`PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md`](../spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md)",
+      "terraform/LOG.md:8  | 2026-06-10 | Phase −1 — inventory | `docs(spec): add the Discipline terraform package v0.2-beta` · ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "MACHINERY-DISTILLED-INTO-SHIPPED-DOCUMENTS",
+    "claim": "The machinery is now shipped as this playbook plus 05-CAMPAIGN-FORM's paper trail.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:11  ##THIS-DOCUMENT-IS-THE-PAPER-TRAIL *This document is the",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:10  scaffold-covered beyond file-level `scope!`. Paper trail per 05-CAMPAIGN-FORM._",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:90  ##TRACK-THE-CAMPAIGN-PER-CAMPAIGN-FORM Track the campaign per `05-CAMPAIGN-FORM`: a cold-executable PLAN, the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "BROWNFIELD-ADOPTION-IS-A-SEQUENCE-OF-RAIDS",
+    "claim": "Brownfield adoption follows BROWNFIELD-PROTOCOL as a sequence of raids; sweep is the counterpart.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:71  ## Phases 1…N — card raids, crate by crate {#card-raids}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:105  ##HELD-BY-THE-RECURRING-SWEEP From here the tree is",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:10  ##EXECUTING-THE-BROWNFIELD-PROTOCOL You are executing the BROWNFIELD protocol"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "CADENCE-MICRO-CONTINUOUS",
+    "claim": "Micro cadence: inline triggers, continuously, in the per-cell loop.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:39  mode: inline"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "CADENCE-GATE-PER-MERGE",
+    "claim": "Gate cadence: gate-mode triggers fire at the cell's verification gate.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:22  - **gate** (per-merge): B, D, E, G, H.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:67  ##MODE **Mode:** gate (runs at the cell's verification gate, not per keystroke). @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "CADENCE-RAID-SCHEDULED",
+    "claim": "Raid cadence: scheduled or on-adoption layered sweeps per this playbook.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:23  - **raid** (scheduled/on-adoption): A, I.",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:1  # AINATIVE-ANALYSIS-RAID v0.1 — AI-Native scaffold coverage of the static-analysis engine"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "CADENCE-REVIEW-AS-FLAGGED",
+    "claim": "Review cadence: review-mode triggers escalate to a stronger reader.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:24  - **review** (human/strong-agent): none yet; reserved for judgment-heavy cards.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:106  ##TIER-3-DEEP-JUDGMENT **Tier 3 — deep judgment (weekly/biweekly; the WISH"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "03-RAID-PLAYBOOK.md",
+    "anchor": "answers-when-to-switch-on-refactoring",
+    "claim": "Together the cadences answer when refactoring switches on: continuously or in sweeps.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:20  ## Trigger-mode delivery summary",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:148  | Tier | Daily (or per active session) | Weekly |"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "status-line",
+    "claim": "Document is Discipline v0.2, BETA, tier T1, language-neutral.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:154  ##guiding-layer-lead **Guiding layer (T1, language-independent):** @impl/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:50  ##beta-status BETA. @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "SWEEP-IS-THE-RECURRING-COUNTERPART",
+    "claim": "The sweep is the recurring counterpart of the Raid Playbook.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:3  description: Adopt the AI-Native discipline on an existing (brownfield) Rust codebase — inventory-not-gate, ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:10  ##RUNNING-THE-STANDING-SWEEP You are running the standing sweep from the Discipline's Sweep Playbook",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:105  ##CAMPAIGN-SIZED-BACKLOG-BECOMES-A-RAID If a Tier-1 backlog has grown"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "RAID-IS-A-SCHEDULED-CAMPAIGN",
+    "claim": "A raid is a scheduled campaign: scoped, planned, finite.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:180  - **D1 — scope & freeze (RAID §1.1).** In scope: `crates/vibe-cli/src/commands/tree/**`",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:217  ## 8 — Phases",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:23  - **raid** (scheduled/on-adoption): A, I."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "SWEEP-IS-THE-STANDING-RUN",
+    "claim": "The sweep runs daily, or several times a day on an active tree.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:3  description: Run the recurring AI-Native discipline sweep on this Rust project — floor gates first, ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:10  ##RUNNING-THE-STANDING-SWEEP You are running the standing sweep from the Discipline's Sweep Playbook"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TERRAFORM-RAID-SWEEP-DIVISION-OF-LABOUR",
+    "claim": "Terraform brings a tree in, raids move it, the sweep holds the ground between.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:105  ##HELD-BY-THE-RECURRING-SWEEP From here the tree is",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:71  ## Phases 1…N — card raids, crate by crate {#card-raids}",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:1  # BROWNFIELD — Terraforming unfinished projects, v0.1 {#root}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "STACKS-SHIP-TOOLS-THIS-DOCUMENT-IS-METHOD",
+    "claim": "Stacks ship floor/health/test-gate/tripwire plus a GUIDE sweep-idiom section.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:1  //! `rust-ai-native floor` — the portable verification floor (Sweep",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:1  //! `rust-ai-native health` — the Discipline health collector (the Sweep",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:173  ## 14. Sweep idioms (Rust) {#sweep-idioms}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TRUTH-GATES-ARE-THE-FLOOR",
+    "claim": "Truth 1: the binary gates are the floor; a green sweep on a red floor is a contradiction.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:17  - ##TRUTH-GATES-ARE-THE-FLOOR **the gates are the",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:1  //! `rust-ai-native floor` — the portable verification floor (Sweep",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:37  //! only — it never fails the build; the gates do the failing."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TRUTH-GATE-IS-TRUTH-COLLECTOR-IS-A-GUIDE",
+    "claim": "Truth 2: the gate is truth; the collector only predicts and is confirmed by the gate.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:19  - ##TRUTH-GATE-IS-TRUTH and **the gate is truth, the collector is",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:68  2. ##RATCHET-PUB-DOCTEST-PROMOTION-CANDIDATES **`pub_doctest_promotion_candidates`** — a gated crate at 0 typed-gap",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:37  //! only — it never fails the build; the gates do the failing."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "SWEEP-IS-COLLECTOR-FIRST",
+    "claim": "The sweep is collector-first: a deterministic no-LLM health tool computes state.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:29  //! diff IS the health delta. No LLM; no network — the collector is offline",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:24  ##ACT-ON-COLLECTOR-FACTS Act on collector facts, never on",
+      "discipline/health/latest.json:3  \"note\": \"Discipline health snapshot — generated by `rust-ai-native health` (the Sweep Playbook's fact-gatherer). ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "UNMECHANISED-CHECKS-ROUTE-TO-JUDGMENT",
+    "claim": "Unmechanisable checks (WISH rules) are named and routed to judgment, never faked as gates.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:101  ##WALK-THE-WISH-RULES Walk the WISH rules over the week's diff (typed seams, cell",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:53  - ##AXIOM-A5-RULE-IS-CODE **A5 — Rule = code.** Every rule ships a checker or is explicitly a WISH. ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:32  //! Discipline value (a check that could be a checker is a WISH until it is"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-0-HARD-FLOOR",
+    "claim": "Tier 0 is the hard floor: every run, binary, first; never sweep on a red tree.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:38  ## Tier 0 — the hard floor (ALWAYS first) {#tier-zero}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:22  ##NEVER-SWEEP-ON-A-RED-TREE Never sweep on a red tree. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:2  //! Playbook Tier 0): format → tests → lints → the conform gate → the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-0-RUN-THE-FLOOR-COMMAND",
+    "claim": "Run the stack's floor: format, build/tests, lints, conform, traceability, test-gate, fast-loop.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:2  //! Playbook Tier 0): format → tests → lints → the conform gate → the",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:107  // 6. The xfail-strict test-gate — only when the registry exists (a",
+      "campaigns/packages-2026-09/harvest/rust-ai-native-lang-floor.md:6  $ rust-ai-native floor --keep-going"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-0-RED-GATE-IS-THE-ONLY-WORK",
+    "claim": "If any gate is red, the only legal work is making it green.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:44  ##RED-FLOOR-ADMITS-ONLY-GREENING-WORK Red? The only legal work is making it green — fix, do not proceed. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:139  bail!(\"floor: {} step(s) failed: {}\", red.len(), red.join(\", \"))"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-1-RATCHET",
+    "claim": "Tier 1 is the ratchet: run the collector, work its output cheapest-win-first.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:51  ## Tier 1 — the ratchet (every run) {#tier-one}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:60  ##take-cheapest-wins-lead Take one or two cheapest wins, in",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:213  drain_backlog.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(b.0)));"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "canonical-moves-lead",
+    "claim": "Lead-in: the canonical moves, each driven by a collector field, never by memory.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:24  ##ACT-ON-COLLECTOR-FACTS Act on collector facts, never on",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:60  ##take-cheapest-wins-lead Take one or two cheapest wins, in"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "MOVE-SPLIT-THE-DANGER-BAND",
+    "claim": "Move: split danger-band files, measured by physical lines, before they trip.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:51  const DANGER_FLOOR: u32 = 540;",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:63  1. ##RATCHET-DANGER-BAND-FILES **`danger_band_files`** — split any file at the top of the [540,600)",
+      "discipline/health/latest.json:18  \"files_in_danger_band\": 27,"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "MOVE-WIDEN-A-GATE-FOR-FREE",
+    "claim": "Move: a unit at zero drain enters the gate list with zero work; the gate confirms.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:195  // The pub-doctest ratchet drivers: a gated crate whose public types are",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:380  \"pub-doctest promotion candidates (gated, 0 gap — widen the gate, zero drain): {}\",",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:68  2. ##RATCHET-PUB-DOCTEST-PROMOTION-CANDIDATES **`pub_doctest_promotion_candidates`** — a gated crate at 0 typed-gap"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "MOVE-DRAIN-THE-SMALLEST-BACKLOG",
+    "claim": "Move: drain the smallest-gap ungated unit to zero, then flip it into the gate.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:387  println!(\"pub-doctest drain backlog (smallest gap first — drain next):\");",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:181  - ##SWEEP-FLIP-ONLY-AFTER-DRAIN **Flip-only-after-drain**: a crate enters `gated_crates` (or `gated_pub_doctest`) ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:82  2. ##RAID-FLIP **Flip**: add the crate to conform.toml's `gated_crates` (remove its"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "MOVE-REJUSTIFY-THE-DEVIATION-DEBT",
+    "claim": "Move: re-justify each recorded deviation; one with no live reason is a defect.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:20  //! - **Deviation-debt census.** Every `#[spec(deviates)]` is a recorded escape",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:73  4. ##RATCHET-DEVIATION-DEBT **`deviation_debt`** — re-justify each `#[spec(deviates)]`: a deviation",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:180  - ##SWEEP-RESTRUCTURE-BEATS-TESTIFY **Restructure beats testify** (unwrap drain): types carry the invariant — ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "MOVE-CATCH-CENSUS-REGRESSIONS",
+    "claim": "Move: gated units' violation censuses must stay zero; restructure beats testify.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:75  5. ##RATCHET-CENSUS-REGRESSIONS **Census regressions** (`unwrap_domain` / `env_nonroot` /",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:229  \"unwrap_domain\": h.unwrap_domain,",
+      "discipline/health/latest.json:19  \"deviation_debt\": 12,"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-2-DRIFT",
+    "claim": "Tier 2 is weekly drift: the slow rot the gates do not see.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:81  ## Tier 2 — drift (weekly) {#tier-two}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "DRIFT-DEBT-REGISTRY",
+    "claim": "Drift item: run the tripwire tool, re-disposition touched-and-open debt, file new deficiencies.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:83  - ##DRIFT-TRIPWIRE `rust-ai-native tripwire` — re-disposition every touched-and-open debt",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/tripwire.rs:76  \"tripwire: {} debt entr{} fire on this change set — address \\",
+      "discipline/registry/debt.json:3  \"note\": \"Machine-readable deficiency record (BROWNFIELD-PROTOCOL v0.1 §3) — the mechanization of AUDIT.md. ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "DRIFT-DOC-CODE",
+    "claim": "Drift item: checkpoints vs reality, architecture docs, roadmap; stale doc becomes stale-doc debt.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:90  - ##DRIFT-DOC-CODE Doc/code drift: WAL freshness (if the project keeps one — see",
+      "crates/vibe-check/src/checks/wal_freshness.rs:1  //! Check 5 — `spec/WAL.md` modification time is less than",
+      "discipline/registry/debt.json:4  \"kind_extensions\": \"`coverage-gap` and `external-drift` extend the BROWNFIELD §3 kind set (failing-test | ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "DRIFT-MARKER-CENSUS",
+    "claim": "Drift item: every TODO/FIXME/REVIEW/HACK graduates into a registry or is deleted.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:93  - ##DRIFT-MARKER-CENSUS Marker census: `rg -n 'TODO|FIXME|REVIEW|XXX|HACK'` over the source",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:71  ##REGISTRY-INTENT-JSON **`intent.json`** (+ `INTENT.md`) — the aspiration inventory, harvested from WAL ...",
+      "spec/boot/00-core.md:59  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "DRIFT-GOLDEN-TRANSCRIPTS",
+    "claim": "Drift item: characterization oracles fail loudly and are re-captured deliberately.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`): must fail loudly, re-captured",
+      "discipline/golden/capture.sh:5  # Regenerates every golden transcript deterministically from the current",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:105  ##CHARACTERIZATION-IS-A-STABILITY-ORACLE-NOT-A-CORRECTNESS-CLAIM These are stability oracles, not correctness claims — ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "DRIFT-TRACEABILITY-KIND-HYGIENE",
+    "claim": "Drift item: a code edge into an unmarked spec unit prompts marking its kind/revision.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:125  ##unit-declares-normativity-with-a-kind-line A unit declares normativity with a one-line marker directly under its heading: @impl/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:50  - ##FORCE-INVARIANTS-ARE-MACHINE-CHECKED **Invariants are machine-checked.** Dangling references, uncovered requirements, ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:98  // 5. The specmap check (prints its own policy note when defaulted)."
+    ],
+    "found": "partial",
+    "searched": "the kind/revision machinery and the specmap gate are located, but grep -rni 'kind hygiene|unmarked spec unit|not informative' over packages/org.vibevm.ai-native/**, crates/**, xtask/** returns 0 hits — no checker or skill step enforces marking the kind in the same change"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-3-DEEP-JUDGMENT",
+    "claim": "Tier 3 is weekly deep judgment over the WISH rules no checker mechanises yet.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:99  ## Tier 3 — deep judgment (weekly) {#tier-three}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:101  ##WALK-THE-WISH-RULES Walk the WISH rules over the week's diff (typed seams, cell",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:53  - ##AXIOM-A5-RULE-IS-CODE **A5 — Rule = code.** Every rule ships a checker or is explicitly a WISH. ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-3-CONCRETE-LIST-LIVES-IN-THE-STACK",
+    "claim": "The stack's GUIDE and cards carry the concrete WISH-rule list.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:103  closed-vocabulary naming — GUIDE §1–§10). @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:37  - `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no shadowing.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:41  - `rule-uniformity` (R3-006/H6) — one idiom per operation; mark exceptions."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "TIER-3-MAY-LAUNCH-A-RAID",
+    "claim": "Tier 3 may launch a raid when a Tier-1 backlog grows campaign-sized.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:105  ##CAMPAIGN-SIZED-BACKLOG-BECOMES-A-RAID If a Tier-1 backlog has grown",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:239  **Phase 4 — pub-doctest drain (bounded).** Drain `vibe-workspace`'s hybrid public",
+      "legacy-spec/terraforms/PUBDOC-DRAIN-v0.1.md:1  # vibevm Pub-Doctest Drain v0.1 — teach every public vibe-core type by one compiled example"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "collector-is-the-sweeps-instrument",
+    "claim": "The health collector is the sweep's instrument.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:1  //! `rust-ai-native health` — the Discipline health collector (the Sweep",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:54  rust-ai-native health"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "collector-must-be-lead",
+    "claim": "Lead-in: the collector MUST be four things.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:124  ##collector-must-be-lead It MUST be: @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "COLLECTOR-DETERMINISTIC",
+    "claim": "Deterministic: same tree gives byte-identical output, so the diff is the trend.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:27  //! SHRINK-PLAN v0.1 §0). Pure function of the source tree: re-running on an",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:28  //! unchanged tree writes a byte-identical file, so a committed snapshot's git",
+      "discipline/health/latest.json:3  \"note\": \"Discipline health snapshot — generated by `rust-ai-native health` (the Sweep Playbook's fact-gatherer). ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "COLLECTOR-ADVISORY",
+    "claim": "Advisory: the collector never fails the build; the gates do.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:37  //! only — it never fails the build; the gates do the failing.",
+      "campaigns/packages-2026-09/harvest/rust-ai-native-lang-health.md:16  EXIT=0"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "COLLECTOR-NO-LLM",
+    "claim": "No-LLM: the collector uses no model.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:29  //! diff IS the health delta. No LLM; no network — the collector is offline",
+      "discipline/health/latest.json:3  \"note\": \"Discipline health snapshot — generated by `rust-ai-native health` (the Sweep Playbook's fact-gatherer). ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "COLLECTOR-SINGLE-SOURCED",
+    "claim": "Single-sourced: it reads the gate policies, never hardcoded lists.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:23  //! It reuses the conform fact frontend (`Store::extract_workspace`), so its",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:80  let (config, _origin) = rust_ai_native_conform::load_config_or_default(root)?;",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:86  let gated: BTreeSet<&str> = config.gated_crates.iter().map(|s| s.as_str()).collect();"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "COUNT-THE-LIST-NOT-THE-RECORD",
+    "claim": "Any inventory the sweep acts on comes from the collector or a config, never memory.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:26  //! \"instrument discipline — count the list, not the record\" lesson,",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:24  ##ACT-ON-COLLECTOR-FACTS Act on collector facts, never on",
+      "CONTINUE.md:35  **Never decrement these; re-measure.** Every figure came from a command."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "PROMOTION-LADDER",
+    "claim": "Ladder: a WISH rule becomes a collector census, then a blocking gate rule.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:32  //! Discipline value (a check that could be a checker is a WISH until it is",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:51  - **WISH** = no checker yet (A5); the card is advisory until one exists.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:52  - A card graduates from BETA when its checker is implemented AND its evidence IDs are non-empty ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "EXTENDING-THE-COLLECTOR-IS-RATCHET-WORK",
+    "claim": "Extending the collector is itself ratchet work.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:31  //! dev repo's mirror-sync probe). Automated fact-gathering is itself a",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:266  // Project-wrapper extension point: a caller may append its own"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "ROW-TIER-0",
+    "claim": "Cadence row: Tier 0 hard floor runs daily and weekly.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:38  ## Tier 0 — the hard floor (ALWAYS first) {#tier-zero}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:2  //! Playbook Tier 0): format → tests → lints → the conform gate → the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "ROW-TIER-1",
+    "claim": "Cadence row: Tier 1 ratchet runs daily and weekly.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:51  ## Tier 1 — the ratchet (every run) {#tier-one}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "ROW-TIER-2",
+    "claim": "Cadence row: Tier 2 drift runs weekly only.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:81  ## Tier 2 — drift (weekly) {#tier-two}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "ROW-TIER-3",
+    "claim": "Cadence row: Tier 3 deep judgment / raid runs weekly only.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:99  ## Tier 3 — deep judgment (weekly) {#tier-three}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "DAILY-RUN-IS-LIGHT",
+    "claim": "The daily run is light: floor green, then one or two cheapest Tier-1 wins.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:60  ##take-cheapest-wins-lead Take one or two cheapest wins, in",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:3  description: Run the recurring AI-Native discipline sweep on this Rust project — floor gates first, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "WEEKLY-RUN-ADDS-DRIFT-AND-JUDGMENT",
+    "claim": "The weekly run adds the drift and judgment tiers.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:81  ## Tier 2 — drift (weekly) {#tier-two}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:99  ## Tier 3 — deep judgment (weekly) {#tier-three}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:3  description: Run the recurring AI-Native discipline sweep on this Rust project — floor gates first, ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "ANY-SINGLE-ITEM-IS-A-SAFE-STOP",
+    "claim": "Any single sweep item is a safe stop; the collector re-derives remaining work.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:3  description: Run the recurring AI-Native discipline sweep on this Rust project — floor gates first, ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:27  //! SHRINK-PLAN v0.1 §0). Pure function of the source tree: re-running on an"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "SWEEP-LANDS-TOPIC-GROUPED-COMMITS",
+    "claim": "Each sweep lands topic-grouped commits citing the sweep item that drove them.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:111  ##TOPIC-GROUPED-COMMITS Topic-grouped commits, one logical unit each, citing the sweep item. @impl/done",
+      "TASKS.md:3  Live checklist for the current work-slice. Each item is a logical commit (Conventional Commits per ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "REFRESH-THE-HEALTH-SNAPSHOT",
+    "claim": "Refresh the committed health snapshot in the same run; its diff records the trend.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:113  ##COMMIT-THE-REFRESHED-HEALTH-JSON Commit the refreshed `discipline/health/latest.json` in the same run. @impl/done",
+      "discipline/health/latest.json:1  {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:28  //! unchanged tree writes a byte-identical file, so a committed snapshot's git"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "resume-pointer-lead",
+    "claim": "Lead-in: the sweep's resume pointer, per the WAL convention.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:115  ##RESUME-POINTER Resume pointer: **with a WAL** — bump its standing line at any milestone"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "SWEEP-RESUME-WITH-A-WAL",
+    "claim": "With a WAL: bump the standing line at any milestone-moving sweep.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:115  ##RESUME-POINTER Resume pointer: **with a WAL** — bump its standing line at any milestone",
+      "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase B is CLOSED — B14, B15, B16 landed and the corpus",
+      "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "SWEEP-RESUME-WITHOUT-A-WAL",
+    "claim": "Without a WAL: the closing commit message plus the health snapshot are the pointer.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:116  move; **without** — the closing commit message carries the summary (floor",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:119  ##NEVER-LEAVE-STATE-ONLY-IN-THE-CONVERSATION Never leave the sweep's state only in"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "NON-GOAL-DOES-NOT-REPLACE-THE-GATES",
+    "claim": "Non-goal: the sweep does not replace the gates.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:37  //! only — it never fails the build; the gates do the failing.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:22  ##NEVER-SWEEP-ON-A-RED-TREE Never sweep on a red tree. @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "NON-GOAL-DOES-NOT-AUTO-FIX",
+    "claim": "Non-goal: it does not auto-fix; the collector gathers, the operator acts.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:35  //! Output: a machine-readable JSON snapshot (default",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/tripwire.rs:96  // Warn-only by contract.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:51  - ##AXIOM-A4-HUMAN-ACCOUNTABILITY **A4 — Human accountability.** AI checks and proposes; ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "NON-GOAL-DOES-NOT-TOUCH-FROZEN-SURFACES",
+    "claim": "Non-goal: it does not touch owner-frozen surfaces; drift there is filed as debt.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/modules/vibe-workspace/PROP-009-loading-model.md:13  ##OWNER-SANCTION **Owner sanction:** PROP-009 reshapes the owner-frozen `VIBEVM-SPEC.md` (§6 boot model, ...",
+      "AUDIT.md:373  migrations) — open, owner-court. **-08** (archived legacy repos) —",
+      "CLAUDE.md:136  `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "NON-GOAL-DOES-NOT-MEASURE-EFFECTIVENESS",
+    "claim": "Non-goal: it does not measure effectiveness; it records objective state.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/adopt-v0.3/PREDICTIONS.md:3  Measurement is deferred by owner decision; every adopted card and",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:36  //! `discipline/health/latest.json`) plus a human summary on stdout. Advisory"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "CONSUMER-RUNS-THE-SHIPPED-SKILL",
+    "claim": "A consumer runs the sweep from the shipped skill against the shipped tools.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:2  name: rust-ai-native-sweep",
+      ".claude/skills/rust-ai-native-sweep/SKILL.md:2  name: rust-ai-native-sweep",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:27  ##ALL-COMMANDS-ARE-THE-SHIPPED-TOOLCHAIN All commands below are the shipped toolchain. @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "KEEP-THE-THREE-LAYERS-APART",
+    "claim": "Keep method, language idioms and project instance in separate layers.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:173  ## 14. Sweep idioms (Rust) {#sweep-idioms}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:35  ##PROJECT-MAY-KEEP-ITS-OWN-WRAPPER (A project may also keep",
+      "CLAUDE.md:146  ## Memory discipline: project facts stay in the project"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "04-SWEEP-PLAYBOOK.md",
+    "anchor": "MACHINE-QUIRK-IS-NOT-PROJECT-FACT",
+    "claim": "A machine quirk is not a project fact; a project number is not method.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, ...",
+      "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. ...",
+      "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "status-line",
+    "claim": "Document is Discipline v0.2, BETA, tier T1, language-neutral.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:154  ##guiding-layer-lead **Guiding layer (T1, language-independent):** @impl/done",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:50  ##beta-status BETA. @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "RAID-PLAYBOOK-GIVES-THE-IN-FLIGHT-SKELETON",
+    "claim": "The Raid Playbook section 1 supplies the in-flight skeleton of a campaign.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:73  ##raid-per-crate-in-dependency-order-lead Per the Raid Playbook skeleton (scope & freeze → card order → phases →",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:180  - **D1 — scope & freeze (RAID §1.1).** In scope: `crates/vibe-cli/src/commands/tree/**`",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:193  - **D5 — differential safety (RAID §1.5).** The build_tree fixture oracle is the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "THIS-DOCUMENT-IS-THE-PAPER-TRAIL",
+    "claim": "This document is the paper trail: artifacts letting a campaign run cold and be audited.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:10  scaffold-covered beyond file-level `scope!`. Paper trail per 05-CAMPAIGN-FORM._",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:90  ##TRACK-THE-CAMPAIGN-PER-CAMPAIGN-FORM Track the campaign per `05-CAMPAIGN-FORM`: a cold-executable PLAN, the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "greenfield-terraform-proved-this-machinery",
+    "claim": "The original greenfield terraform proved this machinery; later campaigns reuse it.",
+    "marker": "spec/done",
+    "evidence": [
+      "terraform/BASELINE.md:3  _PLAYBOOK-TERRAFORM-VIBEVM v0.2, Phase −1 (\"Inventory: freeze",
+      "terraform/REPORT.md:1  # terraform/REPORT.md — the Discipline terraform, close-out report",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:10  The method, proven end to end on 58 files and 4 486 units:"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "historical-instances-live-in-the-pilot-tree",
+    "claim": "Historical instances live in the pilot project's tree; this is the distilled form.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/LOG.md:1  # terraform LOG",
+      "terraform/adopt-v0.3/PREDICTIONS.md:1  # Pilot Prediction Ledger — Discipline v0.2 adoption (TERRAFORM-PLAN-v0.3)",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:1  # AINATIVE-ANALYSIS-RAID v0.1 — AI-Native scaffold coverage of the static-analysis engine"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "ROW-ARTIFACT-PLAN",
+    "claim": "PLAN, written before work starts: the cold-executable recipe.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:7  floor-green (`bash tools/self-check.sh`); any phase boundary is a safe stop. A",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:90  ##TRACK-THE-CAMPAIGN-PER-CAMPAIGN-FORM Track the campaign per `05-CAMPAIGN-FORM`: a cold-executable PLAN, the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "ROW-ARTIFACT-BASELINE",
+    "claim": "BASELINE, written at campaign open: frozen starting facts and inventory counts.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/BASELINE.md:1  # BASELINE — Phase −1 inventory snapshot",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
+      "campaigns/packages-2026-09/baseline.json:1  {"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "ROW-ARTIFACT-PREDICTIONS",
+    "claim": "PREDICTIONS, written at open: falsifiable expectations stated before execution.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/adopt-v0.3/PREDICTIONS.md:4  every phase records a **falsifiable prediction** instead",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:413  ## 6. Predictions (falsifiable, campaign-wide) {#predictions}",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:201  ## 7 — Predictions"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "ROW-ARTIFACT-LOG",
+    "claim": "LOG, written during execution: append-only per-phase record with deviations.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/LOG.md:3  One line per terraform session (playbook §0.6): date · phase ·",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
+      "campaigns/packages-2026-09/run/journal.jsonl:1  {\"kind\":\"phase\",\"value\":\"C\",\"ts\":\"2026-07-28T06:05:16Z\"}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "ROW-ARTIFACT-REPORT",
+    "claim": "REPORT, written at close: results vs PREDICTIONS and lessons for Discipline revision.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/REPORT.md:1  # terraform/REPORT.md — the Discipline terraform, close-out report",
+      "terraform/REPORT.md:8  the §6 requirement: what the discipline got wrong feeds v0.2 of every",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2202  ## 9. REPORT {#report}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "SMALL-CAMPAIGNS-MAY-FOLD-BUT-NOT-SKIP",
+    "claim": "Small campaigns may fold artifacts but cannot skip the REPORT or the PLAN.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:151  ## 5 — Current-state facts (audit, verified 2026-07-15; do not re-discover)",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:244  **Phase 5 — the raid REPORT.** What the sweep learned: cards that misfired, gaps",
+      "terraform/discipline-sweep/REPORT-2026-06-17-grammar-refactor.md:1  # Discipline Sweep — grammar refactor of the new features (RAID REPORT)"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-IS-WRITTEN-TO-BE-EXECUTED-COLD",
+    "claim": "A campaign plan is written to be executed cold by a fresh session.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:6  tree `3227fde`, closed at `d821910` · cold-executable: every phase ends",
+      "campaigns/packages-2026-09/PHASE-C-KICKOFF.md:3  _Written 2026-07-28, at the Phase B close. The block under `## The prompt` is",
+      "campaigns/packages-2026-09/PHASE-C-KICKOFF.md:22  ## The prompt {#prompt}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "load-bearing-sections-lead",
+    "claim": "Lead-in: the plan's load-bearing sections follow.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:44  ##load-bearing-sections-lead The load-bearing sections: @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-READ-FIRST",
+    "claim": "Section: read-first/boot note, and living state supersedes the plan.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:7  Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).",
+      "campaigns/packages-2026-09/PHASE-C-KICKOFF.md:30  Перед началом прочитай, в этом порядке:",
+      "CONTINUE.md:3  _Written 2026-07-28 (**Phase B CLOSED at zero; both queued wave-level DRIFTs"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-WHY-THIS-EXISTS",
+    "claim": "Section: why this exists — the debt or gap the campaign pays, in one screen.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:96  ## 3 — The mandate",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:15  ## 0. Mandate (owner's words, 2026-07-25, recorded verbatim) {#mandate}",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:13  ## 0. Mandate (owner's words, 2026-07-24, recorded verbatim) {#mandate}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-DIRECTIVES-IN-FORCE",
+    "claim": "Section: directives in force, so the executor never re-litigates them.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:28  delegation-first default for the duration of the campaign — owner decision;",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:85  ## 3. Two decisions that make this campaign different {#decisions}",
+      "CONTINUE.md:123  ## Decisions still in force {#decisions}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-CURRENT-STATE-FACTS",
+    "claim": "Section: verified current-state facts with file:line pointers, marked do-not-re-discover.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:151  ## 5 — Current-state facts (audit, verified 2026-07-15; do not re-discover)",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:39  ## 1. Baseline (verified at authoring time, 2026-07-24) {#baseline}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-TARGET-END-STATE",
+    "claim": "Section: target end-state — the what-done-looks-like tree or diagram.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:119  ## 4 — Target arithmetic (baseline → exit)",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:147  ## 4. Campaign zone {#layout}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-DESIGN-DECISIONS",
+    "claim": "Section: design decisions, each with rationale and rejected alternative.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:178  ## 6 — Decisions",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:191  - **D4 — \"Где имеет смысл\" excludes B and I.** `model.rs` DTO newtypes and",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:85  ## 3. Two decisions that make this campaign different {#decisions}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-PHASES",
+    "claim": "Section: phases, each with goal, recipe, its own acceptance gate and commit set.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:217  ## 8 — Phases",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:218  ## 5. Phases {#phases}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-RISKS-AND-FALLBACKS",
+    "claim": "Section: risks and fallbacks, each with detection signal and plan-B.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:249  ## 9 — Risks and fallbacks",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:258  - **R3 — scope creep into behavior.** D1 freeze + P4: any behavior change blocks"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-QUICK-START",
+    "claim": "Section: quick-start copy-paste block the executing session runs first.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:276  ## 11 — Quick-start for the executing session",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:280  bash tools/self-check.sh             # floor GREEN before Phase 1",
+      "CONTINUE.md:168  ## Quick start {#quickstart}"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "PLAN-SECTION-WHOLE-CAMPAIGN-ACCEPTANCE",
+    "claim": "Section: whole-campaign acceptance, ideally frozen as a test.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:287  ## 12 — Whole-raid acceptance",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:290  bash tools/self-check.sh; echo \"EXIT=$?\"                      # 0",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:100  ##EXIT-CRITERIA `rust-ai-native floor` green with every crate either gated or"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "GATE-FLOOR-GREEN-AT-EVERY-BOUNDARY",
+    "claim": "The full gate panel is green at every phase boundary, not just what the phase touched.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:87  4. ##RAID-PHASE-CLOSES-WITH-THE-FLOOR-GREEN Each phase closes with the floor green (`rust-ai-native floor`) and",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:135  eprintln!(\"\\nfloor: all green\");"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "GATE-EACH-PHASE-LANDS-ITS-OWN-COMMITS",
+    "claim": "Each phase lands its own topic-grouped commits; the git log is authoritative.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/LOG.md:6  | date | phase | commits | gate |",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:88  its own topic commits, per the Campaign Form's phase-gate discipline. @impl/done",
+      "TASKS.md:3  Live checklist for the current work-slice. Each item is a logical commit (Conventional Commits per ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE",
+    "claim": "Behavior changes carry their oracle; a byte-compare is the oracle for relocations.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:193  - **D5 — differential safety (RAID §1.5).** The build_tree fixture oracle is the",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:85  3. ##RAID-BEHAVIOR-CHANGES-CARRY-AN-ORACLE **Behavior changes carry a differential oracle** (card scaffold-d);",
+      "discipline/golden/capture.sh:6  # tree. Run it twice; `git diff discipline/golden` must be empty — that is"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "GATE-DISCOVERED-WORK-IS-LEGAL-BUT-RECORDED",
+    "claim": "Mid-phase discoveries enter the phase explicitly or are filed, never done silently.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:90  ##DRIVE-BY-FIXES-ARE-PROHIBITED Drive-by fixes of known-failing tests outside a phase's scope are prohibited: ...",
+      "campaigns/packages-2026-09/deferrals.md:3  Open tails at close-out land here: obligations ruled deferred, unexecuted",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:332  ## 15 — Deferrals ledger"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "campaign-survives-stopping-lead",
+    "claim": "Lead-in: a campaign must survive its executor stopping at any phase boundary.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:32  - Crash-safety: any session may die (budget, power); the next session must"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "CAMPAIGN-RESUME-WITH-A-WAL",
+    "claim": "With a WAL: update the standing line every phase boundary; resume boot, WAL, PLAN.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase B is CLOSED — B14, B15, B16 landed and the corpus",
+      "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:94  ##CAMPAIGN-RESUME-POINTER Resume pointer: with a WAL — the standing line at each phase"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "CAMPAIGN-RESUME-WITHOUT-A-WAL",
+    "claim": "Without a WAL: the PLAN's top status line plus the LOG tail; state lives in the repo.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 ...",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) ...",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:95  boundary; without — the PLAN's status line + LOG tail"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "CAMPAIGN-CLOSES-ON-A-GREEN-FLOOR",
+    "claim": "A campaign closes when whole-campaign acceptance passes on a green floor.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:16  **Closed 2026-07-15, `3227fde` → `d821910`, floor-green at every boundary.** The",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:98  ## Exit criteria {#exit-criteria}",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:287  ## 12 — Whole-raid acceptance"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "closing-motions-lead",
+    "claim": "Lead-in: the closing motions of a campaign.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:108  ##closing-motions-lead The closing motions: @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "CLOSING-WRITE-THE-REPORT",
+    "claim": "Closing motion: write the REPORT with results, lessons and candidate revisions.",
+    "marker": "impl/done",
+    "evidence": [
+      "terraform/REPORT.md:8  the §6 requirement: what the discipline got wrong feeds v0.2 of every",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2202  ## 9. REPORT {#report}",
+      "terraform/adopt-v0.3/REPORT.md:1  # terraform/adopt-v0.3/REPORT.md — the Discipline v0.2 adoption, close-out report"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "CLOSING-FILE-EVERY-LEFTOVER",
+    "claim": "Closing motion: file every leftover as debt/intent with an id; nothing evaporates.",
+    "marker": "impl/done",
+    "evidence": [
+      "campaigns/packages-2026-09/deferrals.md:3  Open tails at close-out land here: obligations ruled deferred, unexecuted",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:123  ##PHASE-6-CLOSES-WITH-ASPIRATION-RECONCILIATION Phase 6 (playbook v0.2) closes with **aspiration reconciliation**: ...",
+      "BACKLOG.md:19  | ##REL-DEFERRALS `campaigns/<id>/deferrals.md` | **one campaign's** tails; dies with the zone | ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "CLOSING-UPDATE-THE-RESUME-POINTER",
+    "claim": "Closing motion: update the resume pointer to closed.",
+    "marker": "impl/done",
+    "evidence": [
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:3  <status stage=\"freeze\" state=\"done\" comment=\"B0 2026-07-24: EXECUTED, phases 0-5 done, floor-green throughout - historical plan\"/>",
+      "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase B complete.**",
+      "CONTINUE.md:18  **Nothing is running. Nothing is blocked.** The next phase is **Phase C**, its"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "05-CAMPAIGN-FORM.md",
+    "anchor": "CLOSING-PUBLISHING-IS-THE-OWNERS-CALL",
+    "claim": "Closing motion: publishing or mirroring stays the owner's explicit call.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:245  engines re-vendored) with **no new version slot and no publication**.",
+      "spec/boot/90-user.md:13  - ##SRC-MULTI-HOMED **vibevm source repo (this repository) — multi-homed:** GitVerse `git@gitverse.ru:vibevm/vibevm.git` ...",
+      "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "status-line",
+    "claim": "Document is Discipline v0.2, BETA, T1, language-neutral, optional but preferred.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:154  ##guiding-layer-lead **Guiding layer (T1, language-independent):** @impl/done",
+      "crates/vibe-check/src/checks/wal_wellformed.rs:34  // WAL discipline is a project convention, not part of the"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "sessions-end-a-project-outlives-them",
+    "claim": "Agent sessions end, compact and crash; a project outlives all of them.",
+    "marker": "spec/done",
+    "evidence": [
+      "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — ...",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:32  - Crash-safety: any session may die (budget, power); the next session must",
+      "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "CONVENTION-KEEPS-STATE-IN-TWO-FILES",
+    "claim": "The convention keeps living state in two repository files.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/WAL.md:1  # WAL — Project Continuation State",
+      "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+      "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "WAL-IS-OPTIONAL",
+    "claim": "It is optional; every procedure touching it carries a without-WAL branch.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:115  ##RESUME-POINTER Resume pointer: **with a WAL** — bump its standing line at any milestone",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:94  ##CAMPAIGN-RESUME-POINTER Resume pointer: with a WAL — the standing line at each phase",
+      "crates/vibe-check/src/checks/wal_wellformed.rs:36  // simply has no `spec/WAL.md` — that's not a finding. The"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "WAL-IS-PREFERRED",
+    "claim": "It is preferred because scattered resumption state degrades as a project grows.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:116  move; **without** — the closing commit message carries the summary (floor"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'degrades as a project grows|scattered across commit messages' over packages/org.vibevm.ai-native/**, crates/**, spec/**, campaigns/**, CLAUDE.md — 0 hits; the two branches exist but no artefact argues the preference"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "ADOPT-WHEN-MORE-THAN-ONE-SESSION",
+    "claim": "Adopt it when more than one session or operator will touch the tree.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path ...",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:64  section; rewrite CONTINUE.md; commit both as their own topic commits."
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'more than one session|more than one operator' over packages/org.vibevm.ai-native/**, crates/**, spec/**, campaigns/**, CLAUDE.md, AGENTS.md, GEMINI.md — 0 hits outside the convention itself; no adoption trigger is recorded anywhere"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "WAL-FILE-DESCRIBES-THE-CURRENT-STATE",
+    "claim": "spec/WAL.md is the living checkpoint: dated standing line plus a session section.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase B is CLOSED — B14, B15, B16 landed and the corpus",
+      "spec/WAL.md:6  ## Current phase",
+      "crates/vibe-check/src/checks/wal_wellformed.rs:13  const WAL_REQUIRED_SECTIONS: &[&str] = &["
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "two-hard-rules-lead",
+    "claim": "Lead-in: two hard rules govern the WAL.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:31  ##two-hard-rules-lead Two hard rules: @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "RULE-REWRITE-NOT-APPEND",
+    "claim": "Rewrite, not append: the lead always describes now; old lines demote to a PRIOR tail.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+      "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+      "spec/WAL.md:154  ## Done (collapsed — see `git log`)"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "RULE-THE-WAL-IS-CANONICAL",
+    "claim": "The WAL is canonical: where it and any snapshot disagree, the WAL wins.",
+    "marker": "impl/done",
+    "evidence": [
+      "CONTINUE.md:4  landed**). `spec/WAL.md` is the canonical living state and supersedes this",
+      "CLAUDE.md:188  - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+      "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "CONTINUE-FILE-IS-THE-COLD-RESUME-SNAPSHOT",
+    "claim": "CONTINUE.md holds TL;DR, tree state, blocker, next-steps recipe, findings, commits.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. ...",
+      "CLAUDE.md:180  - Where work currently stands (branch, ahead/behind origin, working tree status).",
+      "CONTINUE.md:7  ## TL;DR"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "CONTINUE-IS-OVERWRITTEN-WHOLESALE",
+    "claim": "CONTINUE.md is overwritten wholesale each time; staleness compounds otherwise.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "CONTINUE-IS-A-SNAPSHOT-THE-WAL-SUPERSEDES-IT",
+    "claim": "CONTINUE.md is a snapshot; the WAL supersedes it.",
+    "marker": "impl/done",
+    "evidence": [
+      "CONTINUE.md:4  landed**). `spec/WAL.md` is the canonical living state and supersedes this",
+      "CLAUDE.md:188  - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "WAL-OLDER-THAN-24-HOURS-IS-STALE",
+    "claim": "A WAL older than 24 hours is stale; verify recorded state before destructive work.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+      "crates/vibe-check/src/lib.rs:292  /// WAL is \"stale\" past this age. Default 24h matches the boot",
+      "crates/vibe-cli/templates/boot-00-core.md:18  If `spec/WAL.md` is older than 24 hours, verify the state with the user before"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "FRESHNESS-ENFORCEMENT-IS-ADVISORY",
+    "claim": "The pilot's linter warns on a stale WAL; the sweep's Tier-2 checks it weekly.",
+    "marker": "impl/done",
+    "evidence": [
+      "crates/vibe-check/src/checks/wal_freshness.rs:1  //! Check 5 — `spec/WAL.md` modification time is less than",
+      "crates/vibe-check/src/checks/wal_freshness.rs:70  \"WAL is {age_hours} hours old (threshold: {max_age_hours}h). Consider an end-session checkpoint.\"",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:90  - ##DRIFT-DOC-CODE Doc/code drift: WAL freshness (if the project keeps one — see"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "BOUNDARY-SESSION-END",
+    "claim": "Session end: update the WAL, rewrite CONTINUE.md, commit both as topic commits.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / ...",
+      "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` ...",
+      "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "BOUNDARY-SESSION-RESUME",
+    "claim": "Session resume: boot, read WAL and CONTINUE, verify empirically, report and wait.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, ...",
+      "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. ...",
+      "CLAUDE.md:209  Rationale: the resume boundary exists so the owner can inspect the restored state and steer — ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "BOUNDARY-MID-WORK-CHECKPOINTS",
+    "claim": "Mid-work: campaigns bump the WAL at phase boundaries, sweeps at milestone moves.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:94  ##CAMPAIGN-RESUME-POINTER Resume pointer: with a WAL — the standing line at each phase",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:115  ##RESUME-POINTER Resume pointer: **with a WAL** — bump its standing line at any milestone",
+      "terraform/LOG.md:8  | 2026-06-10 | Phase −1 — inventory | `docs(spec): add the Discipline terraform package v0.2-beta` · ..."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "OPT-OUT-STILL-OWES-THE-SAME-INVARIANT",
+    "claim": "A project that opts out still owes: resumption state lives in the repository.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:119  ##NEVER-LEAVE-STATE-ONLY-IN-THE-CONVERSATION Never leave the sweep's state only in",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:33  resume from **one obvious file** with at most one step lost."
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "the-fallbacks-lead",
+    "claim": "Lead-in: the fallbacks the procedures use without a WAL.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:78  ##the-fallbacks-lead The fallbacks the procedures"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "FALLBACK-PLAN-STATUS-LINE",
+    "claim": "Fallback: a campaign PLAN carries a status line updated with each phase's commits.",
+    "marker": "impl/done",
+    "evidence": [
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 ...",
+      "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) ...",
+      "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:5  _Status: **EXECUTED** (Phases 0–5 done, floor-green throughout) · opened against"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "FALLBACK-SWEEP-CLOSING-COMMIT",
+    "claim": "Fallback: the sweep's closing commit carries the summary; the snapshot is the trend.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:116  move; **without** — the closing commit message carries the summary (floor",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:28  //! unchanged tree writes a byte-identical file, so a committed snapshot's git",
+      "discipline/health/latest.json:1  {"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "FALLBACK-TERRAFORM-REGISTRIES",
+    "claim": "Fallback: the terraform skill's registries hold what a WAL would hold about debt and intent.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:47  ## 3. The registries {#registries}",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:43  4. ##INVENTORY-HARVEST-INTENT **Harvest intent** into `discipline/registry/intent.json`: WAL \"Next\" /",
+      "discipline/registry/intent.json:1  {"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "fallbacks-work-but-are-weaker",
+    "claim": "The fallbacks work but are weaker: three places instead of one canonical now.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:95  boundary; without — the PLAN's status line + LOG tail",
+      "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'three places instead of one|no single canonical' over packages/org.vibevm.ai-native/**, crates/**, spec/**, campaigns/**, legacy-spec/**, CLAUDE.md — 0 hits; the three fallbacks are each located but nothing compares their strength"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "SIGNAL-TO-ADOPT-THE-TWO-FILES",
+    "claim": "Re-deriving its own state is the signal for a without-WAL project to adopt section 1.",
+    "marker": "impl/done",
+    "evidence": [
+      "CONTINUE.md:35  **Never decrement these; re-measure.** Every figure came from a command."
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'signal to adopt|keeps re-deriving' over packages/org.vibevm.ai-native/**, crates/**, spec/**, campaigns/**, legacy-spec/**, CLAUDE.md — 0 hits; the host adopted the two files before this convention was written, so no adoption event is recorded"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "WAL-RECORDS-PROJECT-FACTS",
+    "claim": "The WAL records project facts.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:146  ## Memory discipline: project facts stay in the project",
+      "spec/WAL.md:1  # WAL — Project Continuation State",
+      "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "MACHINE-SCOPED-QUIRKS-BELONG-ELSEWHERE",
+    "claim": "Machine-scoped quirks belong in user-scoped notes or the boot user-override file.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, ...",
+      "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. ...",
+      "MEMORY.md:1  # Project memory: vibevm"
+    ],
+    "found": "located"
+  },
+  {
+    "file": "06-WAL-CONVENTION.md",
+    "anchor": "KEEP-THE-THREE-LAYERS-APART",
+    "claim": "Keep method, project (WAL/CONTINUE) and machine (user boot snippet) apart.",
+    "marker": "impl/done",
+    "evidence": [
+      "CLAUDE.md:146  ## Memory discipline: project facts stay in the project",
+      "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. ...",
+      "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped ..."
+    ],
+    "found": "located"
+  }
+]
