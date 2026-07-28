@@ -1,0 +1,1983 @@
+[
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "PACKAGE-INSTALLS-THE-WAL-PROTOCOL",
+  "marker": "@impl/done",
+  "claim": "The package is a `flow`-kind package whose install puts the WAL protocol into a project.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:4  kind = \"flow\"",
+   "vibe.lock:421  kind = \"flow\"",
+   "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "Manifest kind, lockfile entry (vibe.lock:420-428, version 0.2.0, source_kind local), the installed slot, and the compiled static lane. `find vibedeps/flow-wal -type f` returns 9 files — the same 9 the package ships. Widened to the host's own spec tree to see what 'installs into a project' means here: `ls spec/flows` returns 'No such file or directory', and vibe.lock:427 reads files_written = [], so the protocol reaches this consumer through vibedeps/ plus the compiled spec/boot/STATIC.md, not by copying documents into spec/flows/wal/."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "WAL-IS-A-SHORT-CHECKPOINT-FILE-THAT-BRIDGES-SESSIONS",
+  "marker": "@impl/done",
+  "claim": "The WAL is a short checkpoint file at `spec/WAL.md` that bridges sessions, because a coding agent has no memory between invocations.",
+  "evidence": [
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+   "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The named path exists in the host and the host's own boot contract calls it a checkpoint, not a log, in the same words. Measured the file rather than judging 'short': wc gives 291 lines / 2 807 words / 18 493 bytes for spec/WAL.md. The token-budget question is measured separately on the BUDGET-TARGET and BUDGET-HARD-LIMIT rows."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "DISCIPLINE-SPANS-TWO-FILES-SINCE-0-2-0",
+  "marker": "@impl/done",
+  "claim": "Since 0.2.0 the discipline spans two files — the living checkpoint plus `CONTINUE.md`, a cold-resume snapshot.",
+  "evidence": [
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+   "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:31  ## The CONTINUE.md contract {#contract}"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "Both files exist in the host at the named paths (also captured in harvest/world-w2-wal-family.md §source-2). For the 'since 0.2.0' half I widened into git history: `git show --stat 50122eb2` (2026-04-17, 'feat(packages): hand-write flow:wal@0.1.0 canonical registry payload') lists six files — README.md, boot/10-flow-wal.md, WAL-PROTOCOL.md, morning-routine.md, session-end-hook.md, vibe-package.toml — with no cold-resume.md; `git show 50122eb2:packages/flow/wal/v0.1.0/README.md` names only spec/WAL.md in its uninstall paragraph. Only v0.2.0 is on disk today."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-WAL-CONVENTION",
+  "marker": "@impl/done",
+  "claim": "This package is the canonical home of the WAL convention.",
+  "evidence": [
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred** @impl/done",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:31  ##two-hard-rules-lead Two hard rules: @impl/done"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "A second, complete WAL convention document ships in this tree from another package, and it does not cede canonicity. grep over packages/org.vibevm.ai-native/ for flow:wal and org.vibevm.world/wal returns 4 hits, all inside PROP-014-specmap-bidirectional-traceability.md as examples of reserved group-qualified URI grammar — none a pointer to this package. grep in 06-WAL-CONVENTION.md for defer / supersed / canonical home returns one hit, line 49, about CONTINUE being superseded by the WAL, not about this package. Widened to the host: grep for spec://org.vibevm.world/wal over CLAUDE.md, spec/ and campaigns/ returns nothing, so nothing in this repository cites the package as its WAL authority either. What is missing is any text, in either package, naming this one as the canonical home."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "DISCIPLINE-DEFERS-TO-THIS-PACKAGE-FROM-ITS-NEXT-RELEASE",
+  "marker": "@spec/done",
+  "claim": "The AI-Native Discipline (`flow:core-ai-native`) ships a WAL convention document, and that document defers to this package from its next release.",
+  "evidence": [
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:49  - `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).",
+   "vibe.lock:62      \"flow:org.vibevm.world/wal@=0.2.0\","
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The first half is confirmed: the convention document exists, in both shipped versions (ls packages/org.vibevm.ai-native/core-ai-native/ → v0.7.0, v0.8.0; 06-WAL-CONVENTION.md present in each). The second half is about a release that does not exist in this tree. v0.8.0 is the newest version here and is the installed one, and it still carries the full convention with no deferral text — the only 'defer' hit in that file is a PROP-014 URI-grammar deferral, and the only org.vibevm.world/wal mentions anywhere in the ai-native package are the four PROP-014 grammar examples. No later core-ai-native version exists to check the claim against."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "package-contents-lead",
+  "marker": "@impl/done",
+  "claim": "The package ships five pieces of content plus a skill.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:15  [boot_snippet]",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:19  [[skill]]",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:21  path = \"spec/skills/wal-status\""
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "`find packages/org.vibevm.world/wal/v0.2.0 -type f | sort` returns exactly 9 files: LICENSE.md, README.md, vibe.toml, and six content files — spec/boot/10-flow-wal.md, spec/flows/wal/WAL-PROTOCOL.md, cold-resume.md, morning-routine.md, session-end-hook.md, spec/skills/wal-status/SKILL.md. That is five documents plus one skill, matching the count and matching the six bullets that follow the lead. The installed slot returns the same 9 paths under vibedeps/flow-wal/0.2.0/."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CONTENT-THE-PROTOCOL",
+  "marker": "@impl/done",
+  "claim": "`spec/flows/wal/WAL-PROTOCOL.md` is the full protocol and covers the two files, what a WAL is and isn't, required sections, agent-grade precision, update triggers, freshness, size budget, the conflict rule, the acceptance test, and a re-derivation prompt.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:13  ## The two files {#files}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:33  ## What a WAL is {#what}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:64  ## What a WAL is NOT {#not}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:74  ## Required sections {#sections}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:100  ## Write for the autonomy you grant {#precision}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:127  ## Update triggers {#triggers}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:137  ## The freshness rule {#freshness}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:146  ## Size budget {#size}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:158  ## Conflict resolution {#conflicts}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:204  ## The acceptance test {#acceptance}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:232  ## Re-derive for your project {#re-derive}"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "Read WAL-PROTOCOL.md end to end (262 lines) and matched each of the ten named topics to a heading; all ten are present, in the order the README lists them. The same file is installed verbatim at vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CONTENT-THE-SESSION-END-HOOK",
+  "marker": "@impl/done",
+  "claim": "`spec/flows/wal/session-end-hook.md` carries the wind-down: a step-by-step session-end procedure plus the trigger phrases that invoke it explicitly.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md:1  # Session-end hook — the wind-down {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md:9  ##also-defines-the-trigger-phrases It also defines the trigger phrases that invoke",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md:47  ## 2. Rewrite `spec/WAL.md` {#rewrite}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md:124  ## 6. Report {#report}"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "The file exists at the named path and its headings are numbered 1..6 (§stopping-state, §rewrite, §collapse, §continue, §propose, §report), so 'step-by-step' is literal. Trigger phrases are declared in its scope line and covered in §when. Installed identically at vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md. This file's own facts belong to another W2 worker; it is cited here only as the referent of the README's content list."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CONTENT-THE-MORNING-ROUTINE",
+  "marker": "@impl/done",
+  "claim": "`spec/flows/wal/morning-routine.md` is the human counterpart — a five-minute ritual at the start of each day that keeps the agent's read of state synchronised with the human's.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:1  # Morning routine — the human side of WAL {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:5  ##scope-of-this-document **Scope of this document.** The five-minute human ritual at the start",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:9  ##WAL-IS-A-TWO-SIDED-PROTOCOL The WAL is a two-sided protocol — the"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "File present at the named path; its own scope line uses the same 'five-minute human ritual at the start' wording the README summarises. Installed at vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md. Widened to the host for the ritual itself: no artifact records a daily human read — no log, no dated morning entry in spec/WAL.md or CONTINUE.md — so the human half is not observable from the tree and I found nothing to cite either way."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CONTENT-THE-COLD-RESUME-CONTRACT",
+  "marker": "@impl/done",
+  "claim": "`spec/flows/wal/cold-resume.md` carries the `CONTINUE.md` contract and the wind-down / resume session commands.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:1  # Cold resume — `CONTINUE.md` and the session commands {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:31  ## The CONTINUE.md contract {#contract}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:74  ## The wind-down command {#wind-down}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:110  ## The resume command {#resume}"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "All three named parts have their own sections in the file. Installed at vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md. The host implements both commands at CLAUDE.md:167 and CLAUDE.md:196; that conformance is measured per fact on the boot-snippet rows RECOGNISE-THE-WIND-DOWN-PHRASES and RECOGNISE-THE-RESUME-PHRASES rather than here."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CONTENT-THE-BOOT-SNIPPET",
+  "marker": "@impl/done",
+  "claim": "`spec/boot/10-flow-wal.md` is the boot snippet agents read at session start, pointing them at the protocol and at the WAL itself.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:16  source = \"spec/boot/10-flow-wal.md\"",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md:62  ##full-protocol-pointer Full protocol: [`spec/flows/wal/WAL-PROTOCOL.md`](../flows/wal/WAL-PROTOCOL.md). @impl/done",
+   "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->",
+   "spec/boot/STATIC.md:1428  Full protocol: [`spec/flows/wal/WAL-PROTOCOL.md`](../flows/wal/WAL-PROTOCOL.md)."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The snippet is declared in the manifest, compiled into the host's static lane at STATIC.md:1369-1428, and STATIC.md is read first per spec/boot/INDEX.md:11 (static = \"spec/boot/STATIC.md\"). Widened to check the pointer half: the compiled copy keeps the relative links verbatim, and ../flows/wal/WAL-PROTOCOL.md resolved from spec/boot/ is spec/flows/wal/WAL-PROTOCOL.md, which does not exist here — `ls spec/flows` returns 'No such file or directory'. In this consumer the protocol is on disk only at vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md, so all three sibling links in the compiled snippet (STATIC.md:1403, :1414, :1428) fail to resolve against the host tree."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CONTENT-THE-WAL-STATUS-SKILL",
+  "marker": "@impl/done",
+  "claim": "`spec/skills/wal-status/` is an installable agent skill: the ten-line orientation read of the WAL, staleness warning first.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:19  [[skill]]",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:21  path = \"spec/skills/wal-status\"",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:24  ## Output — at most ten lines {#output}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:18     than 24 hours? The warning is your FIRST output line:"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The skill is declared as an installable [[skill]], an installer surface exists (ls crates/vibe-cli/src/commands/ shows a `skill` module), and the file's §output caps the answer at ten lines with the staleness warning as the FIRST output line. Widened to the installed reality: `ls .claude/skills/` returns five entries — rust-ai-native-sweep, rust-ai-native-terraform, typescript-ai-native-sweep, typescript-ai-native-terraform, vibevm — and `ls .claude/skills/ | grep -i wal` returns nothing. Cited from harvest/world-w2-wal-family.md §source-3 rather than re-derived. 'Installable' holds; 'installed in this host' does not."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "UNINSTALL-REMOVES-PACKAGE-FILES-BUT-NEVER-PROJECT-STATE",
+  "marker": "@impl/done",
+  "claim": "Uninstall removes every file the package wrote, including the boot snippet and the skill, but never touches `spec/WAL.md`, `CONTINUE.md`, or the user-owned boot files `00-core.md` / `90-user.md`.",
+  "evidence": [
+   "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
+   "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+   "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add any project-specific conventions that should be read at session boot. @impl/done",
+   "vibe.lock:427  files_written = []"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "Read crates/vibe-cli/src/commands/uninstall.rs and grepped it for WAL|CONTINUE|00-core|90-user: no hit names spec/WAL.md, CONTINUE.md, 00-core.md or 90-user.md. The command removes the vibedeps/ slot (in-place or versioned), drops the lockfile entry and its root-dependency mirror, drops the [requires] declaration, and regenerates boot artifacts — nothing else. The host restates the same guarantee for the user lane in its own words at spec/boot/90-user.md:3. One qualification recorded, not judged: files_written = [] for this package, so in this consumer 'every file the package wrote' is the empty set, and what removal touches is the vibedeps slot plus the regenerated boot artifacts."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CHANGE-THE-TWO-FILE-MODEL",
+  "marker": "@impl/done",
+  "claim": "0.2.0 absorbed the two-file model from the AI-Native Discipline's WAL convention: `spec/WAL.md` canonical living checkpoint, `CONTINUE.md` at repo root the cold-resume snapshot it supersedes.",
+  "evidence": [
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:9  ##CONVENTION-KEEPS-STATE-IN-TWO-FILES *This",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:49  ##CONTINUE-IS-A-SNAPSHOT-THE-WAL-SUPERSEDES-IT It is a *snapshot*; the WAL supersedes it. @impl/done",
+   "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
+   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The ai-native convention document carries the same two-file model and the same supersession rule in its §1 'The two files', which is what 'absorbed from' asserts; the host runs it, stating the subordination twice inside CONTINUE.md itself. For the 'new in 0.2.0' half: `git show --stat 50122eb2` (flow:wal@0.1.0, 2026-04-17) has no cold-resume.md and no CONTINUE.md anywhere in the payload. What this row does not settle is the direction of the borrowing — both documents live in this repository and neither dates the other."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CHANGE-SESSION-COMMANDS",
+  "marker": "@impl/done",
+  "claim": "0.2.0 adds the session-command contracts: the wind-down (`END SESSION`, `WRAP UP`, `CHECKPOINT AND CLOSE`) overwrites the snapshot wholesale; resume restores, reports, and stops.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:74  ## The wind-down command {#wind-down}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:110  ## The resume command {#resume}",
+   "CLAUDE.md:174  - English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.",
+   "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+   "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "Both contracts exist in the package and both are implemented by the host, whose English phrase list is a superset of the flow's three and which reuses the flow's 'overwrite wholesale' and 'stop and wait for direction' wording almost verbatim. `git show --stat 50122eb2` shows no cold-resume.md in 0.1.0, so the commands are new in 0.2.0. Two host differences recorded and not judged: the host's wind-down writes CONTINUE.md first (CLAUDE.md:178) and the WAL second (CLAUDE.md:189), where session-end-hook.md rewrites the WAL at step 2 and overwrites CONTINUE at step 4; and the host commits and pushes (CLAUDE.md:190-191) where session-end-hook.md:112 reads '##DO-NOT-COMMIT-AUTOMATICALLY Do not commit automatically —'."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CHANGE-THE-WAL-STATUS-SKILL",
+  "marker": "@impl/done",
+  "claim": "0.2.0 turns the fast skim into an installable skill rather than a hand-pasted prompt snippet.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:19  [[skill]]",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:2  name: wal-status",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:45  ##FLOW-SHIPS-A-WAL-STATUS-SKILL This flow ships a `wal-status` skill:",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:52  ##equivalent-prompt-lead For an agent without skill support, paste the equivalent prompt into"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "The skill file and its [[skill]] declaration exist in 0.2.0; `git show --stat 50122eb2` lists six files for 0.1.0 and none is a skill, so 'now an installable skill rather than a hand-pasted snippet' matches the diff exactly. The hand-paste path survives as the documented fallback at morning-routine.md:52-63. Installed reality: not present in .claude/skills/ (five entries, none wal-status)."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "CHANGE-THE-SPEC-LAYOUT",
+  "marker": "@impl/done",
+  "claim": "0.2.0 moved the boot snippet from `boot/` to `spec/boot/`, matching the current package layout.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:16  source = \"spec/boot/10-flow-wal.md\"",
+   "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "`git show --stat 50122eb2` (2026-04-17) lists packages/flow/wal/v0.1.0/boot/10-flow-wal.md; `git show --stat ec6b5b5a` (2026-07-07, 'feat(redbook): wal 0.2.0 — the canonical WAL convention') lists packages/org.vibevm/wal/v0.2.0/spec/boot/10-flow-wal.md. The move is exactly as claimed. Widened to test 'matching the current package layout' against the installed corpus: `grep -n 'vibe:static' spec/boot/STATIC.md` shows five flows still resolved from the old <slot>/boot/ path — dev-runtime-docs, git-atomic-commits, git-autonomy, git-conventional-commits, sync-from-code — so wal is on the newer side of a split layout rather than in a uniform one."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "COMPOSES-SYNC-FROM-CODE-AND-ATOMIC-COMMITS",
+  "marker": "@impl/done",
+  "claim": "`flow:sync-from-code` uses the `20-` boot prefix and `flow:git-atomic-commits` the `30-`, distinct from this flow's by design; a sync may trigger a WAL update, and checkpoint commits follow the project's commit discipline.",
+  "evidence": [
+   "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+   "spec/boot/STATIC.md:1221  <!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md -->",
+   "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->",
+   "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back. @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The prefix half is confirmed against the installed lane: 10- for wal, 20- for sync-from-code, 30- for git-atomic-commits, all distinct and all three installed. The behavioural half is not settled. grep for WAL in vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md and in the atomic-commits snippet returns nothing, so neither composed flow's snippet says a sync may trigger a WAL update; the host's own sync pointer at 00-core.md:45 likewise says nothing about the WAL. The composition is asserted only from this side."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "COMPOSES-CONFLICT-PROTOCOL",
+  "marker": "@impl/done",
+  "claim": "`flow:conflict-protocol` defines the authority hierarchy Human > Spec > Tests > Code > WAL, including the WAL's place at its bottom.",
+  "evidence": [
+   "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:56  Human  >  Spec  >  Tests  >  Code  >  WAL",
+   "vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md:13  Human  >  Spec  >  Tests  >  Code  >  WAL",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:161  Human  >  Spec  >  Tests  >  Code  >  WAL"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "grep for 'Human  >  Spec' across packages/org.vibevm.world/conflict-protocol and vibedeps/flow-conflict-protocol returns the identical five-term chain in the README, the boot snippet and CONFLICT-PROTOCOL.md, with WAL last in every one; the wal package reproduces the same chain in its own §conflicts. The flow is installed here, compiled at spec/boot/STATIC.md:174. One thing the search shows that the claim does not: the conflict-protocol package's own vibe.toml description stops at Code and omits WAL."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "COMPOSES-CAMPAIGN-PLANS",
+  "marker": "@impl/done",
+  "claim": "`flow:campaign-plans` composes with this flow: a campaign checkpoint updates the WAL at phase boundaries.",
+  "evidence": [
+   "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md:65  - ##COMPOSES-WAL `flow:wal` — a campaign checkpoint updates the WAL's standing line",
+   "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md:66    at every phase boundary; the plan file, not the WAL, carries the",
+   "spec/boot/STATIC.md:65  <!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->",
+   "spec/WAL.md:6  ## Current phase"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The reciprocal fact exists on the campaign-plans side in the same words, and campaign-plans is installed here at boot prefix 40-. The host behaves this way: its WAL's Current phase section names the live campaign and phase, and `git log --grep='docs(wal)'` returns phase-boundary checkpoints — 053f1671 'docs(wal): Phase B closed, and the instruments agreed once too often', 3ec0424c 'docs(wal): Phase D closed 304 rows, not 310', 15c5bb30 'docs(wal): Phase L closed — boundary entry, status line, checkpoint'. Narrower than the claim: grep for WAL in vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md returns nothing, so the installed campaign-plans boot snippet does not itself carry the WAL obligation — only its README does."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "ideas-are-chapters-two-and-three",
+  "marker": "@spec/done",
+  "claim": "The underlying ideas — two-process cooperation, files as IPC, the memory hierarchy, and WAL as the only memory surviving session boundaries — are chapters 2–3 of *AI-native development*, shipped in Russian inside `flow:redbook` at `spec/book/ru/`.",
+  "evidence": [
+   "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
+   "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+   "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:1  # Глава третья.<br>Архитектура памяти",
+   "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:4  которая определяет всё. WAL как checkpoint, не лог.",
+   "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The location half is exact: `ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/` returns exactly three Russian chapters, identical in v0.1.0 and in the installed vibedeps/flow-redbook/0.2.0/spec/book/ru/. Three of the four listed ideas land where claimed — files-as-IPC is chapter 2's title, the memory architecture and 'WAL как checkpoint, не лог' are chapter 3's summary. The fourth does not: 'two-process cooperation' is chapter 1 ('Два процесса, одна задача'), which the range 2–3 excludes. Widened to git history for the wording: `git show 50122eb2:packages/flow/wal/v0.1.0/README.md` gave the same list as 'chapters 1-3', so 0.2.0 narrowed the range while keeping chapter 1's subject in the list. The memory hierarchy also appears host-side as the reading layers at spec/boot/00-core.md:38-43."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "AGENT-SESSION-HAS-NO-PERSISTENT-MEMORY",
+  "marker": "@spec/done",
+  "claim": "An agent session has no persistent memory: every morning it wakes up blank, and only files survive.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:54  ##FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY For the",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:25  ##RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY-NEVER-IN-A-SESSION One invariant governs both: **resumption state lives in the repository,",
+   "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+   "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The premise is restated in the package's own protocol and, more usefully, acted on by the host: the wind-down command exists because a session's context does not survive, and CLAUDE.md:169 names the three ways it ends — different machine, new session, post-compaction. The host applies the same premise again in its memory-discipline section (CLAUDE.md:150 onward), ruling that project facts land in the repository rather than in per-user harness memory. No counter-evidence found anywhere on the perimeter; nothing in the tree claims session memory persists."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "WELL-WRITTEN-WAL-TELLS-THE-AGENT-WHERE-WORK-STOPPED",
+  "marker": "@spec/done",
+  "claim": "A well-written WAL tells the agent and the author's future self where work stopped, what is safe to change, and what is explicitly off-limits.",
+  "evidence": [
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:162  ## In progress",
+   "spec/WAL.md:175  ## Next",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host's WAL carries the claim's roles as named sections: where work stopped (In progress, which describes the in-flight W2 delegation), what is next (Next), and what is off-limits (Constraints — do not violate, 86 lines, the largest section in the file). Read that section: every entry states a rule and its cost, e.g. the verdict standard 'written down 2026-07-28 after it was applied to 690 rows without being stated' and 'Never classify a group of rows by one rule to save time.' The one part with no heading of its own is 'what is safe to change' — it is carried implicitly by what Constraints does not cover."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "WITHOUT-THE-DISCIPLINE-CONTEXT-IS-RE-DERIVED-EVERY-SESSION",
+  "marker": "@spec/done",
+  "claim": "Without the discipline the agent re-derives context from scratch every session — wasting tokens, missing constraints, drifting from intent.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:225  ##the-cost-of-the-fallback-path That works; the cost is three",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:229  ##RE-DERIVING-STATE-IS-THE-SIGNAL-TO-ADOPT A project that",
+   "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "This is a counterfactual about projects that do not run the discipline, and this repository has run it continuously — `git log --grep='docs(wal)'` returns an unbroken chain of checkpoints back to dc45b24e — so the without-WAL branch cannot be exercised here. The package restates the claim in its own §without appendix, which is the package agreeing with itself. Widened for any host measurement of re-derivation cost and found only the inverse: commit a35ff173 (2026-07-23) 'docs(wal): collapse to a living checkpoint (126k → 1k tokens)' measures the cost of an over-long WAL, not of having none. What is missing is any observation of a session run without the discipline."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "PACKAGE-ENCODES-THE-DISCIPLINE-AS-PLAIN-MARKDOWN",
+  "marker": "@impl/done",
+  "claim": "The package encodes the discipline as plain Markdown, a tiny boot snippet, and one skill.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:15  [boot_snippet]",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:19  [[skill]]",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md:1  # Flow: WAL (Write-Ahead Log) {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:8  # WAL status — the ten-line orientation {#root}"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "`find packages/org.vibevm.world/wal/v0.2.0 -type f | sort` returns 9 files: eight Markdown documents and one TOML manifest — no code, no scripts, no templates, no generated artifacts. Exactly one boot snippet is declared and exactly one [[skill]]. 'Tiny' measured rather than judged: 10-flow-wal.md is 63 lines. The installed slot mirrors the same 9 files."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "no-magic-no-agent-product-dependency",
+  "marker": "@impl/done",
+  "claim": "The package uses no magic and depends on no particular agent product.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:13  requires_kinds = []",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:2  name: wal-status",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:52  ##equivalent-prompt-lead For an agent without skill support, paste the equivalent prompt into"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The prose half holds: the manifest declares no required kinds, and grep for Claude|Cursor|Copilot|Codex|GPT|Gemini across the package's eight Markdown files returns nothing — the boot snippet and protocol speak only of 'the agent'. The skill half narrows it. The skill ships in the SKILL.md-plus-YAML-frontmatter shape, and the host's install target for skills is .claude/skills/, a Claude Code path — the directory harvest §source-3 checked. The package's own mitigation is morning-routine.md:52-63, a paste-this-prompt fallback for agents without skill support. Unsettled: whether 'no dependency on any particular agent product' is meant to cover the skill packaging format as well as the prose."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+  "anchor": "license-line",
+  "marker": "@impl/done",
+  "claim": "The package is licensed UPL-1.0, per its `LICENSE.md`.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:7  license = \"UPL-1.0\"",
+   "vibedeps/flow-wal/0.2.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+   "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The linked file exists at the package root, names UPL-1.0 in its body, and the manifest's SPDX field agrees. The installed slot carries the identical LICENSE.md at the same line. The host's own licence ledger records the whole shipped surface as UPL-1.0 and enumerates the exceptions, none of which is this package."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY",
+  "marker": "@impl/done",
+  "claim": "The consuming project uses WAL discipline for session continuity.",
+  "evidence": [
+   "spec/boot/STATIC.md:1373  This project uses **WAL discipline** for session continuity. Two files",
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The snippet is compiled verbatim into the host's static lane (STATIC.md:1369-1428), so the host reads this sentence about itself at every boot. It is also true of the host independently of the snippet: spec/WAL.md exists, the host's own 00-core.md boot sequence reads it as step 2, and `git log --grep='docs(wal)'` returns 30+ checkpoint commits. No contradicting artifact on the perimeter."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "two-files-carry-it-lead",
+  "marker": "@impl/done",
+  "claim": "Two files carry the discipline.",
+  "evidence": [
+   "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+   "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The lead's two bullets are compiled into the host's static lane and both named files exist at the named paths (also in harvest/world-w2-wal-family.md §source-2). Widened for a third file that might carry the discipline in the host and did not find one used at boot: SPECSPACES.md carries per-specspace status lines and TASKS.md / BACKLOG.md carry work items, but CLAUDE.md:3 and 00-core.md:11 name only spec/WAL.md as the boot read, and CLAUDE.md:194 names only CONTINUE.md + spec/WAL.md as the resume pair."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT",
+  "marker": "@impl/done",
+  "claim": "`spec/WAL.md` is the living checkpoint and is canonical.",
+  "evidence": [
+   "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+   "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
+   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host restates the canonicity twice inside CONTINUE.md itself, in the header note and again in a closing precedence paragraph, in the flow's own vocabulary. One qualification the host adds and the snippet does not: 00-core.md:38-43 places the WAL below Head and Spec in the reading layers, so 'canonical' here means canonical among snapshots, not top of the authority chain — which is what conflict-protocol's Human > Spec > Tests > Code > WAL also says."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT",
+  "marker": "@impl/done",
+  "claim": "`CONTINUE.md` at repo root is the cold-resume snapshot, and the WAL supersedes it wherever they diverge.",
+  "evidence": [
+   "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+   "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
+   "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host's CONTINUE.md is at the repository root, titles itself a cold-resume checkpoint, and carries the supersession clause in the flow's exact wording ('supersedes this snapshot wherever they diverge'). CLAUDE.md's wind-down contract requires that pointer as a mandatory element of the body, so the host both states and enforces it."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE",
+  "marker": "@impl/done",
+  "claim": "At session start, read `spec/WAL.md` before doing anything else; the `wal-status` skill, where installed, is the fast form of that read.",
+  "evidence": [
+   "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+   "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+   "spec/boot/00-core.md:9  ##boot-sequence-lead Every session starts here. In order: @impl/done",
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The host reads the WAL at session start, but not first. CLAUDE.md:3 and 00-core.md:9-13 both put the boot files ahead of it: CLAUDE.md → spec/boot/ (including STATIC.md, 1 584 lines) → spec/WAL.md → PROPs → work; 00-core.md numbers the boot directory as step 1 and the WAL as step 2. So 'before doing anything else' is satisfied against *work* and not against *reading*, and the snippet asserting the rule is itself inside the material read first. The fast-form clause is the other unsettled half: `ls .claude/skills/` returns five skills and none is wal-status (harvest §source-3), so the 'where installed' condition is false in this consumer and the fast form is unavailable."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "VERIFY-THE-UPDATED-LINE-IS-CURRENT",
+  "marker": "@impl/done",
+  "claim": "Verify the `_Updated:` line is current; if older than 24 hours, ask the user to confirm state before acting on WAL claims and before any destructive work.",
+  "evidence": [
+   "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+   "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+   "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host carries the same 24-hour rule in its own user-owned boot file, in the same threshold and for the same trigger — this is the clearest single instance of the flow's rule being independently restated by the consumer. Two differences recorded, not judged: the host's version drops the 'before acting on anything the WAL claims' half and keeps only 'before doing destructive work'; and the host's own `_Updated:` value is a bare date (2026-07-28) with a parenthetical, not a timestamp, so 'older than 24 hours' cannot be evaluated to the hour from the line itself. The line's current value matches today's date. Note for the checker: spec/WAL.md's `_Updated:` line was rewritten twice while this table was being gathered — its tail read '...is CLOSED and `world` batch W1 / is CLOSED at 407 of 407**)_', then '...; W2…W7 remain**)_', then '...are CLOSED / at 407 of 407; W2's evidence is in flight, two of four tables returned**)_', shifting every line below it by one. The ref above quotes only the stable prefix of line 3; the value wraps onto line 4, and all other spec/WAL.md line numbers in this table were re-derived against the tree after the last of those rewrites."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "HONOUR-EVERY-CONSTRAINT-VERBATIM",
+  "marker": "@impl/done",
+  "claim": "Honour every constraint in the WAL's Constraints section verbatim; violate only after explicit in-session confirmation from the user.",
+  "evidence": [
+   "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section",
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host's WAL has the section under the heading 'Constraints — do not violate' and fills it: 86 lines of numbered do-not-touch rules with their costs, the largest section in the file. The rule is compiled into the host's boot lane so every session reads it. What the tree cannot show is whether any session has ever violated one; the closest observable is the WAL's own record that the verdict standard was 'applied to 690 rows without being stated' before it became a constraint on 2026-07-28."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL",
+  "marker": "@impl/done",
+  "claim": "During a session, if the user makes a decision affecting future sessions, propose adding it to the WAL (or the spec, if architectural); do not silently file it as remembered.",
+  "evidence": [
+   "spec/boot/STATIC.md:1393  4. If the user makes a decision that affects future sessions, propose",
+   "CLAUDE.md:146  ## Memory discipline: project facts stay in the project",
+   "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+   "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host runs a stronger version of the same rule under its own heading: durable project facts must land in repository files, and the harness's per-user memory is explicitly excluded — 'do not silently file it as remembered' is the same prohibition. The host also names the routing the snippet's parenthetical implies (CLAUDE.md:148-159 lists CLAUDE.md, MEMORY.md, TASKS.md, BACKLOG.md and the spec tree as the canonical homes) and adds a tie-break: when unsure, treat the fact as project-scoped. Observable instances of the rule firing: spec/WAL.md's Constraints entries dated to the day they were written down."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT",
+  "marker": "@impl/done",
+  "claim": "If about to violate a Constraint, stop and surface the question explicitly; a violation snuck past in a diff is a future bug.",
+  "evidence": [
+   "spec/boot/STATIC.md:1396  5. If you find yourself about to violate a Constraint, stop and surface",
+   "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:170  ##SURFACE-A-WRONG-WAL-ENTRY-NEVER-SILENTLY-REWRITE-IT An agent that believes a WAL entry is wrong does not silently rewrite"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host carries the same stop-and-surface shape for the adjacent case — an unclear spec rather than a constraint about to break — with the same anti-silence clause ('Never silently invent semantic behavior') and the same escalation channel (the end-of-session report). The protocol's §conflicts rule is the mirror case. Nothing on the perimeter contradicts the rule; the host has no counter-rule permitting a constraint to be crossed without surfacing."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "REWRITE-THE-WAL-NEVER-APPEND-TO-IT",
+  "marker": "@impl/done",
+  "claim": "At session end, rewrite `spec/WAL.md` per `session-end-hook.md` — rewrite, not append; history lives in git log and milestone commit messages.",
+  "evidence": [
+   "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
+   "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The rewrite-not-append rule is independently restated in the host's own boot file in the same parenthetical wording, and the host's WAL practises the delegation of history to git in its Done heading. Two things are not settled. First the pointer: STATIC.md:1403 compiles the link as ../flows/wal/session-end-hook.md, which resolves from spec/boot/ to spec/flows/wal/session-end-hook.md — `ls spec/flows` returns 'No such file or directory', so the named protocol is reachable in this consumer only at vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md. Second the verb: the host's own wind-down step says update / bump / refresh three named sections, which is a patch-in-place instruction, where the flow says rewrite the file. `git log --grep='docs(wal)'` shows 30+ session-end commits, and a35ff173 (2026-07-23) 'docs(wal): collapse to a living checkpoint (126k → 1k tokens)' shows the append tendency having accumulated far enough to need one."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "RECOGNISE-THE-WIND-DOWN-PHRASES",
+  "marker": "@impl/done",
+  "claim": "Recognise the wind-down phrases `END SESSION`, `WRAP UP`, `CHECKPOINT AND CLOSE` and project-defined twins by intent; a wind-down runs the full session-end hook plus a wholesale overwrite of `CONTINUE.md`.",
+  "evidence": [
+   "spec/boot/STATIC.md:1410  7. Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,",
+   "CLAUDE.md:171  **Trigger phrases** (case-insensitive; exact wording not required, recognise the intent):",
+   "CLAUDE.md:174  - English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.",
+   "CLAUDE.md:173  - Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.",
+   "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "This is the flow's strongest host conformance. All three English phrases the snippet names appear in the host's list verbatim, the host adds three more English and seven Russian twins — the 'project-defined twins' the snippet invites — and states the recognise-the-intent rule in the same words. The wholesale overwrite of CONTINUE.md is step 1 of the host's procedure with the same anti-append reason. Where the host's ritual differs, recorded not judged: order (CONTINUE first at :178, WAL second at :189, against the hook's WAL at step 2 and CONTINUE at step 4); and autonomy — the host commits (CLAUDE.md:190) and pushes to origin/main (CLAUDE.md:191), where session-end-hook.md:107-112 makes step 5 'Commit — propose by default' and says 'Do not commit automatically'. The host's push step cites its own Rule 4 as the authority for the difference."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "RECOGNISE-THE-RESUME-PHRASES",
+  "marker": "@impl/done",
+  "claim": "Recognise the resume phrases `RESUME SESSION`, `RESTORE CONTEXT`; restore context, verify repository state empirically, emit a status report, then stop and wait for direction — a recorded next step is a candidate, not authorisation.",
+  "evidence": [
+   "spec/boot/STATIC.md:1415  8. Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE",
+   "CLAUDE.md:201  - English: `RESUME SESSION`, `RESTORE SESSION`, `RESTORE CONTEXT`.",
+   "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+   "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "Every clause of the snippet has a matching clause in the host's resume contract, in near-identical wording: both phrases present (plus a RESTORE SESSION twin and three Russian twins at CLAUDE.md:200), 'verify repository state empirically' verbatim, 'stop and wait for direction' verbatim, and the candidate-not-authorisation rule verbatim including the word 'candidate'. The host adds a dated rationale — cold-resume.md:141-146 records that the rule exists because the misfire happened once, and CLAUDE.md's closing note dates that misfire to 2026-06-12. No divergence found."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "FLOW-OWNS-ONLY-ITS-OWN-FILES",
+  "marker": "@impl/done",
+  "claim": "This flow owns only the protocol files under `spec/flows/wal/`, the `wal-status` skill, and this boot snippet.",
+  "evidence": [
+   "spec/boot/STATIC.md:1422  - This flow owns only the protocol files under `spec/flows/wal/`, the",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:16  source = \"spec/boot/10-flow-wal.md\"",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:21  path = \"spec/skills/wal-status\"",
+   "vibe.lock:427  files_written = []"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "`find packages/org.vibevm.world/wal/v0.2.0 -type f` returns nothing outside the three named territories except LICENSE.md, README.md and vibe.toml — the package's own metadata — so the ownership claim matches the payload exactly. Widened to the consumer to test what ownership means on disk here: files_written = [] and `ls spec/flows` returns 'No such file or directory', so in this host the flow owns no path under spec/ at all; the four protocol files and the skill exist only under vibedeps/flow-wal/0.2.0/, and the snippet reaches spec/ only as compiled text inside the generated STATIC.md."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE",
+  "marker": "@impl/done",
+  "claim": "`spec/WAL.md` and `CONTINUE.md` are project state, not package state — the package never creates, deletes, or overwrites them as part of install or uninstall.",
+  "evidence": [
+   "spec/boot/STATIC.md:1424  - `spec/WAL.md` and `CONTINUE.md` are **project state**, not package",
+   "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
+   "vibe.lock:427  files_written = []",
+   "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add any project-specific conventions that should be read at session boot. @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "grep for WAL|CONTINUE in crates/vibe-cli/src/commands/uninstall.rs returns no hit naming either file; the command's whole effect is the vibedeps slot, the lockfile entry, the [requires] declaration, and regenerated boot artifacts. The package declares no template or scaffold for either file — `find packages/org.vibevm.world/wal/v0.2.0 -type f` shows no WAL.md or CONTINUE.md template, and the manifest has no files-to-write section. Host-side both files exist and are maintained by session commits (`git log --grep='docs(wal)'`, `--grep='docs(continue)'`), never by the installer, and files_written = [] confirms the installer wrote nothing here."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+  "anchor": "full-protocol-pointer",
+  "marker": "@impl/done",
+  "claim": "The full protocol is at `spec/flows/wal/WAL-PROTOCOL.md`.",
+  "evidence": [
+   "spec/boot/STATIC.md:1428  Full protocol: [`spec/flows/wal/WAL-PROTOCOL.md`](../flows/wal/WAL-PROTOCOL.md).",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:1  # WAL Protocol {#root}",
+   "vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md:1  # WAL Protocol {#root}"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The target document exists in the package and in the installed slot, and is genuinely the full protocol (262 lines, eleven sections). What does not resolve is the pointer as the host reads it: STATIC.md:1428 keeps the relative link ../flows/wal/WAL-PROTOCOL.md, which from spec/boot/ means spec/flows/wal/WAL-PROTOCOL.md, and `ls spec/flows` returns 'No such file or directory'. The same failure affects the snippet's other two sibling links at STATIC.md:1403 and :1414. An agent following the compiled boot snippet in this repository lands on a path that does not exist; the document is only at vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md. This is a property of files_written = [] plus a verbatim compile, not of the package's own tree, where the relative link resolves."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "scope-of-this-document",
+  "marker": "@impl/done",
+  "claim": "The document's scope: what a WAL is in a spec-driven project, which files carry the discipline, what belongs in it, how big it may get, when it must be updated, and who wins on disagreement.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:13  ## The two files {#files}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:74  ## Required sections {#sections}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:127  ## Update triggers {#triggers}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:146  ## Size budget {#size}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:158  ## Conflict resolution {#conflicts}"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "Read the file end to end (262 lines) and matched each of the six scope items to a section: what a WAL is (§what), which files (§files), what belongs in it (§sections), how big (§size), when updated (§triggers), who wins (§conflicts). All six present, none missing. Same file installed at vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "sibling-document-pointers",
+  "marker": "@impl/done",
+  "claim": "The rituals live in three sibling documents: `session-end-hook.md`, `morning-routine.md`, `cold-resume.md`.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md:1  # Session-end hook — the wind-down {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:1  # Morning routine — the human side of WAL {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:1  # Cold resume — `CONTINUE.md` and the session commands {#root}"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "All three targets exist as siblings in the same directory and all three links are same-directory relative, so they resolve inside the package and inside the installed slot. The harvest already measured the mechanical half for this batch — 23 relative .md citations resolved, 0 broken, over the four W2 packages (harvest §source-1) — cited rather than re-derived."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "two-files-lead",
+  "marker": "@impl/done",
+  "claim": "Session-durable state lives in two repository files.",
+  "evidence": [
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+   "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "Both files exist in the host (harvest §source-2) and the host names exactly this pair, and only this pair, as what a session resumes from. Widened for a third durable-state file the host might use: SPECSPACES.md carries per-specspace one-line status, TASKS.md the current slice's checklist and BACKLOG.md the deferred findings, but none is named in the resume contract or in the boot read, so the pair is the session-durable set as the flow defines it."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT",
+  "marker": "@impl/done",
+  "claim": "`spec/WAL.md` is the living checkpoint holding phase, constraints, done, open and next; rewritten at every session end; canonical where it and any snapshot disagree.",
+  "evidence": [
+   "spec/WAL.md:6  ## Current phase",
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:162  ## In progress",
+   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "All five named contents are present as headings in the host's WAL (Current phase :6, Constraints :56, Done :142, In progress :162, Next :175). The rewrite-at-session-end obligation is restated in the host's own boot file and exercised — `git log --grep='docs(wal)'` returns 30+ session-end checkpoints. The canonicity clause is restated inside the subordinate file itself, twice (CONTINUE.md:4 and :385). One measured difference: the host's session-end instruction (CLAUDE.md:189) says bump the date line and refresh three named sections, which is narrower than 'rewritten' — recorded on REWRITE-THE-WAL-NEVER-APPEND-TO-IT."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "FILE-CONTINUE-IS-THE-SUBORDINATE-COLD-RESUME-SNAPSHOT",
+  "marker": "@impl/done",
+  "claim": "`CONTINUE.md` at the repository root is the cold-resume snapshot, written at session end for whoever picks up cold — richer than the WAL, strictly subordinate.",
+  "evidence": [
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+   "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
+   "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+   "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "Every clause checks out against the host. Location: repository root. Written at session end: CLAUDE.md's wind-down step 1, and `git log --grep='docs(continue)'` returns 15+ cold-resume commits, each paired with a docs(wal) commit. Richer than the WAL, measured not asserted: wc gives CONTINUE.md 386 lines / 3 273 words / 24 304 bytes against spec/WAL.md's 291 / 2 807 / 18 493 — larger on all three counts. Strictly subordinate: stated in the file's own header and again at :385. The audience clause matches CLAUDE.md:169's three cases — different machine, new session, post-compaction."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY-NEVER-IN-A-SESSION",
+  "marker": "@impl/done",
+  "claim": "One invariant governs both files: resumption state lives in the repository, never in a session.",
+  "evidence": [
+   "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+   "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context.",
+   "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host states the invariant in its own words and generalises it past the two WAL files to all project facts, with a stated tie-break and a recorded cost of getting it wrong ('has already silently cost a teammate context'). The wind-down's job description — capture everything into durable repository state — is the same invariant as a procedure. No artifact on the perimeter keeps resumption state anywhere but in files."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "sessions-end-compact-and-crash",
+  "marker": "@spec/done",
+  "claim": "Sessions end, compact, and crash; the repository outlives them all.",
+  "evidence": [
+   "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:7  ##sessions-end-a-project-outlives-them *Agent sessions end, compact, and crash; a project outlives all of them.* @spec/done"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host names two of the three failure modes explicitly in its wind-down rationale — a new session and post-compaction — and the third, a crash, is the unannounced case the same contract covers. The identical sentence appears in the ai-native discipline's convention document, so the two packages state it in the same words; which borrowed from which is not determinable from the tree."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "rest-of-the-document-specifies-the-wal",
+  "marker": "@impl/done",
+  "claim": "The rest of the document specifies the WAL (as opposed to CONTINUE.md).",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:33  ## What a WAL is {#what}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:74  ## Required sections {#sections}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:31  ## The CONTINUE.md contract {#contract}"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "Read every section after line 31: §what, §not, §sections, §precision, §triggers, §freshness, §size, §conflicts, §example, §acceptance, §without, §re-derive and §summary all speak about spec/WAL.md. CONTINUE.md appears after line 31 only in three cross-references — the summary's two-file line at :255, and inside §files above it — with the contract itself delegated to cold-resume.md §contract. The division of labour is as stated."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "WAL-STANDS-FOR-WRITE-AHEAD-LOG",
+  "marker": "@spec/done",
+  "claim": "WAL stands for Write-Ahead Log — a name any developer, and any coding agent from training data alone, recognises on sight.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md:1  # Flow: WAL (Write-Ahead Log) {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/README.md:1  # `flow:wal` — Write-Ahead Log discipline {#root}",
+   "spec/boot/STATIC.md:1371  # Flow: WAL (Write-Ahead Log) {#root}"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The expansion is used consistently across the package and reaches the host verbatim in the compiled boot lane, so the naming half is settled. The recognition half — that any developer and any coding agent recognises it on sight — is a claim about people and models, not about this repository, and nothing in the perimeter measures it. The host's own WAL does not expand the acronym in its title (spec/WAL.md:1 reads 'WAL — Project Continuation State'), which is consistent with the name being treated as self-explanatory but does not test it."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "THE-MECHANISM-IS-THE-CHECKPOINT-NOT-THE-LOG",
+  "marker": "@impl/done",
+  "claim": "The fitting mechanism is not the ever-growing database log but the database checkpoint: a snapshot of current state, overwritten rather than appended to.",
+  "evidence": [
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+   "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host restates the checkpoint-not-log framing twice in its own boot file, in the same two contrasts the protocol draws (current state vs history; rewrite vs append), and practises it in its WAL's Done heading, which delegates history to git. The strongest single instance of the mechanism working: commit a35ff173 (2026-07-23) 'docs(wal): collapse to a living checkpoint (126k → 1k tokens)', a deliberate overwrite of accumulated content back to a snapshot."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "picture-a-whiteboard-by-the-door",
+  "marker": "@spec/done",
+  "claim": "Picture a whiteboard by the door.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:50  ##WAL-IS-A-WHITEBOARD-NOT-A-JOURNAL **The WAL is a whiteboard, not a journal.** @impl/done"
+  ],
+  "src": [
+   1
+  ],
+  "found": "located",
+  "searched": "This is the opening move of the document's own metaphor, resolved three lines later into the normative statement at :50; it asserts nothing checkable about this repository or any artifact. Widened anyway: grep for 'whiteboard' across CLAUDE.md, spec/, campaigns/ and the other org.vibevm.world packages returns hits only inside this package's own protocol and its installed copy, so the host has not adopted the metaphor. Evidence is the package's own text — recorded as src [1], self-referential."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "a-good-whiteboard-and-a-bad-one",
+  "marker": "@spec/done",
+  "claim": "A good whiteboard carries three lines — where we are, what we are doing, what must not be touched; a bad one carries three hundred lines of stale history.",
+  "evidence": [
+   "spec/WAL.md:6  ## Current phase",
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:162  ## In progress"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The three roles the metaphor names map onto three of the host's WAL sections: where we are (Current phase), what we are doing (In progress), what must not be touched (Constraints — do not violate). The bad case has a dated instance in this repository's history: commit a35ff173 (2026-07-23) 'docs(wal): collapse to a living checkpoint (126k → 1k tokens)' is the correction of exactly the accumulation the metaphor warns about. The 'three lines' figure is rhetorical — the host's WAL runs 291 lines — and this row does not treat it as a limit; the numeric limits are §size."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "WAL-IS-A-WHITEBOARD-NOT-A-JOURNAL",
+  "marker": "@impl/done",
+  "claim": "The WAL is a whiteboard, not a journal.",
+  "evidence": [
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+   "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+   "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The normative content — snapshot of now, not a record of what happened — is restated by the host in its own words twice, reaches it a third time as compiled boot text, and is visible in the WAL's own Done heading. The metaphor's vocabulary is not adopted host-side (grep for 'whiteboard' finds nothing outside this package), but the rule it carries is."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "file-serves-both-processes",
+  "marker": "@impl/done",
+  "claim": "The file serves both processes in the human-AI system.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:9  ##WAL-IS-A-TWO-SIDED-PROTOCOL The WAL is a two-sided protocol — the",
+   "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
+   "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host declares itself an instance of the two-process model and places the WAL inside that model's reading layers, between the human's head and the spec — which is the two-sided role the claim describes. The package's own sibling states it as 'a two-sided protocol'. The agent side is directly observable (the boot read at 00-core.md:11); the human side is documented as the morning ritual but leaves no artifact in this tree, so it rests on the flow's text rather than on an observation."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY",
+  "marker": "@impl/done",
+  "claim": "For the agent the WAL is the only persistent memory: each session starts blank, and the WAL is read first.",
+  "evidence": [
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+   "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+   "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "Two clauses, one confirmed and one not. Session starts blank: confirmed by the host's memory-discipline section (CLAUDE.md:161) ruling that nothing may live only in per-user harness memory. 'Read first' and 'the only persistent memory' are both narrower in practice here. The host reads CLAUDE.md and the whole of spec/boot/ — 1 584 lines of compiled STATIC.md plus 00-core.md and 90-user.md — before it reaches spec/WAL.md, so the WAL is third in the read order (CLAUDE.md:3, 00-core.md:9-13); and those same boot files, plus CONTINUE.md, plus the spec tree, are persistent memory the agent also gets. Recorded on READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE as well."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "FOR-THE-HUMAN-IT-IS-THE-SINGLE-MORNING-RE-READ",
+  "marker": "@impl/done",
+  "claim": "For the human the WAL is the single morning re-read that synchronises memory with the project's actual state.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:19  ##before-coding-lead Before opening any code, before starting any agent session: @impl/done",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:27  ##HEAD-WINS-EDIT-THE-WAL-TO-MATCH-MEMORY If the WAL and your memory disagree, **head wins** — edit the WAL to"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "partial",
+  "searched": "The package specifies the ritual and the head-wins rule that makes it a synchronisation rather than a read, and the sibling is installed. What is missing is any host observation: nothing in this repository records a human morning read — no dated log, no per-day entry in spec/WAL.md or CONTINUE.md, and `git log` shows commit activity rather than reading. Widened to .claude/skills/ for the tool that would make the read cheap: wal-status is not installed (five skills, none it). So the human half of the two-sided protocol has no artifact here to check against."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "THIS-FILE-ALONE-EXISTS-FOR-SESSION-CONTINUITY",
+  "marker": "@impl/done",
+  "claim": "Everything else in `spec/` is medium-term memory or artefacts; this file alone exists for session continuity.",
+  "evidence": [
+   "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+   "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The host draws the same line inside spec/: the WAL is the volatile per-session layer, everything else under spec/ is the stable decision layer — a direct restatement. What the claim does not account for is the discipline's own second file: CONTINUE.md exists for session continuity too, sits at the repository root rather than in spec/, and the same package specifies it. Read strictly the sentence is about spec/ only, and inside spec/ it holds; read as 'this file alone' it does not, and the protocol's own §files says so two sections earlier."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "NOT-A-LOG",
+  "marker": "@impl/done",
+  "claim": "Not a log: rewritten every session, always describing the current state; an append-only WAL rots into an archive nobody reads.",
+  "evidence": [
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+   "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+   "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host restates 'checkpoint, not log' and 'rewrite, not append' in its own boot file, and its WAL's lead describes the current phase rather than a history. The rot the claim predicts has a dated instance here: a35ff173 (2026-07-23) 'docs(wal): collapse to a living checkpoint (126k → 1k tokens)' — the file had grown to roughly 126k tokens before being cut back, which is the append-only failure the rule exists to prevent, observed and corrected rather than merely asserted. Note for the checker: spec/WAL.md's `_Updated:` line was rewritten twice while this table was being gathered — its tail read '...is CLOSED and `world` batch W1 / is CLOSED at 407 of 407**)_', then '...; W2…W7 remain**)_', then '...are CLOSED / at 407 of 407; W2's evidence is in flight, two of four tables returned**)_', shifting every line below it by one. The ref above quotes only the stable prefix of line 3; the value wraps onto line 4, and all other spec/WAL.md line numbers in this table were re-derived against the tree after the last of those rewrites."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "NOT-A-CHANGELOG",
+  "marker": "@impl/done",
+  "claim": "Not a changelog: history belongs in `git log` and spec changelogs.",
+  "evidence": [
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
+   "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host routes history exactly where the claim says: its WAL's Done section is headed 'collapsed — see git log', and the session-end procedure produces the commit trail that carries it. The routing is legible in the log itself — `git log --grep='docs(wal)'` returns 30+ subject lines that read as session summaries ('Phase B closed…', 'Phase D closed 304 rows, not 310'). Read the Done section: entries are one- to three-line collapsed summaries with dates, not a running change list."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "NOT-A-TO-DO-LIST",
+  "marker": "@impl/done",
+  "claim": "Not a to-do list: the Next section names one next action; the backlog belongs in an issue tracker.",
+  "evidence": [
+   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:187  3. **Then W3…W7.** 3 743 anchors remain in `world`.",
+   "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The backlog half holds in a form the claim did not anticipate: this repository keeps its backlog in a repository file rather than an issue tracker — CLAUDE.md:155-157 defines BACKLOG.md as severity-triaged P1/P2/P3 findings nobody is working on yet, with TASKS.md at :152 holding the current slice — so the backlog is out of the WAL, but not in a tracker. The one-next-action half does not hold: the host's Next section runs lines 175-191 with four numbered items, the numbering repeats 3 twice, and no item is marked as the default. §sections allows several candidates 'listed briefly with the default marked'; these are sequenced work, not marked candidates."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "NOT-DOCUMENTATION",
+  "marker": "@impl/done",
+  "claim": "Not documentation: a fact stable enough to deserve a permanent home belongs in a spec document, not in the WAL.",
+  "evidence": [
+   "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+   "CLAUDE.md:159  - Authoritatively, the `spec/**/*.md` tree — PROP / FEAT documents, `spec/WAL.md`, `spec/boot/*`.",
+   "spec/boot/STATIC.md:1393  4. If the user makes a decision that affects future sessions, propose"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The host draws the same stable-vs-volatile boundary in its reading layers and routes durable decisions to the spec, and the compiled boot snippet's step 4 carries the routing rule ('or the spec, if it's architectural'). Where the host's practice is looser than the claim: spec/WAL.md's Constraints section holds long-form standing rules — the verdict standard at :57-71 runs 15 lines and is written as doctrine, not as a session note, and the WAL's own text says it was 'written down 2026-07-28 after it was applied to 690 rows without being stated'. Whether that content has become stable enough for a spec document is a judgement this row does not make; what is measurable is that the WAL's largest section is 86 lines of rules."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "required-sections-lead",
+  "marker": "@impl/done",
+  "claim": "A well-formed `spec/WAL.md` has the eight sections that follow.",
+  "evidence": [
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "spec/WAL.md:6  ## Current phase",
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:162  ## In progress",
+   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:193  ## Known issues",
+   "spec/WAL.md:235  ## Session context"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "`grep -n '^#' spec/WAL.md` returns the title plus exactly seven headings, and with the `_Updated:` line that is all eight required sections, in the protocol's order, including the optional eighth. No extra sections and none missing. Two of the headings are extended rather than bare — 'Constraints — do not violate' and 'Done (collapsed — see git log)' — which the protocol neither requires nor forbids. Per-section conformance is measured on the eight SECTION-* rows."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-UPDATED-LINE",
+  "marker": "@impl/done",
+  "claim": "`_Updated: <ISO 8601 UTC>_` is the very first line after the title, always and without exception; the date makes staleness detectable fast.",
+  "evidence": [
+   "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:179  _Updated: 2026-04-16T18:23:00Z_",
+   "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "Position holds — the `_Updated:` line is the first non-blank line after the title, and the host's own boot file depends on it for the staleness check. Format does not. The protocol's own worked example at :179 shows `_Updated: 2026-04-16T18:23:00Z_`, a full ISO 8601 UTC timestamp; the host's line carries a bare calendar date, a parenthetical status summary, and runs across two lines with the closing underscore on line 4. Consequence, measured not judged: 'older than 24 hours' cannot be evaluated from a date-only line — a WAL written at 23:00 and read at 01:00 the next day reads as one day old by date and two hours old in fact. The harvest's capture (§source-2, `grep -m1 '^_Updated' spec/WAL.md`) shows the same truncated line. Note for the checker: spec/WAL.md's `_Updated:` line was rewritten twice while this table was being gathered — its tail read '...is CLOSED and `world` batch W1 / is CLOSED at 407 of 407**)_', then '...; W2…W7 remain**)_', then '...are CLOSED / at 407 of 407; W2's evidence is in flight, two of four tables returned**)_', shifting every line below it by one. The ref above quotes only the stable prefix of line 3; the value wraps onto line 4, and all other spec/WAL.md line numbers in this table were re-derived against the tree after the last of those rewrites."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-CURRENT-PHASE",
+  "marker": "@impl/done",
+  "claim": "Current phase — one or two lines naming what the project is working on right now.",
+  "evidence": [
+   "spec/WAL.md:6  ## Current phase",
+   "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
+   "spec/WAL.md:56  ## Constraints — do not violate"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The section exists and its opening line names the project's current work in exactly the shape the claim describes — campaign, wave, phase, state. The length does not match: the section runs from line 6 to line 55, 49 lines, against the claimed one or two. Its first two lines carry the whole naming function and the remaining 47 are progress detail (verdict counts, per-batch state, the zone map). Whether that excess belongs here or under In progress is a judgement this row does not make."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-CONSTRAINTS",
+  "marker": "@impl/done",
+  "claim": "Constraints — the do-not-touch list, each entry carrying a brief why citing a spec anchor or issue; the most valuable content in the WAL, because without the written line an enthusiastic session improves what was deliberately left alone.",
+  "evidence": [
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:58  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
+   "spec/WAL.md:71  - **Never classify a group of rows by one rule to save time.** That is how 138 rows",
+   "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The section exists under the protocol's name, is the largest in the file (lines 56-141, 86 lines), and every entry carries its why — usually as a measured cost, e.g. 'That is how 138 rows became a debt.' The claim's most specific requirement is the one that does not hold: entries cite campaign artifacts and prose rationale, not spec anchors or issue numbers. Read all entries; none uses the `spec://…` form the protocol's worked example uses ('Timeout: 600s… → spec://oproto/PROP-003#verification.timeout') and none cites an issue id. Widened to the host's own anchor convention: `spec://` URIs are in daily use elsewhere (00-core.md:38, :45), so the form is available and is not being used here."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-DONE",
+  "marker": "@impl/done",
+  "claim": "Done — completed work collapsed to one-line summaries, not five lines of notes.",
+  "evidence": [
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:144  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read",
+   "spec/WAL.md:162  ## In progress"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The section exists, names itself collapsed, and routes the detail to git log — the mechanism the claim asks for, and the whole section is 19 lines (142-161) for a campaign of thousands of verdicts, so the collapsing is real. Strictly against 'one-line summaries' it is looser: the first entry runs four wrapped lines and carries counts and outcomes rather than a single line. This row records the measurement and leaves the reading of 'one-line' to the reviewer."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-IN-PROGRESS",
+  "marker": "@impl/done",
+  "claim": "In progress — what is open, with enough detail that the next session can pick it up; cite spec anchors (`spec://…`).",
+  "evidence": [
+   "spec/WAL.md:162  ## In progress",
+   "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for",
+   "spec/WAL.md:175  ## Next"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The section exists and passes the pick-it-up test concretely: it names the four commissioned workers, the file each writes (tasks/evidence/ev-W2{a,b,c,d}.json), the harvest that holds the sources, and the CONTINUE.md section carrying the table list — a cold session could resume from it. The anchor requirement is not met: the section cites repository-relative paths and campaign artifacts, and no `spec://…` URI appears anywhere in spec/WAL.md, though the form is in daily use in the host's boot files."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-NEXT",
+  "marker": "@impl/done",
+  "claim": "Next — the single next action; if several candidates, list them briefly and mark the default.",
+  "evidence": [
+   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one",
+   "spec/WAL.md:187  3. **Then W3…W7.** 3 743 anchors remain in `world`.",
+   "spec/WAL.md:188  3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The section exists and its first item is unambiguously the next action, which satisfies the spirit. Against the letter, three measured departures: it holds four numbered items over lines 175-191, not one; none is marked as the default, which the fallback clause requires when several are listed; and the numbering repeats — two items are numbered 3, so the list reads 1, 2, 3, 3, 4. The items are also sequenced work rather than alternatives, which is a third case the protocol does not cover."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-KNOWN-ISSUES",
+  "marker": "@impl/done",
+  "claim": "Known issues — open problems not being worked on right now, so future sessions don't re-discover them.",
+  "evidence": [
+   "spec/WAL.md:193  ## Known issues",
+   "spec/WAL.md:229  - **F-092** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.",
+   "spec/WAL.md:231  - **`specmap` ratchet** — 37 gated orphans host-side, unmoved.",
+   "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The section exists and holds exactly the genre described — parked findings with ids and counts, each one line, none of them the current work. The host has also built a second home for the same genre: BACKLOG.md, defined at CLAUDE.md:155-157 as severity-triaged findings nobody is working on yet, drained by the next wave, with the WAL's Known issues carrying the campaign-local ones. That is an extension of the protocol's slot, not a departure from it; the WAL section still exists and is still populated."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SECTION-SESSION-CONTEXT",
+  "marker": "@impl/done",
+  "claim": "Session context (optional) — one-paragraph orientation: what file to open first, what to run, what to avoid.",
+  "evidence": [
+   "spec/WAL.md:235  ## Session context",
+   "spec/WAL.md:237  **The debt's own result is one sentence: no row moved because a worker's evidence",
+   "spec/WAL.md:250  **The standard had been in use for 690 rows and had never been stated**, which is",
+   "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The optional section is present in the host's WAL, which is more than the protocol requires, and it is prose paragraphs rather than a list. Its content does not match the description: lines 235-292 are a retrospective on what the reviewing debt found, what the verdict standard cost, and one reason that was wrong — not a one-paragraph orientation naming what file to open first, what to run, and what to avoid. Widened to find where the orientation function actually lives here: the WAL's Next item 1 at :177 names the scripts to run in order (verify-evidence.py, repair-refs.py, show-rows.py --brief) and points at CONTINUE.md §recipe for the loop and §w2-in-flight for the file list. So the material the slot is specified to hold exists, split between Next and CONTINUE.md, and the slot itself holds something else."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "in-chat-vagueness-gets-a-question-back",
+  "marker": "@spec/done",
+  "claim": "In chat, vague writing gets a question back.",
+  "evidence": [
+   "spec/boot/00-core.md:56  ##uncertainty-lead When the spec is silent on a question: @impl/done",
+   "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "This is the benign half of a contrast whose point is the next fact; it describes what happens in a supervised conversation, which leaves no artifact. The nearest checkable host behaviour is the uncertainty protocol, and it is notably not 'ask a question': when the spec is silent the host's rule is to re-read three sources, then mark, choose conservatively, proceed, and flag at session end. So in this repository unattended vagueness is handled by a marker and a report rather than by a question back, which is closer to the agent-mode half of the contrast than to this one. Nothing on the perimeter measures chat behaviour."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "IN-AGENT-MODE-THE-WAL-IS-EXECUTED-LITERALLY",
+  "marker": "@spec/done",
+  "claim": "In agent mode — unattended for hours — nobody asks; the WAL is executed literally.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:112  ## Constraints — do not violate",
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section",
+   "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host is a live instance of the premise and has written its WAL accordingly: it adopted the protocol's own agent-grade heading verbatim — the worked example at :112 reads 'Constraints — do not violate' and so does spec/WAL.md:56 — and the compiled boot lane orders every session to honour those constraints verbatim. The literal-execution premise is also visible in what the host's WAL Constraints contain: procedural orders to the reader ('Every partial row is read individually'), not notes. The host runs delegated unattended workers as routine (spec/WAL.md:164 records four commissioned for this batch), so 'unattended for hours' is its normal mode rather than a hypothetical."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "the-second-is-not-bureaucracy",
+  "marker": "@spec/done",
+  "claim": "The agent-grade example is not bureaucracy: it is the difference between an agent that quietly optimises the timeout back to 300 s and one that does what is needed.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:113  - Timeout: 600s, not 300s → spec://oproto/PROP-003#verification.timeout",
+   "spec/WAL.md:71  - **Never classify a group of rows by one rule to save time.** That is how 138 rows"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The illustration is about a fictional project (oproto), so the timeout itself is unverifiable here. The mechanism it illustrates — a constraint written down because a session already optimised past it once — has a real instance in the host: the WAL's constraint against classifying rows by one rule states its own origin, 'That is how 138 rows became a debt', and the verdict-standard constraint above it says it 'was applied to 690 rows without being stated'. Both are constraints written after the failure rather than before, which supports the mechanism but not the specific example. No host artifact measures the counterfactual agent that would have optimised."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "MORE-AUTONOMY-DEMANDS-A-MORE-PRECISE-WAL",
+  "marker": "@impl/done",
+  "claim": "The more autonomy the agent has, the more precise the WAL must be — coarse context suffices for one supervised step; hours unattended demand every constraint explicit and spec-anchored.",
+  "evidence": [
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:58  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
+   "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for",
+   "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The correlation the claim predicts is visible in this repository, which grants high autonomy — unattended delegated workers, and a wind-down permitted to commit and push without asking — and carries a correspondingly heavy Constraints section, 86 lines, the largest in its WAL, written as explicit orders. The 'spec-anchored' half is where it does not hold: no `spec://…` URI appears anywhere in spec/WAL.md, and the constraints cite campaign artifacts and prose reasons instead, though the URI form is in daily use in the host's boot files (00-core.md:38, :45). So this host has the precision without the anchoring the claim pairs it with."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "TRIGGER-END-OF-EVERY-SESSION",
+  "marker": "@impl/done",
+  "claim": "Update trigger: at the end of every session — non-negotiable; a session that ends without updating the WAL has partially broken the next session.",
+  "evidence": [
+   "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+   "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
+   "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+   "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host carries the trigger in its own boot file's End-of-session section, again as compiled snippet text, and a third time as a numbered step of the wind-down command — which it explicitly calls a hard contract, not a courtesy, the same non-negotiable framing. Exercised rather than only declared: `git log --oneline --grep='docs(wal)'` returns 30+ checkpoint commits, many titled 'session-end checkpoint', paired with docs(continue) commits. What the log cannot show is sessions that ended without one; a commit trail records the compliant cases only."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "TRIGGER-BEFORE-ANY-DESTRUCTIVE-OPERATION",
+  "marker": "@impl/done",
+  "claim": "Update trigger: before any destructive operation — a big refactor, a `git reset`, a migration — checkpoint first, so a failure restarts from known-good.",
+  "evidence": [
+   "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+   "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+   "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The host has a rule for destructive operations, but it is a different one: Rule 4 stops and asks the owner before history rewrites, force-push and anything whose reversal costs work, and the staleness rule requires verifying state with the user before destructive work. Neither says checkpoint the WAL first. Widened for the checkpoint-before form: grep across CLAUDE.md, spec/boot/ and spec/WAL.md for a rule pairing a destructive operation with a WAL write returns only the two ask-the-user rules above, and the boot snippet's own session-end step 6 is tied to session end rather than to risk. The trigger is stated in the flow and not adopted here; the host substitutes human confirmation for the checkpoint."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "TRIGGER-WHEN-SWITCHING-CONTEXT-MID-SESSION",
+  "marker": "@impl/done",
+  "claim": "Update trigger: when switching context mid-session — checkpoint the outgoing work before pivoting, or its state is lost.",
+  "evidence": [
+   "spec/WAL.md:162  ## In progress",
+   "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The host has the mid-session checkpoint as an observed practice but not as a stated rule. Observed: `git log --grep='docs(wal)'` includes 26a72e28 'docs(wal): mid-session checkpoint — modules cluster past half (c4a…c4d2)' and a088be58 'docs(wal): checkpoint — Phase B open, fact grain in force', both written before session end; and the WAL's In progress section is currently holding exactly this kind of parked state for a delegation in flight. Not stated: no rule in CLAUDE.md, spec/boot/00-core.md or the compiled snippet names a context switch as a trigger — the snippet's only end-state trigger is step 6, session end. So the behaviour occurs without the rule being installed."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "WAL-OLDER-THAN-24-HOURS-IS-PRESUMED-STALE",
+  "marker": "@impl/done",
+  "claim": "A WAL older than 24 hours is presumed stale: before trusting any claim, and before any destructive work, verify against reality (branch, tree, tests) and confirm divergences with the user.",
+  "evidence": [
+   "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+   "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+   "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:17  2. ##STALENESS-WARNING-IS-THE-FIRST-OUTPUT-LINE Check the `_Updated:` line (the first line after the title). Older",
+   "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The 24-hour threshold is independently restated in the host's user-owned boot file — the clearest single adoption of any rule in this flow — and the empirical verification the claim asks for is spelled out in the host's resume contract as branch, sync with origin, working tree and recent commits, which is the protocol's 'branch, tree, tests' minus tests. Two narrowings recorded: the host's version keeps only the destructive-work trigger and drops 'before trusting any claim'; and the host's own `_Updated:` value is a bare date, so the 24-hour arithmetic cannot be done to the hour from the line itself. The line's date is current as of today. Note for the checker: spec/WAL.md's `_Updated:` line was rewritten twice while this table was being gathered — its tail read '...is CLOSED and `world` batch W1 / is CLOSED at 407 of 407**)_', then '...; W2…W7 remain**)_', then '...are CLOSED / at 407 of 407; W2's evidence is in flight, two of four tables returned**)_', shifting every line below it by one. The ref above quotes only the stable prefix of line 3; the value wraps onto line 4, and all other spec/WAL.md line numbers in this table were re-derived against the tree after the last of those rewrites."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "THE-RULE-BINDS-WHATEVER-THE-TOOLING-DOES",
+  "marker": "@impl/done",
+  "claim": "Tooling may warn advisorily; the freshness rule binds regardless.",
+  "evidence": [
+   "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:19     `WARNING: WAL updated <N> hours ago — may be stale.` @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The claim's structure is confirmed by this host from the failing side, which is the stronger test: the only tooling the flow ships for the warning is the wal-status skill, and it is not installed here — `ls .claude/skills/` returns five entries, none of them it (harvest §source-3). The rule nevertheless binds, because the host carries it in its own boot file independently of any tool. Widened for other warning mechanisms: `grep -rn '_Updated' --include=*.rs crates/ xtask/` returns nothing, so no Rust code anywhere in this workspace parses the line, and the only `_Updated` hits under crates/ are five inside the test fixture crates/vibe-index/fixtures/golden-flow-wal-0.1.0/, which are copies of the flow's own prose rather than an implementation. So in this consumer the rule is entirely unenforced by tooling and entirely stated in prose, exactly the case the fact describes."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "WAL-IS-LOADED-AT-THE-START-OF-EVERY-SESSION",
+  "marker": "@impl/done",
+  "claim": "The WAL is loaded into the agent's context at the start of every session.",
+  "evidence": [
+   "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+   "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "Three independent statements of the same obligation reach every session here: the harness-facing CLAUDE.md contract, the user-owned boot file's numbered sequence, and the package's own snippet compiled into the static lane. The claim is about loading, not about ordering, so the host's placement of the WAL third in the read order does not bear on it — that measurement is recorded on READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE. This is the premise the whole size budget rests on."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "EVERY-TOKEN-IS-A-TAX-PAID-PER-SESSION",
+  "marker": "@spec/done",
+  "claim": "Every token in the WAL is a tax paid per session.",
+  "evidence": [
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The per-session premise holds here — the WAL is read at every boot — and this repository has acted on the cost directly: commit a35ff173 (2026-07-23) 'docs(wal): collapse to a living checkpoint (126k → 1k tokens)' is a token-budget rewrite whose subject line states the saving, and the WAL's Done heading permanently routes history to git log to keep it from returning. The tax framing is also the host's own vocabulary elsewhere — CLAUDE.md's delegation directive opens by calling context the scarcest, most expensive resource. What is not measured anywhere is a per-session token figure for the current file; that is on the budget rows."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "BUDGET-TARGET",
+  "marker": "@impl/done",
+  "claim": "Target: ≤ 3 000 tokens, roughly one page of plain text.",
+  "evidence": [
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "Measured the host's WAL rather than judging it: `wc` gives 291 lines, 2 807 words, 18 493 bytes. No token count exists in the tree and no tool here produces one, so the comparison depends on the conversion — at the common ~4 bytes/token that is roughly 4 600 tokens, at words×1.3 roughly 3 650; both are above 3 000, neither is a measurement. The 'roughly one page' gloss is exceeded on any reading at 291 lines. The largest single contributor is the Constraints section at 86 lines, which the protocol itself calls the most valuable content, so the overage sits in the section the flow least wants collapsed. This repository has hit the budget once before and acted: a35ff173 (2026-07-23) cut the file from ~126k to ~1k tokens by its own subject line."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "BUDGET-HARD-LIMIT",
+  "marker": "@impl/done",
+  "claim": "Hard limit: 5 000 tokens — past that the WAL hoards history; collapse done items, move stable facts to specs, split epics.",
+  "evidence": [
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/WAL.md:144  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "Same measurement as the target row: 291 lines / 2 807 words / 18 493 bytes, no token count available in the tree, so the file sits under 5 000 tokens on the words×1.3 estimate (~3 650) and near it on the bytes/4 estimate (~4 600). What is checkable is the first remedy: the host applies it, its Done section is 19 lines and titled 'collapsed', delegating detail to git log. The second remedy is where the practice is weaker — the standing rules in Constraints have not been moved to spec documents, and the WAL records that one of them had been operating unwritten for 690 rows before being added here. Nothing in the tree enforces either limit; no gate reads the file's size."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "BUDGET-RULE-OF-THUMB",
+  "marker": "@impl/done",
+  "claim": "Rule of thumb: unreadable end-to-end in a minute means too long.",
+  "evidence": [
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:24  ## Output — at most ten lines {#output}"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The rule is a human reading-time heuristic and nothing in the tree measures reading time, so it cannot be settled from files. The two numbers that bear on it: the host's WAL is 291 lines / 2 807 words, and the flow's own fast-read tool caps its answer at ten lines — the skill exists precisely because the full read is not a one-minute job, and it is not installed here (five skills in .claude/skills/, none wal-status). Widened for any host statement of a reading-time expectation and found none in CLAUDE.md, spec/boot/ or the campaign documents."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "WAL-IS-VOLATILE-BY-DESIGN",
+  "marker": "@impl/done",
+  "claim": "The WAL is volatile by design — a record of the current state, not a source of truth about intent.",
+  "evidence": [
+   "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+   "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+   "vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md:13  Human  >  Spec  >  Tests  >  Code  >  WAL"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The host uses the same word for the same file — 'volatile, rewritten each session, describes current state' — and places intent one layer up in the spec, which is the record-versus-truth split the claim draws. The installed conflict-protocol snippet ranks the WAL last of five for the same reason. Consistent across all three sources; no artifact treats the WAL as a source of intent."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SPEC-WINS-AND-THE-WAL-IS-STALE",
+  "marker": "@impl/done",
+  "claim": "If the WAL says one thing and a spec document says another, the spec wins and the WAL is stale.",
+  "evidence": [
+   "vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md:13  Human  >  Spec  >  Tests  >  Code  >  WAL",
+   "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:56  Human  >  Spec  >  Tests  >  Code  >  WAL",
+   "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+   "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The ordering is asserted identically by three parties: this protocol's §conflicts, the conflict-protocol package that owns the hierarchy, and its snippet installed in this host's boot lane. The host's own reading layers put Spec above WAL with information flowing top-down (00-core.md:38-43), which is the same ruling in different vocabulary. No artifact anywhere on the perimeter ranks them the other way."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SURFACE-A-WRONG-WAL-ENTRY-NEVER-SILENTLY-REWRITE-IT",
+  "marker": "@impl/done",
+  "claim": "An agent believing a WAL entry wrong does not silently rewrite it: complete the task per the spec, add a `<!-- REVIEW: … -->` marker where the mismatch matters, surface the disagreement in the end-of-session report, and let the human reconcile.",
+  "evidence": [
+   "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+   "spec/boot/STATIC.md:1396  5. If you find yourself about to violate a Constraint, stop and surface",
+   "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "Three of the four steps are independently installed in this host, in the same order and with the same marker syntax: the `<!-- REVIEW: … -->` marker verbatim, proceed conservatively, flag in the end-of-session report — and the host's own anti-silence clause, 'Never silently invent semantic behavior', matches the claim's core prohibition. The end-of-session report exists as a required wind-down step. The host's rule is written for a silent spec rather than a wrong WAL entry, which is the adjacent case; grep across CLAUDE.md and spec/boot/ found no separate rule for a WAL entry believed wrong, so the WAL case inherits the general one."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "ACCEPTANCE-TEST-IS-A-STRANGER-WITH-ONLY-THE-REPOSITORY",
+  "marker": "@impl/done",
+  "claim": "One test decides whether the discipline works: a stranger with only the repository resumes work without asking.",
+  "evidence": [
+   "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+   "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy.",
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:27  ##THE-PAIR-PASSES-THE-ACCEPTANCE-TEST The pair together passes the discipline's"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host adopts the test as its stated design goal in the same terms — 'everything a cold reader would need', resumed 'with no degradation' — and builds the artifact the test requires, with CLAUDE.md:179-188 enumerating what the cold document must contain (blocker, exact next-steps recipe with commands and line numbers, repository map, recent commit chain, quick-start). What no artifact can show is whether an actual stranger has passed the test; the closest observable is that the pair exists, is current to today, and is regenerated at every wind-down."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "a-stranger-cold-from-files-alone",
+  "marker": "@impl/done",
+  "claim": "A stranger, cold, from files alone — not the author remembering, not the agent that wrote it reconstructing.",
+  "evidence": [
+   "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+   "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host states the same exclusion from the other direction and names the same figure: a teammate who clones the repository sees nothing but files, therefore nothing they need may live outside them. That is the stranger test used as a routing rule for facts. The 'not the agent reconstructing' half is enforced by the same section, which forbids leaving load-bearing knowledge in per-session or per-user memory. Nothing on the perimeter relies on an author's recollection."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "APPLY-THE-TEST-WHEN-IN-DOUBT",
+  "marker": "@impl/done",
+  "claim": "When in doubt what to record or where, apply the stranger test.",
+  "evidence": [
+   "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context.",
+   "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo."
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The host has a written tie-break for exactly this doubt, and it is the stranger test applied: when unsure, treat the fact as project-scoped and write it into the repository, justified by the asymmetry of the two errors and by a recorded instance of the costly direction. The 'where' half is answered separately at CLAUDE.md:148-159, which lists the canonical homes — CLAUDE.md, MEMORY.md, TASKS.md, BACKLOG.md, the spec tree — so the host resolves the doubt with a routing table rather than by re-deriving the test each time."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "A-PROJECT-MAY-DECLINE-THIS-CONVENTION",
+  "marker": "@impl/done",
+  "claim": "A project may decline this convention.",
+  "evidence": [
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:13  ##WAL-IS-OPTIONAL *It is **optional**: every Discipline procedure",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:18  ##WAL-IS-PREFERRED *It is **preferred** because the alternative — resumption",
+   "vibe.lock:62      \"flow:org.vibevm.world/wal@=0.2.0\","
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The optionality is corroborated from outside this package: the ai-native discipline marks its WAL convention OPTIONAL but preferred and states that every procedure touching it carries an explicit without-WAL branch, which is what declining looks like in practice. What cannot be checked here is a project that actually declined — this host installs the flow (vibe.lock) and runs it, and the other consumers on the perimeter are demo projects: tested each of research/rust-demo, research/ts-demo and research/go-demo for spec/WAL.md and none has one, but they are scaffolds rather than declining consumers, so their absence is not a decision."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "THE-INVARIANT-BINDS-AND-THE-FALLBACK-IS-GIT-LOG",
+  "marker": "@impl/done",
+  "claim": "Even when the convention is declined the invariant binds, and the fallback resume path is `git log` plus a fresh look at the tree: commit messages carry session summaries, a plan's status line carries campaign state, each session re-derives the rest.",
+  "evidence": [
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:18  ##WAL-IS-PREFERRED *It is **preferred** because the alternative — resumption"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "Both fallback mechanisms exist and work in this repository even though it has not declined the convention. Commit messages carrying session summaries: `git log --oneline --grep='docs(wal)'` returns subject lines that read as summaries — 'Phase D closed 304 rows, not 310', 'the two drifts landed, and one of them was smaller than filed' — and the host's WAL deliberately delegates its own Done detail to that log. Plan status lines carrying campaign state: the campaign-plans flow is installed and the host's Next section points at plan files for detail. The host's resume contract also folds the fallback into the primary path by requiring recent commits to be read alongside the WAL. The ai-native convention names the same alternative and calls it degrading as a project grows."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "the-cost-of-the-fallback-path",
+  "marker": "@spec/done",
+  "claim": "The fallback works, but costs three places instead of one, no single canonical 'now', tokens burned every session on re-derivation — and constraints missed first.",
+  "evidence": [
+   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:18  ##WAL-IS-PREFERRED *It is **preferred** because the alternative — resumption"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The costs are asserted about a mode this repository does not run, so none of the four can be measured here. Two indirect observations: the single-canonical-now benefit is real and is exercised — the host had to write the precedence rule down twice because it keeps two files, which is the two-place version of the problem the claim describes at three; and the ai-native convention independently predicts the same degradation for the same alternative. The 'constraints missed first' ordering has no measurement anywhere in the tree. What is missing is any project on the perimeter running without a WAL to compare against."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "RE-DERIVING-STATE-IS-THE-SIGNAL-TO-ADOPT",
+  "marker": "@spec/done",
+  "claim": "A project that keeps re-deriving its own state has received the signal to adopt the convention.",
+  "evidence": [
+   "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:22  ##ADOPT-WHEN-MORE-THAN-ONE-SESSION *Adopt it when more than one",
+   "vibe.lock:62      \"flow:org.vibevm.world/wal@=0.2.0\","
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The adoption trigger is stated differently by the two packages and neither is testable here. The ai-native convention names a structural trigger — more than one session or operator will ever touch the tree — where this protocol names a behavioural one, repeated re-derivation. This host adopted the flow (vibe.lock:62, pinned =0.2.0) but nothing in the tree records why or when the decision was taken; `git log` shows the install, not the reasoning. No project on the perimeter is observed re-deriving state and then adopting."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "COPY-THE-TASK-NOT-THE-IMPLEMENTATION",
+  "marker": "@impl/done",
+  "claim": "Copy the task, not the implementation.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:250  Show all four as proposals. Apply nothing until I approve.",
+   "CLAUDE.md:173  - Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.",
+   "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "This host is itself the worked instance of the instruction, and it adapted rather than copied on exactly the two axes the re-derive prompt names. Trigger phrases: seven Russian twins plus six English, where the package ships three English — the prompt's item 2 asked for native-language twins if the team is bilingual, and it got them. Autonomy: the prompt's item 4 asks the project to state whether a wind-down may commit and push and defaults to drafts; the host chose the other branch and wrote the reason down, citing its own Rule 4. Both are project-specific answers to the flow's questions, not copies of its text."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "re-derive-prompt-lead",
+  "marker": "@impl/done",
+  "claim": "Hand your agent the following prompt and review its drafts.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:250  Show all four as proposals. Apply nothing until I approve.",
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+   "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The prompt exists as a fenced block at :239-251 and all four of its deliverables have host counterparts: a drafted spec/WAL.md with the required sections and a fresh `_Updated:` line; project trigger phrases with Russian twins; boot lines making every session read the WAL first, present in both CLAUDE.md:3 and 00-core.md:11; and a stated autonomy rule for the wind-down. The 'review its drafts' discipline is carried by the prompt's own closing line, which forbids applying anything before approval. What the tree cannot show is whether the host's four were actually produced by running this prompt."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SUM-TWO-FILES",
+  "marker": "@impl/done",
+  "claim": "Summary: two files — `spec/WAL.md` the living checkpoint, canonical; `CONTINUE.md` the cold-resume snapshot, subordinate.",
+  "evidence": [
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+   "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
+   "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "Restates §files, and both halves are confirmed against the host: both files exist at the named paths, the subordinate one declares its own subordination in the flow's wording, and the canonicity reaches every session through the compiled boot lane. Consistent with the boot snippet's own two bullets and with the README's 0.2.0 changelog entry."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SUM-WHITEBOARD-NOT-JOURNAL",
+  "marker": "@impl/done",
+  "claim": "Summary: a whiteboard, not a journal — rewrite at session end, never append; date line first; older than 24 hours means verify before trusting.",
+  "evidence": [
+   "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+   "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+   "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "Three clauses, two confirmed and one narrowed. Rewrite-not-append and the 24-hour rule are both independently restated in the host's own boot file, in the same words. 'Date line first' holds by position — the `_Updated:` line is the first non-blank line after the title — but not by format: the host's value is a bare date with a parenthetical spanning two lines, where the protocol's worked example at :179 is a full ISO 8601 UTC timestamp, and the difference is what makes the 24-hour test unevaluable to the hour. Detail on SECTION-UPDATED-LINE. Note for the checker: spec/WAL.md's `_Updated:` line was rewritten twice while this table was being gathered — its tail read '...is CLOSED and `world` batch W1 / is CLOSED at 407 of 407**)_', then '...; W2…W7 remain**)_', then '...are CLOSED / at 407 of 407; W2's evidence is in flight, two of four tables returned**)_', shifting every line below it by one. The ref above quotes only the stable prefix of line 3; the value wraps onto line 4, and all other spec/WAL.md line numbers in this table were re-derived against the tree after the last of those rewrites."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SUM-SIZE-AND-CONSTRAINTS",
+  "marker": "@impl/done",
+  "claim": "Summary: keep it under a page; stable facts move to specs; constraints are the highest-value content — more autonomy demands more precision.",
+  "evidence": [
+   "spec/WAL.md:56  ## Constraints — do not violate",
+   "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+   "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The constraints half is confirmed and visible: the section is the host's largest at 86 lines, and the compiled boot lane orders every session to honour it verbatim, which is the flow's own valuation acted on. The other two clauses are where the host diverges, both measured on their own rows: under a page — the file is 291 lines / 2 807 words / 18 493 bytes, over the 3 000-token target on either conversion; stable facts to specs — the standing rules in Constraints have not moved, and the WAL itself records that one operated unwritten for 690 rows before landing there rather than in a spec document."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+  "anchor": "SUM-SPEC-BEATS-WAL",
+  "marker": "@impl/done",
+  "claim": "Summary: spec beats WAL; a stranger with only the repository resumes without asking.",
+  "evidence": [
+   "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+   "vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md:13  Human  >  Spec  >  Tests  >  Code  >  WAL",
+   "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state."
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "Both clauses restate facts settled above and both hold against the host. Spec beats WAL: the host's reading layers put Spec above WAL and the installed conflict-protocol snippet ranks WAL last of five. The stranger test: the host adopts it as the stated purpose of its wind-down command and builds the cold document the test requires, enumerating its mandatory contents at CLAUDE.md:179-188. Nothing on the perimeter contradicts either."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "PRODUCING-THE-FAST-MORNING-READ",
+  "marker": "@impl/done",
+  "claim": "The skill produces the fast morning read of the project WAL — the skim form of the ritual in `spec/flows/wal/morning-routine.md`.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:41  ## Fast skim: wal-status {#skim}",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:43  ##the-daily-read-has-a-fast-form The daily read has a fast form. @impl/done",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md:66  ##THE-SKIM-DOES-NOT-REPLACE-THE-WEEKLY-RE-READ It does not replace the",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md:16  1. ##READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE Read `spec/WAL.md` **before** doing anything else. The `wal-status`"
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "The named sibling exists, has a section dedicated to this skill by name (§skim), calls it the fast form of the daily read in the same words, and bounds it — the skim does not replace the weekly re-read. The boot snippet makes the same pairing from the other side. The cross-reference is one of the 23 relative citations the harvest resolved with 0 broken. Not exercisable in this host: the skill is not installed (`ls .claude/skills/` returns five entries, none wal-status), so no morning read can actually be produced here by invoking it."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "READ-THE-WAL-END-TO-END",
+  "marker": "@impl/done",
+  "claim": "Step 1: read `spec/WAL.md` end to end; if the file does not exist, say so, point at `spec/flows/wal/WAL-PROTOCOL.md`, and stop.",
+  "evidence": [
+   "spec/WAL.md:1  # WAL — Project Continuation State",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:1  # WAL Protocol {#root}",
+   "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:22  description = \"Read the project WAL end to end and emit a ten-line orientation: phase, attention items, next step; warn on staleness\""
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The happy path's target exists in this host — spec/WAL.md is present, 291 lines — and the manifest's skill description states the same end-to-end read, so the package is internally consistent. The fallback branch is where the instruction would misfire here: it tells the reader to point at `spec/flows/wal/WAL-PROTOCOL.md`, and in this consumer that path does not exist (`ls spec/flows` returns 'No such file or directory'); the document is on disk only at vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md, because files_written = [] for this package. The branch is unreachable here anyway, since the WAL does exist."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "STALENESS-WARNING-IS-THE-FIRST-OUTPUT-LINE",
+  "marker": "@impl/done",
+  "claim": "Step 2: check the `_Updated:` line — the first line after the title; if older than 24 hours the warning is the FIRST output line, in the form `WARNING: WAL updated <N> hours ago — may be stale.`",
+  "evidence": [
+   "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt",
+   "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:78  1. ##SECTION-UPDATED-LINE **`_Updated: <ISO 8601 UTC>_`** — the very first line after the"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "Position matches — the `_Updated:` line is the first non-blank line after the title in this host's WAL — and the 24-hour threshold agrees with both the protocol and the host's own boot rule, so the three sources are consistent on the rule. The output format cannot be produced from this host's line: `<N> hours ago` requires a timestamp, and the value here is a bare calendar date with a parenthetical status summary wrapped across lines 3 and 4, so a skill following this step literally has no hours to report. The protocol's own required form (line 78, and its worked example `_Updated: 2026-04-16T18:23:00Z_`) would supply them. Moot in practice: the skill is not installed (five skills in .claude/skills/, none wal-status). Note for the checker: spec/WAL.md's `_Updated:` line was rewritten twice while this table was being gathered — its tail read '...is CLOSED and `world` batch W1 / is CLOSED at 407 of 407**)_', then '...; W2…W7 remain**)_', then '...are CLOSED / at 407 of 407; W2's evidence is in flight, two of four tables returned**)_', shifting every line below it by one. The ref above quotes only the stable prefix of line 3; the value wraps onto line 4, and all other spec/WAL.md line numbers in this table were re-derived against the tree after the last of those rewrites."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "FLAG-A-CONTINUE-DIVERGENCE-AND-TREAT-THE-WAL-AS-CANONICAL",
+  "marker": "@impl/done",
+  "claim": "Step 3: if `CONTINUE.md` exists at the repository root and disagrees with the WAL on phase, blockers or next step, flag the divergence and treat the WAL as canonical.",
+  "evidence": [
+   "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+   "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
+   "CONTINUE.md:386  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+   "spec/WAL.md:6  ## Current phase"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "located",
+  "searched": "The precondition holds — CONTINUE.md exists at the repository root — and the tie-break the step prescribes is already written into the host's own files twice, in the header note and in a closing precedence paragraph, in the flow's wording. Checked the two files for an actual divergence on the three named axes: both are dated 2026-07-28, both describe Phase C of PROP-043 wave 2 with W1 closed at 407 of 407 and W2 in flight, and the WAL's Next item 1 and CONTINUE.md's recipe point at the same loop — so there is nothing to flag today. The skill itself is not installed here."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "OUTPUT-ONE-LINE-CURRENT-PHASE",
+  "marker": "@impl/done",
+  "claim": "Output: one line giving the current phase and its status.",
+  "evidence": [
+   "spec/WAL.md:6  ## Current phase",
+   "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:81  2. ##SECTION-CURRENT-PHASE **Current phase** — one or two lines naming what the project is"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The source the output line is drawn from exists in this host and its opening line is already in the one-line phase-plus-status shape the skill wants — campaign, wave, phase, state — so the step is satisfiable here without summarising. Consistent with the protocol's §sections requirement for the same section. What the skill would have to skim past is the other 47 lines of that section, measured on SECTION-CURRENT-PHASE."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "OUTPUT-UP-TO-THREE-ATTENTION-BULLETS",
+  "marker": "@impl/done",
+  "claim": "Output: up to three bullets naming what needs attention — blockers, risks, pending decisions.",
+  "evidence": [
+   "spec/WAL.md:193  ## Known issues",
+   "spec/WAL.md:229  - **F-092** — `SKILL.md` YAML frontmatter cannot carry a fact anchor; 9 files.",
+   "spec/WAL.md:231  - **`specmap` ratchet** — 37 gated orphans host-side, unmoved.",
+   "spec/WAL.md:56  ## Constraints — do not violate"
+  ],
+  "src": [
+   1,
+   2
+  ],
+  "found": "partial",
+  "searched": "The material the bullets would be drawn from exists and is already bulleted: Known issues runs lines 193-234 as one-line parked findings with ids. The cap is where the host's state exceeds the skill's shape — that section alone holds far more than three entries, and the WAL's Constraints and In progress sections carry further attention items, so 'up to three' would require the skill to select rather than transcribe, and nothing in the step says on what basis. The skill is not installed here, so no selection has ever been made to inspect."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "OUTPUT-ONE-LINE-NEXT-PRIORITY-STEP",
+  "marker": "@impl/done",
+  "claim": "Output: one line giving the next priority step.",
+  "evidence": [
+   "spec/WAL.md:175  ## Next",
+   "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:93  6. ##SECTION-NEXT **Next** — the single next action. Several candidates? List them"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "partial",
+  "searched": "The source section exists and its first numbered item is identifiable as the next priority step, so the output is producible. Two frictions measured rather than judged: the host's Next section holds four numbered items across lines 175-191 with none marked as the default, so 'the next priority step' has to be inferred from ordering; and that first item is itself six lines long naming four scripts in sequence, which does not reduce to one line without loss. The protocol's §sections asks for the default to be marked precisely so this step does not need to guess."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "example-shape-lead",
+  "marker": "@impl/done",
+  "claim": "An example of the output shape follows.",
+  "evidence": [
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:34  WARNING: WAL updated 26 hours ago — may be stale.",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:36  Phase: PROP-003 verification engine, ~70% done",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:42  Next step: resolve #12, or start PROP-004 in parallel."
+  ],
+  "src": [
+   1,
+   3
+  ],
+  "found": "located",
+  "searched": "The example is present as a fenced block at lines 33-43 and matches the three output rules it illustrates in order: the staleness warning first, one phase line, bulleted attention items, one next-step line. It also uses the `<N> hours ago` form the second step specifies, which is the form this host's date-only `_Updated:` line cannot supply — recorded on STALENESS-WARNING-IS-THE-FIRST-OUTPUT-LINE. The example's contents are the protocol's fictional oproto project, so nothing in it is checkable against this repository. Installed identically at vibedeps/flow-wal/0.2.0/spec/skills/wal-status/SKILL.md."
+ },
+ {
+  "file": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+  "anchor": "REPORT-ONLY-DO-NOT-EDIT-OR-EXECUTE",
+  "marker": "@impl/done",
+  "claim": "Report only: do not edit the WAL, and do not start the next step.",
+  "evidence": [
+   "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.",
+   "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:130  ##A-RECORDED-POINTER-IS-A-CANDIDATE-NOT-AUTHORISATION Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the",
+   "spec/boot/STATIC.md:1415  8. Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE"
+  ],
+  "src": [
+   1,
+   2,
+   3
+  ],
+  "found": "located",
+  "searched": "The same prohibition is installed in this host at a larger scale and in near-identical wording: the resume contract forbids edits, execution, commits and pushes, and states the candidate-not-authorisation rule the flow's cold-resume.md:130 carries. So although the skill itself is absent from .claude/skills/, the rule it ends on is the one the host actually runs at every restore, and the host records a dated reason for it — CLAUDE.md's closing note attributes the rule to a misfire on 2026-06-12, and cold-resume.md:141-146 records the same event from the package side."
+ }
+]
