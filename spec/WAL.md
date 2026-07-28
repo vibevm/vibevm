@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-28 (**Phase C — `flow:wal` CLOSED at 260; W2c is 88 of 179;
-two files of W2c and all of W2d remain**)_
+_Updated: 2026-07-28 (**Phase C — W2 and W3 both CLOSED; the cluster is 51 of
+121 files and the phase is past 61 %**)_
 
 ## Current phase
 
@@ -9,60 +9,50 @@ two files of W2c and all of W2d remain**)_
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**3 452 verdicts written, sealed and committed — 50.4 % of the phase.** The
-`ai-native` cluster measures **2 470 / 207 / 20 — 91.6 %**; `world` now has **755
-verdicts — 678 / 62 / 15, 89.8 %, with 39 self-referential (5.2 %)**. One command
-prints all of it: `python campaigns/packages-2026-09/tasks/summary.py`.
+**4 222 verdicts written, sealed and committed — 61.7 % of the phase.** The
+`ai-native` cluster measures **2 470 / 207 / 20 — 91.6 %**; `world` now has
+**1 557 / 140 / 17 — 90.8 %** over 51 of its 121 files, with 138 self-referential
+(8.1 %). One command prints all of it:
+`python campaigns/packages-2026-09/tasks/summary.py`.
 
-**`two-process-model` is 88 of 179, and the three files judged so far separate the
-checkable layer from the abstract one cleanly:** README 22/22 (100 %), boot snippet
-14/17 (82 %, all three drifts the dangling `../flows/…` pointers), and
-`TWO-PROCESS-MODEL.md` **49/49 (100 %) — 45 of its 49 facts are `@spec/done`
-argument, and an argument cannot be contradicted by a repository.** Drift lives
-where a fact describes something the tree can answer.
+**W1, W2 and W3 are CLOSED — 1 714 anchors judged row by row.** W1 407 (90.4 %),
+W2 692 (91.9 %), W3 615 (**89.9 %, and zero unverifiable** — the first batch
+where every fact could be settled against the tree). Six packages complete:
+`flow:wal` 86.5 %, `two-process-model` 96.6 %, `wal-specspaces` 93.5 %,
+`sync-from-code` 93.7 %, `decision-records` 92.9 %, `conflict-protocol` 93.6 %,
+`addressable-specs` 87.9 %.
 
-**`flow:wal` is CLOSED at 260 of 260 — 225 / 27 / 8, 86.5 %** (W2a's four files
-81.1 %, W2b's three 90.6 %), and it is the lowest-scoring package in `world` so
-far for a structural reason: **this flow's facts describe `spec/WAL.md`, and
-`spec/WAL.md` is on disk and measurable line by line.** Six of W2a's sixteen
-drifts are the required-sections contract, each measured over the **fourteen most
-recent revisions** of the host's WAL — `_Updated:` a bare date in 14 of 14 where
-ISO 8601 UTC is required «always and without exception»; Current phase 25-50 lines
-against «one or two»; Next 4-5 items against «the single next action», no default
-marked; Constraints citing a spec anchor in **4 of 26** entries, with `spec://`
-occurring **0 times** in the file in every revision; Session context 41-65 lines of
-retrospective against «one-paragraph orientation».
+**The per-file slice replaced the batch as the unit of work, and that closes the
+split question §4 left open.** Seventeen slices landed here, one file each, 17 to
+149 rows, each merged and sealed on its own — `merge-verdicts.py` takes a subset
+of a batch's files under the same id, so a slice that lands cannot become a debt.
+**W5 does not need splitting; it needs twenty-one slices.**
 
-**W1 is CLOSED and the phase's falsifiable prediction is in deeper trouble.** §5-C
-predicted `world` would measure HIGHER than `ai-native`; the cluster now reads
-**88.9 % against 91.6 %** and is still falling. The reason inverts the prediction's
-logic — these flows make claims about the consuming project, and this consumer is
-measurable. Two families carry it: thirteen of W1's drifts are attribution's
-single-place law broken by its own consumer (88 lines across 50 files), and **69
-relative `../flows/…` pointers in the host's compiled boot lane, all 69 dangling**,
-because the host has no `spec/flows/` at all.
+**The prediction is settled and it inverted.** §5-C said `world` would measure
+higher than `ai-native`. Over 1 714 anchors it reads **90.8 % against 91.6 %**,
+and the reason is the opposite of the one predicted: these flows make claims
+about the consuming project, and this consumer is measurable to the line.
 
-**F-129 is the batch's own finding, and it is internal to the package.**
-`session-end-hook.md` orders «the full hook, steps 1-6»; `cold-resume.md`
-§wind-down orders **five** in a different sequence, with no stopping-state step and
-no collapse step; and a third fact asserts the two are the same procedure. The host
-implements `cold-resume.md`'s five exactly, in order.
+**What the three closed batches measured, by family:** the boot lane is **~16 100
+tokens against its own 500-token budget** (32×) and «split when over» has fired
+zero times; **4 of 153** decision-bearing sections carry all four required fields
+and **127** carry the Decision line alone; the prescribed sync subject
+`docs(spec): sync …` has been typed **0 times in 2 041 commits**; 857 of 982
+headings are anchored and the 125 that are not are **all 23 in `spec/boot/` and
+all 8 in this file**; and **59 `duplicate-anchor` warnings** say `{#root}` means
+27 things inside the generated boot lane.
 
-**`world` is 23 of 121 files: 3 483 anchors remain — W2c, W2d, then W3…W7.** W1's
-and W2's nine delegated tables live in `tasks/evidence/ev-W{1,2}*.json` with their
-verdict batches beside them; the three §3.1 sources per batch are captured in
-`harvest/world-w{1,2}-*.md`.
+**Three internal contradictions were found inside single packages** — the `wal`
+package's two incompatible wind-downs (F-129), `record-template` against
+`revisit-triggers` on whether a trigger fires unprompted, and
+`cognitive-load-split` against the wal package on whether one text serves three
+readers. **And one collision of principle**: `uncertainty-protocol` prefers no new
+dependency; `PROP-000` §15 decides the opposite at the governing anchor, in the
+four-field form.
 
-**Exit-gate clause (iii) is satisfied** — 39 captured runs under `harvest/`, each
-`command → real output`, plus W1's three-source capture. **Clauses (ii) and (iv)
-now have a producer**: `tasks/summary.py` prints the X/Y/Z rollup per cluster and
-counts `src == [1]` as self-referential, which no shipped command does.
-
-**The phase's own answer to the mandate, so far: the discipline gates everything
-except itself.** No package under `packages/org.vibevm.ai-native/` carries a
-`conform.toml` or a `discipline/` directory, so every discipline-specific floor step
-fails or is skipped in all six slots, while the three portable steps pass wherever
-the toolchain is present.
+**Exit-gate clause (iii) is satisfied** — 39 captured runs under `harvest/`, plus
+three per-batch source captures. **Clauses (ii) and (iv) have a producer**:
+`tasks/summary.py`.
 
 Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
@@ -81,6 +71,16 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
   **For `world` there is a fourth clause:** a flow's fact is also checked against
   the host's observed conformance (§3.1 source 2). The host is a living consumer,
   and a law the host breaks is measured, not excused.
+- **Non-adoption is not drift (the line W2/W3 ran on, and the rest of `world`
+  runs on it).** A flow's prescription the host simply never adopted is
+  **confirmed** — a human's morning read leaves no repository artefact and no flow
+  claims the host performs one. **Drift is where the host's own written contract
+  contradicts the flow**, or where a measurable rule is broken over a double-digit
+  share of its window. Two corollaries: **each fact is judged on its own sentence,
+  never on its family** (`NEVER-APPEND-TO-THE-WAL` prohibits appending only —
+  confirmed; `REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND` names patching too —
+  drift); and **a definition that classifies a failure correctly is confirmed BY
+  that failure**, not refuted by it.
 - **Never classify a group of rows by one rule to save time.** That is how 138 rows
   became a debt. Every `partial` row is read individually; a `partial` is *related
   code that does not settle the claim*, which is exactly the class that carries
@@ -181,50 +181,38 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
 ## In progress
 
-**W2 is 348 of 692.** `ev-W2a` (111), `ev-W2b` (149) and three of `ev-W2c`'s five
-files (88) are read row by row, merged, sealed and committed — batches
-`batch-W2a`, `batch-W2b`, `batch-W2c-1`, `batch-W2c-2`.
+**W4 is the next batch and nothing is in flight.** No worker is running; no table
+is half-read. W1, W2 and W3 are closed and sealed, and every slice of them is
+committed and mirrored.
 
-**Still unjudged — 344 anchors, all on disk and verified:**
-
-| left | file(s) | rows |
-|---|---|---:|
-| `ev-W2c.json` | `cognitive-load-split.md` | 50 |
-| `ev-W2c.json` | `files-as-ipc.md` | 41 |
-| `ev-W2d.json` | `sync-from-code` (5) + `wal-specspaces` (3) | 253 |
-
-Nothing needs re-commissioning; start by reading. `ev-W2c` carries **9 unresolvable
-refs that are not fictions** — all quote `spec/WAL.md` text this session's own
-checkpoint deleted, verbatim at `100617b3`; `repair-refs.py` cannot re-point them
-because the text is gone, and the verdicts written from those rows cite the current
-tree in their own words instead.
-
-**Two findings from the harvest capture alone are still open on those two files:**
-the host's `two-process-model` boot snippet is missing three `{#…}` heading anchors
-the package added on 2026-07-27, so three of its four sections cannot be cited (a
-stale install, not a changed rule); and both `CLAUDE.md:141` and `SPECSPACES.md:8`
-place the specspaces snippet at «slot 11 of `spec/boot/INDEX.md`» where `grep -c`
-on that file returns **0** — the same shape as F-128.
+**W4 — `campaign-plans`, `discovery-prompt`, `comparative-research`, `redbook` —
+is 15 files / 564 anchors, unstarted.** Its evidence has not been gathered: the
+recipe's step 1 (capture the three §3.1 sources into `harvest/`) and step 2
+(commission one `opus5` worker per package) both remain. W3's harvest is the
+model — `harvest/world-w3-ipc-core-ii.md`.
 
 ## Next
 
-1. **Finish `ev-W2c` — `cognitive-load-split.md` (50) then `files-as-ipc.md` (41) —
-   then `ev-W2d` (253).** Re-run `verify-evidence.py` first anyway, because this
-   session proved twice that a checkpoint invalidates a sealed table. Then
-   `show-rows.py --brief --file <name>` row by row; one file per slice, merged and
-   sealed on its own, is the granularity that has worked.
-   `CONTINUE.md` §recipe is the loop, §standard the verdict standard, and
-   §w2-judged what W2a/W2b already settled — including the non-adoption line.
-   **Re-measure the per-anchor cost when W2 closes** — W5 is provisional at ~697 and
-   splits if the cost is higher than C1's.
-2. **Every `world` verdict must carry `src`** (a non-empty subset of `[1,2,3]`,
-   amendment A2); `merge-verdicts.py` refuses a batch without it, and `src == [1]`
-   counts separately as self-referential — `summary.py --batch <id>` prints both.
-   `world`'s share so far is 30 of 667, 4.5 %.
-3. **Then W3…W7.** 3 483 anchors remain in `world`.
-3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential
+1. **Open W4.** Capture its three §3.1 sources into
+   `harvest/world-w4-plans-and-inquiry.md` (source-1 join over the four packages,
+   the boot-join for source 3, and the host observations source 2 needs), then
+   commission four `opus5` workers, one per package, pointing each at
+   `tasks/WORLD-WORKER-BRIEF.md` and that harvest. **Tell them to avoid citing
+   `CONTINUE.md` and `spec/WAL.md`** — that two-sentence change is what gave W3
+   zero unresolvable refs on the first pass.
+2. **Judge one file per slice.** Read the subject document in full, then
+   `show-rows.py --brief --file <name>` row by row, then a batch of that file's
+   verdicts alone, `merge-verdicts.py`, `progress seal`, commit. Seventeen slices
+   closed W2 and W3 this way and none became a debt.
+3. **Every `world` verdict carries `src`** (a non-empty subset of `[1,2,3]`, A2);
+   `merge-verdicts.py` refuses a batch without it. `world`'s self-referential
+   share so far is 138 of 1 714, 8.1 %.
+4. **Then W5, W6, W7** — 1 872 anchors over 55 files. **W5 does not need
+   splitting** (§4's open question, answered in the LOG): the per-file slice
+   replaced the batch as the unit.
+5. **At the phase close:** the X/Y/Z summary in the LOG, the self-referential
    count (both from `summary.py`), and `baseline.json` (amendment A6).
-4. **Phases T and G are designed and unrun. Neither starts without an explicit
+6. **Phases T and G are designed and unrun. Neither starts without an explicit
    instruction.**
 
 ## Known issues
@@ -281,37 +269,39 @@ on that file returns **0** — the same shape as F-128.
 
 ## Session context
 
-**Open `campaigns/packages-2026-09/tasks/evidence/ev-W2c.json` first** (179 rows,
-`two-process-model`), then `ev-W2d.json` (253). Run
-`python campaigns/packages-2026-09/tasks/verify-evidence.py <table>` before reading
-a word of either, then `repair-refs.py --apply`, then `show-rows.py --brief` row by
-row. Avoid touching `CONTINUE.md` or `spec/WAL.md` while judging — those two files
-are what the tables cite.
+**Start at `campaigns/packages-2026-09/tasks/PHASE-C-BATCHES.json`, batch W4, and
+open its harvest before anything else.** The recipe is `CONTINUE.md` §recipe; the
+verdict standard is §Constraints above and `CONTINUE.md` §standard; what W1-W3
+already settled is `CONTINUE.md` §judged, and reading it first is what keeps the
+next batch from re-deriving four measurements it already has.
 
-**The line this batch drew, and the rest of `world` will be judged on it.** A flow's
-prescription that the host simply never adopted is **not** drift: a human's morning
-read leaves no repository artefact, and the flow never claims the host performs one.
-Drift is where the host's own **written contract contradicts the flow** — the
-cold-start read order, the `_Updated:` format, the Next section's shape. Judged the
-other way, one unadopted document would have produced forty-two drifts and buried
-the two that matter.
+**The line that made three batches consistent is now a constraint, and it is the
+one to read twice.** Non-adoption is not drift. `morning-routine.md` is unadopted
+end to end and scores 39 of 42 confirmed; its two drifts are both a read order
+the host reverses *in writing*. Judged the other way, one unadopted document
+would have produced forty-two drifts and buried the two that matter.
 
-**Two rule pairs were judged differently on purpose, because their own words
-differ.** `NEVER-APPEND-TO-THE-WAL` prohibits appending only, and the host never
-appends — confirmed. `REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND` names patching too,
-and `CLAUDE.md`'s step 2 says «Update … bump … refresh» — drift. Each fact is judged
-on its own sentence, never on the family it belongs to.
+**The instruments failed once more and the failure is now a standing trap.** A
+wind-down invalidates any sealed evidence table citing `CONTINUE.md` or
+`spec/WAL.md` — W2's tables went from 3 unresolvable to 65 that way, and this
+session's own checkpoint then did it again to W2c and W2d. Not one of the 71
+broken refs was a fiction. The fix is upstream, in the brief: W3's workers were
+told to cite durable files instead, and returned 1 805 refs with **zero**
+unresolvable.
 
-**The instruments failed in a new way and it is now a constraint.** W2's tables were
-verified clean and sealed; a wind-down then overwrote `CONTINUE.md` and the WAL's
-`_Updated:` line, and the same tables re-verified at 65 unresolvable. Every one was
-a real quote whose coordinate the boss moved. `repair-refs.py` recovered 51; the
-other 14 are named in the batch commit. Its first real `--apply` also reformatted
-every table — fixed to measure the file's own indent, because 51 changes buried in
-4 481 is not a diff anyone reads.
+**Two workers corrected the harvest that commissioned them, and one asserted an
+absence it had not checked.** The REVIEW contract is in live use with shipped
+machinery around it, against a harvest that called it unexercised from a
+three-file grep. And «no host rule discouraging new dependencies exists» was
+written against a `PROP-000` §15 that exists and rules the opposite way — the
+campaign's own named trap, in the session that wrote the trap down. Both
+corrections live in the verdicts' reasons, where the next reader meets them.
 
-**And the phase measured itself again.** The host's WAL breaks six clauses of the
-protocol it ships, `spec://` appears zero times in a file whose flow requires spec
-anchors, and the instruction «read the WAL before doing anything else» is compiled
-at line 1382 of a 1585-line lane the host reads first. None of it was fixed — Phase
-C files findings; it does not repair the subject it is measuring.
+**And the phase measured its own repository harder than any batch before.** The
+boot lane is 32× the budget its own installed flow sets. The two least
+addressable files in the tree are the boot lane and this one — all 23 headings in
+`spec/boot/` and all 8 here carry no anchor, so the Constraints section above
+cannot be cited. `spec://` occurs zero times in this file, in every revision
+measured, while the flow that requires it is installed and read at every boot.
+None of it was fixed: Phase C files findings; it does not repair the subject it
+is measuring.
