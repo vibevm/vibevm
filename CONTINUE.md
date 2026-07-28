@@ -1,7 +1,7 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written 2026-07-28 (**Phase C: the reviewing debt is CLOSED; W1's evidence
-gathering is in flight**). `spec/WAL.md` is the canonical living state and
+_Written 2026-07-28 (**Phase C: the reviewing debt is CLOSED and `world` batch W1
+is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and
 supersedes this snapshot wherever they diverge._
 
 ## TL;DR
@@ -32,8 +32,8 @@ Gate: `progress check --exhaustive` **clean, 259 files, 0 warnings**.
 |---|---|
 | host | 58 / 58 files, 4 499 verdicts (4 496 confirmed · 3 unverifiable) |
 | **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, **2 470 / 207 / 20, 91.6 %** |
-| **world** | **0 / 121 files** — **4 150 anchors owed**, batches W1…W7 |
-| phase | **2 697 of 6 847 — 39.4 %** |
+| **world** | **16 / 121 files** — 407 verdicts, **368 / 32 / 7, 90.4 %**, 26 self-referential; **3 743 anchors owed**, batches W2…W7 |
+| phase | **3 104 of 6 847 — 45.3 %** |
 | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |
 | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |
 
@@ -43,50 +43,36 @@ Gate: `progress check --exhaustive` **clean, 259 files, 0 warnings**.
 python campaigns/packages-2026-09/tasks/summary.py
 ```
 
-## What is in flight, and exactly how to pick it up {#in-flight}
+## The recipe that closed W1, to run again on W2 {#recipe}
 
-**Five delegated evidence tables for W1 were commissioned and had not landed when
-this checkpoint was written.** Check first:
+W1 cost five delegated tables, 1 645 refs and zero unresolvable after the checker's
+fourth narrowing. The loop that produced it, in order:
 
-```bash
-ls campaigns/packages-2026-09/tasks/evidence/ev-W1*.json
-```
+1. **Capture the batch's three §3.1 sources into `harvest/`**, each `command → real
+   output`. W1's is `harvest/world-w1-git-family.md`: the source-1 link join, the
+   source-2/3 boot-lane join, and — for the git family only — this repository's own
+   `git log` as source 2.
+2. **Commission one `opus5` worker per package**, pointing each at
+   `tasks/WORLD-WORKER-BRIEF.md` and the batch's harvest file, with the file list and
+   the per-file anchor counts. The anchor list comes from the campaign mirror
+   (`run/mirror/<path with / → __>.json`, every fact with `marked` true and a
+   non-empty `id`), never from a regex.
+3. **`verify-evidence.py` BEFORE reading a word**, then `repair-refs.py` if a file
+   moved under the workers, then `show-rows.py --brief` row by row.
+4. **Judge every row individually**, write the batch with `src` on every verdict,
+   `merge-verdicts.py`, `progress seal`, `summary.py --batch <id>`, commit.
 
-| table | files | anchors |
-|---|---|---:|
-| `ev-W1a.json` | `git-atomic-commits` README + boot + `ATOMIC-COMMITS-PROTOCOL.md` | 101 |
-| `ev-W1b.json` | `git-atomic-commits/…/splitting-large-changes.md` | 52 |
-| `ev-W1c.json` | `git-attribution-policy` — all five files | 132 |
-| `ev-W1d.json` | `git-autonomy` (3 files) + `git-practices/README.md` | 54 |
-| `ev-W1e.json` | `git-conventional-commits` — all three files | 68 |
+**Two operational lessons W1 paid for, both the boss's:**
 
-**If a table is missing, re-commission it** with the same brief — the prompt is
-reconstructible from `tasks/WORLD-WORKER-BRIEF.md` plus the file list above. The
-worker contract is: read the brief and `harvest/world-w1-git-family.md`, key the
-anchor list on the campaign mirror (`run/mirror/<path with / → __>.json`, every
-fact with `marked` true and a non-empty `id`), return
-`{file, anchor, marker, claim, evidence[], src, found, searched}`, write the JSON
-array to the named path, and never write a verdict.
+- **Do not edit a file a running worker is citing.** An eleven-line insert into the
+  harvest mid-run shifted every ref below it; two workers caught it themselves and
+  re-anchored, and `repair-refs.py` exists for the set that will not.
+- **Do not read a table while its worker may still be writing.** A verify run against
+  a half-written file reported 228 fictions that were not fictions, and the
+  conclusion drawn from it — a narrowing of the checker — had to be restated as
+  justified-but-not-by-that-evidence.
 
-**Then, for every table that exists:**
-
-```bash
-python campaigns/packages-2026-09/tasks/verify-evidence.py campaigns/packages-2026-09/tasks/evidence/ev-W1a.json
-python campaigns/packages-2026-09/tasks/show-rows.py campaigns/packages-2026-09/tasks/evidence/ev-W1a.json --start 0 --count 20
-```
-
-`verify-evidence.py` runs **before** you read a word: it resolves every
-`path:line  snippet` and lands each in `OK` / `OFF-BY` / `ELIDED` (pass) or `PATH` /
-`LINE` / `TEXT` (fail). `show-rows.py` prints each row joined with the verdict
-standing in the cache — empty for `world`, so it will read `CACHE: (none)`.
-
-**Every `world` verdict MUST carry `src`** — a non-empty subset of `[1,2,3]` naming
-which of §3.1's source classes it rests on. `merge-verdicts.py` refuses a `world`
-batch without it, and `src == [1]` alone is self-referential and counted separately
-(amendment A2, exit-gate clause iv). The counter exists now:
-`python campaigns/packages-2026-09/tasks/summary.py --batch W1`.
-
-## Reading already done for W1, so you do not repeat it {#w1-reading}
+## What W1 found, so W2 does not re-derive it {#w1-reading}
 
 Read in full this session and worth knowing before judging:
 

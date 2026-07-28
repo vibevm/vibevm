@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED; `world` batch W1 is
-open and its evidence is being gathered**)_
+_Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1
+is CLOSED at 407 of 407; W2…W7 remain**)_
 
 ## Current phase
 
@@ -9,10 +9,21 @@ open and its evidence is being gathered**)_
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**2 697 verdicts written, sealed and committed — 39.4 % of the phase.** The
+**3 104 verdicts written, sealed and committed — 45.3 % of the phase.** The
 `ai-native` cluster now measures **2 470 confirmed / 207 drift / 20 unverifiable —
-91.6 %**, restated from 92.4 % by the reviewing pass below. One command prints it:
-`python campaigns/packages-2026-09/tasks/summary.py`.
+91.6 %**, restated from 92.4 % by the reviewing pass below; `world` has its first
+**407 verdicts — 368 / 32 / 7, 90.4 %, with 26 self-referential (6.4 %)**. One
+command prints all of it: `python campaigns/packages-2026-09/tasks/summary.py`.
+
+**W1 is CLOSED and the phase's falsifiable prediction is in trouble.** §5-C predicted
+`world` would measure HIGHER than `ai-native`; the first world batch reads **90.4 %
+against 91.6 %**, and the reason inverts the prediction's logic — these flows make
+claims about the consuming project, and this consumer is measurable. Thirteen of
+W1's thirty-two drifts are one law broken by its own consumer (attribution's
+single-place rule, restated in eight further host locations, 88 lines across 50
+files), and a second family runs through every package: **69 relative `../flows/…`
+pointers in the host's compiled boot lane, all 69 dangling**, because the host has
+no `spec/flows/` at all.
 
 **The 138-row reviewing debt is PAID.** Sixty `partial` rows had been sorted by
 filename and seventy-eight by one two-branch rule; read individually they come to
@@ -22,12 +33,12 @@ behavioural. **The standard that judges a verdict is now written down** — see
 §Constraints and the campaign LOG — after four claims turned out to have been judged
 two ways across three languages.
 
-**`world` has no verdicts yet: 121 files, 4 150 anchors, batches W1…W7.** W1 (the
-git family, 16 files, 407 anchors) is **open**: all three §3.1 sources are captured
-by command in `harvest/world-w1-git-family.md`, and five delegated evidence tables
-(`tasks/evidence/ev-W1{a,b,c,d,e}.json`) were commissioned. **Check whether they
-landed before doing anything else** — `CONTINUE.md` §in-flight carries the exact
-recipe, including how to re-commission a missing one.
+**`world` is 16 of 121 files: 3 743 anchors remain, batches W2…W7.** W1's five
+delegated tables live in `tasks/evidence/ev-W1{a,b,c,d,e}.json` and its five verdict
+batches beside them; all three §3.1 sources for it are captured in
+`harvest/world-w1-git-family.md`. The worker contract that produced them —
+`tasks/WORLD-WORKER-BRIEF.md` — now carries the ref grammar in full, after W1
+returned 43 unresolvable refs of which **not one was a fiction**.
 
 **Exit-gate clause (iii) is satisfied** — 39 captured runs under `harvest/`, each
 `command → real output`, plus W1's three-source capture. **Clauses (ii) and (iv)
@@ -150,26 +161,22 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
 ## In progress
 
-**W1's evidence gathering was in flight at the checkpoint.** Five `opus5` workers
-were commissioned for the git family's 16 files / 407 anchors, each writing one
-table to `campaigns/packages-2026-09/tasks/evidence/ev-W1{a,b,c,d,e}.json`. **No
-`world` verdict has been written.** The tree is clean and in sync with
-`origin/main`; nothing else is running.
+Nothing running. The tree is clean and in sync with `origin/main`.
 
 ## Next
 
-1. **W1 — check for the five tables first**, then `verify-evidence.py` each one
-   BEFORE reading it, then `show-rows.py` row by row and judge. `CONTINUE.md`
-   §in-flight carries the file list, the worker contract, and how to re-commission a
-   missing table. §w1-reading carries the reading already done, so it is not
-   repeated: `git-practices`' README is stale about its own family, the
-   single-place law is broken by the host in six places, and F-128's chain is
-   verified end to end.
-2. **The rest of `world` — W2…W7**, per `tasks/PHASE-C-BATCHES.json`. **Every
-   `world` verdict must carry `src`** (a non-empty subset of `[1,2,3]`, amendment
-   A2); `merge-verdicts.py` refuses a batch without it, and `src == [1]` counts
-   separately as self-referential — `summary.py --batch <id>` prints both. W2 and W5
-   are provisional at ~695 anchors; re-measure the per-anchor cost after W1 closes.
+1. **W2 — `two-process-model`, `wal`, `wal-specspaces`, `sync-from-code`**: 20 files,
+   692 anchors, per `tasks/PHASE-C-BATCHES.json`. The recipe is W1's and it works:
+   capture the batch's three §3.1 sources into `harvest/`, commission per-package
+   evidence tables from `opus5` workers against `tasks/WORLD-WORKER-BRIEF.md`, run
+   `verify-evidence.py` BEFORE reading, then `show-rows.py` row by row and judge.
+   **Re-measure the per-anchor cost now that W1 has closed** — W2 and W5 are
+   provisional at ~695 anchors and split if the cost is higher than C1's.
+2. **Every `world` verdict must carry `src`** (a non-empty subset of `[1,2,3]`,
+   amendment A2); `merge-verdicts.py` refuses a batch without it, and `src == [1]`
+   counts separately as self-referential — `summary.py --batch <id>` prints both.
+   W1's own share is 26 of 407, 6.4 %.
+3. **Then W3…W7.** 3 743 anchors remain in `world`.
 3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential
    count (both from `summary.py`), and `baseline.json` (amendment A6).
 4. **Phases T and G are designed and unrun. Neither starts without an explicit
