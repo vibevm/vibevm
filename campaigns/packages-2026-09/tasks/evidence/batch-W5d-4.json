@@ -1,0 +1,600 @@
+{
+ "batch": "W5",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:16  ## The never-escalate law {#never-escalate}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:41  ## Explicit prefix checks {#prefix-checks}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:72  ## Escalation is an error, not a warning {#error-not-warning}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:98  ## Trust ordering between sources {#trust-ordering}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:130  ## Why scope rules live globally {#global}",
+     "confirmed: All five promised subjects have their own section, in the order the scope sentence lists them. Self-description of the document, so `src` is [1]."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:37  ## The four laws {#laws}",
+     "vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:31  ## The four laws {#laws}",
+     "confirmed: Same-directory relative link, so it resolves both in the package and in the installed `vibedeps/` copy — unlike the boot snippet's `../flows/…` form. The named section exists at line 37 of the target."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "AN-INTEGRATION-IS-BOUND-TO-ITS-GRANTED-SCOPE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:305  - ##TS-ADAPTER-SCOPE **Adapter scope.** A `RepoCreator` impl MUST refuse to operate outside the organization specified in the project's `[[registry]].url`.",
+     "crates/vibe-publish/src/creator.rs:152      /// Refuse operations addressed to an org other than this adapter's",
+     "crates/vibe-publish/src/creator.rs:156      fn validate_scope(&self, org: &str) -> Result<(), PublishError> {",
+     "spec/boot/90-user.md:28  RepoCreator-адаптеры обязаны отказывать любым операциям, выходящим за пределы этой org (PROP-002 §2.10 — \"Never escalate scope\").",
+     "confirmed: Three host bindings, all using the word «refuse»: PROP-000 §20's `##TS-ADAPTER-SCOPE` (a MUST), the boot lane at `spec/boot/90-user.md:28` (which quotes the phrase «Never escalate scope» by name), and the code at `crates/vibe-publish/src/creator.rs:152-167`, a default trait method whose doc opens «Refuse operations addressed to an org other than this adapter's configured scope». The scope is bound at construction: `GitHubCreator::new(token, expected_org)` (github.rs:80) requires it, and `GitVerseCreator`'s field doc (gitverse.rs:55-58) says the constructor requires it «so adapters built in production never trust a caller not to escalate scope»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "act-on-the-declared-target-and-nowhere-else-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:305  A publish run targeting `github.com/vibespecs` may not create, modify, or even probe a repository under a different `github.com` org or under any user namespace.",
+     "crates/vibe-publish/src/creator.rs:154      /// Concrete impls call this from `repo_exists` / `create_repo`",
+     "crates/vibe-publish/src/creator.rs:155      /// before any side-effecting work.",
+     "confirmed: PROP-000 §20's `##TS-ADAPTER-SCOPE` restates the lead with the same three verbs the flow uses — create, modify, «or even probe» — and instantiates X as `github.com/vibespecs`. The «even probes» clause is the one that matters and it is honoured: `repo_exists` is the probe, and `GitHubCreator::repo_exists` calls `self.validate_scope(org)?` at github.rs:174 as its first statement, before the HTTP GET is built."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SCOPE-NO-OTHER-ORGANIZATIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:305  may not create, modify, or even probe a repository under a different `github.com` org",
+     "spec/boot/90-user.md:28  создавать только `github.com/vibespecs/<repo>`; не уходить в `github.com/<любая-другая-org>`",
+     "crates/vibe-publish/tests/repo_creator_oracle.rs:40              creator.validate_scope(\"someone-else\"),",
+     "crates/vibe-publish/tests/repo_creator_oracle.rs:41              Err(PublishError::ScopeViolation { .. })",
+     "confirmed: Bound in both host contract documents and tested. The seam-level oracle `api_adapters_share_the_scope_guard_contract` (`crates/vibe-publish/tests/repo_creator_oracle.rs:20-46`) drives BOTH API adapters through `&dyn RepoCreator` and asserts each refuses the org `\"someone-else\"` with a `ScopeViolation`, with the failure message «an out-of-scope org must be refused». Because it runs through the trait object over a table of both adapters, a future third adapter that diverges would be caught by the same test."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SCOPE-NO-USER-NAMESPACES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:305  or under any user namespace",
+     "spec/boot/90-user.md:28  не трогать `github.com/<user>` пространства имён",
+     "crates/vibe-publish/src/github.rs:350      fn validate_scope_blocks_user_namespace() {",
+     "crates/vibe-publish/src/github.rs:356              .validate_scope(\"some-other-user\")",
+     "crates/vibe-publish/src/github.rs:358          assert!(matches!(err, PublishError::ScopeViolation { .. }));",
+     "confirmed: This sub-rule has a dedicated unit test named for it: `validate_scope_blocks_user_namespace` (github.rs:349-359), whose comment states the threat model exactly as the flow's `##a-credential-may-technically-reach-further` does — «A token with broad scopes could in principle target a user namespace; the adapter's scope guard refuses» — and which asserts `expect_err(\"scope guard must fire\")`. Both host contract documents bind the rule independently."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SCOPE-NO-UNRELATED-ENDPOINTS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:28  не вызывать никакие endpoint'ы, не относящиеся к target org.",
+     "crates/vibe-publish/src/github.rs:6  //! - `GET /repos/{owner}/{repo}` — repo presence check.",
+     "crates/vibe-publish/src/github.rs:10  //! - `POST /orgs/{org}/repos` — create repo in an org.",
+     "confirmed: The host's boot lane binds the rule verbatim («do not call any endpoints unrelated to the target org»), and the adapter's endpoint surface is closed and documented: `github.rs:4-14` states «The two endpoints we use» and lists exactly two, both parameterised by the org/owner segment that `validate_scope` has already checked. `grep -n 'api_base' crates/vibe-publish/src/github.rs` shows the base URL is only interpolated at github.rs:175 (`/repos/{org}/{name}`) and github.rs:213 (`/orgs/{org}/repos`) — no account-wide `/user/repos` or `/orgs` listing call exists. One adjacent surface outside the publish crate: `crates/vibe-index/src/scanner/from_github.rs` paginates an org repo listing (`parse_next_link`, from_github.rs:233-245), which is a different tool (the index scanner) and is not a `RepoCreator`; it is org-scoped by its own URL rather than by `validate_scope`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-credential-may-technically-reach-further": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/github.rs:351          // A token with broad scopes could in principle target a user",
+     "crates/vibe-publish/src/github.rs:352          // namespace; the adapter's scope guard refuses.",
+     "confirmed: The host states this premise in the test comment that motivates the guard (github.rs:351-352) — the same argument, applied to the user-namespace case. Widened to `spec/boot/90-user.md:22`, which records that the publish token is file-scoped and used exclusively by the publisher; the host limits the credential's grant as well as guarding its use, which is stronger than the flow requires."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TECHNICAL-REACH-IS-NOT-PERMISSION": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:156      fn validate_scope(&self, org: &str) -> Result<(), PublishError> {",
+     "crates/vibe-publish/src/github.rs:352          // namespace; the adapter's scope guard refuses.",
+     "confirmed: The principle is realised structurally: the guard is checked against the adapter's own configured `expected_org`, never against what the credential could reach — `validate_scope` (creator.rs:156-167) never consults the token at all, only the declared org. So permission in this codebase is defined by configuration, not by capability, which is exactly this rule. The test comment at github.rs:351-352 states the reasoning in prose."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-DECLARED-SCOPE-IS-THE-BOUNDARY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:28  `vibe registry publish` оперирует **строго в рамках** организации, указанной в `[[registry]].url` проекта.",
+     "crates/vibe-cli/src/commands/registry/publish.rs:129      let org_segment = extract_org_segment(&registry_section.url)",
+     "crates/vibe-cli/src/commands/registry/publish.rs:193          creator_for_url(&registry_section.url, org_segment, token).map_err(|e| anyhow!(\"{e}\"))?;",
+     "confirmed: The declaration site is concrete and traceable: the boundary comes from `[[registry]].url` in the project's `vibe.toml`, is extracted by `extract_org_segment` at `registry/publish.rs:129`, and is handed to `creator_for_url` at :193, which constructs an adapter already scoped to it. The comment at publish.rs:121-126 states «that's the boundary that enforces \"never operate outside the configured organization\" per PROP-000 §20. Each adapter additionally validates the org at every method call as defence in depth»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-LAW-IS-ENFORCED-BY-AN-EXPLICIT-CHECK-IN-THE-ADAPTER": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:305  Adapter implementations carry an explicit org-prefix check and surface a `PublishError` on attempted scope escalation.",
+     "crates/vibe-publish/src/creator.rs:156      fn validate_scope(&self, org: &str) -> Result<(), PublishError> {",
+     "crates/vibe-publish/src/github.rs:174          self.validate_scope(org)?;",
+     "crates/vibe-publish/src/github.rs:212          self.validate_scope(org)?;",
+     "confirmed: The check is explicit and lives in the adapter layer, as a default trait method every impl inherits (creator.rs:156-167) and calls at the top of each side-effecting method (github.rs:174, :212; the GitVerse impl mirrors it). PROP-000 §20 line 305 binds it with the words «explicit org-prefix check». Note the host's check is org EQUALITY (`org != want` at creator.rs:158), not a string-prefix comparison — see the `prefix-comparison-lead` row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "prefix-comparison-lead": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:157          if let Some(want) = self.expected_org()",
+     "crates/vibe-publish/src/creator.rs:158              && org != want",
+     "crates/vibe-publish/src/creator.rs:160              return Err(PublishError::ScopeViolation {",
+     "spec/common/PROP-000.md:305  Adapter implementations carry an explicit org-prefix check",
+     "confirmed as pseudocode illustrating a guarantee, not a claim about a consumer's exact expression. The REFUSAL shape matches exactly — an `Err` return with no logging branch. The comparison differs: the flow tests a string prefix on a full target path, the host compares two already-extracted org segments for equality, with the parsing done earlier by `extract_org_segment` / `extract_host_segment`. Functionally the two refuse the same cases the flow enumerates. RECORDED for the reviewer: `PROP-000` §20 calls the host's check an «org-prefix check», adopting this flow's vocabulary for code that implements equality — a host-side wording gap rather than a defect in this lead."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-CHECK-IS-A-GUARD-AT-THE-BOUNDARY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:155      /// before any side-effecting work.",
+     "crates/vibe-publish/src/github.rs:174          self.validate_scope(org)?;",
+     "crates/vibe-publish/src/github.rs:175          let url = format!(\"{}/repos/{}/{}\", self.api_base, org, name);",
+     "confirmed: The guard placement is literally the first statement of each boundary method, before the request URL is even built — github.rs:174 precedes :175, and github.rs:212 precedes :213. The trait doc at creator.rs:154-155 states the contract: «Concrete impls call this from `repo_exists` / `create_repo` before any side-effecting work.» That is the single-point-of-action placement this anchor names."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-check-runs-on-every-action-lead": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-cli/src/commands/registry/publish.rs:126      // at every method call as defence in depth.",
+     "DRIFT: the host states the intent and honours it for two of the guard's three org-taking methods. `registry/publish.rs:125-126` says «Each adapter additionally validates the org at every method call as defence in depth». `RepoCreator` has four methods; `repo_exists` and `create_repo` call the guard, `host_name` needs none — and **`push_url` does NOT call `validate_scope` before interpolating the org into the credentialed URL**. That is the method whose output `git push` then contacts, so it is the one that reaches a host endpoint. «Every action» is two of three."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GUARDED-ACTION-CREATE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/github.rs:206      fn create_repo(",
+     "crates/vibe-publish/src/github.rs:212          self.validate_scope(org)?;",
+     "crates/vibe-publish/src/github.rs:213          let url = format!(\"{}/orgs/{}/repos\", self.api_base, org);",
+     "confirmed: `create_repo` calls the guard as its first statement (github.rs:212) before building the `POST /orgs/{org}/repos` URL. The trait's own doc example (creator.rs:89-100) shows the same shape as the canonical implementation pattern, and the doctest at creator.rs:110-114 asserts that a mismatched org yields `ScopeViolation`. The GitVerse adapter mirrors it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GUARDED-ACTION-MODIFY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/registry/redirect/update.rs:74      // creates / mutates GitHub stubs via the `RepoCreator` machinery.",
+     "confirmed with the shape difference recorded: `RepoCreator` has no dedicated modify method at all — its four are `host_name`, `repo_exists`, `create_repo` and `push_url`. Modification reaches the host by two routes, and the redirect commands record that they create and mutate GitHub stubs «via the `RepoCreator` machinery», so they inherit the guard through `create_repo`. The other route is `git push` via `push_url`, which is unguarded and is carried as drift at the every-action row rather than counted twice here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GUARDED-ACTION-DELETE": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:90  publish token does not apply to GitVerse, and GitVerse exposes no API",
+     "AUDIT.md:91  DELETE, so this is owner web-UI / owner-token work. **Open** —",
+     "confirmed as a guarded action this consumer does not have. vibevm implements NO delete: `RepoCreator` has no delete method and a search of `crates/vibe-publish/src/` finds no repository-deletion call. The host's own audit ledger records deletion as owner web-UI work rather than tool work. The guard cannot run on an action that does not exist — an absent capability, not an unguarded path — and this consumer has three of the flow's four actions."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GUARDED-ACTION-PROBE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/github.rs:173      fn repo_exists(&self, org: &str, name: &str) -> Result<bool, PublishError> {",
+     "crates/vibe-publish/src/github.rs:174          self.validate_scope(org)?;",
+     "spec/common/PROP-000.md:305  may not create, modify, or even probe a repository under a different `github.com` org",
+     "confirmed: The probe is `repo_exists` and it is guarded first-statement at github.rs:174, before the `GET /repos/{org}/{name}` URL is built at :175. PROP-000 §20 line 305 binds the probe case explicitly with the words «or even probe». The probe is the read-only action of the four, and it is the one the host names explicitly in its contract."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AN-UNGUARDED-CODE-PATH-IS-A-BUG": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  every code path touching a `Token` or a `RepoCreator` is audited.",
+     "crates/vibe-publish/src/github.rs:156      fn push_url(&self, org: &str, name: &str) -> String {",
+     "confirmed BY the failure it classifies, per §judged. The definition is right and the host has an instance of exactly what it names: `push_url` builds the credentialed URL without its own `validate_scope` call, guarded only transitively — its org argument is the same `org_segment` that `create_repo` validated earlier in the same publish run, so the path is protected by SEQUENCE rather than by a check. PROP-000 §20 puts `Token` paths and `RepoCreator` paths on the same audit footing, which is this anchor's «same footing» claim adopted. The failure itself is carried by `the-check-runs-on-every-action-lead`, which asserts the check runs everywhere."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-FAILED-CHECK-RAISES-AN-ERROR-AND-REFUSES-THE-ACTION": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:160              return Err(PublishError::ScopeViolation {",
+     "crates/vibe-publish/src/lib.rs:216      \"publish refused: scope violation — adapter for `{host}` is scoped to organization \\",
+     "crates/vibe-publish/src/lib.rs:221      ScopeViolation {",
+     "spec/common/PROP-000.md:305  surface a `PublishError` on attempted scope escalation.",
+     "confirmed: The refusal is an early `return Err` (creator.rs:160-164) carrying a dedicated error variant, `PublishError::ScopeViolation { host, expected_org, attempted_org }` (lib.rs:221-225). The rendered message opens with the word «refused» (lib.rs:216) and names the flow's own principle — «The publish utility never operates outside the organization named in `[[registry]].url`» — plus a `spec://vibevm/common/PROP-000#token-secrecy` citation. Because the guard returns `Result` and every caller uses `?`, the action cannot proceed past a failure."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "IT-DOES-NOT-WARN-AND-PROCEED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:158              && org != want",
+     "crates/vibe-publish/src/creator.rs:160              return Err(PublishError::ScopeViolation {",
+     "crates/vibe-publish/src/creator.rs:166          Ok(())",
+     "confirmed: `validate_scope` (creator.rs:156-167) has exactly two outcomes — `Err(ScopeViolation)` or `Ok(())` — with no third branch, no `warn!`, no `eprintln!`. Checked every `ScopeViolation` occurrence in the workspace (`grep -rn 'ScopeViolation' crates/` → 8 hits): four are in creator.rs / lib.rs defining or returning it, four are test or doc assertions that it fired. Not one is a log-and-continue. The absence of a warn-and-proceed path is the finding here, and per the brief it is stated as a search rather than cited as a line."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THERE-IS-NO-RUNTIME-OVERRIDE-FLAG": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:148      fn expected_org(&self) -> Option<&str> {",
+     "crates/vibe-publish/src/creator.rs:149          None",
+     "crates/vibe-publish/src/direct_git.rs:68      fn expected_org(&self) -> Option<&str> {",
+     "crates/vibe-publish/src/direct_git.rs:70          None",
+     "confirmed on exactly what it says: no CLI flag widens the boundary, the org always coming from `[[registry]].url`, and a search of the cli tree and the publish command finds no scope-override argument. RECORDED because it is adjacent and deliberate rather than a loophole: there IS a CONSTRUCTION-time opt-out, `expected_org()` returning `None`, documented in the trait as «Adapters that opt out … trust their caller for the boundary — useful for tests and mocks», taken by `DirectGitCreator` («Direct-push is operator-managed; there is no org scoping») and the test mock. An oracle test asserts the behaviour on purpose. Not a runtime flag, and not hidden."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-reason-is-the-blast-radius": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  of an escalated adapter, the entire host account (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#blast-radius`).",
+     "confirmed: PROP-000 §20's `##BLAST-RADIUS` gives the escalated-adapter blast radius as the entire host account and cites the flow's `#blast-radius` anchor, in the same fact that justifies making the rules global. So the host carries the reasoning, not only the rule."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-warning-is-indistinguishable-from-success": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:155      /// before any side-effecting work.",
+     "confirmed as a rationale whose CONSEQUENCE is implemented even though the argument has no host restatement. The guard runs «before any side-effecting work», so the out-of-scope write this sentence warns about cannot have happened by the time the refusal fires — which is the design the argument exists to justify. The warning-versus-error reasoning itself appears only in the package."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AN-ERROR-STOPS-BEFORE-THE-BOUNDARY-IS-CROSSED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/creator.rs:154      /// Concrete impls call this from `repo_exists` / `create_repo`",
+     "crates/vibe-publish/src/creator.rs:155      /// before any side-effecting work.",
+     "crates/vibe-publish/src/github.rs:174          self.validate_scope(org)?;",
+     "crates/vibe-publish/src/github.rs:212          self.validate_scope(org)?;",
+     "confirmed: The stop happens before any network call: at github.rs:174 the guard precedes the URL construction at :175 and the `.send()` at :183; at github.rs:212 it precedes the URL at :213 and the `.send()` at :232. The trait contract states the placement rule as «before any side-effecting work» (creator.rs:155). Nothing has been created, modified or probed at the moment the refusal fires."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "WIDENING-SCOPE-IS-AN-OWNER-CONFIGURATION-CHANGE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:28  `vibe registry publish` оперирует **строго в рамках** организации, указанной в `[[registry]].url` проекта.",
+     "crates/vibe-cli/src/commands/registry/publish.rs:129      let org_segment = extract_org_segment(&registry_section.url)",
+     "crates/vibe-publish/src/lib.rs:218      operates outside the organization named in `[[registry]].url`. \\",
+     "confirmed: The scope's only source is `[[registry]].url` in the project manifest — a committed, reviewable file — read at `registry/publish.rs:129` and named in the refusal message itself (lib.rs:218). Widening therefore means editing `vibe.toml` and committing it, which passes through the repository's ordinary review and Rule 3 commit discipline. Searched for any runtime path that could set `expected_org` from a flag or env var: `creator_for_url` (lib.rs:307-311) takes it as a parameter and the only caller passes the extracted URL segment, so there is none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SCOPE-DISCIPLINE-EXTENDS-TO-READING": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:16  //! 2. **`[[registry]]` array, in priority order.** The first registry",
+     "crates/vibe-registry/src/git_package_registry/mod.rs:97      /// Org-level mirror URLs in priority order (lower index = tried",
+     "confirmed: The host does have a read-side scope regime, and it is a different crate from the write side: `vibe-registry`'s `MultiRegistryResolver` governs resolution reads across registries and mirrors (mod.rs:1-35), while `vibe-publish`'s `RepoCreator` governs writes. The read side is ordered rather than org-guarded — see the trust-ordering rows — which is exactly the split this section describes. Note the read side has no `validate_scope` equivalent: a registry read is bounded by the configured `[[registry]]` / `[[mirror]]` URLs themselves rather than by a guard, so the boundary is declarative there and enforced there."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "trust-order-highest-first-lead": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:16  //! 2. **`[[registry]]` array, in priority order.** The first registry",
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:17  //!    whose [`GitPackageRegistry::resolve`] succeeds wins.",
+     "crates/vibe-registry/src/git_package_registry/lookup.rs:66      /// each mirror URL in priority order. Returns the first `Ok`",
+     "crates/vibe-registry/src/git_package_registry/mod.rs:97      /// Org-level mirror URLs in priority order (lower index = tried",
+     "confirmed: Both of the anchor's example pairs exist in the host. Primary-registry-versus-mirror: `GitPackageRegistry` holds «Org-level mirror URLs in priority order» (mod.rs:97) and `lookup.rs:66-67` documents trying the primary then each mirror in priority order, returning «the first `Ok`». Registry-array ordering: `MultiRegistryResolver`'s decision order (mod.rs:7-28) puts overrides first, then the `[[registry]]` array in priority order, with «The first registry whose resolve succeeds wins». Mirror chains are explicitly sorted by priority at mod.rs:333 (`chain.sort_by_key(|m| m.priority)`) and again at mod.rs:480. The «wins outright» wording of the flow and the «wins» wording of the host doc coincide."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TRUST-ITERATE-IN-PRIORITY-ORDER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:136          // Step 2: priority-ordered registry walk. PROP-002 §2.3.1",
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:165          for src in &self.sources {",
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:333              chain.sort_by_key(|m| m.priority);",
+     "confirmed: The iteration is a literal `for src in &self.sources` (walk.rs:165) over a list the resolver built in priority order, under a comment naming it «priority-ordered registry walk» (walk.rs:136). The ordering is established at construction: mirror chains are `sort_by_key(|m| m.priority)` at mod.rs:333, and `mirrors_for` re-sorts ascending at mod.rs:480. The registry array's order is the manifest's own `[[registry]]` order. Test fixtures at `multi_registry_resolver/tests.rs:20-35` seed priorities 2, 1, 99, 0 to exercise the sort."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TRUST-FIRST-VALID-ANSWER-TERMINATES": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:168                  Ok(resolved) => {",
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:185                              source_url: url,",
+     "crates/vibe-registry/src/git_package_registry/lookup.rs:118      /// priority order. The first URL that yields a tag list wins. If",
+     "confirmed: Termination is an early `return` out of the loop: the `Ok(resolved)` arm at walk.rs:168 builds a `MultiResolution` and returns it at walk.rs:182-193, so no later source is consulted. Only the `Err(UnknownPackage)` arm at walk.rs:195 falls through with `continue` (walk.rs:202). The failure-mode discriminator documented at walk.rs:136-155 is careful about which errors may fall through: `UnknownPackage` and an `AuthFailed` on an `auth = \"none\"` registry fall through; `AuthFailed` on an authenticated registry, `MissingToken`, and any other error HALT rather than walking on — with the stated reason that walking past `MissingToken` «would silently downgrade a private registry to \"not present\" which would mask configuration errors». That is a stricter reading of «satisfying answer» than the flow requires."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TRUST-ANSWERS-ARE-NOT-MERGED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:168                  Ok(resolved) => {",
+     "crates/vibe-registry/src/git_package_registry/lookup.rs:66      /// each mirror URL in priority order. Returns the first `Ok`",
+     "confirmed: No merge exists to find. The walk's success arm returns a single `MultiResolution` built from one registry's `resolve` result (walk.rs:168-193) and never accumulates across sources; the only cross-source accumulation in the function is `attempts: Vec<RegistryWalkAttempt>` (walk.rs:164), which collects DIAGNOSTICS about failed legs for the error message, not answers. On the mirror side, `lookup.rs:66-67` returns «the first `Ok` produced by any URL». Searched the resolver for union/extend/merge over resolutions and found none — stated here as a search per the brief, since an absence has no line to cite."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "this-prevents-a-lower-trust-source-from-influencing": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:17  //!    whose [`GitPackageRegistry::resolve`] succeeds wins. If a registry",
+     "confirmed: The property follows from the early return: once a higher-priority registry answers, the loop exits and lower-priority sources are never contacted, so they have no channel to influence the result. The host doc states the winning rule (mod.rs:17) but does not state this security consequence in words; the consequence is structural. Widened to `docs/` and `spec/modules/vibe-registry/PROP-002-decentralized-registry.md` for a stated influence-prevention rationale; the PROP carries the priority mechanics (§2.3.1, cited at walk.rs:136) rather than the trust argument."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "unioning-would-let-a-malicious-mirror-inject-an-entry": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:24  //! 3. **Mirror chain per registry** — schema-wired in this commit, runtime",
+     "confirmed: The threat argument has no host restatement — searched `spec/modules/vibe-registry/PROP-002-decentralized-registry.md`, `docs/registry-auth.md` and the resolver docs for a poisoned-mirror or artifact-substitution rationale and found none. What the host does carry is a related mitigation named for a future phase: mod.rs:24-28 records that runtime mirror dispatch «lands together with content-hash cross-source verification in M1.6 (Phase B)» — i.e. the host's planned answer to cross-source poisoning is content-hash verification rather than trust ordering alone. The redirect mechanism the anchor names as an attack shape does exist (`try_fetch_redirect` at walk.rs:176, `redirect_follow.rs`), which makes the argument concrete for this consumer even though the consumer has not written it down."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TRUST-ORDERING-CLOSES-THAT-SURFACE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:168                  Ok(resolved) => {",
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:202                          continue;",
+     "confirmed: «Never consulted» is literally true in the host's control flow: the only path that reaches a later source is the `continue` at walk.rs:202, guarded by the `Err(UnknownPackage)` arm at :195. A successful answer returns at walk.rs:182 and the loop body never runs again, so no request is issued to a lower-priority source. Same shape on the mirror leg per lookup.rs:66-67."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-MERGE-UNION-ACROSS-SOURCES": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:16  //! 2. **`[[registry]]` array, in priority order.** The first registry",
+     "confirmed: This row describes the REJECTED strategy, so the host evidence is its absence: no union of resolutions exists in `MultiRegistryResolver` (see the `TRUST-ANSWERS-ARE-NOT-MERGED` row for the search). The «sorts first» hazard is worth noting against the host's version-selection path, which does sort — `list_versions` gathers tags and semver-orders them — but within ONE source's answer, not across sources, so the hazard shape the row names does not arise. The row's threat rationale itself has no host restatement."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-MERGE-FIRST-TRUSTED-WINS": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:17  //!    whose [`GitPackageRegistry::resolve`] succeeds wins. If a registry",
+     "crates/vibe-registry/src/git_package_registry/lookup.rs:118      /// priority order. The first URL that yields a tag list wins. If",
+     "confirmed: The adopted strategy is the host's, stated in the same first-wins vocabulary at two levels — across registries (mod.rs:17) and across mirror URLs within a registry (lookup.rs:118). The never-consulted consequence is the control flow described in the `TRUST-ORDERING-CLOSES-THAT-SURFACE` row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SCOPE-DISCIPLINE-IS-A-GLOBAL-INVARIANT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:295  ## 20. Token secrecy and adapter scope {#token-secrecy}",
+     "spec/common/PROP-000.md:305  - ##TS-ADAPTER-SCOPE **Adapter scope.**",
+     "spec/common/PROP-000.md:307  so the rules are global and every code path touching a `Token` or a `RepoCreator` is audited.",
+     "confirmed: The host places adapter scope in the same PROP-000 section as the four laws — the section title joins them («Token secrecy and adapter scope») and `##TS-ADAPTER-SCOPE` sits as the fourth binding alongside the three law bindings. PROP-000 is the repository's cross-cutting decisions document, not a module PROP, so placement itself carries the globality claim. `##BLAST-RADIUS` at line 307 names `RepoCreator` alongside `Token` as the two audited types."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-reason-is-again-blast-radius": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  of an escalated adapter, the entire host account (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#blast-radius`).",
+     "confirmed: PROP-000 §20's `##BLAST-RADIUS` carries the escalated-adapter half in the same clause as the leaked-token half, phrased «the entire host account», and cites the protocol's `#blast-radius` anchor. This is the second host statement of the same reasoning, matching the flow's own «again»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "one-forgotten-check-is-enough-to-realize-it": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/tests/repo_creator_oracle.rs:1  //! Seam-driving oracle for the `RepoCreator` cells (card",
+     "crates/vibe-publish/tests/repo_creator_oracle.rs:6  //! replacement of any cell that diverges on these merges red here.",
+     "crates/vibe-publish/tests/repo_creator_oracle.rs:25      let cases: [(&dyn RepoCreator, &str); 2] =",
+     "confirmed: The host's answer to «a single adapter that forgot its check» is a seam-level oracle rather than a per-adapter test: `repo_creator_oracle.rs` drives every API adapter through `&dyn RepoCreator` over a table (line 25) and asserts the shared contract, so «a replacement of any cell that diverges on these merges red here» (line 6). That is the forgotten-check failure mode caught structurally. The mirrored resolver hazard has no equivalent oracle — searched `crates/vibe-registry/` for a cross-source merge test and found only per-path tests."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-catastrophic-rule-cannot-live-per-module": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  - ##BLAST-RADIUS **Why global, not module-local.**",
+     "crates/vibe-publish/src/creator.rs:156      fn validate_scope(&self, org: &str) -> Result<(), PublishError> {",
+     "confirmed: The host implements the argument's remedy directly: `validate_scope` is a DEFAULT trait method (creator.rs:156-167), so every `RepoCreator` impl inherits one implementation rather than reimplementing the check — the reimplementation hazard this anchor names is removed by construction. Only `DirectGitCreator` overrides it (direct_git.rs:73-78), and it does so to opt out deliberately, not to re-derive. PROP-000 §20's fact is titled «Why global, not module-local», the same proposition."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "IT-LIVES-ONCE-GLOBALLY-AND-EVERY-PATH-IS-AUDITED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  every code path touching a `Token` or a `RepoCreator` is audited.",
+     "crates/vibe-publish/src/creator.rs:156      fn validate_scope(&self, org: &str) -> Result<(), PublishError> {",
+     "crates/vibe-publish/src/creator.rs:8  specmark::scope!(\"spec://vibevm/modules/vibe-registry/PROP-002#publish\");",
+     "confirmed: «Lives once» holds literally — one default trait method (creator.rs:156-167) is the single implementation of the check. The audit half is bound in PROP-000 §20 line 307 for credential-acting paths, naming `Token` and `RepoCreator`. The «resolves across trust boundaries» half is NOT covered by that binding: PROP-000 §20 names no resolver type, and the registry crate's modules declare `specmark::scope!` against PROP-002 anchors (registry-model, registry-auth, publish) rather than against the token-secrecy anchor. So the host audits the write side against this rule by name and leaves the read side under a different PROP."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "module-local-rules-bound-module-local-blast": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  - ##BLAST-RADIUS **Why global, not module-local.** The blast radius of a leaked publish token is the entire organization it can reach",
+     "confirmed: The closing epigram of the section's argument; the host's binding fact carries the same contrast in its title («Why global, not module-local») and its body gives the two non-local blast radii. No further host restatement found."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-ACT-ONLY-INSIDE-THE-DECLARED-SCOPE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:305  A publish run targeting `github.com/vibespecs` may not create, modify, or even probe a repository under a different `github.com` org or under any user namespace.",
+     "spec/boot/90-user.md:28  создавать только `github.com/vibespecs/<repo>`; не уходить в `github.com/<любая-другая-org>`, не трогать `github.com/<user>` пространства имён, не вызывать никакие endpoint'ы, не относящиеся к target org.",
+     "confirmed: The host's boot-lane fact `##SCOPE-DISCIPLINE` (spec/boot/90-user.md:28) enumerates all three prohibitions in the same order as this summary — other orgs, user namespaces, unrelated endpoints — instantiated for `github.com/vibespecs`. PROP-000 §20 line 305 binds the first two. The technical-reach clause is carried in the test comment at github.rs:351-352."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-ENFORCEMENT-IS-AN-EXPLICIT-PREFIX-CHECK": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:305  Adapter implementations carry an explicit org-prefix check and surface a `PublishError` on attempted scope escalation.",
+     "crates/vibe-publish/src/creator.rs:158              && org != want",
+     "confirmed: Explicit: yes, one named method called at the boundary. «Prefix check»: the host calls it that (PROP-000:305, «explicit org-prefix check») but implements equality on an already-extracted org segment (creator.rs:157-158), not `starts_with` on a path — see the `prefix-comparison-lead` row. «Every action»: two of the four actions the flow enumerates are guarded (`repo_exists`, `create_repo`), delete does not exist in this consumer at all, and `push_url` reaches a host endpoint without its own check."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-A-VIOLATION-IS-AN-ERROR-NOT-A-WARNING": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/lib.rs:216      \"publish refused: scope violation — adapter for `{host}` is scoped to organization \\",
+     "crates/vibe-publish/src/creator.rs:160              return Err(PublishError::ScopeViolation {",
+     "spec/common/PROP-000.md:305  surface a `PublishError` on attempted scope escalation.",
+     "confirmed: Both halves hold. Error-not-warning: a dedicated `PublishError::ScopeViolation` variant whose rendered text begins «publish refused: scope violation» (lib.rs:216), returned as `Err` with no warn branch anywhere in the 8 `ScopeViolation` occurrences in the workspace. Owner configuration: the scope's sole source is `[[registry]].url` in the committed manifest (registry/publish.rs:129), with no flag or env override. The one caveat is the construction-time opt-out via `expected_org() -> None`, used by `DirectGitCreator` and mocks — recorded in the `THERE-IS-NO-RUNTIME-OVERRIDE-FLAG` row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-TRUST-ORDERING-HIGHEST-FIRST-NEVER-MERGE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:16  //! 2. **`[[registry]]` array, in priority order.** The first registry",
+     "crates/vibe-registry/src/multi_registry_resolver/mod.rs:17  //!    whose [`GitPackageRegistry::resolve`] succeeds wins.",
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:202                          continue;",
+     "crates/vibe-registry/src/git_package_registry/lookup.rs:118      /// priority order. The first URL that yields a tag list wins. If",
+     "confirmed: All three clauses are implemented in `vibe-registry`: priority-ordered iteration (walk.rs:136, :165 and the sorts at mod.rs:333, :480), first-valid-wins with early return (walk.rs:168-193, fall-through only via the `continue` at :202), and no merge (no union of resolutions exists; `attempts` collects diagnostics only). The rule is realised in a crate the flow's own document never names, which is the relocation worth recording: scope discipline's read-side half lives in `vibe-registry`, its write-side half in `vibe-publish`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-GLOBAL-BECAUSE-THE-BLAST-RADIUS-IS-THE-ACCOUNT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  of an escalated adapter, the entire host account",
+     "spec/common/PROP-000.md:307  every code path touching a `Token` or a `RepoCreator` is audited.",
+     "confirmed: One host fact carries both clauses of this summary: the account-wide blast radius and the audit obligation over `Token` and `RepoCreator` paths. Globality is confirmed by placement in PROP-000 rather than a module PROP. The audit is human rather than mechanical — no CI exists (`test -d .github` → ABSENT) and no `cargo xtask` gate scans for credential paths."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
