@@ -58,6 +58,40 @@ Per package, closed: `two-process-model` 96.6 % · `wal-specspaces` 93.5 % ·
 remain: capture its three §3.1 sources into `harvest/world-w4-plans-and-inquiry.md`,
 then commission four `opus5` workers, one per package.
 
+**W4's file list with per-file anchor counts, measured from `run/mirror/` — hand
+these to the workers verbatim so nobody re-derives them:**
+
+```
+campaign-plans (218)
+  23  packages/org.vibevm.world/campaign-plans/v0.1.0/README.md
+  29  …/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md
+  64  …/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md
+  48  …/spec/flows/campaign-plans/execution-ledger.md
+  54  …/spec/flows/campaign-plans/phase-gates.md
+comparative-research (180)
+  21  packages/org.vibevm.world/comparative-research/v0.1.0/README.md
+  12  …/spec/boot/52-flow-comparative-research.md
+  60  …/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md
+  61  …/spec/flows/comparative-research/from-research-to-roadmap.md
+  26  …/spec/flows/comparative-research/research-template.md
+discovery-prompt (83)
+  19  packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md
+  10  …/spec/boot/50-flow-discovery-prompt.md
+  54  …/spec/flows/discovery-prompt/usage.md
+redbook (83)
+  44  packages/org.vibevm.world/redbook/v0.2.0/README.md
+  39  …/spec/boot/03-flow-redbook.md
+```
+
+**Two things about W4 worth knowing before the harvest.** `redbook` is the
+umbrella that pins the other twenty-two members and ships the book itself at
+`spec/book/ru/` — its facts are mostly about the collection's own composition, so
+source 1 and the lockfile carry more of the weight than usual. And
+`discovery-prompt` ships an artefact the boot lane explicitly tells sessions NOT
+to load outside a deployment request, so «is it in use here?» is the wrong
+question to ask of it — `F-119` already records that the book's chapter 1 cites a
+`safeharbor.md` that exists nowhere, in both redbook slots.
+
 ## The recipe {#recipe}
 
 1. **Capture the batch's three §3.1 sources into `harvest/`**, each `command →
