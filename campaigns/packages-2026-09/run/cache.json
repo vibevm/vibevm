@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T23:01:22Z",
+  "updated_at": "2026-07-28T23:04:21Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -56100,7 +56100,1023 @@
       },
       "marker_count": 56,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "c0636ad3471015f3c0026ee941bbcd3321d1c6f78c297c984cc4d1e38a0c74cc",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:5  ##scope-of-this-document **Scope of this document.** Four designs that look reasonable and are",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:6  wrong, each with its full reasoning, plus the exact hard-stop drill",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:7  the tool runs when it meets a malformed block. @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:13  ## A sidecar file instead of a block {#sidecar}",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:51  ## Model-based or heuristic block detection {#model-detection}",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:81  ## Auto-repairing a malformed block {#auto-repair}",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:114  ## Whole-file ownership {#whole-file}",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:147  ## The malformed-state drill {#drill}",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:186  ## Summary {#summary}",
+              "confirmed: The document's own sections match the scope exactly: `grep -nE '^## ' rejected-designs.md` returns §sidecar 13, §model-detection 51, §auto-repair 81, §whole-file 114, §drill 147, §summary 186 — four rejected designs plus the drill, and nothing else. Each of the four carries an explicit rejection paragraph (22, 58, 89, 121). Self-referential by construction."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "catalogue-the-temptations-once": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:9  ##catalogue-the-temptations-once These are the shortcuts",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:10  every author of a file-writing tool is tempted by; catalogue them once",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:11  so the temptation is answered before it costs a user's data. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:164  ## 6. Rejected / deferred alternatives {#rejected}",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:166  - ##REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo). Rejected — it destroys co-tenant content; undoing it is the reason this PROP exists. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:167  - ##REJ-HEURISTIC-DETECTION **Heuristic or LLM-assisted block detection** (\"find the part that looks like vibevm's\"). Rejected — the region that gates a mutating write must be found by a deterministic byte scan, with no model and no guessing. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:168  - ##REJ-AUTO-REPAIR **Auto-repairing a malformed file** (delete the surplus marker, keep the first block). Rejected — vibevm never decides which of two regions is canonical; a malformed file is a hard stop for the human (§2.3). @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "confirmed: The host did exactly this cataloguing, independently and in the same document class: PROP-012 §6 is titled '## 6. Rejected / deferred alternatives {#rejected}' (line 164) and lists the same four — whole-file overwrite (166), heuristic/LLM detection (167), auto-repair (168), sidecar (169) — each with a one-line 'Rejected — …' reason. Same set, reverse order, written before the flow was extracted. That is the practice the fact recommends, observed being followed."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SIDECAR-DESIGN-DO-NOT-TOUCH-THE-HOST-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:15  ##SIDECAR-DESIGN-DO-NOT-TOUCH-THE-HOST-FILE *The design.* Do not touch the host file at all. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:16  ",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "confirmed: PROP-012:169 states the same design in one clause before rejecting it: '**A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`.' So the design was considered by name in the host's own decision record. No such file exists here — `ls CLAUDE.local.md .vibe/redirect` returns 'No such file or directory' for both."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SIDECAR-DESIGN-WRITE-INTO-A-COMPANION-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:17  ##SIDECAR-DESIGN-WRITE-INTO-A-COMPANION-FILE Write the tool's",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:18  content into a companion file next to it — `.tool/redirect`,",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:19  `CLAUDE.local.md`, `~/.toolrc` — and point the real consumer at the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:20  sidecar. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "confirmed: PROP-012:169 names a companion file of precisely this shape (`.vibe/redirect`). Checked that no such companion exists in this repository: `ls CLAUDE.local.md .vibe/redirect` → neither found; `ls .vibe/` shows only `cache/` and the generated ignore file. The redirect lives inside the shared file instead — CLAUDE.md:211-228."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "sidecar-why-the-host-files-value-is-zero-config-reading": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:22  ##sidecar-why-the-host-files-value-is-zero-config-reading *Why it is rejected.* The entire value of a host file like",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:23  `CLAUDE.md`, `~/.bashrc`, or `ssh_config` is that its consumer **already",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:24  reads it, with zero configuration**. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "VIBEVM-SPEC.md:140  3. **Cross-agent compatibility by design.** vibevm computes each node's boot sequence into generated `spec/boot/` artifacts, reached through a managed `<vibevm>` block in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`. Every agent reads the same boot sequence. Other tools commit to specific agent configurations.",
+              "VIBEVM-SPEC.md:507  The user's `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` are the cross-agent compatibility layer: every modern coding agent reads a project-level instruction file at session start. vibevm does **not** own these files — they are a shared surface a developer and other tools also write to. vibevm owns only a delimited block inside each, bounded by the literal markers `<vibevm>` and `</vibevm>`:",
+              "confirmed: The host makes the identical argument in two places. PROP-012:169's rejection reason is 'the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that.' VIBEVM-SPEC.md:507 states the premise ('every modern coding agent reads a project-level instruction file at session start') and :140 makes it a design principle ('Cross-agent compatibility by design … Every agent reads the same boot sequence. Other tools commit to specific agent configurations'). Found with `grep -n -i 'zero configuration|cross-agent' VIBEVM-SPEC.md`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "sidecar-that-is-the-property-you-are-buying": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:26  ##sidecar-that-is-the-property-you-are-buying That is the property you are",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:27  buying by writing there. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:28  ",
+              "VIBEVM-SPEC.md:140  3. **Cross-agent compatibility by design.** vibevm computes each node's boot sequence into generated `spec/boot/` artifacts, reached through a managed `<vibevm>` block in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`. Every agent reads the same boot sequence. Other tools commit to specific agent configurations.",
+              "VIBEVM-SPEC.md:507  The user's `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` are the cross-agent compatibility layer: every modern coding agent reads a project-level instruction file at session start. vibevm does **not** own these files — they are a shared surface a developer and other tools also write to. vibevm owns only a delimited block inside each, bounded by the literal markers `<vibevm>` and `</vibevm>`:",
+              "crates/vibe-workspace/src/boot_artifacts.rs:83  pub const REDIRECT_FILES: &[&str] = &[\"CLAUDE.md\", \"AGENTS.md\", \"GEMINI.md\"];",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "confirmed: The host's file set is chosen for exactly that property and for nothing else: `REDIRECT_FILES` is the three filenames every major agent reads (boot_artifacts.rs:83), not a vibe-specific name, and VIBEVM-SPEC.md:140 lists the resulting cross-agent compatibility as one of the project's design advantages over tools that 'commit to specific agent configurations'. The purchase is visible in this session too — the boot contract that governs this very repository is reached through that block."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SIDECAR-FORFEITS-THE-ZERO-CONFIGURATION-PROPERTY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:29  ##SIDECAR-FORFEITS-THE-ZERO-CONFIGURATION-PROPERTY A sidecar the consumer does not natively read",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:30  forfeits exactly that property: now something must be taught to read",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:31  the sidecar, and that teaching step is one more thing to install, get",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:32  wrong, and drift. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "spec/modules/vibe-workspace/PROP-009-loading-model.md:83  - ##PURE-FILE-READING Boot remains **pure file-reading** — the redirect never becomes \"run `vibe`\", preserving the zero-dependency cross-agent property of `VIBEVM-SPEC.md` §6.1. @impl/done",
+              "VIBEVM-SPEC.md:517  **Session-start order:** the `<vibevm>` block of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` → `spec/boot/INLINE.md` (if present) → `spec/boot/INDEX.md` and the entries it names, in order. Boot stays **pure file-reading** — the block points at files, it never becomes \"run `vibe`\", preserving the zero-dependency cross-agent property.",
+              "confirmed: PROP-012:169's closing clause is the same sentence ('A sidecar the agent does not natively read forfeits that'). The host also guards the weaker version of the same failure — anything that turns boot into a configured or executed step — at PROP-009:83 ('Boot remains **pure file-reading** — the redirect never becomes \"run `vibe`\", preserving the zero-dependency cross-agent property') and VIBEVM-SPEC.md:517. The teaching step the fact warns about is what those two lines refuse to introduce."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "sidecar-users-read-the-host-file": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:34  ##sidecar-users-read-the-host-file Users read the host file — it is where they look for",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:35  what is in effect. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:36  ",
+              "CLAUDE.md:1  # vibevm — read this first",
+              "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+              "VIBEVM-SPEC.md:507  The user's `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` are the cross-agent compatibility layer: every modern coding agent reads a project-level instruction file at session start. vibevm does **not** own these files — they are a shared surface a developer and other tools also write to. vibevm owns only a delimited block inside each, bounded by the literal markers `<vibevm>` and `</vibevm>`:",
+              "confirmed: Observable in this repository's own CLAUDE.md, which is 228 lines of which 210 are the human's — the file is where this project's rules are written and read (line 1 is '# vibevm — read this first', line 3 the boot instruction). `git log --oneline -- CLAUDE.md | wc -l` = 25 commits, i.e. it is an actively maintained human document, not a generated stub. VIBEVM-SPEC.md:507 names it 'the cross-agent compatibility layer'. This is a claim about reader behaviour, so what the evidence establishes is that the file is heavily human-authored and human-maintained here, not that any particular user consulted it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "sidecar-content-exiled-is-content-nobody-sees": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:37  ##sidecar-content-exiled-is-content-nobody-sees Content exiled to a sidecar is content nobody sees",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:38  until it misbehaves. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:39  ",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "confirmed as a counterfactual about a design this host rejected before shipping it, so there is nothing to observe and the absence was checked four ways rather than assumed. `ls CLAUDE.local.md .vibe/redirect` → neither exists; `grep -rn 'CLAUDE.local\\|\\.vibe/redirect' crates/ spec/` → hits only in `PROP-012:169`'s rejection sentence and this package's own prose; `ls .vibe/` → only `cache/`. And the alternative is demonstrably in place: the redirect lives INSIDE the shared file at `CLAUDE.md:211-228`. Self-referential by construction — a rejected design's failure mode cannot have a host instance in a host that rejected it."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "SIDECAR-TRADES-A-SOLVED-PROBLEM-FOR-AN-UNSOLVED-ONE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:40  ##SIDECAR-TRADES-A-SOLVED-PROBLEM-FOR-AN-UNSOLVED-ONE The sidecar trades a solved problem (write",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:41  politely into the file everyone reads) for an unsolved one (make",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:42  everyone read a new file). @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "VIBEVM-SPEC.md:140  3. **Cross-agent compatibility by design.** vibevm computes each node's boot sequence into generated `spec/boot/` artifacts, reached through a managed `<vibevm>` block in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`. Every agent reads the same boot sequence. Other tools commit to specific agent configurations.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:83  pub const REDIRECT_FILES: &[&str] = &[\"CLAUDE.md\", \"AGENTS.md\", \"GEMINI.md\"];",
+              "confirmed: The 'solved problem' half is solved here and can be pointed at: the polite write is boot_artifacts.rs's locate-classify-splice over `REDIRECT_FILES` (83), 11 tests deep. The 'unsolved problem' half was never attempted — PROP-012:169 rejected the sidecar at design time, so no code in this repository tries to teach an agent to read a new file. VIBEVM-SPEC.md:140 frames the trade the same way, as the difference between reading what every agent already reads and committing to specific agent configurations."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-SIDECAR-IS-RIGHT-FOR-LARGE-PAYLOADS-AS-A-COMPLEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:44  ##A-SIDECAR-IS-RIGHT-FOR-LARGE-PAYLOADS-AS-A-COMPLEMENT A sidecar *is* the right answer for large payloads — but as a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:45  complement to the block, not a replacement. @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:129  ##PUT-A-LARGE-PAYLOAD-IN-A-TOOL-OWNED-FILE When the payload is large, put it in a **tool-owned file** — a file",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:130  with a co-tenant of exactly zero, safely under whole-file ownership",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:131  (see [`rejected-designs.md`](rejected-designs.md#whole-file)) — and let",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:490      fs::write(&index, render_index(boot, None)?).map_err(|e| io_err(&index, e))?;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:496              fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:510      let redirects = write_redirect_blocks(node_dir)?;",
+              "CLAUDE.md:219  1. `spec/boot/STATIC.md` — if it exists. The static (priority) lane: read it",
+              "CLAUDE.md:221  2. `spec/boot/INDEX.md` — a generated TOML manifest. Read every file named",
+              "confirmed: This is precisely the host's architecture. The block stays 18 lines (CLAUDE.md:211-228) and points at two tool-owned sidecars — `spec/boot/STATIC.md` (1584 lines) and `spec/boot/INDEX.md` (39) — named at CLAUDE.md:219 and :221. `write_boot_artifacts` writes the two payload files first (boot_artifacts.rs:490, 496) and the pointer block last (510), which is the complement-not-replacement shape the fact prescribes. Both payload files carry a generated-do-not-edit first line, so they are the zero-co-tenant kind §whole-file allows."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "adoption-guide-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:47  ##adoption-guide-pointer See",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:48  [`adoption-guide.md`](adoption-guide.md#what-belongs) on keeping the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:49  block small and pointing it at tool-owned files. @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:115  ## What belongs inside the block {#what-belongs}",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:117  ##KEEP-THE-BLOCK-SMALL-STABLE-AND-POINTER-LIKE Keep the block **small, stable, and pointer-like**. @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:129  ##PUT-A-LARGE-PAYLOAD-IN-A-TOOL-OWNED-FILE When the payload is large, put it in a **tool-owned file** — a file",
+              "vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/adoption-guide.md:98  ## What belongs inside the block {#what-belongs}",
+              "confirmed: The pointer resolves and the target matches: adoption-guide.md has `## What belongs inside the block {#what-belongs}` at line 115, opens with 'Keep the block **small, stable, and pointer-like**' (117), and gives the tool-owned-file rule at 129. Both files are siblings in the same directory, so the relative link works in the package and in the installed payload (vibedeps/.../adoption-guide.md:98 carries the same section). The batch's source-1 join reported 35 relative citations with 0 broken, and this is one of them."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "MODEL-DETECTION-DESIGN-FIND-THE-BLOCK-BY-INTELLIGENCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:53  ##MODEL-DETECTION-DESIGN-FIND-THE-BLOCK-BY-INTELLIGENCE *The design.* Instead of exact markers, find the block by",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:54  intelligence: \"locate the region that looks like the tool's output,\"",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:55  possibly by asking an LLM, possibly by a fuzzy match against the last",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:56  thing written. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:167  - ##REJ-HEURISTIC-DETECTION **Heuristic or LLM-assisted block detection** (\"find the part that looks like vibevm's\"). Rejected — the region that gates a mutating write must be found by a deterministic byte scan, with no model and no guessing. @spec/done",
+              "confirmed: PROP-012:167 states the same design in the same terms before rejecting it: '**Heuristic or LLM-assisted block detection** (\"find the part that looks like vibevm's\").' The parenthetical is almost the flow's own phrasing, which places this squarely as provenance rather than independent confirmation. No such detection exists in the code — `grep -rniE 'llm|model|fuzzy|heuristic|similar' crates/vibe-workspace/src/boot_artifacts.rs` returns only doc comments explaining that there is none."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "model-detection-why-the-region-gates-a-mutating-write": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:58  ##model-detection-why-the-region-gates-a-mutating-write *Why it is rejected.* The region gates a **mutating write** to a file",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:59  full of someone else's data. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:60  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:318  /// Locate vibevm's managed block in `content` by a plain line scan: a",
+              "crates/vibe-workspace/src/boot_artifacts.rs:319  /// line whose trimmed text equals `<vibevm>` / `</vibevm>` is a marker",
+              "crates/vibe-workspace/src/boot_artifacts.rs:320  /// (PROP-012 §2.2). No markdown parse, no model — the detection that",
+              "crates/vibe-workspace/src/boot_artifacts.rs:321  /// gates a mutating write must be deterministic and trivial.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:403              BlockLocation::Present { start, end } => {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:435      fs::write(path, &new_content).map_err(|e| io_err(path, e))?;",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:72  - ##PLAIN-TEXT-SCAN The markers are located by a **plain line-anchored text scan** — no markdown parse, no model in the loop. \"Programmatically findable without an LLM\" is a hard requirement: the markers gate a mutating write, so detection must be deterministic and trivial. @impl/done",
+              "confirmed: The gating relationship is literal in the code: `locate_block`'s return value is the sole input to the branch that decides whether `fs::write` (boot_artifacts.rs:435) happens at all and over which byte range (403-409). Its doc comment states the reason at 320-321 — 'the detection that gates a mutating write must be deterministic and trivial'. PROP-012:72 says the same ('the markers gate a mutating write, so detection must be deterministic and trivial'). And the file really is full of someone else's data: 210 of CLAUDE.md's 228 lines."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-GATE-ON-A-DESTRUCTIVE-OPERATION-MUST-BE-DETERMINISTIC": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:61  ##THE-GATE-ON-A-DESTRUCTIVE-OPERATION-MUST-BE-DETERMINISTIC The gate on a destructive operation must",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:62  be **deterministic** — the same input yields the same region, every",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:63  run, on every machine, forever. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:64  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:326  pub fn locate_block(content: &str) -> BlockLocation {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:332      for line in content.split_inclusive('\\n') {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:333          let trimmed = line.strip_suffix('\\n').unwrap_or(line).trim();",
+              "crates/vibe-workspace/src/boot_artifacts.rs:334          if trimmed == BLOCK_OPEN {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:341          offset += line.len();",
+              "crates/vibe-workspace/src/boot_artifacts.rs:347      match (opens, closes, open, close) {",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:72  - ##PLAIN-TEXT-SCAN The markers are located by a **plain line-anchored text scan** — no markdown parse, no model in the loop. \"Programmatically findable without an LLM\" is a hard requirement: the markers gate a mutating write, so detection must be deterministic and trivial. @impl/done",
+              "crates/vibe-check/src/checks/redirect_block.rs:49  /// Classify the `<vibevm>` markers in `content` (PROP-012 §2.2): a line",
+              "crates/vibe-check/src/checks/redirect_block.rs:50  /// whose trimmed text is exactly `<vibevm>` / `</vibevm>` is a marker.",
+              "confirmed: `locate_block` is a pure function of the input string: it takes `&str`, holds four local counters, iterates lines and returns a value computed only from them (boot_artifacts.rs:326-366). It reads no clock, no filesystem, no environment and no config — I checked the whole body. That is determinism in the strong sense the fact asks for. The independent second implementation in the linter (redirect_block.rs:55-82) is the same pure shape, which is also why the two can be trusted to agree. PROP-012:72 is the host's requirement, phrased as 'Programmatically findable without an LLM' being a hard requirement."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-model-is-nondeterministic-by-construction": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:65  ##a-model-is-nondeterministic-by-construction A model or a heuristic is",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:66  nondeterministic by construction: it returns \"probably here,\" and a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:67  \"probably\" that is wrong once has overwritten content that does not",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:68  belong to the tool. @spec/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:320  /// (PROP-012 §2.2). No markdown parse, no model — the detection that",
+              "crates/vibe-workspace/src/boot_artifacts.rs:321  /// gates a mutating write must be deterministic and trivial.",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:167  - ##REJ-HEURISTIC-DETECTION **Heuristic or LLM-assisted block detection** (\"find the part that looks like vibevm's\"). Rejected — the region that gates a mutating write must be found by a deterministic byte scan, with no model and no guessing. @spec/done",
+              "confirmed, and the host's conformance is a CHOICE rather than an absence of capability, which is what makes it evidence. No model or heuristic is anywhere near the write gate: `grep -rniE 'llm|model|fuzzy|heuristic' crates/vibe-workspace/src/boot_artifacts.rs` returns only the doc comments saying so, and `boot_artifacts.rs:320-321` states the rule in the module's own words. The repository DOES have an LLM surface — `crates/vibe-llm/` — and `vibe-workspace`'s manifest does not depend on it, so the deterministic byte scan was selected over a capability that was available. The premise itself (that a model is nondeterministic by construction) is asserted rather than demonstrated here, and nothing in the perimeter tests it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "no-acceptable-false-positive-rate-for-which-bytes-to-destroy": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:70  ##no-acceptable-false-positive-rate-for-which-bytes-to-destroy There is no acceptable false-positive rate for",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:71  \"which bytes may I destroy.\" @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:72  ",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:42  ##MATCH-THE-OLD-FORM-BY-AN-EXACT-STRING Match the old form by an **exact** string, never a loose heuristic:",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:43  here a false positive means wrongly deleting a file a human wrote by",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:44  hand, which is the exact disaster the whole practice exists to prevent. @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:412                      || content.trim_start().starts_with(OLD_GENERATED_HEADER)",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:158  2. ##OPEN-OLD-REDIRECT-DETECTION **Old-redirect detection for migration (§4).** Match the exact Phase-4 generated-header string (precise; a false positive would wrongly destroy a hand-authored file) versus a looser heuristic. Leaning: exact string match. @spec/work",
+              "confirmed: The host applied this rule at the one place where a false positive was actually possible — the legacy-migration discriminator — and chose an exact full-line string over a heuristic for exactly this reason. PROP-012:158 records the deliberation: 'Match the exact Phase-4 generated-header string (precise; a false positive would wrongly destroy a hand-authored file) versus a looser heuristic. Leaning: exact string match.' The shipped code is the exact match (boot_artifacts.rs:412, `starts_with(OLD_GENERATED_HEADER)`). So the zero-tolerance rule was not merely stated; it decided a real design question in this repository."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-BYTE-SCAN-IS-THE-ONLY-CORRECT-DESIGN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:73  ##A-BYTE-SCAN-IS-THE-ONLY-CORRECT-DESIGN A plain line-anchored byte scan for a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:74  unique marker is not a lesser version of smart detection; it is the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:75  only correct design, because it is the only one whose answer you can",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:76  prove before you write. @spec/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:332      for line in content.split_inclusive('\\n') {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:333          let trimmed = line.strip_suffix('\\n').unwrap_or(line).trim();",
+              "crates/vibe-workspace/src/boot_artifacts.rs:334          if trimmed == BLOCK_OPEN {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:337          } else if trimmed == BLOCK_CLOSE {",
+              "crates/vibe-workspace/src/install/bootgen.rs:403  pub(super) fn validate_redirect_blocks(workspace: &Workspace) -> Result<(), WorkspaceError> {",
+              "crates/vibe-workspace/src/install/bootgen.rs:413              if let boot_artifacts::BlockLocation::Malformed(reason) =",
+              "crates/vibe-check/src/checks/redirect_block.rs:60      for (i, line) in content.lines().enumerate() {",
+              "crates/vibe-check/src/checks/redirect_block.rs:61          match line.trim() {",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:72  - ##PLAIN-TEXT-SCAN The markers are located by a **plain line-anchored text scan** — no markdown parse, no model in the loop. \"Programmatically findable without an LLM\" is a hard requirement: the markers gate a mutating write, so detection must be deterministic and trivial. @impl/done",
+              "confirmed: 'Prove before you write' is implemented as a separate, earlier pass: `validate_redirect_blocks` (install/bootgen.rs:403-421) runs the scan over every target file and returns before anything is written, which is only possible because the scan is cheap and total. The scan itself is boot_artifacts.rs:332-341. A third implementation exists in the linter so a user can run the proof by hand ahead of any command (`vibe check`, redirect_block.rs:60-61). PROP-012:72 is the host's version of the claim."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DETERMINISM-IS-THE-SAFETY-PROPERTY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:78  ##DETERMINISM-IS-THE-SAFETY-PROPERTY Determinism is not a performance choice here —",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:79  it is the safety property. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:80  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:318  /// Locate vibevm's managed block in `content` by a plain line scan: a",
+              "crates/vibe-workspace/src/boot_artifacts.rs:319  /// line whose trimmed text equals `<vibevm>` / `</vibevm>` is a marker",
+              "crates/vibe-workspace/src/boot_artifacts.rs:320  /// (PROP-012 §2.2). No markdown parse, no model — the detection that",
+              "crates/vibe-workspace/src/boot_artifacts.rs:321  /// gates a mutating write must be deterministic and trivial.",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:72  - ##PLAIN-TEXT-SCAN The markers are located by a **plain line-anchored text scan** — no markdown parse, no model in the loop. \"Programmatically findable without an LLM\" is a hard requirement: the markers gate a mutating write, so detection must be deterministic and trivial. @impl/done",
+              "crates/vibe-workspace/src/install/bootgen.rs:394  /// Validate every node's agent instruction files before any mutation",
+              "crates/vibe-workspace/src/install/bootgen.rs:395  /// (PROP-012 §2.4): a malformed `<vibevm>` block aborts the operation",
+              "crates/vibe-workspace/src/install/bootgen.rs:396  /// here — ahead of materialisation or any boot-artifact write — so an",
+              "confirmed: Both host statements of the rule give the safety reason and neither mentions speed. boot_artifacts.rs:320-321: 'No markdown parse, no model — the detection that gates a mutating write must be deterministic and trivial.' PROP-012:72: '\"Programmatically findable without an LLM\" is a hard requirement: the markers gate a mutating write, so detection must be deterministic and trivial.' The consequence the safety framing buys is the plan-time pass (bootgen.rs:394-398), which is only sound if the scan's verdict at plan time equals its verdict at write time — i.e. determinism is what makes fail-fast correct."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "AUTO-REPAIR-DESIGN-THE-FILE-IS-MALFORMED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:83  ##AUTO-REPAIR-DESIGN-THE-FILE-IS-MALFORMED *The design.* The file has two opening markers, or an opener with no",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:84  closer. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:85  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
+              "crates/vibe-workspace/src/boot_artifacts.rs:362              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:363               and {closes} `</vibevm>` marker line(s)\"",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:464  fn locate_block_two_openers_is_malformed() {",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:465      let content = \"<vibevm>\\na\\n</vibevm>\\n<vibevm>\\nb\\n</vibevm>\\n\";",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:470  fn locate_block_unbalanced_is_malformed() {",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:472          locate_block(\"<vibevm>\\nbody\\n\"),",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:74  - ##MALFORMED-DEF Anything else is **malformed**: two or more of either marker, an opener with no closer, a closer with no opener, or a closer preceding its opener. @impl/done",
+              "confirmed: Both shapes are real states of the host's classifier and both are exercised: two openers at boot_artifacts/tests.rs:464-467 (fixture at 465) and an opener with no closer at 470-474 (fixture at 472). PROP-012:74 defines the malformed set in the same enumeration. So the situation the rejected design proposes to 'fix' is a live, tested state here — which is what makes the refusal meaningful rather than theoretical."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "AUTO-REPAIR-DESIGN-BE-HELPFUL-AND-PROCEED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:86  ##AUTO-REPAIR-DESIGN-BE-HELPFUL-AND-PROCEED Be helpful: delete the surplus marker, keep the first block,",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:87  and proceed. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:88  ",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:168  - ##REJ-AUTO-REPAIR **Auto-repairing a malformed file** (delete the surplus marker, keep the first block). Rejected — vibevm never decides which of two regions is canonical; a malformed file is a hard stop for the human (§2.3). @spec/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
+              "confirmed: PROP-012:168 states the same tempting design before rejecting it: '**Auto-repairing a malformed file** (delete the surplus marker, keep the first block).' The 'keep the first block' half would even be easy here — `locate_block` already records the first opener and first closer via `open.get_or_insert(...)` at boot_artifacts.rs:336 and `close.get_or_insert(...)` at 339 — so the information needed to do the wrong thing is computed and then deliberately discarded when counts are not (1,1). That is the refusal made visible in the code."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-MALFORMED-BLOCK-IS-EVIDENCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:89  ##A-MALFORMED-BLOCK-IS-EVIDENCE *Why it is rejected.* A malformed block is **evidence** — of a failed",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:90  previous write, a bad merge, a hand-edit that went wrong, or two tool",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:91  versions disagreeing. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:92  ",
+              "crates/vibe-workspace/src/lib.rs:228  ",
+              "crates/vibe-workspace/src/lib.rs:229      /// A `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` carries a malformed",
+              "crates/vibe-workspace/src/lib.rs:230      /// vibevm managed block — not exactly one well-formed `<vibevm>` …",
+              "crates/vibe-workspace/src/lib.rs:231      /// `</vibevm>` pair (PROP-012 §2.3). vibevm never guesses which block",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
+              "crates/vibe-cli/src/exit_code.rs:74      }",
+              "crates/vibe-cli/src/exit_code.rs:75      // A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped —",
+              "confirmed: The host treats it as evidence to be preserved and reported, not cleaned up: the error type's doc comment (crates/vibe-workspace/src/lib.rs:228-231) ends 'vibevm never guesses which block is canonical; the operator repairs the file by hand', and the exit code classifies it as a *conflict* rather than a failure — exit_code.rs:74-75, 'A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped — vibevm and the instruction file disagree on the managed region.' Classifying it as a disagreement between two writers is the same reading the fact gives. One of the four listed causes is a live risk here rather than a hypothetical: `git log --oneline --merges | wc -l` = 4, so this repository does merge branches, and CLAUDE.md is edited on 25 commits across them."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "auto-repair-destroys-evidence-and-guesses": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:93  ##auto-repair-destroys-evidence-and-guesses Auto-repair destroys that evidence before a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:94  human can read it, and the \"repair\" is a guess about which of two",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:95  regions is canonical. @spec/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:397              BlockLocation::Malformed(reason) => {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:398                  return Err(WorkspaceError::MalformedRedirectBlock {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:399                      path: path.to_path_buf(),",
+              "crates/vibe-workspace/src/boot_artifacts.rs:400                      reason,",
+              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
+              "crates/vibe-workspace/src/lib.rs:230      /// vibevm managed block — not exactly one well-formed `<vibevm>` …",
+              "crates/vibe-workspace/src/lib.rs:231      /// `</vibevm>` pair (PROP-012 §2.3). vibevm never guesses which block",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:168  - ##REJ-AUTO-REPAIR **Auto-repairing a malformed file** (delete the surplus marker, keep the first block). Rejected — vibevm never decides which of two regions is canonical; a malformed file is a hard stop for the human (§2.3). @spec/done",
+              "confirmed: Nothing in the host destroys the evidence: the Malformed arm returns `Err` with the file untouched (boot_artifacts.rs:396-401), the plan-time pass returns the same error before any mutation (bootgen.rs:416), and `vibe check` only reports. Searched for any repair with `grep -rn 'remove_block\\|remove_managed\\|strip_block\\|delete.*block' crates/ --include='*.rs'` — one hit, unrelated (a registry `[[mirror]]` block). The 'guess' the fact names is the thing lib.rs:230-231 explicitly forswears."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "auto-repair-guess-wrong-and-you-delete-the-wanted-block": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:97  ##auto-repair-guess-wrong-and-you-delete-the-wanted-block Guess wrong and you have deleted the block the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:98  user actually wanted and kept the stale one — silently, in the name of",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:99  being helpful. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:100  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:168  - ##REJ-AUTO-REPAIR **Auto-repairing a malformed file** (delete the surplus marker, keep the first block). Rejected — vibevm never decides which of two regions is canonical; a malformed file is a hard stop for the human (§2.3). @spec/done",
+              "confirmed as the motivating hazard, with the host showing how close the wrong guess sits. `locate_block` records the FIRST opener and the FIRST closer (`boot_artifacts.rs:336`, `:339`) — so «keep the first block and delete the rest» is one line of code away — and the catch-all at `:361-364` then DISCARDS both and returns Malformed, refusing the repair the fact warns against. `PROP-012:168` records that refusal as a decision rather than an omission. The harm itself has no instance here, which is the point: the design that would have produced it was rejected before it shipped."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-tool-has-no-basis-for-the-guess": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:101  ##the-tool-has-no-basis-for-the-guess The tool has no basis for the guess: nothing in the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:102  file says which duplicate is intended. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:103  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:326  pub fn locate_block(content: &str) -> BlockLocation {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:329      let mut opens = 0usize;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:330      let mut closes = 0usize;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:347      match (opens, closes, open, close) {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:58  ##BARE-TAGS **Decision.** The block is delimited by the literal **bare tags** `<vibevm>` and `</vibevm>` — opening and closing — each alone on its own line. @impl/done",
+              "confirmed: Verifiable from the information the classifier actually has. `locate_block` sees only: line text, two counts, and two byte offsets (boot_artifacts.rs:327-341). The markers are bare tags carrying no attributes — `pub const BLOCK_OPEN: &str = \"<vibevm>\";` (87) with no id, timestamp or version, a consequence of PROP-012:58's bare-tag decision — so there is literally no field in the file that could distinguish two blocks. Position is the only discriminator available, and position is the user's (PROP-012:92), so it cannot be used either. That is the 'no basis' the fact asserts, established from the data model rather than from prose."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "user-content-may-have-drifted-between-the-stray-markers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:104  ##user-content-may-have-drifted-between-the-stray-markers Worse, user content may have",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:105  drifted *between* the stray markers, so deleting a marker can delete",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:106  the user's own lines with it. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:107  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:405                  out.push_str(&content[..start]);",
+              "crates/vibe-workspace/src/boot_artifacts.rs:407                  out.push_str(&content[end..]);",
+              "crates/vibe-workspace/src/boot_artifacts.rs:312      Present { start: usize, end: usize },",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
+              "confirmed as a hazard that is structurally real in this implementation and has never fired. REAL: the block's byte span is defined purely by marker positions (`Present { start, end }`, `boot_artifacts.rs:312`) and the splice replaces everything in `[start, end)` (`:405-407`), so a user line that ended up inside a span would be replaced without inspection — the tool has no way to distinguish a tenant's text inside the markers from its own. NEVER OCCURRED: `git log --oneline -S'</vibevm>' -- CLAUDE.md` returns one commit and the file has never carried stray markers. The hazard is exactly why the Malformed arm refuses rather than repairs."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-MALFORMED-BLOCK-IS-WHERE-THE-TOOL-MUST-STOP-AND-DEFER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:108  ##A-MALFORMED-BLOCK-IS-WHERE-THE-TOOL-MUST-STOP-AND-DEFER A malformed block is exactly the case",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:109  where the tool must stop and defer to the one party who knows what was",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:110  meant. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:111  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/lib.rs:230      /// vibevm managed block — not exactly one well-formed `<vibevm>` …",
+              "crates/vibe-workspace/src/lib.rs:231      /// `</vibevm>` pair (PROP-012 §2.3). vibevm never guesses which block",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
+              "crates/vibe-cli/src/exit_code.rs:74      }",
+              "crates/vibe-cli/src/exit_code.rs:75      // A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped —",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:12  ##WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY What is forbidden is resolving a contradiction silently. @impl/done",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:43  ##THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE The human decides in",
+              "confirmed: Implemented as a stop and classified as a deferral. Stop: `Err` before any write (boot_artifacts.rs:396-401) and again at plan time (bootgen.rs:416). Defer: lib.rs:230-231, 'the operator repairs the file by hand'; PROP-012:82, 'It does not proceed until the user repairs the file by hand … a malformed managed block is always a human's call.' The exit code makes the deferral machine-readable as a conflict rather than an error (exit_code.rs:74-75 → `PACKAGE_CONFLICT`). The same posture is the installed conflict-protocol flow's first rule (35-flow-conflict-protocol.md:12, 'What is forbidden is resolving a contradiction silently'; :43, 'The human decides in the next cycle')."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:112  ##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:113  ",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:147  ## The malformed-state drill {#drill}",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
+              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
+              "DRIFT at one of three, and the two that hold are the safety-critical ones. HARD STOP: `Err` before any write, twice over (`boot_artifacts.rs:396-401`, `bootgen.rs:416`). HUMAN DECIDES: `lib.rs:230-231` and `PROP-012:82` — nothing auto-repairs. PRECISE REPORT: the message names the file and the defect class with counts and carries NO line numbers, which is what this drill's own §d specifies as the precision. Root at `##ROW-REPORT-WHAT-I-FOUND`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WHOLE-FILE-DESIGN-THE-TOOL-OWNS-THE-WHOLE-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:116  ##WHOLE-FILE-DESIGN-THE-TOOL-OWNS-THE-WHOLE-FILE *The design.* Skip blocks entirely: the tool owns the whole file and",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:117  regenerates it on every run. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:118  ",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:20  - ##whole-file-write The Phase-4 implementation — `vibe-workspace::boot_artifacts::write_boot_artifacts` — does this with an unconditional whole-file `fs::write`: every `vibe install` / `vibe reinstall` / `vibe uninstall` / `vibe update` replaces the **entire file** with vibevm's generated content. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:166  - ##REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo). Rejected — it destroys co-tenant content; undoing it is the reason this PROP exists. @spec/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:96  const OLD_GENERATED_HEADER: &str =",
+              "crates/vibe-workspace/src/boot_artifacts.rs:97      \"<!-- Generated by vibe — do not edit. This file is overwritten on `vibe install`. -->\";",
+              "confirmed: This is what the host shipped before PROP-012, described in its own words at PROP-012:20 ('an unconditional whole-file `fs::write`: every `vibe install` / `vibe reinstall` / `vibe uninstall` / `vibe update` replaces the **entire file**') and listed as rejected at PROP-012:166 ('**The whole-file overwrite** (the shipped Phase-4 status quo). Rejected — it destroys co-tenant content; undoing it is the reason this PROP exists'). The residue of that design is still in the binary: `OLD_GENERATED_HEADER` at boot_artifacts.rs:96-97."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "whole-file-design-simple-and-no-marker-machinery": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:119  ##whole-file-design-simple-and-no-marker-machinery Simple, and no marker machinery. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:120  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:306  pub enum BlockLocation {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:326  pub fn locate_block(content: &str) -> BlockLocation {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:387  fn write_managed_block(path: &Path) -> Result<Option<PathBuf>, WorkspaceError> {",
+              "crates/vibe-workspace/src/install/bootgen.rs:403  pub(super) fn validate_redirect_blocks(workspace: &Workspace) -> Result<(), WorkspaceError> {",
+              "crates/vibe-check/src/checks/redirect_block.rs:55  fn malformed_vibevm_block(content: &str) -> Option<String> {",
+              "confirmed: The cost the fact implies is measurable here as the machinery the host had to add when it abandoned the simple design: an enum (`BlockLocation`, boot_artifacts.rs:306-316), a classifier (`locate_block`, 326-366), a three-branch writer (`write_managed_block`, 387-437), a plan-time validation pass (install/bootgen.rs:403-421), a duplicate classifier in the linter (redirect_block.rs:55-82), an error variant (lib.rs:239), an exit-code mapping (exit_code.rs:74-91), and 13 tests. That is the price of not being simple, itemised."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WHOLE-FILE-REGENERATION-IS-ACCEPTABLE-ONLY-WHEN-TOOL-OWNED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:121  ##WHOLE-FILE-REGENERATION-IS-ACCEPTABLE-ONLY-WHEN-TOOL-OWNED *Why it is mostly rejected — and the narrow case where it is fine.*",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:122  Whole-file regeneration is acceptable **only** when the file is 100%",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:123  tool-owned and marked as such — a generated `.lock` file, a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:124  `tool-cache.json`, a file whose first line says \"generated file — do",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:125  not edit, your changes will be lost.\" @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:99  const INDEX_HEADER: &str = \"\\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:100  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:111  const STATIC_HEADER: &str = \"\\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:112  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "crates/vibe-workspace/src/boot_artifacts.rs:490      fs::write(&index, render_index(boot, None)?).map_err(|e| io_err(&index, e))?;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:496              fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:20  //! `STATIC.md` and `INDEX.md` are git-tracked and carry a \"generated — do",
+              "crates/vibe-workspace/src/boot_artifacts.rs:21  //! not edit\" header. Boot stays pure file-reading — the redirect points",
+              "confirmed: The host draws the line exactly here and the two sides are visible side by side in one function. `write_boot_artifacts` (boot_artifacts.rs:479-517) does an unconditional whole-file `fs::write` for INDEX.md (490) and STATIC.md (496) — both 100% tool-owned, both opening with a loud generated-do-not-edit line (the constants at 99-100 and 111-112, visible as line 1 of spec/boot/INDEX.md and spec/boot/STATIC.md) — and then calls the block writer for the three shared instruction files (510). Same function, two ownership regimes, chosen by whether anyone else writes there. boot_artifacts.rs:20-21 states the rule. The fact's `.lock` example is also live here: vibe.lock is regenerated wholesale."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "in-that-case-there-is-no-co-tenant-to-protect": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:127  ##in-that-case-there-is-no-co-tenant-to-protect In that case there is no",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:128  co-tenant, so there is nothing to protect. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:129  ",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:490      fs::write(&index, render_index(boot, None)?).map_err(|e| io_err(&index, e))?;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:496              fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:500              if static_path.exists() {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:501                  fs::remove_file(&static_path).map_err(|e| io_err(&static_path, e))?;",
+              "confirmed: Measured on the two generated files. Neither has a co-tenant by contract (STATIC.md:1 and INDEX.md:1 both say 'generated by vibe, do not edit'), and the code treats them accordingly: it overwrites them unconditionally (boot_artifacts.rs:490, 496) and will even delete STATIC.md outright when the node no longer has static contributions (500-501, `fs::remove_file`). No such deletion exists for any instruction file. Checked for accidental co-tenancy: `git log --oneline -- spec/boot/STATIC.md` returns 3 commits, all machine-regeneration commits by the same authoring flow, and the file's every line is either a generated header or a `<!-- vibe:static … -->` provenance marker plus copied package text."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "OWNERSHIP-IS-NOT-A-DECISION-THE-TOOL-GETS-TO-KEEP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:130  ##OWNERSHIP-IS-NOT-A-DECISION-THE-TOOL-GETS-TO-KEEP The trap is that ownership is not a decision the tool gets to keep. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:131  ",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:20  - ##whole-file-write The Phase-4 implementation — `vibe-workspace::boot_artifacts::write_boot_artifacts` — does this with an unconditional whole-file `fs::write`: every `vibe install` / `vibe reinstall` / `vibe uninstall` / `vibe update` replaces the **entire file** with vibevm's generated content. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:28  - ##tenant-vibevm-repo in the vibevm repository itself, `CLAUDE.md` is today ~200 hand-authored lines carrying the four non-negotiable rules and the session-end command. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:31  - ##data-loss-event The first `vibe install` in any project with a non-trivial `CLAUDE.md` is a data-loss event — and it destroys precisely the file a developer is most likely to have invested in by hand. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:51  - ##SHARED-FILE-REFRAME The instruction file ceases to be \"a vibevm-generated file.\" It is a **shared file with a vibevm-managed block in it**. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:119  - ##SUPERSEDES-WORDING Consequently this PROP **supersedes the \"thin generated file\" wording of PROP-009 §2.3**: the instruction file is no longer wholly generated; only its `<vibevm>` block is. @impl/done",
+              "confirmed: This repository is the worked example of losing that decision. PROP-009 §2.3 originally specified the instruction file as a 'thin generated file' — vibevm's own — and then humans wrote ~200 lines into it (PROP-012:28), which forced the reclassification recorded at PROP-012:51 and the supersession at PROP-012:119. The tool did not choose to become a co-tenant; the file's other writers made it one. `git log --oneline -- CLAUDE.md | wc -l` = 25 commits, overwhelmingly human, is the pressure that took the decision away."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-human-edit-makes-you-a-co-tenant": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:132  ##a-human-edit-makes-you-a-co-tenant The moment a human edits the file — and they will, if it is readable",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:133  and sits somewhere they look — you have a co-tenant, and whole-file",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:134  regeneration silently deletes their edit on the next run. @spec/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:135  ",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:28  - ##tenant-vibevm-repo in the vibevm repository itself, `CLAUDE.md` is today ~200 hand-authored lines carrying the four non-negotiable rules and the session-end command. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:30  - ##silent-destruction A whole-file overwrite silently destroys every byte of that. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:31  - ##data-loss-event The first `vibe install` in any project with a non-trivial `CLAUDE.md` is a data-loss event — and it destroys precisely the file a developer is most likely to have invested in by hand. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:151  ##PREREQUISITE-LAW Because the defect is in shipped code, PROP-012 **must land before any `vibe install` / `vibe reinstall` is run against a project with a real `CLAUDE.md`** — including the vibevm repository itself. It is therefore a prerequisite of the Phase-7 redirect rewrite, not a successor to it (§7). @impl/done",
+              "confirmed: Both halves are documented facts about this repository. Humans did edit it: 210 of CLAUDE.md's 228 lines are hand-authored, across 25 commits, in a file whose first line is '# vibevm — read this first' — exactly 'readable and somewhere they look'. And the deletion was real, not hypothetical: PROP-012:151 records that the fix 'must land before any `vibe install` / `vibe reinstall` is run against a project with a real `CLAUDE.md` — including the vibevm repository itself', i.e. the shipped tool would have deleted those lines on the next run had the block not landed first."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-TEST-IS-CAN-ANYONE-ELSE-PLAUSIBLY-WRITE-HERE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:136  ##THE-TEST-IS-CAN-ANYONE-ELSE-PLAUSIBLY-WRITE-HERE So the test",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:137  is not \"did I intend to own this file\" but \"can anyone else plausibly",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:138  write here.\" @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:80  /// The agent instruction files a node carries at its root. vibevm owns",
+              "crates/vibe-workspace/src/boot_artifacts.rs:81  /// only a `<vibevm>` block inside each (PROP-012); the rest of every file",
+              "crates/vibe-workspace/src/boot_artifacts.rs:82  /// belongs to the developer and any other tool sharing it.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:20  //! `STATIC.md` and `INDEX.md` are git-tracked and carry a \"generated — do",
+              "crates/vibe-workspace/src/boot_artifacts.rs:21  //! not edit\" header. Boot stays pure file-reading — the redirect points",
+              "crates/vibe-workspace/src/boot_artifacts.rs:22  //! at files, it never becomes \"run `vibe`\".",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:27  - ##tenant-other-tools another tool, agent, framework, or convention the developer runs *alongside* vibevm — vibevm must assume it is never the only tenant of a repository; @impl/done",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "confirmed: The host applies exactly this test and gets two different answers in one module. For the instruction files the answer is yes and the doc comment says why — boot_artifacts.rs:80-82, 'vibevm owns only a `<vibevm>` block inside each (PROP-012); the rest of every file belongs to the developer and any other tool sharing it' — reinforced by PROP-012:27's 'vibevm must assume it is never the only tenant of a repository'. For STATIC.md and INDEX.md the answer is no, and they are whole-file owned with a loud marker (boot_artifacts.rs:20-22; line 1 of each generated file). The discriminator used is plausibility of other writers, not intent."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "IF-YES-YOU-OWN-A-BLOCK-NOT-THE-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:140  ##IF-YES-YOU-OWN-A-BLOCK-NOT-THE-FILE If yes, you are a co-tenant and you own a block, not the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:141  file. @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:142  ",
+              "crates/vibe-workspace/src/boot_artifacts.rs:80  /// The agent instruction files a node carries at its root. vibevm owns",
+              "crates/vibe-workspace/src/boot_artifacts.rs:81  /// only a `<vibevm>` block inside each (PROP-012); the rest of every file",
+              "crates/vibe-workspace/src/boot_artifacts.rs:82  /// belongs to the developer and any other tool sharing it.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:510      let redirects = write_redirect_blocks(node_dir)?;",
+              "CLAUDE.md:211  <vibevm>",
+              "CLAUDE.md:228  </vibevm>",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:47  ##ONE-BLOCK-LAW **Decision.** `vibe` owns exactly one **managed block** inside each agent instruction file — a contiguous region bounded by an opening and a closing marker. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:51  - ##SHARED-FILE-REFRAME The instruction file ceases to be \"a vibevm-generated file.\" It is a **shared file with a vibevm-managed block in it**. @impl/done",
+              "confirmed: The consequence is drawn correctly in the host: the three files that can plausibly have other writers get the block treatment (boot_artifacts.rs:510, `write_redirect_blocks`), and the outcome is observable — one 18-line block in a 228-line file, with 210 lines belonging to the human (CLAUDE.md:211-228 versus 1-210). PROP-012:47 and :51 are the decision and the reframing."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "RESERVE-WHOLE-FILE-OWNERSHIP-AND-MARK-IT-LOUDLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:143  ##RESERVE-WHOLE-FILE-OWNERSHIP-AND-MARK-IT-LOUDLY Reserve whole-file ownership for files that are unmistakably,",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:144  permanently machine-only, and mark them loudly so no human mistakes",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:145  them for editable. @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:99  const INDEX_HEADER: &str = \"\\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:100  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:111  const STATIC_HEADER: &str = \"\\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:112  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/STATIC.md:2  <!-- The static boot lane (PROP-009 §2.3): the highest-priority -->",
+              "spec/boot/STATIC.md:3  <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "spec/boot/INDEX.md:2  # The computed boot sequence (PROP-009 §2.3). Read every file the",
+              "crates/vibe-workspace/src/boot_artifacts.rs:20  //! `STATIC.md` and `INDEX.md` are git-tracked and carry a \"generated — do",
+              "crates/vibe-workspace/src/boot_artifacts.rs:21  //! not edit\" header. Boot stays pure file-reading — the redirect points",
+              "confirmed: Both clauses are honoured. Reserved: only the two generated boot artifacts are whole-file written (boot_artifacts.rs:490, 496); every shared file goes through the block path. Marked loudly: `STATIC_HEADER` (111-116) and `INDEX_HEADER` (99-109) both open with a 'generated by vibe, do not edit' line, and those are literally line 1 of spec/boot/STATIC.md and spec/boot/INDEX.md — the first thing any reader or agent sees. INDEX.md's marker is a TOML comment so it survives parsing (99); STATIC.md's is an HTML comment so it is invisible in rendered markdown but present in the source (111-112)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:149  ##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT When classification (see",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:150  [`MANAGED-BLOCKS-PROTOCOL.md`](MANAGED-BLOCKS-PROTOCOL.md#state-machine))",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:151  returns *malformed*, the tool aborts the whole operation and prints a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:152  report with three parts. @impl/done",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
+              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
+              "crates/vibe-workspace/src/install.rs:117      // 0. Validate every node's `<vibevm>` instruction-file block before",
+              "crates/vibe-workspace/src/install.rs:120      validate_redirect_blocks(workspace)?;",
+              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
+              "DRIFT at two and a half of three parts. ABORT: yes, and at the earliest possible point — `validate_redirect_blocks` is step 0 of `apply_resolution` (`install.rs:117-120`) and returns before materialisation (`bootgen.rs:416`). The REPORT: «what I found» is present but without line numbers; «what I expected» is present only as an implied clause inside the reason string («expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} … and {closes} …», `boot_artifacts.rs:362-363`) rather than as its own part; «how to unblock» is present on the install path and absent on `vibe check`. Three parts specified, two and a half delivered, and the halves that are missing are the ones a human needs to act. Root at `##ROW-REPORT-WHAT-I-FOUND`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NOTHING-IS-WRITTEN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:154  ##NOTHING-IS-WRITTEN Nothing is written. @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:397              BlockLocation::Malformed(reason) => {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:398                  return Err(WorkspaceError::MalformedRedirectBlock {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:399                      path: path.to_path_buf(),",
+              "crates/vibe-workspace/src/boot_artifacts.rs:400                      reason,",
+              "crates/vibe-workspace/src/boot_artifacts.rs:401                  });",
+              "crates/vibe-workspace/src/boot_artifacts.rs:435      fs::write(path, &new_content).map_err(|e| io_err(path, e))?;",
+              "crates/vibe-workspace/src/install/bootgen.rs:408              let content = match fs::read_to_string(&path) {",
+              "crates/vibe-workspace/src/install/bootgen.rs:413              if let boot_artifacts::BlockLocation::Malformed(reason) =",
+              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:566  #[test]",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:571      let err = write_managed_block(&path).unwrap_err();",
+              "confirmed: Structurally guaranteed at both gates. In the writer, the Malformed arm returns before the function ever reaches `fs::write` at boot_artifacts.rs:435 (the arm is 396-401, an early `return Err`). In the planner, `validate_redirect_blocks` performs only `fs::read_to_string` (bootgen.rs:408) and returns `Err` at 416 — I read the whole function and there is no write in it. Tested at boot_artifacts/tests.rs:566-576, which asserts the call is an `Err`; the test does not additionally assert the file is unchanged, which would be the stronger form."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-REPORT-WHAT-I-FOUND": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:158  | ##ROW-REPORT-WHAT-I-FOUND **What I found** @impl/done | The file path and the exact defect, with line numbers: \"two `<toolname>` opening markers, at lines 12 and 40.\" @impl/done |",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/lib.rs:239      MalformedRedirectBlock { path: PathBuf, reason: String },",
+              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
+              "crates/vibe-workspace/src/boot_artifacts.rs:362              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:363               and {closes} `</vibevm>` marker line(s)\"",
+              "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-check/src/checks/redirect_block.rs:63                  opens += 1;",
+              "crates/vibe-check/src/checks/redirect_block.rs:64                  first_open.get_or_insert(i);",
+              "crates/vibe-check/src/checks/redirect_block.rs:67                  closes += 1;",
+              "crates/vibe-check/src/checks/redirect_block.rs:68                  first_close.get_or_insert(i);",
+              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
+              "DRIFT on the third of three, and this is the ROOT of the malformed-report family: the host reports counts and never line numbers. Path: carried as a typed field, `MalformedRedirectBlock { path: PathBuf, reason: String }` (`lib.rs:239`) and rendered at `lib.rs:232`. Defect: named with counts at `boot_artifacts.rs:362-363`. LINE NUMBERS: absent from every message, and the reason is visible in the code — `locate_block` tracks BYTE offsets (`open.get_or_insert((offset, offset + line.len()))` at 336, the same at 339) and never converts them to lines, while the linter DOES track true line indices (`first_open.get_or_insert(i)`) and uses them only to compare order, never to report. So both surfaces hold the information and neither emits it. Carried onward at `##DRILL-IT-IS-SPECIFIC`, `##a-worked-message`, `##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES`, `##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT`, `##THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT` and `##SUM-MALFORMED-GOES-TO-THE-DRILL`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-REPORT-WHAT-I-EXPECTED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:159  | ##ROW-REPORT-WHAT-I-EXPECTED **What I expected** @impl/done | The well-formed shape: \"either zero markers, or exactly one `<toolname>` … `</toolname>` pair in order.\" @impl/done |",
+              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
+              "crates/vibe-workspace/src/boot_artifacts.rs:362              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:363               and {closes} `</vibevm>` marker line(s)\"",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
+              "crates/vibe-check/src/checks/redirect_block.rs:77          (o, c) => Some(format!(",
+              "crates/vibe-check/src/checks/redirect_block.rs:78              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {o} `<vibevm>` \\",
+              "crates/vibe-check/src/checks/redirect_block.rs:79               and {c} `</vibevm>` marker line(s)\"",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:73  - ##WELL-FORMED-DEF A **well-formed** instruction file contains either *zero* markers (the block is absent — §2.3) or *exactly one* `<vibevm>` line followed, later in the file, by *exactly one* `</vibevm>` line. @impl/done",
+              "confirmed: The expectation is in the message, phrased almost exactly as the row's example. boot_artifacts.rs:362-363 formats 'expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` and {closes} `</vibevm>` marker line(s)' — expectation and observation in one string. The error's own tail adds the well-formed shape again at lib.rs:234-235 ('repair the file by hand to exactly one <vibevm>/</vibevm> pair'). The linter emits the identical sentence (redirect_block.rs:77-80). The 'either zero markers' half is not spelled out in the message, though it is the specification's definition at PROP-012:73."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-REPORT-HOW-TO-UNBLOCK": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:160  | ##ROW-REPORT-HOW-TO-UNBLOCK **How to unblock** @impl/done | The precise human action: \"keep the block you want, delete the other opening marker and its closing marker, then re-run.\" @impl/done |",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
+              "crates/vibe-check/src/checks/redirect_block.rs:38                  report.err(",
+              "crates/vibe-check/src/checks/redirect_block.rs:39                      CheckId::RedirectBlock,",
+              "crates/vibe-check/src/checks/redirect_block.rs:40                      Some(PathBuf::from(name)),",
+              "crates/vibe-check/src/checks/redirect_block.rs:41                      None,",
+              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
+              "DRIFT: present on one of the two surfaces and less specific than the row's own example where it is present. `vibe install` carries a fix clause in the Class-F tail — `lib.rs:234-235`, «(violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; fix: repair the file by hand to exactly one <vibevm>/</vibevm> pair)» — which names the GOAL STATE but not the action or the re-run step, where the row's example says which marker to delete and to re-run afterwards. `vibe check` carries no fix clause at all, and that is the surface `PROP-012:122` designates for exactly this diagnosis."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-worked-message": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:162  ##a-worked-message A worked message: @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:165  error: managed block in CLAUDE.md is malformed — aborting, nothing written.",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:167    found:    two opening markers <toolname> at lines 12 and 40",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:169    expected: zero markers, or one <toolname> … </toolname> pair in order",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:170    fix:      decide which block is canonical, delete the other opener",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:173  No files were changed.",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
+              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
+              "DRIFT: the host's message carries the same three FIELDS and none of the shape the worked example demonstrates. The example (`rejected-designs.md:165-173`) is a multi-line block with labelled `found:` / `expected:` / `fix:` lines, explicit line numbers («at lines 12 and 40»), and a closing «No files were changed.» The host's is a SINGLE LINE (`lib.rs:232-235`) with the fix as a parenthetical tail — no labels, no line numbers, and no explicit no-files-changed statement (the fact is true and unstated). A worked message is a specification of the output's shape, and this one specifies a shape the reference implementation does not produce."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:176  ##THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT Three properties make this drill correct: @impl/done",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:177  ",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:178  - ##DRILL-IT-CHANGES-NOTHING **It changes nothing.** The file is left exactly as found, so the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:180  - ##DRILL-IT-IS-SPECIFIC **It is specific.** Line numbers and the exact defect mean the human",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:182  - ##DRILL-IT-NAMES-THE-UNBLOCKING-ACTION **It names the unblocking action.** The report ends by telling the",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "DRIFT at two of three. CHANGES NOTHING: fully met — the Malformed arm returns before `fs::write` (`boot_artifacts.rs:396-401`) and the plan-time pass only reads (`bootgen.rs:408`). SPECIFIC: partly — file and defect class with counts, no line numbers. NAMES THE UNBLOCKING ACTION: partly — a `fix:` tail on `vibe install` (`lib.rs:234`) and none on `vibe check`. The three rows below carry each measurement separately; this one is ruled on the conjunction it asserts."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DRILL-IT-CHANGES-NOTHING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:178  - ##DRILL-IT-CHANGES-NOTHING **It changes nothing.** The file is left exactly as found, so the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:179    human debugs the real state, not a half-repaired one. @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:397              BlockLocation::Malformed(reason) => {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:398                  return Err(WorkspaceError::MalformedRedirectBlock {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:399                      path: path.to_path_buf(),",
+              "crates/vibe-workspace/src/boot_artifacts.rs:400                      reason,",
+              "crates/vibe-workspace/src/boot_artifacts.rs:401                  });",
+              "crates/vibe-workspace/src/boot_artifacts.rs:435      fs::write(path, &new_content).map_err(|e| io_err(path, e))?;",
+              "crates/vibe-workspace/src/install/bootgen.rs:408              let content = match fs::read_to_string(&path) {",
+              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
+              "crates/vibe-workspace/src/install.rs:117      // 0. Validate every node's `<vibevm>` instruction-file block before",
+              "crates/vibe-workspace/src/install.rs:120      validate_redirect_blocks(workspace)?;",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:567  fn write_managed_block_errors_on_a_malformed_block() {",
+              "crates/vibe-workspace/src/boot_artifacts/tests.rs:571      let err = write_managed_block(&path).unwrap_err();",
+              "confirmed: Guaranteed twice and by construction. The writer's Malformed arm is an early `return Err` at boot_artifacts.rs:396-401, ahead of the only `fs::write` in the function (435). The plan-time pass performs a single `fs::read_to_string` per file (bootgen.rs:408) and returns `Err` at 416 — no write anywhere in `validate_redirect_blocks`, which I read in full — and it is called as step 0 of `apply_resolution` (install.rs:117-120), so nothing else has run either. Tested at boot_artifacts/tests.rs:566-576 (asserts `Err`); note the test does not re-read the file to assert it is byte-unchanged, so the guarantee here is from code structure rather than from an assertion."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DRILL-IT-IS-SPECIFIC": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:180  - ##DRILL-IT-IS-SPECIFIC **It is specific.** Line numbers and the exact defect mean the human",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:181    fixes it in seconds, without opening the tool's source. @impl/done",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
+              "crates/vibe-workspace/src/boot_artifacts.rs:362              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \\",
+              "crates/vibe-workspace/src/boot_artifacts.rs:363               and {closes} `</vibevm>` marker line(s)\"",
+              "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-check/src/checks/redirect_block.rs:60      for (i, line) in content.lines().enumerate() {",
+              "crates/vibe-check/src/checks/redirect_block.rs:64                  first_open.get_or_insert(i);",
+              "crates/vibe-check/src/checks/redirect_block.rs:68                  first_close.get_or_insert(i);",
+              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
+              "DRIFT on the line-number half; the exact-defect half is met. DEFECT: the message reports the marker counts and, for the reversed case, a dedicated sentence (`boot_artifacts.rs:356-358`) — enough to know which of the four malformed shapes occurred. LINE NUMBERS: absent everywhere. `locate_block` stores byte offsets and discards them on the Malformed path (336, 339, 361); `vibe check` computes real line indices via `content.lines().enumerate()` (`redirect_block.rs:60`) and uses them only to compare ordering. Being specific about WHAT without being specific about WHERE is what this drill exists to prevent. Root at `##ROW-REPORT-WHAT-I-FOUND`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DRILL-IT-NAMES-THE-UNBLOCKING-ACTION": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:182  - ##DRILL-IT-NAMES-THE-UNBLOCKING-ACTION **It names the unblocking action.** The report ends by telling the",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:183    human precisely what to do, so a hard stop is a thirty-second detour,",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:184    not a support ticket. @impl/done",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
+              "crates/vibe-check/src/checks/redirect_block.rs:38                  report.err(",
+              "crates/vibe-check/src/checks/redirect_block.rs:39                      CheckId::RedirectBlock,",
+              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
+              "crates/vibe-cli/src/exit_code.rs:74      }",
+              "crates/vibe-cli/src/exit_code.rs:75      // A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped —",
+              "DRIFT because the surface designated for the diagnosis is the one without the clause. `vibe install` / `reinstall` / `update` end with the repository's standard `(violates …; fix: …)` grammar at `lib.rs:234-235`, so that path does say what to do. The `vibe check` finding emits only the defect (`redirect_block.rs:38-43`) — no fix clause — and `PROP-012:122` designates check as the surface that reports this. A user who runs the tool built to find the problem is told what is wrong and not what to do about it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-SIDECAR-FORFEITS-THE-HOST-FILES-ONE-PROPERTY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:188  - ##SUM-SIDECAR-FORFEITS-THE-HOST-FILES-ONE-PROPERTY **Sidecar** — forfeits the one property that made the host file",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:189    worth writing to: its consumer already reads it. @spec/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
+              "VIBEVM-SPEC.md:140  3. **Cross-agent compatibility by design.** vibevm computes each node's boot sequence into generated `spec/boot/` artifacts, reached through a managed `<vibevm>` block in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`. Every agent reads the same boot sequence. Other tools commit to specific agent configurations.",
+              "VIBEVM-SPEC.md:507  The user's `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` are the cross-agent compatibility layer: every modern coding agent reads a project-level instruction file at session start. vibevm does **not** own these files — they are a shared surface a developer and other tools also write to. vibevm owns only a delimited block inside each, bounded by the literal markers `<vibevm>` and `</vibevm>`:",
+              "crates/vibe-workspace/src/boot_artifacts.rs:83  pub const REDIRECT_FILES: &[&str] = &[\"CLAUDE.md\", \"AGENTS.md\", \"GEMINI.md\"];",
+              "confirmed: PROP-012:169 rejects the sidecar for exactly this reason and cites the property by name (PROP-009 §6.1's cross-agent property); VIBEVM-SPEC.md:140 and :507 state the property. The host's file set is chosen to exploit it (boot_artifacts.rs:83). No sidecar exists — `ls CLAUDE.local.md .vibe/redirect` → neither found."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-MODEL-DETECTION-IS-A-NONDETERMINISTIC-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:190  - ##SUM-MODEL-DETECTION-IS-A-NONDETERMINISTIC-GATE **Model / heuristic detection** — a nondeterministic gate on a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:191    destructive write; the region you may overwrite must be provable",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:192    before you write. @spec/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:318  /// Locate vibevm's managed block in `content` by a plain line scan: a",
+              "crates/vibe-workspace/src/boot_artifacts.rs:320  /// (PROP-012 §2.2). No markdown parse, no model — the detection that",
+              "crates/vibe-workspace/src/boot_artifacts.rs:321  /// gates a mutating write must be deterministic and trivial.",
+              "crates/vibe-workspace/src/boot_artifacts.rs:326  pub fn locate_block(content: &str) -> BlockLocation {",
+              "crates/vibe-workspace/src/install/bootgen.rs:403  pub(super) fn validate_redirect_blocks(workspace: &Workspace) -> Result<(), WorkspaceError> {",
+              "crates/vibe-workspace/src/install/bootgen.rs:413              if let boot_artifacts::BlockLocation::Malformed(reason) =",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:72  - ##PLAIN-TEXT-SCAN The markers are located by a **plain line-anchored text scan** — no markdown parse, no model in the loop. \"Programmatically findable without an LLM\" is a hard requirement: the markers gate a mutating write, so detection must be deterministic and trivial. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:167  - ##REJ-HEURISTIC-DETECTION **Heuristic or LLM-assisted block detection** (\"find the part that looks like vibevm's\"). Rejected — the region that gates a mutating write must be found by a deterministic byte scan, with no model and no guessing. @spec/done",
+              "confirmed: Both clauses hold. Not nondeterministic: `locate_block` is a pure function of the input string, reading no clock, filesystem, environment or config (boot_artifacts.rs:326-366), and vibe-workspace does not even depend on the LLM crate (`grep -rn 'vibe-llm' crates/vibe-workspace/Cargo.toml` → nothing). Provable before you write: the plan-time pass (bootgen.rs:403-421) is that proof, run over every target before the first mutation. PROP-012:167 records the rejection and :72 the requirement."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-AUTO-REPAIR-DESTROYS-EVIDENCE-AND-GUESSES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:193  - ##SUM-AUTO-REPAIR-DESTROYS-EVIDENCE-AND-GUESSES **Auto-repair** — destroys evidence and guesses which region is",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:194    canonical; may delete user content that drifted between markers. @spec/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
+              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
+              "crates/vibe-workspace/src/lib.rs:230      /// vibevm managed block — not exactly one well-formed `<vibevm>` …",
+              "crates/vibe-workspace/src/lib.rs:231      /// `</vibevm>` pair (PROP-012 §2.3). vibevm never guesses which block",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:168  - ##REJ-AUTO-REPAIR **Auto-repairing a malformed file** (delete the surplus marker, keep the first block). Rejected — vibevm never decides which of two regions is canonical; a malformed file is a hard stop for the human (§2.3). @spec/done",
+              "confirmed: No auto-repair exists to do any of the three: `grep -rn 'remove_block\\|remove_managed\\|strip_block\\|delete.*block' crates/ --include='*.rs'` returns one unrelated hit, the Malformed arm is an early `return Err` (boot_artifacts.rs:396-401), and the information that would enable a guess — the first opener and first closer, recorded at 336 and 339 — is deliberately discarded at 361. lib.rs:230-231 and PROP-012:168 record the refusal."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-WHOLE-FILE-OWNERSHIP-IS-FOR-MACHINE-ONLY-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:195  - ##SUM-WHOLE-FILE-OWNERSHIP-IS-FOR-MACHINE-ONLY-FILES **Whole-file ownership** — fine only for permanently machine-only",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:196    files, marked loudly; the moment a human edits it, you are a",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:197    co-tenant and owe them a block. @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:490      fs::write(&index, render_index(boot, None)?).map_err(|e| io_err(&index, e))?;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:496              fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;",
+              "crates/vibe-workspace/src/boot_artifacts.rs:510      let redirects = write_redirect_blocks(node_dir)?;",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:31  - ##data-loss-event The first `vibe install` in any project with a non-trivial `CLAUDE.md` is a data-loss event — and it destroys precisely the file a developer is most likely to have invested in by hand. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:51  - ##SHARED-FILE-REFRAME The instruction file ceases to be \"a vibevm-generated file.\" It is a **shared file with a vibevm-managed block in it**. @impl/done",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:166  - ##REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo). Rejected — it destroys co-tenant content; undoing it is the reason this PROP exists. @spec/done",
+              "confirmed: The host draws exactly this line inside one function: whole-file writes for the two generated, loudly-marked artifacts (boot_artifacts.rs:490, 496; line 1 of spec/boot/INDEX.md and spec/boot/STATIC.md both say 'generated by vibe, do not edit'), block writes for the three shared instruction files (510). And it learned the second clause the hard way — humans edited CLAUDE.md, so the tool became a co-tenant and owed them a block, which is PROP-012's whole reason for existing (PROP-012:31, :51, :166)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-MALFORMED-GOES-TO-THE-DRILL": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:198  - ##SUM-MALFORMED-GOES-TO-THE-DRILL **Malformed → the drill**: change nothing, report what was found vs",
+              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:199    expected, name the exact human action that unblocks. @impl/done",
+              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
+              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
+              "crates/vibe-workspace/src/lib.rs:233      #[error(",
+              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
+              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
+              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
+              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
+              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
+              "DRIFT, carrying the body rows per W1's summary-restatement precedent. CHANGE NOTHING: fully met (early `return Err` at `boot_artifacts.rs:396-401`; the plan-time pass only reads, `bootgen.rs:408-416`). FOUND VERSUS EXPECTED: met in substance — `boot_artifacts.rs:362-363` puts both in one sentence — but without the line numbers the drill's own table specifies at `rejected-designs.md:158`. NAME THE EXACT HUMAN ACTION: met on the install path (`lib.rs:234-235`) and absent on `vibe check` (`redirect_block.rs:42`), and less precise than the drill's example on either."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T23:04:21Z",
+        "verify_batch": "W7"
+      }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/README.md": {
       "content_hash": "3c6ed891d520198c57af2d49c4002da9ae5fe4987ad443054d5609be5d8323e2",
