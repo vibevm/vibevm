@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-29 (**Phase C — W1-W4 CLOSED, W5 at 14 of 21 files, W6's
-workers commissioned; the phase is past 78 %**)_
+_Updated: 2026-07-29 (**Phase C — W1-W6 CLOSED, W7 at 5 of 15 files; the phase is
+past 94 %, with 405 anchors owed and all of them in one batch**)_
 
 **Every number below is reproduced by two commands; run them rather than quoting
 this file.**
@@ -17,22 +17,25 @@ python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts 
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**5 392 verdicts written, sealed and committed — 78.7 % of the phase, 1 455
-anchors owed.** `ai-native` measures **2 470 / 207 / 20 — 91.6 %**; `world` has
-fallen to **89.3 %** as W4 and W5 landed (2 407 / 270 / 18 over 80 files). Two commands print the truth and
-supersede every figure in this file:
-`tasks/batch-progress.py` (owed vs judged, per batch) and `tasks/summary.py`.
+**6 442 verdicts written, sealed and committed — 94.1 % of the phase, 405
+anchors owed.** `ai-native` measures **2 470 / 207 / 20 — 91.6 %**; `world` sits
+at **89.6 %** over 111 files (3 354 / 370 / 21), with 226 verdicts (6.0 %)
+carrying `src=[1]` and therefore self-referential. Two commands print the truth
+and supersede every figure in this file: `tasks/batch-progress.py` (owed vs
+judged, per batch) and `tasks/summary.py`.
 
-**W1-W4 are CLOSED.** W1 407 (90.4 %), W2 692 (91.9 %), W3 615 (89.9 %), **W4
-564 (84.0 %)** — the phase's lowest batch, carried by `campaign-plans` at
-72.5 %. Ten packages complete, adding `redbook` 96.4 %, `discovery-prompt`
-92.8 %, `comparative-research` 84.4 %, `campaign-plans` 72.5 %, `health-audit`
-88.5 % and `manual-tests` 91.1 %.
+**W1-W6 are CLOSED.** W1 407, W2 692, W3 615, W4 564, W5 697, **W6 572** —
+nineteen files across `licensing` (151, 90.7 %), `source-mirrors` (200),
+`spec-genres` (191, 94.8 %) and `dev-runtime-docs` (30). W6 produced the phase's
+first two `unverifiable` verdicts, both honest: «every third-party dependency
+must be permissively licensed» asserts a state of the resolved graph, and this
+environment cannot enumerate it — `cargo metadata --offline` exits 101, and
+`grep -c 'license' Cargo.lock` = 0 so the lockfile cannot substitute.
 
-**W5 is 14 of 21 files.** Left: operating-modes' PROTOCOL (52) and
-writing-a-codeword (37), then all five `secrets-hygiene` files (191). **W6's
-four workers were commissioned 2026-07-29** — do not read any `ev-W6*.json`
-before its completion notification.
+**W7 is 5 of 15 files** — `managed-blocks` closed at 198 (84.8 %); the ten files
+of `qualified-naming` and `tool-design-lessons` remain. Their workers were
+commissioned 2026-07-29; **check `tasks/evidence/` on disk rather than waiting on
+a chat reply — the table is the artefact, the reply is a summary.**
 
 **The per-file slice replaced the batch as the unit of work, and that closes the
 split question §4 left open.** Seventeen slices landed here, one file each, 17 to
