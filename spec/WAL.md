@@ -17,18 +17,22 @@ python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts 
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**4 411 verdicts written, sealed and committed — 64.4 % of the phase.** The
-`ai-native` cluster measures **2 470 / 207 / 20 — 91.6 %**; `world` now has
-**1 557 / 140 / 17 — 90.8 %** over 51 of its 121 files, with 138 self-referential
-(8.1 %). One command prints all of it:
-`python campaigns/packages-2026-09/tasks/summary.py`.
+**5 392 verdicts written, sealed and committed — 78.7 % of the phase, 1 455
+anchors owed.** `ai-native` measures **2 470 / 207 / 20 — 91.6 %**; `world` has
+fallen to **89.1 %** as W4 and W5 landed. Two commands print the truth and
+supersede every figure in this file:
+`tasks/batch-progress.py` (owed vs judged, per batch) and `tasks/summary.py`.
 
-**W1, W2 and W3 are CLOSED — 1 714 anchors judged row by row.** W1 407 (90.4 %),
-W2 692 (91.9 %), W3 615 (**89.9 %, and zero unverifiable** — the first batch
-where every fact could be settled against the tree). Six packages complete:
-`flow:wal` 86.5 %, `two-process-model` 96.6 %, `wal-specspaces` 93.5 %,
-`sync-from-code` 93.7 %, `decision-records` 92.9 %, `conflict-protocol` 93.6 %,
-`addressable-specs` 87.9 %.
+**W1-W4 are CLOSED.** W1 407 (90.4 %), W2 692 (91.9 %), W3 615 (89.9 %), **W4
+564 (84.0 %)** — the phase's lowest batch, carried by `campaign-plans` at
+72.5 %. Ten packages complete, adding `redbook` 96.4 %, `discovery-prompt`
+92.8 %, `comparative-research` 84.4 %, `campaign-plans` 72.5 %, `health-audit`
+88.5 % and `manual-tests` 91.1 %.
+
+**W5 is 14 of 21 files.** Left: operating-modes' PROTOCOL (52) and
+writing-a-codeword (37), then all five `secrets-hygiene` files (191). **W6's
+four workers were commissioned 2026-07-29** — do not read any `ev-W6*.json`
+before its completion notification.
 
 **The per-file slice replaced the batch as the unit of work, and that closes the
 split question §4 left open.** Seventeen slices landed here, one file each, 17 to
