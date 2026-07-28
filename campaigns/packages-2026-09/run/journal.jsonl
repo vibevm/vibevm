@@ -1,0 +1,5 @@
+{"kind":"phase","value":"C","ts":"2026-07-28T06:05:16Z"}
+{"kind":"step-start","id":"c0-harvest","step_type":"verify","target":"packages/org.vibevm.ai-native/**","actor":"fable","ts":"2026-07-28T06:05:16Z"}
+{"kind":"step-done","id":"c0-harvest","result":"31 captured runs under harvest/; every slot's floor exits 1; no package carries a conform.toml or discipline/ registry; core-ai-native ships library crates only and has no floor at all","ts":"2026-07-28T06:05:16Z"}
+{"kind":"step-start","id":"c0-host-control","step_type":"verify","target":"the five stale host files","actor":"fable","ts":"2026-07-28T06:05:16Z"}
+{"kind":"step-done","id":"c0-host-control","result":"4 verdicts written by load-and-merge (1 minted, 3 evidence-extended), 5 files sealed by the tool, 0 refused; the 53 untouched campaign maps came through byte-identical; host now 4441/4441 addressable anchors judged, 0 stale","ts":"2026-07-28T06:05:16Z"}
