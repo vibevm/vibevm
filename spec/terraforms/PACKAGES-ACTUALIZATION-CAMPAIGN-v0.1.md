@@ -2024,13 +2024,33 @@ command that would have tested it.
   reason.
 
   Four host-side checks were run and are recorded for whoever picks it up, because
-  they decide the load-bearing rows: **there is no host PROP-014** — the package
-  copy is the only one in the repository, so this proposal was never adopted into
-  the spec tree it proposes against; `vibe check` carries **neither** the
+  they decide the load-bearing rows: `vibe check` carries **neither** the
   edge-multiplicity lint nor the 120-line unit warning the document says it warns
   with; **no `specmap_query` / `specmap_explain` / `specmap_source`** MCP tools
   exist; and `[metamodel] profile` appears nowhere in the crates. The two
   companion PROPs it cites — 009 and 013 — do exist in the host.
+
+  **A correction to this entry, made the same day it was written.** It first said
+  «there is no host PROP-014 — the package copy is the only one in the repository,
+  so this proposal was never adopted into the spec tree it proposes against». Both
+  halves are false. There are some thirty copies (`vibedeps/`, `.vibe/cache/`,
+  `research/*`, the superseded `v0.7.0` slot) — regenerated dependency copies, but
+  copies. And the host **does** adopt it, by citation in the qualified form
+  addressable-specs prescribes: `PROP-031` cites
+  `spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#…` **five times**
+  — as a companion, as «the read-side model this PROP makes writable», and as what
+  its own `##BOUNDARY-COMPLETION` completes — and `PROP-024` links it too. The
+  document's `##HOME-SHIPS-WITH-THE-DISCIPLINE` states the placement is deliberate:
+  the mechanism ships with the Discipline, its Rust implementation with
+  `rust-ai-native-lang`.
+
+  **The check searched for a FILE under `spec/` and read its absence as absence of
+  adoption.** That is the same shape as F-119 — a clean result produced by looking
+  in the wrong place — and as the perimeter lesson one entry above, made this time
+  by the reviewer rather than by a worker. What survives is narrower and minor: no
+  file under the host `spec/`, and **`014` is an unexplained hole in the host's own
+  PROP sequence** (so is `004`; the tree runs 000–013, then 015). A naming
+  question, not an adoption one, and it bears on no C1 verdict.
 
   **The five evidence tables now live in the repository**, at
   `tasks/evidence/ev-*.json`, and re-verify from there: 748 refs, zero
