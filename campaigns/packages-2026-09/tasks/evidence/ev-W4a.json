@@ -80,7 +80,7 @@
       "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:76  ##ONE-ENTRY-PER-COMMIT One entry per commit — **hash, the conventional-commit",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:694  ### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:257  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
     ],
     "src": [
       1,
@@ -458,8 +458,8 @@
     "claim": "The plan is one document carrying five roles.",
     "evidence": [
       "spec/boot/STATIC.md:77  touching the tree. The plan is one document carrying five roles: the",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:200  **Both plans carry all five roles the flow names**, as top-level sections:",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3022  ## 9. REPORT {#report}",
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:218  **Both plans carry all five roles the flow names**, as top-level sections:",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3110  ## 9. REPORT {#report}",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1295  ## 11. REPORT (filled at close-out against §8) {#report}"
     ],
     "src": [
@@ -550,7 +550,7 @@
       "spec/boot/STATIC.md:80  verdict (REPORT). Format:",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1295  ## 11. REPORT (filled at close-out against §8) {#report}",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1297  _Filled 2026-07-26. Scored against §8 as written, not as one would like it to",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3024  *(empty — filled at close-out against §6)*"
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3112  *(empty — filled at close-out against §6)*"
     ],
     "src": [
       1,
@@ -803,7 +803,7 @@
       "spec/boot/STATIC.md:106  2. Write the phase's commit-map entry in the execution ledger —",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:694  ### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:257  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
     ],
     "src": [
       1,
@@ -928,7 +928,7 @@
     "evidence": [
       "spec/boot/STATIC.md:124  - Never carry a deferral outside the plan file — the deferrals",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1293  *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3020  *(empty)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3108  *(empty)*",
       "BACKLOG.md:19  | ##REL-DEFERRALS `campaigns/<id>/deferrals.md` | **one campaign's** tails; dies with the zone | the next campaign's mandate (`campaign-plans` law) |"
     ],
     "src": [
@@ -982,7 +982,7 @@
       "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:1  # vibevm Shrink Plan v0.1 — drain the depth-program baseline",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:634  ## 11. Wave 6 — the demontage, the re-teach, the dogfood",
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:10  The method, proven end to end on 58 files and 4 486 units:",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:257  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
     ],
     "src": [
       1,
@@ -1051,7 +1051,7 @@
     "marker": "@impl/done",
     "claim": "A campaign's paper trail carries five roles.",
     "evidence": [
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:200  **Both plans carry all five roles the flow names**, as top-level sections:",
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:218  **Both plans carry all five roles the flow names**, as top-level sections:",
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
       "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:26  | Artifact | Written | Purpose |"
@@ -1126,7 +1126,7 @@
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:339  ## 9. LOG (execution ledger — append per batch/wave/phase) {#log}",
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1786    **The size correction first, because it is the same slip B16 named.** The",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:241  do carry them carry subjects and outcomes too. Note the counts are not"
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:259  do carry them carry subjects and outcomes too. Note the counts are not"
     ],
     "src": [
       1,
@@ -1269,7 +1269,7 @@
       "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:17  ## 2 — Execution record (EXECUTED 2026-07-15)",
       "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:361  ## 14 — Execution ledger",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:692  ## 13. Execution ledger (filled by the executing session)",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3024  *(empty — filled at close-out against §6)*"
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3112  *(empty — filled at close-out against §6)*"
     ],
     "src": [
       1,
@@ -1375,8 +1375,8 @@
     "claim": "Section 2, the execution record, is empty at authoring.",
     "evidence": [
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:692  ## 13. Execution ledger (filled by the executing session)",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3024  *(empty — filled at close-out against §6)*",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3020  *(empty)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3112  *(empty — filled at close-out against §6)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3108  *(empty)*",
       "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:17  ## 2 — Execution record (EXECUTED 2026-07-15)"
     ],
     "src": [
@@ -2040,7 +2040,7 @@
     "marker": "@impl/done",
     "claim": "Summary: five roles — PLAN, BASELINE, PREDICTIONS, LOG, REPORT — one file by default; skip the report and the campaign learns nothing durable.",
     "evidence": [
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:200  **Both plans carry all five roles the flow names**, as top-level sections:",
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:218  **Both plans carry all five roles the flow names**, as top-level sections:",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1295  ## 11. REPORT (filled at close-out against §8) {#report}",
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:163  ## 4.5 Amendments carried in from wave 1's close-out {#amendments}",
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:150  campaigns/packages-2026-09/        # id fixed at Phase A close"
@@ -2150,7 +2150,7 @@
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:767    version-mirroring the `=0.5.0` pin; D10 amended by execution:",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:778  - Proof: the hermetic e2e drives the BUILT binary on a bare temp",
       "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1016    `e9fc7b44` (DRIFT-026, *sealing a verdict stops depending on memory*), landed",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:257  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
     ],
     "src": [
       1,
@@ -2778,7 +2778,7 @@
     "claim": "A deferral lives in the plan file, under its campaign, until a later campaign drains it.",
     "evidence": [
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1293  *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3020  *(empty)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3108  *(empty)*",
       "campaigns/progress-2026-08/deferrals.md:1  # Deferrals — campaign `progress-2026-08`",
       "BACKLOG.md:24    disposable.** `ZONE-LIFETIMES` says `run/` is throwaway after close-out and"
     ],
@@ -2888,7 +2888,7 @@
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:759  ### Wave 3 — EXECUTED (2026-07-07); commit map",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:778  - Proof: the hermetic e2e drives the BUILT binary on a bare temp",
       "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:463  ## 13. Execution ledger {#ledger}",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:257  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
     ],
     "src": [
       1,
@@ -3356,7 +3356,7 @@
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:762    the kind's first real inhabitant. TWO PLAN SIMPLIFICATIONS recorded:",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:767    version-mirroring the `=0.5.0` pin; D10 amended by execution:",
       "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:463  ## 13. Execution ledger {#ledger}",
-      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
+      "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:257  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20"
     ],
     "src": [
       1,

@@ -38,15 +38,20 @@ Exit code 0 when every ref resolves (OFF-BY and ELIDED tolerated but named), 1 o
 import json, re, sys, pathlib, collections
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-# The leading segment is `*` rather than `+` so an EXTENSIONLESS DOTFILE parses:
-# `.gitignore:37  /refs/` is a real, checkable ref, and with `+` the group before
-# `\.` had nothing to match and the whole ref fell through to UNPARSED. W4b hit it
-# three times on evidence that the reference sources are deliberately not in the
-# repository — refs that were true and that the checker could not read. Dotfile
-# paths recur (`.gitignore`, `.claude/`, `.github/`), so this is fixed rather than
-# worked around. Regression: the three already-trusted tables re-run to the
-# identical counts they returned before (C45-rust 2, C45-go 10, C6 0).
-REF = re.compile(r"^\s*([^\s:]*(?::[^\s:]*)??[^\s:]*\.[A-Za-z0-9]+):(\d+)\s*(.*)$")
+# A path qualifies if it contains a `/` or a `.` — not if it ends in an extension.
+# The old pattern required `\.[A-Za-z0-9]+` before the colon and so could not read
+# two whole classes of real, checkable ref:
+#   * extensionless DOTFILES — `.gitignore:37  /refs/` (W4b, three times, on
+#     evidence that the reference sources are deliberately not in the repository);
+#   * extensionless FILES — `vibedeps/flow-dev-runtime-docs/0.1.0/LICENSE:3`
+#     (W6d, twice). Six of 27 world packages ship `LICENSE` rather than
+#     `LICENSE.md`, so this is a recurring class, not a one-off.
+# The `/`-or-`.` lookahead keeps bare prose words (`note:12`) from parsing while
+# admitting any real repository path. A path that parses and does not exist is
+# reported as PATH, which is louder than UNPARSED and therefore the safer failure.
+# Regression: the three already-trusted tables re-run to the identical counts they
+# returned before this and the previous widening (C45-rust 2, C45-go 10, C6 0).
+REF = re.compile(r"^\s*((?=[^\s:]*[/.])[^\s:]+):(\d+)\s*(.*)$")
 FUZZ = 3
 SPAN = 4          # how many lines a single quote may legitimately span
 BLOCK_CAP = 40    # and the ceiling on the block an elided quote may range over
