@@ -245,9 +245,23 @@ So a brief names all of them by default:
 
 ```
 packages/org.vibevm.ai-native/**   crates/**   xtask/**   spec/**   schemas/**
-specmap.json  specmap.toml  vibe.toml  vibe.lock  vibedeps/**
+specmap.json  specmap.toml  conform.toml  vibe.toml  vibe.lock  vibedeps/**
+research/rust-demo/**  research/ts-demo/**
 campaigns/packages-2026-09/harvest/*.md
 ```
+
+**`research/rust-demo/` and `research/ts-demo/` were added after C3 cost the
+perimeter a fourth time, and they are the sharpest entry on the list.** A language
+guide's rules are addressed to a CONSUMING project, and the stack package is a Rust
+workspace that *analyses* the language rather than a project written in it — so its
+own lack of a `tsconfig.json` is not the discipline's absence, it is the wrong place
+to look. The demos are the right place, and they carry the whole surface: both have
+`conform.toml`, `specmap.toml`, `specmap.json` and the three
+`discipline/registry/` files; `ts-demo`'s `tsconfig.json` sets **all four** mandatory
+beyond-strict flags, and the tooling the guide names is present at scale — vitest in
+46 files, `tsd` 43, fast-check 36, Twoslash 35, `expectTypeOf` 30, ts-morph 25,
+`assertNever` 21. Searched without them, roughly forty of that guide's facts read as
+absent; searched with them, they read as in force.
 
 Two rules follow. **A `not-found` is a fact about the search perimeter until the
 perimeter has been checked** — it is never, on its own, evidence of absence. And a

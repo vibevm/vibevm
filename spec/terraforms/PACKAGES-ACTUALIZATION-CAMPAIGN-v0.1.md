@@ -2328,6 +2328,44 @@ command that would have tested it.
   its filing suggests, and the distinction between naming a model and claiming it
   wrote something is the whole of it.
 
+- **2026-07-28 · C3a — the TypeScript guide at 93.5 %, and the perimeter was
+  wrong a fourth time in the most expensive way yet.** 153 verdicts: **143 confirmed
+  / 9 drift / 1 unverifiable.**
+
+  **The guide's consumer is `research/ts-demo/`, and no brief had named it.** A
+  language guide's rules are addressed to a project written in that language, and
+  the stack package is a Rust workspace that *analyses* TypeScript — so its own lack
+  of a `tsconfig.json` is not the discipline's absence, it is the wrong place to
+  look. The demo carries the entire surface: `conform.toml`, `specmap.toml`,
+  `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json`
+  setting **all four** mandatory beyond-strict flags. The tooling the guide names is
+  there at scale — **vitest in 46 files, `tsd` 43, fast-check 36, Twoslash 35,
+  `expectTypeOf` 30, ts-morph 25, `assertNever` 21** — every one of which the
+  delegated search had correctly reported absent from the places it was given.
+  **Searched without the demos, about forty facts read as unbuilt; searched with
+  them, they read as in force.** The batch plan's §4.5 now names them.
+
+  **What is genuinely drift, and it is precise.** The TypeScript gate registers
+  exactly three rules — `TsUnsafeInDomain`, `TsCellIsolation`, `FileLength`
+  (`build_rules`, lib.rs:48-61) — so the whole §7 flag family cites an R-001 that
+  **is present in the vendored engine and never mounted on this language**. The
+  build-time tier (bundler `define` / DCE) and the runtime flag registry have no
+  instance anywhere, including the demo. The five defect-catcher flags are marked
+  implemented and the discipline's own demonstration project sets **none** of them.
+
+  **And a number quoted from a superseded copy of the corpus's own appendix.** The
+  guide cites TCD at «~74.8 %» twice; that figure appears in the live tree **only
+  under `.vibe/cache/**`, in an older CONTRADICTION-MAP**, while this family's own
+  ATLAS records **75.3 % synthesis / 70.2 % translation**. One cross-reference is
+  also off by two sections: the agentic battery is cited as «the sibling brief §6»
+  and §6 of that brief is «The honest risk register».
+
+  *On the worker:* it returned 153 rows having **repaired 59 of its own line numbers
+  before returning** and re-checked every one of 348 refs. Its three `not-found`
+  rows were all correct about the perimeter it was given, and two of the three
+  became drift on wider search while the third stayed. **A worker that reports what
+  it searched converts a reviewer's disagreement into one lookup.**
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

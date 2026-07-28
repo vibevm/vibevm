@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T10:47:01Z",
+  "updated_at": "2026-07-28T11:00:01Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -9385,7 +9385,1280 @@
       },
       "marker_count": 154,
       "unit_count": 18,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "bc9aff0a57d03e7e1b707cf5fe965ea7d98dbe1ff5681c4f8216386a72c54028",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:2  **Discipline v0.2 · BETA · T2 · TypeScript**",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:1  # GUIDE — TypeScript/JavaScript under the Discipline, v0.1",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:3  **Status.** Beta; second T2 guide. Section structure is deliberately isomorphic to `GUIDE-RUST-v0.1.md` ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "projection-onto-typescript": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:8  description = \"AI-Native TypeScript - the TypeScript projection of the Discipline v0.2: cells, branding over structural typing, ...\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:5  ##TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE TypeScript code in this",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "GUIDE-COVERS-TYPESCRIPT-AS-A-TYPED-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:1  # GUIDE — TypeScript/JavaScript under the Discipline, v0.1",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:5  Framing note — the inverse of Rust's. Rust *enforces*; TypeScript *permits everything*, because underneath it is JavaScript",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "READ-THE-T1-CORE-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:1  # The AI-Native Code Discipline — Manifesto {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:1  # Executable Scaffolds — The Runnable-Capital Catalog {#root}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:16  packages = { \"flow:org.vibevm.ai-native/core-ai-native\" = \"^0.8\" }",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "A-HUMAN-CAN-READ-AI-NATIVE-TYPESCRIPT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:27  - ##RULE-ORDINARY-IDIOMATIC-TYPESCRIPT-SURFACE Ordinary idiomatic TypeScript at the token level — no invented dialect,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md:21  ... *Committed output* (plain idiomatic TypeScript) · *Determinism check* (regenerate-and-diff in CI).",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "what-differs-is-the-envelope-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:29    are the OOD tail, treated like `unsafe`). Strictness lives in the",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:30    envelope: the maxed `tsconfig`, branded types at seams, runtime",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ENVELOPE-MAXED-COMPILER-CONFIGURATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:33  - ##RULE-COMPILER-IS-A-CONFIGURABLE-VERIFIER The compiler is a configurable verifier: the project `tsconfig` is a",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/fixtures/proj/tsconfig.json:3      \"strict\": true,",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ENVELOPE-BRANDED-CONTRACT-BEARING-TYPES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:47  - ##RULE-BRANDING-RECOVERS-NOMINAL-TYPING Structural typing is recovered to nominal by branding: a meaning-bearing",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/oracle.ts:769    private brandedInFile(absPath: string): string[] {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ENVELOPE-RUNTIME-VALIDATION-AT-THE-ERASURE-BOUNDARY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:53  - ##RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN Untyped external data (network, JSON, `process.env`, user input) enters",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:55  (Zod/Valibot) that is both the static type and the runtime check. @impl/done",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ENVELOPE-EXECUTABLE-SCAFFOLDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:6  ## Scaffold cards (the nine executable-scaffold patterns)",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ENVELOPE-FAST-PER-CELL-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/fast_loop.rs:1  //! `typescript-ai-native fast-loop` — the Class-E",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/main.rs:89      /// The Class-E fast-loop checker: every cell's tests run in",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "STRUCTURALLY-PARALLEL-TO-THE-RUST-GUIDE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:24  ## 0. The law, applied to Rust {#law}",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:63  ## 3. The nine scaffolds in Rust {#scaffolds}",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:173  ## 14. Sweep idioms (Rust) {#sweep-idioms}",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "CROSS-REFERENCE-NOTATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:33  > ##LAW-IDIOMATIC-INSIDE-ENGINEERED-AROUND **Idiomatic inside the file; engineered around the file.** *(≈ Rust §0)*",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:115  ## 3. Cells, closure, ownership *(≈ Rust §1)* {#cells}",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TS-SPECIFIC-NOTATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:75  ## 1. Compiler configuration is discipline (the biggest free lever) `[TS-specific]` {#compiler-config}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:99  ## 2. The erasure boundary: regenerate trust at runtime edges `[TS-specific]` {#erasure-boundary}",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "LAW-IDIOMATIC-INSIDE-ENGINEERED-AROUND": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:26  > ##LAW-IDIOMATIC-INSIDE-ENGINEERED-AROUND **Idiomatic inside the file; engineered around the file.** @impl/done",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPESCRIPT-IS-DEEPLY-IN-DISTRIBUTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:27  - ##FINDING-DR1-016 **DR1-016** — EsoLang-Bench: frontier models collapse on out-of-distribution languages",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "TOOLING-CUTS-THREE-WAYS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md:17  ##TS-TOOLING-CARRIES-THE-TYPE-GENERATION-HALF The TypeScript cards already specify a rich, mature **type / generation** checker set",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md:19  ##THAT-HALF-IS-WELL-TYPED-AND-EXAMPLES-TYPE-CHECK Those answer *\"is this well-typed, and do the examples type-check?\"*",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106  ... Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilation errors by 75.3% (synthesis) and 70.2% (translation)",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
+              ".vibe/cache/org.vibevm/core-ai-native/v0.7.0/spec/appendix/CONTRADICTION-MAP.md:21  ## C-4 — \"Type-constrained decoding cuts errors 74.8%\" vs \"no Rust implementation exists\"",
+              "the cited figure is not in the live tree: «~74.8 %» appears only in `.vibe/cache/**` copies of an older CONTRADICTION-MAP, while this package family's own ledger records **75.3 % synthesis / 70.2 % translation** at ATLAS.md:106. A measurement quoted from a superseded copy of the corpus's own appendix"
+            ]
+          },
+          "RUST-ORACLE-IS-A-MULTI-YEAR-FUTURE-BET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:31  ##RUST-HAS-NOTHING-AND-A-MULTI-YEAR-HORIZON For Rust, type-aware constrained decoding does not exist and must be built",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:32  from scratch over a multi-year horizon (rust-analyzer as the oracle;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPESCRIPT-COMPILER-AS-ORACLE-IS-AVAILABLE-TODAY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/main.rs:34      Validate {",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/main.rs:37          /// Read hypothetical content from this path, or `-` for stdin.",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:36  2. ##VALUE-INFORMATION **Information** — \"what is in scope here, with what type; does this",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "tooling-story-flipped-in-typescripts-favor": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:251  ## 14. Tooling roadmap pointer (the tcg line) *(≈ Rust §12)* {#tooling}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:35  ##TYPESCRIPT-TCD-KNOWLEDGE-EXISTS **For TypeScript the",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ADVANTAGE-2-MATURE-CODEMOD-ECOSYSTEM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md:11  ##INTENT Intent: ... TypeScript's mature codemod ecosystem (`ts-morph`, `jscodeshift`, typed ESLint autofix) makes this the most achievable scaffold here",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md:33  ... TypeScript note: the codegen ecosystem (`ts-morph`, Compiler API, schema generators) is the most mature of any language",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLDED-EDIT-OPERATIONS-ARE-NEAR-TERM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:18  | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`typescript-ai-native co ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/codemod.rs:1  //! `typescript-ai-native codemod add-cell` — the scaffold-I frame:",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "HAZARD-TYPES-ARE-ERASED-AND-CAN-BE-LIED-TO": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:51          \"types are erased and can be lied to; every unsafe-set token is a place the \\",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:42  - ##RULE-UNSAFE-SET-IS-FORBIDDEN-IN-DOMAIN-CODE Types are erased and can be lied to. The `unsafe` set —",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "COMPILER-BELIEVES-AN-UNCHECKED-ASSERTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:73                      \"a cross-type `as` makes the compiler believe a lie\",",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPE-SYSTEM-IS-A-DEFEATABLE-VERIFIER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:59      | \"any_type\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:60      | \"as_cross\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:17  /// `ts-unsafe-in-domain` — the §8 ban set as Class-F findings: `any`",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "THE-DEFEATING-WORDS-ARE-STATISTICALLY-COMMON": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be marked",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "CENTRAL-TYPESCRIPT-SPECIFIC-JOB": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:50      out.push(Box::new(rules::TsUnsafeInDomain));",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:14  const TS_GUIDE_BANS: &str = \"discipline://typescript-ai-native-lang/guide#the-unsafe-set\";",
+              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-conform.md:8  Error: violates REQ discipline://typescript-ai-native-lang/guide#tooling: the project cannot resolve `typescript` ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "LAW-PROJECTED-ORDINARY-IDIOMATIC-TYPESCRIPT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:27  - ##RULE-ORDINARY-IDIOMATIC-TYPESCRIPT-SURFACE Ordinary idiomatic TypeScript at the token level — no invented dialect,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:21   * The file is erasable-syntax-only TypeScript: node >= 22.6 runs it",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "NO-INVENTED-SYNTAX": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:27  - ##FINDING-DR1-016 **DR1-016** — EsoLang-Bench: frontier models collapse on out-of-distribution languages",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:33  - ##FINDING-R2C-002 **R2C-002 *** — EsoLang-Bench: OOD collapse confirmed; ICL gives ~0 benefit; compile errors dominate failures",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPESCRIPT-SECOND-OOD-EDGE-IS-TYPE-LEVEL-METAPROGRAMMING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:28  no type-level wizardry in domain code (deep conditional/recursive types",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:29  are the OOD tail, treated like `unsafe`). Strictness lives in the",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "LAW-CLAUSE-EXPRESSIVENESS-UP-TO-IDIOMATIC": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:27  - ##RULE-ORDINARY-IDIOMATIC-TYPESCRIPT-SURFACE Ordinary idiomatic TypeScript at the token level — no invented dialect,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:188  - ##BAN-TYPE-LEVEL-METAPROGRAMMING **Type-level metaprogramming beyond the idiomatic** (deep recursive/conditional types) — OOD tail (§0).",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPE-LEVEL-WIZARDRY-IS-TREATED-LIKE-UNSAFE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:29  are the OOD tail, treated like `unsafe`). Strictness lives in the",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:48  pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "STRICTNESS-LIVES-IN-THE-ENVELOPE-NOT-IN-CLEVER-TYPES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:29    are the OOD tail, treated like `unsafe`). Strictness lives in the",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:30    envelope: the maxed `tsconfig`, branded types at seams, runtime",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:31    validators at the erasure boundary, `spec://` metadata, per-cell fast",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPESCRIPT-STRICTNESS-IS-CONFIGURABLE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:33  - ##RULE-COMPILER-IS-A-CONFIGURABLE-VERIFIER The compiler is a configurable verifier: the project `tsconfig` is a",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/fixtures/proj/tsconfig.json:3      \"strict\": true,",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "RUST-STRICTNESS-IS-FIXED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:43  ##COMPILER-IS-A-FREE-HALLUCINATION-DETECTOR The compiler is a free hallucination detector; we give it as much to check as possible (A3 ...)",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "NON-STRICT-CONFIG-GIVES-ALMOST-NO-SAFETY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:12  - **tsconfig (load-bearing flags):** `strict`, `noUncheckedIndexedAccess` (indexing can miss), `exactOptionalPropertyTypes`, ...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:5  ... The primary instrument of this guide is therefore **subset selection**, enforced by compiler flags and type-aware lints",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "MANDATE-THE-STRICTEST-PRACTICAL-CONFIGURATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:34    versioned discipline artifact at the strictest practical floor",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:70  2. ##PHASE-ZERO-RAISE-THE-TSCONFIG-FLOOR Raise `tsconfig.json` toward the GUIDE §1 floor (`strict`,",
+              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-floor.md:21  floor: `tsc` is not installed in this project — `npm install -D typescript` (the structural gate needs it too)",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "COMPILER-IS-A-FREE-HALLUCINATION-DETECTOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:43  ##COMPILER-IS-A-FREE-HALLUCINATION-DETECTOR The compiler is a free hallucination detector; we give it as much to check as possible",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/floor.rs:99      // 2. Typecheck — the compiler is the TS half of `cargo test`'s",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "typescript-analogue-of-the-rust-guides-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:43  ##COMPILER-IS-A-FREE-HALLUCINATION-DETECTOR The compiler is a free hallucination detector; we give it as much to check as possible",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:72     `erasableSyntaxOnly`) — one flag at a time; each flag's fallout is",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "mandatory-tsconfig-floor-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:35    (`strict` + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes` +",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:71     `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TSCONFIG-STRICT-TRUE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/fixtures/proj/tsconfig.json:3      \"strict\": true,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:35    (`strict` + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes` +",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "TSCONFIG-BEYOND-STRICT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/fixtures/proj/tsconfig.json:4      \"noUncheckedIndexedAccess\": true,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/fixtures/proj/tsconfig.json:5      \"exactOptionalPropertyTypes\": true,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:71     `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "TSCONFIG-DEFECT-CATCHERS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:90  - ##TSCONFIG-DEFECT-CATCHERS **Defect-catchers:** `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, ...",
+              "five flags named as defect-catchers and marked @impl/done, and the discipline's own demonstration project sets **none** of them: `research/ts-demo/tsconfig.json` carries the four mandatory beyond-strict flags and neither `noUnusedLocals`, `noUnusedParameters` nor `noFallthroughCasesInSwitch`. Nothing else enforces them either"
+            ]
+          },
+          "TSCONFIG-ERASABLE-SYNTAX-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/fixtures/proj/tsconfig.json:6      \"erasableSyntaxOnly\": true,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:21   * The file is erasable-syntax-only TypeScript: node >= 22.6 runs it",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:36    `erasableSyntaxOnly`); loosening a mandatory flag needs",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TSCONFIG-IS-A-VERSIONED-DISCIPLINE-ARTIFACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:33  - ##RULE-COMPILER-IS-A-CONFIGURABLE-VERIFIER The compiler is a configurable verifier: the project `tsconfig` is a",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:34    versioned discipline artifact at the strictest practical floor",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "LOOSENING-A-MANDATORY-FLAG-REQUIRES-DEVIATES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:36    `erasableSyntaxOnly`); loosening a mandatory flag needs",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:101          if matches!(verb, EdgeVerb::Deviates) && reason_text.is_none() {",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "RULE-STRICT-FLOOR-IS-SET-BY-CONFIG": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:80                  \"ts_ignore\" => (",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:81                      \"`@ts-ignore` silences the compiler invisibly and cannot rot loudly\",",
+              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-floor.md:22  floor: `tsc` FAILED",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "ERASURE-BOUNDARY-IS-WHERE-GUARANTEES-END": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:53  - ##RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN Untyped external data (network, JSON, `process.env`, user input) enters",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:51          \"types are erased and can be lied to; every unsafe-set token is a place the \\",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "BOUNDARY-REQUIRES-SINGLE-SOURCE-RUNTIME-VALIDATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:55    (Zod/Valibot) that is both the static type and the runtime check. @impl/done",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md:21  ... *Schema* (Zod/Valibot as an executable contract at boundaries) · *Use-site witness* ...",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "ONE-DECLARATION-YIELDS-TYPE-AND-PARSER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md:19  ##MOTIVATION Motivation: ... A generator emitting all three from one `as const` table (or a `z.infer` from one Zod schema) ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:55    (Zod/Valibot) that is both the static type and the runtime check. @impl/done",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCHEMA-FUSES-THREE-SCAFFOLDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md:23  ##COLLABORATIONS Collaborations: Output is checked by the Class E loop (`tsc --noEmit`); ... pairs with Class B (generated types ARE the typed surface).",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md:21  ... *Schema* (Zod/Valibot as an executable contract at boundaries) ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:69                      \"`any` disables checking and propagates transitively\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:70                      \"use `unknown` + a runtime narrowing, or record a deviation\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:53  - ##RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN Untyped external data (network, JSON, `process.env`, user input) enters",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCHEMA-IS-THE-BOUNDARYS-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md:21  ... *Schema* (Zod/Valibot as an executable contract at boundaries) · *Use-site witness* (assertion where the invariant is relied upon)",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:298  - ##SWEEP-UNSAFE-SET-DRAINS ... a cross-type `as` at an erasure boundary becomes a schema parse; `!` becomes an `asserts` function.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "re-establishing-the-verifiers-guarantee": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:51          \"types are erased and can be lied to; every unsafe-set token is a place the \\",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:52           runtime can diverge from the checked types\"",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "cell-is-the-unit-of-modification-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:192          \"a cell is the unit of modification, closed under paging; reaching into a \\",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:93  - ##FINDING-R3-001 **R3-001** — Closure under paging: editable units declare their full semantic dependency set",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "CELL-GRANULARITY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/init.rs:109          \"cells_dir = \\\"src/cells\\\"\\n\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/init.rs:130           seam = \\\"index\\\"\\n\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:174      fn is_seam(&self, target: &str, cell: &str) -> bool {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "EXPLICIT-IMPORTS-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:104  /// `ts-cell-isolation` — R-002 over import specifiers: a file inside",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:211                  if target_cell == from_cell || self.is_seam(&target, target_cell) {",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:373      if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "OWNERSHIP-ALIGNS-WITH-FILE-BOUNDARIES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:203  - ##FINDING-R3-013 **R3-013** — Swarm contention: ownership aligns with file boundaries; deterministic toolchain kills phantom diffs",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:143          \"file-length\"",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "AMBIENT-COUPLING-IS-FORBIDDEN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:40    internals. No barrel-file ambient re-export sprawl; ambient coupling",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:41    (module-level mutable singletons, `declare global`) is forbidden. @impl/done",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "NAMES-ARE-TOKEN-PROGRAMS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:55  - ##FINDING-R3-004 **R3-004** — Names are token programs: closed-vocabulary composition, one name one referent, no shadowing",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:53  - `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no shadowing.",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "FAMILY-PREFIX-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-028-package-families.md:106  ##SURFACE-NAMING-LAW The family stem is language-FIRST and reaches every named surface a family",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:30  name = \"typescript-ai-native\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:8  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules\");",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "CONTRACT-FIRST-ORDERING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:35  - ##FINDING-R3-002 **R3-002** — Contract-first ordering: intent before body within every item",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:56  - `rule-contract-first-ordering` (R3-002) — intent before body.",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "POSITION-IS-A-RESOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:147           its middle third buries invariants — prefer more, smaller, \\",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:57      out.push(Box::new(rules::FileLength {",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:1  //! `typescript-ai-native-conform-frontend` — the `ts-tsc` frontend the Ф6 brief",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "UNIFORMITY-IS-LOAD-BEARING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be marked",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:60  - ##RULE-UNIFORMITY-IS-LOAD-BEARING Uniformity is load-bearing: one idiom per operation; exceptions are",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:101          if matches!(verb, EdgeVerb::Deviates) && reason_text.is_none() {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "STRUCTURAL-TYPING-TRAP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/oracle.ts:766    /** Exported brand-shaped type aliases in a seam file (heuristic — see",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/oracle.ts:805                        .includes(\"__brand\"),",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Branded type* (primitive + erased brand tag) ...",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "scaffold-cards-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:4  *The navigable registry of the TypeScript projection's cards. ... These are the TypeScript shape of the nine language-neutral scaffold patterns ...*",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLD-A-GENERATORS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Schema/manifest* ... *Generator* (`ts-morph` / TypeScript Compiler API / a codegen script)",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLD-B-TYPED-SURFACES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Branded type* (primitive + erased brand tag) · *Discriminated union* ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:46  checker: @typescript-eslint `seam-protocol-typed` (+ `no-bare-primitive-at-seam`) + `tsd`/`expectTypeOf` compile-fail test",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:11  | `scaffold-b-typed-builders` | E | scaffold B | gate | [E-mid] | specified |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLD-C-RUNNABLE-CONTRACTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Assertion function* (`asserts x is T` — the TS-unique dual checker) ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:12  | `scaffold-c-runnable-contracts` | E | scaffold C | inline | [E-mid] | specified |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLD-D-DIFFERENTIAL-ORACLES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:36  - ##PARTICIPANT-INPUT-SOURCE *Input source* — a `fast-check` arbitrary, a recorded production-input set, or a snapshot corpus.",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:38  - ##PARTICIPANT-ORACLE-HARNESS *Oracle harness* — the runnable `vitest`/`fast-check` test binding these ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | specified (pilot) |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLD-E-PER-CELL-FAST-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/main.rs:96          #[arg(long, default_value_t = 60)]",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/fast_loop.rs:10  //! `tsc` has no per-cell project mode without project references, so",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:14  | `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | shipped (`typescript-ai-native fast-loop`; the ts ...",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "SCAFFOLD-F-STRUCTURED-DIAGNOSTICS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs:50      format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
+              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-conform.md:12  ... fix surface: `npm install -D typescript` in the project root — the tsc floor step needs the same install",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:15  | `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`ts-unsafe-in-domain` / `ts- ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLD-G-EXECUTABLE-EXAMPLES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-g-doctests.md:11  ##INTENT Intent: Ship one type-checked, runnable example per public seam ... because it must type-check (Twoslash) and/or run.",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:414          has_doc_example: /```|@example/.test(docText.slice(0, 2000)),",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:16  | `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | specified (the health collector counts export `@ex ...",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "SCAFFOLD-H-LOCAL-SIMULATORS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-h-simulators.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Reference model* (runnable, small) · *In-memory fake* (MSW for network, fake seam implementations) ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:17  | `scaffold-h-simulators` | E+H | scaffold H | gate | [E-strong] | specified |",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SCAFFOLD-I-CODEMODS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`ts-morph`/`jscodeshift` AST rewrite, or typed ESLint autofix) ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/codemod.rs:1  //! `typescript-ai-native codemod add-cell` — the scaffold-I frame:",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:18  | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`typescript-ai-native co ...",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "THROW-IS-UNTYPED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:68  - **Expected failures are values.** Seams return a discriminated Result — the minimal core type, no framework dependency ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:50  - ##RULE-TYPED-SEAM-FAILURES Failure on a seam is a typed value (`Result<T, E>` / discriminated",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "a-thrown-error-is-invisible": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:51    union), never an untyped `throw`; the `E` union cites `spec://` REQs and",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "FAILURE-IS-A-VALUE-ON-THE-CONTRACT-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:50  - ##RULE-TYPED-SEAM-FAILURES Failure on a seam is a typed value (`Result<T, E>` / discriminated",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:68  - **Expected failures are values.** Seams return a discriminated Result — the minimal core type, no framework dependency (`neverthrow` MAY be adopted later ...)",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "EXHAUSTIVENESS-OVER-E-IS-ENFORCED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:43    3. Close unions; assert exhaustiveness with `satisfies` / `assertNever` in the default branch.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:77  - **Exhaustiveness:** closed sets are discriminated unions with compiler-checked exhaustive `switch` (`assertNever` in `default` ...)",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "THROW-IS-FOR-UNRECOVERABLE-DEFECTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:79  ##ONE-ERROR-ENUM-PER-LAYER ... One `thiserror` enum per layer; variants carry `#[spec]` REQ edges; ... `anyhow` only at the binary edge; **panics are defects**.",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:51    union), never an untyped `throw`; the `E` union cites `spec://` REQs and",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "FALLIBLE-SEAMS-RETURN-RESULT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:50  - ##RULE-TYPED-SEAM-FAILURES Failure on a seam is a typed value (`Result<T, E>` / discriminated",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:68  - **Expected failures are values.** Seams return a discriminated Result ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPESCRIPT-PROJECTION-OF-THISERROR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:79  ##ONE-ERROR-ENUM-PER-LAYER *(From GUIDE-RUST-v0.1, retained and extended.)* One `thiserror` enum per layer; variants carry `#[spec]` REQ edges ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "RULE-FAILURE-ON-A-SEAM-IS-A-TYPED-VALUE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:52    its exhaustive `switch` is compiler-checked. @impl/done",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "SAME-RULE-AS-RUST-SHARPENED-BY-ERASURE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:83  ## 5. Registry & flags {#registry-and-flags}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:38          \"flag at the seam, never in the veins: the registry module is the \\",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "FLAGS-READ-ONCE-AT-THE-COMPOSITION-ROOT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:53  - ##RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN Untyped external data (network, JSON, `process.env`, user input) enters",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:26  pub struct FlagSites {",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "NO-IF-FLAG-IN-DOMAIN-CELLS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:35          \"R-001\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:57                              \"discipline://rust-ai-native-lang/guide#registry-and-flags\",",
+              "the fact names R-001 as the enforcing rule and **the TypeScript gate does not register it**: `build_rules` at typescript-ai-native-conform/src/lib.rs:48-61 registers exactly `TsUnsafeInDomain`, `TsCellIsolation` and `FileLength`. The `FlagSites` rule exists in the vendored engine and is never mounted on this language"
+            ]
+          },
+          "EXPLICIT-SWITCH-BEATS-DYNAMIC-LOOKUP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:77  - **Exhaustiveness:** closed sets are discriminated unions with compiler-checked exhaustive `switch` (`assertNever` in `default` ...)",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:43    3. Close unions; assert exhaustiveness with `satisfies` / `assertNever` in the default branch.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "two-tiers-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:83  ## 5. Registry & flags {#registry-and-flags}",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TIER-BUILD-TIME": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:83  ## 5. Registry & flags {#registry-and-flags}",
+              "the build-time tier — bundler `define`, dead-code elimination, env-gated conditional compilation — has no implementation anywhere: no bundler is configured in the demo consumer, and no crate or tool reads such a definition. The Rust analogue it names (cargo features) is real; its TypeScript twin is not"
+            ]
+          },
+          "TIER-RUNTIME": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:27      /// Repo-relative path of the one legal construction site.",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:28      pub registry_file: String,",
+              "the runtime tier's «registry object selects the cell at run time» has no instance: no typed flag registry exists in the stack, in the host, or in the demo consumer"
+            ]
+          },
+          "FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:41    (module-level mutable singletons, `declare global`) is forbidden. @impl/done",
+              "the registry the fact describes — typed data carrying provenance, birth and sunset per flag — does not exist in any of the three places it could: the stack, the host, or `research/ts-demo/`"
+            ]
+          },
+          "RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:105                  \"deviates-missing-reason\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:35          \"R-001\"",
+              "same gap, stated as a rule: the TypeScript gate registers three rules and none of them is the flag rule. `FlagSites` is present in the vendored engine and unmounted here, so the «else deviates» clause has nothing to fire against"
+            ]
+          },
+          "BANS-ARE-THE-MOVES-THAT-DEFEAT-THE-TYPE-SYSTEM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:2  //! fed by the `ts-tsc` frontend's facts: the `unsafe`-set ban with its",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:14  const TS_GUIDE_BANS: &str = \"discipline://typescript-ai-native-lang/guide#the-unsafe-set\";",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "forbidden-by-default-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:22  /// out of scope for the value-level bans (the guide scopes the ban to",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:84                  \"ts_expect_error\" if reason.is_none() => (",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "BAN-ANY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:68                  \"any_type\" if !in_test => (",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:70                      \"use `unknown` + a runtime narrowing, or record a deviation\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:342      if (node.kind === ts.SyntaxKind.AnyKeyword) {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "BAN-UNCHECKED-AS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:73                      \"a cross-type `as` makes the compiler believe a lie\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:74                      \"narrow with a runtime check first (`as const` is always fine)\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:353          ts.isTypeReferenceNode(asserted) &&",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "BAN-NON-NULL-ASSERTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:77                      \"`!` claims non-null without proof\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:78                      \"narrow, or use an `asserts x is NonNullable<T>` function\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:365      if (ts.isNonNullExpression(node)) {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "BAN-TS-IGNORE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:80                  \"ts_ignore\" => (",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:82                      \"use `@ts-expect-error -- reason`, which fails when the error goes\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:241  const SUPPRESSION = /@ts-(expect-error|ignore)(?:\\s*--\\s*(\\S[^\\n*]*))?/;",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "BAN-TYPE-LEVEL-METAPROGRAMMING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:28  no type-level wizardry in domain code (deep conditional/recursive types",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:88                  _ => continue,",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "BAN-RUNTIME-ENUM-AND-NAMESPACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/fixtures/proj/tsconfig.json:6      \"erasableSyntaxOnly\": true,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:298    if (ts.isEnumDeclaration(node)) {",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:309    if (ts.isModuleDeclaration(node)) {",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "BAN-WITHOUT-HATCH-IS-A-DISCIPLINE-BUG": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:85                      \"`@ts-expect-error` without `-- reason` is an unrecorded deviation\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:86                      \"append `-- <why this suppression is sound>`\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:252      fn reasoned_expect_error_is_honoured_and_unreasoned_is_not() {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SPEC-URIS-CARRIED-BY-JSDOC-OR-DECORATORS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:35  /** The §9 tag vocabulary (PROP-014 edge kinds + the module-scope tag). */",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:253  function markerFromTag(",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:2  //! D3): the §9 JSDoc spec markers — `@implements` / `@verifies` /",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "EDGE-KINDS-MIRROR-PROP-014": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:28          \"implements\" | \"scope\" => Some(EdgeVerb::Implements),",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-specmap/src/index.rs:7  //! (PROP-014 §2.2, asymmetric invalidation): every edge pinned to an",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:101          if matches!(verb, EdgeVerb::Deviates) && reason_text.is_none() {",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "METADATA-IS-THE-AUTHORED-RETRIEVAL-INDEX": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:97  - ##FINDING-R3-012 **R3-012** — Written for retrieval: stable anchors + uniform one-line what/why per item",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-specmap/src/index.rs:24  /// Repo-relative location of the committed index.",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-specmap/src/index.rs:25  pub const INDEX_REL_PATH: &str = \"specmap.json\";",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "prefer-jsdoc-tags-over-decorators": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:406        const tags = ts.getJSDocTags(node);",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:21   * The file is erasable-syntax-only TypeScript: node >= 22.6 runs it",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WRONG-PROSE-IS-WORSE-THAN-NO-PROSE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:71  - ##FINDING-R2C-004 **R2C-004** — CodeCrash perturbation taxonomy: a direct catalog of banned anti-patterns",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:66  ... CodeCrash (NeurIPS 2025) ... misleading NL contexts cause avg 23.2% degradation in output prediction; even with CoT, 13.8% drop.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "DRIFTED-JSDOC-IS-TRUSTED-OVER-THE-TYPES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:66  ... Across 17 LLMs, misleading NL contexts cause avg 23.2% degradation in output prediction; even with CoT, 13.8% drop.",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "RULE-BEHAVIORAL-CLAIMS-ARE-MACHINE-CHECKED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:414          has_doc_example: /```|@example/.test(docText.slice(0, 2000)),",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/health.rs:74                          if *has_doc_example {",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "MISLEADING-STRINGS-COUNT-TOO": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:66  ... misleading NL contexts cause avg 23.2% degradation in output prediction; even with CoT, 13.8% drop. Aggregated structural perturbations ...",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "TSDOC-IS-THE-HUMAN-DETAIL-LAYER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:2  //! D3): the §9 JSDoc spec markers — `@implements` / `@verifies` /",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:36  const SPEC_TAGS = new Set([",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "REPLACEMENT-SHIPS-A-DIFFERENTIAL-ORACLE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:31  ##MOTIVATION **Motivation:** ... With a differential oracle — `fast-check` feeding identical generated inputs to `oldParse` and `newParse` ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:29          \"verifies\" => Some(EdgeVerb::Verifies),",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | specified (pilot) |",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "CHARACTERIZATION-GOLDENS-PIN-LEGACY-BEHAVIOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:34  - ##PARTICIPANT-SUBJECT-OLD *Subject-old* — the prior implementation (kept temporarily as `oldParse`, or captured as `vitest` snapshots).",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:57  6. ##INVENTORY-CHARACTERIZE **Characterize** currently-passing observable behavior (golden",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "CHARACTERIZATION-ENSHRINES-BUGS-TOO": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:58     transcripts under `discipline/golden/`, normalized for volatile",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:59     fields). A pinned bug is visible debt; an unpinned bug is a landmine. @impl/done",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "BYTE-FOR-BYTE-THE-RUST-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:119  ## 9. Replacement protocol {#replacement-protocol}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:151  /// replacement protocol requires (card scaffold-d, R-040). The",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "TEST-MATRICES-ARE-DECLARED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:125  ## 10. Test matrices {#test-matrices}",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "MATRIX-TOOLING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:33  - **`fast-check`** — property/differential oracles (D); `vitest` snapshots for characterization.",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "MATRIX-IS-AUTHORED-DATA": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:125  ## 10. Test matrices {#test-matrices}",
+              "«R-060, projected» — a rule projected from the Rust guide with no checker on either side and no instance in the demo consumer. Whether test matrices here are authored data or an implicit explosion is not recorded anywhere, so the claim has nothing to be true or false against"
+            ]
+          },
+          "TYPE-LEVEL-TESTING-IS-TYPESCRIPT-UNIQUE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:49  - **Type-level testing** (guide §12) — Class C/D applied to the types themselves (`expectTypeOf`/`tsd`/`@ts-expect-error`). Rust has no readily-available analogue ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:31  - **`tsd` / `expectTypeOf` (vitest)** — type-level assertions (B, and the type-level-testing scaffold, guide §12).",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPE-LEVEL-TEST-TOOLING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:45    5. Confirm the previously-wrong call no longer type-checks (add a `tsd`/`expectTypeOf` or `@ts-expect-error` compile-fail test).",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:241  const SUPPRESSION = /@ts-(expect-error|ignore)(?:\\s*--\\s*(\\S[^\\n*]*))?/;",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:57    canonical use, and public generic/branded/union surfaces carry a",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:58    type-level test (`expectTypeOf`/`tsd`). Replacing a non-trivial cell",
+              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+            ]
+          },
+          "type-level-testing-is-additive-over-rust": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:49  - **Type-level testing** (guide §12) — ... Rust has no readily-available analogue, so this is additive over the shared nine, not a tenth scaffold ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:48  ## TypeScript-specific additive coverage (beyond the nine)",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WEAK-SWARM-DOES-NOT-READ-THIS-GUIDE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:9  ##READ-THE-GUIDE-FOR-STRUCTURE Read the",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:10  guide when authoring or reviewing structure; per-edit work needs only",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:11  the card whose trigger fires. @impl/done",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WEAK-READER-RECEIVES-BAND-3-OPS-PER-EDIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:205  - ##FINDING-R3-014 **R3-014** — Active-rule-set minimality: rule-paging beats rule-dumping at equal rule mass",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:4  *The navigable registry of the TypeScript projection's cards. The harness uses this to resolve a trigger to a card  ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md:48  budget: active_rules=2; first_signal=vitest run <cell> (<60s)",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "GUIDE-IS-THE-AUTHORING-AND-REVIEW-ARTIFACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:16  ##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION This",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:18  for `.ts` edits is a TypeScript card's Band-3 ops block, never the Rust",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:4  *... this stack ships its own `cards/` so the weak-reader runtime surface for TypeScript is a TypeScript Band-3 block, never the Rust core's ...*",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "RAIDS-SWEEP-CROSS-CUTTING-CONCERNS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md:1  # The Raid Playbook — Layered Refactoring Sweeps {#root}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:77  ##raid-one-directory-at-a-time-lead Per the Raid Playbook skeleton (scope & freeze → card order → phases →",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "two-tcg-briefs-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:1  # Tool Spec: `vibe-agentic-tcg-ts` — the Agentic Type Oracle for TypeScript {#root}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:1  # Tool Spec (high-level): `typescript-ai-native-tcg` — Token-Level Type-Constrained Generation for TypeScript {#root}",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TCG-AGENTIC-BRIEF-SHIPPED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:14  [`TCG-ORACLE-v0.1`](../mechanisms/TCG-ORACLE-v0.1.md),",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/lib.rs:64      \"tcg_validate\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/main.rs:34      Validate {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TCG-TOKEN-LEVEL-BRIEF-VERY-FAR-FUTURE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:5  ##status-line *Status: vision / component brief — **DELIBERATELY HELD AT STUB DEPTH**, and",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:6  **dispositioned VERY-FAR-FUTURE by the owner (2026-07-07)**: token-level",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:15  language-service core is the SAME oracle a future logit-masker will query.* @impl/done",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TOOLING-ASYMMETRY-STATED-HONESTLY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:45  ##CLEAN-ROOM-RULE **Clean-room rule (owner directive, boot-resident in the dev tree):**",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:47  generation`) is inspiration-only — its code is NEVER copied, adapted,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:108  ... ~94% of TS compile errors are type-level (only ~6% syntactic) ...",
+              "carries the same «~74.8 %» as the fact above, and the ATLAS records 75.3 % / 70.2 %. The honesty the anchor is named for is real — the clean-room posture on the PLDI'25 repository holds — and the number beside it is stale"
+            ]
+          },
+          "TYPESCRIPT-EXPOSES-ITS-CHECKER-PROGRAMMATICALLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/package.json:5    \"description\": \"Long-lived TypeScript language-service oracle for the agentic tcg line (TCG-ORACLE-v0.1 / TCG-PROTOCOL-v0.1) ...\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:2   * ts-extract — the Compiler-API fact extractor behind the `ts-tsc`",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:180    createSourceFile(",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "TYPESCRIPT-IS-THE-STRONGEST-NEAR-TERM-PILOT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:36  All checker statuses are `specified` (defined, not yet implemented): there is **no TypeScript pilot codebase yet** ...",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:36  ... the forthcoming VibeVM TypeScript surface (UI + scripting) is the pilot, exactly as vibevm-Rust was the Rust pilot.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "COUNTERWEIGHT-DEFAULT-SAFETY-IS-LOWER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:5  Framing note — the inverse of Rust's. Rust *enforces*; TypeScript *permits everything*, because underneath it is JavaScript",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:51          \"types are erased and can be lied to; every unsafe-set token is a place the \\",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "MORE-LEVERAGE-AND-MORE-ROPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md:17  ##TS-TOOLING-CARRIES-THE-TYPE-GENERATION-HALF The TypeScript cards already specify a rich, mature **type / generation** checker set",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:5  ... TypeScript *permits everything* ... mutable, dynamic, side-effectful, with an erased type system.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "PROJECTION-IS-HEAVIER-ON-BANS-BY-DESIGN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:179  ## 8. Bans and their escape hatches — the TypeScript `unsafe` set *(≈ Rust §6)* {#bans}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:17  /// `ts-unsafe-in-domain` — the §8 ban set as Class-F findings: `any`",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md:25  - ##RULE-BANS-AS-FACTS the bans-as-facts (`any` / unchecked `as` / `!` / `@ts-ignore` in domain code — the §8 set)  ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "STANDING-OPEN-QUESTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:169  ## 6. The honest risk register {#risk-register}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:36  All checker statuses are `specified` (defined, not yet implemented): there is **no TypeScript pilot codebase yet** ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "MODIFICATION-SAFETY-IS-STILL-THE-PILOTS-JOB": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:173    shortens the distance to green. The battery measures whether it DOES",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:73                      \"a cross-type `as` makes the compiler believe a lie\",",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:144    MCP + one-shot delivery, measured by the two-arm battery. @impl/done",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:169  ## 6. The honest risk register {#risk-register}",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/main.rs:89      /// Run the differential/latency corpus and write a report",
+              "the cross-reference does not resolve: it points at «the sibling brief §6», and §6 of `spec/typescript/tools/vibe-agentic-tcg-ts.md` is «The honest risk register». The two-arm battery it means is at line 144 of that file, inside §4"
+            ]
+          },
+          "wires-it-in-five-moves-lead": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-024-code-bearing-packages.md:1  (host PROP document present at spec/common/PROP-024-code-bearing-packages.md)",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:29  [[binary]]",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:30  name = \"typescript-ai-native\"",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WIRE-1-INSTALL-THE-STACK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:4  kind = \"stack\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/Cargo.toml:4  # excludes vibedeps/ and the slot builds standalone (PROP-024 §2.4).",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:1  //! The TypeScript rule family (GUIDE-AI-NATIVE-TYPESCRIPT §3, §8),",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WIRE-2-GET-THE-BINARIES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:86  (`cargo install --path",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:88  `cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:31  crate = \"crates/typescript-ai-native-cli\"",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WIRE-3-PROJECT-TOOLCHAIN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/init.rs:211           \\x20 1. `npm install -D typescript prettier eslint typescript-eslint` — the floor's",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/test_gate.rs:28          .context(\"spawning node (install node >= 22.6 — strip-types runs .ts natively)\")?;",
+              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-floor.md:36  ts-extract: cannot resolve `typescript` from `...`. The structural gate parses with the project's own compiler — run `npm install -D typescript` ...",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WIRE-4-BOOTSTRAP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/init.rs:173          write_once(&root.join(\"conform.toml\"), &conform, opts.force)?,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/init.rs:177          write_once(&root.join(\"specmap.toml\"), &specmap, opts.force)?,",
+              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-floor.md:31  typescript-ai-native-conform: NO conform.toml — topology default in force ...; run `typescript-ai-native init` to write a starting policy.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "WIRE-5-GENERATION-TIME-ORACLE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:45  name = \"typescript-ai-native-tcg\"",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/main.rs:40          /// Emit the enriched result as JSON (default: human summary).",
+              "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/lib.rs:61      \"tcg_complete\",",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "gotchas-the-fresh-walks-caught-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/floor.rs:123      // would walk into vibedeps/ and run the installed packages' own",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/floor.rs:124      // fixtures — the demo walk caught exactly that.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "GOTCHA-WORKSPACE-EXCLUDE-VIBEDEPS": {
+            "v": "confirmed",
+            "ev": [
+              "Cargo.toml:7  exclude = [\"packages\", \"vibedeps\"]",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/Cargo.toml:4  # excludes vibedeps/ and the slot builds standalone (PROP-024 §2.4).",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "GOTCHA-NODE-MODULES-AND-LOCKFILES": {
+            "v": "confirmed",
+            "ev": [
+              ".gitignore:11  **/node_modules/",
+              ".gitignore:9  # shippable-tree filter excludes node_modules from package hashes too",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/package-lock.json:1  (committed lockfile present alongside tools/ts-extract/package.json; tools/ts-oracle/package-lock.json likewise)",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "GOTCHA-EXTRACTOR-REMATERIALISES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-extract-bridge/src/lib.rs:141  /// `<project>/target/conform/ts-extract/` (content-addressed: re-runs",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:128      fn extractor_materialises_content_addressed_and_idempotent() {",
+              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-floor.md:32  ... file:///.../v0.6.0/target/conform/ts-extract/extract-f678dc7748b4054a.ts is not specified and it doesn't parse as CommonJS.",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "sweep-idioms-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:2  name: typescript-ai-native-sweep",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:10  ##RUNNING-THE-STANDING-SWEEP You are running the standing sweep from the Discipline's Sweep Playbook",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:50  name = \"typescript-ai-native-sweep\"",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SWEEP-DANGER-BAND-SPLITS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:64  1. ##RATCHET-DANGER-BAND-FILES **danger-band files** — split any file at the top of the [540,600) band",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/health.rs:18  const DANGER_FLOOR: u32 = 540;",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:9  //! Semantics mirror rscan: a file-level `@scope` is a module-level",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SWEEP-SUPPRESSION-DRAINS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:67  2. ##RATCHET-UNREASONED-SUPPRESSIONS **unreasoned suppressions** — every `@ts-expect-error` WITHOUT",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:85                      \"`@ts-expect-error` without `-- reason` is an unrecorded deviation\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/health.rs:106          \"unsafe_census\": {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SWEEP-UNSAFE-SET-DRAINS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:85  - ##RAID-DRAIN-THE-UNSAFE-SET drain the unsafe set (`any` → `unknown`+narrowing, checked `as`,",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs:78                      \"narrow, or use an `asserts x is NonNullable<T>` function\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/health.rs:60                  typescript_ai_native_extract_bridge::RawFact::TsUnsafe { reason, .. } => {",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          },
+          "SWEEP-FLOOR-DISABLEMENT-IS-DEBT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/floor.rs:61          eprintln!(",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/floor.rs:62              \"floor: step `{}` DISABLED by policy — {} (conform.toml [typescript])\",",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/config.rs:173      pub floor_disable: Vec<FloorDisable>,",
+              "located in the perimeter on the refs above, machine-verified against the files they cite"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T11:00:01Z",
+        "verify_batch": "C3"
+      }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
       "content_hash": "1a451863c2a7c10913a101577da43f226c4ea24da8cc6b79e7edc0650c5a5fd6",
