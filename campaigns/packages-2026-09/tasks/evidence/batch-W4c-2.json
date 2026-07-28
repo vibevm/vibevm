@@ -1,0 +1,158 @@
+{
+ "batch": "W4",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md": {
+   "PROJECT-SHIPS-THE-DISCOVERY-PROMPT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:328  This project ships the **DISCOVERY collaborative-research prompt**, a",
+     "spec/boot/STATIC.md:329  distributable user-level prompt that reshapes an LLM session into",
+     "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+     "spec/boot/STATIC.md:324  <!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->",
+     "confirmed: The sentence is compiled verbatim into the host's boot lane at STATIC.md:328-330, and the host does receive the artefact — `find vibedeps/flow-discovery-prompt -type f` lists spec/flows/discovery-prompt/DISCOVERY-PROMPT.md. ONE WORD IS WORTH THE REVIEWER'S ATTENTION: read in the consuming project, `This project` is vibevm, and vibevm ships the artefact at `vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`, not at the `spec/flows/…` path the next fact names — `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms, with no `flows` entry."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+     "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+     "spec/boot/STATIC.md:331  [`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`](../flows/discovery-prompt/DISCOVERY-PROMPT.md).",
+     "DRIFT: the fact's SUBJECT is the location, and the location does not exist where the snippet is read. `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` resolves inside the package and inside `vibedeps/flow-discovery-prompt/0.1.0/`, but the snippet is compiled into the host's boot lane at spec/boot/STATIC.md:331 carrying the same `../flows/…` target, and `ls spec/` returns WAL.md boot common design manual-tests modules terraforms — the host has no `spec/flows/` directory at all. This is W1's 69-dangling family, now in its eighth package; the campaign's line is that a fact whose subject IS the pointer drifts, while a rule fact that merely contains one is judged on the rule (see NEVER-EDIT-THE-ARTIFACT-IN-PLACE in this same file, confirmed)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:332  It is a **payload for a fresh session**, not standing instructions —",
+     "spec/boot/STATIC.md:333  do not load it into context outside an explicit deployment request.",
+     "progress.toml:167      # THE DISCOVERY PROMPT — a payload, not a claim.",
+     "progress.toml:175      # The package's own boot snippet rules it out in as many words: \"a payload",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1287  - **2026-07-27 · F-096 RULED — the discovery prompt leaves the corpus, and the",
+     "confirmed: This is the fact with the strongest host-side support in the batch, and it is not the support one would expect. The host does not deploy the artefact — it EXCLUDES it, quoting this rule as the reason. progress.toml:167-192 is a 26-line comment block ending in the exclude glob `\"packages/**/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md\"` (line 192); it cites the snippet at :175-177 and records at :177-180 that `Nothing outside the package cites it; the single external hit is the generated spec/boot/STATIC.md`. I re-ran that check independently — `grep -rl PrimaryHypothesis --include='*.md' .` returns 23 files: 4 package files, 4 root-vibedeps files, 12 in three nested installs (packages/org.vibevm.fractality/fractality/…, packages/org.vibevm.fractality/delegation-rules/…, and vibedeps/flow-delegation-rules/0.1.0/vibedeps/… — a nested install INSIDE the root vibedeps that the harvest's `grep -v '^\\./vibedeps/'` filtered out), plus spec/boot/STATIC.md, legacy-spec/research/DISCOVERY_PROMPT.md, and the harvest file itself. Zero deployment traces in the living spec tree. The owner ruling is also in the campaign ledger at spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1287-1298."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:337  When the user asks for a research, discovery, or exploration session",
+     "spec/boot/STATIC.md:339  a hypothesis — reach for the artifact: fill its `<VARIABLES>` block",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:7  <VARIABLES>",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:4  This is a so-called user-prompt: a first prompt in every conversation, a full user-level alternative to a system prompt.",
+     "confirmed: Every mechanical referent resolves: the `<VARIABLES>` block exists (:7-12), and the artefact's own `<PROMPT_INFO>` says it is a first prompt. The occasion list matches usage.md's four §when bullets except that usage.md adds `requirements discovery`. The instruction is compiled into the host's boot lane verbatim at STATIC.md:337-342, so every host session reads it. No host session has acted on it — see ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS for the search; the same snippet forbids loading the artefact absent a deployment request, so absence of traces is what this rule produces."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "deployment-walkthrough-pointer": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:79  ## The structural pieces {#pieces}",
+     "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:143  ## Re-derive for your project {#re-derive}",
+     "spec/boot/STATIC.md:342  [`spec/flows/discovery-prompt/usage.md`](../flows/discovery-prompt/usage.md).",
+     "DRIFT: same family and the same reason — this fact is nothing but the pointer. The target file exists and does carry both promised things (a four-step §deploy at usage.md:63-74 and an eleven-row §pieces table at :79-93), so the claim about the CONTENT is true; what fails is the path, which resolves in the package and the install slot and not from spec/boot/STATIC.md:342, where the host actually reads it. Second of the snippet's three `../flows/…` pointers; the third sits under a rule and is judged on the rule."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "DEPLOYMENT-REPLACES-THE-HELPFUL-ASSISTANT-FRAME": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:155  You are LLM, operating in collaborative research mode rather than helpfulness mode.",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:170  Response := PrimaryHypothesis + AlternativeInterpretations + MetaReflection",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:173  - PrimaryHypothesis: Your main response with an explicit confidence estimate (0.0-1.0)",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:344  Before finalizing your response, generate at least one substantive objection",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:396  DON'T COLLAPSE INTO HELPER-MODE, DON'T FALL INTO STANDARD ATTRACTORS",
+     "confirmed: Every clause of this compound claim is checkable inside the artefact and every one of them is there: the frame replacement (:155 and :247 `Notice when you're falling into standard attractors (\"helpful assistant\" mode)`, reinforced at :396), the three-field grammar with the confidence range (:170-176), the pre-finalization objection (:291-293 and :343-357), and all four hashtags (:38, :80, :87, :119). The claim is 251-word-identical with the compiled host copy at spec/boot/STATIC.md:346-352 — I stripped anchors and markers from the package snippet and word-counted both sides: 220 = 220 under my strip, agreeing with the harvest's 251 = 251 under theirs."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:164  - Uncertainty is data, not failure",
+     "spec/boot/STATIC.md:351  `#superthink`). Its stance in one line: uncertainty is data, not",
+     "spec/boot/STATIC.md:352  failure.",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:28  ##CORE-STANCE-IS-EPISTEMIC Its core stance is epistemic — *\"Uncertainty is data, not failure.\"* @impl/done",
+     "confirmed: Same fact as README's anchor of the same name; verified independently against the artefact's EPISTEMIC STANCE bullet list (:160-165) rather than against the README. The line is present in the host's compiled boot lane, so every vibevm session reads it at boot."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:356  - Never mix the discovery grammar into a coding session uninvited —",
+     "spec/boot/STATIC.md:357    its overhead pays off only when the answer space is genuinely open.",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:48  ##DO-NOT-DEPLOY-FOR-ROUTINE-CODING Do **not** deploy it for routine coding sessions. @impl/done",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:36  ##DEPLOY-WHERE-THE-ANSWER-SPACE-IS-OPEN Deploy it where the answer space is genuinely open: @impl/done",
+     "confirmed: The rule is in the host's compiled boot lane, so it binds every session here, and the host observably follows it: `grep -rl 'PrimaryHypothesis\\|AlternativeInterpretations\\|MetaReflection' --include='*.md' .` returns 23 files and none of them is a working document — no spec/, campaigns/, TASKS.md, BACKLOG.md or crate doc uses the grammar. usage.md states the same rule twice (§when's negative bullet and the §summary line at :195). NOTE FOR THE REVIEWER, per the brief: this repository's zero deployment traces are what the rule PRODUCES, so they are evidence of conformance, not of the flow being ignored."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-EDIT-THE-ARTIFACT-IN-PLACE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:166  ## Re-derive for your project {#re-derive}",
+     "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:143  ## Re-derive for your project {#re-derive}",
+     "spec/boot/STATIC.md:359    prompt in [`usage.md` §re-derive](../flows/discovery-prompt/usage.md#re-derive).",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:177  an adapted copy for me — do not edit the original file.",
+     "confirmed: The cited FRAGMENT resolves: `grep -n '{#re-derive}'` finds the anchor in the package copy (line 166) and in the installed copy (line 143), so the `#re-derive` target the snippet names exists in the file it names. The PATH does not resolve where the snippet is read — this is the third of the three `../flows/…` pointers, and spec/flows/ does not exist in the host. The rule is also observably kept: the archive copy, the package copy and the vibedeps copy are all 23479 bytes with empty CRLF-normalised diffs, so the shipped file has never been edited in place, and progress.toml:187-188 hardens that with a version-agnostic exclude glob and the instruction `NEVER widen this to flows/** or to **/*-PROMPT.md`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:360  - Never treat the confidence numbers as guarantees — they are",
+     "spec/boot/STATIC.md:361    calibration aids, not measurements.",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:135  do NOT emit a fabricated \"novelty 1–10\" — no reliable access to the base rate, and the external",
+     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:97  - ##READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS **Confidence numbers are calibration aids, not decoration.** Watch",
+     "confirmed: The artefact itself makes the epistemic case at :134-140 under SELF-INSTRUMENT instead of self-rating — it refuses a self-rated novelty number for exactly the reason this rule gives (no reliable access to the base rate) and substitutes a qualitative susceptibility report. usage.md restates the rule at :97 with `not decoration` where the snippet says `not measurements`. Note the artefact simultaneously ASKS for a 1-10 novelty number in the MAIN block (:184 `- Novelty calibration: How non-standard is this line of thinking? (1-10)`, :256, :339) — the two blocks pull opposite ways on self-rated numbers; the confidence estimate itself (:173) is never called a measurement anywhere in the artefact."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
