@@ -26,13 +26,18 @@ verification pass, where every anchor in every shipped package file gets a
 verdict of `confirmed | drift | unverifiable` backed by evidence that resolves to
 a real line in a real file.
 
-At the last measurement: **6390 / 6847 anchors, 93.3 %, 457 remaining.**
-**W6 is CLOSED** (572/572, four packages, nineteen files). **W7 is open** at
-146/603 — `managed-blocks` judged except its fifth file, `qualified-naming` and
-`tool-design-lessons` not started.
+**PHASE C IS CLOSED — 6847 / 6847 anchors, zero owed.** All seven world batches
+complete (W1 407, W2 692, W3 615, W4 564, W5 697, W6 572, W7 603), and the exit
+gate discharged in the plan's §7 LOG: the X/Y/Z summary (10 700 / 601 / 45 =
+11 346, 94.3 %), the self-referential count (248 world verdicts at `src == [1]`,
+6.0 %), and `baseline.json` at 2 216 units.
 
-Branch `main`, clean, pushed to both mirrors. The standing goal is **finish
-Phase C**. Nothing else.
+Branch `main`, clean, pushed to both mirrors.
+
+**What is next is a decision, not a continuation.** §9 REPORT of the campaign
+plan is still empty and is filled at close-out against §6. The three findings
+below are filed and deliberately unrepaired — draining them is a later wave's
+job. Nothing in this file is authorisation to start either.
 
 ---
 
@@ -161,21 +166,35 @@ cites, re-verify and repair every table.**
 
 ---
 
-## What is left
+## What Phase C found
 
-**W7 — «authoring for tools»**, three packages of five files each:
+601 drifts, and four shapes recur hard enough to be worth a wave of their own:
 
-- `managed-blocks` — four files judged; **`rejected-designs.md` outstanding**.
-  Its worker wrote per-file partials `ev-W7a-p1..p4.json`; p5 was still pending.
-- `qualified-naming` — worker commissioned, no table on disk yet.
-- `tool-design-lessons` — worker commissioned, no table on disk yet.
+- **The dangling sibling pointer**, in **seven consecutive W6/W7 packages**. The
+  host has no `spec/flows/` directory, so every boot snippet's `../flows/…` link
+  points a session at nothing. The root-relative variant inside two re-derive
+  prompts is invisible to the campaign's own `\.\./flows/` scan.
+- **A rule with no checker is a wish.** `source-mirrors` is the controlled
+  experiment: never-`--force` has a unit test and held; never-push-to-a-replica
+  and the ancestry gate have none, and both failed — 130 named-remote pushes and
+  zero `merge-base` calls.
+- **Verbs specified and never built** — managed-blocks' `remove`,
+  qualified-naming's `KindMismatch`. Each costs five to six sentences downstream.
+- **Two READMEs over-count their own contents** — `spec-genres` and
+  `tool-design-lessons` both say «four pieces of content» over three shipped
+  documents, where 14 of 16 siblings say «three».
 
-**When W7 closes**, Phase C is not done until:
+**Two shape mismatches await the next `rescan`**, recorded in the LOG so they are
+not read as change: 60 baseline units were omitted for want of a judged fact and
+**will read as `new`**, and 58 verdict keys matched no fact anchor (the per-file
+`_elements` bundles).
 
-- the X/Y/Z summary lands in the plan's §7 LOG (exit-gate clause ii);
-- the self-referential count is reported (clause iv) — `summary.py` prints it;
-- `vibe progress baseline --campaign campaigns/packages-2026-09` writes
-  `baseline.json` (clause v / amendment A6).
+**A caution for whoever reads the evidence base.** 174 refs no longer resolve,
+and 116 of them sit in the two W2 tables written before the durable-citation rule
+existed — they point into `CONTINUE.md` and `spec/WAL.md`, which every wind-down
+rewrites wholesale. Those verdicts were judged and sealed against the text as it
+stood; it is the trail that rotted. `repair-refs.py --apply` has already
+re-pointed everything a single-hit search could find.
 
 ---
 

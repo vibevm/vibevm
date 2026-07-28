@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-29 (**Phase C — W1-W6 CLOSED, W7 at 5 of 15 files; the phase is
-past 94 %, with 405 anchors owed and all of them in one batch**)_
+_Updated: 2026-07-29 (**PHASE C IS CLOSED — 6 847 / 6 847 anchors, zero owed, all
+seven world batches complete and the exit gate discharged**)_
 
 **Every number below is reproduced by two commands; run them rather than quoting
 this file.**
@@ -17,25 +17,24 @@ python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts 
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**6 442 verdicts written, sealed and committed — 94.1 % of the phase, 405
-anchors owed.** `ai-native` measures **2 470 / 207 / 20 — 91.6 %**; `world` sits
-at **89.6 %** over 111 files (3 354 / 370 / 21), with 226 verdicts (6.0 %)
-carrying `src=[1]` and therefore self-referential. Two commands print the truth
-and supersede every figure in this file: `tasks/batch-progress.py` (owed vs
-judged, per batch) and `tasks/summary.py`.
+**Phase C is DONE: 6 847 / 6 847 anchors, zero owed.** Every addressable anchor in
+every shipped package file carries a verdict backed by evidence that resolves to
+a real line in a real file. All seven world batches closed — W1 407, W2 692,
+W3 615, W4 564, W5 697, W6 572, W7 603. Two commands print the truth and
+supersede every figure in this file: `tasks/batch-progress.py` and
+`tasks/summary.py`.
 
-**W1-W6 are CLOSED.** W1 407, W2 692, W3 615, W4 564, W5 697, **W6 572** —
-nineteen files across `licensing` (151, 90.7 %), `source-mirrors` (200),
-`spec-genres` (191, 94.8 %) and `dev-runtime-docs` (30). W6 produced the phase's
-first two `unverifiable` verdicts, both honest: «every third-party dependency
-must be permissively licensed» asserts a state of the resolved graph, and this
-environment cannot enumerate it — `cargo metadata --offline` exits 101, and
-`grep -c 'license' Cargo.lock` = 0 so the lockfile cannot substitute.
+**The exit gate is discharged**, all three clauses, in the plan's §7 LOG.
+(ii) The corpus reads **10 700 confirmed / 601 drift / 45 unverifiable = 11 346,
+94.3 %** — host 4 496/0/3 (99.9 %), ai-native 2 470/207/20 (91.6 %), world
+3 734/394/22 (90.0 %). (iv) **248 of world's 4 150 verdicts carry `src == [1]`,
+6.0 %**, self-referential and to be discounted. (v) `baseline.json` written,
+**2 216 units**; two shape mismatches are recorded there for whoever runs the
+next `rescan` — 60 units omitted for want of a judged fact WILL read as `new`.
 
-**W7 is 5 of 15 files** — `managed-blocks` closed at 198 (84.8 %); the ten files
-of `qualified-naming` and `tool-design-lessons` remain. Their workers were
-commissioned 2026-07-29; **check `tasks/evidence/` on disk rather than waiting on
-a chat reply — the table is the artefact, the reply is a summary.**
+**Next is §9 REPORT**, still empty, to be filled at close-out against §6. The
+three findings this phase filed and deliberately did not repair are named in the
+LOG entry and in `CONTINUE.md`; draining them is a later wave's job, not Phase C's.
 
 **The per-file slice replaced the batch as the unit of work, and that closes the
 split question §4 left open.** Seventeen slices landed here, one file each, 17 to
