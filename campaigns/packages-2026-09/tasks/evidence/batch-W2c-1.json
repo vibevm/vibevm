@@ -1,0 +1,545 @@
+{
+ "batch": "W2c",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/two-process-model/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-THE-TWO-PROCESS-MODEL": {
+    "v": "confirmed",
+    "ev": [
+     "vibe.lock:411  kind = \"flow\"",
+     "vibe.lock:412  name = \"two-process-model\"",
+     "vibe.lock:61      \"flow:org.vibevm.world/two-process-model@=0.1.0\",",
+     "spec/boot/STATIC.md:1528  - `two-process-model` — the foundation: human and AI as",
+     "confirmed: Read the host lockfile entry (`vibe.lock:410-418`): kind `flow`, group `org.vibevm.world`, version 0.1.0, `files_written = []`. The `dependencies` list of the redbook entry (`vibe.lock:33-64`) names this package at line 61, so `redbook` pulls it — the 'collection' the claim names is a real edge in the host's resolve, not prose. The host's compiled boot lane names it first among the redbook's members and calls it 'the foundation' (STATIC.md:1526-1529). Widened to `vibedeps/`: slot `vibedeps/flow-two-process-model/0.1.0/` exists with README.md, vibe.toml, LICENSE.md, spec/boot/, spec/flows/."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "the-human-and-the-ai-are-two-processors": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1315  This project runs on the **two-process model**: the human and the AI",
+     "spec/boot/STATIC.md:1316  are two coprocessors with radically different architectures working",
+     "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
+     "confirmed: The host's own boot file states the model in the host's voice, not the package's: `spec/boot/00-core.md:38` opens the 'Reading layers' section by naming this flow by `spec://` address and calling the layers 'vibevm's instance' of it. That is the host declaring conformance, not the package agreeing with itself. The compiled boot lane carries the package's own statement at STATIC.md:1315-1319. Searched the perimeter for a competing model statement (`grep -rn \"two processes\\|coprocessor\" CLAUDE.md AGENTS.md GEMINI.md spec/`): none contradicts it."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1338  1. **The human owns coherence.** Consistency across sessions, global",
+     "spec/boot/STATIC.md:1529    coprocessors; the human owns coherence; files are the IPC.",
+     "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. …",
+     "confirmed: Three independent host locations carry the assignment: the compiled boot lane's own consequence #1 (STATIC.md:1338), the redbook's members table restating it (STATIC.md:1529), and the host's own `00-core.md:40`, which puts the human's memory at the top of the reading-layer stack and gives it conflict priority. `CLAUDE.md:207,209` operationalises 'the human owns meaning': the RESUME SESSION ritual forbids the session from choosing the next step, and 209 records the date the rule was added after a misfire."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1327  - The **AI process** is optimized for: throughput (thousands of",
+     "spec/boot/STATIC.md:1328    consistent lines per minute), mechanical consistency within a",
+     "spec/boot/STATIC.md:1331    structure, tirelessness within the session budget.",
+     "CLAUDE.md:11  **The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** …",
+     "confirmed: The compiled lane carries the profile verbatim (STATIC.md:1327-1331). The host's own instantiation is `CLAUDE.md:9-31`, the delegation-first directive, which routes bulk mechanical execution to worker slots and reserves the expensive process for judgment — the same split, stated as a spend policy. Note the host's version assigns 'architecture' to the reasoning tier (CLAUDE.md:11), which is the reverse of `cognitive-load-split.md:28` (AI owns architecture at the level of small detail) only if 'architecture' is read at one grain; the two documents distinguish grains."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "FILES-ARE-THE-ONLY-MEMORY-THE-TWO-SHARE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+     "spec/boot/STATIC.md:1343     survives it. Whatever must survive goes into the repository. Specs",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+     "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. …",
+     "confirmed: `CLAUDE.md:146-165` is the host's own 'Memory discipline' section and it is this claim with a consequence attached: anything load-bearing must be in the repository because a cloning teammate sees nothing else. The host names five canonical homes (CLAUDE.md:150-158: CLAUDE.md/AGENTS.md/GEMINI.md, MEMORY.md, TASKS.md, BACKLOG.md, spec/**). Checked whether the host keeps any out-of-repo channel: `MEMORY.md` is a three-line pointer to `spec/boot/90-user.md`, i.e. in-repo."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "both-default-metaphors-collapse-the-same-way": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:20  ##BOTH-FAIL-AND-BOTH-FAIL-THE-SAME-WAY Both fail, and both fail the same way. @spec/done",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:63  ##THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD In both models the human takes on **one hundred percent of the",
+     "an argument about how the two default metaphors fail on real projects, and the README's summary matches the sections it points at (TWO-PROCESS-MODEL.md §wrong-metaphors / §shared-mistake, lines 15-69). A grep of the host perimeter for an independent record of either metaphor failing returns nothing, so the evidence is the package's own text — self-referential by construction, and the same class W1 found where the corpus argues rather than states."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "PACKAGE-INSTALLS-THE-ALTERNATIVE-AS-STANDING-INSTRUCTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1311  <!-- vibe:static org.vibevm.world/two-process-model — vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md -->",
+     "vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md:1  # Flow: Two-Process Model {#root}",
+     "confirmed: The standing-instruction half is real and mechanically traceable: the snippet is installed at `vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md` and its text is spliced into `spec/boot/STATIC.md` behind a provenance marker at line 1311, which the host reads every session (spec/boot/00-core.md:10). The three reference documents are installed too — `ls vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/` returns TWO-PROCESS-MODEL.md, cognitive-load-split.md, files-as-ipc.md. What is NOT reachable is the path the snippet points at; see the `full-model-p"
+    ],
+    "src": [
+     3
+    ]
+   },
+   "package-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md:1  # Flow: Two-Process Model {#root}",
+     "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:1  # The Two-Process Model {#root}",
+     "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md:1  # The cognitive load split {#root}",
+     "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md:1  # Files as IPC {#root}",
+     "confirmed: Counted the shipped tree: `packages/org.vibevm.world/two-process-model/v0.1.0/` holds README.md, LICENSE.md, vibe.toml, one boot snippet and exactly three documents under spec/flows/two-process-model/. The installed slot mirrors the same four files. Four = three content + one snippet, as claimed."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-MODEL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:15  ## The two wrong metaphors {#wrong-metaphors}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:82  | | Strong at | Weak at |",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:123  ## What a productive cycle looks like {#cycle}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:111  ##ONE-ASSIGNMENT-NEVER-MOVES-THE-HUMAN-OWNS-COHERENCE One assignment never moves: **the human owns coherence** — the",
+     "confirmed: Resolved all four promised contents inside the named file: §wrong-metaphors (line 15), the two-column table (82-85), §cycle (123-138), and the never-moving assignment (111-113). Also confirmed the installed copy carries the same four sections (`grep -n '^## ' vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md`)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-COGNITIVE-LOAD-SPLIT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:13  ### Only the human (the AI can, but badly) {#human-only}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:26  ### Only the AI (the human can, but wastefully) {#ai-only}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:68  ##four-consequences-lead Four consequences, each load-bearing: @impl/done",
+     "confirmed: All four promised parts resolve in the named file. Counted the four consequences the lead announces: §decisions-not-facts (70), §unwritten (84), §window (98), §whole-system (112) — four `###` headings follow line 68, so the count is right. Installed copy carries the same headings."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-FILES-AS-IPC": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:15  ## Documentation is the wrong word {#wrong-word}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:56  ## The three planes {#planes}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:70  ## The four requirements {#requirements}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:60  | ##ROW-PLANE-CONTROL **Control** @impl/done | the boot file (entry instructions), the checkpoint/WAL file, the specs @impl/done | mostly human → AI @impl/done | loaded every session, so every token is a recurring tax: boot ≤ ~500 tokens, checkpoint ≤ ~3000, one module spec ≤ ~5000 — split when over @impl/done |",
+     "confirmed: Three planes at lines 60-62, budgets carried in the fourth column of the Control row, four requirements at lines 82-85. All present in the named file and in the installed copy at `vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md` (planes at :40-46, requirements at :52-…)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1311  <!-- vibe:static org.vibevm.world/two-process-model — vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md -->",
+     "spec/boot/STATIC.md:1321  ## The architecture",
+     "spec/boot/STATIC.md:1354  ## Never",
+     "spec/boot/00-core.md:10  1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6. @impl/done",
+     "confirmed: 'Loaded at session start' is verifiable end to end: the snippet's text sits in the compiled priority lane at STATIC.md:1311-1367, and the host's own boot step 1 (`spec/boot/00-core.md:10`) plus this repository's CLAUDE.md boot block command reading STATIC.md first and in full. Both promised sections are present in the loaded copy — but with their `{#architecture}` and `{#never}` anchors missing; see the boot-file rows for the WORDS-DIFFER finding."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its",
+     "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+     "crates/vibe-cli/src/commands/uninstall.rs:5  //! declaration, and regenerates every node's boot artifacts so the",
+     "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
+     "confirmed: Read the implementation, not the prose: `crates/vibe-cli/src/commands/uninstall.rs` removes the `vibedeps/` slot (line 120/123), drops the lockfile entry (129) and the `[requires]` declaration (164), then calls `regenerate_boot` (144), which rewrites STATIC.md without this package's contribution. Under the PROP-009 loading model this package writes NO file into the consumer tree — `vibe.lock:417  files_written = []` — so 'every file the package wrote' is the empty set plus the slot and the compiled contribution, and both are removed. Separately noted, not part of the claim: the README's uninst"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add any project-specific conventions that should be read at session boot. @impl/done",
+     "crates/vibe-workspace/src/install/bootgen.rs:214  /// user-owned `00-core.md` / `90-user.md` are `Foundation` / `UserOverride`",
+     "crates/vibe-workspace/src/boot.rs:79      /// The file's category. The user-owned `00-core.md` / `90-user.md`",
+     "confirmed: The host carries the same rule in its own user-owned snippet (`spec/boot/90-user.md:3`), and the implementation categorises `00-core.md` / `90-user.md` as `Foundation` / `UserOverride` rather than generated content (`crates/vibe-workspace/src/install/bootgen.rs:214`, `crates/vibe-workspace/src/boot.rs:79`). Both files are present and unmanaged in this repository after 36 installs. Widened to `crates/vibe-workspace/src/materialization.rs` for the destructive guard `uninstall.rs:78` consults — it refuses non-interactive removal of an in-place (non-vendored) slot rather than deleting user content"
+    ],
+    "src": [
+     2
+    ]
+   },
+   "this-flow-is-the-root-of-the-collection": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1526  The book's core — the four IPC requirements and the memory model:",
+     "spec/boot/STATIC.md:1528  - `two-process-model` — the foundation: human and AI as",
+     "vibe.lock:61      \"flow:org.vibevm.world/two-process-model@=0.1.0\",",
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:43  | ##ROW-TWO-PROCESS-MODEL `two-process-model` @0.1.0 @impl/done | Human and AI as coprocessors; the human owns coherence; files are the only shared memory. @impl/done |",
+     "confirmed: Checked the direction of the dependency edge: `redbook` requires `two-process-model` (vibe.lock:61 inside the redbook entry at 33-64), not the reverse — so this flow is upstream of the collection, as 'root' claims. The redbook's own boot snippet lists it first among the members and calls it the foundation (STATIC.md:1524-1529). Note the claim's stronger half — that the OTHERS are its consequences — is a semantic relation no manifest records; the mapping is asserted in the four rows below, which I checked individually."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-THE-FOUR-IPC-REQUIREMENTS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:5  <!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->",
+     "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+     "spec/boot/STATIC.md:174  <!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->",
+     "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->",
+     "confirmed: All five named flows exist as packages under `packages/org.vibevm.world/` and all five are installed in this host — each carries its own `vibe:static` contribution in the compiled boot lane at the line cited. Cross-checked the mapping against `files-as-ipc.md:82-85`, which assigns the same five to the same four requirements. Note two of the five are installed at the pre-DRIFT-039 `boot/` path rather than `spec/boot/` (git-atomic-commits, sync-from-code — visible in the marker text at STATIC.md:363 and :1221), which is the NO-SOURCE shape the harvest records for sync-from-code."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "COMPOSES-THE-MEMORY-ASYMMETRY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:235  <!-- vibe:static org.vibevm.world/decision-records — vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->",
+     "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+     "spec/boot/STATIC.md:1373  This project uses **WAL discipline** for session continuity. Two files",
+     "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+     "confirmed: Both flows are installed and both carry, in the host's own loaded boot lane, exactly the sub-claim attributed to them: decision-records opens with 'records **decisions, not facts**' (STATIC.md:239, the same phrase `cognitive-load-split.md:70-80` uses) and wal defines the surviving checkpoint (STATIC.md:1374-1378). The host's artifacts exist: `spec/WAL.md` (298 lines, `_Updated: 2026-07-28`) and `CONTINUE.md` (386 lines)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "COMPOSES-CAMPAIGN-PLANS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:65  <!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->",
+     "spec/boot/STATIC.md:75  When the owner commissions work that spans **more than one session or",
+     "spec/boot/STATIC.md:76  more than a handful of commits**, propose a campaign plan before",
+     "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
+     "confirmed: The flow is installed (STATIC.md:65) and its trigger is explicitly the multi-session boundary (STATIC.md:74-75). The host is running one right now: `campaigns/packages-2026-09/` holds BATCH-PLAN.md, PHASE-C-BATCH-PLAN.md, PHASE-C-KICKOFF.md, PHASE-C-RESUME.md, PHASE-G-SPEC.md, PHASE-T-*.md, baseline.json, harvest/, run/, tasks/, and `campaigns/progress-2026-08/` is the archived predecessor — the five plan roles the snippet names (PLAN/BASELINE/PREDICTIONS/LOG/REPORT) are visible as separate artifacts. `git log --format=%s -400` shows 122 `docs(campaign)` + 40 `chore(campaign)` + 12 `feat(campa"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "COMPOSES-DISCOVERY-PROMPT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:324  <!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->",
+     "spec/boot/STATIC.md:328  This project ships the **DISCOVERY collaborative-research prompt**, a",
+     "spec/boot/STATIC.md:329  distributable user-level prompt that reshapes an LLM session into",
+     "spec/boot/STATIC.md:330  structured co-inquiry. The artifact lives at",
+     "confirmed: The flow is installed and its own boot text describes exactly 'programming the reasoning posture for research' (STATIC.md:328-330: reshapes an LLM session into structured co-inquiry). The artifact path it names, `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`, does not exist in this host (`ls spec/flows` → No such file or directory) — the same dangling-relative-pointer family the WAL records at spec/WAL.md:25-27; that is a fact about the discovery-prompt package's pointer, not about this mapping."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "distilled-from-chapters-one-and-two": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
+     "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+     "spec/boot/STATIC.md:1512  The practices are distilled from the book *AI-native development*.",
+     "confirmed: Both chapter titles resolve verbatim in the installed book, and the file names match the two documents this package ships (chapter-1-two-process-model, chapter-2-shared-state-and-files ↔ TWO-PROCESS-MODEL.md, files-as-ipc.md). Chapter 2's abstract names the IPC requirements this flow's `files-as-ipc.md` §requirements enumerates. Note the chapters are installed at `vibedeps/flow-redbook/0.2.0/spec/book/ru/` — the sibling `redbook` package, outside this package's own tree."
+    ],
+    "src": [
+     3
+    ]
+   },
+   "collections-spirit-is-the-redbook": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1513  The book itself ships in this package at `spec/book/ru/` (currently",
+     "spec/boot/STATIC.md:1514  in Russian — see `spec/book/README.md` for the edition plan). **The",
+     "spec/boot/STATIC.md:1515  general spirit of the process comes from the book**: two processes",
+     "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
+     "confirmed: The redbook's own installed boot snippet states the same three things this README claims — ships in that package, at `spec/book/ru/`, in Russian, and is the source of the spirit (STATIC.md:1512-1517), using the phrase 'general spirit' verbatim. Listed the directory: `vibedeps/flow-redbook/0.2.0/spec/book/ru/` holds three chapters, all Russian. Note the host is told NOT to read the book at boot (STATIC.md:1519-1522), so 'spirit' rather than 'normative source' is the accurate word."
+    ],
+    "src": [
+     3
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/two-process-model/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "vibedeps/flow-two-process-model/0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: `LICENSE.md` exists both in the shipped package and in the installed slot, and both carry the UPL 1.0 title on line 3 under `Copyright (c) 2026 Oleg Chirukhin` on line 1. Cross-checked against the host's own ledger: `CLAUDE.md` records 'our shipped surface is **fully UPL-1.0**' and names `packages/org.vibevm.*/**` as relicensed by MT-05 firing #2. `grep -n 'EULA' packages/org.vibevm.world/two-process-model/v0.1.0/LICENSE.md` returns nothing."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  },
+  "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md": {
+   "THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1315  This project runs on the **two-process model**: the human and the AI",
+     "spec/boot/STATIC.md:1316  are two coprocessors with radically different architectures working",
+     "spec/boot/STATIC.md:1317  one task. Neither is the boss's subordinate; neither is a tool. The",
+     "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; …",
+     "confirmed: The snippet's opening sentence is in the host's loaded boot lane word-for-word (STATIC.md:1315-1319) and the host independently declares the model its own at `spec/boot/00-core.md:38`, citing the flow by `spec://` address. Both halves of the compare were run: `python campaigns/packages-2026-09/tasks/source23-boot-join.py` reports this contribution INSTALLED SOURCED WORDS-DIFFER at 436 package words vs 433 host words. The three differing words are NOT in this paragraph — the diff hunks are at word offsets 59, 157 and 313, all in headings; see the rows for HUMAN-PROCESS-IS-OPTIMIZED-FOR, CONSEQU"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEITHER-SUBORDINATE-NOR-TOOL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1317  one task. Neither is the boss's subordinate; neither is a tool. The",
+     "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); …",
+     "the sentence is verbatim in the host's loaded lane (STATIC.md:1317) and it scopes to the human/AI pair. Recorded rather than counted against it: the host's delegation directive runs an explicit BOSS/WORKER hierarchy and calls a worker «a tool, never credited» — but that governs AI↔AI routing, a different pair from the one this fact is about, and nothing in the host treats the human as subordinate or the reasoning process as a tool."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-STRENGTH-IS-THE-COMBINATION-AND-WORK-IS-ASSIGNED-WITH-THE-GRAIN": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1318  system's strength is the combination, and each side is assigned only",
+     "spec/boot/STATIC.md:1319  the work it is structurally good at.",
+     "CLAUDE.md:11  **The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** …",
+     "confirmed: Present verbatim in the loaded lane. The host's operational form is the delegation-first directive: `CLAUDE.md:9-31` assigns judgment/architecture/review to the expensive reasoning process and bulk execution to the cheap worker slot, i.e. routes by structural fit rather than by seniority. `CLAUDE.md` names the concrete routing surface (fractality launcher, GLM-5.2 `big` slot, packet schema) in the operating-facts ledger, so the assignment is mechanised, not aspirational."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "HUMAN-PROCESS-IS-OPTIMIZED-FOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1321  ## The architecture",
+     "spec/boot/STATIC.md:1323  - The **human process** is optimized for: persistent memory across",
+     "spec/boot/STATIC.md:1326    slow but deep verification, decisions under uncertainty, taste.",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md:15  ## The architecture {#architecture}",
+     "confirmed: THIS IS ONE OF THE THREE WORDS-DIFFER SITES. The bullet's own text is word-identical between package and host. The word `architecture` that the join reports as 'only in the package' is the anchor suffix on the section heading that governs this bullet: the package ships `## The architecture {#architecture}` (line 15), the installed copy carries `## The architecture` with no suffix (vibedeps/…/05-flow-two-process-model.md:9), and the compiled lane inherits that (STATIC.md:1321). Traced the cause: `git log --oneline -- packages/…/05-flow-two-process-model.md` gives `54499a6c docs(world): three mo"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AI-PROCESS-IS-OPTIMIZED-FOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1327  - The **AI process** is optimized for: throughput (thousands of",
+     "spec/boot/STATIC.md:1330    APIs of hundreds of libraries), routine transformations, formal",
+     "spec/boot/STATIC.md:1331    structure, tirelessness within the session budget.",
+     "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. …",
+     "confirmed: Word-identical in the loaded lane. The host's routing matches the profile at the level of practice: `CLAUDE.md`'s operating-facts ledger records that a delegated GLM worker executed a ~40-edit map-guided migration with '0 stale values' but needed the boss for formatting and two behavioural edge cases — mechanical consistency delivered, judgment not. 'Tirelessness within the session budget' is bounded in the same ledger by the observed `max_turns` failure mode. Same WORDS-DIFFER site as the row above (this bullet sits under `## The architecture`); the bullet text itself does not differ."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-PROFILES-ARE-COMPLEMENTARY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1332  - These profiles are **complementary**: the weaknesses of one are the",
+     "spec/boot/STATIC.md:1333    strengths of the other. Assign work with the grain, never against",
+     "spec/boot/STATIC.md:1334    it.",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:84  | ##ROW-HUMAN **Human** @spec/done | persistent memory (weeks, years); … | throughput (reads and writes slowly); mechanical consistency (typos, forgotten twin files); holding many details at once (7±2); routine repetition; work under fatigue @spec/done |",
+     "confirmed: Word-identical in the loaded lane. Checked the complementarity claim against the table it summarises (`TWO-PROCESS-MODEL.md:84-85`): every entry in the Human 'Weak at' column (throughput, mechanical consistency, holding many details) appears in the AI 'Strong at' column, and vice versa for persistent memory / long-range coherence — the two columns are literal inverses, so the summary is accurate to its source. Third bullet under the same `{#architecture}` heading affected by the WORDS-DIFFER; the bullet text does not differ."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1336  ## Standing consequences",
+     "spec/boot/STATIC.md:1338  1. **The human owns coherence.** Consistency across sessions, global",
+     "spec/boot/STATIC.md:1341     system's worst failure mode.",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md:30  ## Standing consequences {#consequences}",
+     "confirmed: SECOND OF THE THREE WORDS-DIFFER SITES. The rule text is word-identical; the missing word `consequences` is the anchor suffix on the heading that governs all four numbered consequences — package line 30 ships `## Standing consequences {#consequences}`, the installed copy (line 22) and the compiled lane (STATIC.md:1336) carry `## Standing consequences` bare. Same cause and same commit as the `{#architecture}` case (54499a6c, 2026-07-27, after the 2026-07-14 install). Host conformance to the rule itself: `spec/boot/00-core.md:40` gives the human's memory conflict priority over the spec, and `CLA"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+     "spec/boot/STATIC.md:1344     are not documentation — they are the inter-process channel; see",
+     "spec/boot/STATIC.md:1345     [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md).",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+     "confirmed: The rule is word-identical in the loaded lane and the host instantiates it in `CLAUDE.md:146-165` (project facts go in the repo, never in harness auto-memory). One defect in the loaded copy, and it is the pointer, not the rule: the relative link at STATIC.md:1345 resolves from `spec/boot/` to `spec/flows/two-process-model/files-as-ipc.md`, which does not exist — `ls spec/flows` returns 'No such file or directory'. The document itself IS installed, at `vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md`. `spec/WAL.md:25-27` already records this as a corpus-wide f"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1346  3. **Precise tasks beat broad ones.** A task that cites the exact",
+     "spec/boot/STATIC.md:1347     spec section costs twenty tokens to act on; \"finish the module\"",
+     "spec/boot/STATIC.md:22  compare, fix. Twenty tokens, exact hit — no guessing what",
+     "spec/boot/STATIC.md:1336  ## Standing consequences",
+     "the rule is word-identical in the loaded lane and the sibling that delivers it agrees on the same number in the same lane (addressable-specs, STATIC.md:20-23, «Twenty tokens, exact hit»); the host cites exact spec sections constantly. The irony is worth the record and is NOT counted as drift here: the rule prices a correction at twenty tokens BECAUSE the exact section can be cited, and the host's copy of the very snippet carrying it lost three of its four `{#…}` heading anchors to a stale install — that defect is the harvest's WORDS-DIFFER finding, not a falsification of the rule."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-VERIFICATION-IS-ASYMMETRIC": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1349  4. **Verification is asymmetric.** The AI checks formal properties",
+     "spec/boot/STATIC.md:1350     (builds, tests, lint); the human checks semantics (does it do what",
+     "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+     "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+     "confirmed: The rule is word-identical in the loaded lane, and the host's formal half is a literal script: `tools/self-check.sh` runs fmt, test, clippy, `vibe check` and `cargo xtask conform check` in that order (lines 7-12), documented as the shippability gate at `DEV-GUIDE.md:330-334`. The human half is the campaign's own division of labour, visible in this very batch: `campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:8-16` forbids the delegated search from writing verdicts and reserves the confirmed/drift/unverifiable call for a reviewer. Fourth item under the anchor-less `## Standing consequence"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-DECIDE-ARCHITECTURE-WITHOUT-SURFACING-IT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1354  ## Never",
+     "spec/boot/STATIC.md:1356  - Never take an architectural decision that outlives the session",
+     "spec/boot/STATIC.md:1357    without surfacing it to the human — decisions are the human's zone.",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md:48  ## Never {#never}",
+     "confirmed: THIRD OF THE THREE WORDS-DIFFER SITES, and the one whose loss reads worst in isolation: the join reports the word `never` missing from the host, and the site is the heading of the never-do list itself. The rule text is word-identical — the missing token is the `{#never}` anchor suffix the package added at line 48 and the installed copy (line 42) / compiled lane (STATIC.md:1354) do not carry. All four NEVER-* rules are present and unchanged. Host conformance to this particular rule: `spec/boot/00-core.md:24` (Rule 4 — stop and ask for anything whose reversal costs work), `spec/boot/00-core.md:6"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-OPTIMIZE-LOCALLY-AGAINST-GLOBAL-CONSISTENCY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1358  - Never optimize locally (one file, one function) at the cost of",
+     "spec/boot/STATIC.md:1359    global consistency; when the two conflict, stop and ask.",
+     "spec/boot/STATIC.md:181  error. What is forbidden is resolving a contradiction silently.",
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "confirmed: Word-identical in the loaded lane, and the 'stop and ask' half has a delivery mechanism installed in the same lane: the conflict-protocol flow forbids silent resolution (STATIC.md:178-181) and fixes the priority order (STATIC.md:185-196). The host's own uncertainty protocol makes the same move concrete at `spec/boot/00-core.md:56-60`: re-read the spec, re-read the book, look at the analogs, then mark REVIEW and pick the conservative interpretation — 'Never silently invent semantic behavior'. Second item under the anchor-less `## Never`."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-LEAVE-LOAD-BEARING-KNOWLEDGE-IN-THE-CONVERSATION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1360  - Never leave load-bearing knowledge only in the conversation. If it",
+     "spec/boot/STATIC.md:1361    matters tomorrow, it lands in a file today.",
+     "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. …",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). …",
+     "confirmed: Word-identical in the loaded lane, and this is the rule with the densest host conformance of the four. The `ЗАВЕРШИ СЕССИЮ` / `END SESSION` contract (`CLAUDE.md:167-197`) exists solely to move conversation state into files before the window closes, and it is exercised: `git log --format=%s -400` shows 28 `docs(wal)` and 10 `docs(continue)` commits, and the two artifacts are current (`spec/WAL.md:3  _Updated: 2026-07-28 …`). `CLAUDE.md:165` states the tie-break in the same direction as the rule. Third item under the anchor-less `## Never`."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-TREAT-THE-HUMAN-AS-A-GENERATOR-OR-THE-AI-AS-AN-ORACLE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1362  - Never treat the human as a code generator or the AI as an oracle:",
+     "spec/boot/STATIC.md:1363    wrong process, wrong work.",
+     "CLAUDE.md:11  … so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) …",
+     "confirmed: Word-identical in the loaded lane. The 'human as generator' half is what `CLAUDE.md:9-31` is written against — it treats human/Claude reasoning as the scarce resource and forbids spending it on work a worker could do. The 'AI as oracle' half is guarded by the same directive's standing obligation to always review a worker's output, and by this campaign's own instrument set (`campaigns/packages-2026-09/tasks/verify-evidence.py` resolves every delegated citation before a reviewer reads a word). Fourth item under the anchor-less `## Never`."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "full-model-pointer": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1365  Full model: [`TWO-PROCESS-MODEL.md`](../flows/two-process-model/TWO-PROCESS-MODEL.md).",
+     "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:1  # The Two-Process Model {#root}",
+     "spec/WAL.md:24  files), and a second family runs through every package: **69 relative `../flows/…`",
+     "DRIFT: the pointer does not resolve for the reader it is written for. The target exists and is installed (vibedeps/flow-two-process-model/0.1.0/…/TWO-PROCESS-MODEL.md, 190 lines), but STATIC.md:1365 keeps the relative link ../flows/two-process-model/TWO-PROCESS-MODEL.md, which from spec/boot/ means spec/flows/two-process-model/TWO-PROCESS-MODEL.md, and `ls spec/flows` returns 'No such file or directory'. W1's 69-dangling family; the same anchor name was judged drift there."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "responsibility-table-pointer": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1366  Responsibility table: [`cognitive-load-split.md`](../flows/two-process-model/cognitive-load-split.md).",
+     "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md:1  # The cognitive load split {#root}",
+     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
+     "DRIFT: second of the three sibling pointers in this snippet. cognitive-load-split.md exists in the package and the installed slot and does carry the responsibility table (three zones, the shared-work table at 40-45), but the compiled link resolves to spec/flows/two-process-model/cognitive-load-split.md, which the host does not have."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "file-channel-pointer": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1367  The file channel: [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md).",
+     "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md:1  # Files as IPC {#root}",
+     "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md:40  ## The three planes {#planes}",
+     "DRIFT: third of the three. files-as-ipc.md exists and is installed and is about the file channel (§planes, §requirements), and the same document is cited a second time from inside CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY — so the snippet dangles the same path twice. files_written = [] plus a verbatim compile is the mechanism; the package's own tree resolves it fine."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
