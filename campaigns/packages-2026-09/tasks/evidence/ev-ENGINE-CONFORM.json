@@ -1,0 +1,498 @@
+[
+  {
+    "anchor": "status-line",
+    "claim": "The mechanism's status is design-stage, beta.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:11  description = \"The conform engine core (ENGINE-CONFORM v0.1): fact model, content-addressed store, rules, SARIF, ratchet baseline\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:12      \"crates/core-ai-native-conform\","
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'beta|design|status|stage' over core-ai-native/v0.8.0/crates + both named frontends — no status/stage marker carried in code; the crate exists and is a workspace member, which is all the surface can show"
+  },
+  {
+    "anchor": "IMPLEMENTS-T3-OWN-ENGINE-BORROWED-FRONTENDS",
+    "claim": "Own conformance engine here; per-language frontends are borrowed.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:7  # drift). The per-language FRONTENDS and CLI drivers stay in the stacks;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:1  //! `conform-core` — the cross-language conformance engine core",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:1  //! The Rust T-syn frontend (ENGINE-CONFORM §2): `syn` in-process, the"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "rationale-compiler-is-a-page-reimplementation-is-weeks",
+    "claim": "Asking a compiler is one page; rebuilding resolution takes weeks.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:2  //! one-page-AST path. Emits the facts the Phase 4 rules consume —",
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'one-page|weeks|name resolution|reimplement|rebuild' over core-ai-native/v0.8.0/crates + both named frontends — only the 'one-page-AST path' phrasing in the Rust frontend header; the cost comparison itself has no code carrier"
+  },
+  {
+    "anchor": "BALANCE-IS-EXPLICIT-THROUGH-ESCALATION-TIERS",
+    "claim": "Escalation tiers make the cost balance explicit, not ad-hoc.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:157  /// A fact producer for one language (ENGINE-CONFORM §2). T-syn for",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'escalat' → 0 matches; grep -rniE '\\btier\\b|T-lex|T-syn|T-sem' → only the facts.rs:157 prose mention; grep -rniE 'enum Tier|struct Tier|enum Lang' → 0 matches. Paths: core-ai-native/v0.8.0/crates, Cargo.toml, specmap.toml, rust-ai-native-conform-frontend, typescript-ai-native-conform-frontend"
+  },
+  {
+    "anchor": "derives-from-lead",
+    "claim": "Lead-in: this mechanism derives from Charter axioms below.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:2  //! (ENGINE-CONFORM v0.1; PLAYBOOK Phase 4).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:32      /// Why the rule exists — the axiom trace rendered into SARIF."
+    ],
+    "found": "partial",
+    "searched": "grep -rniE '\\bA1\\b|\\bA2\\b|\\bA3\\b|\\bA5\\b|axiom|charter' over core-ai-native/v0.8.0/crates + both named frontends — hits are finding.rs:7 ('A1 chain') and finding.rs:32 ('axiom trace'); no per-axiom derivation record in code"
+  },
+  {
+    "anchor": "DERIVES-A1-EXPLANATION-CHAINS",
+    "claim": "Charter A1: findings carry explanation chains.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:7  /// One finding with its A1 chain.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:32      /// Why the rule exists — the axiom trace rendered into SARIF.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:24                  \"shortDescription\": { \"text\": r.why() }"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DERIVES-A2-CACHED-INCREMENTAL",
+    "claim": "Charter A2: extraction is cached and incremental.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:26  /// Content-addressed fact store under `<repo>/target/conform/facts/`.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:91      /// `(content-hash, producer)` already has them.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:86          \"a 1-file diff re-extracts exactly 1 file\""
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DERIVES-A3-BELOW-THE-ALGORITHMIC-FLOOR",
+    "claim": "Charter A3: no LLM anywhere in the checking path.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:20  walkdir.workspace = true",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:79  pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) -> Vec<Finding> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:80      let mut findings: Vec<Finding> = rules.iter().flat_map(|r| r.check(facts)).collect();"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DERIVES-A5-RULES-SHIP-WITH-CHECKERS",
+    "claim": "Charter A5: rules ship together with their checkers.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:24  pub use structure::{CellHasOracle, CellIsolation, FlagSites};"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RULE-RECORD-DECLARES-ITS-TIER",
+    "claim": "Every rule record declares a `tier` — its minimum analysis depth.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:54      fn id(&self) -> &'static str;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:55      fn why(&self) -> &'static str;"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE '\\btier\\b|T-lex|T-syn|T-sem' over core-ai-native/v0.8.0/crates + Cargo.toml + specmap.toml + both named frontends — only facts.rs:157 prose; grep -rniE 'enum Tier|struct Tier' → 0 matches; the `Rule` trait (finding.rs:53-57) exposes only id/why/check"
+  },
+  {
+    "anchor": "ENGINE-RUNS-THE-CHEAPEST-ADEQUATE-FRONTEND",
+    "claim": "Engine picks cheapest adequate frontend; escalation declared, never improvised.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:95          frontend: &dyn Frontend,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go("
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'escalat|cheapest|adequate|select.*frontend' over core-ai-native/v0.8.0/crates + both named frontends → 0 matches. Located: per-language entry points that each take one caller-supplied `&dyn Frontend`; no tier-based selection or escalation logic"
+  },
+  {
+    "anchor": "ROW-TIER-T-LEX",
+    "claim": "T-lex tier: textual invariants via free ripgrep-class scan.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:22  pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:20  walkdir.workspace = true"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'T-lex|ripgrep|\\brg\\b|forbidden.?token|license header|regex|MIT/Unlicense' over core-ai-native/v0.8.0/crates + Cargo.toml + specmap.toml + both named frontends → 0 matches. The full in-tree rule roster is rules/mod.rs:21-25; every rule consumes parsed facts, none does a textual scan"
+  },
+  {
+    "anchor": "ROW-TIER-T-SYN",
+    "claim": "T-syn tier: items, attributes, imports, spans, hashes via tree-sitter/syn.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:1  //! The Rust T-syn frontend (ENGINE-CONFORM §2): `syn` in-process, the",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'tree-sitter|tree_sitter' over core-ai-native/v0.8.0/crates + Cargo.toml + both named frontends → 0 matches. For 'spans': Fact variants carry `line: u32` only (facts.rs:27-40); for 'hashes': hashing is whole-file (store.rs:191 `content_hash`), not per item"
+  },
+  {
+    "anchor": "ROW-TIER-T-SEM",
+    "claim": "T-sem tier: types, name resolution, expansion via compiler frontends.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:157  /// A fact producer for one language (ENGINE-CONFORM §2). T-syn for",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:158  /// Phase 4; the trait carries id+version so the store key changes when"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'T-sem|name resolution|macro expansion|import graph|type' for a tier declaration over core-ai-native/v0.8.0/crates + both named frontends → no Tier type, no tier field; the ts-tsc frontend does reach a real compiler API but declares no tier. 'cached hard' — the store keys by frontend id+version (store.rs:83-87)"
+  },
+  {
+    "anchor": "rule-examples-lead",
+    "claim": "Lead-in: example rules and the tiers they map to follow.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:23  pub use go::{GoCellIsolation, GoUnsafeInDomain};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:25  pub use typescript::{TsCellIsolation, TsUnsafeInDomain};"
+    ],
+    "found": "partial",
+    "searched": "grep 'pub use' in crates/core-ai-native-conform/src/rules/mod.rs — the complete in-tree rule roster (lines 21-25); no rule-to-tier mapping table or example registry exists in the surface"
+  },
+  {
+    "anchor": "EXAMPLE-R-021-FORBIDDEN-IDIOM",
+    "claim": "R-021 forbidden-idiom scan maps to T-lex or T-syn.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:24  pub use structure::{CellHasOracle, CellIsolation, FlagSites};"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'R-021|forbidden.?idiom|forbidden' over core-ai-native/v0.8.0/crates + Cargo.toml + specmap.toml + both named frontends → 0 matches. The full rule roster is rules/mod.rs:21-25 and contains no R-021"
+  },
+  {
+    "anchor": "EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION",
+    "claim": "R-002 import-graph isolation: T-syn for Rust, T-sem for C++.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:77  /// R-002 — cell isolation: a cell module imports seams and core",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:91          \"R-002\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:106                  let Fact::Import { to_path, line, .. } = f else {"
+    ],
+    "found": "partial",
+    "searched": "Rust half located (structure.rs:87-146 `CellIsolation`, plus TS/Go projections at typescript.rs:129 and go.rs:194). C++ half: grep -rniE 'cpp|c\\+\\+|libclang|clang' over core-ai-native/v0.8.0/crates + both named frontends → 0 matches; no tier annotation on the rule"
+  },
+  {
+    "anchor": "EXAMPLE-R-020-NAMING-VS-MANIFEST",
+    "claim": "R-020 naming-vs-manifest maps to T-syn plus specmap index.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:22  pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:14  specmark.workspace = true",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'R-020|naming-vs-manifest|manifest' over crates/core-ai-native-conform + both named frontends → 0 matches. grep -rniE 'specmap::|Index' in the conform crate → 0 matches; conform's dependency list (Cargo.toml:13-20) carries specmark but not core-ai-native-specmap, and `Rule::check` takes no specmap index parameter"
+  },
+  {
+    "anchor": "EXAMPLE-TYPE-FLOW-RULES",
+    "claim": "Type-flow rules are future work, requiring T-sem.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:25  pub use typescript::{TsCellIsolation, TsUnsafeInDomain};"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'type.?flow|typeflow|taint|dataflow|data.?flow' over core-ai-native/v0.8.0/crates + both named frontends → 0 matches. The full rule roster is rules/mod.rs:21-25 (marked future in the spec, so absence is what the surface shows)"
+  },
+  {
+    "anchor": "ROW-FRONTEND-RUST",
+    "claim": "Rust frontend: syn for T-syn, rust-analyzer/rustc_driver for T-sem.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:11  description = \"The conform engine's Rust T-syn frontend (ENGINE-CONFORM §2): syn-precision facts — items, attributes, imports, ctor sites, unsafe\"",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:61          let Ok(ast) = syn::parse_file(text) else {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true"
+    ],
+    "found": "partial",
+    "searched": "T-syn column located (syn in-process). T-sem column: grep -rniE 'rust-analyzer|rustc_driver|nightly|ra_ap|hir' over core-ai-native/v0.8.0/crates + both named frontends → 0 matches. License posture: core-ai-native/v0.8.0/Cargo.toml:34 '# Third-party (all permissive licenses — PROP-000 §3)'"
+  },
+  {
+    "anchor": "ROW-FRONTEND-CPP",
+    "claim": "C++ frontend: tree-sitter-cpp for T-syn, libclang for T-sem.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:25  pub enum Fact {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = ["
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'tree-sitter|tree_sitter|libclang|clang-sys|clang_sys|cpp|c\\+\\+' over core-ai-native/v0.8.0/crates + Cargo.toml + specmap.toml + both named frontends → 0 matches. The fact model's language-specific variants are Rust, TsUnsafe, GoUnsafe only (facts.rs:103-134); the Rust frontend's own sort comment names the complete frontend set as rust-syn / ts-tsc / go"
+  },
+  {
+    "anchor": "ROW-FRONTEND-TS-JS",
+    "claim": "TS/JS frontend: tree-sitter/SWC for T-syn, tsc API via Node sidecar.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`",
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:12  //! Process economics: `warm()` (the store's batch hook) runs ONE node",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set"
+    ],
+    "found": "partial",
+    "searched": "T-sem column located (TypeScript Compiler API through a node child process). T-syn column: grep -rniE 'tree-sitter|tree_sitter|\\bswc\\b' over core-ai-native/v0.8.0/crates + both named frontends → 0 matches"
+  },
+  {
+    "anchor": "ROW-FRONTEND-GO",
+    "claim": "Go frontend: go/parser+go/ast via `go run` sidecar; gopls for T-sem.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:120      /// produced by the `go-extract` frontend: `kind` is one of",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:2  //! `go-extract` frontend's facts: the ban census with its",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:71      /// `go-ai-native-conform` (the `go-extract` frontend). Absent for"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'go/parser|go/ast|go run|gopls|go vet|stdlib-only' over core-ai-native/v0.8.0/crates + both named frontends → 0 matches. The engine side names and consumes a `go-extract` frontend (facts.rs:119-134 GoUnsafe, store.rs:118 extract_go, rules/go.rs); the go-extract frontend crate itself lives outside the permitted evidence surface"
+  },
+  {
+    "anchor": "ROW-FRONTEND-PYTHON",
+    "claim": "Python frontend: RustPython parser in-process, CPython ast via sidecar.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go("
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'rustpython|python|symtable|cpython|\\.py\\b' over core-ai-native/v0.8.0/crates + Cargo.toml + specmap.toml + both named frontends → 0 matches. The store's language entry points are extract_workspace (Rust), extract_typescript, extract_go only (store.rs:92, 105, 118)"
+  },
+  {
+    "anchor": "SIDECAR-PROTOCOL-IS-NDJSON-OVER-STDIO",
+    "claim": "Sidecars speak versioned newline-delimited JSON over stdio, emitting only Facts.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:95          // Bump with the extractor protocol / fact schema: retires every",
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:52          let records = match typescript_ai_native_extract_bridge::extract_tree(",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'ndjson|newline-delimited|jsonl|stdio' over core-ai-native/v0.8.0/crates + both named frontends — the only stdio hits are in the unrelated core-ai-native-mcp crate (server.rs:35 `pub struct StdioTransport;`, wire.rs:2). Versioning located (frontend `version()` bumped with the extractor protocol); the wire format itself lives in typescript-ai-native-extract-bridge, outside the permitted surface"
+  },
+  {
+    "anchor": "FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY",
+    "claim": "Frontend crash marks T-sem rules `skipped (frontend unavailable)`, visible in report.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:47      /// lowered facts. Failures surface on stderr here and again as an",
+      "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:59                  eprintln!(\"conform ts-tsc: extraction failed — {error}\");",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:4  //! sites, and `unsafe` uses. B5: an unparseable file yields zero facts"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'unavailable|degrade|skipped \\(' over core-ai-native/v0.8.0/crates + both named frontends → no 'frontend unavailable' or per-rule skip status. `Finding` (finding.rs:27-36) has no status field and the SARIF renderer emits only level \"error\" (sarif.rs:33); visibility located is stderr + a driver-side probe (ts lib.rs:78-87), not a report entry"
+  },
+  {
+    "anchor": "FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS",
+    "claim": "clippy/eslint/ruff/clang-tidy output is ingested as facts via SARIF.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs:6  //! for routing these through conform instead of ESLint).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:180      /// The step name (`prettier` / `tsc` / `tests` / `eslint` /",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:18  pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'clippy|eslint|ruff|clang-tidy|linter' over core-ai-native/v0.8.0/crates + both named frontends — hits are an `#[allow(clippy::…)]` in the specmap crate, `eslint` as a floor-step name (config.rs:180), and prose saying rules route through conform INSTEAD of ESLint. grep -rni 'sarif' → all hits are the renderer (sarif.rs); no SARIF parse/deserialize/ingest path, and no Fact variant sourced from a foreign tool (facts.rs:25-135)"
+  },
+  {
+    "anchor": "LINTERS-ARE-CITED-NOT-REIMPLEMENTED",
+    "claim": "Rules cite linters via `check: {tool, id, status}`; conform orchestrates plus own checks.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:87  pub struct CellIsolation;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs:5  //! cannot drift between language projections (the Ф6 brief's argument",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:35  #[serde(default, deny_unknown_fields)]"
+    ],
+    "found": "partial",
+    "searched": "Cell isolation located (structure.rs:87 R-002, typescript.rs:129 TsCellIsolation, go.rs:194 GoCellIsolation). grep -rniE 'tool:|status: enforced|check = \\{|manifest|specmap coverage' over crates/core-ai-native-conform + both named frontends → 0 matches; `Config` (config.rs:34-73, deny_unknown_fields) has no tool-citation field, and manifest-vs-name / specmap-coverage checks are absent from the rule roster (rules/mod.rs:21-25)"
+  },
+  {
+    "anchor": "fact-store-is-the-ledgers-facts-class-lead",
+    "claim": "Facts are language-neutral and normalized — the ledger's facts class.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:4  //! - [`Fact`] — the language-neutral normalized fact model (§3); the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:5  //!   ledger's \"facts class\" instantiated.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:5  /// One normalized fact (ENGINE-CONFORM §3). Variants carry exactly"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "KEY-IS-FILE-HASH-PLUS-FRONTEND-VERSION",
+    "claim": "Store key is (file content-hash, frontend id+version); one-file diff re-extracts one.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:85              .join(format!(\"{}-{}\", frontend.id(), frontend.version()))",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:86              .join(format!(\"{content_hash}.json\"))",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:86          \"a 1-file diff re-extracts exactly 1 file\""
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "STORE-IS-CONTENT-ADDRESSED-NEVER-COMMITTED",
+    "claim": "Store is content-addressed, local plus CI-cache, never committed.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:26  /// Content-addressed fact store under `<repo>/target/conform/facts/`.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:54              root: repo.join(\"target\").join(\"conform\").join(\"facts\"),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:9  //!   `target/conform/` — derived data with a deterministic producer,"
+    ],
+    "found": "partial",
+    "searched": "Content-addressed + never-committed located (store.rs:26/54, lib.rs:9-10). CI-cache half: grep -rniE 'CI.?cache|actions/cache|cache key|restore-keys' over core-ai-native/v0.8.0/crates + both named frontends → 0 matches; `ls -a` of core-ai-native/v0.8.0 shows no .gitignore in the package root"
+  },
+  {
+    "anchor": "RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN",
+    "claim": "v0.1 rules implement one Rust trait, compiled into the engine.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};"
+    ],
+    "found": "partial",
+    "searched": "One-trait, compiled-in shape located (finding.rs:53-57 plus the mod.rs:15-25 in-tree rule modules). The spec's stated signature `fn check(&self, facts: &FactStore, specmap: &Index) -> Vec<Finding>`: grep -rniE 'FactStore|specmap::|&Index' over crates/core-ai-native-conform + both named frontends → 0 matches; the in-tree signature is quoted above"
+  },
+  {
+    "anchor": "QUERY-DSL-IS-DELIBERATELY-DEFERRED",
+    "claim": "A declarative datalog-flavored query DSL is deliberately deferred.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:11  //! - [`Rule`] — rules as compiled queries over facts (§4); the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:12  //!   declarative DSL is deliberately deferred (Open Question 2).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:38  /// A rule is a compiled query over facts (ENGINE-CONFORM §4)."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FINDINGS-CARRY-THE-A1-CHAIN",
+    "claim": "Findings carry rule, why, span, facts, deviation status; deviates downgrades.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:27  pub struct Finding {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:56      /// a matching deviates record downgrades the finding). Fn-grain",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:93                      if *in_deviation {"
+    ],
+    "found": "partial",
+    "searched": "rule id / why / span located (finding.rs:28-35: rule, file, line, message, why, fingerprint). grep -rniE 'deviation.?acknowledged|involved.?facts|status' over crates/core-ai-native-conform → 0 matches for a downgraded status; a deviation causes `continue` (budget.rs:93-95, 252-254, 368-370), i.e. the finding is not emitted at all, and `Finding` carries no list of involved facts"
+  },
+  {
+    "anchor": "OUTPUT-IS-SARIF-PLUS-THE-RATCHET-BASELINE",
+    "claim": "Output is SARIF plus conform-baseline.json; new findings fail, baseline only shrinks.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:18  pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:11  /// fingerprint. The file only shrinks.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:50  /// fail the gate; stale entries are prune candidates (the file may"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "SAME-INPUTS-BYTE-IDENTICAL-SARIF",
+    "claim": "Identical inputs yield byte-identical SARIF: stable ordering, no wall-clock.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:7  /// Byte-stable minimal SARIF 2.1.0: stable ordering (findings are",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:8  /// pre-sorted), no wall-clock, no absolute paths.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:124      assert_eq!(sarif_a, sarif_b, \"same inputs — byte-identical SARIF\");"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DETERMINISM-TESTED-BY-RUN-TWICE-DIFF",
+    "claim": "Determinism is tested the project's way: run twice, diff.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:82      fn sarif_is_byte_stable() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:99          assert_eq!(a, b);",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:123      assert_eq!(findings_a, findings_b);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "GATE-EXIT-CODE-IS-THE-ACCEPTANCE-CRITERION",
+    "claim": "`conform check --baseline --scope` exit code is the acceptance criterion.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:20  //! whole workspace; **findings** are reported only inside the gate's",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:79  pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) -> Vec<Finding> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:38  pub fn load(path: &Path) -> Result<Baseline> {"
+    ],
+    "found": "partial",
+    "searched": "scope + baseline library halves located (lib.rs:19-21, finding.rs:79-86, baseline.rs:38-76). grep -rniE 'exit.?code|std::process::exit|\\[\\[bin\\]\\]|fn main|clap|std::env::args|--baseline|--scope' over core-ai-native/v0.8.0/crates + Cargo.toml + both named frontends → only the lib.rs:21 doc mention of `--scope`; core-ai-native-conform/Cargo.toml declares no [[bin]] and the crate has no main.rs (ls of src/). The `conform check` CLI driver lives in the per-language stacks, outside the permitted surface"
+  },
+  {
+    "anchor": "OPEN-RUST-T-SEM-BACKEND",
+    "claim": "Open: rust-analyzer vs rustc_driver for Rust T-sem, decided later.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:1  //! The Rust T-syn frontend (ENGINE-CONFORM §2): `syn` in-process, the",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'rust-analyzer|rustc_driver|nightly|ra_ap|hir|T-sem' over core-ai-native/v0.8.0/crates + Cargo.toml + specmap.toml + both named frontends → 0 matches. The only Rust backend present is `syn` (T-syn); the open question has no code carrier either way"
+  },
+  {
+    "anchor": "OPEN-QUERY-DSL-SHAPE",
+    "claim": "Open: query-DSL shape and whether rules become loadable data.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:12  //!   declarative DSL is deliberately deferred (Open Question 2).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:25  pub use typescript::{TsCellIsolation, TsUnsafeInDomain};"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "OPEN-FACT-SCHEMA-VERSIONING",
+    "claim": "Open: schema carries `v`, store segregates by version, mixed reads forbidden.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:7  /// a field or variant bumps the frontend version, which retires old",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:8  /// cache slots wholesale — facts never deserialize across schemas).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:85              .join(format!(\"{}-{}\", frontend.id(), frontend.version()))"
+    ],
+    "found": "partial",
+    "searched": "Segregation-by-version and no-mixed-reads located (store.rs:83-87 slot path per frontend id+version; facts.rs:6-8). A `v` field on the schema: grep -rniE 'schema' in crates/core-ai-native-conform → hits are only `Baseline::schema` (baseline.rs:24) and the SARIF `$schema` URL (sarif.rs:46); the `Fact` enum (facts.rs:23-25) carries `#[serde(tag = \"fact\")]` and no version field"
+  },
+  {
+    "anchor": "OPEN-PERFORMANCE-ENVELOPE",
+    "claim": "Open: cold-scan and warm-incremental budget targets, set from Phase 4.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:19  pub struct ExtractionLog {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:23      pub cached: usize,"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'Instant|elapsed|Duration|benchmark|envelope|cold scan|warm incremental|perf' over core-ai-native/v0.8.0/crates + Cargo.toml + specmap.toml + both named frontends → 0 timing matches (the only 'budget' in the surface is `max_file_lines`, config.rs:59-60). `ExtractionLog` counts files extracted/cached, never time"
+  },
+  {
+    "anchor": "UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED",
+    "claim": "Any frontend or tier unexercised by Phase 4 is removed, not carried.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = ["
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'unexercised|aspiration|remove|prune' for an enforcing check over core-ai-native/v0.8.0/crates + both named frontends → 0 matches; no test, gate, or lint enforces the removal rule. The exercised inventory located in the surface: frontends rust-syn / ts-tsc / go-extract (rust lib.rs:82, facts.rs:120, store.rs:92/105/118); tiers: none declared (see rows RULE-RECORD-DECLARES-ITS-TIER, ROW-TIER-T-LEX, ROW-TIER-T-SEM)"
+  }
+]

@@ -1,0 +1,1753 @@
+[
+  {
+    "anchor": "status-line",
+    "claim": "Design proposal v0.1, not implementation-locked.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/Cargo.toml:11  description = \"The specmap engine (PROP-014 §2.5): markdown unit parser, source scanner, canonical index, ...\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:1  //! `specmap-core` — the traceability engine (PROP-014): the library behind"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'design proposal|implementation-locked' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "drafted-for-review-open-until-ratified",
+    "claim": "Drafted for review; every decision open to challenge until ratified.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:24  //! PROP-014 itself is unit-ified after ratification."
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'ratif' over v0.8.0/crates → 3 hits (ratchet.rs:24 + two 'absent = ratified' doc lines in generated/specmap/mod.rs); nothing asserting review-openness"
+  },
+  {
+    "anchor": "companions-lead",
+    "claim": "Lead-in: companion vibevm-hosted documents cited as context, not shipped.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'companion|vibevm-hosted' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "COMPANION-PROP-000",
+    "claim": "PROP-000 (foundation, license policy §3) is a companion document.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:75  /// let uri = parse_spec_uri(\"spec://vibevm/common/PROP-000#commits~r2\").unwrap();",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:300  /// `spec://vibevm/common/PROP-000#commits`): relative to `spec/`, the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:34  # Third-party (all permissive licenses — PROP-000 §3). Feature sets match"
+    ],
+    "found": "partial",
+    "searched": "PROP-000 appears only as a URI example and one licence-policy comment; no companion-document relation in code"
+  },
+  {
+    "anchor": "COMPANION-PROP-003",
+    "claim": "PROP-003 (the LLM-boundary philosophy) is a companion document.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:299  const GRAMMAR: &str = \"spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar\";",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:345  const URI: &str = \"spec://project/modules/vibe-resolver/PROP-003#req-conditional-fixpoint\";"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'PROP-003' over v0.8.0/crates → 15 hits, all test-fixture URIs; no LLM-boundary reference"
+  },
+  {
+    "anchor": "COMPANION-PROP-009",
+    "claim": "PROP-009 (boot/loading model) is a companion document.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'PROP-009' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "COMPANION-PROP-013",
+    "claim": "PROP-013 (category C drift) is a companion document.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'PROP-013' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "COMPANION-RED-BOOK",
+    "claim": "Red Book ch.2 (files as IPC) and ch.3 (Sync-from-Code) are companions.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'Red Book' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "HOME-SHIPS-WITH-THE-DISCIPLINE",
+    "claim": "Mechanism ships with the Discipline; Rust impl is specmap-core plus a rust-ai-native-specmap binary.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:1  //! `specmap-core` — the traceability engine (PROP-014): the library behind",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/Cargo.toml:14  name = \"rust-ai-native-specmap\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:13  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index\");"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "TAG-SYNTAX-SHOWN-IS-THE-RUST-PROJECTION",
+    "claim": "The shown #[spec]/scope! syntax is Rust's projection; other stacks ship their own.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:5  //! (`typescript-ai-native-specmap-scan` reads the §9 JSDoc markers through the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:23  pub trait CodeScanner {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:60  /// TypeScript stack injects its JSDoc scanner here, and a mixed tree"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "vibevm-scale-and-its-governing-documents",
+    "claim": "vibevm is ~52K lines of Rust, ~20 PROPs, a 99KB frozen spec.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE '52K|99KB|owner-frozen' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "linkage-exists-today-only-in-three-weak-forms",
+    "claim": "Spec-code linkage exists only as doc prose, commit-body URIs, and memory.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'commit bod|Rule-2|cross-reference' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "drift-is-detected-by-periodic-human-sweep",
+    "claim": "AUDIT category C drift is detected by periodic human sweep.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'AUDIT category|category C|human sweep' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "the-two-questions-become-unanswerable",
+    "claim": "Both trace directions become unanswerable at acceptable cost as code grows.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:91  fn explain_unit(map: &Specmap, uri: &str) -> Result<String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:123  fn explain_symbol(map: &Specmap, target: &str) -> Result<String> {"
+    ],
+    "found": "partial",
+    "searched": "the claim is a problem statement; located only the two query functions that answer the two questions"
+  },
+  {
+    "anchor": "desired-end-state-is-bidirectional-reach",
+    "claim": "End state: reach code from a spec unit and a spec unit from code.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:200  if target.starts_with(\"spec://\") {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:199  pub fn explain_text(map: &Specmap, target: &str) -> Result<String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:409  fn unit_view_lists_incoming_edges() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "many-to-many-is-the-real-shape",
+    "claim": "One spec unit touches many code items; one code item serves many units.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:87  pub struct Edge {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:183  .filter(|s| s.uri == e.uri && s.fromSymbol != item.symbol)",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/tests/usage.rs:33  enum MultiTagged {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "SYSTEM-REPRESENTS-MANY-TO-MANY-AND-LINTS-ITS-GROWTH",
+    "claim": "Represent many-to-many while linting against its growth.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:86  #[derive(Serialize, Deserialize)]  pub struct Edge {"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'multiplicity|max_edges|edges > ?3|more than 3' over v0.8.0/crates → 0 hits; no edges-per-item lint exists"
+  },
+  {
+    "anchor": "source-maps-work-because-a-compiler-emits-them",
+    "claim": "Source maps work because a compiler emits them free and deterministically.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'source map|DWARF' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "between-spec-and-realisation-there-is-no-compiler",
+    "claim": "No compiler stands between spec and Rust — a human or LLM session does.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:3  //! never expanded (PROP-014 §2.5: \"no macro expansion needed\").",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:60  provenance: EdgeProvenance::Authored,"
+    ],
+    "found": "partial",
+    "searched": "no generator/compiler emitting edges exists; only the authored-tag path"
+  },
+  {
+    "anchor": "consequences-lead",
+    "claim": "Lead-in: three consequences follow.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "lead-in sentence; no code counterpart searched for beyond the three sub-facts below"
+  },
+  {
+    "anchor": "CONSEQUENCE-MAPPING-IS-CARRIED-NOT-GENERATED",
+    "claim": "Mapping is carried and verified, never generated; every edge is authored.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:60  provenance: EdgeProvenance::Authored,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:55  pub enum EdgeProvenance {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "CONSEQUENCE-AUTHORED-METADATA-ROTS-UNLESS-THREE-FORCES-HOLD",
+    "claim": "Authored metadata rots unless three named forces hold simultaneously.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:6  //! Beyond raw nodes and edges the index carries the **suspects table**"
+    ],
+    "found": "partial",
+    "searched": "umbrella claim; the three forces are evidenced individually in the next three rows"
+  },
+  {
+    "anchor": "FORCE-EDGES-TRAVEL-WITH-THE-ARTEFACTS",
+    "claim": "Code links live on items, spec links on stable anchors; sidecar maps rejected.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:78  pub fn spec(attr: TokenStream, item: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:126  fn tag_item(&mut self, attrs: &[syn::Attribute], symbol: &str, item_kind: &str, line: u32) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:23  fn parse_heading(line: &str) -> Option<(usize, String, String)> {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FORCE-INVARIANTS-ARE-MACHINE-CHECKED",
+    "claim": "Dangling refs, orphans and staleness are machine-checked; stale pins go suspect.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:96  code: \"dangling-edge\".to_string(),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:122  suspects.push(Suspect {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:53  pub fn orphans(root: &Path, map: &Specmap, cfg: &Config) -> Vec<Orphan> {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FORCE-MAP-IS-LOAD-BEARING-IN-DAILY-WORK",
+    "claim": "The map must feed agent context paging, explain, and error provenance.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:199  pub fn explain_text(map: &Specmap, target: &str) -> Result<String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:131  pub fn prose_explain(root: &Path, map: &Specmap, target: &str) -> Result<ProseRender> {"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'paging' over v0.8.0/crates → 2 hits, both conform cell rules; grep 'error provenance' → 0 hits; no index-driven error rendering"
+  },
+  {
+    "anchor": "CONSEQUENCE-M1-5-CONVERGENCE",
+    "claim": "Once `vibe build` generates code the generator emits edges; tags stay as override.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:60  Generated,"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'vibe build|M1\\.5' over v0.8.0/crates → 0 hits; nothing constructs EdgeProvenance::Generated"
+  },
+  {
+    "anchor": "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS",
+    "claim": "Agents at runtime can ask why a command behaves so and get a subgraph.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:209  pub fn explain_json(map: &Specmap, target: &str) -> Result<serde_json::Value> {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:163  /// Render the traceability subgraph around one target (a spec:// URI"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'specmap_query|specmap_explain|specmap_source' over v0.8.0/crates → 0 hits; no runtime/MCP exposure of the metamodel"
+  },
+  {
+    "anchor": "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY",
+    "claim": "The metamodel index ships with the package; fragments fetched by content hash.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:54  pub fn content_hash(text: &str) -> String {"
+    ],
+    "found": "partial",
+    "searched": "find v0.8.0 -name specmap.json (excluding target/) → no file; no fragment-fetch code in crates"
+  },
+  {
+    "anchor": "CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE",
+    "claim": "Closed-source projects ship a redacted metamodel profile.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'profile' over v0.8.0/crates → 0 hits; 'redact' → 1 hit (a doctest fn name `redaction_is_total` in specmark/src/lib.rs:91)"
+  },
+  {
+    "anchor": "DECISIONS-SECTION-IS-THE-BINDING-MODEL",
+    "claim": "Section 2 in its entirety is the design brief's binding-model deliverable.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "document-meta statement; grep -rniE 'binding model|deliverable' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "kind-line-addressing-spec",
+    "claim": "The §2.1 unit's kind line is `req r1`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:89  let revision: u32 = rev_word"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DECISION-EXTEND-THE-SPEC-URI-SCHEME",
+    "claim": "spec://<package>/<doc-path>#<anchor>[~rN] is the canonical spec-side address.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:177  pub fn parse_spec_uri(raw: &str) -> Result<SpecUri, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:203  .ok_or_else(|| format!(\"revision pin must be `~r<N>`, got `~{pin}` in `{raw}`\"))?;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:96  format!(\"spec://{}/{}#{}\", self.package, self.doc_path, self.anchor)"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "URI-PACKAGE-COMPONENT",
+    "claim": "`<package>` is the repo name; group-qualified cross-package tracing deferred.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:190  let (package, doc_path) = path",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:47  pub namespace: String,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/specmap.toml:14  namespace = \"core-ai-native\""
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "HEADING-ANCHOR-GRAMMAR-AND-IMMUTABILITY",
+    "claim": "Anchor grammar [A-Za-z][A-Za-z0-9_-]*, one law with fact ids; anchors immutable, retirement tombstoned.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:125  pub fn is_valid_anchor(anchor: &str) -> bool {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:150  pub fn is_valid_fact_id(id: &str) -> bool {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib/tests.rs:112  fn the_two_validators_agree_on_every_input() {"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'tombstone|RETIRED|immutab' over v0.8.0/crates → 0 hits; nothing enforces anchor immutability or non-reuse"
+  },
+  {
+    "anchor": "ANCHORS-ARE-CASE-SENSITIVE-AT-EVERY-LEVEL",
+    "claim": "Anchors are case-sensitive when written, deduped and resolved; no case folding.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:119  fn a_heading_anchor_and_a_fact_id_differing_only_in_case_are_two_names() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:275  if seen_anchors.contains(&id) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:123  // byte-exact and nothing folds case. Widening the anchor grammar did not"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "SPEC-UNIT-SPAN-AND-FACT-UNIT-GRAIN",
+    "claim": "A spec unit spans anchored heading to next same-or-higher heading; facts are finer.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:404  let mut end = i + 1;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:230  fn segment_block_facts(",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:19  fn anchored_heading_becomes_a_unit_with_span_hash() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FACT-ANCHORS-MINT-THE-FINEST-GRAIN",
+    "claim": "`##<ID>` first in a paragraph or list item mints a fact unit in one address space.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:185  fn fact_anchor_at(line: &str, start: usize) -> Option<(String, String)> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:281  units.push(SpecUnit {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:238  fn paragraph_fact_anchor_becomes_an_untyped_unit() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FACT-UNITS-CARRY-NO-KIND-LINE",
+    "claim": "Fact units carry no kind line; edges cite them exactly as heading units.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:289  kind: None,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:251  assert!(f.kind.is_none());",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:172  let f = parse_spec_uri(\"spec://vibevm/modules/vibe-progress/PROP-043#FACT-ID-GRAMMAR\").unwrap();"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "MERGE-BEHAVIOUR-IS-OWNED-BY-THE-HOST-CONTRACT",
+    "claim": "Fact merge behaviour is owned by the host spec-compiler contract (PROP-035 §7.3).",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'PROP-035' over v0.8.0/crates → 0 hits; grep 'fact-inheritance|per-fact override|contract↔source' → 0 hits"
+  },
+  {
+    "anchor": "kind-line-spec-units",
+    "claim": "The §2.2 unit's kind line is `req r1`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DECISION-FOUR-UNIT-KINDS",
+    "claim": "Four unit kinds, each with different default edge semantics.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:77  let kind = match kind_word {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:122  pub enum SpecUnitKind {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "ROW-KIND-PROP",
+    "claim": "Kind `prop` carries a decision plus rationale; edges `decides`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:78  \"prop\" => SpecUnitKind::Prop,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:130  Prop,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:40  pub enum Verb {"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'decides' over v0.8.0/crates → 0 hits; the Verb enum (grammar/src/lib.rs:40-46) holds no `decides` verb"
+  },
+  {
+    "anchor": "ROW-KIND-REQ",
+    "claim": "Kind `req` carries a normative contract; edges `implements`, `verifies`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:133  Req,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:61  \"implements\" => Verb::Implements,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "ROW-KIND-DESIGN",
+    "claim": "Kind `design` carries solution shape, non-binding; edge `informs`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:80  \"design\" => SpecUnitKind::Design,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:124  Design,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:65  \"informs\" => Verb::Informs,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "ROW-KIND-GUIDE",
+    "claim": "Kind `guide` carries usage documentation; edge `documents`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:81  \"guide\" => SpecUnitKind::Guide,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:127  Guide,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:63  \"documents\" => Verb::Documents,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "unit-declares-normativity-with-a-kind-line",
+    "claim": "A unit declares normativity with a one-line marker directly under its heading.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:422  if let Some((off, first)) = lines[i + 1..end]",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:48  fn kind_line_parses_kind_revision_status() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:67  fn ordinary_inline_code_is_not_a_kind_line() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "revisions-are-two-tier-lead",
+    "claim": "Lead-in: revisions are two-tier.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:89  let revision: u32 = rev_word",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:198  pub fn classify_drift(old: &Specmap, new: &Specmap) -> Vec<String> {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "REVISION-R-IS-AN-AUTHOR-ASSERTED-SEMANTIC-BUMP",
+    "claim": "`rN` is an author-asserted semantic revision; editorial edits do not bump.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:195  /// Author-asserted semantic revision `rN`.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:89  let revision: u32 = rev_word",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:236  \"unbumped-hash: `{uri}` content changed while the revision stayed \\"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "REVISION-CONTENT-HASH-AUDITS-THE-BUMP",
+    "claim": "Content hash audits the bump: hash moved without `r` warns editorial-or-forgot-to-bump.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:237  at r{rev} — editorial, or forgot to bump? (bump `r`, or mark the \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:54  pub fn content_hash(text: &str) -> String {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:589  fn drift_classification_reports_bumps_and_unbumped_hashes() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "asymmetric-invalidation-rule-lead",
+    "claim": "Lead-in: the asymmetric invalidation rule is load-bearing.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:7  //! (PROP-014 §2.2, asymmetric invalidation): every edge pinned to an",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:82  // Asymmetric-invalidation analysis (PROP-014 §2.2). On a duplicate"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "INVALIDATION-SPEC-BUMP-MAKES-EDGES-SUSPECT",
+    "claim": "A spec `r` bump makes edges pinned to the old r suspect until re-affirmed.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:121  if p < rev {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:208  /// did not. Cleared by re-affirming — updating the pin in code after review.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:252  \"  now SUSPECT: `{}` (pinned r{}) at {}:{} — re-affirm after review\","
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "INVALIDATION-CODE-CHANGE-KEEPS-EDGES-VALID",
+    "claim": "Code changes keep edges valid; `deviates` edges flip to review on either side.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:93  for e in &edges {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:34  pub struct CodeItem {"
+    ],
+    "found": "partial",
+    "searched": "suspect computation reads only unit revision vs pinned_r (index.rs:92-145); CodeItem carries no content_hash; grep for a `deviates`-specific review flip in index.rs → only verb_str/verb_key mentions (index.rs:36, 46)"
+  },
+  {
+    "anchor": "kind-line-addressing-code",
+    "claim": "The §2.3 unit's kind line is `req r1`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DECISION-CODE-LINKS-ARE-SPECMARK-ATTRIBUTES",
+    "claim": "Code-side links are inert attributes from a tiny `specmark` crate.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/Cargo.toml:11  description = \"Inert spec<->code traceability tags (PROP-014 §2.3): #[spec], #[verifies], scope!\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:77  #[proc_macro_attribute]",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:31  specmark = { package = \"core-ai-native-specmark\", path = \"crates/core-ai-native-specmark\" }"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "ATTRIBUTE-IS-A-NO-OP-WITH-TWO-CONSUMERS",
+    "claim": "The attribute is a compiler no-op; consumers are the scanner and rustdoc.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:27  let mut line = format!(\"Spec: {} {}\", edge.verb.as_str(), edge.uri.without_pin());",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:43  #[doc = #doc]",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:2  //! `specmark::scope!` markers, read as AST out of the source tree —"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "grammar-one-edge-per-attribute-lead",
+    "claim": "Grammar: one edge per attribute; attributes repeat for multiple edges.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:13  //! #[spec( <verb> = \"<spec-uri>\" [, r = <N>] [, reason = \"<text>\"] )]",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:64  /// One edge per attribute; repeat the attribute for multiple edges.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/tests/usage.rs:29  #[spec("
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "rules-lead",
+    "claim": "Lead-in: the code-side rules follow.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "lead-in sentence; no code counterpart — the six rules are evidenced individually below"
+  },
+  {
+    "anchor": "RULE-VERBS-AND-MANDATORY-REASON",
+    "claim": "Five verbs; `deviates` REQUIRES `reason`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:59  pub fn parse(s: &str) -> Option<Verb> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:356  \"`deviates` requires `reason = \\\"…\\\"` (PROP-014 §2.3)\",",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib/tests.rs:162  fn spec_args_deviates_requires_reason() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RULE-UNIT-OF-CODE-IS-THE-ITEM",
+    "claim": "The unit of code is the item, never lines; spans only decorate the derived index.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:137  fn walk_items(&mut self, items: &[syn::Item], module: &str) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:175  /// 1-based line of the heading. Derived decoration — volatile across edits,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:141  syn::Item::Fn(f) => {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RULE-SCOPE-INHERITANCE",
+    "claim": "`scope!` gives module items a default implements edge unless the item is tagged.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:112  pub fn scope(input: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:439  pub fn into_scope_edge(self) -> EdgeSpec {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:139  if tagged.contains(module) {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RULE-GENERATED-CODE-IS-EXCLUDED",
+    "claim": "Generated code is excluded via a directory marker; generator input is taggable.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:314  if fwd(rel_in_crate).contains(\"/generated/\") {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:82  if fwd(rel_in_crate).contains(\"/generated/\") {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RULE-ERROR-ENUMS-ARE-CONTRACT",
+    "claim": "Public error variants from a REQ carry `implements` on the enum.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:308  pub struct ErrorEnumCitesReq {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:339  if enum_attrs.iter().any(|a| a.starts_with(\"spec(\")) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:354  \"add #[spec(implements = \\\"spec://…\\\")] on `{name}` citing \\"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RULE-MULTIPLICITY-LINT",
+    "claim": "An item carrying more than three spec edges is flagged by `vibe check`.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'multiplicity|max_edges|more than 3|edges > ?3' over v0.8.0/crates → 0 hits; also 'vibe check' → 0 hits"
+  },
+  {
+    "anchor": "kind-line-edges",
+    "claim": "The §2.4 unit's kind line is `req r1`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "edge-model-is-a-typed-directed-multigraph-lead",
+    "claim": "The edge model is a typed, directed property multigraph.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:84  /// One typed, directed edge `(code item) --verb--> (spec unit)` (PROP-014",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:87  pub struct Edge {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "EDGE-MODEL-NODES",
+    "claim": "Nodes are SpecUnit and CodeItem with content hashes, plus derived Command/ErrorVariant views.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:150  pub struct SpecUnit {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:34  pub struct CodeItem {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:43  pub itemKind: String,"
+    ],
+    "found": "partial",
+    "searched": "CodeItem (mod.rs:34-52) has crate_name/file/item_kind/line/symbol but no content_hash field; grep for derived `Command`/`ErrorVariant` views in the specmap crate → 0 hits (ErrorVariant exists only as a conform Fact)"
+  },
+  {
+    "anchor": "EDGE-MODEL-EDGES",
+    "claim": "Edges carry provenance and deviates reason; units get lifecycle status; conflicts_with records contradictions.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:98  pub provenance: EdgeProvenance,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:138  pub enum SpecUnitStatus {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair."
+    ],
+    "found": "partial",
+    "searched": "grep 'conflicts_with' over v0.8.0/crates → 1 hit, a doc comment only; no spec↔spec edge type, no suspect-freeze for disputed units, and no coverage math (grep 'coverage per|coverage table' → 0)"
+  },
+  {
+    "anchor": "EDGE-MODEL-DIRECTION-OF-AUTHORITY",
+    "claim": "Authority runs spec→code; reverse is computed; a `proposed` pool feeds Sync-from-Code.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:101  let edges: Vec<&Edge> = map.edges.iter().filter(|e| e.uri == uri).collect();",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'Proposed' over v0.8.0/crates → 2 hits, both the enum variant/rename in generated/specmap/mod.rs:62-63; nothing constructs a proposed edge"
+  },
+  {
+    "anchor": "kind-line-index",
+    "claim": "The §2.5 unit's kind line is `req r1`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "DECISION-INDEX-IS-A-DERIVED-COMMITTED-ARTEFACT",
+    "claim": "specmap.json is derived, deterministic, committed, regenerated and gated by --check.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:25  pub const INDEX_REL_PATH: &str = \"specmap.json\";",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:324  pub fn check(root: &Path, cfg: &Config) -> Result<std::result::Result<Summary, String>> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/specmap.toml:7  # code, which lives HERE). Orphan-coverage gate only — the scope! tags on"
+    ],
+    "found": "partial",
+    "searched": "find v0.8.0 -name 'specmap.json' -not -path './target/*' → no file; this package ships no committed index (specmap.toml:7-11 states the orphan gate only)"
+  },
+  {
+    "anchor": "INDEX-IS-BUILT-BY-A-SOURCE-SCANNER",
+    "claim": "Built by a source scanner (syn plus a markdown parser); no macro expansion.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:243  match syn::parse_file(text) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:336  pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, Vec<Warning>) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:3  //! never expanded (PROP-014 §2.5: \"no macro expansion needed\")."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "INDEX-IS-CANONICAL-JSON-WITH-A-SCHEMA",
+    "claim": "Canonical JSON with stable ordering; schema at schemas/specmap.jtd.json feeds codegen.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:178  pub fn to_canonical_bytes(map: &Specmap) -> Result<String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:1  // Code generated by jtd-codegen for Rust v0.2.1",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:147  // Canonical ordering — the determinism contract."
+    ],
+    "found": "partial",
+    "searched": "find v0.8.0 -name '*.jtd.json' -not -path './target/*' → none; `ls v0.8.0/schemas` → No such file or directory (the path appears only as a string in ledger.rs:55 and lib.rs:13)"
+  },
+  {
+    "anchor": "INDEX-CONTENTS",
+    "claim": "Index holds nodes, edges, coverage per REQ, orphans, suspects, unbumped-hash warnings.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:11  pub struct Specmap {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:22  //! Orphans are computed at gate time and deliberately not serialised",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:11  //! index and is emitted as regeneration-time stderr, never stored."
+    ],
+    "found": "partial",
+    "searched": "Specmap (mod.rs:11-29) has six fields — no coverage and no orphans table; grep 'coverage per|coverage table|implemented, verified' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "INDEX-DETERMINISM-IS-A-TESTED-PROPERTY",
+    "claim": "Determinism is a tested property: index twice, assert byte-identical.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:457  fn index_is_deterministic() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:461  assert_eq!(a, b);",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:454  /// PROP-014 §2.5: determinism is a tested property — index twice, assert"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "kind-line-queries",
+    "claim": "The §2.6 unit's kind line is `req r1`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "QUERY-OUTPUT-FORMATS",
+    "claim": "--json raw subgraph, --text deterministic, --prose LLM; tool must work without an LLM.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:209  pub fn explain_json(map: &Specmap, target: &str) -> Result<serde_json::Value> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:199  pub fn explain_text(map: &Specmap, target: &str) -> Result<String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:9  //! deterministic template (the tool MUST be fully useful without an"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "QUERY-ERROR-PROVENANCE",
+    "claim": "Error rendering looks up the failing variant and appends `violates spec://…`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:49  pub fn req_message(uri: &str, why: &str, fix_surface: &str) -> String {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:50  format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")"
+    ],
+    "found": "partial",
+    "searched": "the `violates REQ` string is conform's rule-finding grammar with a hardcoded URI, not an index lookup of a failing error variant; grep 'error provenance' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "QUERIES-LIVE-BEHIND-XTASK-DURING-THE-PILOT",
+    "claim": "During the pilot queries live behind `cargo xtask trace …`; promotion is Phase 4.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:162  enum TraceCmd {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:1  //! `rust-ai-native trace …` — traceability queries over the specmap"
+    ],
+    "found": "partial",
+    "searched": "grep 'xtask trace' over both surfaces → 0 hits; no xtask crate in the v0.8.0 workspace (Cargo.toml:11-17 members); the query surface ships as `rust-ai-native trace explain`"
+  },
+  {
+    "anchor": "llm-boundary-continues-prop-003-lead",
+    "claim": "Lead-in: the LLM emits facts and renderings; deterministic machinery decides.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:9  //! deterministic template (the tool MUST be fully useful without an",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:4  //! useful without an LLM by contract — prose rendering is a later,"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "LLM-AS-PROPOSER",
+    "claim": "Mined edges land as `proposed` in specmap-proposals.json; humans affirm by writing the attribute.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'specmap-proposals' over v0.8.0/crates → 0 hits; no proposal file, no link mining, nothing constructs EdgeProvenance::Proposed"
+  },
+  {
+    "anchor": "LLM-AS-RENDERER",
+    "claim": "`explain --prose` feeds the subgraph to the provider; prose cites URIs.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:133  let subgraph = crate::explain::explain_json(map, target)?;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:168  fn render_prose(",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:10  //! LLM; an LLM prose producer slots in later under its own producer"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'llm|anthropic|openai|provider|model_id' over v0.8.0/crates → 3 hits, all doc comments; the prose producer is a deterministic template, no provider call and no `vibe-llm`"
+  },
+  {
+    "anchor": "LLM-NEVER-SILENTLY-WRITES-EDGES",
+    "claim": "The LLM never writes edges, bumps revisions, or clears suspects.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:60  provenance: EdgeProvenance::Authored,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:168  fn render_prose("
+    ],
+    "found": "partial",
+    "searched": "no LLM call exists to constrain — grep -rniE 'llm|anthropic|openai|provider' over v0.8.0/crates → 3 doc-comment hits only; edges come solely from source attributes"
+  },
+  {
+    "anchor": "RUNTIME-TRANSPORT",
+    "claim": "vibe-mcp gains specmap_query, specmap_explain, specmap_source tools.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'specmap_query|specmap_explain|specmap_source' over v0.8.0/crates → 0 hits; core-ai-native-mcp/src/toolset.rs registers no specmap tool"
+  },
+  {
+    "anchor": "RUNTIME-DISTRIBUTION",
+    "claim": "The index ships inside the published package; fragments resolve by content hash.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:54  pub fn content_hash(text: &str) -> String {"
+    ],
+    "found": "partial",
+    "searched": "find v0.8.0 -name 'specmap.json' -not -path './target/*' → no file shipped; no content-hash fragment resolution code in crates"
+  },
+  {
+    "anchor": "RUNTIME-PROFILES",
+    "claim": "Profiles open/contract/none declared in vibe.toml `[metamodel] profile`.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:11  [compatibility]"
+    ],
+    "found": "not-found",
+    "searched": "grep -rniE 'profile' over v0.8.0/crates → 0 hits; 'metamodel' → 1 hit (ledger.rs:34 doc comment); v0.8.0/vibe.toml (17 lines) has no [metamodel] table"
+  },
+  {
+    "anchor": "RUNTIME-SECURITY-IS-NON-OPTIONAL",
+    "claim": "Shipped index and fragments are signed; MCP descriptions frame data as reference; imperative phrasing linted.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'sigstore' → 0; 'signed' → 1 hit (ledger.rs:17 '.ledger/ … never signed'); grep -rniE 'second.person|imperative' → 0 hits"
+  },
+  {
+    "anchor": "GRAMMAR-IS-LANGUAGE-NEUTRAL",
+    "claim": "URIs, verbs, r and reasons are language-neutral; only the carrier syntax differs.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:229  /// One validated edge declaration, whatever carrier syntax it arrived in.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:23  pub trait CodeScanner {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:6  //! ts-extract bridge). The neutral core never learns about node."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "SPEC-SIDE-IS-ONE-SHARED-ENGINE",
+    "claim": "The spec side is one shared engine reaching every language identically.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:62  /// markdown side, external-spec resolution, suspects, and ordering are",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:336  pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, Vec<Warning>) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:5  # every language stack ships as byte-identical vendored copies under its own"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RUST-SHIPS-FIRST",
+    "claim": "Rust ships first.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:33  pub struct RustScanner;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:56  build_with_scanner(root, cfg, &crate::scanner::RustScanner)",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = ["
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "sketches-normative-later-lead",
+    "claim": "Lead-in: the following language sketches become normative later.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "lead-in sentence; no code counterpart"
+  },
+  {
+    "anchor": "SKETCH-JAVASCRIPT-TYPESCRIPT",
+    "claim": "JS/TS use a JSDoc carrier `/** @spec implements … */` with a tree-sitter scanner.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:5  //! (`typescript-ai-native-specmap-scan` reads the §9 JSDoc markers through the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:60  /// TypeScript stack injects its JSDoc scanner here, and a mixed tree"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'tree-sitter|treesitter' over v0.8.0/crates → 0 hits; no JS/TS scanner implementation in this package, only the seam that names one"
+  },
+  {
+    "anchor": "SKETCH-PYTHON",
+    "claim": "Python uses a `@spec(...)` decorator plus `__specmap_scope__` module variable.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'python|decorator|__specmap_scope__|__spec__' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-EVERY-STATEMENT-IS-ADDRESSABLE",
+    "claim": "Every normative statement is addressable; anchors immutable; retirement is a tombstone.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:185  fn fact_anchor_at(line: &str, start: usize) -> Option<(String, String)> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:444  units.push(SpecUnit {"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'tombstone|RETIRED|immutab|never reused' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-ONE-UNIT-ONE-DECISION",
+    "claim": "One unit, one decision; a unit must make sense alone when paged in.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'one unit|and also|one decision' over v0.8.0/crates → 0 hits; no splitting check"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-NORMATIVITY-IS-MARKED",
+    "claim": "Normativity is marked, not implied; RFC-2119 verbs live inside req units.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:77  let kind = match kind_word {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:119  /// From the unit's kind line (GUIDE-SPEC-AUTHORING §3); absent on legacy-"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'RFC.?2119|MUST/SHOULD' over v0.8.0/crates → 0 hits; nothing checks that MUST appears only inside req units; unkinded units are inventoried untyped (mdspec.rs:8-9)"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-NORM-AND-RATIONALE-ARE-SEPARATED",
+    "claim": "Norm and rationale are separated; PROPs hold rationale, REQs hold contract.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:78  \"prop\" => SpecUnitKind::Prop,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:79  \"req\" => SpecUnitKind::Req,"
+    ],
+    "found": "partial",
+    "searched": "the two kinds exist; grep for any check enforcing the separation (rationale-in-req / norm-in-prop) over v0.8.0/crates → none found"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-SEMANTIC-EDITS-BUMP-R",
+    "claim": "Semantic edits bump r, editorial ones do not, and the hash audits the difference.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:232  if old_hash != new_hash",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:248  lines.push(format!(\"revision bump: `{uri}` {fa} → {fb}\"));",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:589  fn drift_classification_reports_bumps_and_unbumped_hashes() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-SPEC-NEVER-RESTATES-HOW",
+    "claim": "Spec states what and why; implementation detail belongs in rustdoc.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:39  fn emit_with_doc(edge: &EdgeSpec, item: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:107  /// carries at least one compiled doc example, or a `#[spec(documents)]`"
+    ],
+    "found": "partial",
+    "searched": "no lint detects a spec that restates how; grep -rniE 'shadow code|restates' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-WRITE-TESTABLY",
+    "claim": "Write testably: a req implies its verification, else it is design.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:428  pub fn into_verifies_edge(self) -> EdgeSpec {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:94  pub fn verifies(attr: TokenStream, item: TokenStream) -> TokenStream {"
+    ],
+    "found": "partial",
+    "searched": "no rule requires a req unit to carry a verifies edge; grep for a req-without-verifies check over v0.8.0/crates → none found"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-DEVIATIONS-ARE-FIRST-CLASS",
+    "claim": "Deviations are first-class: code says `deviates` plus reason; undocumented ones are defects.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:353  (Verb::Deviates, None) => {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:104  record #[spec(deviates = <uri>, reason = …)] on the \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:84  s.push_str(&format!(\"\\n      deviation: {reason}\"));"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-CROSS-REFERENCE-BY-URI-ONLY",
+    "claim": "Cross-reference by URI only; no 'see above' or relative prose pointers.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:180  .ok_or_else(|| format!(\"spec URI must start with `spec://`, got `{raw}`\"))?;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:49  pub fn req_message(uri: &str, why: &str, fix_surface: &str) -> String {"
+    ],
+    "found": "partial",
+    "searched": "the tag grammar accepts only URIs; grep -rniE 'see above|relative pointer' over v0.8.0/crates → 0 hits, no prose-pointer lint"
+  },
+  {
+    "anchor": "SPEC-PRINCIPLE-UNITS-FIT-A-PAGE",
+    "claim": "Units fit a page: soft target ≤120 lines; `vibe check` warns beyond.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE '120' over v0.8.0/crates → 2 hits, both conform file-length doctest fixtures (budget.rs:133, budget.rs:210); no unit-length rule and no `vibe check`"
+  },
+  {
+    "anchor": "RUST-PRINCIPLES-ARE-NOT-A-GENERAL-STYLE-GUIDE",
+    "claim": "These principles are not a general style guide; house rules stay where they are.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'style guide|forbid\\(unsafe_code\\)|clippy' over v0.8.0/crates → no statement of scope found"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-ITEM-IS-THE-UNIT-OF-MEANING",
+    "claim": "The item is the unit of meaning; each public item serves ≤3 spec units.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:126  fn tag_item(&mut self, attrs: &[syn::Attribute], symbol: &str, item_kind: &str, line: u32) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:131  self.record_item(symbol, item_kind, line);"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'multiplicity|max_edges|more than 3' over v0.8.0/crates → 0 hits; no ≤3-edge lint exists"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-TAGS-TRAVEL-WITH-CODE",
+    "claim": "Tags travel with code: #[spec] on items, scope! per module, private helpers inherit.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:78  pub fn spec(attr: TokenStream, item: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:112  pub fn scope(input: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:15  //!   PROP-014 §2.3: private helpers need no annotation; method-level"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-TYPED-VERBS-NO-BARE-LINKS",
+    "claim": "Typed verbs, no bare links; the verb is what makes the graph queryable.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:40  pub enum Verb {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:303  \"unknown specmark verb `{verb_ident}`; expected one of \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:12  fn verb_str(e: &Edge) -> &'static str {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-TESTS-DECLARE-WHAT-THEY-VERIFY",
+    "claim": "Tests declare what they verify with #[verifies]; coverage is computed, not estimated.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:94  pub fn verifies(attr: TokenStream, item: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:105  \"verifies\" => match &attr.meta {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/tests/usage.rs:68  #[verifies("
+    ],
+    "found": "partial",
+    "searched": "the verifies edge is located; no coverage computation exists — Specmap (generated/specmap/mod.rs:11-29) has no coverage field, grep 'coverage per|REQ ×' → 0 hits"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER",
+    "claim": "Rustdoc is the detail layer; explain composes spec contract plus rustdoc detail.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:43  #[doc = #doc]",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:123  fn explain_symbol(map: &Specmap, target: &str) -> Result<String> {"
+    ],
+    "found": "partial",
+    "searched": "explain_symbol renders symbol/kind/crate/file/line and edges only; CodeItem (generated/specmap/mod.rs:34-52) carries no doc-comment field, so no rustdoc is composed in"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-NO-ORPHAN-PUBLIC-API",
+    "claim": "No orphan public API; every pub item reachable from an edge, ratcheted per crate.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:53  pub fn orphans(root: &Path, map: &Specmap, cfg: &Config) -> Vec<Orphan> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:112  fn is_pub(vis: &syn::Visibility) -> bool {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/src/lib.rs:96  \"specmap ratchet: {blockers} orphan(s) in gated crates — \\"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED",
+    "claim": "Generated code is excluded; its generator input carries the edges.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:313  // Generated trees are excluded from scanning wholesale.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:82  if fwd(rel_in_crate).contains(\"/generated/\") {"
+    ],
+    "found": "partial",
+    "searched": "exclusion located; the tagging of generator input is not — no schema file exists in this package to tag (find -name '*.jtd.json' → none)"
+  },
+  {
+    "anchor": "RUST-PRINCIPLE-ERRORS-ARE-CONTRACT-SURFACE",
+    "claim": "Public error types carrying a requirement hold its edge, enabling message provenance.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:308  pub struct ErrorEnumCitesReq {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:317  \"errors are contract surface and agent food: the error layer \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:339  if enum_attrs.iter().any(|a| a.starts_with(\"spec(\")) {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "SECTION-2-IS-THE-DELIVERABLE",
+    "claim": "Section 2 is deliverable (в).",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "document-meta statement; grep -rniE 'deliverable' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "five-load-bearing-invariants-lead",
+    "claim": "Lead-in: five load-bearing invariants follow.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "lead-in sentence; the five invariants are evidenced individually below"
+  },
+  {
+    "anchor": "INVARIANT-EDGES-TRAVEL-WITH-ARTEFACTS",
+    "claim": "Invariant: edges travel with the artefacts.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:78  pub fn spec(attr: TokenStream, item: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:126  fn tag_item(&mut self, attrs: &[syn::Attribute], symbol: &str, item_kind: &str, line: u32) {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "INVARIANT-TWO-TIER-REVISIONS",
+    "claim": "Invariant: two-tier revisions with asymmetric invalidation.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:122  suspects.push(Suspect {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:198  pub fn classify_drift(old: &Specmap, new: &Specmap) -> Vec<String> {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "INVARIANT-DERIVED-INDEX-WITH-A-CI-GATE",
+    "claim": "Invariant: a derived deterministic committed index with a CI gate.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:324  pub fn check(root: &Path, cfg: &Config) -> Result<std::result::Result<Summary, String>> {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/src/main.rs:27  check: bool,"
+    ],
+    "found": "partial",
+    "searched": "find v0.8.0 -name 'specmap.json' -not -path './target/*' → no committed index in this package; no CI workflow file found under v0.8.0"
+  },
+  {
+    "anchor": "INVARIANT-TOOL-IS-FUNCTIONAL-WITHOUT-AN-LLM",
+    "claim": "Invariant: the tool is fully functional without an LLM; the LLM only proposes and renders.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:4  //! useful without an LLM by contract — prose rendering is a later,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:9  //! deterministic template (the tool MUST be fully useful without an",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:168  fn render_prose("
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "INVARIANT-RUNTIME-CHANNEL-SHIPS-SIGNED",
+    "claim": "Invariant: the runtime channel ships signed or not at all.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'sigstore|signature|verify.*signed' over v0.8.0/crates → 0 hits; 'signed' → 1 hit (ledger.rs:17, '.ledger/ … never signed')"
+  },
+  {
+    "anchor": "MIGRATION-STRATEGY-EASY-WINS-FIRST",
+    "claim": "Strategy: easy wins first, ratchet always, never gate the whole repo on day one.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:7  //! - `specmap.toml`'s `exempt` list (see [`crate::config::Config`]) names",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:67  pub exempt: Vec<String>,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/specmap.toml:30  exempt = ["
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "maximum-perfection-horizon-is-phase-5-plus",
+    "claim": "Full backfill, JS/Py bindings and the signed channel are Phase 5+.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'Phase 5|bindings' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "PHASE-0-SPECMARK-CRATE",
+    "claim": "crates/specmark/: no-op attribute plus scope! and verifies macros with rustdoc injection.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:78  pub fn spec(attr: TokenStream, item: TokenStream) -> TokenStream {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/Cargo.toml:14  proc-macro = true",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:39  fn emit_with_doc(edge: &EdgeSpec, item: TokenStream) -> TokenStream {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "PHASE-0-XTASK-SPECMAP-SUBCOMMAND",
+    "claim": "An `xtask specmap` subcommand: markdown parser, syn scanner, canonical JSON, --check.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:336  pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, Vec<Warning>) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:289  pub fn scan_workspace(root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:324  pub fn check(root: &Path, cfg: &Config) -> Result<std::result::Result<Summary, String>> {"
+    ],
+    "found": "partial",
+    "searched": "no xtask crate exists in the v0.8.0 workspace (Cargo.toml:11-17 members lists five crates); the driver ships as the `rust-ai-native-specmap` binary instead"
+  },
+  {
+    "anchor": "PHASE-0-SCHEMA-AND-CODEGEN",
+    "claim": "schemas/specmap.jtd.json plus codegen.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:1  // Code generated by jtd-codegen for Rust v0.2.1",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/mod.rs:1  // Generated by `cargo xtask codegen`. DO NOT EDIT."
+    ],
+    "found": "partial",
+    "searched": "`ls v0.8.0/schemas` → No such file or directory; find -name '*.jtd.json' -not -path './target/*' → none; only the generated output is present"
+  },
+  {
+    "anchor": "PHASE-0-ACCEPTANCE",
+    "claim": "Acceptance: deterministic double index with full node inventory, CI job non-blocking.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:457  fn index_is_deterministic() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:420  fn untagged_items_are_not_inventoried() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:32  /// at least one edge appear; the full-orphan inventory is a later-phase table."
+    ],
+    "found": "partial",
+    "searched": "determinism located; 'full node inventory' not — untagged items are excluded by design (rscan.rs:420, mod.rs:31-32); no CI workflow file found under v0.8.0"
+  },
+  {
+    "anchor": "phase-1-is-the-smallest-real-loop",
+    "claim": "Pilot is PROP-003 §2.6.1 against a ~130-line conditional.rs, the smallest real loop.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:345  const URI: &str = \"spec://project/modules/vibe-resolver/PROP-003#req-conditional-fixpoint\";",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:301  \"spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition\";"
+    ],
+    "found": "partial",
+    "searched": "the PROP-003 / ConditionalPredicate material appears only as test fixtures; find v0.8.0 -name 'conditional.rs' → no such module in the evidence surface"
+  },
+  {
+    "anchor": "PHASE-1-UNIT-IFY-THE-SPEC",
+    "claim": "Unit-ify §2.6.1: add req markers plus anchors for three named contracts.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "the vibevm PROP-003 document is outside the evidence surface; grep 'req-conditional-fixpoint|req-conditional-grammar|host-invariance' over v0.8.0/crates → fixture URIs only, no spec units"
+  },
+  {
+    "anchor": "PHASE-1-TAG-CONDITIONAL-RS",
+    "claim": "Tag conditional.rs: implements on enum and parse, deviates plus reason, verifies on tests.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:355  fn tagged_items_yield_edges() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:361  #[spec(deviates = \"{URI}\", r = 2, reason = \"boolean composition unimplemented\")]",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/tests/usage.rs:38  #[spec("
+    ],
+    "found": "partial",
+    "searched": "the exact tagging shape exists only as a scanner test fixture; find v0.8.0 -name 'conditional.rs' → no such file"
+  },
+  {
+    "anchor": "PHASE-1-DRIFT-DRILL",
+    "claim": "Drift drill: bump r flags suspects; typo without bump fires the hash warning.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:589  fn drift_classification_reports_bumps_and_unbumped_hashes() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:617  report.iter().any(|l| l.starts_with(\"unbumped-hash:\")),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:634  report.iter().any(|l| l.contains(\"now SUSPECT\")),"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "PHASE-1-TRACE-EXPLAIN-EMITS-A-SUBGRAPH",
+    "claim": "`trace explain <symbol> --text` emits a correct subgraph.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:199  pub fn explain_text(map: &Specmap, target: &str) -> Result<String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:381  fn symbol_view_renders_edges_units_and_siblings() {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:32  print!(\"{}\", specmap_core::explain::explain_text(&map, target)?);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "phase-2-two-link-sources-lead",
+    "claim": "Two link sources flow through the `proposed` pool, affirmed by diff review.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'specmap-proposals|proposal pool|affirm' over v0.8.0/crates → 0 hits; no pool implementation, only the unused provenance value"
+  },
+  {
+    "anchor": "PHASE-2-LATENT-CORPUS-MINING",
+    "claim": "Latent corpus mining of `spec://` citations already in commit bodies.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'git log|commit bod|mining' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "PHASE-2-MINED-TRIPLES-SEED-PROPOSED-EDGES",
+    "claim": "Each (commit, files, URIs) triple seeds proposed edges with evidence pointers.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'triple|evidence pointer|seeds' over v0.8.0/crates → 0 hits; no proposal generation code"
+  },
+  {
+    "anchor": "PHASE-2-CRATE-SWEEP-PROMPT",
+    "claim": "A guard-railed Claude Code crate-sweep prompt emitting specmap-proposals.json.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'specmap-proposals|candidate orphan|confidence' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "phase-2-affirmation-session-prompt-lead",
+    "claim": "An affirmation prompt turns APPROVED proposals into real annotations.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'APPROVED|affirmation' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "PHASE-2-ACCEPTANCE",
+    "claim": "Acceptance: ≥90% req coverage, orphans empty or dispositioned, gate blocking per crate.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:70  pub dispositioned: Vec<Disposition>,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:19  //!   \"empty or dispositioned into debt.json\" arm of the Phase 2",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/src/lib.rs:97  see the list above (PLAYBOOK #phase2 acceptance: empty or dispositioned)\""
+    ],
+    "found": "partial",
+    "searched": "the orphan/disposition arm is located; grep 'coverage|90%' for a req-coverage percentage over v0.8.0/crates → 0 hits, no coverage report exists"
+  },
+  {
+    "anchor": "PHASE-3-CRATE-BY-CRATE",
+    "claim": "Expand crate-by-crate, each flipping its ratchet entry.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:62  if cfg.exempt.iter().any(|e| e == &crate_name) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:64  /// Crates exempt from the orphan ratchet (PLAYBOOK `#phase2`). A crate",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/specmap.toml:31  \"core-ai-native-specmark\","
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "PHASE-3-INSTRUMENT-THE-ECONOMICS",
+    "claim": "Instrument economics: stale-edge half-life, proposal lag, share of PRs updating pins.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:83  pub struct Telemetry {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:77  /// Telemetry counters (LEDGER §5): hit rate and cost feed the"
+    ],
+    "found": "partial",
+    "searched": "the telemetry that exists counts ledger hits/misses/rot; grep -rniE 'half-life|lag|stale-edge' over v0.8.0/crates → 0 hits, none of the three named metrics is collected"
+  },
+  {
+    "anchor": "PHASE-4-PROMOTE-XTASK-TO-VIBE",
+    "claim": "Promote xtask trace/explain to `vibe trace` / `vibe explain` with --json/--text/--prose.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:167  /// Emit the raw subgraph as JSON (for agents).",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:170  /// Deterministic prose render through the intent ledger.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:8  pub fn run_trace_explain(root: &Path, target: &str, json: bool, prose: bool) -> Result<()> {"
+    ],
+    "found": "partial",
+    "searched": "the promoted surface is `rust-ai-native trace explain`, not `vibe trace`/`vibe explain`; grep 'vibe trace|vibe explain|xtask trace' over both surfaces → 0 hits"
+  },
+  {
+    "anchor": "PHASE-4-ERROR-PROVENANCE-WIRING",
+    "claim": "Wire error provenance into vibe-cli error rendering.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:50  format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'vibe-cli|vibe_cli' over v0.8.0/crates → 0 hits; the located string is conform's finding grammar, not index-driven error rendering"
+  },
+  {
+    "anchor": "PHASE-4-MCP-TOOLS-BLOCKED-ON-SIGNING",
+    "claim": "vibe-mcp specmap tools are blocked on the signing decision; signed or not at all.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'specmap_query|specmap_explain|specmap_source|sigstore|signing' over v0.8.0/crates → 0 hits; core-ai-native-mcp/src/toolset.rs mounts no specmap tool"
+  },
+  {
+    "anchor": "rejected-external-sidecar-map-only",
+    "claim": "Rejected: a hand-maintained sidecar map with no in-source tags; kept only as derived index.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:2  //! (PROP-014 §2.5) — derived, deterministic, committed, regenerated by",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:126  fn tag_item(&mut self, attrs: &[syn::Attribute], symbol: &str, item_kind: &str, line: u32) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/specmap.toml:1  # specmap.toml — core-ai-native's own traceability policy."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "rejected-line-range-anchors",
+    "claim": "Rejected: line/range anchors; spans demoted to derived-index decoration.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:175  /// 1-based line of the heading. Derived decoration — volatile across edits,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:217  \"anchor must be an id `[A-Za-z][A-Za-z0-9_-]*`, got `#{anchor}` in `{raw}`\""
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "rejected-embedding-similarity-as-ground-truth",
+    "claim": "Rejected: embedding-similarity links as ground truth; allowed once as a proposer.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'embedding|similarity' over v0.8.0/crates → 0 hits; only the unused `proposed` provenance value bears on the claim"
+  },
+  {
+    "anchor": "rejected-literate-programming",
+    "claim": "Rejected: literate programming / tangle inverting authority.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'literate|tangle' over v0.8.0/crates → 1 hit, unrelated (conform/src/rules/structure.rs:95 'the tangle cells exist to prevent')"
+  },
+  {
+    "anchor": "rejected-external-requirements-database",
+    "claim": "Rejected: an external requirements database outside the repo.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:25  pub const INDEX_REL_PATH: &str = \"specmap.json\";",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:127  pub const REL_PATH: &'static str = \"specmap.toml\";"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE 'DOORS|Doorstop|database' over v0.8.0/crates → 0 hits; located only the in-repo file paths the decision implies"
+  },
+  {
+    "anchor": "rejected-full-formal-specification",
+    "claim": "Rejected: full formal specification (TLA+/Kani/Dafny) for prose contracts.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'TLA|Kani|Dafny|formal' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "CONVENTIONS-ARE-FREE-CODE-IS-NOT",
+    "claim": "Conventions and ideas are free; code is not.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:24  license-file = \"LICENSE.md\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:34  # Third-party (all permissive licenses — PROP-000 §3). Feature sets match"
+    ],
+    "found": "partial",
+    "searched": "the licensing posture is located; no code embodies the conventions-vs-code distinction itself"
+  },
+  {
+    "anchor": "ROLES-ARE-EXPLICIT-PER-PROP-000",
+    "claim": "Per PROP-000 §3 (permissive only), each prior-art system's role is explicit.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:34  # Third-party (all permissive licenses — PROP-000 §3). Feature sets match",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }"
+    ],
+    "found": "partial",
+    "searched": "the permissive-only policy is cited in the manifest; grep for any prior-art system name (openfasttrace|strictdoc|doorstop|sphinx|sigstore) over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "LICENSE-FIELDS-ARE-RE-VERIFIED-BEFORE-REUSE",
+    "claim": "License fields must be re-verified before any code-level reuse.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'license' over v0.8.0/crates → only `license-file.workspace = true` manifest lines; no verification step or check exists"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-OPENFASTTRACE",
+    "claim": "OpenFastTrace (GPL-3.0): study only; ideas borrowed, no code.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'openfasttrace|artifact-type chain|utest' over v0.8.0/crates → 0 hits; not a declared dependency in v0.8.0/Cargo.toml"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-STRICTDOC",
+    "claim": "strictdoc (Apache-2.0): friendly; grammar/UI patterns.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'strictdoc' over v0.8.0/crates and Cargo.toml → 0 hits"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-DOORSTOP",
+    "claim": "Doorstop (LGPL-3.0): wrapper-zone; reviewed-hash-stamp idea borrowed.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'doorstop|reviewed.hash' over v0.8.0/crates and Cargo.toml → 0 hits"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-SPHINX-NEEDS",
+    "claim": "Sphinx-needs (MIT): friendly; typed needs/links, filter queries.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'sphinx' over v0.8.0/crates and Cargo.toml → 0 hits"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-DO-178C",
+    "claim": "DO-178C / DOORS culture: the cautionary tale of audited-but-not-load-bearing traceability.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE '178c|DOORS' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-SOURCE-MAPS",
+    "claim": "JS source maps / DWARF: the analogy and its failure point.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'source map|DWARF' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-SYN-TREE-SITTER",
+    "claim": "syn / tree-sitter (MIT/Apache-2.0): implementation dependencies for the scanner.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/Cargo.toml:16  syn.workspace = true",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:243  match syn::parse_file(text) {"
+    ],
+    "found": "partial",
+    "searched": "syn is a declared dependency; grep -rniE 'tree-sitter|treesitter' over v0.8.0/crates and Cargo.toml → 0 hits"
+  },
+  {
+    "anchor": "ROW-PRIOR-ART-SIGSTORE",
+    "claim": "sigstore (Apache-2.0): default candidate for §2.8.4 signing.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'sigstore' over v0.8.0/crates and Cargo.toml → 0 hits"
+  },
+  {
+    "anchor": "differentiators-lead",
+    "claim": "Lead-in: four differentiators vs classical requirements traceability.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "lead-in sentence; the four differentiators are evidenced individually below"
+  },
+  {
+    "anchor": "DIFFERENTIATOR-CONSUMED-AT-RUNTIME",
+    "claim": "The map is consumed at runtime by agents using the tool, not only at audit.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:207  /// `--json`: the raw subgraph — the items, edges, units and suspects",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:167  /// Emit the raw subgraph as JSON (for agents)."
+    ],
+    "found": "partial",
+    "searched": "the agent-facing JSON surface is a CLI flag; grep 'specmap_query|specmap_explain' for a runtime/MCP channel over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "DIFFERENTIATOR-LLM-PARTICIPATES-BEHIND-A-DETERMINISTIC-CORE",
+    "claim": "An LLM participates strictly as proposer and renderer behind a deterministic core.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:9  //! deterministic template (the tool MUST be fully useful without an",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:4  //! useful without an LLM by contract — prose rendering is a later,"
+    ],
+    "found": "partial",
+    "searched": "the deterministic core is located; no LLM participates yet — ledger.rs:10 says 'an LLM prose producer slots in later', and no proposer exists"
+  },
+  {
+    "anchor": "DIFFERENTIATOR-DOUBLES-AS-THE-CONTEXT-PAGING-TABLE",
+    "claim": "The map doubles as the context-paging table for agent sessions.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'paging' over v0.8.0/crates → 2 hits, both conform cell-isolation rule text (go.rs:235, typescript.rs:192); no context-paging consumer of the index"
+  },
+  {
+    "anchor": "DIFFERENTIATOR-SPECS-ARE-PACKAGE-DISTRIBUTED",
+    "claim": "Specs are package-distributed artefacts, so tracing composes across the registry.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:63  pub external_specs: Vec<ExternalSpec>,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:527  pub fn scan_external_units(root: &Path, cfg: &Config) -> Vec<SpecUnit> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:538  fn external_specs_resolve_edges_without_entering_the_index() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "OPEN-CROSS-PACKAGE-URIS",
+    "claim": "Open: group-qualified cross-package URIs and resolution against installed packages.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:58  /// Installed packages' spec trees that participate in **resolution",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:72  // (PROP-014 §7.1): their units feed the revision map below — so an",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:168  fn external_specs_resolve_under_their_own_namespace_and_are_skipped_when_absent() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "OPEN-INHERITANCE-MERGE",
+    "claim": "Open: item tags replace scope! defaults in v0.1; is a `+implements` extend form needed?",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:218  if is_scope && let Ok(args) = syn::parse2::<UriArgs>(mc.mac.tokens.clone()) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:139  if tagged.contains(module) {"
+    ],
+    "found": "partial",
+    "searched": "grep -rniE '\\+implements|extend form|merge' for an extend syntax over v0.8.0/crates → 0 hits; the scanner records the module edge and item edges independently (rscan.rs:126-135, 218-221) rather than replacing"
+  },
+  {
+    "anchor": "OPEN-UNIT-MOVES-ACROSS-DOCUMENTS",
+    "claim": "Open: moving a unit between files needs redirect stubs or doc-path-free ids.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'redirect' over v0.8.0/crates → 10 hits, all MCP stderr-capture plumbing; no URI redirect stub or doc-path-free id mechanism"
+  },
+  {
+    "anchor": "OPEN-EXPLANATION-CACHING",
+    "claim": "Open: --prose renderings keyed by (subgraph hash, model id) — where cached, when invalidated.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136  let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:119  fn object_path(root: &Path, key_hex: &str) -> PathBuf {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:279  fn editing_cargo_lock_invalidates_the_render() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "OPEN-THRESHOLDS",
+    "claim": "Open: 3 edges/item and 120 lines/unit are placeholders until Phase 3 metrics.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'multiplicity|max_edges|120' for either threshold over v0.8.0/crates → no edge-count rule; the two '120' hits are conform file-length doctest fixtures (budget.rs:133, 210)"
+  },
+  {
+    "anchor": "OPEN-SIGNING-SCHEME",
+    "claim": "Open: sigstore vs minisign vs git signatures; blocking for §2.8.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'sigstore|minisign|git signature|signing' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "OPEN-NON-OSS-CONTRACT-PROFILE",
+    "claim": "Open: which item metadata is safe to ship in the closed-source `contract` profile.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'profile|contract profile' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "OPEN-COMMIT-MESSAGE-INTEGRATION",
+    "claim": "Open: should commits citing a REQ auto-link into the index as `informs` provenance?",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:65  \"informs\" => Verb::Informs,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:27  specmark_grammar::Verb::Informs => EdgeVerb::Informs,"
+    ],
+    "found": "partial",
+    "searched": "the `informs` verb exists; grep -rniE 'commit|git log' for commit-message ingestion over v0.8.0/crates → 0 relevant hits"
+  },
+  {
+    "anchor": "this-prop-is-a-design-proposal",
+    "claim": "This PROP is a design proposal.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rniE 'design proposal' over v0.8.0/crates → 0 hits"
+  },
+  {
+    "anchor": "RATIFICATION-HAPPENS-THROUGH-PR-REVIEW",
+    "claim": "Ratification and the specmark/xtask implementation start happen through PR review.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:24  //! PROP-014 itself is unit-ified after ratification.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/Cargo.toml:11  description = \"Inert spec<->code traceability tags (PROP-014 §2.3): #[spec], #[verifies], scope!\""
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'ratif' over v0.8.0/crates → 3 hits; no PR-review or ratification record in the code surface, and no xtask crate exists"
+  },
+  {
+    "anchor": "UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC",
+    "claim": "Any mechanism unexercised by end of Phase 2 is removed rather than carried aspirationally.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:22  //! Orphans are computed at gate time and deliberately not serialised"
+    ],
+    "found": "partial",
+    "searched": "no removal mechanism exists; located instead the wire fields for mechanisms nothing exercises (`Proposed` provenance, `conflicts_with` doc reference)"
+  }
+]

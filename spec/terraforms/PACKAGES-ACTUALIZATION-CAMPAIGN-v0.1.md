@@ -2013,6 +2013,33 @@ command that would have tested it.
   policy not exercised by Playbook v0.2 Phase 2 is removed», `@impl/done`,
   contradicted above it by five things that do not exist.
 
+- **2026-07-28 · C1 stands at 4 of 5 files, and PROP-014 stops at the boundary
+  rather than at the bottom of a session.** 180 verdicts merged and sealed —
+  **132 confirmed / 43 drift / 5 unverifiable, 73.3 %**. PROP-014's evidence is
+  gathered, machine-verified and **not judged**: 173 rows, 118 of them
+  `@impl/done`, 60 marked `partial` — the class that needs a reader, since a
+  `partial` is precisely «related code that does not settle the claim». Judging
+  ninety-five of those at the end of a long session is how a bad verdict gets
+  written, and this phase rejects a verdict without evidence for exactly that
+  reason.
+
+  Four host-side checks were run and are recorded for whoever picks it up, because
+  they decide the load-bearing rows: **there is no host PROP-014** — the package
+  copy is the only one in the repository, so this proposal was never adopted into
+  the spec tree it proposes against; `vibe check` carries **neither** the
+  edge-multiplicity lint nor the 120-line unit warning the document says it warns
+  with; **no `specmap_query` / `specmap_explain` / `specmap_source`** MCP tools
+  exist; and `[metamodel] profile` appears nowhere in the crates. The two
+  companion PROPs it cites — 009 and 013 — do exist in the host.
+
+  **The five evidence tables now live in the repository**, at
+  `tasks/evidence/ev-*.json`, and re-verify from there: 748 refs, zero
+  unresolvable, one OFF-BY and one ELIDED. They were written into a session
+  scratchpad, which is ephemeral — five workers' output would have been lost at
+  the session boundary, and the campaign's own erasure law says the derived
+  artifacts may be deleted only because **the sources carry the knowledge**. An
+  evidence table is not derived from the sources; it is a reading of them.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

@@ -1,0 +1,666 @@
+[
+  {
+    "anchor": "status-line",
+    "claim": "The document's own status is Beta.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'Beta' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates (only hits are test fixture identifiers `crate::beta::Beta` in core-ai-native-conform/src/rules/tests.rs); no status/stage marker is modelled in any crate, Cargo.toml or specmap.toml"
+  },
+  {
+    "anchor": "CLOSES-THE-HEALTHY-BASELINE-GAP",
+    "claim": "Closes the gap where the playbook assumed an all-green baseline.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:1  //! The xfail-strict test gate (BROWNFIELD-PROTOCOL §4).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:41  \"passing\" | \"failing-known\" | \"flaky\" | \"obsolete\" => {}",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:10  /// `conform-baseline.json`: frozen pre-existing findings, by"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'healthy baseline|all gates green|unfinished' over core-ai-native/v0.8.0/crates — 0 hits for the framing itself; the located code is the mechanism (a baseline of already-failing tests / frozen findings), not a statement about the gap"
+  },
+  {
+    "anchor": "UNFINISHEDNESS-IS-A-MODELED-STATE",
+    "claim": "Unfinishedness is modelled as state, not treated as an exception.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:136  /// Lifecycle status (brownfield amendment); absent = ratified.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:25  pub struct BaselineEntry {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:36  struct DebtEntry {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "mars-was-empty-real-codebases-are-inhabited",
+    "claim": "Terraforming an inhabited codebase needs relocation protocols, not bulldozers.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'mars|inhabited|bulldoz|terraform|relocation protocol' over core-ai-native/v0.8.0/crates — 0 hits (rhetorical framing; no code counterpart)"
+  },
+  {
+    "anchor": "amendments-carried-lead",
+    "claim": "Lead-in: this document carries amendments to four other documents.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:136  /// Lifecycle status (brownfield amendment); absent = ratified."
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'amendment' over core-ai-native/v0.8.0/crates — 2 hits, both the same doc-comment line on SpecUnitStatus (mod.rs:136 and mod.rs:200); no code enumerates the four amendments"
+  },
+  {
+    "anchor": "AMENDMENT-CHARTER-GAINS-A6",
+    "claim": "The Charter gains a new axiom A6.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rn 'A6' over core-ai-native/v0.8.0/crates — 0 hits; grep -rn 'Charter' — 1 hit (core-ai-native-specmap/src/ledger.rs:78, \"Charter's headline metric\", unrelated to axioms); grep -rni 'axiom' — 1 hit (core-ai-native-conform/src/finding.rs:32)"
+  },
+  {
+    "anchor": "AMENDMENT-GUIDE-SPEC-AUTHORING-LIFECYCLE",
+    "claim": "GUIDE-SPEC-AUTHORING gains lifecycle statuses.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:119  /// From the unit's kind line (GUIDE-SPEC-AUTHORING §3); absent on legacy-",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:138  pub enum SpecUnitStatus {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:7  //!   GUIDE-SPEC-AUTHORING §1–4)."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "AMENDMENT-PROP-014-STATUS-AND-CONFLICTS",
+    "claim": "PROP-014 gains unit status plus conflicts_with edges.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:200  /// Lifecycle status (brownfield amendment); absent = ratified.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:11  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#spec-units\");"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'conflicts_with' over core-ai-native/v0.8.0/crates — 1 hit, a doc comment on the `disputes` field; there is no separate edge kind or edge table for conflicts (EdgeVerb is Implements|Verifies|Documents|Deviates|Informs, mod.rs verb enum)"
+  },
+  {
+    "anchor": "AMENDMENT-PLAYBOOK-REVISED-TO-V0-2",
+    "claim": "The Playbook is revised to v0.2 by this document.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:1  //! The specmap orphan ratchet — the Phase 2 \"flip\" (PLAYBOOK",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:8  //!    test passed; promote it via the explicit protocol (PLAYBOOK §7.2).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:64  /// Crates exempt from the orphan ratchet (PLAYBOOK `#phase2`). A crate"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'PLAYBOOK' over core-ai-native/v0.8.0/crates — 5 hits, all unversioned citations; grep -rn 'v0.2|v0\\.2' next to PLAYBOOK — 0 hits naming the Playbook revision"
+  },
+  {
+    "anchor": "on-an-unfinished-project-lead",
+    "claim": "Lead-in enumerating four states of an unfinished project.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'unfinished' over core-ai-native/v0.8.0/crates — 0 hits; pure prose lead-in with no code counterpart"
+  },
+  {
+    "anchor": "problem-a-tests-fail-and-have-failed",
+    "claim": "Some tests fail and have failed for a while.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:41  \"passing\" | \"failing-known\" | \"flaky\" | \"obsolete\" => {}",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:194  { \"test\": \"vibe-cli::cli_live_e2e install_github_smoke_alone\", \"status\": \"failing-known\", \"debt\": \"DBT-0002\" },"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "problem-b-ratified-units-unimplemented-by-plan",
+    "claim": "Some ratified spec units are unimplemented by plan.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:100  Some(\"planned\") => (Some(SpecUnitStatus::Planned), None),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:142  #[serde(rename = \"planned\")]",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:48  Planned => \" [PLANNED]\".to_string(),"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "problem-c-intentions-must-survive-migration",
+    "claim": "WAL/TASKS/ROADMAP intentions must survive the migration.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:101  { \"id\": \"DBT-0017\", \"kind\": \"stale-doc\", \"severity\": \"P3\", \"title\": \"roadmap staleness\","
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'WAL|TASKS|ROADMAP' over core-ai-native/v0.8.0/crates — WAL only as a doctest path string in specmap/src/lib.rs:71, TASKS 0 hits, ROADMAP only inside the tripwire.rs test fixture; no harvesting/carry-over code in the surface"
+  },
+  {
+    "anchor": "problem-d-drift-and-mutually-exclusive-statements",
+    "claim": "The spec corpus contains drift and mutually exclusive statements.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:189  /// a freshly-built one — the regeneration-time drift report:",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:101  Some(w) if w.starts_with(\"disputed(#\") && w.ends_with(')') => {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:207  fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "demanding-global-health-never-starts",
+    "claim": "A discipline demanding global health first never starts; ignoring entrenches.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:29  /// Load the baseline; an absent file is an empty baseline (the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:65  /// **not** listed is gated: its `pub` items must carry an own edge or a"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'global health|never start|entrench' over core-ai-native/v0.8.0/crates — 0 hits; located code is the incremental-adoption mechanism, not a statement of the argument"
+  },
+  {
+    "anchor": "BOTH-FAILURE-MODES-ARE-A1-VIOLATIONS",
+    "claim": "Both failure modes violate axiom A1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:7  /// One finding with its A1 chain.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:32  /// Why the rule exists — the axiom trace rendered into SARIF."
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'A1' over core-ai-native/v0.8.0/crates — 2 hits (finding.rs:7 and an unrelated grammar test fixture \"a1\"); no code ties either brownfield failure mode to A1"
+  },
+  {
+    "anchor": "PRINCIPLE-B1-INVENTORY-NOT-GATE",
+    "claim": "Only precondition is compiling; everything else inventoried, then non-regression.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:147  pub fn evaluate(baseline: &[BaselineEntry], results: &BTreeMap<String, RunStatus>) -> GateReport {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:50  /// Diff findings against the baseline: `(new, stale)` — new ones",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:52  /// only shrink, so pruning is the legal direction)."
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'B1' and grep -rni 'inventory, not gate|non-regression' over core-ai-native/v0.8.0/crates — 0 hits naming B1; the two directions are implemented (testgate.rs:154-174 newly-failing, :160 unexpectedly-passing) but no code cites B1"
+  },
+  {
+    "anchor": "PRINCIPLE-B2-ASPIRATION-LEGAL-ONLY-WHEN-LABELED",
+    "claim": "Unimplemented intent must be tracked; exit accounts for every intention.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:100  Some(\"planned\") => (Some(SpecUnitStatus::Planned), None),",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/lib.rs:30  pub const DEFAULT_INTENT_REGISTRY: &str = \"discipline/registry/intent.json\";"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'B2' and grep -rni 'aspiration|carry-over|unaccounted' over core-ai-native/v0.8.0/crates — 0 hits; `planned` units and the intent-registry path exist, but no carry-over accounting code anywhere in the surface"
+  },
+  {
+    "anchor": "PRINCIPLE-B3-CONTRADICTION-IS-DATA",
+    "claim": "Conflicts recorded with evidence; normalization never resolves them inline.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:108  (Some(SpecUnitStatus::Disputed), Some(other.to_string()))",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:98  { \"id\": \"DBT-0015\", \"kind\": \"disputed-spec\", \"severity\": \"P2\", \"title\": \"fixed already\","
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'B3' and grep -rni 'contradiction|adjudicat|inline resolution' over core-ai-native/v0.8.0/crates — 0 hits; the disputed pair is recorded, but no evidence field and no adjudication path exist in the surface"
+  },
+  {
+    "anchor": "PRINCIPLE-B4-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD",
+    "claim": "Golden transcripts of passing behavior pin don't-break-it independently.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:150  /// crate — the differential / characterization oracle the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:179  or characterization oracle against prior behavior (R-040; card \\"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'characteriz|golden|transcript' over core-ai-native/v0.8.0/crates — only the CellHasOracle rule (structure.rs:148-235) and two skip-list mentions of goldens (conform/src/store.rs:370, conform/src/config.rs:110); no transcript capture/compare code and no B4 citation"
+  },
+  {
+    "anchor": "PRINCIPLE-B5-MONOTONE-UTILITY",
+    "claim": "Tools stay useful at 0% migration; outside-frontier degrades, never errors.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:19  //! Design rule inherited from B5 (monotone utility): scanners degrade —",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:5  //! B5 (monotone utility): a file `syn` cannot parse becomes a warning,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:19  //! Frontier behaviour (B5, no cliffs): facts are extracted for the"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "principles-mechanize-what-vibevm-does-socially",
+    "claim": "These mechanize AUDIT.md/PROP-013 practice: findings, severities, dispositions.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:38  severity: String,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:40  disposition: String,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:96  \"disposition\": \"filed\","
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'PROP-013' over core-ai-native/v0.8.0/crates — 0 hits; grep -rn 'AUDIT' case-sensitive — hits are AUD-#### rule citations (conform/src/rules/budget.rs:15) and `audit_crates`, not AUDIT.md; severity/disposition fields located as above"
+  },
+  {
+    "anchor": "DEBT-REGISTRY-IS-MACHINE-READABLE-AUDIT",
+    "claim": "The debt registry is machine-readable AUDIT.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:49  let file: DebtFile = serde_json::from_str(debt_json).context(\"parsing debt.json\")?;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:31  struct DebtFile {"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'AUDIT.md' over core-ai-native/v0.8.0/crates — 0 hits; a machine reader for debt.json exists (tripwire.rs:48-87) but nothing in the surface names it the AUDIT successor"
+  },
+  {
+    "anchor": "registries-are-committed-human-diffable-lead",
+    "claim": "Registries live committed under discipline/registry/, overridable by flag.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:3  //! Diff a nextest run against the project's tests-baseline registry (`discipline/registry/tests-baseline.json`",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/lib.rs:26  pub const DEFAULT_TESTS_BASELINE: &str = \"discipline/registry/tests-baseline.json\";",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:18  //! `.ledger/` is git-ignored."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "REGISTRY-TESTS-BASELINE",
+    "claim": "tests-baseline.json holds test/status/since/debt as exact-match gate input.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:25  pub struct BaselineEntry {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:41  \"passing\" | \"failing-known\" | \"flaky\" | \"obsolete\" => {}",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:29  pub debt: Option<String>,"
+    ],
+    "found": "partial",
+    "searched": "read testgate.rs:23-50 in full — BaselineEntry carries `test`, `status`, `debt` only; grep -rn '\"since\"' over core-ai-native/v0.8.0/crates — 0 hits, so the `since` field of the doc's JSON sample is modelled nowhere (extra fields are tolerated by serde). No discipline/ directory exists under core-ai-native/v0.8.0 (ls of package root)"
+  },
+  {
+    "anchor": "REGISTRY-DEBT-JSON",
+    "claim": "debt.json plus generated DEBT.md is the unified deficiency record.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:37  id: String,",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:114  const DEBT_VIEW: &str = \"discipline/DEBT.md\";",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:98  &[\"open\", \"accepted\", \"filed\", \"fixed\"],"
+    ],
+    "found": "partial",
+    "searched": "read tripwire.rs:30-43 — DebtEntry models id/severity/title/disposition/tripwires; grep -rni 'sunset' and 'evidence' over core-ai-native/v0.8.0/crates — 0 hits each, and `kind` is absent from the struct (present only in the tripwire.rs:95-103 test fixture JSON). No discipline/registry/debt.json file exists under core-ai-native/v0.8.0"
+  },
+  {
+    "anchor": "REGISTRY-INTENT-JSON",
+    "claim": "intent.json plus INTENT.md is the harvested aspiration inventory.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/lib.rs:30  pub const DEFAULT_INTENT_REGISTRY: &str = \"discipline/registry/intent.json\";",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:115  const INTENT_VIEW: &str = \"discipline/INTENT.md\";",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:108  &[\"open\", \"rescoped\", \"done\", \"rejected\"],"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'intent.json|INTENT' over core-ai-native/v0.8.0/crates — 0 hits (core-ai-native-specmap/src/ledger.rs is the LEDGER-INTENT interpretation cache, a different artifact). grep -rni 'harvest|REVIEW marker|TODO|FIXME|WAL|TASKS|ROADMAP' over both surfaces — no harvesting code; the reader is the CLI's tolerant JSON renderer (ledger.rs:20-34)"
+  },
+  {
+    "anchor": "TRIPWIRES-ARE-CHEAP-AND-MECHANICAL",
+    "claim": "A tripwire warns when a change touches watched paths or revs a unit.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:60  if let Some(glob_src) = wire.strip_prefix(\"touch:\") {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:7  //! (matched here) and `rev:<spec-uri>` (needs specmap revisions —",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:27  pub unevaluated: Vec<String>,"
+    ],
+    "found": "partial",
+    "searched": "read tripwire.rs in full — `touch:` globs are matched (lines 60-70); `rev:` wires fall to the else branch (lines 71-73) and are collected as `unevaluated`, documented at tripwire.rs:8-9 as \"evaluation lands with Phase 1; reported as not-yet-evaluable\""
+  },
+  {
+    "anchor": "test-gate-diffs-the-run-against-the-baseline-lead",
+    "claim": "xtask test-gate diffs a nextest run against tests-baseline.json; libtest fallback.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:68  pub fn parse_nextest_output(output: &str) -> BTreeMap<String, RunStatus> {",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:19  eprintln!(\"test-gate: running `cargo nextest run --workspace --no-fail-fast` …\");",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:38  let results = testgate::parse_nextest_output(&combined);"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'libtest' over core-ai-native/v0.8.0/crates — 4 hits, all in core-ai-native-mcp/src/capture.rs about test-harness stdout capture, none a stdout parser fallback; the only parser is parse_nextest_output. grep -rn 'xtask' over both surfaces — 0 hits; the shipped driver is `rust-ai-native test-gate` (main.rs:74-78)"
+  },
+  {
+    "anchor": "GATE-FAILS-ON-NEWLY-FAILING",
+    "claim": "A passing test that failed is a regression and fails the gate.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:172  (\"passing\", RunStatus::Fail) => {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:155  if *status == RunStatus::Fail {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:143  self.newly_failing.is_empty() && self.unexpectedly_passing.is_empty()"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "GATE-FAILS-ON-UNEXPECTEDLY-PASSING-UNPROMOTED",
+    "claim": "A failing-known test that passed fails the gate until explicitly promoted.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:160  (\"failing-known\", RunStatus::Pass) => {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:133  /// (promote via the explicit protocol instead).",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:94  eprintln!(\"  UNEXPECTEDLY PASSING (unpromoted — see PLAYBOOK §7.2): {test}\");"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FLAKY-ENTRIES-ARE-QUARANTINED",
+    "claim": "Flaky entries run and report but never gate; carry debt and a sunset.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:164  (\"flaky\", s) => {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:135  /// `flaky` entries and their observed status — informational.",
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/test_gate.rs:77  eprintln!(\"  flaky (never gating): {test} — {status}\");"
+    ],
+    "found": "partial",
+    "searched": "the never-gating half is located above (flaky_observed is not consulted by is_green, testgate.rs:142-144); grep -rni 'sunset' over core-ai-native/v0.8.0/crates and rust-ai-native-cli — 0 hits, so the required sunset on a flaky entry has no field or check"
+  },
+  {
+    "anchor": "DRIVE-BY-FIXES-ARE-PROHIBITED",
+    "claim": "Fixing known-failing tests outside a phase's scope is prohibited.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:160  (\"failing-known\", RunStatus::Pass) => {"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'drive-by|while I was here|out of scope' over core-ai-native/v0.8.0/crates — 0 hits; the closest mechanical effect is that an out-of-scope repair trips the unexpectedly-passing arm (testgate.rs:160-162), but no rule names or enforces the prohibition"
+  },
+  {
+    "anchor": "UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR",
+    "claim": "Kind-line grammar: req rN, planned, disputed(#anchor), retired tombstone.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:6  //! `` `req r2` ``, `` `req r1 planned` ``, `` `req r2 disputed(#other)` ``",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:64  fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec/tests.rs:49  let text = \"### R {#req-x}\\n`req r2`\\n\\nMUST hold.\\n\\n### P {#req-y}\\n`req r1 planned`\\n\\n### D {#req-z}"
+    ],
+    "found": "partial",
+    "searched": "read mdspec.rs:64-125 — the parser accepts exactly `planned` and `disputed(#anchor)` and rejects any other status word (mdspec.rs:110-114); grep -rni 'retired|tombstone' over core-ai-native/v0.8.0/crates — 0 hits, so the retired/tombstone status has no grammar or enum arm (SpecUnitStatus has only Disputed and Planned, mod.rs:138-144)"
+  },
+  {
+    "anchor": "STATUS-PLANNED",
+    "claim": "Planned means zero coverage expected, counted separately, flipped on first edge.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:100  Some(\"planned\") => (Some(SpecUnitStatus::Planned), None),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:48  Planned => \" [PLANNED]\".to_string(),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:390  assert!(text.contains(\"[PLANNED]\"), \"{text}\");"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'coverage' over core-ai-native/v0.8.0/crates — 4 hits (conform/src/store.rs:293 skip-list word, explain.rs:121 doc phrase, config.rs comment, tripwire.rs:95 fixture) and none counts planned scope separately; grep -rni 'status flip|flip.*status' — 0 hits, so no code prompts a flip on a first `implements` edge"
+  },
+  {
+    "anchor": "STATUS-DISPUTED",
+    "claim": "Disputed records a pair plus debt evidence; heuristic and LLM detection; no inline merge.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:101  Some(w) if w.starts_with(\"disputed(#\") && w.ends_with(')') => {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:207  fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:98  { \"id\": \"DBT-0015\", \"kind\": \"disputed-spec\", \"severity\": \"P2\", \"title\": \"fixed already\","
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'heuristic|MUST-NOT|semantic conflict' over core-ai-native/v0.8.0/crates — 0 hits, so neither the MUST/MUST-NOT keyword-collision pass nor an LLM conflict proposer exists; grep -rn 'LLM' — 2 hits (explain.rs:4, ledger.rs:10) both saying the tools work without one. `disputed-spec` appears only as a tripwire test fixture value, not as a debt-kind enum"
+  },
+  {
+    "anchor": "ADJUDICATION-HAS-THREE-OUTCOMES",
+    "claim": "Owner adjudication yields supersede, scope-split, or stay-open.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'adjudicat|supersede|scope-split|tombstone|stay open' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits for every term; also 0 hits over packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli"
+  },
+  {
+    "anchor": "WHILE-DISPUTED-EDGES-ARE-FROZEN",
+    "claim": "Disputed pairs freeze edges: no suspect-clearing, no coverage penalty, presumption label.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:119  Some(Some(rev)) => {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:122  suspects.push(Suspect {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:49  Disputed => format!("
+    ],
+    "found": "partial",
+    "searched": "read index.rs:86-145 (the whole suspect-detection loop) — it keys only on `unit_revisions` and `e.pinnedR`; `status` is never consulted, so a disputed unit's edges are not exempted. grep -rni 'presumption|presumed|frozen' over core-ai-native/v0.8.0/crates — 0 presumption hits (`frozen` hits are the conform baseline). explain.rs:49-55 renders a [DISPUTED ↔ #x] label but not a presumption label"
+  },
+  {
+    "anchor": "CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME",
+    "claim": "At inventory, capture goldens: CLI output, exit codes, file trees, normalized.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'golden|transcript|manual-tests|exit code|snapshot' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — the only `golden` hits are skip-list substrings (core-ai-native-conform/src/store.rs:370, core-ai-native-conform/src/config.rs:110); no capture, normalisation or comparison code exists. Nothing in rust-ai-native-cli either"
+  },
+  {
+    "anchor": "CHARACTERIZATION-IS-A-STABILITY-ORACLE-NOT-A-CORRECTNESS-CLAIM",
+    "claim": "Characterization pins stability, not correctness; pinning a bug is intended.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:171  pub struct CellHasOracle;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:178  \"no replacement of a non-trivial cell merges without a differential \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:224  \"add a differential or characterization test in \\"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'stability oracle|correctness claim|pinned bug|landmine' over core-ai-native/v0.8.0/crates — 0 hits; the located rule requires that an oracle exist per cell, but says nothing about stability-vs-correctness"
+  },
+  {
+    "anchor": "PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED",
+    "claim": "Phase gates now mean characterization snapshots unchanged unless deliberately recorded.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'snapshot|behavior unchanged|behaviour unchanged|phase gate' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 relevant hits (the only `snapshot` in the surface family is the CLI health snapshot path, rust-ai-native-cli/src/lib.rs:32, unrelated to characterization)"
+  },
+  {
+    "anchor": "RATCHET-FILE-IS-THE-FRONTIER",
+    "claim": "The ratchet file defines the migrated frontier.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:7  //! - `specmap.toml`'s `exempt` list (see [`crate::config::Config`]) names",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:64  /// Crates exempt from the orphan ratchet (PLAYBOOK `#phase2`). A crate",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/specmap.toml:30  exempt = ["
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'ratchet file' over core-ai-native/v0.8.0/crates — 0 hits; the frontier is expressed as the `exempt`/`dispositioned` lists inside specmap.toml (and conform-baseline.json, conform/src/baseline.rs:10) rather than a file named 'ratchet'"
+  },
+  {
+    "anchor": "contract-per-tool-lead",
+    "claim": "Lead-in: each tool has a stated outside-frontier contract.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:19  //! Design rule inherited from B5 (monotone utility): scanners degrade —",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:19  //! Frontier behaviour (B5, no cliffs): facts are extracted for the"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'contract per tool' over core-ai-native/v0.8.0/crates — 0 hits; the per-tool contracts appear only as separate module doc statements, not as one enumerated table"
+  },
+  {
+    "anchor": "CONTRACT-SPECMAP-AND-TRACE",
+    "claim": "specmap/trace on untagged items yield facts marked outside frontier.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:139  \"no tagged code item matches `{target}` (neither exactly nor as a suffix); \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:140  untagged items are outside the migrated frontier — facts only\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:138  0 => bail!("
+    ],
+    "found": "partial",
+    "searched": "read explain.rs:123-152 — the phrase 'outside the migrated frontier' occurs inside a `bail!(...)`, i.e. the untagged-target path returns an error rather than facts plus a mark; grep -rn 'outside frontier' (exact doc wording) over core-ai-native/v0.8.0/crates — 0 hits"
+  },
+  {
+    "anchor": "CONTRACT-CONFORM",
+    "claim": "conform reports findings only within scope; baseline frozen elsewhere.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:59  /// Run every rule over the facts; report findings only inside `scope`",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:82  findings.retain(|f| f.file.starts_with(prefix));",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:68  .filter(|f| !baseline.findings.contains(&f.fingerprint))"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "CONTRACT-EXPLAIN",
+    "claim": "explain degrades to best-effort facts; provenance line says which.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:214  \"\\n— provenance: computed at {}, epoch {}, producer {producer}\\n\",",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:94  bail!(\"no spec unit with URI `{uri}` in the index\");",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:103  out.push_str(\"  edges: none (uncovered unit)\\n\");"
+    ],
+    "found": "partial",
+    "searched": "read explain.rs:91-205 and ledger.rs:165-223 — a provenance line exists on the prose render (ledger.rs:213-221) and names epoch+producer, but it does not state a full-chain-vs-best-effort mode; explain_text bails on unknown symbols/URIs (explain.rs:93, :138-141) rather than degrading. grep -rni 'best.effort' over core-ai-native/v0.8.0/crates — 1 unrelated hit (core-ai-native-mcp/src/capture.rs:106)"
+  },
+  {
+    "anchor": "A-TOOL-THAT-ERRORS-OUTSIDE-THE-FRONTIER-IS-FORBIDDEN",
+    "claim": "B5 forbids a tool that errors on the unmigrated part of the repo.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:20  //! an unparseable file becomes a warning entry, never a hard error.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:231  /// unparseable sources). B5: the indexer degrades, never errors, outside the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:437  fn unparseable_source_degrades_to_a_warning() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "PHASE-6-CLOSES-WITH-ASPIRATION-RECONCILIATION",
+    "claim": "Phase 6 closes when every intent item is done, rescoped, or rejected.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs:108  &[\"open\", \"rescoped\", \"done\", \"rejected\"],"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'reconcil|Phase 6|aspiration' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits; the four intent states exist only as a render grouping order in the CLI's ledger view, with no check that the `open` group is empty"
+  },
+  {
+    "anchor": "REPORT-PUBLISHES-THE-EXIT-NUMBERS",
+    "claim": "REPORT publishes burn-down, disputed half-life, shrinkage, intent unaccounted = 0.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'burn-down|burndown|half-life|shrinkage|unaccounted|exit criterion' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits for every term; also 0 over packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli"
+  },
+  {
+    "anchor": "EVERYTHING-PLANNED-LANDS-OR-IS-LET-GO",
+    "claim": "Everything planned lands or is consciously let go — a checkable property.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'let go|lands or|checkable' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits; no code computes or asserts the property (see also the REPORT-PUBLISHES-THE-EXIT-NUMBERS search)"
+  },
+  {
+    "anchor": "DEBT-ENTRIES-CARRY-SUNSETS",
+    "claim": "Debt entries carry sunsets and are re-dispositioned at audit runs.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:36  struct DebtEntry {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:40  disposition: String,"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'sunset' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates and over rust-ai-native-cli — 0 hits in both; DebtEntry (tripwire.rs:35-43) models id/severity/title/disposition/tripwires with no sunset field and no re-disposition timer; grep -rn 'R-050' — 0 hits"
+  },
+  {
+    "anchor": "ANTI-ENTRENCHMENT-CLOSE-QUOTA",
+    "claim": "A per-phase close-quota K activates when debt flatlines while the frontier advances.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'quota|flatline|entrench|close-quota|museum' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits for every term; also 0 over packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli"
+  },
+  {
+    "anchor": "ACCEPTED-DEBT-BUDGET-PER-CRATE",
+    "claim": "Exceeding a crate's accepted-debt budget blocks new accepted dispositions there.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:1  //! Budget-and-bans rules — the guide's quantitative gates: unsafe",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:137  pub struct FileLength {"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'error.budget|accepted.debt|debt budget' over core-ai-native/v0.8.0/crates — 0 hits; the only crate named `budget` (conform/src/rules/budget.rs) gates unsafe/file-length/unwrap, never debt counts, and nothing consults a per-crate accepted-debt total"
+  },
+  {
+    "anchor": "PRIOR-ART-PYTEST-XFAIL-STRICT",
+    "claim": "Prior art: pytest xfail(strict=True) supplies the unexpectedly-passing signal.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:1  //! The xfail-strict test gate (BROWNFIELD-PROTOCOL §4).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:27  /// the only xfail home) fire everywhere. A site covered by a reasoned"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'pytest' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits; the borrowed name 'xfail-strict' is present (testgate.rs:1, and the CLI's 'test-gate: green (xfail-strict).' at rust-ai-native-cli/src/test_gate.rs:87) but the pytest attribution is not"
+  },
+  {
+    "anchor": "PRIOR-ART-BASELINES-AND-RATCHETS",
+    "claim": "Prior art: lint/violation baselines and ratchet patterns from large repos.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:15  //! - [`baseline`] — the ratchet baseline (`conform-baseline.json`):",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:17  //!   the file only shrinks.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:1  //! The specmap orphan ratchet — the Phase 2 \"flip\" (PLAYBOOK"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "PRIOR-ART-SRE-ERROR-BUDGETS",
+    "claim": "Prior art: SRE error budgets, concepts only.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rnw 'SRE' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits; grep -rni 'error.budget' over the same tree — 0 hits (the -i 'SRE' count of 11 was substring noise inside ordinary words)"
+  },
+  {
+    "anchor": "PRIOR-ART-VIBEVM-AUDIT-AND-PROP-013",
+    "claim": "Prior art: vibevm's AUDIT.md and PROP-013 are the direct ancestor.",
+    "marker": "impl/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rn 'PROP-013' and grep -rn 'AUDIT.md' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits each; case-sensitive 'AUDIT' hits are AUD-#### rule ids (conform/src/rules/budget.rs:15) and `audit_crates` config, neither the vibevm audit document"
+  },
+  {
+    "anchor": "PRIOR-ART-FEATHERS-CHARACTERIZATION-TESTS",
+    "claim": "Prior art: Feathers' characterization tests underlie B4.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:179  or characterization oracle against prior behavior (R-040; card \\"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'Feathers' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits; the term 'characterization' appears only in the CellHasOracle rule's prose (structure.rs:150, :179, :224) with no attribution"
+  },
+  {
+    "anchor": "OPEN-CONFLICT-HEURISTIC-PRECISION",
+    "claim": "Open question: the MUST/MUST-NOT window match will false-positive; tune and report.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'heuristic' and grep -rn 'MUST-NOT' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits each; no conflict-detection pass exists to measure precision on (the only conflict signal is mdspec.rs:207 duplicate_anchor_warning)"
+  },
+  {
+    "anchor": "OPEN-QUOTA-K-AND-DEBT-BUDGETS",
+    "claim": "Open question: quota K and per-crate debt budgets come from REPORT data.",
+    "marker": "spec/done",
+    "evidence": [],
+    "found": "not-found",
+    "searched": "grep -rni 'quota' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits; grep -rni 'debt budget|accepted.debt' — 0 hits; no REPORT-producing code in the surface (see REPORT-PUBLISHES-THE-EXIT-NUMBERS)"
+  },
+  {
+    "anchor": "OPEN-INTENT-AUTO-LINK-TO-ROADMAP",
+    "claim": "Open question: should intent.json auto-link ROADMAP milestone anchors after Phase 1.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:103  \"tripwires\": [\"touch:ROADMAP.md\"] }"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'ROADMAP' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 3 hits, all inside the tripwire.rs test fixture (lines 101, 103, 136); no intent-to-ROADMAP linking code, and no intent.json reader in this package at all"
+  },
+  {
+    "anchor": "OPEN-INDEX-ABSORPTION",
+    "claim": "Open question: registries stay files in v0.x; folding into specmap.json is a v0.2 decision.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:25  pub const INDEX_REL_PATH: &str = \"specmap.json\";",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:167  Specmap {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:22  //! Orphans are computed at gate time and deliberately not serialised"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED",
+    "claim": "Any field, status or policy not exercised by Playbook v0.2 Phase 2 is removed.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:23  /// One `tests-baseline.json` entry (extra fields tolerated).",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:39  #[serde(default, deny_unknown_fields)]"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'unexercised|removed rather than|eats its own' over packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates — 0 hits; no code prunes unexercised registry fields, and the registry readers deliberately tolerate extra fields (testgate.rs:23, ledger.rs:20-34 in rust-ai-native-cli), the opposite direction from removal"
+  }
+]

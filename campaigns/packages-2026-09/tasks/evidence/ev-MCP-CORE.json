@@ -1,0 +1,372 @@
+[
+  {
+    "anchor": "status-line",
+    "claim": "Shipped with discipline-core 0.6.0; crate ships as core-ai-native-mcp after PROP-028 rename.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/Cargo.toml:2  name = \"core-ai-native-mcp\"",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:13      \"crates/core-ai-native-mcp\",",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:20  version = \"0.8.0\""
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'discipline-core' Cargo.toml specmap.toml crates/ -> 0 hits; grep -rn 'PROP-028' same paths -> 0 hits; grep -rn 'MCP-SOVEREIGNTY' -> 1 hit (crates/core-ai-native-mcp/src/lib.rs:2). Crate name and the core-ai-native family name are in the manifests; the '0.6.0' version claim has no manifest bearing it (workspace version = 0.8.0)."
+  },
+  {
+    "anchor": "TRANSPORT-EVERY-MCP-KIND-SERVER-BUILDS-ON",
+    "claim": "This package owns the JSON-RPC transport every mcp-kind package's server builds on.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:2  //! MCP-SOVEREIGNTY-PLAN Wave 2). The `mcp`-kind packages (PROP-027)",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:3  //! build their servers on this crate: it owns the line-delimited",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:8  # this package owns what no single language owns."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "CONSUMERS-VENDOR-THIS-CRATE-BYTE-IDENTICALLY",
+    "claim": "Per-language discipline servers vendor this crate byte-identically via sync-engines.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:5  # every language stack ships as byte-identical vendored copies under its own",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:6  # `crates/vendor/` (`cargo xtask sync-engines` mirrors them; `--check` gates",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:3  # It AUTHORS the neutral engine crates — the conform fact/rule engine, the"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'rust-ai-native-mcp|typescript-ai-native-mcp' Cargo.toml specmap.toml crates/ -> 0 hits. grep -rn 'sync-engines|vendor' Cargo.toml specmap.toml -> Cargo.toml:5-6, specmap.toml:3; the enumeration at Cargo.toml:4-5 names the conform / specmap / specmark engines and does not list the mcp crate. The consumer repos are outside the stated evidence surface."
+  },
+  {
+    "anchor": "RELATED-LAWS-LIVE-IN-THE-CONSUMING-REPO",
+    "claim": "Consumer kind/delivery laws sit in PROP-027; tcg tool grammar is transport-independent.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:2  //! MCP-SOVEREIGNTY-PLAN Wave 2). The `mcp`-kind packages (PROP-027)",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:22  //! (PROP-027 §2.6)."
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'PROP-027' crates/ Cargo.toml specmap.toml -> 2 hits (lib.rs:2, lib.rs:22). grep -rni 'tcg|TCG-PROTOCOL' crates/core-ai-native-mcp/ Cargo.toml specmap.toml -> 0 hits. The consuming repo's PROP-027 and the TCG-PROTOCOL documents are outside the stated evidence surface."
+  },
+  {
+    "anchor": "kind-line-wire",
+    "claim": "The wire section is declared a requirement unit at rank r1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:7  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#wire\");",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:5  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#wire\");"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'MCP-CORE-v0.1#wire' crates/ -> wire.rs:7, error.rs:5 (scope! tags) plus error.rs:25 and error.rs:37 (error strings). No source encodes a `req` kind or an `r1` rank; the kind/rank is spec-side metadata."
+  },
+  {
+    "anchor": "WIRE-IS-LINE-DELIMITED-JSON-RPC-OVER-STDIO",
+    "claim": "One JSON object per line over stdio; no Content-Length framing.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:2  //! §2 — the MCP stdio form; one JSON object per line, protocol revision",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:58          writeln!(out, \"{line}\")",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:183          assert!(!line.contains('\\n'));"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "ANSWERED-PROTOCOL-REVISION",
+    "claim": "The initialize handshake answers protocol revision 2024-11-05.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:15  pub const PROTOCOL_VERSION: &str = \"2024-11-05\";",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:123                      \"protocolVersion\": PROTOCOL_VERSION,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:240          assert_eq!(out[0][\"result\"][\"protocolVersion\"], PROTOCOL_VERSION);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "inbound-frames-classify-by-id-lead",
+    "claim": "Inbound frames are classified by presence of the id member.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:62      match v.get(\"id\") {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:17  /// One inbound frame, already classified.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:164      fn classifies_requests_and_notifications_by_id() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FRAME-WITH-ID-IS-A-REQUEST",
+    "claim": "A present, non-null id makes the frame a request that must be answered.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:63          Some(id) if !id.is_null() => Ok(JsonRpcMessage::Request(JsonRpcRequest {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:104                  Ok(JsonRpcMessage::Request(req)) => Some(self.answer(req)),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:31      Request(JsonRpcRequest),"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "FRAME-WITHOUT-ID-IS-A-NOTIFICATION",
+    "claim": "Absent or null id makes a notification, absorbed without any response.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:68          _ => Ok(JsonRpcMessage::Notification(JsonRpcNotification {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:105                  Ok(JsonRpcMessage::Notification(_)) => None,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:239          assert_eq!(out.len(), 4);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "MALFORMED-LINE-MUST-NOT-KILL-THE-LOOP",
+    "claim": "Malformed or method-less lines answer parse error -32700 and the loop survives.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:106                  Err(detail) => Some(JsonRpcResponse::error(",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:137              code: -32700,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:280          assert_eq!(out[1][\"id\"], 9, \"the loop survived to answer the ping\");"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "TRANSPORT-FAILURE-IS-ONE-THISERROR-ENUM",
+    "claim": "One thiserror enum for transport failure; each variant cites spec and fix surface.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:22  pub enum McpCoreError {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:25           (violates spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#wire; \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:26            fix surface: the host closed the pipe — check the agent host's \\"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "kind-line-server",
+    "claim": "The server-loop section is declared a requirement unit at rank r1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:9  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#server\");"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'MCP-CORE-v0.1#server' crates/ -> 1 hit (server.rs:9). No source encodes a `req` kind or an `r1` rank; the kind/rank is spec-side metadata."
+  },
+  {
+    "anchor": "SERVER-IS-NAME-VERSION-TOOLSET-OVER-A-TRANSPORT-SEAM",
+    "claim": "Server is (name, version, ToolSet) over a Transport seam; stdio in production, scripted in tests.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:81  pub struct Server {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:23      fn read_line(&mut self) -> Result<Option<String>, McpCoreError>;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:162      pub struct Scripted {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "methods-lead",
+    "claim": "The loop dispatches on the request's method name.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:119          match req.method.as_str() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:118      fn answer(&mut self, req: crate::JsonRpcRequest) -> JsonRpcResponse {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "METHOD-INITIALIZE",
+    "claim": "initialize returns protocolVersion, serverInfo, and tools capability with listChanged false.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:120              \"initialize\" => JsonRpcResponse::ok(",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:124                      \"serverInfo\": { \"name\": self.name, \"version\": self.version },",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:125                      \"capabilities\": { \"tools\": { \"listChanged\": false } },"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "METHOD-TOOLS-LIST",
+    "claim": "tools/list returns registry descriptors in stable sorted order.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:131                  serde_json::json!({ \"tools\": self.tools.descriptors() }),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:110      tools: BTreeMap<String, Box<dyn Tool>>,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:126          self.tools.values().map(|t| t.descriptor()).collect()"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "METHOD-TOOLS-CALL",
+    "claim": "tools/call dispatches by name; missing name is -32602, unknown tool -32601.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:138                          JsonRpcError::invalid_params(\"missing `name`\"),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:146                          JsonRpcError::method_not_found(&format!(\"tools/{name}\")),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:141                  let args = params.get(\"arguments\").cloned().unwrap_or(Value::Null);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "METHOD-PING",
+    "claim": "ping answers an empty object result.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:128              \"ping\" => JsonRpcResponse::ok(req.id, Value::Object(serde_json::Map::new())),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:249          assert_eq!(out[3][\"id\"], 3);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "METHOD-ANYTHING-ELSE",
+    "claim": "Any other method answers method not found.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:150              other => JsonRpcResponse::error(req.id, JsonRpcError::method_not_found(other)),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:268          assert_eq!(out[1][\"error\"][\"code\"], -32601);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "kind-line-toolset",
+    "claim": "The tools section is declared a requirement unit at rank r1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:6  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#toolset\");"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'MCP-CORE-v0.1#toolset' crates/ -> 1 hit (toolset.rs:6). No source encodes a `req` kind or an `r1` rank; the kind/rank is spec-side metadata."
+  },
+  {
+    "anchor": "TOOL-IS-DESCRIPTOR-PLUS-RUN",
+    "claim": "A tool is descriptor() with inputSchema plus run(args) returning ToolOutput{report,is_error}.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:77      fn descriptor(&self) -> ToolDescriptor;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:78      fn run(&mut self, args: &Value) -> ToolOutput;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:27      #[serde(rename = \"inputSchema\")]"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "REGISTRY-LAST-REGISTRATION-OF-A-NAME-WINS",
+    "claim": "Registry maps name to tool; a repeated name overwrites the earlier registration.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:121          self.tools.insert(tool.descriptor().name, tool);",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:118      /// Mount a tool; a repeated name overwrites the previous entry (the",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:155      fn descriptors_are_sorted_and_last_registration_wins() {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "TOOL-FAILURE-IS-A-RESULT-NEVER-A-PROTOCOL-ERROR",
+    "claim": "Tool failure returns content text with isError true, not a protocol error.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:66              \"content\": [{ \"type\": \"text\", \"text\": self.report }],",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:143                      Some(output) => JsonRpcResponse::ok(req.id, output.into_result_value()),",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:257          assert!(out[0].get(\"error\").is_none(), \"{:?}\", out[0]);"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "REPORTS-SPEAK-THE-CLASS-F-REQ-CITING-GRAMMAR",
+    "claim": "Tool reports use the Class-F REQ-citing grammar of the wrapped runners.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:44      pub report: String,",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:1  //! The one error enum of the transport layer (Class F): every variant"
+    ],
+    "found": "partial",
+    "searched": "grep -rni 'class-f|class f' crates/core-ai-native-mcp/ -> 1 hit (error.rs:1, about this crate's error enum, not tool reports). grep -rni 'REQ-' crates/core-ai-native-mcp/src/ -> no report-grammar check. ToolOutput.report is an unvalidated String; the wrapped runners live in the consumer stacks, outside the evidence surface."
+  },
+  {
+    "anchor": "kind-line-capture",
+    "claim": "The capture-guard section is declared a requirement unit at rank r1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:23  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#capture\");"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'MCP-CORE-v0.1#capture' crates/ -> capture.rs:23 (scope! tag), capture.rs:113, capture.rs:272, error.rs:48. No source encodes a `req` kind or an `r1` rank; the kind/rank is spec-side metadata."
+  },
+  {
+    "anchor": "CAPTURE-IS-A-PROCESS-LEVEL-REDIRECT",
+    "claim": "Capture redirects process stderr (dup2 / SetStdHandle) into a temp file, not a pipe.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:80      let sink = fs::File::create(&path).map_err(|e| err(\"create\", e))?;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:147              if dup2(sink.as_raw_fd(), 2) < 0 {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:202              if SetStdHandle(STD_ERROR_HANDLE, sink.as_raw_handle().cast::<c_void>()) == 0 {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "threaded-write-was-rejected-at-the-spike",
+    "claim": "A threaded &mut dyn Write was rejected: children inherit the process handle.",
+    "marker": "spec/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:5  //! threaded `&mut dyn Write` was tried on paper and rejected: children",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:6  //! inherit the PROCESS handle and would bypass it entirely (the plan's",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:229          /// the Wave-0 S3 finding is about), and the rustdoc example on"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "LAWS-CAPTURES-MUST-NOT-NEST-OR-RUN-CONCURRENTLY",
+    "claim": "A second simultaneous capture refuses, citing this unit; dispatch is sequential.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:58      if ACTIVE.swap(true, Ordering::SeqCst) {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:61              \"a capture is already active — tool dispatch is sequential by design, \\",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:272          assert!(msg.contains(\"MCP-CORE-v0.1#capture\"), \"{msg}\");"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "RESTORATION-RIDES-DROP",
+    "claim": "Stderr restoration happens in Drop, so a panicking tool cannot mute the process.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:102  impl Drop for RestoreOnDrop {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:110              if platform::restore_stderr(r).is_err() {",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:277          let result = std::panic::catch_unwind(|| {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "CAPTURE-CELL-IS-THE-AUDITED-HOME-OF-UNSAFETY",
+    "claim": "Only this cell touches raw descriptors or std handles; nothing else is unsafe.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:140              // restore. This cell is the audited home of that unsafety —",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:141              // nothing else in the crate touches raw fds.",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:180      unsafe extern \"system\" {"
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "kind-line-no-prompts",
+    "claim": "The no-prompts section is declared a requirement unit at rank r1.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:73  /// (MCP-CORE §5: a server has no interactive channel; anything that"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'no-prompts|no_prompts' crates/ Cargo.toml specmap.toml -> 0 hits. grep -rn 'specmark::scope!' crates/core-ai-native-mcp/src/ -> 5 tags, citing #wire (wire.rs:7, error.rs:5), #server (server.rs:9), #toolset (toolset.rs:6), #capture (capture.rs:23); none cites #no-prompts. No source encodes a `req` kind or an `r1` rank."
+  },
+  {
+    "anchor": "NO-INTERACTIVE-CHANNEL-TOOLS-MUST-NOT-PROMPT",
+    "claim": "Tools never prompt; anything that would ask becomes an explicit parameter.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:72  /// One mounted tool. `run` returns [`ToolOutput`] — tools NEVER prompt",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:78      fn run(&mut self, args: &Value) -> ToolOutput;",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:16  //!   never prompt (a server has no interactive channel)."
+    ],
+    "found": "located"
+  },
+  {
+    "anchor": "CRATE-KNOWS-NEITHER-VIBE-NOR-A-LANGUAGE",
+    "claim": "Crate knows no vibe, language, or discipline rule; PROP-027 §2.6 tests it.",
+    "marker": "impl/done",
+    "evidence": [
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:20  //! Nothing here knows any language, any discipline rule, or vibe: a",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:21  //! server built on this crate serves with `vibe` absent from PATH",
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/Cargo.toml:14  specmark.workspace = true"
+    ],
+    "found": "partial",
+    "searched": "grep -rn 'vibe' crates/core-ai-native-mcp/src/ -> hits only in doc comments and scope!/error spec URLs (lib.rs:5,20,21; wire.rs:13; the spec:// strings); no code path reads vibe. Dependencies are specmark, thiserror, serde, serde_json only (crates/core-ai-native-mcp/Cargo.toml:13-17). grep -rn 'PATH' crates/core-ai-native-mcp/ -> 1 hit (lib.rs:21, prose). crates/core-ai-native-mcp has no tests/ directory (ls -> Cargo.toml, src); the PROP-027 §2.6 acceptance test lives in the consuming repo, outside the evidence surface."
+  }
+]
