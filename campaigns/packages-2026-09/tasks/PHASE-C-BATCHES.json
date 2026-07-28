@@ -1,0 +1,393 @@
+{
+ "schema": 1,
+ "generated_from": "campaigns/packages-2026-09/run/mirror (vibe progress mirror)",
+ "batches": [
+  {
+   "id": "C1",
+   "cluster": "ai-native",
+   "title": "core-ai-native — mechanisms",
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+   ],
+   "file_count": 5,
+   "markers": 412,
+   "anchors": 353
+  },
+  {
+   "id": "C2",
+   "cluster": "ai-native",
+   "title": "core-ai-native — guiding layer",
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md"
+   ],
+   "file_count": 11,
+   "markers": 548,
+   "anchors": 485
+  },
+  {
+   "id": "C3",
+   "cluster": "ai-native",
+   "title": "the three language GUIDEs",
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md"
+   ],
+   "file_count": 3,
+   "markers": 393,
+   "anchors": 390
+  },
+  {
+   "id": "C4",
+   "cluster": "ai-native",
+   "title": "nine scaffolds x three languages",
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-f-structured-diagnostics.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-e-fast-loop.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-f-structured-diagnostics.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-g-doctests.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-h-simulators.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md"
+   ],
+   "file_count": 27,
+   "markers": 494,
+   "anchors": 467
+  },
+  {
+   "id": "C5",
+   "cluster": "ai-native",
+   "title": "tcg mechanisms + tools x three",
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md"
+   ],
+   "file_count": 14,
+   "markers": 617,
+   "anchors": 573
+  },
+  {
+   "id": "C6",
+   "cluster": "ai-native",
+   "title": "skills + boot snippets + READMEs",
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md",
+    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md",
+    "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/README.md",
+    "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md"
+   ],
+   "file_count": 17,
+   "markers": 375,
+   "anchors": 330
+  },
+  {
+   "id": "C7",
+   "cluster": "ai-native",
+   "title": "the three discipline-mcp briefs",
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md"
+   ],
+   "file_count": 3,
+   "markers": 154,
+   "anchors": 99
+  },
+  {
+   "id": "W1",
+   "cluster": "world",
+   "title": "the git family",
+   "packages": [
+    "git-practices",
+    "git-atomic-commits",
+    "git-conventional-commits",
+    "git-attribution-policy",
+    "git-autonomy"
+   ],
+   "files": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md",
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md",
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md",
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/README.md",
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md",
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md",
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/README.md",
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md",
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md",
+    "packages/org.vibevm.world/git-practices/v0.1.0/README.md"
+   ],
+   "file_count": 16,
+   "markers": 472,
+   "anchors": 407
+  },
+  {
+   "id": "W2",
+   "cluster": "world",
+   "title": "IPC core I",
+   "packages": [
+    "two-process-model",
+    "wal",
+    "wal-specspaces",
+    "sync-from-code"
+   ],
+   "files": [
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md",
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md",
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md",
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md",
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md",
+    "packages/org.vibevm.world/two-process-model/v0.1.0/README.md",
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md",
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md",
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md",
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md",
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/README.md",
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md",
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md",
+    "packages/org.vibevm.world/wal/v0.2.0/README.md",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md"
+   ],
+   "file_count": 20,
+   "markers": 745,
+   "anchors": 692
+  },
+  {
+   "id": "W3",
+   "cluster": "world",
+   "title": "IPC core II",
+   "packages": [
+    "addressable-specs",
+    "decision-records",
+    "conflict-protocol"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md",
+    "packages/org.vibevm.world/decision-records/v0.1.0/README.md",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md"
+   ],
+   "file_count": 15,
+   "markers": 770,
+   "anchors": 615
+  },
+  {
+   "id": "W4",
+   "cluster": "world",
+   "title": "plans and inquiry",
+   "packages": [
+    "campaign-plans",
+    "discovery-prompt",
+    "comparative-research",
+    "redbook"
+   ],
+   "files": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/README.md",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md",
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+    "packages/org.vibevm.world/redbook/v0.2.0/README.md",
+    "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md"
+   ],
+   "file_count": 15,
+   "markers": 651,
+   "anchors": 564
+  },
+  {
+   "id": "W5",
+   "cluster": "world",
+   "title": "project practice I",
+   "packages": [
+    "operating-modes",
+    "health-audit",
+    "manual-tests",
+    "secrets-hygiene"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/README.md",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md",
+    "packages/org.vibevm.world/manual-tests/v0.1.0/README.md",
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md",
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md",
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md",
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/README.md",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md",
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md",
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md",
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md",
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md",
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md"
+   ],
+   "file_count": 21,
+   "markers": 775,
+   "anchors": 697
+  },
+  {
+   "id": "W6",
+   "cluster": "world",
+   "title": "project practice II",
+   "packages": [
+    "licensing",
+    "source-mirrors",
+    "spec-genres",
+    "dev-runtime-docs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md",
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md",
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md",
+    "packages/org.vibevm.world/licensing/v0.1.0/README.md",
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md",
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md",
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md",
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/eula-template.md",
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/README.md",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md"
+   ],
+   "file_count": 19,
+   "markers": 700,
+   "anchors": 572
+  },
+  {
+   "id": "W7",
+   "cluster": "world",
+   "title": "authoring for tools",
+   "packages": [
+    "managed-blocks",
+    "qualified-naming",
+    "tool-design-lessons"
+   ],
+   "files": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md"
+   ],
+   "file_count": 15,
+   "markers": 703,
+   "anchors": 603
+  }
+ ],
+ "totals": {
+  "file_count": 201,
+  "markers": 7809,
+  "anchors": 6847
+ }
+}
