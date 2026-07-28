@@ -1,0 +1,669 @@
+{
+ "batch": "W3",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:14  ## The reference tree {#tree}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:58  ## PROP vs FEAT {#prop-vs-feat}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:78  ## What goes where {#what-goes-where}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:95  ## The `.human/` private buffer {#human-buffer}",
+     "confirmed: Four topics named, four sections present: `{#tree}` (14), `{#prop-vs-feat}` (58), `{#what-goes-where}` (78), `{#human-buffer}` (95). `src: [1]` deliberately — a scope line describes its own file, and nothing outside the package bears on that."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "protocol-document-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:72  ## The URI scheme {#uri-scheme}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:1  # Addressable Specs Protocol {#root}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:10  ##protocol-document-pointer The addressing scheme the layout serves is defined in [`ADDRESSABLE-SPECS-PROTOCOL.md`](ADDRESSABLE-SPECS-PROTOCOL.md). @impl/done",
+     "confirmed: Same-directory relative link, target present in the package and in `vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/`, and it does define the scheme at line 72. One of the 24 relative citations the campaign's source-1 join resolved with 0 broken. Does not dangle after compilation, because it never leaves its directory."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SPEC-OR-SPECS-PICK-ONE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+     "specmap.toml:21  spec_roots = [\"spec\"]",
+     "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+     "confirmed: The host picked `spec/` and never mixes. `find . -maxdepth 4 -type d -name specs` (excluding node_modules, vibedeps, .vibe and target) returns nothing; all 38 package spec trees and the host's own are `spec/`. It is also load-bearing rather than cosmetic: `specmap.toml:22  spec_roots = [\"spec\"]` hard-codes the name for the scanner, and the resolver joins a doc-path under a `spec/` root. So the choice is made once and encoded in two places."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "three-zones-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+     "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:40  ##three-zones-lead The tree divides into three zones with different loss semantics: @impl/done",
+     "confirmed: The host states the loss semantics and gets two zones out of three. `spec/boot/00-core.md:40-43` lists Head, WAL, Spec, Code and grades the last pair explicitly — 'Losing them is inconvenient; losing the spec is a catastrophe' — which is the shared-state / artifacts distinction with the same asymmetry. The third zone, private buffers, has no in-tree existence here (no `.human/`, no ignore file), so the host's version of the division is two zones plus an out-of-repository buffer. What is missing to settle it: nothing in the host names 'three zones' or ranks them as a set."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ZONE-SHARED-STATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+     "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at…",
+     "confirmed: Stated by the host almost word for word: `00-core.md:43` — 'Losing them is inconvenient; losing the spec is a catastrophe' — with the Spec layer defined one line above as 'other files under `spec/`', addressable by `spec://` URI. CLAUDE.md:3 makes that tree the mandatory first read of every session, which is the operational form of 'only channel'. Measured: `spec/` holds 47 PROP/module documents plus boot, design, manual-tests and terraforms — 982 headings, 857 anchored."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ZONE-ARTIFACTS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+     "crates/vibe-spec/src/resolver.rs:1  //! The file resolver — `spec://` authority + doc-path → a file on disk //! (PROP-035 §6, the `doc_path → file` half). //!",
+     "confirmed: The semantics are adopted and the paths differ. `00-core.md:43` names the artifact zone as 'everything under `crates/`, including each crate's own `tests/`' and grades it 'inconvenient' to lose — the fact's claim with the host's own layout substituted (a Cargo workspace has no root `src/`; `ls src tests` at the repo root returns 'No such file or directory', while `ls crates/vibe-spec/` returns `src` and `tests`). What is missing to settle the regeneration half: nothing in the perimeter has ever regenerated a crate from its spec, and the 5 dangling edges show the spec trailing the code in at le"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ZONE-PRIVATE-BUFFERS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project…",
+     "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+     "confirmed: `ls .human` returns 'No such file or directory'; `ls -a | grep -i ignore` returns only `.gitignore`, which has no `human` line; there is no `.claudeignore`, `.aiexclude` or `.cursorignore` anywhere in the tree. So neither the directory nor the enforcement mechanism exists here. The host's substitute is named in CLAUDE.md:163 — 'Global user-memory is reserved for facts about *this developer's machine*' — a private buffer kept OUTSIDE the repository, which is the fallback `##NO-IGNORE-FILE-MEANS-KEEP-IT-OUTSIDE-THE-TREE` prescribes rather than the `.human/` form. The concept IS in force here, in"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "HARNESS-ENTRY-FILES-ARE-THIN-REDIRECTS": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after…",
+     "CLAUDE.md:216  This project's boot sequence is computed by vibe (the PROP-009 loading model). To begin a session, read these files in order:  1. `spec/boot/STATIC.md` — if it exists. The static (priority) lane: read it",
+     "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
+     "DRIFT on both halves. Thin: `CLAUDE.md` is 228 lines / 2 915 words of full contract, and `AGENTS.md` and `GEMINI.md` are byte-identical copies of it. Redirect: there is no `spec/BOOT.md` to redirect INTO — the host boots from a directory, `spec/boot/`, computed by a generated manifest. Three fat doors rather than three thin ones."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "one-boot-sequence-many-doors": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at…",
+     "CLAUDE.md:216  This project's boot sequence is computed by vibe (the PROP-009 loading model). To begin a session, read these files in order:  1. `spec/boot/STATIC.md` — if it exists. The static (priority) lane: read it",
+     "confirmed: The host has exactly the N doors the fact anticipates and keeps them from diverging by copying rather than by redirecting: `diff -q CLAUDE.md AGENTS.md` and `diff -q CLAUDE.md GEMINI.md` both report the files identical, md5 329017ba… for all three, and CLAUDE.md:150 states the policy — 'kept identical'. One boot sequence is genuinely shared: all three carry the same `<vibevm>` managed block computing one order from `spec/boot/STATIC.md` + `INDEX.md`, and that block is regenerated by `vibe install` rather than hand-maintained. So the outcome the fact wants holds today, obtained by the mechanism"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PROP-FEAT-HOLDS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:1  # PROP-000: Foundational technical decisions {#root}",
+     "spec/common/PROP-029-fully-qualified-addresses.md:1  # PROP-029 — Fully-qualified addresses and mechanical refactoring {#root}",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+     "confirmed: `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents, so the FEAT half of the split has no instance in this host — the host runs feature slices as campaign plans under `campaigns/**` and `spec/terraforms/` instead. The resolver still knows the genre: `crates/vibe-spec/src/resolver.rs:164-169 is_id_stem` accepts `PROP` or `FEAT`, so the code is ready for a document type the tree does not contain. The PROP half matches exactly: PROP-000 is 'Foundational technical decisions', PROP-029 is a ratified standing law with a §1 MUST. The FEAT half's content — scope, plan, acceptance — lives in"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PROP-FEAT-LIFETIME": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the…",
+     "spec/common/PROP-000.md:1  # PROP-000: Foundational technical decisions {#root}",
+     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:44  - ##RETIRED-SECTIONS-KEPT §3–§5 below describe the retired topology and stay as the",
+     "confirmed: `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents, so the FEAT half of the split has no instance in this host — the host runs feature slices as campaign plans under `campaigns/**` and `spec/terraforms/` instead. The resolver still knows the genre: `crates/vibe-spec/src/resolver.rs:164-169 is_id_stem` accepts `PROP` or `FEAT`, so the code is ready for a document type the tree does not contain. The PROP half holds and is visible in the tree: all 42 PROP documents are live, PROP-029:5 carries a ratification date rather than an expiry, and where content IS superseded the host keeps it"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PROP-FEAT-CHANGES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:47  ## Changelog {#changelog}",
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only vibevm's concrete carriers, the mechanical-refactoring foundation, and the scope rules. @spec/done",
+     "spec/common/PROP-000.md:1  # PROP-000: Foundational technical decisions {#root}",
+     "confirmed: The changelog clause is the measurable half and it is nearly unexercised: `grep -rn '## Changelog' spec/` returns exactly one hit, PROP-029:47, whose two dated entries are in the prescribed form. The other 41 PROPs record semantic changes only in git. 'Changes rarely' does hold — PROP-029 has two changelog entries in the three months since its 2026-07-12 ratification. `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents, so the FEAT half of the split has no instance in this host — the host runs feature slices as campaign plans under `campaigns/**` and `spec/terraforms/` instead. The "
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PROP-FEAT-CITED-BY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) —…",
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the…",
+     "confirmed: The PROP half holds at scale and through all three named citers: code markers (912 specmap edges, all `spec://vibevm/…#anchor`, e.g. `specmark::scope!` at baseline.rs:14), commits (515 with `spec://` in the message), other specs (PROP-029:5 building on PROP-008 by URI; 145 `spec://` occurrences across spec/common + spec/modules). `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents, so the FEAT half of the split has no instance in this host — the host runs feature slices as campaign plans under `campaigns/**` and `spec/terraforms/` instead. The resolver still knows the genre: `crates"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PROP-IS-THE-LAW-FEAT-IS-A-PROJECT-UNDER-IT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:9  ##ADDR-LAW A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project: @spec/done",
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+     "confirmed: The law half is unambiguous — PROP-029 §ADDR-LAW is a MUST binding every occurrence project-wide, PROP-000 ends with an Invariants section telling the reader to stop and reconcile on any apparent violation. The project-under-it half exists in substance and not in the named genre: the campaign plans under `campaigns/**` and `spec/terraforms/` are projects executed under those PROPs (`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` cites PROP anchors throughout), but they are not FEAT documents and do not live under `spec/modules/`. `find spec -name 'FEAT-*'` returns 0 against 42 PROP d"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-LASTING-DECISION-MOVES-UP-INTO-A-PROP": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
+     "confirmed: The movement happens here, between the genres the host actually uses. PROP-029's changelog line 49 records it being 'ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure' — a campaign uncovering a lasting rule, which was then filed as a PROP rather than left in the campaign plan. The reverse direction is visible too: `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}` holds 2 485 lines of slice-scoped findings that have NOT moved up, and the campaign's own rulings cite PROP anchors rather than restating them. So the pro"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NUMBER-PER-MODULE-AND-NEVER-RENUMBER": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
+     "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the…",
+     "DRIFT on the first clause, confirmed on the second. Never renumber holds absolutely — all 42 PROP numbers are unique repository-wide and no renumbering appears in history. Number PER MODULE does not: the host's numbering is GLOBAL, which is stricter than the rule and differently shaped, so `PROP-043` names one document across ten module directories rather than one per module."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-HOME-ARCHITECTURE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:14  ## 1. Language: Rust {#language}  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:1  # PROP-029 — Fully-qualified addresses and mechanical refactoring {#root}",
+     "spec/common/PROP-028-package-families.md:1  # PROP-028 — Package families: `<family>` / `-lang` / `-mcp` {#root}",
+     "confirmed: Exactly the host's practice. `ls spec/common/` returns 12 PROP documents and they are the cross-cutting ones: PROP-000 (foundational technical decisions, incl. `## 1. Language: Rust {#language}`), PROP-028 (package families), PROP-029 (addressing law), PROP-031 (algorithmic refactoring), PROP-032 (project model), PROP-033 (refactoring registry). Module-specific contracts sit under `spec/modules/<m>/` instead — 35 documents across 10 module directories. The split matches the row without exception I could find."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-HOME-MODULE-CONTRACT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:1  # PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker {#root}",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:1  # PROP-008: Qualified package naming — groups, short aliases, collision detection {#root}",
+     "spec/modules/README.md:1  # Module-level specs",
+     "confirmed: The host's tree is `spec/modules/<module>/PROP-NNN-<slug>.md` across 10 module directories (vibe-actions, vibe-cli, vibe-index, vibe-mcp, vibe-progress, vibe-registry, vibe-resolver, vibe-settings, vibe-workspace) holding 35 documents, with `spec/modules/README.md` as the module map — which is also what the flow's reference tree shows as `spec/common/structure.md`. Each document is a single module's contract: PROP-035 is the spec compiler, PROP-008 is qualified naming."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-HOME-FEATURE-SCOPE": {
+    "v": "drift",
+    "ev": [
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
+     "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
+     "DRIFT: the row routes a feature's scope and acceptance criteria to `spec/modules/<m>/FEAT-*`, and `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents. The host routes them elsewhere — feature slices run as plans under `campaigns/**`, with their own scope, phases and acceptance gates. The destination the row names is empty and a different one is in use."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-HOME-NEXT-SESSION-STEP": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:209  ## Next",
+     "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+     "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+     "confirmed: The host does exactly this and encodes it twice. `spec/WAL.md:209  ## Next` is the section; `00-core.md:11` makes reading `spec/WAL.md` step 2 of every session boot ('current project state (checkpoint, not log)'); `00-core.md:64` makes rewriting it the end-of-session obligation. Cited by heading and by boot step rather than by the WAL's prose, since that prose is rewritten every session."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-HOME-SPEC-PROTOCOL": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading…",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3)…",
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. --> <!-- The static boot lane (PROP-009 §2.3): the highest-priority --> <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+     "DRIFT: «protocol docs at the spec root» names a location the host does not have. `ls spec/SPEC-PROTOCOL.md` returns 'No such file or directory' and there is no protocol document at the spec root at all — the host receives its conflict rules, sync rules and commit rules as INSTALLED FLOWS compiled into `spec/boot/STATIC.md`. The content exists; the home the row designates does not."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-HOME-BOOT-MINIMUM": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:7  ## Session boot sequence",
+     "spec/boot/00-core.md:9  ##boot-sequence-lead Every session starts here. In order: @impl/done 1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6. @impl/done 2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done 3. ##BOOT-STEP-PROPS Read the relevant PROP/FEAT under `spec/common/` and `spec/modules/` for the task at hand. @impl/done",
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. --> <!-- The static boot lane (PROP-009 §2.3): the highest-priority --> <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+     "confirmed: The boot minimum is exactly where the row says: `spec/boot/00-core.md:7-13` is a five-line `## Session boot sequence` — read `spec/boot/`, read the WAL, read the relevant PROP/FEAT, then start work. The budget half is broken by a wide margin, measured with the flow's own 375-words-per-500-tokens conversion: 00-core.md alone is 827 words (~1 100 tokens) and the always-loaded lane (00-core + 90-user + INDEX + the compiled STATIC.md) is ~12 100 words / ~16 100 tokens, ~32x the line. The 500 figure appears nowhere in the host (`grep -rn '500 tokens' spec/ CLAUDE.md VIBEVM-SPEC.md crates/` returns "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-HOME-IMPLEMENTATION-DETAIL": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-spec/src/address.rs:1  //! The `spec://` address grammar (PROP-035 §6). //! //! Canonical form:",
+     "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3)…",
+     "confirmed: The host's clearest instance is the `spec://` grammar itself: PROP-035 gives it one line (97) while `crates/vibe-spec/src/address.rs` carries 27 lines of module doc covering the authority split, the optional `@version`, the doc-path genre segments and the `~rN` pin — the *how*, beside the parser, appearing in no spec document. `00-core.md:45` routes the general case ('propose a spec update, do not rewrite code back'). Widened for the violation: `grep -rn 'fn \\|struct \\|impl ' spec/common spec/modules --include=*.md` returns hits only inside fenced illustration blocks."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-HOME-HUMAN-ONLY-NOTES": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project…",
+     "spec/boot/90-user.md:1  # User overrides",
+     "confirmed: `ls .human` returns 'No such file or directory'; `ls -a | grep -i ignore` returns only `.gitignore`, which has no `human` line; there is no `.claudeignore`, `.aiexclude` or `.cursorignore` anywhere in the tree. So neither the directory nor the enforcement mechanism exists here. The host's substitute is named in CLAUDE.md:163 — 'Global user-memory is reserved for facts about *this developer's machine*' — a private buffer kept OUTSIDE the repository, which is the fallback `##NO-IGNORE-FILE-MEANS-KEEP-IT-OUTSIDE-THE-TREE` prescribes rather than the `.human/` form. The host does keep a human-facin"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DEFAULT-A-HOMELESS-FACT-INTO-THE-SPEC-TREE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:146  ## Memory discipline: project facts stay in the project",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live…",
+     "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate…",
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "confirmed: The host states this rule in nearly the fact's own words and makes it a default. `CLAUDE.md:146  ## Memory discipline: project facts stay in the project`; line 161 gives the same teammate argument — 'A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo'; line 165 states the tie-breaker — 'when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo'. Widened for the alternatives the fact names: no wiki, no gist, no ADR directory anywhere in the tree, a"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "HUMAN-BUFFER-HOLDS-TEXT-THE-AGENT-MUST-NEVER-SEE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:334  `.human/` заслуживает отдельного комментария. Это директория для заметок, которые не должны попадать в контекст AI. Почему? Каждый файл, прочитанный AI — это токены. Файл `shortcuts.md` содержит команды для копипасты типа «ты дрифтуешь, перечитай спеку». Если…",
+     "confirmed: `ls .human` returns 'No such file or directory'; `ls -a | grep -i ignore` returns only `.gitignore`, which has no `human` line; there is no `.claudeignore`, `.aiexclude` or `.cursorignore` anywhere in the tree. So neither the directory nor the enforcement mechanism exists here. The host's substitute is named in CLAUDE.md:163 — 'Global user-memory is reserved for facts about *this developer's machine*' — a private buffer kept OUTSIDE the repository, which is the fallback `##NO-IGNORE-FILE-MEANS-KEEP-IT-OUTSIDE-THE-TREE` prescribes rather than the `.human/` form. The book chapter the flow derive"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "two-reasons-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:101  ##two-reasons-lead Two reasons to keep it out: @impl/done",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:104  - ##REASON-TOKEN-COST **Token cost.** Every file the agent reads is context spent; a shortcuts file is pure overhead for any task. @spec/done - ##REASON-REACTION-RISK **Reaction risk.** An agent that reads \"you are drifting\" mid-task may *respond* to it — reflecting on drift it has not committed,",
+     "confirmed: A lead-in checked against the list it introduces: two bullets follow at 104-108, `##REASON-TOKEN-COST` and `##REASON-REACTION-RISK`. Two, as claimed. `src: [1]` — only the file bears on whether two items follow."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "REASON-TOKEN-COST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. --> <!-- The static boot lane (PROP-009 §2.3): the highest-priority --> <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at…",
+     "spec/boot/90-user.md:1  # User overrides",
+     "confirmed: The premise is measurable in this host and it is large. CLAUDE.md:3 makes every file in `spec/boot/` an unconditional read; the lane is 00-core.md 827 words + 90-user.md 1 282 + INDEX.md 133 + STATIC.md 9 860 ≈ 12 100 words (~16 100 tokens by the flow's own conversion), paid every session. So a file added to that lane is a recurring cost, exactly as the reason states. The host has no shortcuts file to exclude, but `spec/boot/90-user.md` — 1 282 words of machine-specific quirks — is in the lane and read every session, which is the cost this reason argues against."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "REASON-REACTION-RISK": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:334  `.human/` заслуживает отдельного комментария. Это директория для заметок, которые не должны попадать в контекст AI. Почему? Каждый файл, прочитанный AI — это токены. Файл `shortcuts.md` содержит команды для копипасты типа «ты дрифтуешь, перечитай спеку». Если AI прочитает это —…",
+     "spec/boot/00-core.md:33  - ##VOID-TEXT-STILL-READS The trap, and the only reason this rule is needed: the prose is unchanged. A tombstone still reads like the requirement it used to be, because it was one. The marker is the only thing saying otherwise, so read it before…",
+     "confirmed: The book chapter states the same mechanism at line 334 («увидит „ты дрифтуешь\" и начнёт рефлексировать»). The host has met a structurally identical failure in a different context and written the rule for it: `00-core.md:33 ##VOID-TEXT-STILL-READS` — 'the prose is unchanged. A tombstone still reads like the requirement it used to be … The marker is the only thing saying otherwise, so read it before acting on the paragraph.' That is the same reaction risk — text that reads like a live instruction being acted on — recognised and guarded in the host's own boot file."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PHYSICAL-INVISIBILITY-BEATS-LOGICAL-PROHIBITION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:26  ## Files you MUST NOT touch without explicit instruction  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to…",
+     "a design principle, and this host demonstrates it from the weak side: its one protected path carries BOTH instruments — `.gitignore` holds `/refs/` (the firewall) and `spec/boot/00-core.md:26-28` holds a written do-not-touch line (the sign). The written line is what this flow's next fact forbids, and it is filed there."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DO-NOT-WRITE-A-NEVER-READ-LINE-IN-THE-BOOT-FILE": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/00-core.md:26  ## Files you MUST NOT touch without explicit instruction  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+     "spec/boot/STATIC.md:54  ## Never {#never}",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and…",
+     "DRIFT: the host writes exactly the forbidden line, in exactly the forbidden place. `spec/boot/00-core.md:26-28` is a section headed «Files you MUST NOT touch without explicit instruction», naming `refs/book/` — a never-read line in the boot file, read by every session forever, which is the cost this fact exists to avoid. The host also has the physical form available (`.gitignore` carries `/refs/`), so the written line is additional rather than a substitute."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LIST-THE-BUFFER-IN-THE-IGNORE-MECHANISM": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to…",
+     "confirmed: `ls .human` returns 'No such file or directory'; `ls -a | grep -i ignore` returns only `.gitignore`, which has no `human` line; there is no `.claudeignore`, `.aiexclude` or `.cursorignore` anywhere in the tree. So neither the directory nor the enforcement mechanism exists here. The host's substitute is named in CLAUDE.md:163 — 'Global user-memory is reserved for facts about *this developer's machine*' — a private buffer kept OUTSIDE the repository, which is the fallback `##NO-IGNORE-FILE-MEANS-KEEP-IT-OUTSIDE-THE-TREE` prescribes rather than the `.human/` form. I checked each named mechanism b"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-firewall-beats-a-no-entry-sign": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:26  ## Files you MUST NOT touch without explicit instruction  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "confirmed: Both instruments exist in this host and the comparison the fact draws is visible: the no-entry sign is `00-core.md:26-28` (a written MUST NOT about `refs/book/`, re-read every session), and the firewall is `.gitignore` lines 13-14 and 2-11 (which remove `.vibe/`, `target/` and `node_modules/` from the tree a clone sees). What is missing to settle which one 'beats' the other: no record of either being violated, so the comparison is untested here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NO-IGNORE-FILE-MEANS-KEEP-IT-OUTSIDE-THE-TREE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to…",
+     "CLAUDE.md:146  ## Memory discipline: project facts stay in the project",
+     "confirmed: This is the arm the host actually took, and it wrote down why. CLAUDE.md:163 — 'Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics' — puts the machine-scoped buffer in the harness's per-user store, outside the repository, and 161 gives the reason (a teammate who clones will never see it). With no `.claudeignore` present, that is precisely the fallback this fact prescribes, reached independently and for a stated reason."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-principle-survives-the-mechanism": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already…",
+     "spec/boot/90-user.md:1  # User overrides",
+     "confirmed: Demonstrated in this host: with no `.human/` and no ignore file, the underlying principle — one process's private notes stay off the shared channel — is still enforced, by a boundary rule instead of a directory (CLAUDE.md:161-165 partitions project facts into the repo and machine facts into user-memory, with an explicit tie-breaker). The host even keeps the mirror-image case in-tree and marked: `spec/boot/90-user.md` is the user-owned override file the engine never rewrites. So the principle is intact under a mechanism the flow does not describe."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "layout-is-the-uri-scheme-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:132  ##layout-is-the-uri-scheme-lead The layout is the URI scheme made physical: @impl/done",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:134  - ##SEGMENT-MODULE-IS-THE-DIRECTORY the directory name under `spec/modules/` is the `<module>` segment; @impl/done - ##SEGMENT-DOC-IS-THE-FILE-NAME the file name minus `.md` is the `<doc>` segment; @impl/done - ##SEGMENT-FRAGMENT-IS-THE-ANCHOR the `{#anchor}` in the file is the fragment. @impl/done",
+     "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+     "confirmed: A lead-in to three segment mappings at 134-136, and the host's addresses are literally built that way: `spec://vibevm/modules/vibe-progress/PROP-043#baseline` reads off `spec/modules/vibe-progress/PROP-043-progress-markup.md` heading by directory, file and anchor. The one place the mapping is not literal — the `PROP-NNN` truncation — is handled by the resolver's prefix-scan and recorded on `##SEGMENT-DOC-IS-THE-FILE-NAME` below."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SEGMENT-MODULE-IS-THE-DIRECTORY": {
+    "v": "drift",
+    "ev": [
+     "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+     "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
+     "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
+     "DRIFT: the directory name is in the host's addresses, one segment further right than this mapping places it. Host citations read `spec://vibevm/modules/<module>/<doc>#<anchor>` — the authority is a minted namespace (`specmap.toml:14`, `namespace = \"vibevm\"`), and the module directory has moved into the path. The mapping as stated does not describe the consumer's addresses."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SEGMENT-DOC-IS-THE-FILE-NAME": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+     "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
+     "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
+     "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+     "DRIFT, and the host keeps a resolver that exists because of it. Host files carry a descriptive slug — `PROP-043-progress-markup.md` — and are cited as `PROP-043`, so the doc segment is the file name minus the extension AND minus the tail. `crates/vibe-spec/src/resolver.rs:112-113` inverts that truncation by a prefix-scan."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SEGMENT-FRAGMENT-IS-THE-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-spec/src/doctree.rs:439  /// Split a `{#anchor}` out of heading text, returning the text before it, the /// anchor, and any trailing text after the closing `}` (e.g. a `:add` / /// `:replace` merge marker). The anchor need not sit at the end of the line. fn split_anchor(text: &str) -> (String, Option<String>, String) {",
+     "spec/common/PROP-000.md:157  ## 12. Commit and push discipline {#commits}",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) —…",
+     "confirmed: Holds exactly, and is implemented: `doctree.rs:442 split_anchor` lifts `{#anchor}` from the heading, and a live pair resolves end to end — CLAUDE.md:5 cites `spec://vibevm/common/PROP-000#commits` and `spec/common/PROP-000.md:157` is `## 12. Commit and push discipline {#commits}`. Population: 519 distinct heading anchors, 313 distinct fragments cited in host `spec://` addresses. The host adds a second fragment species the fact does not mention — the `##ID` fact id, which shares the same address space per the ruling recorded at PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1579."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-URI-RESOLVES-WITH-ZERO-INDEX": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+     "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
+     "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json.",
+     "crates/vibe-spec/src/resolver.rs:1  //! The file resolver — `spec://` authority + doc-path → a file on disk //! (PROP-035 §6, the `doc_path → file` half). //!",
+     "the word is INDEX and the host has none: resolution never consults `specmap.json`, the 62 791-line graph sitting right there. Recorded: it does need a directory prefix-scan for the PROP-NNN truncation (`resolver.rs:112-113`), which is a lookup without being an index — the cost that buys is filed on KEEP-THE-MAPPING-ONE-TO-ONE."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "KEEP-THE-MAPPING-ONE-TO-ONE": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+     "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json.",
+     "spec/common/PROP-029-fully-qualified-addresses.md:32  - ##ADDR-RENAME-IS-LOOKUP Change a name, a group, or an anchor, then rewrite every occurrence, and the inverse — a table lookup, not the judgment call a resolver-dependent short address would need. @spec/done",
+     "DRIFT: the mapping is not one-to-one here and the host bought the warned-of cost knowingly. Descriptive slugs mean `PROP-043` does not name a file, so resolution needs a directory prefix-scan; package addresses need the lockfile. The fact's own prediction — «the moment resolution needs a lookup table, every citation costs a search, and the twenty-token correction stops being twenty tokens» — is realised, and the code that realises it is committed."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "REVERSE-DNS-WHEN-SPECS-MAY-BE-SHARED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
+     "vibe.lock:177  group = \"org.vibevm.world\"",
+     "spec/common/PROP-029-fully-qualified-addresses.md:21  | ##CARRIER-PKGREF pkgref (manifests, lockfiles, prose) @spec/done | `[<kind>:]<group>/<name>` @spec/done | `stack:org.vibevm.ai-native/rust-ai-native-lang` @spec/done |",
+     "confirmed: The host splits on exactly this condition and encodes the split syntactically. Shareable specs — the 36 installed packages — carry reverse-DNS groups (`group = \"org.vibevm.world\"` in vibe.lock, cited as `spec://org.vibevm.world/addressable-specs/…`). Non-shareable specs — the host's own `spec/modules/` — use short local names (`vibe-cli`, `vibe-registry`, `vibe-workspace`). `address.rs:9-16` makes the two tellable apart by a dot in the first segment. Counted: 1384 host-namespace citations against 68 package-coordinate ones in host-owned zones."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "decisions-arrive-scattered": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:146  ## Memory discipline: project facts stay in the project",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project…",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
+     "confirmed: The host is a live instance of the migration this describes, mid-flight. CLAUDE.md's memory-discipline section exists precisely to stop the scattering ('Project facts do **not** belong in the running harness's global per-user auto-memory'), and `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` is a 2 936-line campaign whose whole subject is bringing scattered package documentation under one addressed discipline. Widened for the named carriers: no wiki and no gist in the tree; docstrings ARE a live carrier (470 crate files with `spec://` markers), but joined by edges rather than left sc"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "delegate-the-inventory-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:155  ##delegate-the-inventory-lead Delegate the inventory: @impl/done",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:157  ``` Inventory every Markdown file in this repository that states a decision, requirement, or plan. For each: current path, what kind of fact it holds (per the what-goes-where table in",
+     "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:1  # The `world` evidence brief — what a delegated search returns, and what it must not",
+     "confirmed: The prompt at 157-164 asks for a migration table — current path, kind of fact, proposed home, headings needing anchors — and ends 'Move nothing yet'. The host runs delegated, report-only inventories in exactly this shape: `campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md` is a worker contract that forbids verdicts and edits, and the `campaigns/packages-2026-09/tasks/evidence/` directory holds 35 completed tables. Widened for this specific prompt: `grep -rn 'Inventory every Markdown file' campaigns/ spec/` returns nothing, so the technique is in use and this text is not."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MIGRATE-IN-SMALL-REVIEWABLE-STEPS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+     "CLAUDE.md:203  **Required behaviour** when a resume phrase fires:",
+     "confirmed: The host's practice matches the prescription closely. The campaign is phased into reviewable batches with a written plan and a running LOG (`## 7. LOG {#log}`, 2 485 lines of dated findings and rulings), evidence is gathered before verdicts, and CLAUDE.md:203-207 stops the session at the resume boundary so 'the owner reads the report and decides' rather than a session executing its own next step. The commit chain shows the granularity: `git log --oneline | head -25` is one batch or one finding per commit."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THREE-ZONES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+     "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "confirmed: Re-measured rather than inherited from `##three-zones-lead`. Shared state: `spec/`, named and graded 'losing the spec is a catastrophe'. Artifacts: `crates/` (with per-crate `tests/`), graded 'inconvenient' — same semantics, different path, since a Cargo workspace has no root `src/`. Private buffers: absent from the tree; `ls .human` fails and no ignore file exists, with the function displaced to out-of-repository user-memory (CLAUDE.md:163). Two zones present with the stated loss semantics, one displaced."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-PROP-IS-LAW-FEAT-IS-A-SLICE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:9  ##ADDR-LAW A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project: @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
+     "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+     "PROP as standing law holds at 42 documents with PROP-029 §1 a project-wide MUST; the migration-up half holds with a recorded instance; numbers-are-part-of-URIs holds absolutely. The FEAT genre has no instance here — non-adoption of a genre, not a rule the host contradicts. Where the host DOES contradict is the routing row that sends feature scope to a FEAT file, filed on ROW-HOME-FEATURE-SCOPE."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-EVERY-FACT-HAS-A-DESIGNATED-HOME": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:146  ## Memory discipline: project facts stay in the project",
+     "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate…",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to…",
+     "CLAUDE.md:148  Facts about *this project* — its design, conventions, decisions, milestones, open questions, owner preferences that govern technology choices — live **inside this repository**. The canonical homes are:  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot). - `MEMORY.md` at repo root (currently a pointer to [`spec/boot/90-user.md`](spec/boot/90-user.md), the user-owned boot snippet).",
+     "confirmed: The host writes both clauses and adds a homes list of its own. CLAUDE.md:146-159 enumerates the canonical homes — the harness entry files, `MEMORY.md`, `TASKS.md`, `BACKLOG.md`, and 'authoritatively, the `spec/**/*.md` tree'; line 165 states the default in the fact's own terms ('when uncertain … treat it as project-scoped and write it into the repo'); line 161 gives the fresh-clone argument verbatim in substance. Widened for a fact with no home: the campaign zone (`campaigns/**`) and `spec/terraforms/` are two homes the list does not mention, both live and both in-repository, so the clone argu"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-HUMAN-BUFFER-IS-ENFORCED-BY-INVISIBILITY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:26  ## Files you MUST NOT touch without explicit instruction  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+     "CLAUDE.md:163  Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to…",
+     "confirmed: `ls .human` returns 'No such file or directory'; `ls -a | grep -i ignore` returns only `.gitignore`, which has no `human` line; there is no `.claudeignore`, `.aiexclude` or `.cursorignore` anywhere in the tree. So neither the directory nor the enforcement mechanism exists here. The host's substitute is named in CLAUDE.md:163 — 'Global user-memory is reserved for facts about *this developer's machine*' — a private buffer kept OUTSIDE the repository, which is the fallback `##NO-IGNORE-FILE-MEANS-KEEP-IT-OUTSIDE-THE-TREE` prescribes rather than the `.human/` form. And the host's one agent-facing "
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-NAMES-ARE-THE-URI-SEGMENTS": {
+    "v": "drift",
+    "ev": [
+     "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+     "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+     "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json.",
+     "DRIFT on the file-name segment and on the zero-index claim it pairs with, for the reasons filed on SEGMENT-DOC-IS-THE-FILE-NAME and KEEP-THE-MAPPING-ONE-TO-ONE. Directory names ARE segments here (`spec/modules/vibe-progress` appears verbatim in host addresses); file names are not."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
