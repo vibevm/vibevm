@@ -2116,6 +2116,42 @@ command that would have tested it.
   documents, one habit: the rule that exists to keep a document honest is the rule
   nobody gave a checker.**
 
+- **2026-07-28 · The `world` cluster's sources 2 and 3 become one command, and
+  the host turns out to be one install behind.** §3.1's third source is
+  unreadable as written — `files_written` is `[]` for all 36 packages — so the
+  substitute ratified at the phase opening is the boot lane, which is *compiled*
+  from the installed packages and carries a provenance marker per contribution.
+  That marker is the join: package → installed copy → what the host actually reads.
+
+  **17 of 31 contributions carry the package's exact word stream. Six differ, and
+  the differences are small and specific**: `campaign-plans` by six words («cold
+  facts verified at writing time», in the package and not in the host),
+  `comparative-research` by three («sibling document pointers»). **Eight have no
+  source at the path the installed copy names** — they were installed from `boot/`
+  and DRIFT-039 moved the packages to `spec/boot/`, so the installed lane predates
+  the layout fix. The whole lane was last written 2026-07-14; the packages were
+  marked through 2026-07-27, and **0 of 32 installed snippets carry Phase B's
+  markup while every package copy does**.
+
+  None of that is semantic drift and all of it is source-3 evidence: the host runs
+  what the packages ship, one install behind, and the compiler strips the campaign's
+  markup on the way in — so the boot lane is a **rendering** of a snippet, never a
+  copy of it.
+
+  **The join also reproduces F-078 mechanically**, which was filed from reading:
+  `git-atomic-commits`, `git-attribution-policy`, `git-autonomy` and
+  `git-conventional-commits` each appear **twice** in `STATIC.md`, once directly and
+  once through the `git-practices` umbrella that compiles its own members. Four
+  flows, four duplications, exactly as the finding says.
+
+  *Three wrong comparisons were made before the right one, and each was reported as
+  a fact about the tree.* A byte compare called all 31 contributions drifted — that
+  was the compiler stripping markup. A path derivation that took three components
+  instead of four called all 31 unsourced. And the report diffed raw text while the
+  decision was taken on stripped text, so it claimed 247 differing words where the
+  verdict rested on 6. **The instrument was wrong three times in one afternoon and
+  said so loudly each time; that is the only reason none of it reached a verdict.**
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
