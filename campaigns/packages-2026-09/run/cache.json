@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:57:52Z",
+  "updated_at": "2026-07-28T21:58:39Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -49896,7 +49896,210 @@
       },
       "marker_count": 15,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "9ff19490ad21b6e0cd5bee163bc0d8b191fa3dca79567b89dbc0467361edd4c0",
+        "verdicts": {
+          "RUNNING-ONE-PERIODIC-HEALTH-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:20  name = \"health-audit\"",
+              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:31  Use the **`health-audit`** skill: it reads the category checklist,",
+              "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+              "confirmed: the skill exists, ships, installs, and describes the procedure it claims to. F-092 is confirmed as CLOSED on this file rather than re-discovered — the YAML frontmatter carries no anchor and the first anchored fact is at line 10, with `grep -oE '##[A-Za-z]…' | wc -l` = 14 matching the mirror's fact_count of 14 and 0 unmarked, so DRIFT-037's close on 2026-07-27 is holding. RECORDED as the standing fact for every row in this file: the skill is materialised into NO harness the host runs — three skill homes checked (`.claude/skills/` 5, `.agents/skills/` 4, `.opencode/skills/` 4), health-audit in none — so no agent here has ever invoked this procedure as a skill, and the three recorded runs were performed without it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "full-protocol-pointer": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:1  # Running an audit {#root}",
+              "DRIFT: the fact's subject is the pointer, and the directory it names does not exist in the consuming project. `ls -d spec/flows` returns «No such file or directory»; the host's spec/ holds WAL.md, boot, common, design, manual-tests, modules, terraforms. The three documents DO ship, in the package and at `vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/`. An agent that read this skill inside this repository and followed the pointer literally would find nothing — which the skill's own step-1 fallback half anticipates. W1's 69-dangling family."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "PRODUCE-A-DRAFT-AND-DO-NOT-COMMIT-WITHOUT-APPROVAL": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+              "AUDIT.md:389  The owner directed the filed program to completion the same day",
+              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+              "confirmed, and the host's posture matches even though the skill was not the route. The 2026-06-12 run is recorded «Owner-requested» and its follow-through reads «The owner directed the filed program to completion the same day» with the instruction quoted — draft, then owner approval, then action. What cannot be attributed to THIS skill is the loop itself, since no harness carries it; the posture is the host's own and predates any skill projection."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "READ-THE-CHECKLIST-AND-THE-RUN-PROCEDURE-IN-FULL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:1  # Running an audit {#root}",
+              "confirmed: Both named files exist in the package and in the installed payload. The fallback clause is the interesting half here: inside this repository neither path resolves (no spec/flows/ directory), so a literal reading of step 1 would trigger the stop condition. The files ARE reachable at vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/, which the skill does not name."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "READ-THE-PREVIOUS-SECTION-AND-NOTE-WHAT-CARRIES-FORWARD": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+              "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
+              "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
+              "discipline/DEBT.md:7  ## open (12)",
+              "confirmed: The host performed this step once, at 2026-06-12, and its output is the carry-forward section re-listing the 2026-05-23 series and the 2026-06-10 AUD- series. What a fourth run would find today, if it ran the step: AUDIT.md's last section leaves 3 open and 2 filed-not-landed at heading grain, and discipline/DEBT.md's open section carries 12, eight of them traceable to the 2026-05-23 run."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "IDENTIFY-THE-PROJECTS-GATE-SO-YOU-AUDIT-WHAT-IT-MISSES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:13  - ##GATE-DEF vibevm's per-commit gate is `tools/self-check.sh` (`cargo fmt --check`, `cargo test --workspace`, `cargo clippy -D warnings`, `vibe check`). @spec/done",
+              "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+              "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+              "tools/self-check.sh:9  #   3. `cargo clippy --workspace ...`     — zero warnings under `-D warnings`.",
+              "tools/self-check.sh:10  #   4. `vibe check --path . --quiet`      — spec linter clean against the",
+              "tools/self-check.sh:12  #   5. `cargo xtask conform check`        — the discipline gate (Class-F/G",
+              "confirmed: The host has done this once and written the answer down permanently: PROP-013 ##GATE-DEF names tools/self-check.sh and four commands. The script has since grown to ten documented steps, so a run performing step 3 today would find a wider gate than the PROP records — the PROP's gate description has not tracked the script, which is itself the C2 spec-drift shape."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID": {
+            "v": "drift",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+              "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
+              "DRIFT on the walk, split on the aids. The project-specific-rows clause is well served — PROP-013 §2 carries E1-E4 with their own aids. The breadth-first walk is unconfirmed by any of the three runs, two of which disclaim it in their own text, which is the same measurement ruled at four other facts in this package. The named aids split four ways: the grep-based ones were run and reported at 2026-06-12-11; the CI-config-versus-tree diff exists as self-check.sh step 0b; the coverage tool has no host equivalent; and the dependency audit has never been invoked anywhere."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ASSIGN-THE-FIVE-FIELDS-TO-EACH-FINDING": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+              "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+              "AUDIT.md:9  **Severity** — `P1` blocker (resolve before the next milestone ships) ·",
+              "AUDIT.md:11  **Disposition** — `fixed` (resolved in-run, with the commit hash) ·",
+              "confirmed: All 29 findings in the artefact carry all five. The `<date>-NN` form holds for 25 of them; the 2026-06-10 run used the repository-wide AUD-00NN sequence instead. Severity is P1/P2/P3 throughout and disposition is one of the four words throughout — zero out-of-vocabulary values by `grep -oE '^### 20[0-9-]+ · [^·]+ · P[123] · [a-z]+' AUDIT.md | grep -oE '[a-z]+$' | sort | uniq -c`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "CARRY-FORWARD-EACH-PRIOR-UNRESOLVED-FINDING-AND-RE-JUDGE-IT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+              "AUDIT.md:369  unverified this run. Re-judged P2 → P3, open.",
+              "AUDIT.md:370  - **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`",
+              "AUDIT.md:377  - **-13** (NaiveDepSolver the only solver) — **superseded in",
+              "discipline/DEBT.md:9  - **DBT-0002** `failing-test` [P2] — cli_live_e2e is #[ignore]d and red",
+              "confirmed: The 2026-06-12 carry-forward does both halves: it re-judges ('Re-judged P2 → P3, open'; 'Re-pointed, P3') and it flags recurrence ('open, unchanged'). The recurrence flag has grown teeth outside AUDIT.md — eight seed-run findings are still in discipline/DEBT.md's open section, unre-judged since 2026-05-23."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "OUTPUT-A-DRAFT-AUDIT-MD-SECTION": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+              "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+              "AUDIT.md:104  **Legacy `vibespecs/flow-*` repos archived, not deleted.** The M1.19",
+              "AUDIT.md:344  60 s budget; revisit at the first breach or when vibe-cli decomposes.",
+              "confirmed as an output spec whose referents resolve; the dated heading and the accepted/open notes are present in all three host sections. RECORDED: the finding table is present in one of three, the other two using per-finding headings — and since the skill is installed in no harness, NONE of the three sections was produced by following this spec at all. The form drift belongs to `EVERY-FINDING-IS-ONE-TABLE-ROW`, which asserts the row; this fact describes what the skill should emit."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "OUTPUT-THE-CHEAP-FIXES-VERSUS-THE-FINDINGS-TO-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+              "AUDIT.md:30  1 accepted, 9 open. **10 carry forward** to the next run.",
+              "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+              "confirmed: Every host run opens with exactly this split as a tally line: '**13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed, 1 accepted, 9 open. **10 carry forward**' and '**12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3'. The convention predates the skill's existence, so it is convergent practice rather than skill output."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DO-NOT-COMMIT-OR-FIX-BEFORE-THE-OWNER-APPROVES": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+              "AUDIT.md:389  The owner directed the filed program to completion the same day",
+              "spec/common/PROP-013-periodic-health-audit.md:70  1. ##open-trigger-phrase **Trigger phrase.** Add `АУДИТ` / `RUN AUDIT` to `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` as a recognised command (mirroring the `ЗАВЕРШИ СЕССИЮ` session-end command), or keep the audit purely owner-narrated? @spec/work",
+              "confirmed: Owner approval gates the runs on this host by construction: all three runs are owner-triggered, PROP-013 §4 records that no АУДИТ / RUN AUDIT command exists to let an agent start one unprompted (still open, no owner ruling), and `grep -ni 'audit' CLAUDE.md` returns 0 hits, so nothing in the agent contract authorises an unapproved run. The same-day fix program was executed only after explicit owner direction, quoted at AUDIT.md:390."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DO-NOT-WRITE-FINDINGS-ONLY-INTO-THE-CHECKPOINT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+              "discipline/DEBT.md:1  <!-- GENERATED by `rust-ai-native ledger render` from discipline/registry/debt.json — do not edit;",
+              "discipline/DEBT.md:2       edit the registry and re-render. `ledger render --check` gates drift. -->",
+              "confirmed: The prohibition holds on this host — AUDIT.md carries 29 findings and PROP-013:62-64 names it the home and puts the checkpoint on the receiving end. The complication a reviewer should weigh is the same one raised at the boot snippet's NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT: the host's live inventory has substantially moved to discipline/registry/debt.json (22 typed entries, `ledger render --check`-gated), which is durable but is neither the checkpoint nor AUDIT.md."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DO-NOT-INVENT-FINDINGS-TO-FILL-THE-TABLE": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+              "AUDIT.md:348  Hygiene census for the record: `#[ignore]` 5 (vibe-cli live quartet +",
+              "confirmed: The host's runs are conspicuously honest about their own narrowness rather than padded: the 2026-06-10 run has four findings and states plainly that it is 'not the full §2.2 breadth sweep'; the seed run states it 'is **not** a fresh full sweep'; the D census at 2026-06-12-11 reports its own false positives ('14 are vibe-check's own detector pattern strings (false positives)') and concludes 'Nothing actionable'. That is the short-and-honest shape this line asks for."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T21:58:39Z",
+        "verify_batch": "W5"
+      }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/README.md": {
       "content_hash": "b5485020c0836c374ed827ac1d8d9eb5da1fd55b19734888d3f29326d2e56696",
