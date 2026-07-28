@@ -54,12 +54,23 @@ resolve is the *package-side* path: the installed copies were written from
 moved them). The join cannot pair them by path, so it reports NO-SOURCE and
 declines to compare words.
 
-**Each of the four git flows appears TWICE in the host's boot lane** — once
-directly and once compiled in through the `git-practices` umbrella, which ships its
-own `spec/boot/STATIC.md` containing the other three. That is **F-078**,
+**Each of the four member flows appears TWICE in the host's boot lane** — once
+directly and once compiled in through the `git-practices` umbrella, whose installed
+tree carries a generated `spec/boot/STATIC.md` holding all four. That is **F-078**,
 reproduced mechanically here rather than read: `atomic-commits`,
-`conventional-commits` and `attribution-policy`/`autonomy` are each read twice at
-every session boot.
+`conventional-commits`, `autonomy` and `attribution-policy` are each read twice at
+every session boot, and `# Flow: Attribution Policy` sits at `spec/boot/STATIC.md`
+lines **423 and 617**.
+
+**One of the five resolves cleanly and four do not, and the split is worth
+stating.** The join's problem list over all 31 contributions is 14 long, and this
+batch contributes **seven** of them — `git-atomic-commits`, `git-autonomy` and
+`git-conventional-commits` twice each (direct and through the umbrella), plus
+`git-practices` itself. **`git-attribution-policy` is not on it**: both of its
+contributions resolve to a package source and carry the same word stream. So the
+NO-SOURCE class here is a path move (DRIFT-039) that touched four manifests and not
+the fifth — the evidence is a manifest's `[boot_snippet] source` field, not the
+snippet's content.
 
 ## Source 2 — the host's observed conformance {#source-2}
 
