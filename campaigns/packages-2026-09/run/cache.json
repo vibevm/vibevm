@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T22:16:50Z",
+  "updated_at": "2026-07-28T22:17:42Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -56212,7 +56212,277 @@
       },
       "marker_count": 21,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "9d203dfbcd5f0403f063d52bf218a5cff3b4a83322cf8f89b615bd60c184a02a",
+        "verdicts": {
+          "PACKAGE-INSTALLS-A-DEFENSIVE-SECRETS-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/vibe.toml:4  kind = \"flow\"",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/vibe.toml:8  description = \"Secrets hygiene for agent-driven repositories: surface-secrets never printed or persisted, sanctioned process boundaries, and scope discipline\"",
+              "vibe.lock:56      \"flow:org.vibevm.world/secrets-hygiene@=0.1.0\"",
+              "spec/boot/STATIC.md:1045  <!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->",
+              "confirmed: Read the package `vibe.toml` for `kind`; grepped `vibe.lock` for `secrets-hygiene` (3 hits: the requires line 56, the `[[package]]` name line 362, the `source_url` line 365); grepped `spec/boot/STATIC.md` for `secrets-hygiene` (4 hits: the provenance marker at 1045, three sibling pointers at 1110-1112, and a catalogue line at 1557). `ls vibedeps/flow-secrets-hygiene/0.1.0/` returns 7 files (LICENSE.md, README.md, the boot snippet, three flow docs, vibe.toml)."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "agent-sessions-remove-the-traditional-safety-margin": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/90-user.md:24  ##TOKEN-DISCIPLINE **Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. **Никогда** не печатается в stdout, stderr, чат, лог-сообщения, error messages, JSON-payload, lockfile, или коммит. Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка.",
+              "spec/common/PROP-000.md:299  - ##TOKEN-SURFACE-SECRET **Decision.** Publish tokens, registry-API tokens, and any LLM-provider keys handled by vibevm are **surface secrets** in the sense of the `secrets-hygiene` flow",
+              "confirmed: Grepped `spec/boot/90-user.md` for TOKEN-DISCIPLINE. The host restates the same premise in its own words at line 24 — «Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка» (all sessions of this repository are conducted under video recording; one echo of the token = a leak). That is the host's own statement of the recorded-session premise, and it is the reason the host's token rule is absolute. No value read or quoted."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "PACKAGE-MAKES-THE-RULES-EXPLICIT-MECHANICAL-AND-ALWAYS-LOADED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/vibe.toml:16  source = \"spec/boot/57-flow-secrets-hygiene.md\"",
+              "spec/boot/STATIC.md:1045  <!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->",
+              "crates/vibe-publish/src/token.rs:40  specmark::scope!(\"spec://vibevm/common/PROP-000#token-secrecy\");",
+              "confirmed: «Always-loaded» is checkable via the `[boot_snippet]` declaration in the package manifest plus the compiled host lane: the snippet is present verbatim in `spec/boot/STATIC.md` under a provenance marker at line 1045, so it is read at every session boot. «Mechanical» is checkable in the crates — `specmark::scope!` binds `crates/vibe-publish/src/token.rs` to the governing PROP anchor, and two unit tests at token.rs:280 / token.rs:289 assert the value's absence. Both halves have host support; the claim is not self-referential."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-CORE-IDEA-IS-THE-SURFACE-SECRET": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-000.md:299  their **value** MUST NOT appear on any surface vibevm produces, though their **source** (env-var name, file path) may be printed.",
+              "docs/registry-auth.md:82  Treat the env-var value as a surface secret:",
+              "docs/registry-auth.md:85  - Do not commit it. `vibe.toml` carries the env-var **name**, never the value.",
+              "crates/vibe-cli/src/commands/registry/publish.rs:181      // The CLI surfaces the *source* of the token (env var, file path),",
+              "confirmed: PROP-000 §20's `##TOKEN-SURFACE-SECRET` uses the term «surface secrets» and cites this flow's `#surface-secret` anchor by qualified `spec://` URI. Widened beyond `spec/` into `docs/`: `docs/registry-auth.md` (a user-facing auth guide, outside the nominal package and outside `spec/`) carries the same concept in operator vocabulary at lines 82-86. The code instance is `crates/vibe-cli/src/commands/registry/publish.rs:181-191`, which switches on `token.source()` and prints the env-var name or file path."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "FOUR-LAWS-PLUS-SCOPE-DISCIPLINE-AND-A-CONSENT-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-000.md:300  - ##token-bindings-lead vibevm's bindings of the flow's four laws (`spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#laws`): @spec/done",
+              "spec/common/PROP-000.md:305  - ##TS-ADAPTER-SCOPE **Adapter scope.** A `RepoCreator` impl MUST refuse to operate outside the organization specified in the project's `[[registry]].url`.",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:117  ### 2.3 Trust gate — allow-list of groups, plus first-run consent {#trust-gate}",
+              "confirmed: PROP-000 §20 carries all four laws as named bindings at lines 302-305 (`##TS-NEVER-PRINTED`, `##TS-NEVER-PERSISTED`, `##TS-BOUNDARIES`, `##TS-ADAPTER-SCOPE`) and cites the flow's `#laws` anchor. The consent gate is the fifth element and lives outside PROP-000 entirely — in `spec/modules/vibe-workspace/PROP-020-install-hooks.md` §2.3. So the host splits this one flow across two PROPs; that relocation is the finding."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/vibe.toml:15  [boot_snippet]",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/vibe.toml:16  source = \"spec/boot/57-flow-secrets-hygiene.md\"",
+              "confirmed: `ls packages/org.vibevm.world/secrets-hygiene/v0.1.0/` returns LICENSE.md, README.md, spec, vibe.toml. Under `spec/` there are exactly four markdown files: the one boot snippet and the three flow documents — three pieces of content plus a boot snippet, as claimed. `find vibedeps/flow-secrets-hygiene -type f` returns the same four plus LICENSE.md, README.md and vibe.toml (7 total)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-FULL-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:15  ## The surface secret {#surface-secret}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:37  ## The four laws {#laws}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:123  ## The agent era changes the threat model {#agent-era}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:144  ### The accidental-read drill {#accidental-read}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:158  ## Blast radius — why the rules are global {#blast-radius}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:178  ## Suspected-leak drill — rotate first {#leak-drill}",
+              "vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:1  # Secrets Hygiene Protocol {#root}",
+              "confirmed: Every one of the six contents the anchor enumerates has a section heading in the cited file, in the order the anchor lists them. «Recorded sessions» and «one-echo-is-a-leak» are the `#agent-era` bullets at lines 131 and 134. The file is also present under `vibedeps/`. This is source 1 agreeing with itself plus source 3 confirming delivery — no host claim is made."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-SCOPE-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:16  ## The never-escalate law {#never-escalate}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:41  ## Explicit prefix checks {#prefix-checks}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:72  ## Escalation is an error, not a warning {#error-not-warning}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:98  ## Trust ordering between sources {#trust-ordering}",
+              "vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:1  # Scope Discipline {#root}",
+              "confirmed: All four enumerated contents have their own `##` section in the named file, in the order listed. Installed copy present under `vibedeps/`."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-THIRD-PARTY-CODE-CONSENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:37  ## The consent gate {#consent-gate}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:57  ## A non-interactive run aborts, never runs unseen {#ci-abort}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:81  ## Hooks are versioned files, not inline strings {#versioned-files}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:111  ## Secrets never enter a hook's environment {#no-secrets-in-env}",
+              "vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:1  # Third-Party Code Consent {#root}",
+              "confirmed: All four enumerated contents have their own section in the named file, in the order listed. Installed copy present under `vibedeps/`."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/vibe.toml:16  source = \"spec/boot/57-flow-secrets-hygiene.md\"",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md:64  ## Never {#never}",
+              "spec/boot/STATIC.md:1045  <!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->",
+              "confirmed: The manifest's `[boot_snippet].source` names exactly this path; the snippet carries a `## Never {#never}` list at line 64 with six bullets. The compiled host lane `spec/boot/STATIC.md` carries it from line 1045 under a provenance marker naming the `vibedeps/` copy — so «loaded at session start» is confirmed against the file the host actually boots, not only against the package."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+            "v": "confirmed",
+            "ev": [
+              "vibe.lock:367  files_written = []",
+              "confirmed, settled in the code as it was for the six earlier twins in this phase. `crates/vibe-cli/src/commands/uninstall.rs` removes the vibedeps slot, drops the lockfile entry and the `[requires]` declaration, then regenerates the boot artefacts, and its module doc cites `spec://vibevm/modules/vibe-workspace/PROP-009-loading-model` for exactly that behaviour. `files_written` is `[]` here as for all 36 packages, and the boot snippet is never projected into `spec/boot/` as a standalone file — it reaches the host only by being compiled into the generated lane — so the slot plus that contribution IS the whole written surface, and both are removed."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/90-user.md:3  ##user-overrides-intro User-owned boot snippet. `vibe install`/`uninstall` never touches this file. …",
+              "confirmed: The host carries the corresponding rule on the one user-owned file it has: `spec/boot/90-user.md` states in its own first fact that `vibe install`/`uninstall` never touches it. That file is also where the host's `##TOKEN-DISCIPLINE`, `##TOKEN-FILE-CONVENTION` and `##SCOPE-DISCIPLINE` live, so the user-owned lane is in fact the one carrying this flow's host bindings. Widened to `crates/` for a code-level never-touch guard; the specific enforcement was not traced."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-ATTRIBUTION-POLICY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:1  # Flow: Attribution Policy {#root}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md:1  # Flow: Secrets Hygiene {#root}",
+              "DRIFT on «enforced by mechanical scans», which holds for one half of the pairing and not the other. The SECRETS half is enforced and enforced well — 11 `fn .*redact` across `crates/`, and two unit tests at `crates/vibe-publish/src/token.rs:280` and `:289` that plant a literal and assert its ABSENCE rather than assert the mask appears. The ATTRIBUTION half has no scan in this host: `grep -rln 'attribution' xtask/ tools/ crates/vibe-check/` returns exactly one file, a batch-review tool rather than an attribution scan, and `grep -rn 'Co-Authored|Generated with' xtask/src/ --include='*.rs'` returns nothing. A composition that asserts mechanical enforcement for both is half-supported. RECORDED separately: the sibling's boot snippet is named `55-flow-attribution-policy.md` while its package directory is `git-attribution-policy` — a fact about the filename, not about this rule."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-MANUAL-TESTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:18  ##EVERY-RUN-STARTS-FROM-NOTHING-AND-TOUCHES-NO-REAL-USER-STATE Every run starts from nothing and touches no real user state. @impl/done",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:25  - ##MECHANISM-AN-ENVIRONMENT-REDIRECT **An environment redirect** pointing the tool's per-user state",
+              "crates/vibe-publish/src/token.rs:25  //! That is the whole list. Both file legs hang off the one settings dir,",
+              "crates/vibe-publish/src/token.rs:26  //! so `$VIBE_SETTINGS` redirects every on-disk credential read together.",
+              "crates/vibe-publish/src/token.rs:379      fn token_file_precedence_holds_no_second_home() {",
+              "confirmed: The sibling flow's Rule 1 says exactly what the composition claims, at `authoring-rules.md:18` and `:25`. The host implements the environment-redirect mechanism concretely for credentials: `crates/vibe-core/src/settings.rs:34` defines `SETTINGS_DIR_ENV = \"VIBE_SETTINGS\"`, and `crates/vibe-publish/src/token.rs:228` derives both on-disk token candidates from `settings_dir()`, with the unit test `token_file_precedence_holds_no_second_home` (token.rs:379-398) asserting `candidates.len() == 2` and that both start with the settings root. The module doc at token.rs:27-32 records that a pre-consolidation directory supplied a sixth and seventh leg until 2026-07-26 and was removed precisely because `$VIBE_SETTINGS` did not relocate it, leaving a path by which an isolated run could still reach the operator's real credential. That is this composition claim closing a real hole in the host."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-HEALTH-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md:90  publish token does not apply to GitVerse, and GitVerse exposes no API",
+              "confirmed as an instruction to a consumer rather than a description of either package's current content — the referents resolve and the pairing is coherent. RECORDED, and it is the sharper measurement: the sibling flow carries NO secret-scanning line at all. `grep -rni 'secret|token|credential'` across health-audit's protocol, checklist and run procedure returns **zero hits**. And the host's own audit artefact has two hits, both about a GitVerse deletion limitation rather than about scanning output paths for echoed values. So neither the sibling package nor any of the three audit runs carries the category this composition names."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-CONFLICT-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md:63  source answered, or a marked conservative default did. @impl/done",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md:170    → conservative default + REVIEW + report. @impl/done",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:154  ##WHEN-UNCERTAIN-TREAT-AS-UNTRUSTED-AND-ASK When uncertain whether a given publisher or",
+              "confirmed: The sibling flow does carry a «conservative default» mechanism — `uncertainty-protocol.md` mentions it at lines 63 and 170. This package's own matching rule is `##WHEN-UNCERTAIN-TREAT-AS-UNTRUSTED-AND-ASK` in third-party-code-consent.md:154. Both halves of the composition exist in shipped package text. I found no host instance: grepping `crates/` for a conservative-default branch on secret classification produced nothing, and the host's `sensitive` flag in `crates/vibe-cli/src/commands/show/config.rs:112` is a static per-variable boolean, not an uncertainty rule. `src` is [1] because only package text supports this row."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "crystallized-from-the-origin-projects-token-secrecy-law": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-000.md:295  ## 20. Token secrecy and adapter scope {#token-secrecy}",
+              "spec/common/PROP-000.md:299  - ##TOKEN-SURFACE-SECRET **Decision.** Publish tokens, registry-API tokens, and any LLM-provider keys handled by vibevm are **surface secrets** in the sense of the `secrets-hygiene` flow",
+              "spec/common/PROP-000.md:307  - ##BLAST-RADIUS **Why global, not module-local.** The blast radius of a leaked publish token is the entire organization it can reach (cross-repo writes, branch deletes, CI-secret reads); of an escalated adapter, the entire host account",
+              "confirmed: This repository IS the origin project named. PROP-000 §20 is titled «Token secrecy and adapter scope» and its `##TOKEN-SURFACE-SECRET` enumerates exactly the three credential classes the anchor names (publish tokens, registry-API tokens, LLM-provider keys); `##BLAST-RADIUS` at line 307 states the two consequences verbatim in the same order (leak → organization, escalation → host account). The direction of citation is now inverted — PROP-000 §20 cites the flow by `spec://` URI rather than the reverse, which is what extraction-then-pointer looks like."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "generalized-here-to-any-product-credential-and-agent": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:20  ##WHAT-COUNTS-AS-A-SURFACE-SECRET Publish and",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:22  passwords, signing keys, SSH passphrases — all surface secrets. @impl/done",
+              "confirmed: The generalization is visible inside the package: the protocol's credential list (publish and deploy tokens, registry-API tokens, provider API keys, database passwords, signing keys, SSH passphrases) is strictly wider than PROP-000 §20's three classes, and the protocol names no product. Nothing host-side bears on a claim about the package's own scope, so `src` is [1]."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "collections-spirit-is-the-redbook": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
+              "confirmed: `ls packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/` returns Russian chapter files, so the path and the language the anchor names both hold. Note the package's qualified group is `org.vibevm.world/redbook` while the anchor writes the short form `flow:redbook`; the short form is how the host's CLAUDE.md refers to it too."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+              "vibedeps/flow-secrets-hygiene/0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+              "confirmed: The manifest declares `license = \"UPL-1.0\"`, `LICENSE.md` exists in the package and states UPL 1.0 at line 3, and the installed copy under `vibedeps/flow-secrets-hygiene/0.1.0/LICENSE.md` is present. The host's CLAUDE.md licence-state ledger records the `org.vibevm.*` canonical surface as fully UPL-1.0, consistent with this."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T22:17:42Z",
+        "verify_batch": "W5"
+      }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md": {
       "content_hash": "42c8ed93b007a456495927062df966e04ddcfbde906a89b97de876a0a4797adc",
