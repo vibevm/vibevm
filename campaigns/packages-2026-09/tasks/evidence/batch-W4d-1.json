@@ -1,0 +1,688 @@
+{
+ "batch": "W4",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/redbook/v0.2.0/README.md": {
+   "REDBOOK-IS-A-CURATED-COLLECTION-OF-PRACTICES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:5  ##REDBOOK-IS-A-CURATED-COLLECTION-OF-PRACTICES The **redbook** is a curated collection of AI-native development",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:8  description = \"The redbook collection: the AI-native development practices, distilled from the book into installable flows — one edition, one tested set\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:3  This directory carries the source text of *AI-native development* —",
+     "spec/common/PROP-013-periodic-health-audit.md:1  # PROP-013: Periodic health audit — vibevm's instance {#root}",
+     "spec/common/PROP-016-source-mirrors.md:1  # PROP-016: Decentralized source mirrors — the vibevm setup {#root}",
+     "vibe.toml:23  # on individual flows, means every practice extracted from this project's own",
+     "confirmed: Both halves of the claim. Distilled-from-the-book: the book text ships in the package (spec/book/ru/, 3 chapters + spec/book/README.md, confirmed by `find packages/org.vibevm.world/redbook/v0.2.0 -type f` = 8 files). Proven-in-vibevm's-history: the host carries its own PROP instances for member flows — PROP-006 operating-modes, PROP-013 health-audit ('vibevm's instance'), PROP-016 source-mirrors ('the vibevm setup'), PROP-012 managed-redirect-block. The host's own vibe.toml comment at line 23 states the extraction direction explicitly."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EACH-PRACTICE-IS-A-STANDALONE-FLOW-PACKAGE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:9  ##EACH-PRACTICE-IS-A-STANDALONE-FLOW-PACKAGE Each",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:4  kind = \"flow\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:29  \"flow:org.vibevm.world/git-practices\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md:55  2. ##READS-THE-SPECSPACES-OWN-BOOT-CONTRACT the specspace's own boot contract (`CLAUDE.md` at the specspace",
+     "confirmed: `grep -h '^kind' packages/org.vibevm.world/*/v*/vibe.toml | sort | uniq -c` → 28 of 28 read `kind = \"flow\"`, no exceptions. For the boot-snippet-plus-protocol-documents shape I walked every installed slot: `for d in vibedeps/flow-*/; do test -d $d/<ver>/spec/flows && echo HAS`. 21 of the umbrella's 22 pins ship a `spec/flows/<name>/` directory; **git-practices is the one that ships none** — its payload is LICENSE, README.md, vibe.toml, spec/boot/INDEX.md, spec/boot/STATIC.md (it is itself an umbrella). flow-redbook likewise ships no spec/flows/ (it carries spec/book/ instead). For agent-agnosticism I ran `grep -rniE 'claude|cursor|copilot|codex|gemini' packages/org.vibevm.world/ --include='*.md' -l`: 15 files hit, of which the only boot snippet is wal-specspaces' line 55, and it names `CLAUDE.md` as a file the specspace carries."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-UMBRELLA-NAMES-A-TESTED-SET-AND-CARRIES-THE-BOOK": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:14  ##THE-UMBRELLA-NAMES-A-TESTED-SET-AND-CARRIES-THE-BOOK This umbrella package names",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:24  [requires.packages]",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
+     "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md:1  Подробности об использовании документа — в разделе [Safe Harbor](safeharbor.md).",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1684  two of them agree.** Counted: the manifest pins **22** members, the README's",
+     "confirmed: Carries-the-book: verified in the package (3 chapters + spec/book/README.md) AND in what a consumer receives (`find vibedeps/flow-redbook -type f` = 8 files, including all three chapters and spec/book/README.md — the book is not stripped at install). Names-a-tested-set: the manifest's [requires.packages] block holds 22 exact pins (counted at lines 26-34, 37-47, 50-51). The 'names' half is the contested one — the host's own campaign plan filed F-113 counting three disagreeing rosters (manifest 22, README table 21, boot snippet 23); my own count reproduces exactly those three numbers."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "REQUIRING-THE-UMBRELLA-INSTALLS-THE-WHOLE-COLLECTION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:17  ##REQUIRING-THE-UMBRELLA-INSTALLS-THE-WHOLE-COLLECTION Requiring `flow:redbook` installs the whole collection: the members",
+     "vibe.toml:28  \"flow:org.vibevm.world/redbook\" = { version = \"^0.2.0\", link = \"static-transitive\" }",
+     "vibe.lock:41  dependencies = [",
+     "vibe.lock:42      \"flow:org.vibevm.world/addressable-specs@=0.1.0\",",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:53  - ##DEPS-UP **Dependency boot** flows up: a node's sequence includes the boot of everything it transitively requires. @impl/done",
+     "docs/authoring-flow.md:28  After `vibe install flow:<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:",
+     "confirmed: The host is the live instance: its root vibe.toml declares only `flow:org.vibevm.world/redbook` (line 28) for the whole collection — no per-flow host entry, as the comment at vibe.toml:24-25 says. vibe.lock's redbook [[package]] block (lines 41-63) lists exactly 22 resolved dependencies, matching the 22 manifest pins name-for-name and version-for-version. On disk: `ls -d vibedeps/flow-* | wc -l` = 30 slots; all 22 pins present, `missing: 0 of 22`, and every pinned version has a matching version directory. Boot snippets: all 22 appear as `vibe:static` provenance markers in spec/boot/STATIC.md. The spec/flows/<name>/ half fails for one member — git-practices ships no spec/flows/ directory at all (verified by walking every vibedeps slot)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-UMBRELLAS-VERSION-IS-THE-EDITION-NUMBER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:23  ##THE-UMBRELLAS-VERSION-IS-THE-EDITION-NUMBER The umbrella's version is the **edition number**. @impl/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:5  version = \"0.2.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:34  - ##EDITION-0-2-0 **Edition 0.2.0** (this edition) — adds eleven project-practice",
+     "packages/org.vibevm.world/redbook/v0.1.0/vibe.toml:5  version = \"0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:36  ## The members (edition 0.2.0) {#member-list}",
+     "confirmed: Direct arithmetic across both slots. v0.2.0's manifest version is 0.2.0 and its own README calls edition 0.2.0 'this edition'; v0.1.0's manifest version is 0.1.0 and edition 0.1.0 is described as the ten flows — v0.1.0's [requires.packages] carries exactly 10 pins (lines 23-32), so the edition number and the version line up on both slots. Installed reality agrees: the slot directory is vibedeps/flow-redbook/0.2.0/ and vibe.lock:37 records version = \"0.2.0\"."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:25  ##AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS An edition is a",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:48  # The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:49  # full new practice set has settled; accumulated here in place meanwhile).",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1693  - **2026-07-28 · F-114 — the edition contract is falsified by the manifest that",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1701  **So the umbrella accumulates members inside 0.2.0 without an edition bump, and",
+     "spec/common/PROP-028-package-families.md:161  - ##REJ-CARET-PINS **Caret pins in the aggregator**: a caret would let members skew within a",
+     "DRIFT on its causal clause, confirming the host's already-filed F-114 rather than opening anything new. The exact-pin half holds arithmetically — all 22 pins parse as `=X.Y.Z`, none caret, none range, and PROP-028 §REJ-CARET-PINS records the host's rationale for that rule. What fails is the «so»: «two projects on the same edition run byte-identical practice text» is falsified by the manifest three lines below the last pin, which I read directly — vibe.toml:48-49 reads «# The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the full new practice set has settled; accumulated here in place meanwhile)». Members were added to 0.2.0 without the version moving, so two projects that installed 0.2.0 on either side of that commit receive different member sets. F-114 (campaign plan, 2026-07-28) quotes the same comment against the same sentence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MEMBERS-EVOLVE-BETWEEN-EDITIONS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:29  ##MEMBERS-EVOLVE-BETWEEN-EDITIONS Members evolve on their own version lines between editions; a new",
+     "packages/org.vibevm.world/redbook/v0.1.0/vibe.toml:24  \"flow:org.vibevm.world/wal\" = \"=0.2.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:27  \"flow:org.vibevm.world/wal\" = \"=0.2.0\"",
+     "packages/org.vibevm.world/redbook/v0.1.0/vibe.toml:26  \"flow:org.vibevm.world/git-atomic-commits\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:29  \"flow:org.vibevm.world/git-practices\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:48  # The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the",
+     "confirmed: Diffed the two editions' pin lists directly. v0.1.0 pins 10 members; v0.2.0 pins 22. The 0.1.0→0.2.0 transition did refresh the pins — git-atomic-commits and git-attribution-policy, pinned individually at v0.1.0 lines 26 and 32, are replaced in v0.2.0 by the single git-practices umbrella at line 29, with the reconciling comment at line 35. `wal` is the one member already ahead of the 0.1.0 line (=0.2.0 in both editions), which is the claim's 'own version lines' in observed form. The second half ('a new edition is a new umbrella version') is contradicted by the manifest's own lines 48-49, where two members are added inside 0.2.0 with the bump deferred."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "EDITION-0-1-0": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:32  - ##EDITION-0-1-0 **Edition 0.1.0** — the book's core: the ten flows for the",
+     "packages/org.vibevm.world/redbook/v0.1.0/vibe.toml:23  \"flow:org.vibevm.world/two-process-model\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.1.0/README.md:27  | `two-process-model` @0.1.0 | The foundation: human and AI as coprocessors; the human owns coherence; files are the only shared memory. |",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:29  ## Четыре требования к IPC",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:1  # Глава третья.<br>Архитектура памяти",
+     "confirmed: Counted the superseded slot rather than trusting the prose: `grep -c '^\"flow:org\\.vibevm\\.world/' packages/org.vibevm.world/redbook/v0.1.0/vibe.toml` = 10, and its README member table has exactly 10 rows (lines 27-36). Ten flows confirmed. The three named subjects map to the three shipped chapters — chapter 1 'Два процесса, одна задача' (two-process model), chapter 2 'Shared state: файлы как IPC' whose §Четыре требования к IPC is the file IPC, chapter 3 'Архитектура памяти' the memory model. v0.1.0 is the superseded slot the campaign marks but never verifies (campaign plan §3.3, line 141)."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "EDITION-0-2-0": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:34  - ##EDITION-0-2-0 **Edition 0.2.0** (this edition) — adds eleven project-practice",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:36  # The project-practice wave (edition 0.2.0)",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:37  \"flow:org.vibevm.world/operating-modes\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:47  \"flow:org.vibevm.world/tool-design-lessons\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:50  \"flow:org.vibevm.world/dev-runtime-docs\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:51  \"flow:org.vibevm.world/wal-specspaces\" = \"=0.1.0\"",
+     "confirmed on its own sentence, and the omission is named rather than folded in. «Adds eleven project-practice flows» is exact: manifest lines 37-47 under the `# The project-practice wave (edition 0.2.0)` comment hold eleven pins, and the README's second table has the same eleven names in the same order. What the line does NOT say is that the manifest adds two more under a third comment — dev-runtime-docs and wal-specspaces at lines 50-51 — which the boot snippet lists as a cultural-extraction wave and the README never mentions. That is the roster gap, and it is the host's already-filed F-113 (manifest 22 / README table 21 / snippet 23, the same three counts I reproduced). Judged here on what this sentence asserts about the project-practice group, which is right; the roster disagreement belongs to F-113, not to this row."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "books-core-table-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:39  ##books-core-table-lead The book's core: @impl/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:25  # The book's core (edition 0.1.0)",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:38  ##books-core-list-lead The book's core — the four IPC requirements and the memory model: @impl/done",
+     "confirmed: A section lead. The table under it has ten rows (README lines 43-52), matching the manifest's '# The book's core (edition 0.1.0)' group at lines 26-34 in membership except that the README names git-atomic-commits and git-attribution-policy where the manifest pins git-practices — nine pins under that comment against ten table rows. The boot snippet's parallel lead at line 38 uses the same words plus a gloss the README's lead omits."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "ROW-TWO-PROCESS-MODEL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:43  | ##ROW-TWO-PROCESS-MODEL `two-process-model` @0.1.0 @impl/done | Human and AI as coprocessors; the human owns coherence; files are the only shared memory. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:26  \"flow:org.vibevm.world/two-process-model\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:1311  <!-- vibe:static org.vibevm.world/two-process-model — vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md -->",
+     "spec/boot/STATIC.md:1313  # Flow: Two-Process Model {#root}",
+     "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+     "confirmed: Version, existence and description all checked. Pin is `=0.1.0`, matching the row's @0.1.0. Installed at vibedeps/flow-two-process-model/0.1.0/ (slot directory present). The description's three clauses are all in the installed snippet: 'two coprocessors ... working one task' (STATIC.md:1315-1317), 'The human owns coherence' (STATIC.md:1338), 'Files are the only shared memory' (STATIC.md:1342) — verbatim on the third."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-WAL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:44  | ##ROW-WAL `wal` @0.2.0 @impl/done | The checkpoint file (WAL) and cold-resume snapshot; session wind-down and resume rituals; the `wal-status` skill. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:27  \"flow:org.vibevm.world/wal\" = \"=0.2.0\"",
+     "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->",
+     "spec/boot/STATIC.md:1371  # Flow: WAL (Write-Ahead Log) {#root}",
+     "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:21  path = \"spec/skills/wal-status\"",
+     "confirmed: wal is the one member pinned above 0.1.0 and the row's @0.2.0 matches the pin exactly. The skill clause is the checkable tail: `grep -ln 'skill' packages/org.vibevm.world/*/v*/vibe.toml` returns exactly three members (health-audit, licensing, wal), and wal's [[skill]] block at lines 19-21 declares path spec/skills/wal-status; the directory exists in the package and in the installed slot (`ls packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status`, `vibedeps/flow-wal/0.2.0/spec/skills/wal-status`). The installed snippet's opening names both files it claims to carry (STATIC.md:1374-1377)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-SYNC-FROM-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:45  | ##ROW-SYNC-FROM-CODE `sync-from-code` @0.1.0 @impl/done | The sanctioned reverse path: reconcile the spec when code changed first, with human approval. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:28  \"flow:org.vibevm.world/sync-from-code\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:1221  <!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md -->",
+     "spec/boot/STATIC.md:1225  This project uses the **Sync-from-Code** protocol to reconcile specs with",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back. @impl/done",
+     "confirmed: Pin `=0.1.0` matches @0.1.0; slot vibedeps/flow-sync-from-code/0.1.0/ present. The description matches the installed snippet's opening (STATIC.md:1225-1226) word for word on 'reconcile specs with code when the code changed first'. Source 2: the host's own authored boot file names the flow and its direction at spec/boot/00-core.md:45 — the 'with human approval' half reads there as 'propose a spec update, do not rewrite code back'. Note this member's provenance marker points at a bare `boot/` path, not `spec/boot/` — the installed slot predates the layout move the host recorded as F-103/F-110."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-ATOMIC-COMMITS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:46  | ##ROW-ATOMIC-COMMITS `git-atomic-commits` @0.1.0 @impl/done | One commit, one idea; Conventional Commits; pushed history is frozen. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:35  # attribution-policy now arrives via git-practices (§12.1 human-authored)",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:29  \"flow:org.vibevm.world/git-practices\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:557  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+     "spec/boot/STATIC.md:559  # Flow: Atomic Commits {#root}",
+     "vibe.lock:246  name = \"git-atomic-commits\"",
+     "confirmed: This row names a member the manifest does not pin. I diffed the two sets in full: named-in-README-not-pinned = ['git-atomic-commits', 'git-attribution-policy']; pinned-not-named-in-README = ['git-practices']. The flow itself is real and installed — vibedeps/flow-git-atomic-commits/0.1.0/ exists, vibe.lock carries a [[package]] entry at line 246, and its snippet is compiled into the boot lane twice (STATIC.md:363 directly and STATIC.md:557 nested inside git-practices' composite). So the member exists and arrives, but transitively via git-practices, and the qualified name at README:46 is current (the older short form `atomic-commits` was the host's F-097, closed by DRIFT-038 `7b0ec6aa`). The installed snippet's opening (STATIC.md:561-563) carries 'One commit carries exactly one idea'."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-ADDRESSABLE-SPECS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:47  | ##ROW-ADDRESSABLE-SPECS `addressable-specs` @0.1.0 @impl/done | `spec://` URIs, stable anchors, size budgets, and the spec tree layout. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:30  \"flow:org.vibevm.world/addressable-specs\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:5  <!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->",
+     "spec/boot/STATIC.md:9  Every normative statement in this project's spec tree is",
+     "spec/boot/STATIC.md:11  cited by URI, never by paraphrase.",
+     "confirmed: Pin `=0.1.0` matches; slot vibedeps/flow-addressable-specs/0.1.0/ present, and it is the very first contribution in the host's compiled boot lane (STATIC.md:5). The installed snippet's opening covers the URI and stable-anchor clauses verbatim ('lives under a stable `{#kebab-anchor}` and is cited by URI'). The 'size budgets' and 'spec tree layout' clauses point at supporting documents rather than the snippet: `spec/flows/addressable-specs/spec-tree-layout.md` exists in the package (it is one of the 15 files that hit the agent-name grep)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-DECISION-RECORDS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:48  | ##ROW-DECISION-RECORDS `decision-records` @0.1.0 @impl/done | Decisions, not facts: reason + rejected alternatives + revisit trigger, at the governing anchor. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:31  \"flow:org.vibevm.world/decision-records\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:235  <!-- vibe:static org.vibevm.world/decision-records — vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->",
+     "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+     "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
+     "confirmed: Pin matches; slot present. Every clause of the one-liner is in the installed snippet: 'decisions, not facts' verbatim at STATIC.md:239, and the four-field table at STATIC.md:250-255 carries Decision / Why / Considered and rejected / When to revisit — which is the row's 'reason + rejected alternatives + revisit trigger'. 'At the governing anchor' is STATIC.md:248's 'at the spec anchor that governs the value'."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-CONFLICT-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:49  | ##ROW-CONFLICT-PROTOCOL `conflict-protocol` @0.1.0 @impl/done | Human > Spec > Tests > Code; REVIEW markers; the conservative-default path when the spec is silent. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:32  \"flow:org.vibevm.world/conflict-protocol\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:174  <!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->",
+     "spec/boot/STATIC.md:178  This project runs **two writers over one file set** — a human and a",
+     "vibe.toml:25  # dev-runtime-docs (§19), conflict-protocol (§9), and the git-practices family",
+     "confirmed: Pin `=0.1.0` matches the row. Installed at vibedeps/flow-conflict-protocol/0.1.0/, compiled into the boot lane at STATIC.md:174. Source 2 quirk worth recording: this is one of the members the **host also declares directly** in its own root vibe.toml (line 12) as well as receiving through redbook — the host's comment at vibe.toml:25 says conflict-protocol 'now arrives transitively through it', and vibe.lock:12 lists it in root_dependencies alongside the redbook root. The precedence clause and REVIEW markers live deeper in the snippet than its opening; I confirmed the flow is the two-writers-over-one-file-set discipline at STATIC.md:178-181."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-CAMPAIGN-PLANS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:50  | ##ROW-CAMPAIGN-PLANS `campaign-plans` @0.1.0 @impl/done | Cold-executable campaign plans: phase gates, falsifiable predictions, execution and deferral ledgers. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:33  \"flow:org.vibevm.world/campaign-plans\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:65  <!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->",
+     "spec/boot/STATIC.md:69  This project executes large changes as **campaigns**: multi-commit",
+     "spec/boot/STATIC.md:71  resumable cold by any session.",
+     "confirmed: Pin matches; slot present; snippet compiled at STATIC.md:65 and its opening carries 'planned in a written campaign plan, executed as gated phases, resumable cold by any session' — the row's cold-executable and phase-gates clauses verbatim. Source 2 is unusually strong for this member and I checked it rather than citing the harvest: the host runs two live instances (spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md and SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) with the predictions, LOG and deferrals sections the row names, plus separate deferral ledgers at campaigns/packages-2026-09/deferrals.md and campaigns/progress-2026-08/deferrals.md."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-DISCOVERY-PROMPT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:51  | ##ROW-DISCOVERY-PROMPT `discovery-prompt` @0.1.0 @impl/done | The DISCOVERY collaborative-research prompt, packaged verbatim with a usage guide. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:34  \"flow:org.vibevm.world/discovery-prompt\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:324  <!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->",
+     "spec/boot/STATIC.md:328  This project ships the **DISCOVERY collaborative-research prompt**, a",
+     "spec/boot/STATIC.md:331  [`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`](../flows/discovery-prompt/DISCOVERY-PROMPT.md).",
+     "confirmed: Pin matches; slot present. Both halves of the description are checkable on disk and both hold: the artifact and the usage guide both ship — `find vibedeps/flow-discovery-prompt -type f` yields six files including spec/flows/discovery-prompt/DISCOVERY-PROMPT.md and spec/flows/discovery-prompt/usage.md. The installed snippet's opening (STATIC.md:328) is the row's phrase almost word for word."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-ATTRIBUTION-POLICY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:52  | ##ROW-ATTRIBUTION-POLICY `git-attribution-policy` @0.1.0 @impl/done | A deliberate authorship posture: human-authored surface by default, disclosure documented as the alternative. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:35  # attribution-policy now arrives via git-practices (§12.1 human-authored)",
+     "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+     "spec/boot/STATIC.md:619  This project keeps its repository **human-authored on every",
+     "vibe.lock:256  name = \"git-attribution-policy\"",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).",
+     "confirmed: The second of the two rows naming an unpinned member. The manifest's line 35 is the reconciliation — it names attribution-policy in a comment where the pin would be, and pins git-practices instead at line 29. The flow is real and installed (vibedeps/flow-git-attribution-policy/0.1.0/, vibe.lock:256), compiled into the boot lane twice (STATIC.md:421 and 615). The 'disclosure documented as the alternative' clause is checkable: the installed snippet links `disclosure-alternative.md` at STATIC.md:622. Source 2 is the host's own posture at CLAUDE.md:5, which attributes the rule to the git-practices family — matching the manifest's routing, not the README's naming."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "project-practice-table-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:54  ##project-practice-table-lead The project-practice wave: @impl/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:36  # The project-practice wave (edition 0.2.0)",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:61  ##project-practice-list-lead The project-practice wave — running a project over the long haul: @impl/done",
+     "confirmed: A section lead, and the one grouping where README, manifest and snippet agree exactly. The README table under it has eleven rows (lines 58-68); the manifest's '# The project-practice wave (edition 0.2.0)' group has eleven pins (lines 37-47); the snippet's project-practice list has eleven items (lines 63-83). Same eleven names, same order, in all three. The README's tables stop here — it has no third table for the cultural-extraction wave that the manifest and snippet both carry."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "ROW-OPERATING-MODES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:58  | ##ROW-OPERATING-MODES `operating-modes` @0.1.0 @impl/done | Codeword-triggered work postures; red lines that survive every mode. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:37  \"flow:org.vibevm.world/operating-modes\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:942  <!-- vibe:static org.vibevm.world/operating-modes — vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md -->",
+     "spec/boot/STATIC.md:946  This project uses **codeword-triggered operating modes**. The session",
+     "spec/common/PROP-006-operating-modes.md:1  # PROP-006: Operating modes — codeword-triggered work postures {#root}",
+     "confirmed: Pin `=0.1.0` matches @0.1.0; slot vibedeps/flow-operating-modes/0.1.0/ present; snippet compiled at STATIC.md:942 and its opening is the row's phrase verbatim ('codeword-triggered operating modes'). Source 2 is a direct host instance: spec/common/PROP-006-operating-modes.md's title repeats the row's exact words 'codeword-triggered work postures'. The 'red lines that survive every mode' clause is in the snippet at STATIC.md:949-950 ('they never change what is')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-HEALTH-AUDIT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:59  | ##ROW-HEALTH-AUDIT `health-audit` @0.1.0 @impl/done | The periodic judgment sweep over what the per-commit gate is blind to; a skill and an append-only trend. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:38  \"flow:org.vibevm.world/health-audit\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:745  <!-- vibe:static org.vibevm.world/health-audit — vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md -->",
+     "spec/boot/STATIC.md:751  recorded as an append-only trend in `AUDIT.md`.",
+     "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:21  path = \"spec/skills/health-audit\"",
+     "spec/common/PROP-013-periodic-health-audit.md:1  # PROP-013: Periodic health audit — vibevm's instance {#root}",
+     "confirmed: Both tail clauses are countable and both hold. The skill: health-audit is one of exactly three members whose manifest declares a [[skill]] block (found by `grep -ln 'skill' packages/org.vibevm.world/*/v*/vibe.toml` — health-audit, licensing, wal), path spec/skills/health-audit. The append-only trend: named in the installed snippet at STATIC.md:751 as AUDIT.md. Source 2: PROP-013's title says 'vibevm's instance', i.e. the host runs the flow rather than merely shipping it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-MANUAL-TESTS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:60  | ##ROW-MANUAL-TESTS `manual-tests` @0.1.0 @impl/done | Human-runnable walkthroughs for the integration surfaces automation cannot prove. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:39  \"flow:org.vibevm.world/manual-tests\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:892  <!-- vibe:static org.vibevm.world/manual-tests — vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md -->",
+     "spec/boot/STATIC.md:896  This project keeps a **second test tier**: human-run markdown",
+     "spec/boot/STATIC.md:897  walkthroughs that prove the integration surfaces the automated suite",
+     "confirmed: Pin matches; slot present; the installed snippet's opening at STATIC.md:896-898 is the row's sentence almost word for word ('human-run markdown walkthroughs that prove the integration surfaces the automated suite cannot reach'). Source 2: the host keeps its own instance of the tier — `ls spec/` shows a manual-tests directory alongside boot, common, design, modules and terraforms, and the fractality specspace carries MT-05 (referenced in CLAUDE.md's operating-facts ledger)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-SECRETS-HYGIENE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:61  | ##ROW-SECRETS-HYGIENE `secrets-hygiene` @0.1.0 @impl/done | Surface-secrets never printed or persisted; scope discipline; third-party-code consent. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:40  \"flow:org.vibevm.world/secrets-hygiene\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:1045  <!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->",
+     "spec/boot/STATIC.md:1051  a secret has no safe margin: one echo of its value into chat, a",
+     "CLAUDE.md:68    token by PATH `~/.vibe/zai.api.token` (never inline/echo it);",
+     "confirmed: Pin matches; slot present; snippet compiled at STATIC.md:1045 with the never-printed clause at STATIC.md:1051-1052. Source 2 is a live application rather than a restatement: CLAUDE.md's fractality operating-facts ledger records the z.ai token as a PATH with the parenthetical 'never inline/echo it', which is the flow's rule applied to a real credential in the host's own boot file. Located the line by `grep -n 'zai.api.token' CLAUDE.md`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-LICENSING": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:62  | ##ROW-LICENSING `licensing` @0.1.0 @impl/done | A deliberate licence posture; permissive-only dependencies; the EULA-to-open path; a drafting skill. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:41  \"flow:org.vibevm.world/licensing\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:802  <!-- vibe:static org.vibevm.world/licensing — vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md -->",
+     "spec/boot/STATIC.md:806  This project has a **deliberate licensing posture**, decided once and",
+     "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:21  path = \"spec/skills/draft-eula\"",
+     "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The",
+     "confirmed: Four clauses, all checkable. Deliberate posture: STATIC.md:806 verbatim. Drafting skill: the member's manifest declares [[skill]] with path spec/skills/draft-eula (one of the three skill-bearing members). EULA-to-open path: the host has walked it — CLAUDE.md's licence-state ledger records the relicensing of packages/org.vibevm.* and the root LICENSE.md from EULA to UPL-1.0, naming the merges. The redbook package itself is UPL-1.0 (vibe.toml:7, LICENSE.md:3)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-SOURCE-MIRRORS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:63  | ##ROW-SOURCE-MIRRORS `source-mirrors` @0.1.0 @impl/done | Single-writer multi-homing; manifest-driven fail-loud fast-forward-only fan-out. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:42  \"flow:org.vibevm.world/source-mirrors\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:1114  <!-- vibe:static org.vibevm.world/source-mirrors — vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md -->",
+     "spec/boot/STATIC.md:1118  This project's source is **multi-homed**: the same history lives on",
+     "spec/boot/STATIC.md:1119  more than one git host. It is kept in step under a **single-writer**",
+     "spec/common/PROP-016-source-mirrors.md:1  # PROP-016: Decentralized source mirrors — the vibevm setup {#root}",
+     "confirmed: Pin matches; slot present; the installed snippet's opening carries multi-homed and single-writer verbatim (STATIC.md:1118-1120). Source 2: PROP-016's title says 'the vibevm setup', i.e. the host document is its own instance of the flow rather than a copy of the rule. The 'manifest-driven fail-loud fast-forward-only' clause names mechanics that sit in the member's spec/flows/source-mirrors/ documents rather than the snippet; I did not open those, since the perimeter for this row is the umbrella's roster claim."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-SPEC-GENRES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:64  | ##ROW-SPEC-GENRES `spec-genres` @0.1.0 @impl/done | Contract vs lore vs research vs plans — what goes where, who wins, two-way links. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:43  \"flow:org.vibevm.world/spec-genres\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:1162  <!-- vibe:static org.vibevm.world/spec-genres — vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md -->",
+     "spec/boot/STATIC.md:1166  This project's documents are **genre-typed**. One undifferentiated",
+     "spec/boot/STATIC.md:1169  belongs to exactly one genre; the genre decides where it lives, how",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1211  excluded for its **genre**, not its age. In `spec-genres`' terms it is lore,",
+     "confirmed: Pin matches; slot present; snippet at STATIC.md:1162 carries the genre-typed rule and the 'exactly one genre' law. Source 2 is a live invocation, not a restatement: the host's campaign plan reasons in the flow's vocabulary at line 1211, excluding a document 'for its genre, not its age ... In spec-genres' terms it is lore'. Found by `grep -n 'spec-genres' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-COMPARATIVE-RESEARCH": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:65  | ##ROW-COMPARATIVE-RESEARCH `comparative-research` @0.1.0 @impl/done | Evergreen competitor studies with two-way gap analysis and numbered roadmap deltas. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:44  \"flow:org.vibevm.world/comparative-research\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:128  <!-- vibe:static org.vibevm.world/comparative-research — vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md -->",
+     "spec/boot/STATIC.md:134  research document** is a self-contained, evergreen study: readable",
+     "spec/boot/STATIC.md:135  months after publication without the original sources, structured",
+     "confirmed: Pin matches; slot present; the installed snippet's opening carries 'evergreen study' verbatim at STATIC.md:134. The roster claim is settled. I did not extend this row into the host's adoption of the genre — the W4 harvest §s2-comparative records that every living instance sits in legacy-spec/ (an archive) and that the only spec/ hit for the genre vocabulary is the compiled boot lane itself; that is a fact about the comparative-research package's own rows, not about redbook's roster."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ROW-MANAGED-BLOCKS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:66  | ##ROW-MANAGED-BLOCKS `managed-blocks` @0.1.0 @impl/done | How a tool writes into files it does not own — one delimited block, deterministic scanning (for tool authors). @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:45  \"flow:org.vibevm.world/managed-blocks\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:853  <!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md -->",
+     "spec/boot/STATIC.md:857  This project ships the **managed blocks** practice — a discipline",
+     "spec/boot/STATIC.md:858  for tool authors: how a tool writes into a file it does not own (an",
+     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:1  # PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files {#root}",
+     "confirmed: Pin matches; slot present; the installed snippet's opening at STATIC.md:857-860 repeats the row's phrasing including the '(for tool authors)' audience marker. Source 2 is the host implementing it on itself: PROP-012 is vibevm's own managed-block spec, and CLAUDE.md carries the live block — its <vibevm> markers read 'Generated by vibe — do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours.'"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-QUALIFIED-NAMING": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:67  | ##ROW-QUALIFIED-NAMING `qualified-naming` @0.1.0 @impl/done | Namespaces for package ecosystems: groups, identity tuples, collision vs conflict (for ecosystem designers). @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:46  \"flow:org.vibevm.world/qualified-naming\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:1001  <!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->",
+     "spec/boot/STATIC.md:1005  This project ships the **qualified-naming** practice for *ecosystem",
+     "spec/common/PROP-029-fully-qualified-addresses.md:1  # PROP-029 — Fully-qualified addresses and mechanical refactoring {#root}",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:3  group = \"org.vibevm.world\"",
+     "confirmed: Pin matches; slot present; the installed snippet's opening names the same audience the row does ('for *ecosystem designers*', STATIC.md:1005-1006). Source 2: the host runs the practice on itself — every package reference in this repository is a group-qualified `kind:group/name` tuple (redbook's own manifest carries group = \"org.vibevm.world\" at line 3, and all 22 pins are written `flow:org.vibevm.world/<name>`), and PROP-029 is the host's spec for fully-qualified addresses."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-TOOL-DESIGN-LESSONS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:68  | ##ROW-TOOL-DESIGN-LESSONS `tool-design-lessons` @0.1.0 @impl/done | Paid-for lessons for self-updating tools and package systems. @impl/done |",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:47  \"flow:org.vibevm.world/tool-design-lessons\" = \"=0.1.0\"",
+     "spec/boot/STATIC.md:1271  <!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->",
+     "spec/boot/STATIC.md:1275  This project builds a tool that manages itself — a self-updating CLI,",
+     "spec/boot/STATIC.md:1278  lessons, each one paid for by shipping such a tool and the ecosystem",
+     "confirmed: Pin matches; slot present; the installed snippet at STATIC.md:1275-1279 carries both of the row's distinguishing words — 'self-updating CLI ... a package system' and 'each one paid for by shipping such a tool'. Source 2 is the host being the tool in question: crates/vibe-cli implements install / uninstall / update / reinstall / self, and spec/common/PROP-019-version-manager.md specs the self-updating half."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-collection-takes-its-spirit-from-the-book": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:72  ##the-collection-takes-its-spirit-from-the-book The collection takes the general spirit of the process from the",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:19  ##spirit-of-the-process-lead **The",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:4  the book the redbook collection distills. The collection takes the",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:5  **general spirit of the process** from it; the member flows are its",
+     "spec/boot/STATIC.md:1515  general spirit of the process comes from the book**: two processes",
+     "confirmed: The same sentence appears in three of the package's own files — README:72, the boot snippet's lead at line 19, and spec/book/README.md:4-6 — and reaches the consumer through the compiled boot lane at STATIC.md:1515. spec/book/README.md is one of the files the campaign's exclude globs drop, so it carries no rows of its own; I read it in full anyway because this fact and three others point at it."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-FULL-TEXT-SHIPS-UNDER-SPEC-BOOK-RU": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:75  ##THE-FULL-TEXT-SHIPS-UNDER-SPEC-BOOK-RU The full text ships in this package under `spec/book/ru/` —",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:10  - `ru/` — the Russian text, included **as-is** from the author's",
+     "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md:1  Подробности об использовании документа — в разделе [Safe Harbor](safeharbor.md).",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1191  `spec/book/**`». `flow:redbook`'s three Russian chapters (1 209 lines, **375",
+     "confirmed: 'Ships in this package' verified twice: `find packages/org.vibevm.world/redbook/v0.2.0 -type f` lists the three ru/ chapters, and `find vibedeps/flow-redbook -type f` lists the same three in what a consumer receives — the book is not stripped at install. 'As-is' is the package's own word at spec/book/README.md:10-12. 'Full text' is where I would push back on the wording rather than the marker: three chapters ship, and the host's own count is 1 209 lines / 375 facts (campaign plan F-091, line 1191). chapter-2's own abstract at line 3 forward-references material 'ближе к главе 5, когда я ее допишу' — a chapter 5 that does not ship — so the shipped text is three chapters of a longer manuscript."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AN-ENGLISH-EDITION-WILL-TAKE-PRIORITY-ONCE-IT-EXISTS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:78  ##AN-ENGLISH-EDITION-WILL-TAKE-PRIORITY-ONCE-IT-EXISTS An English edition",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:13  - `en/` — reserved. An English edition will sit alongside the",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:16  Russian text is the reference.",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:11  manuscript. Currently the only edition, and therefore the",
+     "confirmed: A forward-looking claim, marked @spec/done. Its antecedent is checkable and holds: `ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/` returns exactly `README.md` and `ru` — there is no `en/` directory in either slot, so the 'until then' branch is the live one and the Russian text is the reference by default. spec/book/README.md:13-16 states the same rule in the same words, and line 11 calls Russian 'currently the only edition'. Widened to the installed slot: `find vibedeps/flow-redbook -type f` likewise shows no en/ files."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "book-readme-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:82  ##book-readme-pointer See `spec/book/README.md`. @impl/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:1  # The book {#root}",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:8  ## Editions {#editions}",
+     "vibedeps/flow-redbook/0.2.0/spec/book/README.md:1  # The book {#root}",
+     "confirmed: A pointer, and the target resolves in both the package and the installed slot. spec/book/README.md is 34 lines and does carry the edition plan the boot snippet promises — an ## Editions section at line 8 covering ru/ and a reserved en/, and a ## Contents section at line 18 naming all three chapters. It is excluded from the campaign corpus by the exclude globs, so it carries no rows; I read it in full because this fact and THE-BOOK-SHIPS-IN-THIS-PACKAGE both assert something about it. Note the pointer is written as a backticked path, not a markdown link, so it is not one of the 37 relative citations the source-1 join resolves."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-BOOK-IS-REFERENCE-DEPTH": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:84  ##THE-BOOK-IS-REFERENCE-DEPTH The book is reference depth: the member flows carry the operational",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:29  ##DO-NOT-READ-THE-BOOK-AT-SESSION-BOOT Do **not** read the book at session boot — it is reference depth,",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:28  The chapters are reference depth, not standing instructions: open",
+     "spec/boot/STATIC.md:1519  Do **not** read the book at session boot — it is reference depth,",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1196  **The package rules itself out in its own words.** Its boot snippet: «*Do not",
+     "confirmed: Three of the package's own files say 'reference depth' in the same words (README:84, snippet:29, spec/book/README.md:28-30), and the phrase reaches the consumer at STATIC.md:1519. Source 2 is the strongest evidence here and it is an owner ruling: the host's campaign plan F-091 (line 1189) excluded spec/book/** from the corpus on exactly this ground, quoting the snippet back at itself, and recorded 'Nothing outside the package cites a chapter.' I re-ran that check — `grep -rn 'chapter-1-two-process-model\\|chapter-2-shared-state\\|chapter-3-memory' spec/ docs/ crates/ CLAUDE.md` returns nothing outside the package and its installed copy."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "complementary-layers-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:89  ##complementary-layers-lead The redbook and the AI-Native Code Discipline",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:4  kind = \"flow\"",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:3  group = \"org.vibevm.ai-native\"",
+     "spec/boot/INDEX.md:18  path = \"vibedeps/flow-core-ai-native/0.8.0/spec/boot/10-flow-core-ai-native.md\"",
+     "spec/boot/INDEX.md:22  path = \"vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md\"",
+     "confirmed: The pkgref in the lead resolves exactly: core-ai-native's manifest carries kind = \"flow\" and group = \"org.vibevm.ai-native\", so `flow:org.vibevm.ai-native/core-ai-native` is the correct fully-qualified name. 'Its language families' also resolves — `ls packages/org.vibevm.ai-native/` shows rust / go / typescript triples (aggregator, -lang, -mcp), and the -lang packages carry kind = \"stack\" rather than flow. Source 3: the host installs both layers side by side — spec/boot/INDEX.md names flow-core-ai-native and two -lang stacks as boot entries, while the 22 redbook members arrive in the STATIC.md lane."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "LAYER-REDBOOK-IS-PURE-METHOD": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:93  - ##LAYER-REDBOOK-IS-PURE-METHOD **redbook** is pure method — its value survives with only a git",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:13  requires_kinds = []",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:12  min_vibe_version = \"0.1.0\"",
+     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md:55  2. ##READS-THE-SPECSPACES-OWN-BOOT-CONTRACT the specspace's own boot contract (`CLAUDE.md` at the specspace",
+     "confirmed: Countable and it holds almost entirely. I ran `find packages/org.vibevm.world -type f ! -name '*.md' ! -name '*.toml'` across the whole world corpus: six hits, all of them bare LICENSE files. **No source file, no script, no manifest of any build system, in any of the 28 world packages** — the collection is markdown and TOML only. The umbrella's [compatibility] block declares requires_kinds = [] (no kind dependency). The 'any agent' clause has one counter-instance I found by `grep -rniE 'claude|cursor|copilot|codex|gemini' packages/org.vibevm.world/ --include='*.md' -l`: 15 files hit, and of the member boot snippets only wal-specspaces:55 names a specific agent's file (`CLAUDE.md`)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LAYER-DISCIPLINE-IS-CODE-ENFORCED-RIGOR": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:96  - ##LAYER-DISCIPLINE-IS-CODE-ENFORCED-RIGOR **The Discipline** is code-enforced rigor — pattern cards, gates,",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/rules/structure.rs:1  //! Structure rules — where cells are constructed and what a cell may",
+     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:1  # Card Registry — INDEX (Rust projection)",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:1  # The AI-Native Pattern Card Format {#root}",
+     "confirmed: The mirror image of the previous row's count, and the contrast is sharp. `find packages/org.vibevm.ai-native -type f ! -name '*.md' ! -name '*.toml'` returns Rust source in quantity — core-ai-native-conform (baseline, config, facts, finding, rules/{budget,diagnostics,structure,tests,typescript}, sarif, store) and core-ai-native-mcp (capture, error, server, toolset, wire), plus a Cargo.lock. Pattern cards: `ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/` gives INDEX.md plus scaffold-a through scaffold-i, and the go -lang package carries the same nine card names — 'per language' confirmed on two of three families. Note the crates I found sit in the v0.7.0 slot; v0.8.0 is the authored slot and the campaign plan (line 63) records core-ai-native as carrying two live slots."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:99  ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred** @impl/done",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral** @impl/done",
+     "DRIFT, and this is the THIRD instance of one defect — the sentence that states it for both packages at once. It claims «the Discipline's internal copies defer to them from their next release», naming flow:wal and flow:campaign-plans. The next release arrived and deferred in neither. Measured directly: core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`), five days after campaign-plans reached org.vibevm.world (`69708287`, 2026-07-12) and ten days after wal 0.2.0; `vibe.lock:111` shows v0.8.0 is the slot the host installs; and its `spec/05-CAMPAIGN-FORM.md` is 117 lines carrying ZERO occurrences of `campaign-plans`, `defer` or `superseded`, while `grep -ril 'campaign-plans' packages/org.vibevm.ai-native/v0.8.0-slot` returns no files at all. The worker's independent sweep found `grep -rn 'redbook' packages/org.vibevm.ai-native/` returns zero across the entire tree, installed side included. W2 measured the wal half separately and reached the same result on `06-WAL-CONVENTION.md`. The canonical-home assertion is stated only here; nothing on the other side records it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "UNINSTALLING-THE-UMBRELLA-REMOVES-ONLY-ITS-OWN-FILES": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:116  ##UNINSTALLING-THE-UMBRELLA-REMOVES-ONLY-ITS-OWN-FILES Uninstalling the umbrella removes its own files; member packages are",
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:530  - ##LF-ROOT-DEPENDENCIES `root_dependencies` is a **mirror of `vibe.toml` `[requires].packages`** — the lockfile keeps the user's declared roots inline so it remains a self-contained snapshot of the solve state (nothing inside `vibe.lock` requires reading `vibe.toml` to interpret). The source of truth for *what the user asked for* is the manifest's `[requires]` section; the lockfile carries a copy plus the resolved transitive closure. `vibe uninstall` of a root drops the entry from both files; `vibe uninstall` of a pure transitive is rejected with an explanation. @impl/done",
+     "vibe.lock:5  root_dependencies = [",
+     "vibe.lock:14      \"flow:org.vibevm.world/redbook@^0.2.0\",",
+     "vibe.lock:40  files_written = []",
+     "DRIFT on its second half, against the host's own written contract. «Member packages are removed by uninstalling them individually» is contradicted by `spec/modules/vibe-registry/PROP-002-decentralized-registry.md` `##LF-ROOT-DEPENDENCIES`, which I read directly: «`vibe uninstall` of a root drops the entry from both files; `vibe uninstall` of a pure transitive **is rejected with an explanation**». In this repository `vibe.lock`'s root_dependencies names only four of the umbrella's 22 members — wal-specspaces, dev-runtime-docs, conflict-protocol, git-practices — so **18 of 22 are pure transitives and cannot be uninstalled individually at all**. The first half stands: files_written is `[]` for redbook as for all 36 packages, and its payload lives in the vibedeps slot rather than the consumer's authored tree. This is a written-contract contradiction, not non-adoption: the host does not decline the practice, it specifies the opposite."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:121  ##license-line UPL-1.0. See `LICENSE.md`. @impl/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "vibedeps/flow-redbook/0.2.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The",
+     "confirmed: Three-way agreement: the manifest field, the README line, and the LICENSE.md text itself (36 lines, opening 'Copyright (c) 2026 Oleg Chirukhin' then the UPL 1.0 grant). The pointer target exists in the package and in the installed slot. Source 2: CLAUDE.md's licence-state ledger records that the canonical packages/org.vibevm.* surface — naming the redbook family first — was relicensed to UPL-1.0, so the host's own record and the package agree."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-BOOK-TEXT-SHIPS-UNDER-THE-SAME-TERMS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/README.md:123  ##THE-BOOK-TEXT-SHIPS-UNDER-THE-SAME-TERMS The book text under `spec/book/` is the",
+     "packages/org.vibevm.world/redbook/v0.2.0/LICENSE.md:6  person obtaining a copy of this software, associated documentation and/or data",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:10  - `ru/` — the Russian text, included **as-is** from the author's",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:1  Подробности об использовании документа — в разделе [Safe Harbor](safeharbor.md).",
+     "confirmed: there is exactly one LICENSE.md, at the package root, and `spec/book/` carries no separate licence file — so the manuscript ships under the package's terms by construction, and the UPL grant's own subject («this software, associated documentation and/or data») covers a manuscript. What is NOT this fact's defect, and is already filed as F-119: chapter 1's first line refers the reader to a Safe Harbor section for terms of use, and no such section exists anywhere in the repository — `find . -iname 'safeharbor*'` returns nothing, in both slots and in the installed copy. `spec/book/README.md:32-34` acknowledges the dangling reference deliberately, saying such references «resolve at the book's own public home, not inside this package». That is a defect in the manuscript's internal pointer, not in the licence line this fact makes."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  }
+ }
+}
