@@ -318,7 +318,7 @@
   "evidence": [
    "packages/org.vibevm.world/decision-records/v0.1.0/README.md:79  - ##COMPOSES-WAL `flow:wal` — WAL Constraints entries cite recorded decisions",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a",
-   "spec/WAL.md:69  ## Constraints — do not violate"
+   "spec/WAL.md:74  ## Constraints — do not violate"
   ],
   "src": [
    1,
@@ -2539,7 +2539,7 @@
   "claim": "The permanent re-litigation: with no stated condition for reopening, every reader feels free to reopen at any time and the record's immunity is worth nothing.",
   "evidence": [
    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:29  - ##FAILURE-THE-PERMANENT-RE-LITIGATION **The permanent re-litigation.** The opposite failure: with no",
-   "spec/WAL.md:69  ## Constraints — do not violate"
+   "spec/WAL.md:74  ## Constraints — do not violate"
   ],
   "src": [
    1,

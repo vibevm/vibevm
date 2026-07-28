@@ -264,7 +264,7 @@
   "evidence": [
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a brief *why*, citing a spec anchor or issue: `match_by_hash(): DO NOT TOUCH — fragile reconnection logic, issue #12`. The most valuable",
    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:91  5. ##SECTION-IN-PROGRESS **In progress** — what is open, with enough detail that the next session can pick it up. Cite spec anchors (`spec://…`). @impl/done",
-   "spec/WAL.md:69  ## Constraints — do not violate",
+   "spec/WAL.md:74  ## Constraints — do not violate",
    "spec/WAL.md:222  ## Next"
   ],
   "src": [
@@ -517,7 +517,7 @@
   "evidence": [
    "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
    "spec/common/PROP-000.md:316  ##INVARIANTS-STOP-RULE (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @spec/done",
-   "spec/WAL.md:69  ## Constraints — do not violate",
+   "spec/WAL.md:74  ## Constraints — do not violate",
    "spec/boot/STATIC.md:38  Critical constraints live at the START or END of a file, never buried mid-document. Models attend to the edges of context (\"Lost in"
   ],
   "src": [
@@ -647,7 +647,7 @@
   "evidence": [
    "spec/boot/STATIC.md:59  - Never bury an invariant in the middle of a file.",
    "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
-   "spec/WAL.md:69  ## Constraints — do not violate",
+   "spec/WAL.md:74  ## Constraints — do not violate",
    "spec/WAL.md:1  # WAL — Project Continuation State"
   ],
   "src": [
@@ -1562,7 +1562,7 @@
   "evidence": [
    "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
    "spec/common/PROP-000.md:316  ##INVARIANTS-STOP-RULE (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @spec/done",
-   "spec/WAL.md:69  ## Constraints — do not violate",
+   "spec/WAL.md:74  ## Constraints — do not violate",
    "spec/WAL.md:1  # WAL — Project Continuation State"
   ],
   "src": [
@@ -1579,7 +1579,7 @@
   "claim": "A mid-file invariant is an invariant the agent statistically did not read.",
   "evidence": [
    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:214  ##A-MID-FILE-INVARIANT-WAS-NOT-READ A mid-file invariant is an invariant the agent statistically did not read. @spec/done",
-   "spec/WAL.md:69  ## Constraints — do not violate",
+   "spec/WAL.md:74  ## Constraints — do not violate",
    "spec/boot/STATIC.md:41  invariant the reader statistically skipped."
   ],
   "src": [
@@ -1794,7 +1794,7 @@
   "claim": "Summary: invariants live at the start or end of a file — the middle is where models stop reading.",
   "evidence": [
    "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
-   "spec/WAL.md:69  ## Constraints — do not violate",
+   "spec/WAL.md:74  ## Constraints — do not violate",
    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:94  Ещё один практический момент, вытекающий из исследований внимания LLM: критическая информация внутри спеки должна размещаться **в начале или конце файла**. Стэнфордское исследование «Lost in the Middle» (Liu et al., [препринт…"
   ],
   "src": [

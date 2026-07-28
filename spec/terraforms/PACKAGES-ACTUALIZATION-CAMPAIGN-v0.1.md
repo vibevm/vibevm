@@ -3103,6 +3103,67 @@ command that would have tested it.
   could not read. Leading `+` became `*`; the three already-trusted tables re-run
   to identical counts.
 
+- **2026-07-29 — PHASE C CLOSES. 6 847 / 6 847 anchors, zero owed.** Every
+  addressable anchor in every shipped package file now carries a verdict backed
+  by evidence that resolves to a real line in a real file. All seven world
+  batches closed: W1 407, W2 692, W3 615, W4 564, W5 697, W6 572, W7 603.
+
+  **Exit-gate clause (ii) — the X/Y/Z summary.** Over the whole marked corpus:
+  **10 700 confirmed / 601 drift / 45 unverifiable = 11 346, 94.3 %.** By zone:
+  `host` 4 496 / 0 / 3 over 58 files (99.9 %); `ai-native` 2 470 / 207 / 20 over
+  80 files (91.6 %); `world` 3 734 / 394 / 22 over 121 files (90.0 %). Reproduce
+  with `tasks/summary.py`; per-batch with `tasks/batch-progress.py`. Both print
+  the truth and supersede every figure written here.
+
+  **Exit-gate clause (iv) — the self-referential count (amendment A2).** Of the
+  world zone's 4 150 verdicts, **248 carry `src == [1]` — 6.0 %.** Those rest on
+  the package's own artifacts alone, with no host observable and no installed
+  witness, and they are overwhelmingly structural lead-ins, package-internal
+  cross-references and illustrative genres (an ssh-config example in a repository
+  that writes no ssh config). A reader weighing this campaign's evidence should
+  discount them and read the other 94 %.
+
+  **Exit-gate clause (v) / amendment A6 — `baseline.json` written.**
+  `vibe progress baseline --campaign campaigns/packages-2026-09` emitted **2 216
+  units — 1 706 confirmed, 491 drift, 19 unverifiable.** Recorded for whoever runs
+  the next `rescan`: **60 units were omitted for want of a judged fact and will
+  read as `new`**, and 58 verdict keys matched no fact anchor (the per-file
+  `_elements` bundles). Neither is a defect; both are shape mismatches between the
+  verdict cache and the unit model, and a rescan that does not expect them will
+  read 60 phantom additions.
+
+  **What the phase found, in one paragraph.** 601 drifts, and the recurring
+  shapes are four. The `../flows/…` sibling pointer dangles in **seven
+  consecutive W6/W7 packages** — the host has no `spec/flows/` directory, so every
+  boot snippet points a session at nothing, and the root-relative variant inside
+  two re-derive prompts is invisible to the campaign's own `\.\./flows/` scan.
+  Rules with no checker fail while their checked siblings hold — `source-mirrors`
+  is the controlled experiment: never-`--force` has a unit test and held, while
+  never-push-to-a-replica and the ancestry gate have none and both failed, 130
+  pushes and 0 `merge-base` calls respectively. Verbs are specified and never
+  built — managed-blocks' `remove`, qualified-naming's `KindMismatch`, each
+  costing five to six sentences downstream. And the collection over-counts its own
+  contents in exactly two READMEs, `spec-genres` and `tool-design-lessons`, both
+  saying «four pieces of content» over three shipped documents where 14 of 16
+  siblings say «three».
+
+  **Three findings filed and deliberately unrepaired**, per the phase's own rule
+  that C records and the next wave drains: the root `README.md:164` still calls
+  vibevm proprietary over a `LICENSE.md` that has been UPL-1.0 since 2026-07-12,
+  and is on none of `CLAUDE.md`'s enumerated stale-string exemptions; both mirror
+  targets declare `refs = ["main", "tags"]`, so four local branches exist on no
+  host and would be lost with this machine; and `CLAUDE.md:191` makes «Push to
+  `origin/main`» step 4 of the END SESSION contract, which `90-user.md:13`, `:35`
+  and `PROP-016:15` all name as *not* the rollout.
+
+  **The method that made it hold.** The per-file slice as the unit of work, never
+  the batch. Two instruments that refuse rather than guess — `make-slice.py`
+  rejecting any slice whose file has an uncovered anchor, `merge-verdicts.py`
+  refusing to restate a verdict without `--force` — and both caught real mistakes
+  in this phase's final week. The durable-citation rule got its controlled
+  experiment too: the one batch written before it carries 116 dead refs into
+  rewritten checkpoints today, and every batch written under it verifies clean.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
