@@ -166,9 +166,10 @@ the 20 files / 692 anchors of `two-process-model`, `wal`, `wal-specspaces` and
 `sync-from-code`, writing to `tasks/evidence/ev-W2{a,b,c,d}.json`. **No W2 verdict
 has been written.** Its three §3.1 sources are captured in
 `harvest/world-w2-wal-family.md`, and two findings already fall out of that capture
-alone: the host runs a `two-process-model` boot snippet **three words shorter** than
-the package ships — `architecture`, `consequences`, `never` — and the `wal-status`
-skill the wal package ships is **not installed**. `CONTINUE.md` §w2-in-flight carries
+alone: the host's `two-process-model` boot snippet is missing three `{#…}` heading
+anchors the package added on 2026-07-27, so three of its four sections cannot be
+cited — a stale install rather than a changed rule, pinned in the harvest — and the
+`wal-status` skill the wal package ships is **not installed**. `CONTINUE.md` §w2-in-flight carries
 the table list and the two rules that protect a running delegation.
 
 ## Next

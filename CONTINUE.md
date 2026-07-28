@@ -66,9 +66,10 @@ ls campaigns/packages-2026-09/tasks/evidence/ev-W2*.json
 
 Their three §3.1 sources are captured in
 [`harvest/world-w2-wal-family.md`](campaigns/packages-2026-09/harvest/world-w2-wal-family.md),
-and **two findings are already on the table from that capture alone**: the host runs
-a `two-process-model` boot snippet **three words shorter** than the package ships —
-`architecture`, `consequences`, `never`, the corpus's first WORDS-DIFFER — and the
+and **two findings are already on the table from that capture alone**: the host's
+`two-process-model` boot snippet is missing three `{#…}` heading anchors the package
+added on 2026-07-27, so three of its four sections cannot be cited — the corpus's
+first WORDS-DIFFER, and a stale install rather than a changed rule — and the
 `wal-status` skill this package ships is **not installed** in `.claude/skills/`.
 
 **Do not touch a table while its worker may still be writing**, and do not edit the
