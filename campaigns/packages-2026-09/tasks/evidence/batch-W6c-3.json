@@ -1,0 +1,771 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:14  ## Why genres exist {#why}",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:37  ## The genre table {#genres}",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:93  ## The precedence law {#precedence}",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:125  ## The two-way linking law {#linking}",
+     "confirmed: Each of the four promised parts is a top-level section of this same file, in the order the scope line lists them. Self-descriptive; nothing in the host bears on whether the file's scope statement matches the file. src [1] only."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "this-file-is-the-taxonomy": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md:5  ##scope-of-this-document **Scope of this document.** A routing table from *situation* to",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md:8  ##this-file-is-the-practical-edge This file is the practical",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:166  ##sibling-document-pointers The decision table for common situations lives in",
+     "confirmed: Both siblings exist in the package and each opens with a scope line matching the role assigned here: when-to-write-what.md calls itself a routing table, design-docs.md calls itself 'the practical edge' of the contract/lore split. The protocol also names them again at §placing with working relative links. src [1] only — a package-internal division of labour with no host observable."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "three-failures-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:19  - ##FAILURE-CONTRACTS-BLOAT-WITH-NARRATIVE **Contracts bloat with narrative.** A discussion log — every fork,",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:23  - ##FAILURE-NARRATIVE-GETS-TREATED-AS-BINDING **Narrative gets treated as binding.** A paragraph of \"here is how",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:26  - ##FAILURE-NOBODY-KNOWS-WHAT-WINS **Nobody knows what wins.** Two documents say different things and",
+     "confirmed: Three bullets follow the lead, matching the three named in the README and the boot snippet. The 'every time' universal is not testable against one repository; the host tree is genre-typed and so is not an instance of the untyped case. src [1] only."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "FAILURE-CONTRACTS-BLOAT-WITH-NARRATIVE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/workspace-and-qualified-naming.md:13  ##what-this-is PROP-007 and PROP-008 say *what* the workspace + qualified-naming refactor does. This document says *why* — and keeps the lore: the owner's mental model, the four-axis decomposition, every fork weighed during the session, the Cargo-vs-Maven precedents studied, the publication model that needed careful explaining, and the ideas that surfaced but were parked. @doc/done",
+     "spec/design/workspace-and-qualified-naming.md:15  ##why-exists It exists because the design session that produced PROP-007/008 spent a large amount of reasoning that does not belong inside a contract-shaped PROP, yet would be expensive to lose at the next session boundary. See [`spec/design/README.md`](README.md) for the genre. @doc/done",
+     "spec/modules/vibe-workspace/PROP-007-workspace.md:11  ##design-rationale **Design rationale:** [`spec/design/workspace-and-qualified-naming.md`](../../design/workspace-and-qualified-naming.md) — the *why* and the lore behind this PROP … Non-normative; this PROP is the contract. @spec/done",
+     "confirmed: The host records the avoided failure in its own words: the design session's reasoning 'does not belong inside a contract-shaped PROP, yet would be expensive to lose', which is exactly the pressure this failure describes. The routing that resulted is observable — the discussion log sits in a 241-line design doc and the PROP carries a one-line pointer. Searched the 42 PROPs for the counter-case (a contract carrying a session narrative): the closest are the History/Changelog sections, present in 15 of 42 (grep -rl for a History or Changelog heading), which are dated one-line-per-draft records rather than discussion logs."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FAILURE-NARRATIVE-GETS-TREATED-AS-BINDING": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:24  we were thinking about it\" sits next to a requirement, in the same",
+     "spec/modules/vibe-cli/PROP-037-tree-tui.md:131  ##visual-language-note The visual language is **a first-class part of this contract**, not an",
+     "spec/modules/vibe-cli/PROP-037-tree-tui.md:135  the normative REQs the code is traceable to are the four anchors below. @spec/done",
+     "confirmed as a description of the hazard the host designs against, stated honestly as not observed firing here. The guards are real and in the tree: PROP-037 keeps the aesthetics narrative out of the contract and marks the four REQ anchors as the traceable surface, and the whole progress-markup discipline (`spec/modules/vibe-progress/PROP-043-progress-markup.md`) marks normativity per unit rather than by font — which is this failure's remedy generalised into a mechanism. What was searched and NOT found is an instance of the failure firing: no record in `spec/terraforms/*.md`, `campaigns/**/*.md`, `AUDIT.md` or `BACKLOG.md` of a musing implemented as a requirement. Note the tree's one related defect runs the other way — binding language inside a narrative doc — and is carried at `##GENRE-TYPING-REMOVES-ALL-THREE`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FAILURE-NOBODY-KNOWS-WHAT-WINS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/loading-and-boot-model.md:9  ##authority-line **Authority:** the PROP is the contract. If this document and PROP-009 disagree, the PROP wins. @doc/done",
+     "spec/design/workspace-and-qualified-naming.md:7  ##authority-line **Authority:** the PROPs are the contract. If this document and a PROP disagree, the PROP wins. @doc/done",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "confirmed: The host closes this failure explicitly: four of five non-README design docs state the conflict rule in their own header, and when 15 real disagreements were found across 4 design docs the campaign resolved every one by the stated rule rather than by edit order — 'lore corrected to the contract per spec-genres'. The one genre pair with no in-file conflict rule is structural-loader.md against PROP-035, and the host parked the file (@spec/hold) rather than leaving the conflict unruled."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GENRE-TYPING-REMOVES-ALL-THREE": {
+    "v": "drift",
+    "ev": [
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. The contract — *what* the system does — lives in the PROP / FEAT documents under [`spec/modules/`](../modules/) and [`spec/common/`](../common/) …",
+     "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header …",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:770    design↔PROP backlinks hold 4/4 (structural-loader parked by its own",
+     "DRIFT on «all three», falsified by one live counter-instance. Two of the three ARE removed on this tree and both are measurable: bloat (the narrative sits in `spec/design/`, the PROPs carry one-line pointers — the discussion log is a 241-line design doc) and authority (every conflict has a stated winner, and the d2b batch resolved 15 by it). The third — narrative treated as binding — is not removed: `spec/design/structural-loader.md` carries two uppercase MUST requirements inside a non-binding genre, which is the exact shape of the failure this claim says typing removes, and it survives in the tree today marked `@spec/hold` rather than corrected. Genre typing gave the host the vocabulary to SEE the failure and the file is still in it, so the claim overstates by one third."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-KIND-FIXES-CHARTER-MUTABILITY-AUDIENCE-AND-AUTHORITY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/tui-visual-language.md:10  ##genre-line **Genre:** design doc (lore). **Contract:** [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.md#theme). @doc/done",
+     "spec/design/action-system.md:3  ##genre-line **Genre:** design (lore) — non-binding rationale and architecture. The normative contract is",
+     "BACKLOG.md:27  - ##TASKS2-GENRE **Genre: forward-looking, non-binding, drained by a later mandate.** Not",
+     "spec/design/README.md:13  ##genre-table-lead vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`: @doc/done",
+     "confirmed: Three host documents literally open with a `Genre:` declaration, and BACKLOG.md's declaration carries the four attributes in one line (charter 'forward-looking', authority 'non-binding', mutability 'drained by a later mandate', plus an explicit not-a-contract/not-a-checkpoint disambiguation). spec/design/README.md adopts the four-attribute frame by name and by spec:// address. The host's own instance table (lines 15-22) publishes only three of the four columns — Directory, Holds, Normative? — so mutability and reader are carried per-document rather than in the host's table."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EACH-GENRE-HAS-CHARTER-MUTABILITY-READER-AND-AUTHORITY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:43  | Genre | Charter | Mutability | Reader | Authority |",
+     "spec/design/README.md:13  ##genre-table-lead vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`: @doc/done",
+     "spec/design/README.md:15  | Directory | Holds | Normative? |",
+     "confirmed: The table's header row carries exactly the four attributes plus the genre name, and all seven rows are fully populated (lines 45-51 — no empty cells). The host names the same four attributes when adopting the taxonomy but publishes a three-column instance table (Directory / Holds / Normative?), i.e. it consumes charter and authority and leaves mutability and reader to the flow's general table by reference."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-GENRE-BOOT-FILES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:9  ##boot-sequence-lead Every session starts here. In order: @impl/done",
+     "spec/design/README.md:17  | ##ROW-BOOT [`boot/`](../boot/) @doc/done | Session-boot instructions read at the start of every session @doc/done | yes @doc/done |",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "confirmed: Four attributes checked against the host. Charter and reader: CLAUDE.md and 00-core.md both put spec/boot/ first in the session. Authority: the host's table marks it 'yes'. 'Small and stable': the two AUTHORED boot files are 65 and 68 lines — small. The two GENERATED ones are not: spec/boot/INDEX.md is 39 lines but spec/boot/STATIC.md is 1584 lines, an order of magnitude past 'small', and it is read first by contract (00-core.md:10 names it 'the priority lane'). Its size is a consequence of compiling 20+ installed packages' snippets into one file, so the size property holds for authored boot files and not for the generated priority lane. 'Rare, deliberate edits' is not measurable without git history for the generated files, which are rewritten on every install."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-GENRE-FOUNDATIONAL-DECISIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:1  # PROP-000: Foundational technical decisions {#root}",
+     "spec/common/PROP-000.md:45  ## 3. License {#license}",
+     "spec/common/PROP-000.md:84  ## 6. Package identity {#identity}",
+     "spec/common/PROP-000.md:86  - ##IDENTITY-FORM **Decision:** `[<kind>:]<group>/<name>@<version>` — identity is **qualified** since M1.19 ([PROP-008 §2.2](../modules/vibe-registry/PROP-008-qualified-naming.md#identity)); the unqualified `<kind>:<name>@<version>` of `VIBEVM-SPEC.md` §7.1 is CLI sugar that resolves once, at the human boundary. @impl/done",
+     "confirmed: Two of the charter's three named examples are literal section titles in the host's foundational document — §3 License, §6 Package identity — and the third (versioning) is carried inside §6 and §7 rather than as its own section. The 'amended by decision record' mutability is observable in form: sections are written as `**Decision:**` bullets, and §6's decision records its own amendment in-place ('qualified since M1.19'), citing the PROP that changed it. spec/common/ holds 12 PROPs; the host's genre table names PROP-000 and PROP-006 as the row's exemplars and marks it binding."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-GENRE-MODULE-CONTRACTS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:19  | ##ROW-MODULES [`modules/`](../modules/) @doc/done | Per-crate PROP / FEAT — the implementation contract @doc/done | yes @doc/done |",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:234  - ##HISTORY-DRAFT-1 **2026-05-21 — draft 1.** Requirements captured in an owner design session: the loading-model redesign answering PROP-007 §6 question 3, the static/dynamic-linking spine, the four-fork resolution. Rationale recorded in [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md). @spec/done",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:107  - ##ROUTER-DOC-ID **Doc-id truncation** — `PROP-NNN` / `FEAT-NNN` in a URI resolve to `PROP-NNN-<slug>.md`; other docs use the full stem. …",
+     "confirmed: Charter, reader and authority all hold: spec/modules/ holds 30 per-crate PROPs across 9 crate directories, the host's table calls them 'the implementation contract' and marks them binding. The 'edit + changelog line' mutability is partly practised — 15 of 42 PROPs carry a History or Changelog section with dated draft lines (PROP-009's is the shape shown above); 27 do not. The PROP/FEAT naming is used as PROP only: 42 PROP files, zero FEAT files anywhere in the repository."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-GENRE-DESIGN-DOCS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:21  | ##ROW-DESIGN `design/` (this directory) @doc/done | Rationale for vibevm's **own** decisions — the why and the lore behind our PROPs @doc/done | no @doc/done |",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "spec/design/loading-and-boot-model.md:7  ##rename-note **Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. … See [PROP-009 §2.4](../modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types), which is normative. @doc/done",
+     "confirmed: All four attributes are observable. Charter and authority: the host's table says 'the why and the lore behind our PROPs', non-normative. Mutability 'corrected on contract conflict': executed on 15 rows across 4 files. But the 'rewritten freely' half is explicitly NOT how the host treats them — the same campaign entry records that a dated record was deliberately not rewritten into current vocabulary because that 'would destroy the record of what was decided', and it gained a rename note instead. That is the flow's own ##WHOLESALE-REWRITES-DO-NOT-HAPPEN rule in design-docs.md, so the table's 'Rewritten freely' and the sibling document's 'Wholesale rewrites do not happen' pull in different directions; the host follows the sibling."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-GENRE-RESEARCH-DOCS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:20  | ##ROW-RESEARCH [`legacy-spec/research/`](../../legacy-spec/research/) — archived 2026-07-25 @doc/done | Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @doc/done | no @doc/done |",
+     "legacy-spec/research/action-systems-vscode-idea.md:723  study **proposes**; ratification happens in the contract (spec-genres). Anchors are indicative.",
+     "spec/design/action-system.md:11  lore and the contract disagree, **the contract wins** and this file is corrected (spec-genres). @doc/done",
+     "confirmed: The host's whole research population — 8 files — sits in legacy-spec/research/ and its genre row records both the external charter and the non-binding authority, plus an archival date. The 'superseded by newer study' mutability was not superseded but archived wholesale: the entire genre directory moved under legacy-spec/ on 2026-07-25. The non-binding half is stated inside a study itself ('study proposes; ratification happens in the contract'), and honoured on the consuming side — spec/design/action-system.md:3-11 records that it is derived clean-room from that study and that the contract wins. Note that citation lives in an archive, so nothing living rests on it as a normative source."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-GENRE-CAMPAIGN-PLANS": {
+    "v": "confirmed",
+    "ev": [
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:212  | **W6** | `licensing`, `source-mirrors`, `spec-genres`, `dev-runtime-docs` | 19 | 700 | 572 |",
+     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:5  ##status-line **Status:** IMPLEMENTED — 2026-07-15 (all five campaign phases shipped, `d487d4e`…`381095e`; see §6). … implementation follows the [HYBRID-LINKING campaign](../../../legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md). @impl/done",
+     "spec/modules/vibe-cli/PROP-036-package-tree.md:17  (the resolved graph). Plan: [`PACKAGE-TREE-PLAN-v0.1`](../../../legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md). @spec/done",
+     "confirmed: Every attribute has instances. Phases and gates: the live campaigns/packages-2026-09/ zone runs lettered phases with per-batch tables, and spec/terraforms/ holds 2 live plans with phase/gate structure. 'Archived when done': 25 plans sit in legacy-spec/terraforms/ and contracts that consumed them now cite them at their archived paths (PROP-038:5, PROP-036:17, PROP-027:6, PROP-031:5, PROP-040:15) — the archive move is complete enough that the contracts' links were repointed. 'Execution, not truth': PROP-038 records the campaign as what its implementation followed while the PROP itself carries the authority."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-GENRE-THE-CHECKPOINT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:22  | ##ROW-WAL [`WAL.md`](../WAL.md) @doc/done | Volatile current-state checkpoint, rewritten each session @doc/done | n/a @doc/done |",
+     "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "CLAUDE.md:180     - Where work currently stands (branch, ahead/behind origin, working tree status).",
+     "confirmed: Per this batch's rule I cite no line inside either checkpoint file. All four attributes are witnessed by durable files. Charter: CLAUDE.md's required-contents list names exactly the flow's three items — where work stands (line 180), the active blocker and the exact human action that unblocks it (line 181), and the next-steps recipe (line 182). Mutability 'overwritten every session': mandated verbatim at CLAUDE.md:178. Reader 'the next session, first': the boot sequence puts the checkpoint at step 2, right after the boot directory. Authority 'state, not truth': the host's genre table gives it 'n/a' rather than yes/no, and 00-core.md calls it 'checkpoint, not log'. Both checkpoint files exist and are rewritten wholesale at each wind-down — an observation, stated here as prose rather than as a ref."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "two-axes-separate-the-genres": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:55  ##BINDING-GENRES-SAY-WHAT-THE-SYSTEM-MUST-DO **Boot,",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:59  ##NON-BINDING-GENRES-EXPLAIN-THEY-DO-NOT-REQUIRE **Design and research are",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:62  ##VOLATILE-GENRES-TRACK-EXECUTION-AND-STATE **Campaign plans",
+     "confirmed: The lead announces two axes and three groups follow — binding, non-binding, volatile — which is a three-way partition produced by two cuts (binding vs not; within not-binding, explanatory vs volatile). Package-internal structural claim; nothing in the host bears on the count of axes. src [1] only."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "BINDING-GENRES-SAY-WHAT-THE-SYSTEM-MUST-DO": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:17  | ##ROW-BOOT [`boot/`](../boot/) @doc/done | Session-boot instructions read at the start of every session @doc/done | yes @doc/done |",
+     "spec/design/README.md:18  | ##ROW-COMMON [`common/`](../common/) @doc/done | Foundation decisions crossing every crate (PROP-000, PROP-006) @doc/done | yes @doc/done |",
+     "spec/design/README.md:19  | ##ROW-MODULES [`modules/`](../modules/) @doc/done | Per-crate PROP / FEAT — the implementation contract @doc/done | yes @doc/done |",
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. The contract — *what* the system does — lives in the PROP / FEAT documents under [`spec/modules/`](../modules/) and [`spec/common/`](../common/) …",
+     "confirmed: The host's genre table marks exactly those three directories 'yes' under Normative? and no others, so the binding set matches one-for-one. The 'what the system is and must do' phrasing is mirrored in the host's own words — 'The contract — *what* the system does — lives in the PROP / FEAT documents under spec/modules/ and spec/common/'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NON-BINDING-GENRES-EXPLAIN-THEY-DO-NOT-REQUIRE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:20  | ##ROW-RESEARCH [`legacy-spec/research/`](../../legacy-spec/research/) — archived 2026-07-25 @doc/done | Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @doc/done | no @doc/done |",
+     "spec/design/README.md:21  | ##ROW-DESIGN `design/` (this directory) @doc/done | Rationale for vibevm's **own** decisions — the why and the lore behind our PROPs @doc/done | no @doc/done |",
+     "spec/design/structural-loader.md:13  ##MUST-LOAD-FIRST A project or package that manages its content this way MUST load these instructions before anything else; without them the directives are inert prose. A managed project or package that omits them is **broken** (§13), and the project/package-creation tools must inject them. @spec/done",
+     "confirmed: The host marks both rows 'no' under Normative?, and four of five non-README design docs say so in their own header. The 'do not require' half has one measured exception inside the design genre: spec/design/structural-loader.md requires, twice, in uppercase MUST, and declares an omitting project 'broken'. Counted the whole directory — uppercase MUST appears 2 times, all in that one file; the other five design files have zero. So five of six explain and one requires."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "VOLATILE-GENRES-TRACK-EXECUTION-AND-STATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:22  | ##ROW-WAL [`WAL.md`](../WAL.md) @doc/done | Volatile current-state checkpoint, rewritten each session @doc/done | n/a @doc/done |",
+     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:5  ##status-line **Status:** IMPLEMENTED — 2026-07-15 (all five campaign phases shipped, `d487d4e`…`381095e`; see §6). … implementation follows the [HYBRID-LINKING campaign](../../../legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md). @impl/done",
+     "BACKLOG.md:24    disposable.** `ZONE-LIFETIMES` says `run/` is throwaway after close-out and",
+     "confirmed: The host uses the word 'volatile' for the checkpoint in its own genre table, and treats campaign zones as disposable by contract — BACKLOG.md exists at the repository root precisely because 'a campaign zone is disposable' and a durable finding must outlive the zone that noticed it. That is the volatility property being designed around rather than merely asserted. The 'never mistaken for truth' half holds on the contract side: PROP-038 carries the authority and names the campaign as what its implementation followed."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-line-that-does-the-most-work": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. The contract — *what* the system does — lives in the PROP / FEAT documents under [`spec/modules/`](../modules/) and [`spec/common/`](../common/); a `spec/design/` document explains *why a PROP is shaped the way it is*. …",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "confirmed: Measured which genre boundary the host actually spends work on. The contract↔design line is the only one the host wrote a whole README about (spec/design/README.md, 51 lines, entirely about that split), the only one with a measured two-way-link audit (4/4), and the only one that produced a correction batch (15 rows across 4 files). No comparable material exists for any other pair — grep across spec/ and campaigns/ finds no audit of, say, boot-vs-foundational or research-vs-plan boundaries."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LOAD-BEARING-RATIONALE-STAYS-INSIDE-THE-CONTRACT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE … load-bearing rationale — the decision itself and the alternatives weighed, in each PROP's `Decision` / `Rejected alternatives` sections (the **decision-records** genre: `spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`) — stays inside the PROP; the narrative lore moves out to here …",
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. …",
+     "confirmed: The host adopts the phrase 'load-bearing rationale' verbatim and names where each part lives: the decision and the weighed alternatives in the PROP's Decision / Rejected alternatives sections. Counted the instances: 13 of 42 PROPs carry a 'Rejected alternatives' section; PROP-000 carries a dedicated Invariants section at line 314 and writes each section as a `**Decision:**` bullet. The 'one-paragraph why' is visible in the same bullets, which state the reason in-line."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NARRATIVE-RATIONALE-MOVES-OUT-INTO-A-DESIGN-DOC": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/workspace-and-qualified-naming.md:13  ##what-this-is PROP-007 and PROP-008 say *what* the workspace + qualified-naming refactor does. This document says *why* — and keeps the lore: the owner's mental model, the four-axis decomposition, every fork weighed during the session, the Cargo-vs-Maven precedents studied, the publication model that needed careful explaining, and the ideas that surfaced but were parked. @doc/done",
+     "spec/design/workspace-and-qualified-naming.md:169  ## 9. Ideas parked for the future",
+     "spec/design/loading-and-boot-model.md:122  ##forks-lead Four forks were put to the owner. The options, the resolution, the reasoning. @doc/done",
+     "confirmed: The host's design doc enumerates the four categories the flow names, in the same order: mental model, decomposition, every fork weighed, precedents studied, parked ideas. All four have their own sections on disk — §5 forks, §6 Cargo-vs-Maven precedents, §9 Ideas parked for the future (3 entries at lines 171-173), plus the owner's request and mental model at §2. loading-and-boot-model.md carries the same shape at §5 with four numbered forks. Both files are reached from their contracts by the ##design-rationale back-links."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "what-the-split-buys-both-sides": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-workspace/PROP-007-workspace.md:11  ##design-rationale **Design rationale:** [`spec/design/workspace-and-qualified-naming.md`](../../design/workspace-and-qualified-naming.md) — the *why* and the lore behind this PROP: the owner's mental model, the fork-by-fork decision record, the Cargo-vs-Maven precedents. Non-normative; this PROP is the contract. @spec/done",
+     "spec/design/workspace-and-qualified-naming.md:15  ##why-exists It exists because the design session that produced PROP-007/008 spent a large amount of reasoning that does not belong inside a contract-shaped PROP, yet would be expensive to lose at the next session boundary. See [`spec/design/README.md`](README.md) for the genre. @doc/done",
+     "confirmed: Both halves are observable on the same pair. Contract side: PROP-007's whole treatment of the lore is one line, which reads as a contract. Lore side: the story is available and reachable — the design doc states in its own words that the reasoning 'would be expensive to lose at the next session boundary', which is the benefit this fact claims. The reach is verified in both directions by the two-way-link check (4/4 pairs wired)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RESEARCH-AND-DESIGN-POINT-IN-OPPOSITE-DIRECTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:24  ##research-vs-design `legacy-spec/research/` (archived) and `design/` are both non-normative, but they look in opposite directions: the archived research studies what *other* projects did; `design/` records why *we* chose what we chose. @doc/done",
+     "confirmed: The host states this distinction in one sentence that is a near-verbatim match for the flow's, including the 'opposite directions' framing and both halves of the contrast. The instance pair backing it is real: legacy-spec/research/action-systems-vscode-idea.md studies VSCode and IntelliJ (external systems), and spec/design/action-system.md records vibevm's own resulting choices, derived from it 'behind the clean-room firewall' (action-system.md:6-10)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-competitor-backgrounder-is-research": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:20  | ##ROW-RESEARCH [`legacy-spec/research/`](../../legacy-spec/research/) — archived 2026-07-25 @doc/done | Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @doc/done | no @doc/done |",
+     "spec/modules/vibe-index/PROP-005-package-index.md:9  ##related **Related:** … [PROP-004](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) §5.x (gap analysis), …",
+     "confirmed: The host's research row uses the word 'Backgrounders' and names Tessl — a competitor — as its first example, and the file exists at legacy-spec/research/PROP-004-tessl-comparative-research.md. Note the filename keeps the PROP- prefix even though the document is filed as research, so the host's genre assignment here rests on location rather than on the name; a live contract (PROP-005) cites it for gap analysis, which means a living document's Related line points into the archive."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "our-own-modules-reasoning-is-design": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:21  | ##ROW-DESIGN `design/` (this directory) @doc/done | Rationale for vibevm's **own** decisions — the why and the lore behind our PROPs @doc/done | no @doc/done |",
+     "spec/design/action-system.md:3  ##genre-line **Genre:** design (lore) — non-binding rationale and architecture. The normative contract is",
+     "spec/design/action-system.md:4  **Spec 1 = PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`, written and implemented — the",
+     "confirmed: Every file in spec/design/ is about a vibevm module or subsystem — action-system→vibe-actions, loading-and-boot-model→vibe-workspace, tui-visual-language→vibe-cli, workspace-and-qualified-naming→vibe-workspace+vibe-registry, structural-loader→vibe-workspace/PROP-035. None studies an external system, and the one derived from an external study (action-system.md) states the clean-room firewall explicitly so the derived reasoning is filed as design and the study stays research."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CONTRACT-WINS-OVER-LORE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. … When a design document and its PROP disagree, **the PROP wins** and the design document is corrected — the flow's precedence law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#precedence`) …",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "spec/design/tui-visual-language.md:8  expands it. When the two disagree, PROP-037 wins._ @doc/done",
+     "spec/design/action-system.md:11  lore and the contract disagree, **the contract wins** and this file is corrected (spec-genres). @doc/done",
+     "confirmed: The host adopts the law by citing this exact anchor (#precedence) and restates it in the same sentence shape. It is stated per-document in four of five non-README design docs and executed once at measurable scale: 15 rows across 4 files corrected in the permitted direction. Searched for the inverse across both live campaign plans and the campaigns/ zones and found no instance."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "not-a-tie-breaker-of-convenience": {
+    "v": "confirmed",
+    "ev": [
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1171    contract per spec-genres. The vocabulary drift was handled",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1172    *deliberately differently*: the loading-model record is a dated",
+     "spec/design/loading-and-boot-model.md:7  ##rename-note **Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. … See [PROP-009 §2.4](../modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types), which is normative. @doc/done",
+     "confirmed: The host's application of the law is the opposite of convenient: rather than rewriting a dated design record into current vocabulary (the cheap move), it kept the record's own words and added a rename note plus per-row glosses, on the stated reasoning that a rewrite 'would destroy the record of what was decided'. The correction was still made — the direction was never in question — but the cheap uniform edit was refused, which is what 'not a tie-breaker of convenience' predicts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LORE-IS-ALLOWED-TO-BE-WRONG": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/loading-and-boot-model.md:8  ##status-line **Status:** non-normative design record. Captured 2026-05-21 in an owner design session. @doc/done",
+     "spec/design/loading-and-boot-model.md:7  ##rename-note **Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. …",
+     "spec/design/workspace-and-qualified-naming.md:6  ##status-line **Status:** non-normative design record. Captured 2026-05-20 in an owner design session. @doc/done",
+     "confirmed: Two host design docs carry a capture date in their status line and one carries an explicit statement that its vocabulary is out of date and was deliberately left so. The rename note is the flow's permission exercised in the open: the design doc is wrong about the current names, says so at the top, points at the normative section, and keeps its own words. Both files remain in the tree uncorrected in that respect and reachable from their contracts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LORE-MAY-NOT-SILENTLY-DIVERGE-AND-BE-CITED-AS-CURRENT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/loading-and-boot-model.md:7  ##rename-note **Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. … See [PROP-009 §2.4](../modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types), which is normative. @doc/done",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. … When a design document and its PROP disagree, **the PROP wins** and the design document is corrected …",
+     "confirmed, and the word carrying it is «silently». The host's one knowingly-divergent design doc is loud about it: the rename note is the first thing in the file, titled «read this before the body», maps every stale name onto its shipped counterpart and points at the normative section. The other 15 divergences the audit found were corrected rather than left. Searched both live campaign plans and the `campaigns/` zones for a recorded case of stale lore being cited as current and found none. This is the sentence the neighbouring `##LORE-IS-ALLOWED-TO-BE-WRONG` sets up, and the host runs the pair as written."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-CORRECTION-ALWAYS-RUNS-ONE-WAY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1171    contract per spec-genres. The vocabulary drift was handled",
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE … When a design document and its PROP disagree, **the PROP wins** and the design document is corrected …",
+     "confirmed: One recorded correction batch, one direction: 15 rows across 4 design documents corrected to the contract, with the flow named. Searched for any counter-direction record — grep 'corrected the contract' / 'contract corrected' / 'edited the PROP to match' across spec/ and campaigns/ — no hits. The three bullets under this lead enumerate the three cases and all three point the same way."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FIX-THE-DESIGN-DOC-WHEN-THE-CONTRACT-MOVED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/loading-and-boot-model.md:7  ##rename-note **Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. Read `inline` as **`link = \"static\"`** (the verbatim `STATIC.md` lane), the design's `static` as **`link = \"dynamic\"`** (the default, a by-reference `INDEX.md` read), and the design's `dynamic` as a **`dynamic` entry carrying a `when`**. The default moved with the names: design-`static` was the default and its shipped counterpart `dynamic` is. See [PROP-009 §2.4](../modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types), which is normative. @doc/done",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1173    2026-05-21 capture, so rewriting it into today's names would destroy",
+     "confirmed: This is the rule executed literally and the single clearest instance in the batch. The contract moved (a 2026-07-16 vocabulary rename in PROP-009), the design doc contradicted it, and the fix was a note stating exactly what moved — three name mappings and the default's move — plus a pointer to the normative section. The campaign's own log gives the reasoning for choosing the note over a rewrite. The added line is the 'add a line noting what moved' clause, verbatim in behaviour."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-FORBIDDEN-PROPOSAL-IS-A-PARKED-IDEA": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/workspace-and-qualified-naming.md:169  ## 9. Ideas parked for the future",
+     "spec/design/workspace-and-qualified-naming.md:172  - ##parked-workspace-dependencies **`[workspace.dependencies]`** — Cargo-style centralised per-pkgref version defaults, alongside the named placeholders. Deferred until a concrete need surfaces. @doc/done",
+     "spec/design/workspace-and-qualified-naming.md:173  - ##parked-inverse-model **Inverse contribution model** — `published_repos = \"open\"` for projects where the split repo, not the monorepo, is the canonical contribution target. @doc/done",
+     "spec/design/loading-and-boot-model.md:227    polish** (`--archive` etc., PROP-007 §9.3) are parked behind PROP-009 — recorded, not",
+     "confirmed on the marking discipline it requires, stated honestly about the case it names. The host holds four parked ideas and every one is marked — three under the explicit heading `§9 Ideas parked for the future` in `workspace-and-qualified-naming.md` (lines 171-173) and one at `loading-and-boot-model.md:227` («parked behind PROP-009 — recorded, not …»), each carrying its own deferral reason. So none can be read as the rule, which is what the fact protects against. What has NO instance is the fact's stricter premise: none of the four is a proposal the contract actively FORBIDS — they are deferrals awaiting a concrete need, not contradictions of a standing rule. The required marking is present on all four regardless."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "spec/design/loading-and-boot-model.md:9  ##authority-line **Authority:** the PROP is the contract. If this document and PROP-009 disagree, the PROP wins. @doc/done",
+     "spec/design/workspace-and-qualified-naming.md:7  ##authority-line **Authority:** the PROPs are the contract. If this document and a PROP disagree, the PROP wins. @doc/done",
+     "confirmed: Searched for a counter-instance across the whole durable perimeter: grep for 'lore corrected', 'design doc is corrected', 'corrected the contract', 'contract corrected', 'edited the PROP' across spec/ and campaigns/ returns exactly one substantive hit and it runs the permitted way. Widened to the two live campaign plans read in the ranges where corrections are logged (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md §d2a-d2d, lines 1155-1190) — the recorded moves are 'lore corrected to the contract', 'two facts re-based rather than softened', and one section 'fixed **by deletion**' because it restated another PROP's content. None inverts the authority. Four design docs carry the anti-inversion statement in their own headers."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "VOLATILE-NEVER-OVERRIDES-BINDING": {
+    "v": "confirmed",
+    "ev": [
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:409  *Not a deviation from `spec-genres`' two-way-link rule:* that rule governs lore",
+     "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:284  These are **hypotheses for Spec 1**, listed here so the study knows what it is trying to justify or overturn. **They are candidate, not binding** — the contract (Spec 1) is the only place they become normative (spec-genres: a plan proposes; a contract ratifies). Each answers a §5 obligation and is frontend-agnostic.",
+     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:5  ##status-line **Status:** IMPLEMENTED — 2026-07-15 (all five campaign phases shipped, `d487d4e`…`381095e`; see §6). … implementation follows the [HYBRID-LINKING campaign](../../../legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md). @impl/done",
+     "confirmed: The host's live campaign plan explicitly declines to treat itself as overriding the flow's rules, and reasons about its own authority in the flow's vocabulary rather than asserting a deviation. The plan-proposes/contract-ratifies formulation is stated by name (that instance sits in the legacy-spec archive, so it records the practice rather than binding anything). On the contract side PROP-038 records the campaign as what its implementation followed, with the PROP carrying the ratified authority — the ordering the fact asserts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-DISAGREEING-CHECKPOINT-IS-STALE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:22  | ##ROW-WAL [`WAL.md`](../WAL.md) @doc/done | Volatile current-state checkpoint, rewritten each session @doc/done | n/a @doc/done |",
+     "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+     "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "confirmed from durable files only — no line inside either checkpoint is cited, per this batch's rule, and that constraint is why the evidence is stronger than a quotation would have been. The host encodes checkpoint staleness as a first-class hazard in two places that bind every session: `spec/boot/00-core.md:15` makes it a boot-time gate with a time bound («older than 24 hours → verify with the user before doing destructive work»), and `CLAUDE.md:178` mandates wholesale replacement with the reason stated in line, «staleness compounds otherwise». The «state, not truth» typing is rendered as the host's `n/a` authority column. The session-end contract closes by pointing the reader at the living record as canonical, superseding the snapshot where they diverge — which is this fact's «gets corrected», written into the host's own procedure."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-non-binding-document-must-be-findable": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header … so a session that reads a PROP during the boot sequence finds the rationale without being told it exists. A one-directional link is a latent break. @doc/done",
+     "spec/design/workspace-and-qualified-naming.md:15  ##why-exists It exists because the design session that produced PROP-007/008 spent a large amount of reasoning that does not belong inside a contract-shaped PROP, yet would be expensive to lose at the next session boundary. See [`spec/design/README.md`](README.md) for the genre. @doc/done",
+     "confirmed: The host states the findability requirement in the same terms and ties it to the boot sequence specifically — the cold reader arrives at a PROP during boot, not at the design directory. The design doc's own reason for existing is the loss at the session boundary that findability prevents. spec/design/README.md also maintains an explicit Index section (lines 38-50) listing all five documents with a one-line summary each, a second findability path independent of the back-links."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-LINK-MAKES-LORE-SURVIVE-A-COLD-START": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header — the flow's two-way linking law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#linking`), so a session that reads a PROP during the boot sequence finds the rationale without being told it exists. A one-directional link is a latent break. @doc/done",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:11  ##design-rationale **Design rationale:** [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md) — the *why*, the static/dynamic-linking metaphor, the fork-by-fork record. Non-normative; this PROP is the contract. @spec/done",
+     "confirmed: The mechanism is checkable because the cold start is mandated: CLAUDE.md sends every session into spec/common/ and spec/modules/ and nowhere near spec/design/, so the only route to the lore during boot is a back-link at the contract. Four PROPs carry that back-link in their header area (PROP-007:11, PROP-008:11, PROP-009:11, PROP-039:11) and PROP-037 carries it in-body at line 134, so the mechanism is wired for every design doc except the parked structural-loader.md."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TWO-WAY-LINKING-LAW": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header — the flow's two-way linking law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#linking`) …",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:770    design↔PROP backlinks hold 4/4 (structural-loader parked by its own",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:11  ##design-rationale **Design rationale:** [`spec/design/workspace-and-qualified-naming.md`](../../design/workspace-and-qualified-naming.md) — the *why* and the lore behind this PROP: the owner's mental model, the fork-by-fork decision record, the Cargo-vs-Maven precedents. Non-normative; this PROP is the contract. @spec/done",
+     "spec/design/workspace-and-qualified-naming.md:5  ##companion-line **Companion to:** [PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) (workspace), [PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md) (qualified naming). @doc/done",
+     "confirmed at 4 of 5 with the fifth an explicitly marked exception, matching the ruling on this law's boot-snippet twin. Wired pairs, walked in both directions: action-system↔PROP-039, loading-and-boot-model↔PROP-009, tui-visual-language↔PROP-037, workspace-and-qualified-naming↔PROP-007+PROP-008. Unwired: `structural-loader.md`, which names PROP-035 in its status line while PROP-035 never names the file. The host measured 4/4 independently, excluding the fifth by its own `@spec/hold` marker — the same result this search reached by a different route. RECORDED: the law says «a contract SECTION», and the host wires PROP-to-document at the header rather than per section; PROP-037 (§2.2 ↔ `tui-visual-language.md`) is the one pair at section granularity."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "concretely-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:136  - ##EVERY-DESIGN-DOC-NAMES-ITS-CONTRACT-SECTIONS Every design doc names the contract section(s) it explains. @impl/done",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:137  - ##EVERY-CONTRACT-SECTION-WITH-LORE-LINKS-TO-IT Every contract section that has a design doc links to it — from a",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:141  - ##A-ONE-DIRECTIONAL-LINK-IS-A-LATENT-BREAK A one-directional link is a latent break: follow the tree from the",
+     "confirmed: Structural lead-in; three bullets follow and each is a separately-anchored fact evidenced below. src [1] only."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "EVERY-DESIGN-DOC-NAMES-ITS-CONTRACT-SECTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/workspace-and-qualified-naming.md:5  ##companion-line **Companion to:** [PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) (workspace), [PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md) (qualified naming). @doc/done",
+     "spec/design/loading-and-boot-model.md:5  ##companion-line **Companion to:** [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md) (the loading model — **shipped**, M1.18 phases 1–7, 2026-05-22). @doc/done",
+     "spec/design/tui-visual-language.md:10  ##genre-line **Genre:** design doc (lore). **Contract:** [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.md#theme). @doc/done",
+     "spec/design/action-system.md:4  **Spec 1 = PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`, written and implemented — the",
+     "confirmed at document granularity, with the section-granularity measurement recorded so the ruling can be re-judged. Four of the five non-README design docs name their contract in the first ten lines, in three different notations — a `Companion to:` line (two files), a `**Contract:**` field (one), and a `Spec 1 = PROP-NNN` `spec://` address (one). The fifth is `structural-loader.md`, which names PROP-035 §13 only inside a parenthetical status line and carries no contract field. THE MEASUREMENT THAT COULD FLIP THIS: only 1 of the 4 — `tui-visual-language.md` — names a SECTION rather than a whole document, so if the law's «section(s)» is read strictly it is met once in four. It is ruled confirmed because the law's stated purpose is that a cold reader entering from either side finds the other, and that purpose is met at document granularity; the host reaches for section granularity exactly where the contract is long enough to need it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVERY-CONTRACT-SECTION-WITH-LORE-LINKS-TO-IT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-workspace/PROP-007-workspace.md:11  ##design-rationale **Design rationale:** [`spec/design/workspace-and-qualified-naming.md`](../../design/workspace-and-qualified-naming.md) — the *why* and the lore behind this PROP … Non-normative; this PROP is the contract. @spec/done",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:11  ##related **Related:** design-doc [`spec/design/action-system.md`](../../design/action-system.md) (the *why* +",
+     "spec/modules/vibe-cli/PROP-037-tree-tui.md:134  [`spec/design/tui-visual-language.md`](../../design/tui-visual-language.md);",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:8  ##related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner), … [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md) (the static/dynamic-linking metaphor this PROP completes), …",
+     "confirmed on the contract side of the law, which the host runs in all three notations the flow allows. `grep 'design/'` across `spec/common/*.md` and `spec/modules/*/*.md` returns 14 hits in 8 PROPs: a dedicated `##design-rationale` line (PROP-007, PROP-008, PROP-009), a `##related` line (PROP-039, PROP-034, PROP-035, PROP-038), and an in-body reference at the relevant section (`PROP-037:131-135`, the only one sitting AT its section rather than in the document header). The one exception is precise and worth naming: PROP-035 links `loading-and-boot-model.md` as related context but does NOT link `spec/design/structural-loader.md`, the design doc written for its own §13 — the single contract section with lore and no link to it. Carried as drift at `##AN-UNLINKED-DESIGN-DOC-IS-A-DEFECT`, where the host's classification of that instance is what disagrees with the flow."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-ONE-DIRECTIONAL-LINK-IS-A-LATENT-BREAK": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:30  ##TWO-WAY-LINKING … A one-directional link is a latent break. @doc/done",
+     "spec/design/README.md:50  - ##idx-structural-loader [Structural loader](structural-loader.md) — provisional loader instructions held for PROP-035; not yet wired into any live boot. @spec/hold",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:770    design↔PROP backlinks hold 4/4 (structural-loader parked by its own",
+     "confirmed: The host adopts the sentence verbatim ('A one-directional link is a latent break'). It also holds exactly one instance of the break, and the break is visible in the direction the fact predicts: a reader arriving at PROP-035 §13 sees no link to spec/design/structural-loader.md and would not learn the document exists (grep 'structural-loader' across spec/ confirms PROP-035 never names the file). The host mitigates it not by wiring the link but by indexing the document in spec/design/README.md with an @spec/hold marker, and its own audit counted 4/4 with that file excluded on those grounds."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AN-UNLINKED-DESIGN-DOC-IS-A-DEFECT": {
+    "v": "drift",
+    "ev": [
+     "spec/design/README.md:30  ##TWO-WAY-LINKING … A one-directional link is a latent break. @doc/done",
+     "spec/design/README.md:50  - ##idx-structural-loader [Structural loader](structural-loader.md) — provisional loader instructions held for PROP-035; not yet wired into any live boot. @spec/hold",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:770    design↔PROP backlinks hold 4/4 (structural-loader parked by its own",
+     "DRIFT, and it is a classification disagreement rather than a missing link — deliberately ruled differently from the adjoining linking rows, per §judged's «each fact on its own sentence». The host DOES treat link state as auditable, counting backlinks as a hard number in a campaign log, which is defect-tracking behaviour and not tidiness. But its one unlinked design doc was not filed as a defect: `structural-loader.md` was EXCLUDED from the count on the strength of its own `@spec/hold` marker, and no finding id was raised — `grep 'F-0'` across `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md` and `BACKLOG.md` returns no entry about its missing back-link. So the flow says «defect, not merely untidy» and the host's own record says «excluded, parked». The neighbouring `##A-ONE-DIRECTIONAL-LINK-IS-A-LATENT-BREAK` is confirmed on the same instance because the host adopts THAT sentence verbatim; this one it does not."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "why-an-unlinked-doc-costs": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/workspace-and-qualified-naming.md:15  ##why-exists It exists because the design session that produced PROP-007/008 spent a large amount of reasoning that does not belong inside a contract-shaped PROP, yet would be expensive to lose at the next session boundary. See [`spec/design/README.md`](README.md) for the genre. @doc/done",
+     "campaigns/packages-2026-09/PHASE-G-SPEC.md:180    them*. Without it the next session must re-derive the same conclusion, and the",
+     "confirmed: The re-derivation cost is stated by the host in two independent places and in the flow's own terms. PHASE-G-SPEC.md gives it as the reason to write the missing genre row down at all — 'Without it the next session must re-derive the same conclusion'. The design doc gives it as its own reason to exist. Neither is about an unlinked document specifically; both are about the same underlying cost the fact names, applied to a conclusion that would otherwise be lost at a session boundary."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "placing-routine-lead": {
+    "v": "confirmed",
+    "ev": [
+     "campaigns/packages-2026-09/PHASE-G-SPEC.md:168  ## 6. The genre question — documentation is not in the map {#genre}",
+     "campaigns/packages-2026-09/PHASE-G-SPEC.md:181    flow's own law is «never create a document without deciding its genre».",
+     "confirmed: The 'before the first sentence' timing is what PHASE-G-SPEC.md demonstrates: the genre question is settled in a numbered section of the plan, for documents Phase G has not written yet, and the flow's law is quoted as the reason it must be settled then. The routine's four steps follow this lead as separately-anchored facts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PLACE-NAME-THE-GENRE": {
+    "v": "confirmed",
+    "ev": [
+     "BACKLOG.md:27  - ##TASKS2-GENRE **Genre: forward-looking, non-binding, drained by a later mandate.** Not",
+     "BACKLOG.md:28    a contract, not a checkpoint, not a health record. `spec-genres`' map does not",
+     "spec/design/README.md:24  ##research-vs-design `legacy-spec/research/` (archived) and `design/` are both non-normative, but they look in opposite directions: the archived research studies what *other* projects did; `design/` records why *we* chose what we chose. @doc/done",
+     "confirmed: All three of the step's questions appear in host practice. Binding-or-explanatory: BACKLOG.md answers 'non-binding' and rules out contract. Ours-or-someone-else's: spec/design/README.md's research-vs-design line is exactly that question, answered for two directories. Truth-or-state: BACKLOG.md rules out 'checkpoint' by name. BACKLOG.md is the cleanest instance because it answers all three in two lines and then reports that the answer falls outside the map."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PLACE-PUT-IT-IN-THAT-GENRES-HOME": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:21  | ##ROW-DESIGN `design/` (this directory) @doc/done | Rationale for vibevm's **own** decisions — the why and the lore behind our PROPs @doc/done | no @doc/done |",
+     "spec/design/workspace-and-qualified-naming.md:179  - ##session-log-2026-05-20 **2026-05-20.** Session restored from `CONTINUE.md` + `spec/WAL.md`. First closed the `vibe registry redirect-update` tech-debt item …",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. …",
+     "confirmed: Homes: the host's genre table maps each genre to a directory, and every document I sampled sits in the mapped one — 42 PROPs in spec/common/ + spec/modules/, 6 design docs in spec/design/, 8 research docs in legacy-spec/research/, 2 live plans in spec/terraforms/. Shapes differ as the step requires: PROP-000 is written as `**Decision:**` bullets under numbered sections; workspace-and-qualified-naming.md ends with a chronological session log written in narrative past tense. The two do not read alike."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PLACE-WIRE-THE-LINKS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/loading-and-boot-model.md:5  ##companion-line **Companion to:** [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md) (the loading model — **shipped**, M1.18 phases 1–7, 2026-05-22). @doc/done",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:11  ##design-rationale **Design rationale:** [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md) — the *why*, the static/dynamic-linking metaphor, the fork-by-fork record. Non-normative; this PROP is the contract. @spec/done",
+     "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header …",
+     "confirmed at 4 of 5, the same population and the same marked exception as the two linking laws. Four of the five non-README design docs have both halves wired — the lore names its contract and the contract links back — and `PROP-037` ↔ `tui-visual-language.md` shows both halves at section granularity. `structural-loader.md` has neither half properly: it names PROP-035 only in a parenthetical status line, and PROP-035 does not link back. The host's own design-doc README states the step as a standing obligation rather than a one-time action, which is how a wiring step survives later edits."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PLACE-DO-NOT-BLEND": {
+    "v": "drift",
+    "ev": [
+     "spec/modules/vibe-cli/PROP-037-tree-tui.md:131  ##visual-language-note The visual language is **a first-class part of this contract**, not an",
+     "spec/modules/vibe-cli/PROP-037-tree-tui.md:135  the normative REQs the code is traceable to are the four anchors below. @spec/done",
+     "spec/design/tui-visual-language.md:5  ##status-line _Status: **FULL** (2026-07-16, TREE-TUI-PLAN v0.2 Phase 1). This is **lore** — the",
+     "spec/design/structural-loader.md:13  ##MUST-LOAD-FIRST A project or package that manages its content this way MUST load these instructions before anything else; without them the directives are inert prose. A managed project or package that omits them is **broken** (§13), and the project/package-creation tools must inject them. @spec/done",
+     "DRIFT, with one clean execution and one unsplit document in the same directory. The split done right: the TUI visual language was half requirement and half story, and it WAS split — the four REQ anchors kept in `PROP-037` §2.2, the aesthetics and tables moved to `tui-visual-language.md`, with the seam stated in the contract at `PROP-037:131-135`. The unsplit case is `spec/design/structural-loader.md`, which carries requirements — 2 uppercase MUST plus «is **broken**» — inside the lore genre, which is exactly «half requirement and half story». Its normative twin does exist at `PROP-035:35`, so the extraction happened; the split did not, because the design-doc half was never reduced to story. Ruled on this step's own sentence, which is about the SHAPE of the draft, not about whether a contract exists somewhere."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md:13  ## The routing table {#routing}",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md:51  ## The fork-by-fork decision record {#forks}",
+     "confirmed, and it is the instructive contrast with this package's boot snippet. Both links here are SAME-DIRECTORY — `when-to-write-what.md`, `design-docs.md` — so they resolve wherever the package is materialised, including in the installed slot where all three documents sit together under `vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/`. The snippet's three pointers use `../flows/…` and are compiled into the host's `STATIC.md`, where nothing resolves; these never leave their own directory and so cannot break. The W6 harvest's source-1 join reports 22 relative citations across the four W6 packages with 0 broken, which covers these two."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "DO-NOT-ADOPT-THIS-TABLE-VERBATIM": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:13  ##genre-table-lead vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`: @doc/done",
+     "spec/design/README.md:15  | Directory | Holds | Normative? |",
+     "spec/design/README.md:20  | ##ROW-RESEARCH [`legacy-spec/research/`](../../legacy-spec/research/) — archived 2026-07-25 @doc/done | Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @doc/done | no @doc/done |",
+     "confirmed by a host that did exactly what the fact asks, and the differences are systematic rather than incidental. The host calls its table «vibevm's instance», keys the rows on DIRECTORIES rather than genre names, drops two of the four attribute columns (mutability, reader) while keeping a merged Normative? column, and reduces seven rows to six — module-contracts and boot survive, the campaign-plan row is absent because the genre lives in `spec/terraforms/` and `campaigns/`, and the research row carries an archival annotation the general table has no column for. It also ADDED two genres the flow's table lacks, product documentation and the backlog genre, each recorded as an owed row. That is the re-derivation this fact prescribes, performed and visible."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "re-derive-prompt-lead": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:180  Read spec/flows/spec-genres/ in full, then adapt it to this project:",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:193  5. Show me the genre map and the misfilings as a plan. Change",
+     "spec/design/README.md:13  ##genre-table-lead vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`: @doc/done",
+     "DRIFT on the prompt this anchor delivers: its FIRST instruction cannot be followed where it is meant to be run. The block opens «Read `spec/flows/spec-genres/` in full», and a consuming host has no `spec/flows/` directory — it resolves only inside the package or the `vibedeps/` slot. This is the fourth dangling pointer in this package and the one the campaign's own `\\.\\./flows/` scan cannot see, because it is root-relative rather than `../`-relative. RECORDED on the rest, which is sound: the block is five numbered steps ending «Change nothing until I approve», and the host has the first of its two outputs — `spec/design/README.md` publishes an instance map with charters and authority per row. The second output has no instance: no misfiling list exists in the durable perimeter, and the closest artefacts are the actualisation campaign's per-fact drift findings, which are a different genre of finding."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-PILE-ROTS-THREE-WAYS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:19  - ##FAILURE-CONTRACTS-BLOAT-WITH-NARRATIVE **Contracts bloat with narrative.** A discussion log — every fork,",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:23  - ##FAILURE-NARRATIVE-GETS-TREATED-AS-BINDING **Narrative gets treated as binding.** A paragraph of \"here is how",
+     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:26  - ##FAILURE-NOBODY-KNOWS-WHAT-WINS **Nobody knows what wins.** Two documents say different things and",
+     "confirmed: The summary compresses §why's three bullets and matches them one-for-one. No independent host statement of the three-way rot exists — see the ##pile-rots-three-ways row for the search. src [1] only."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "SUM-SEVEN-GENRES-THREE-AUTHORITIES": {
+    "v": "confirmed",
+    "ev": [
+     "campaigns/packages-2026-09/PHASE-G-SPEC.md:170  `spec-genres` types every project document and its map has seven rows: boot",
+     "campaigns/packages-2026-09/PHASE-G-SPEC.md:171  files, foundational decisions, module contracts, design docs, research docs,",
+     "campaigns/packages-2026-09/PHASE-G-SPEC.md:172  campaign plans, the checkpoint. **Product documentation is in none of them.**",
+     "BACKLOG.md:28    a contract, not a checkpoint, not a health record. `spec-genres`' map does not",
+     "confirmed exactly: the protocol's table has seven rows (lines 45-51) grouped into three authority bands, and the host independently enumerates all seven by name and in the same order. RECORDED, because the number is right and the coverage is not: the host measured what the seven do not cover and found two genres it needs — product documentation (Phase G adds the row) and the backlog genre («the row is owed»). Seven is what the map carries; this host's live practice needs nine. And one of the seven is half-empty in this tree — the module-contracts row names PROP / FEAT against 42 PROPs and 0 FEATs."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-CONTRACT-WINS-OVER-LORE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. … When a design document and its PROP disagree, **the PROP wins** and the design document is corrected — the flow's precedence law …",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1170    **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the",
+     "spec/design/loading-and-boot-model.md:7  ##rename-note **Terminology (2026-07-16 rename — read this before the body).** …",
+     "confirmed: All three clauses check on the host. Contract wins: adopted by spec:// address and stated in four of five design docs. Corrected on conflict: 15 rows across 4 files, one recorded batch. Never the other way: no counter-instance found across both live campaign plans and the campaigns/ zones. Never silently: the one knowingly-divergent document announces the divergence in its first line."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-TWO-WAY-LINKS-ARE-THE-MECHANISM": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header — the flow's two-way linking law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#linking`), so a session that reads a PROP during the boot sequence finds the rationale without being told it exists. A one-directional link is a latent break. @doc/done",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:770    design↔PROP backlinks hold 4/4 (structural-loader parked by its own",
+     "confirmed: The mechanism is wired for 4 of 5 lore documents in both directions, audited by the host at 4/4 with the fifth excluded by its own hold marker, and independently re-walked in this batch with the same result. The 'either side' property holds for those four: entering at PROP-007/008/009/037/039 reaches the lore, and entering at any of the four design docs reaches the PROP."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-NAME-THE-GENRE-FIRST": {
+    "v": "confirmed",
+    "ev": [
+     "campaigns/packages-2026-09/PHASE-G-SPEC.md:181    flow's own law is «never create a document without deciding its genre».",
+     "BACKLOG.md:27  - ##TASKS2-GENRE **Genre: forward-looking, non-binding, drained by a later mandate.** Not",
+     "spec/design/action-system.md:3  ##genre-line **Genre:** design (lore) — non-binding rationale and architecture. The normative contract is",
+     "confirmed: Three host documents name their genre in their opening lines, and one campaign plan settles the genre of documents not yet written, quoting the flow's law as its reason. See the ##NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE row for the full search."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
