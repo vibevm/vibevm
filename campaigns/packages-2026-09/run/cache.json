@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T22:21:07Z",
+  "updated_at": "2026-07-28T22:22:05Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -58235,7 +58235,543 @@
       },
       "marker_count": 45,
       "unit_count": 8,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "538b4d0c45cbda9727aef0a5f3c0b751b0fa603bdf71a013a228ddcafe2639a7",
+        "verdicts": {
+          "installing-a-dependency-often-runs-its-own-code": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:121  ##TRUST-CHEAP Running a package's hook is running third-party code at install time. Until a",
+              "crates/vibe-core/src/manifest/package/hooks.rs:13  /// `[hooks]` — the install-lifecycle scripts a package declares (PROP-020",
+              "crates/vibe-workspace/src/hooks.rs:1  //! Install-lifecycle hooks (PROP-020): run a package's `pre-install` /",
+              "confirmed: vibevm implements exactly this mechanism, and it is the single largest relocation in this batch: the whole consent-gate subject lives under `spec/modules/vibe-workspace/PROP-020-install-hooks.md` and `crates/vibe-workspace/src/hooks.rs` (467 lines) plus `crates/vibe-core/src/manifest/package/hooks.rs`, none of which the flow document names. PROP-020's `##TRUST-CHEAP` opens with the same proposition. Two phases exist, `pre-install` and `post-install` (hooks.rs:29-36)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:20  ## Install-time code is third-party code {#third-party}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:37  ## The consent gate {#consent-gate}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:57  ## A non-interactive run aborts, never runs unseen {#ci-abort}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:81  ## Hooks are versioned files, not inline strings {#versioned-files}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:111  ## Secrets never enter a hook's environment {#no-secrets-in-env}",
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:135  ## The residual risk, recorded {#residual-risk}",
+              "confirmed: All six promised subjects have their own section, in the order the scope sentence lists them. Self-description, so `src` is [1]. Notable for the reviewer: PROP-020's structure mirrors this list closely enough that all six have host counterparts — §2.3 trust gate, §2.3 non-interactive safety, §2.4 manifest declaration, §3 rejected inline commands, §2.2 hook env, §4 out-of-scope residual risk."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:37  ## The four laws {#laws}",
+              "vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:31  ## The four laws {#laws}",
+              "confirmed: Same-directory relative link; resolves in the package and in the installed copy. The reciprocal link exists too — the protocol's `##NEVER-IN-A-THIRD-PARTY-SCRIPTS-ENVIRONMENT` (SECRETS-HYGIENE-PROTOCOL.md:101-105) links back to this document."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "INSTALLING-EXECUTES-CODE-YOU-DID-NOT-WRITE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:121  ##TRUST-CHEAP Running a package's hook is running third-party code at install time.",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:191  - ##OOS-SANDBOXING **Sandboxing / capability-limiting** hooks (containers, seccomp). Hooks run",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:192    with the user's privileges, like `cargo build` scripts or `npm postinstall`. @spec/done",
+              "crates/vibe-workspace/src/hooks.rs:251          let mut cmd = Command::new(&inv.interpreter);",
+              "confirmed: The privileges clause is bound verbatim by PROP-020's `##OOS-SANDBOXING` — «Hooks run with the user's privileges, like `cargo build` scripts or `npm postinstall`» — which is also the flow's own ecosystem analogy. The mechanism is `SystemHookRunner::run` (hooks.rs:244-259): a plain `Command::new(interpreter).arg(script)` with no sandbox, no capability restriction, running as the invoking user."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-same-trust-surface-as-any-ecosystems-hooks": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:192    with the user's privileges, like `cargo build` scripts or `npm postinstall`. @spec/done",
+              "confirmed: PROP-020 names the same two ecosystem analogues the flow implies — cargo build scripts and npm postinstall — in the fact that declines to sandbox. The «can read your files, reach the network» half is not separately restated host-side; it follows from the unsandboxed `Command` at hooks.rs:251-257, which sets a working directory and six env vars and imposes nothing else."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-convenience-is-real-and-so-is-the-exposure": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:31      /// After the slot is populated, before vibevm uses it — the \"bring the",
+              "crates/vibe-workspace/src/hooks.rs:32      /// tree into order\" hook.",
+              "confirmed: The convenience side is named in the host in the same self-preparation terms: `HookPhase::PreInstall`'s doc calls it «the \"bring the tree into order\" hook» (hooks.rs:32-33), and `PostInstall` is «For finalisation that needs the package already registered» (crates/vibe-core/src/manifest/package/hooks.rs:45-47). The exposure side is PROP-020 §4's accepted-risk stance. Both halves of the trade-off are recorded by the host."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-gate-governs-until-content-inspection-exists": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:121  ##TRUST-CHEAP Running a package's hook is running third-party code at install time. Until a",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:122  content-scanning gate exists (§4), trust is governed cheaply: @impl/done",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:186  - ##OOS-CONTENT-SCANNING **Content scanning / the LLM \"antivirus\".** A future gate that inspects a",
+              "confirmed: PROP-020's `##TRUST-CHEAP` states the identical until-clause — «Until a content-scanning gate exists (§4), trust is governed cheaply» — and §4's `##OOS-CONTENT-SCANNING` at line 186 names the future gate as an LLM «antivirus» that is «far-backlog». So the host carries both the interim posture and the named successor. This sentence and PROP-020's are close enough to be the same sentence in two vocabularies."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "consent-gate-lead": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:117  ### 2.3 Trust gate — allow-list of groups, plus first-run consent {#trust-gate}",
+              "crates/vibe-workspace/src/hooks.rs:269  pub fn decide_trust(",
+              "crates/vibe-workspace/src/hooks.rs:275      if allow_hooks || allowed.iter().any(|g| g == group.as_str()) {",
+              "confirmed: PROP-020 §2.3's heading is almost the flow's sentence — «Trust gate — allow-list of groups, plus first-run consent». The implementation is `decide_trust` (hooks.rs:269-282), a four-argument pure function returning `HookTrust::{Allowed, NeedsConsent, Refused}`, carrying `#[spec(implements = \"spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate\", r = 1)]` at hooks.rs:265-268 so it is machine-linked to the requirement."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY": {
+            "v": "drift",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:26  pub const DEFAULT_ALLOWED_GROUPS: &[&str] = &[\"org.vibevm\"];",
+              "crates/vibe-workspace/src/hooks.rs:88      /// Allow-listed (or `--allow-hooks`) — run with no prompt.",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:124  - ##ALLOW-LIST **Allow-listed groups run silently.** A config key (global",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:127    by default.** A package whose group is allow-listed runs its hooks with no",
+              "crates/vibe-cli/src/commands/install/mod.rs:224      let allowed: Vec<String> = DEFAULT_ALLOWED_GROUPS",
+              "DRIFT on «allow-listed», which in this host is not a list anyone can change. The silent-run arm exists and works — `HookTrust::Allowed` does nothing and falls through — and the group it holds is exactly «a team's own namespace»: `DEFAULT_ALLOWED_GROUPS = [\"org.vibevm\"]`, matching PROP-020's «`org.vibevm` is in the allow-list by default». But PROP-020 §2.3 specifies a config key — global `~/.vibe/config.toml` `[hooks].allowed_groups` with a project-level override — and **`UserConfig` has exactly three tables, `env`, `install` and `init`, and no `hooks`**. `grep -rn 'allowed_groups' crates/` returns only the constant, its tests, the vector built from that constant plus this-run consents, and a fixture. The allow-list is a hard-coded one-element constant, and the «an audited vendor goes on the list» path has no mechanism at all."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT": {
+            "v": "drift",
+            "ev": [
+              "crates/vibe-cli/src/commands/install/mod.rs:247                  let ok = Confirm::new()",
+              "crates/vibe-cli/src/commands/install/mod.rs:249                          \"Package group `{group}` declares install hooks (PROP-020). \\",
+              "crates/vibe-workspace/src/hooks.rs:113      /// `not-declared` / `ran` / `post-install-failed` / `skipped-needs-consent`.",
+              "crates/vibe-workspace/src/hooks.rs:412                  note: Some(\"re-run interactively and consent, or --allow-hooks\".to_string()),",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:130    package, vibevm prints what will run (phase, script path, group) and asks",
+              "DRIFT on «prints exactly what will run». The decline path is met completely — declining leaves the group out of the policy and the hook returns `skipped-needs-consent`, which the report surfaces so a skipped hook is never silent. The prompt is not: it renders «Package group `<group>` declares install hooks (PROP-020). Run them during this install?» and nothing more. Neither the phase nor the script path appears, though PROP-020 §2.3 specifies all three and **the data is in hand at that point** — `dep.manifest.hooks` is available in the same scope. A reviewer answering the prompt cannot see what they are approving. Note also the granularity: the decision is per GROUP, keyed on a `BTreeSet` of group names, so one answer covers every hook-declaring package in it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-GATE-ALLOW-LISTED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks/tests.rs:73      assert_eq!(",
+              "crates/vibe-workspace/src/hooks/tests.rs:74          decide_trust(&vibe, &allowed, false, false),",
+              "crates/vibe-workspace/src/hooks/tests.rs:75          HookTrust::Allowed",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:133  - ##NON-INTERACTIVE-SAFETY **Non-interactive safety.** With `--assume-yes` / in CI, allow-listed",
+              "confirmed: Both cells of this row are covered by one assertion in `trust_matrix` (`crates/vibe-workspace/src/hooks/tests.rs:66-92`): `decide_trust(&vibe, &allowed, false, false)` — an allow-listed group with `interactive = false` and `allow_hooks = false` — returns `Allowed`, under the comment «Allow-listed group runs with no prompt, even non-interactively». PROP-020's `##NON-INTERACTIVE-SAFETY` states the same cell in prose. The test carries `#[verifies(\"spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate\", r = 1)]` at tests.rs:67."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-GATE-NOT-ALLOW-LISTED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks/tests.rs:79          decide_trust(&other, &allowed, true, false),",
+              "crates/vibe-workspace/src/hooks/tests.rs:80          HookTrust::NeedsConsent",
+              "crates/vibe-workspace/src/hooks/tests.rs:84          decide_trust(&other, &allowed, false, false),",
+              "crates/vibe-workspace/src/hooks/tests.rs:85          HookTrust::Refused",
+              "crates/vibe-workspace/src/hooks/tests.rs:89          decide_trust(&other, &allowed, false, true),",
+              "confirmed on all three cells of the row, which the host proves as a truth table: `trust_matrix` asserts non-allow-listed plus interactive → `NeedsConsent`; plus non-interactive → `Refused`, «never silent-run»; plus non-interactive with the opt-in → `Allowed`. The opt-in is a real flag, `--allow-hooks`. The one clause not met — showing the exact script — is the prompt gap, carried as drift at the two rows that assert the prompt's content rather than counted a third time here."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-critical-cell-is-the-bottom-right": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/install/mod.rs:259              HookTrust::Refused => {",
+              "crates/vibe-cli/src/commands/install/mod.rs:260                  bail!(",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:133  - ##NON-INTERACTIVE-SAFETY **Non-interactive safety.**",
+              "confirmed: The host treats the same cell as the critical one: it is the only arm of the three-way match in `resolve_hook_policy` that aborts the whole install (`bail!` at install/mod.rs:260), and PROP-020 gives it its own named fact, `##NON-INTERACTIVE-SAFETY`. The library layer independently refuses it too — `run_package_hook`'s `HookTrust::Refused` arm returns `HookError::Untrusted` (hooks.rs:415-421) — so the cell is guarded at both layers, with the CLI catching it first."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NO-HUMAN-MEANS-THE-HOOK-IS-NOT-RUN-SILENTLY": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/install/mod.rs:231      let interactive =",
+              "crates/vibe-cli/src/commands/install/mod.rs:232          console::user_attended() && !ctx.is_json() && !ctx.is_unattended() && !args.assume_yes;",
+              "crates/vibe-workspace/src/hooks.rs:92      /// Non-interactive and not allow-listed — refuse, never silent-run.",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:136    or pass an explicit `--allow-hooks` opt-in. A script must never execute",
+              "confirmed: The host's definition of «no human» is broader than a TTY check and is worth recording: `interactive` (install/mod.rs:231-232) requires ALL of `console::user_attended()`, not `--json`, not `--unattended`, and not `--assume-yes` — the comment at :228-230 states that «`--assume-yes`, `--json`, and `--unattended` are each non-interactive for the purpose of running third-party code». So an operator who passes `--assume-yes` does not thereby consent to third-party hooks; that is a deliberate narrowing beyond what the flow asks. `HookTrust::Refused`'s own doc says «refuse, never silent-run» (hooks.rs:92)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-INSTALL-ABORTS-WITH-A-HINT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/install/mod.rs:260                  bail!(",
+              "crates/vibe-cli/src/commands/install/mod.rs:261                      \"package group `{group}` declares install hooks but is not trusted to run \\",
+              "crates/vibe-cli/src/commands/install/mod.rs:263                       allow-list `{group}`, or pass `--allow-hooks`.\"",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:135    silently — the install **aborts** with a hint to either allow-list the group",
+              "confirmed: The abort is a `bail!` returning from `resolve_hook_policy` BEFORE `vibe_install::apply` is reached (install/mod.rs:204-206), so nothing is installed. The message carries all three remedies the flow's hint implies: re-run interactively to consent, allow-list the group, or pass `--allow-hooks`. The library-layer twin, `HookError::Untrusted` (hooks.rs:122-132), carries a Class-F fix surface naming the same two config remedies plus the violated spec URI. PROP-020 line 135 binds the abort in prose."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-failure-mode-being-prevented": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:136    or pass an explicit `--allow-hooks` opt-in. A script must never execute",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:137    unseen third-party code by default. @impl/done",
+              "crates/vibe-workspace/src/hooks.rs:264  /// never executing third-party code unseen.",
+              "confirmed: PROP-020's `##NON-INTERACTIVE-SAFETY` closes with the flow's own sentence almost word for word — «A script must never execute unseen third-party code by default» — and `decide_trust`'s doc comment ends «never executing third-party code unseen» (hooks.rs:264). Three statements of one rule across two documents and one function."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SILENCE-NEVER-MEANS-YES": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/install/mod.rs:252                      .default(false)",
+              "crates/vibe-workspace/src/hooks.rs:280              HookTrust::Refused",
+              "crates/vibe-workspace/src/hooks/tests.rs:118      assert_eq!(",
+              "crates/vibe-workspace/src/hooks/tests.rs:120          HookTrust::NeedsConsent",
+              "confirmed: Three independent defaults all point the safe way. (1) The interactive prompt is constructed with `.default(false)` (install/mod.rs:252), so bare-Enter declines rather than approves. (2) `decide_trust`'s final `else` arm is `Refused` (hooks.rs:279-281) — the fall-through is refusal, not permission. (3) `HookPolicy::default()` trusts nothing: the test at hooks/tests.rs:117-121 asserts `HookPolicy::default().trust_for(&vibe)` is `NeedsConsent` even for the allow-listed group, under the comment «The default policy trusts nothing.» That third one is the strongest form of this rule — the type's own `Default` is deny."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ci-abort-forces-the-decision-in-advance": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/cli/pkg.rs:280      /// Run every installed package's declared install hooks (PROP-020 §2.3)",
+              "crates/vibe-cli/src/cli/pkg.rs:282      /// allow-listed. This is the non-interactive opt-in: a hook-declaring",
+              "crates/vibe-cli/src/cli/pkg.rs:287      pub allow_hooks: bool,",
+              "confirmed: the mechanism exists and its own doc describes it in this flow's terms, `--allow-hooks` being «the non-interactive opt-in», so a non-interactive run must have the decision taken in advance. RECORDED: the in-advance ALLOW-LIST half is weakened by the missing config key ruled at the allow-list row — with `[hooks].allowed_groups` unimplemented, the only advance decision an operator can record is the flag on the command line, a per-invocation choice rather than a durable one. And there is no CI in this repository to exercise any of it: `test -d .github` is ABSENT."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-HOOK-IS-A-VERSIONED-FILE-NOT-AN-INLINE-STRING": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-core/src/manifest/package/hooks.rs:35  pub struct HooksDecl {",
+              "crates/vibe-core/src/manifest/package/hooks.rs:44      pub pre_install: Option<PathBuf>,",
+              "crates/vibe-core/src/manifest/package/hooks.rs:53      pub post_install: Option<PathBuf>,",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:151  - ##BASE-PATH-VALUE The value is a **base path without extension**; the runner resolves `.sh` /",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:174  - ##REJ-INLINE-COMMANDS **Inline `command = \"...\"` strings in the manifest** instead of files —",
+              "confirmed: Enforced by the type system, which is stronger than the flow requires: `HooksDecl`'s two fields are `Option<PathBuf>` (hooks.rs:44, :53), so a manifest cannot express an inline command — a TOML string deserialises as a path, and `#[serde(deny_unknown_fields)]` (hooks.rs:34) rejects any other key such as `command`. The flow's TOML example (`pre-install = \"hooks/prepare\"`) is the exact shape the host's doctest uses (crates/vibe-core/src/manifest/package/hooks.rs:22-25). PROP-020 §3's `##REJ-INLINE-COMMANDS` records the rejection as a decided alternative, with the flow's own reasoning: «a versioned script file is auditable, diffable, and platform-split (`.sh`/`.ps1`); an inline string hides the code in TOML and resists review»."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "an-inline-string-hides-code-and-resists-review": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:176    (`.sh`/`.ps1`); an inline string hides the code in TOML and resists review. @spec/done",
+              "confirmed: PROP-020's `##REJ-INLINE-COMMANDS` carries this sentence with «in TOML» substituted for «in the configuration file» — otherwise the same words in the same order. This is one of the closest sentence-level correspondences between the flow and a host PROP in the batch, and it runs in the extraction direction (the host PROP predates the flow, per the README's crystallized-from-the-origin-project fact)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "inline-strings-are-skimmed-past-and-hard-to-diff": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:93  # pre-install = \"curl https://x.example/i.sh | sh\"",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:176    (`.sh`/`.ps1`); an inline string hides the code in TOML and resists review. @spec/done",
+              "confirmed: the hides-and-resists-review clause is bound by PROP-020, and the two specific hazards this sentence adds — poor diffability across versions and the curl-pipe-to-shell invitation its own rejected example illustrates — are structurally foreclosed here rather than argued against, since the manifest field is an `Option<PathBuf>` and cannot hold a shell pipeline. Neither hazard has a host restatement; neither needs one."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-versioned-file-is-auditable-and-diffable": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:175    rejected: a versioned script file is auditable, diffable, and platform-split",
+              "confirmed: PROP-020's `##REJ-INLINE-COMMANDS` names the same two properties in the same order — «auditable, diffable» — and adds a third the flow does not, «platform-split (`.sh`/`.ps1`)», which is the host's own two-interpreter reality (`select_invocation` at hooks.rs:327-353 resolves `.sh` via bash on Unix, `.sh` via Git Bash then `.ps1` via PowerShell on Windows)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-prompt-points-at-a-real-path": {
+            "v": "drift",
+            "ev": [
+              "crates/vibe-cli/src/commands/install/mod.rs:249                          \"Package group `{group}` declares install hooks (PROP-020). \\",
+              "crates/vibe-cli/src/commands/install/mod.rs:250                           Run them during this install?\"",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:130    package, vibevm prints what will run (phase, script path, group) and asks",
+              "DRIFT, and this is the sharpest divergence between this document and its host implementation. The CAPABILITY is real — the manifest value is a genuine base path and `select_invocation` resolves it to a concrete file — so the anchor's claim that a prompt can point at something openable is true of the design. The prompt does not use it: two rendered lines naming only the group. The capability is available and unused, which is worse than absent, because the document's whole argument for a path over an inline string is that a reviewer can go and read it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-CREDENTIAL-IS-NEVER-PLACED-IN-A-HOOKS-ENVIRONMENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:355  /// The documented environment a hook receives (PROP-020 §2.2). The publish",
+              "crates/vibe-workspace/src/hooks.rs:356  /// token is deliberately never placed here.",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:110  - ##TOKEN-NEVER-IN-ENV The publish token",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:112    a hook's environment. @impl/done",
+              "spec/common/PROP-000.md:304  never into a spawned third-party hook's environment (the flow's `#law-boundaries`).",
+              "confirmed: Three host bindings and one implementation. PROP-000 §20 line 304 names it as the sharpest case of Law 3 and cites the flow's `#law-boundaries`; PROP-020's `##TOKEN-NEVER-IN-ENV` (lines 110-112) states it and cites PROP-000 §20 back; the code comment at hooks.rs:355-356 says «deliberately never placed here». The implementation is `build_env` (hooks.rs:357-372): a literal `vec![...]` of six pairs, so there is no code path by which a credential could enter — the function does not read the ambient environment at all. Residual for the reviewer, stated once more: `Command` inherits the parent env and no `env_clear()` is called (hooks.rs:251-257), so an operator-exported token remains visible; vibevm's guarantee is that it adds none."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "HOOKS-GET-A-DOCUMENTED-CREDENTIAL-FREE-ENVIRONMENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:360              \"VIBE_PACKAGE_GROUP\".to_string(),",
+              "crates/vibe-workspace/src/hooks.rs:370          (\"VIBE_HOOK_PHASE\".to_string(), phase.as_str().to_string()),",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:104  - ##HOOK-ENV The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:105    `VIBE_PACKAGE_NAME`, `VIBE_PACKAGE_VERSION`, `VIBE_PACKAGE_KIND`,",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:106    `VIBE_PACKAGE_DIR` (the slot, also CWD), `VIBE_HOOK_PHASE`.",
+              "confirmed: The host's six variables map exactly onto the flow's three categories and nothing else: package identity is `VIBE_PACKAGE_GROUP` / `_NAME` / `_VERSION` / `_KIND`, the working directory is `VIBE_PACKAGE_DIR` (documented as «the slot, also CWD»), and the phase name is `VIBE_HOOK_PHASE`. «Documented» is met twice over — PROP-020's `##HOOK-ENV` at lines 104-106 enumerates them, and `build_env`'s doc calls itself «The documented environment a hook receives». «And nothing more» is met by the closed `vec!`. This is the most exact flow-to-host correspondence in the batch: six named variables, both lists identical."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NO-CREDENTIAL-IS-EXPORTED-TO-THIRD-PARTY-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:253          for (k, v) in env {",
+              "crates/vibe-workspace/src/hooks.rs:254              cmd.env(k, v);",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:26  posture), [PROP-000 §20](../../common/PROP-000.md#token-secrecy) (the publish",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:27  token a hook never sees). @spec/done",
+              "confirmed: `SystemHookRunner::run` sets only the pairs it is handed (hooks.rs:253-254) and those come solely from `build_env`. PROP-020's header cross-reference block describes PROP-000 §20 as «the publish token a hook never sees» (lines 26-27), so the relationship is declared at the top of the module's spec. Of the three credential classes the anchor names, the host holds two — the publish token (`vibe_publish::Token`) and registry credentials (`GitPackageRegistry::effective_token`) — and neither is reachable from `vibe-workspace`: `grep -n 'vibe-publish\\|vibe-registry' crates/vibe-workspace/Cargo.toml` shows the hooks crate does not depend on either, so the value is not merely withheld but unavailable at that layer. Provider keys do not exist yet (no `vibe_llm::ApiKey` type)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "this-is-law-three-at-its-sharpest": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-000.md:304  No other path is allowed — in particular, never into a spawned third-party hook's environment (the flow's `#law-boundaries`).",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:26  posture), [PROP-000 §20](../../common/PROP-000.md#token-secrecy) (the publish",
+              "confirmed: The host makes the same connection in both directions: PROP-000 §20's Law-3 binding singles out the hook environment with «in particular» and cites the flow's `#law-boundaries` anchor, and PROP-020 cites PROP-000 §20 from its own header. So the two documents that carry this rule in the host are cross-linked exactly as the flow's two documents are."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-hook-is-unreviewed-code-by-definition": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:121  ##TRUST-CHEAP Running a package's hook is running third-party code at install time. Until a",
+              "spec/common/PROP-000.md:304  never into a spawned third-party hook's environment (the flow's `#law-boundaries`).",
+              "confirmed: The unreviewed-by-definition premise is PROP-020's `##TRUST-CHEAP` («running third-party code at install time», ungated until a content-scanning gate exists), and the never-a-sanctioned-boundary conclusion is PROP-000 §20 line 304. The argument's middle step — «least entitled to it» — has no host restatement; searched PROP-020 and PROP-000 for an entitlement framing and found none. The conclusion is what is implemented."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-RULE-IS-ABSOLUTE-AND-NEEDS-NO-EXCEPTION": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:357  fn build_env(ctx: &HookContext, phase: HookPhase) -> Vec<(String, String)> {",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:112    a hook's environment. @impl/done",
+              "confirmed, and «absolute» holds mechanically rather than by promise: `build_env` is private, takes only a context and a phase, and has no parameter or configuration through which an extra variable could be injected — there is no widening mechanism to invoke, so the rule cannot be excepted without a code change. PROP-020's `##TOKEN-NEVER-IN-ENV` states it with a bare «never» and no exception clause. RECORDED: the escalate-to-the-human remedy has no host instance — the case of a hook that needs a credential is simply not contemplated anywhere, which is consistent with the rule being absolute and leaves the prescribed remedy unbound."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-GATE-REDUCES-BUT-DOES-NOT-ELIMINATE-THE-RISK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:188    lands, hook execution is an **explicitly accepted risk** governed only by",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:189    §2.3's allow-list + consent. This is the deliberate posture, not an",
+              "confirmed: PROP-020 §4's `##OOS-CONTENT-SCANNING` says the same thing in the host's vocabulary: hook execution is «an **explicitly accepted risk** governed only by §2.3's allow-list + consent» — the word «only» carrying the same does-not-eliminate force as the flow's clause. The two governing mechanisms it names are exactly the flow's two."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-trusted-publisher-or-a-hasty-human-can-still-fail": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:26  pub const DEFAULT_ALLOWED_GROUPS: &[&str] = &[\"org.vibevm\"];",
+              "crates/vibe-cli/src/commands/install/mod.rs:249                          \"Package group `{group}` declares install hooks (PROP-020). \\",
+              "confirmed: Neither failure mode is restated host-side — searched PROP-020 §4 and the crate docs for a compromised-allow-listed-publisher or hasty-approval argument and found neither. Both are nonetheless live for this consumer, and the second is sharpened by the host's implementation: because the prompt shows only the group name and not the phase or script path (install/mod.rs:249-251), a human CANNOT read what they are approving even if they wish to, so «approve something they did not fully read» is the only available behaviour rather than a lapse. The first failure mode applies to `org.vibevm`, the one allow-listed group, which is the project's own namespace."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-RESIDUAL-RISK-IS-RECORDED-AS-A-DELIBERATE-STANCE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:184  ## 4. Out of scope {#out-of-scope}",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:189    §2.3's allow-list + consent. This is the deliberate posture, not an",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:190    oversight — recorded here as the project's stance. @spec/done",
+              "confirmed: The host does exactly what this anchor asks and says so in the same words: PROP-020 §4's `##OOS-CONTENT-SCANNING` closes «This is the deliberate posture, not an oversight — recorded here as the project's stance.» The flow says «recorded as a deliberate, written stance, not left as an unstated gap»; the host says «the deliberate posture, not an oversight — recorded here as the project's stance». Placement matters too: it is filed under «Out of scope», the section for decided non-work, rather than under a backlog."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-PROJECTS-POSITION-ON-HOOK-EXECUTION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:186  - ##OOS-CONTENT-SCANNING **Content scanning / the LLM \"antivirus\".** A future gate that inspects a",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:187    package's hooks (and code) for malicious behaviour is far-backlog. Until it",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:188    lands, hook execution is an **explicitly accepted risk** governed only by",
+              "confirmed: This is the anchor with the closest host counterpart in the entire batch — PROP-020's `##OOS-CONTENT-SCANNING` carries every element: the future content-inspection gate (named as the LLM «antivirus» and dated «far-backlog»), the until-clause, the explicitly-accepted-risk framing in bold, the two governing mechanisms, and the on-the-record-not-an-oversight closing. Given the extraction direction recorded in the README's `##crystallized-from-the-origin-projects-token-secrecy-law`, the host text is the source and this anchor is the generalisation."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WHEN-UNCERTAIN-TREAT-AS-UNTRUSTED-AND-ASK": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:279          } else {",
+              "crates/vibe-workspace/src/hooks.rs:280              HookTrust::Refused",
+              "crates/vibe-cli/src/commands/install/mod.rs:252                      .default(false)",
+              "crates/vibe-workspace/src/hooks/tests.rs:118      assert_eq!(",
+              "crates/vibe-workspace/src/hooks/tests.rs:120          HookTrust::NeedsConsent",
+              "confirmed: The conservative default is implemented three ways and tested. `decide_trust`'s uncovered case falls to `Refused` (hooks.rs:279-281); the interactive prompt defaults to no (`install/mod.rs:252`); and `HookPolicy::default()` yields `NeedsConsent` even for the allow-listed group, asserted at hooks/tests.rs:117-121 under «The default policy trusts nothing.» The ask-the-human half is the `NeedsConsent` → `Confirm::new()` path at install/mod.rs:246-254. This also connects to the README's `##COMPOSES-CONFLICT-PROTOCOL`, and here — unlike there — the conservative default has a real host instance."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-HOOKS-ARE-THIRD-PARTY-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:121  ##TRUST-CHEAP Running a package's hook is running third-party code at install time. Until a",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:192    with the user's privileges, like `cargo build` scripts or `npm postinstall`. @spec/done",
+              "confirmed: Both clauses bound: third-party code by `##TRUST-CHEAP`, running-with-your-privileges by `##OOS-SANDBOXING`. The trust-surface framing is the whole subject of PROP-020 §2.3, titled «Trust gate»."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-THE-GATE-IS-ALLOW-LIST-PLUS-CONSENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:269  pub fn decide_trust(",
+              "crates/vibe-workspace/src/hooks.rs:275      if allow_hooks || allowed.iter().any(|g| g == group.as_str()) {",
+              "crates/vibe-cli/src/commands/install/mod.rs:249                          \"Package group `{group}` declares install hooks (PROP-020). \\",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:117  ### 2.3 Trust gate — allow-list of groups, plus first-run consent {#trust-gate}",
+              "confirmed: The gate's two-branch structure is implemented in `decide_trust` (hooks.rs:269-282) and titled identically in PROP-020 §2.3. Silent execution for allow-listed groups holds. «Showing the exact script» does not: the prompt names only the group (install/mod.rs:248-251), while PROP-020 §2.3's `##FIRST-RUN-CONSENT` specifies phase, script path and group. This is the third row on which that same gap surfaces, and it is the batch's clearest package-versus-host divergence on an `@impl/done` fact."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-CI-ABORTS-AND-SILENCE-NEVER-MEANS-YES": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/install/mod.rs:259              HookTrust::Refused => {",
+              "crates/vibe-cli/src/commands/install/mod.rs:260                  bail!(",
+              "crates/vibe-workspace/src/hooks.rs:280              HookTrust::Refused",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:137    unseen third-party code by default. @impl/done",
+              "confirmed: Both clauses implemented. The abort is the `bail!` at install/mod.rs:259-265, reached before `vibe_install::apply`. Silence-never-means-yes is the `else → Refused` fall-through (hooks.rs:279-281), the `.default(false)` prompt (install/mod.rs:252) and the deny-by-default `HookPolicy::default()` (asserted at hooks/tests.rs:117-121). All four combinations are pinned by the `trust_matrix` truth table (hooks/tests.rs:66-92). The one thing absent is a CI to run it in: `test -d .github` → ABSENT, so no workflow in this repository exercises the CI cell."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-HOOKS-ARE-VERSIONED-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-core/src/manifest/package/hooks.rs:44      pub pre_install: Option<PathBuf>,",
+              "crates/vibe-core/src/manifest/package/hooks.rs:34  #[serde(deny_unknown_fields)]",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:174  - ##REJ-INLINE-COMMANDS **Inline `command = \"...\"` strings in the manifest** instead of files —",
+              "confirmed: Type-enforced: both fields are `Option<PathBuf>` (hooks.rs:44, :53) and `#[serde(deny_unknown_fields)]` (hooks.rs:34) rejects any alternative key, so the inline form the flow forbids cannot be expressed in a manifest at all. PROP-020 §3 records the rejection as a considered alternative rather than an omission. `select_invocation` (hooks.rs:327-353) then requires the resolved `.sh`/`.ps1` to be an actual file on disk (`sh.is_file()`), so a declared-but-absent script yields `HookError::NoInterpreter` rather than silently doing nothing."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-NO-SECRET-IN-A-HOOKS-ENVIRONMENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/hooks.rs:356  /// token is deliberately never placed here.",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:110  - ##TOKEN-NEVER-IN-ENV The publish token",
+              "spec/common/PROP-000.md:304  never into a spawned third-party hook's environment (the flow's `#law-boundaries`).",
+              "confirmed: Three host statements and a closed six-element implementation, all recorded on `A-CREDENTIAL-IS-NEVER-PLACED-IN-A-HOOKS-ENVIRONMENT` above. The Law-3-at-its-sharpest framing is mirrored by PROP-000 §20's «in particular» clause, which singles out this case from the general boundary rule. Layer isolation reinforces it: `vibe-workspace` depends on neither `vibe-publish` nor `vibe-registry`, so no credential type is in scope where hooks run."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-THE-RESIDUAL-RISK-IS-RECORDED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:189    §2.3's allow-list + consent. This is the deliberate posture, not an",
+              "spec/modules/vibe-workspace/PROP-020-install-hooks.md:190    oversight — recorded here as the project's stance. @spec/done",
+              "crates/vibe-workspace/src/hooks.rs:280              HookTrust::Refused",
+              "confirmed: Both clauses hold in the host. The recorded stance is PROP-020 §4's `##OOS-CONTENT-SCANNING`, filed under «Out of scope» as decided non-work with the words «not an oversight — recorded here as the project's stance». The when-in-doubt default is the `Refused` fall-through (hooks.rs:280), the `.default(false)` prompt (install/mod.rs:252) and the deny-by-default `HookPolicy` (hooks/tests.rs:117-121). This closes the document with the same conservative-default rule the README's `##COMPOSES-CONFLICT-PROTOCOL` names."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T22:22:05Z",
+        "verify_batch": "W5"
+      }
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md": {
       "content_hash": "6554df1615a106c2bc0e7d7e335ed71c39158a30029b415ffa8f6f36c3c042b3",
