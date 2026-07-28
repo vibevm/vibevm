@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-28 (**Phase C — the `ai-native` cluster is CLOSED, 80 of 80 files;
-`world` untouched**)_
+_Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED; `world` batch W1 is
+open and its evidence is being gathered**)_
 
 ## Current phase
 
@@ -10,19 +10,29 @@ Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
 **2 697 verdicts written, sealed and committed — 39.4 % of the phase.** The
-`ai-native` cluster measured **2 491 confirmed / 175 drift / 31 unverifiable —
-92.4 %** over its 80 files, in six batches: C1 mechanisms 77.1 %, C2 guiding layer
-92.4 %, C3 the three language GUIDEs 89.7 %, C4+C5 scaffolds and tcg 97.5 %, C6
-skills/boot/READMEs 92.7 %, C7 the `discipline-mcp` trio 100 %.
+`ai-native` cluster now measures **2 470 confirmed / 207 drift / 20 unverifiable —
+91.6 %**, restated from 92.4 % by the reviewing pass below. One command prints it:
+`python campaigns/packages-2026-09/tasks/summary.py`.
 
-**`world` is untouched: 121 files, 4 150 anchors, batches W1…W7.** Two of §3.1's
-three sources are already mechanised and captured — the source-1 link join reads
-**185 citations, 0 broken** over the observed corpus, and the source-2/3 boot-lane
-join reads **17 of 31 contributions carrying the package's exact word stream**.
+**The 138-row reviewing debt is PAID.** Sixty `partial` rows had been sorted by
+filename and seventy-eight by one two-branch rule; read individually they come to
+**101 confirmed / 36 drift / 3 unverifiable**. Eleven rows left `unverifiable`
+correctly and eight moved out of it because their subject was structural, not
+behavioural. **The standard that judges a verdict is now written down** — see
+§Constraints and the campaign LOG — after four claims turned out to have been judged
+two ways across three languages.
 
-**Exit-gate clause (iii) is satisfied** — the clause wave 1 skipped and paid a
-deferred documentation phase for. **39 captured runs** live as files under
-`campaigns/packages-2026-09/harvest/`, each `command → real output`.
+**`world` has no verdicts yet: 121 files, 4 150 anchors, batches W1…W7.** W1 (the
+git family, 16 files, 407 anchors) is **open**: all three §3.1 sources are captured
+by command in `harvest/world-w1-git-family.md`, and five delegated evidence tables
+(`tasks/evidence/ev-W1{a,b,c,d,e}.json`) were commissioned. **Check whether they
+landed before doing anything else** — `CONTINUE.md` §in-flight carries the exact
+recipe, including how to re-commission a missing one.
+
+**Exit-gate clause (iii) is satisfied** — 39 captured runs under `harvest/`, each
+`command → real output`, plus W1's three-source capture. **Clauses (ii) and (iv)
+now have a producer**: `tasks/summary.py` prints the X/Y/Z rollup per cluster and
+counts `src == [1]` as self-referential, which no shipped command does.
 
 **The phase's own answer to the mandate, so far: the discipline gates everything
 except itself.** No package under `packages/org.vibevm.ai-native/` carries a
@@ -30,13 +40,31 @@ except itself.** No package under `packages/org.vibevm.ai-native/` carries a
 fails or is skipped in all six slots, while the three portable steps pass wherever
 the toolchain is present.
 
-**Next: the reviewing debt, then `world`.** See §Next. Nothing is running, nothing is
-blocked, and the resume prompt is
-[`campaigns/packages-2026-09/PHASE-C-RESUME.md`](../campaigns/packages-2026-09/PHASE-C-RESUME.md).
+Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
 ## Constraints — do not violate
 
-- **The perimeter law (new, and it cost five misses).** A mechanism's SPEC lives in
+- **The verdict standard, written down 2026-07-28 after it was applied to 690 rows
+  without being stated.** A fact that **PRESCRIBES** what the discipline requires —
+  an intent, a participants list, a detector seed, a goal, a tradeoff, an
+  alternative, a risk, a routine step — is **confirmed** when it is coherent and
+  every referent it names resolves, *including a referent the package itself
+  declares as future work* (a card registry's `specified` column, a brief's «vision,
+  NOT an implementation plan» line). A fact that **DESCRIBES** what this repository
+  already ships or does is **checked against the tree**, and a description that does
+  not match is **drift**. A fact whose subject cannot be exercised here is
+  **unverifiable, in its own words** — never by a blanket rule over a filename.
+  **For `world` there is a fourth clause:** a flow's fact is also checked against
+  the host's observed conformance (§3.1 source 2). The host is a living consumer,
+  and a law the host breaks is measured, not excused.
+- **Never classify a group of rows by one rule to save time.** That is how 138 rows
+  became a debt. Every `partial` row is read individually; a `partial` is *related
+  code that does not settle the claim*, which is exactly the class that carries
+  drift.
+- **A wrong REASON in the record is worse than a wrong verdict** — the next reader
+  acts on it, and the verdict at least pointed at a real defect. When restating,
+  restate the reason too, and say which way the correction runs.
+- **The perimeter law (and it cost five misses).** A mechanism's SPEC lives in
   `core-ai-native`, its ENGINE in that package's library crates, its DRIVER in each
   language stack's CLI, and its DEPLOYMENT in a consuming project —
   `research/{rust,ts,go}-demo/`, which carry `conform.toml`, `specmap.toml`,
@@ -102,6 +130,12 @@ blocked, and the resume prompt is
 
 ## Done (collapsed — see `git log`)
 
+- **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read
+  individually; the cluster restated 92.4 % → 91.6 %; four cross-language
+  inconsistencies resolved to one verdict each; two verdicts restated upward and one
+  reason corrected. Five findings opened (F-124…F-128). Two tools added:
+  `show-rows.py` (the reviewer's join) and `summary.py` (the exit gate's two
+  counts, its `src` arithmetic exercised against a fixture before use).
 - **Phase C, the `ai-native` cluster — closed 2026-07-28, 31 commits.** Six batches,
   2 697 verdicts, six campaign tools built with their refusals tested before use, 39
   captured runs, 15 delegated evidence tables persisted into the zone. Seven findings
@@ -116,30 +150,46 @@ blocked, and the resume prompt is
 
 ## In progress
 
-Nothing running; the tree is clean and in sync with `origin/main`.
+**W1's evidence gathering was in flight at the checkpoint.** Five `opus5` workers
+were commissioned for the git family's 16 files / 407 anchors, each writing one
+table to `campaigns/packages-2026-09/tasks/evidence/ev-W1{a,b,c,d,e}.json`. **No
+`world` verdict has been written.** The tree is clean and in sync with
+`origin/main`; nothing else is running.
 
 ## Next
 
-1. **The reviewing debt — do this before opening `world`.** 138 rows were classified
-   in bulk instead of read: 60 `partial` rows in `tasks/evidence/ev-C45-go.json`
-   sorted by filename, 78 in `ev-C45-rust.json` sorted by one two-branch rule. A
-   `partial` is *related code that does not settle the claim* — the class that carries
-   drift. Read each, judge it on its own evidence, restate what moves with
-   `merge-verdicts.py … --force`.
-2. **The `world` cluster — W1…W7**, 121 files, 4 150 anchors, per
-   `tasks/PHASE-C-BATCHES.json`. **Every `world` verdict must carry `src`** (a
-   non-empty subset of `[1,2,3]`, amendment A2); `merge-verdicts.py` refuses a batch
-   without it, and `src == [1]` counts separately as self-referential. W2 and W5 are
-   provisional at ~695 anchors — re-measure the per-anchor cost after the first world
-   batch.
-3. **At the phase close:** the X/Y/Z summary in the LOG, the self-referential count
-   (no shipped command computes it — write the script), and `baseline.json`
-   (amendment A6).
+1. **W1 — check for the five tables first**, then `verify-evidence.py` each one
+   BEFORE reading it, then `show-rows.py` row by row and judge. `CONTINUE.md`
+   §in-flight carries the file list, the worker contract, and how to re-commission a
+   missing table. §w1-reading carries the reading already done, so it is not
+   repeated: `git-practices`' README is stale about its own family, the
+   single-place law is broken by the host in six places, and F-128's chain is
+   verified end to end.
+2. **The rest of `world` — W2…W7**, per `tasks/PHASE-C-BATCHES.json`. **Every
+   `world` verdict must carry `src`** (a non-empty subset of `[1,2,3]`, amendment
+   A2); `merge-verdicts.py` refuses a batch without it, and `src == [1]` counts
+   separately as self-referential — `summary.py --batch <id>` prints both. W2 and W5
+   are provisional at ~695 anchors; re-measure the per-anchor cost after W1 closes.
+3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential
+   count (both from `summary.py`), and `baseline.json` (amendment A6).
 4. **Phases T and G are designed and unrun. Neither starts without an explicit
    instruction.**
 
 ## Known issues
 
+- **Opened 2026-07-28 by the reviewing pass, all on the owner, none blocking:**
+  **F-124** (three evidence ids — `H4`, `DR1-014`, `DL1-015` — cited across all
+  three stacks and resolving in no register; the `H`-series is in daily use inside
+  `core-ai-native`'s appendices with no roster anywhere); **F-125** (`core-ai-native`
+  v0.8.0 publishes one PLDI'25 measurement twice — ATLAS 75.3 % / 70.2 %,
+  CONTRADICTION-MAP 74.8 % — and four documents quote whichever they read; this
+  corrected a C3a verdict's reason); **F-126** (`rust-ai-native-tcg` names both a
+  shipped consultation oracle and an unbuilt token-level masker; three names in one
+  family point elsewhere); **F-127** (the Go stack prescribes `go test -race` 15
+  times across 5 documents and passes it 0 times); **F-128** (`spec/boot/INLINE.md`
+  does not exist, and line 5 of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` says the four
+  non-negotiable commit rules load first and verbatim from it and are not restated
+  elsewhere — `link = "inline"` occurs zero times in every `vibe.toml` in the tree).
 - **Open on the owner, and none unblocks Phase C:** **F-120** (the kind-line
   notation — 102 uses, 8 ranks, defined by one example, cited to a
   `GUIDE-SPEC-AUTHORING` that is not in this repository); **F-121** (four mechanism
@@ -169,8 +219,32 @@ Nothing running; the tree is clean and in sync with `origin/main`.
 
 ## Session context
 
-**The cluster's own result is one sentence: the discipline gates everything except
-itself.** Three portable floor steps pass wherever their toolchain is present; every
+**The debt's own result is one sentence: no row moved because a worker's evidence
+was wrong.** Every drift the reviewing pass found was already visible in the
+`searched` field the worker returned; what was missing was someone reading it. A
+delegated table that records what it searched converts a reviewer's disagreement
+into one lookup — and converts a reviewer's absence into 138 unexamined rows.
+
+**Comparing the twins is what earned the rest.** Four claims appear in two or three
+language projections and had been judged differently in each — `vibe codemod
+rename-seam`, the product seam's lockfile dispatch, the `complete` latency target,
+and the Layer-1 grammar mask. Each is now judged once, and **two of the corrections
+run upward**: a document that declares itself «held at stub depth» and
+VERY-FAR-FUTURE is not contradicted by being unbuilt.
+
+**The standard had been in use for 690 rows and had never been stated**, which is
+exactly how one claim gets two verdicts. It is now in §Constraints, in `CONTINUE.md`
+§standard, and in the campaign LOG.
+
+**And one of my own reasons was wrong in a way worth keeping.** C3a recorded the
+TypeScript guide's «~74.8 %» as drift because the figure «appears only in
+`.vibe/cache/**`». It does not — the live v0.8.0 CONTRADICTION-MAP publishes it in
+C-4's own title, one `grep` away, while the ATLAS records 75.3 % / 70.2 % for the
+same measurement. The verdict stood; the reason did not, and the real defect is
+larger than the one recorded.
+
+**The `ai-native` cluster's result is unchanged and still one sentence: the
+discipline gates everything except itself.** Three portable floor steps pass wherever their toolchain is present; every
 discipline-specific step fails or is skipped in all six slots, because no package
 carries the policy its own gate demands. `core-ai-native` ships library crates only
 and has no floor at all.
