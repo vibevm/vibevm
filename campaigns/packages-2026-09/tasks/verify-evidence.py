@@ -45,7 +45,23 @@ BLOCK_CAP = 40    # and the ceiling on the block an elided quote may range over
 
 
 def norm(s):
-    return re.sub(r"\s+", " ", s).strip().lower()
+    """Whitespace-folded, case-folded, and stripped of inline markdown punctuation.
+
+    The fourth narrowing, and the same lesson as the first three. A worker that
+    quotes a fenced line as `` `type(scope): subject` `` has added a code span
+    around content it copied verbatim; the file carries the line without the
+    backticks, and comparing raw text called 152 honest refs fictions.
+    Backticks, asterisks and underscores are MARKUP — how a quote is presented,
+    never what it says — so they come off both sides before the comparison.
+
+    **Stated honestly: the table that showed this was still being written.** The
+    152 were counted mid-write, and on the finished tables every ref passes with
+    or without the strip. The narrowing stays because the failure class is real
+    and will recur, and because it loosens nothing measurable: re-run over the
+    three already-trusted C4/C5/C6 tables returns the identical 12 unresolvable
+    refs it returned before.
+    """
+    return re.sub(r"[`*_]", "", re.sub(r"\s+", " ", s).strip().lower())
 
 
 def check_ref(ref):
