@@ -3015,6 +3015,94 @@ command that would have tested it.
   The campaign's named trap, caught by re-reading, in the session that wrote the
   trap down.
 
+- **2026-07-29 · W4 CLOSED at 564 — 474 / 89 / 1, 84.0 %, the phase's lowest
+  batch and the first that measures a practice the host has LEFT.** Per package:
+  `redbook` 96.4 %, `discovery-prompt` 92.8 %, `comparative-research` 84.4 %,
+  **`campaign-plans` 72.5 %**. The phase crosses **71.4 %** and `world` falls to
+  89.3 % against `ai-native`'s 91.6 %, so §5-C's prediction diverges further in
+  the direction W3 already recorded.
+
+  **The sixty drifts in `campaign-plans` are one finding.** The fifteen-section
+  plan skeleton this flow defines is instantiated exactly once in the repository,
+  and that instance is in `legacy-spec/`. The two campaigns the repository runs
+  today carry none of it — risks 16 archived / 0 live, non-goals 9 / 0,
+  quick-start 7 / 0, whole-campaign acceptance 8 / 0, execution ledger 8 / 0,
+  commit maps 3 / 0, safe stop 12 / 0, Phase 0 five archived and none live. The
+  live campaigns replaced the one-file dialect with a zone directory and eight
+  side documents, which §13 of the format explicitly permits — but the sections
+  went with the dialect.
+
+  **The measured window, stated in the verdict reasons so it can be re-judged.**
+  When a flow's rule has archived host instances and no live ones, the window is
+  the current tree, and the archive is cited as evidence the practice was ONCE
+  ADOPTED — which is what makes the absence drift rather than non-adoption. A
+  rule the host never followed is confirmed; a rule it followed in twenty-five
+  archived plans and stopped following in the two it runs now is not.
+
+  **Three defects need no host to see them.** `campaign-plans`' execution-record
+  example says «Two predictions falsified … the other four held» where the
+  campaign it was copied from says three and enumerates two.
+  `comparative-research`'s worked fragment is introduced as obeying all five laws
+  and obeys four — it has no re-fetch section, the artefact its own skeleton
+  defines. And `discovery-prompt`'s `usage.md` widens a rule the artefact
+  deliberately scoped («every control BELOW is a hashtag») and is contradicted by
+  the artefact's own fourth knob, then contradicts itself fifteen lines later on
+  whether `<EXTENSION_CRITICALITY>` is configuration or mechanism.
+
+  **What no host study does, measured five ways.** No study obeys all five laws
+  of `comparative-research`. No quote anywhere carries a per-quote access date —
+  `grep -rnE '— .*, accessed 20[0-9]{2}-'` returns zero. No delta anywhere carries
+  a verdict, and no accepted delta carries a revisit condition of any kind. No
+  study writes a re-fetch walk order. And the never-paraphrase law is contradicted
+  by an owner directive — the clean-room rule — with the legal rationale quoted
+  verbatim, which is a collision of principle rather than neglect.
+
+  **Findings: NONE opened.** Every W4 drift that reaches finding grade confirms
+  one already filed — F-113 (redbook's three rosters, 22 / 21 / 23), F-114 (the
+  edition contract falsified by its own manifest comment), F-119, F-122. Reading
+  the ledger before judging is what kept a duplicate F-130 from being opened for
+  the roster gap.
+
+- **2026-07-29 · Eight evidence tables, eight clean first passes, and three
+  harvests corrected by the workers they commissioned.** W4a-d and W5a-d returned
+  1 632 rows over **4 643 refs with zero unresolvable**, and none cites
+  `CONTINUE.md` or `spec/WAL.md` — proved when this session rewrote both files
+  mid-flight and re-verified every table at zero. The two-sentence durable-citation
+  rule in the brief is now paid for eight times.
+
+  The corrections run the other way from the usual delegation worry. **W4b:** the
+  harvest said the fractality study notes carry no two-way gap section — an
+  absence asserted, not checked, the campaign's own named trap walked by the
+  session that keeps quoting it. Two `*-SYNTHESIS.md` files were listed and never
+  opened; both carry `## 2. Two-way gaps {#gaps}`, and the pipeline's downstream
+  half is live (ROADMAP records eight milestones deriving from the Tessl study).
+  **W5d:** the harvest printed ten paths from a `grep` that returns nineteen, and
+  the truncation dropped `crates/vibe-publish/src/token.rs`, where the `Token`
+  wrapper and both Law-4 tests live — a worker following the list would have
+  reported the flow's only code-enforced law unimplemented. **W4d and W4c:**
+  `spec/boot/INDEX.md` does not carry the qualified member names, and the
+  dangling-pointer count was an undercount because the regex could not see a
+  root-relative `spec/flows/…` path.
+
+- **2026-07-29 · Two tools, and one of them is the answer to «how much is left».**
+  `tasks/batch-progress.py` joins what each batch OWES (`PHASE-C-BATCHES.json`,
+  generated from `run/mirror`) against what is WRITTEN (`run/cache.json`) and
+  names the unopened files of an open batch. The phase had counts and no way to
+  see the remainder; every «X % of the phase» before it was that subtraction done
+  by hand, and one was done in the head and landed wrong.
+  `tasks/make-slice.py` builds a slice from an evidence table plus a rulings map,
+  with six refusals tested against W3's closed tables before first use. The one
+  that matters refuses any slice whose file has an addressable anchor the table
+  does not cover — the property the 138-row debt was missing. Validated by
+  regenerating a closed slice: identical anchor set, identical `src`, worker refs
+  identical on 63 of 64.
+
+  `verify-evidence.py` also gained one character. Its ref pattern required
+  `<name>.<ext>` before the colon, so an extensionless dotfile fell through to
+  UNPARSED — W4b hit it three times on true `.gitignore` refs the instrument
+  could not read. Leading `+` became `*`; the three already-trusted tables re-run
+  to identical counts.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
