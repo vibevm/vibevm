@@ -2649,6 +2649,54 @@ command that would have tested it.
   The guide's `BASELINE-RACE-DETECTOR-GATES-TESTS` is already drift for the floor
   half; this is the loop half, and it is one flag.
 
+- **2026-07-28 · F-128 — the four non-negotiable commit rules are said to live in a
+  file that does not exist, by the file every session reads first.** Found while
+  reading W1's packages rather than in any delegated table, and the chain resolves
+  end to end:
+
+  ```console
+  $ ls spec/boot/
+  00-core.md  90-user.md  INDEX.md  STATIC.md
+  ```
+
+  **There is no `spec/boot/INLINE.md`.** And line 5 of `CLAUDE.md`, `AGENTS.md` and
+  `GEMINI.md` — identical, and the first substantive sentence of the first file any
+  session reads — says the commit-and-push discipline «is the `git-practices`
+  family, a dependency of this project **loaded first and verbatim from
+  `spec/boot/INLINE.md`**. The rules live in that inline lane, **not restated
+  here**.»
+
+  **Why the lane is empty is the interesting half.** PROP-009 gives a package's
+  `[boot_snippet]` a `link` field with three values — `inline` / `static` /
+  `dynamic` — and only `inline` produces `INLINE.md`. All four git flows carry, in
+  their manifests, this exact pair:
+
+  ```toml
+  # A non-negotiable commit rule — suggest the inline priority lane (PROP-009 §2.4).
+  link = "static"
+  ```
+
+  **The comment says inline and the field says static, in all four.** The umbrella's
+  own manifest then builds on the comment rather than the field: «Each member
+  self-suggests the `inline` priority lane in its own `[boot_snippet]`, so its text
+  lands verbatim in `spec/boot/INLINE.md` (read first)». And repository-wide,
+  `grep 'link = "inline"'` over every `vibe.toml` in `packages/` and `vibedeps/`
+  returns **zero** — nothing anywhere asks for the lane, so the generator has
+  nothing to write and correctly writes nothing.
+
+  **The rules are read anyway, which is why this survived.** They are compiled into
+  `spec/boot/STATIC.md` — twice each, once directly and once through the umbrella
+  (F-078) — and `INDEX.md` names `STATIC.md` as the static lane, so a session that
+  follows the *generated* boot manifest gets all four rules. A session that follows
+  the *authored* sentence goes looking for a file that is not there and is told the
+  rules are not restated anywhere else. **The mechanism works; its documentation is
+  wrong in five manifests and three contract files.**
+
+  Filed, not fixed. Three of the eight surfaces are inside published package slots,
+  so closing it touches F-122's territory; the host-side half — three identical
+  lines in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` — is one edit and the owner's,
+  because those files are the ones the boot contract is written on.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
