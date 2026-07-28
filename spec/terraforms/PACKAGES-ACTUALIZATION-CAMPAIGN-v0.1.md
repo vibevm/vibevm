@@ -2152,6 +2152,49 @@ command that would have tested it.
   verdict rested on 6. **The instrument was wrong three times in one afternoon and
   said so loudly each time; that is the only reason none of it reached a verdict.**
 
+- **2026-07-28 · C2a — the ATLAS resolves, and the three things it says about
+  itself do not.** 145 verdicts over ATLAS, CONTRADICTION-MAP and the README:
+  **135 confirmed / 9 drift / 1 unverifiable — 93.1 %**, the highest rate of the
+  phase and for a structural reason: these files are almost entirely *existence and
+  reachability* claims, and a resolved address is its own evidence.
+
+  **The ATLAS's arithmetic is exact and verifies twice over.** 87 distinct record
+  ids and 87 `##FINDING-*` anchors against its claimed «unique (non-duplicate):
+  87»; the axis distribution sums to 87, the evidence-class distribution sums to
+  87. That is a generated appendix keeping its own books.
+
+  **Its header is F-088, now confirmed against the tree.** «GENERATED from
+  `findings.jsonl` (A2: derived, do not hand-edit)» — and **no `findings.jsonl`
+  exists anywhere in the repository.** The only `findings.json` files are the two
+  campaigns' F-NNN ledgers, a different artifact on a different schema. A generated
+  file whose input is absent cannot be regenerated, and the instruction not to
+  hand-edit it leaves no way to change it at all.
+
+  **One bucket of the fourth distribution is manufactured.** `new=31` is **15
+  records literally marked `new` plus 16 whose status field is EMPTY** — all BLD-*
+  in axis H. The sum still reaches 87, which is exactly why nobody noticed: a
+  reader counting genuinely-new findings is over by sixteen, and the total agrees.
+
+  **A reachability measurement worth carrying forward:** of the 87 records, **24
+  are cited by a card, guide or tool spec in the three `-lang` stacks and 63 are
+  cited nowhere** outside the ATLAS itself. That is not a verdict — an index is
+  allowed to hold more than the corpus uses — but it is the number Phase F will
+  want when it asks what the research passes bought.
+
+  The CONTRADICTION-MAP contradicts itself twice: its own «four parts per entry»
+  law is broken by **C-7, which carries no side/resolution triple**, and C-7's
+  «open» question on H6-uniformity is **answered by DR1-022 in the ATLAS the map
+  indexes**. The README misses in three ways a consumer meets first — it says the
+  package ships prompt content only while **five Rust crates ship inside it**, it
+  points at `rust/GUIDE-…` where the guide is at `spec/rust/GUIDE-…`, and its
+  mechanism roster omits `MCP-CORE-v0.1.md`, which ships.
+
+  *On the instrument:* 424 refs resolved, zero unresolvable, and **188 came back
+  ELIDED** — the outcome added this morning. That is my own brief's doing: it
+  capped snippets at 120 characters and the worker obeyed by truncating. The
+  outcome earned itself in one batch, naming a hundred and eighty-eight honest
+  elisions without failing one of them.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

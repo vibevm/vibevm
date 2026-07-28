@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T09:21:43Z",
+  "updated_at": "2026-07-28T09:38:29Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -23,7 +23,240 @@
       },
       "marker_count": 27,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
+        "verdicts": {
+          "core-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:5  ##core-contents-lead The language-independent core of the Discipline: @impl/done",
+              "vibedeps/flow-core-ai-native/0.8.0/README.md:3  The language-independent core of the Discipline: principles, the pattern-card",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "CORE-PRINCIPLES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:7  - ##CORE-PRINCIPLES principles, @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:1  # The AI-Native Code Discipline — Manifesto {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:47  ## 2. The six axioms, projected to the language level {#six-axioms}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "CORE-PATTERN-CARD-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:8  - ##CORE-PATTERN-CARD-FORMAT the pattern-card format, @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:1  # The AI-Native Pattern Card Format {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "CORE-SCAFFOLD-CATALOG": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:9  - ##CORE-SCAFFOLD-CATALOG the executable-scaffold catalog, @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:1  # Executable Scaffolds — The Runnable-Capital Catalog {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:37  ## 1. The nine classes {#nine-classes}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "CORE-OPERATING-PLAYBOOKS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:10  - ##CORE-OPERATING-PLAYBOOKS the operating playbooks (raid, sweep, campaign",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md:1  # The Raid Playbook — Layered Refactoring Sweeps {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "CORE-MECHANISM-SPECS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:12  - ##CORE-MECHANISM-SPECS and the mechanism specs the shipped checkers",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md:1  # ENGINE — conform: the cross-language conformance engine, v0.1 {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:2  name = \"core-ai-native-conform\"",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "CODE-OPTIMAL-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:15  ##CODE-OPTIMAL-TARGET Code optimal for **comprehension and safe modification",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:31  ## 1. The target function: author/reader asymmetry {#target-function}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "PROMPT-CONTENT-ONLY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:19  ##PROMPT-CONTENT-ONLY This package is prompt content only. @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:2  name = \"core-ai-native-conform\"",
+              "campaigns/packages-2026-09/harvest/core-ai-native-floor-by-hand.md:5  **`core-ai-native` ships library crates only** — `-conform` and `-specmap` build to rlibs and `-specmark` to a proc-m...",
+              "the package's front door says it ships prompt content only, and **five Rust crates ship inside it** — core-ai-native-conform, -mcp, -specmap, -specmark, -specmark-grammar, all workspace members of its own Cargo.toml. They are library crates rather than binaries, which is why the claim is nearly true and still wrong in the sentence a consumer reads first"
+            ]
+          },
+          "RUNNABLE-HALF-IN-STACKS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:21  ##RUNNABLE-HALF-IN-STACKS The runnable half — the checkers, the",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/Cargo.toml:2  name = \"rust-ai-native-conform\"",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/Cargo.toml:20  name = \"rust-ai-native\"",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "READ-MANIFESTO": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:28  1. ##READ-MANIFESTO `spec/00-MANIFESTO.md` — mission, axioms, the central law, §8 the package map. Start here. @impl/...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:1  # The AI-Native Code Discipline — Manifesto {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:152  ## 8. The package map {#package-map}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "READ-PATTERN-CARD-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:29  2. ##READ-PATTERN-CARD-FORMAT `spec/01-PATTERN-CARD-FORMAT.md` — the format every pattern card is written in. @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:1  # The AI-Native Pattern Card Format {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "READ-SCAFFOLDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:30  3. ##READ-SCAFFOLDS `spec/02-EXECUTABLE-SCAFFOLDS.md` — the nine runnable-capital classes. @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:37  ## 1. The nine classes {#nine-classes}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:49  | ##ROW-CLASS-I **I** @impl/done | Scaffolded edit operations / codemods @impl/done | a multi-file change, as one che...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "READ-STACK-GUIDE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:31  4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @imp...",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:1  # AI-Native Rust — The Guide {#root}",
+              "the path is wrong: the README sends a reader to `rust/GUIDE-…` and the guide is at `spec/rust/GUIDE-…`. Same family as F-103/F-110 — a front-door pointer that does not resolve from where the reader stands"
+            ]
+          },
+          "READ-PLAYBOOKS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:32  5. ##READ-PLAYBOOKS `spec/03-RAID-PLAYBOOK.md` + `spec/04-SWEEP-PLAYBOOK.md` + `spec/05-CAMPAIGN-FORM.md` — campaigns...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md:1  # The Raid Playbook — Layered Refactoring Sweeps {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "READ-WAL-CONVENTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:33  6. ##READ-WAL-CONVENTION `spec/06-WAL-CONVENTION.md` — session-durable project state (optional but preferred). @impl/...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "READ-MECHANISMS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:34  7. ##READ-MECHANISMS `spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT: the...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md:1  # LEDGER — the intent ledger, v0.1 {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/tests/usage.rs:14  const URI: &str = \"spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code\";",
+              "the sentence enumerates the mechanisms and **omits a fifth that ships**: `MCP-CORE-v0.1.md` is in `spec/mechanisms/` and is named nowhere in the list. A roster wrong by one is how a reader concludes a mechanism does not exist"
+            ]
+          },
+          "READ-APPENDIX": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:35  8. ##READ-APPENDIX `spec/appendix/` — `CONTRADICTION-MAP.md` (synthesis provenance) and `ATLAS.md` (findings ledger)....",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:1  # Contradiction Map — Synthesis Provenance {#root}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:1  # Atlas — Findings Ledger (human view) {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "RESULT-CENTRAL-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:39  - ##RESULT-CENTRAL-LAW **Central law (Manifesto §3):** idiomatic inside the file, engineered",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:58  ## 3. The central law: idiomatic inside the file, engineered around the file {#the-central-law}",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:26  > ##LAW-IDIOMATIC-INSIDE-ENGINEERED-AROUND **Idiomatic inside the file; engineered around the file.** @impl/done",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "RESULT-RUNNABLE-CAPITAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:43  - ##RESULT-RUNNABLE-CAPITAL **Runnable capital (Manifesto §5):** explanation capital must be",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:97  ## 5. Runnable capital: explanation must be executable {#runnable-capital}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:37  ## 1. The nine classes {#nine-classes}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "beta-status": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:50  ##beta-status BETA. @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:140  ##beta-status This is a beta. @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, executable...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "maturity-tags-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:52  ##maturity-tags-lead Maturity is tagged throughout: @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:39  | Class | Name | Carries | Transfer | Card |",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "MATURITY-E-STRONG": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:54  - ##MATURITY-E-STRONG [E-strong] (benchmark-backed), @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:41  | ##ROW-CLASS-A **A** @impl/done | Generators / codegen @impl/done | structural decisions, as named inputs to an emit...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:38  - ##FIELD-EVIDENCE-AND-TRANSFER-STRENGTH **Evidence & Transfer-strength** — backing `findings.jsonl` IDs, evidence cl...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "MATURITY-E-MID": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:55  - ##MATURITY-E-MID [E-mid] (adjacent evidence), @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:42  | ##ROW-CLASS-B **B** @impl/done | Typed builders / typestate @impl/done | protocol correctness, as types the compile...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:44  - ##C-7-OPEN-TRANSFER **Transfer generation→modification:** every scaffold's value is shown for *generation*; transfe...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "MATURITY-E-HYP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:56  - ##MATURITY-E-HYP [E-hyp] (first-principles, pilot-gated). @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:49  | ##ROW-CLASS-I **I** @impl/done | Scaffolded edit operations / codemods @impl/done | a multi-file change, as one che...",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:18  | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`rust-ai-native codemod ad...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "open-question-transfer": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:58  ##open-question-transfer The central open question — does the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:43  ## C-7 — Unresolved / open (honest) {#c-7-unresolved-open}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:44  - ##C-7-OPEN-TRANSFER **Transfer generation→modification:** every scaffold's value is shown for *generation*; transfe...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "names-failure-modes": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:63  ##names-failure-modes A discipline that names its failure modes is more",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:148  ##names-its-own-failure-modes A discipline that names its own failure modes is more trustworthy than one that hides t...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T09:38:29Z",
+        "verify_batch": "C2"
+      }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md": {
       "content_hash": "7f0933ad9bbc050398ff46e608ed12115c693ef2ce6ea6a56f66abcff90a1128",
@@ -207,7 +440,851 @@
       },
       "marker_count": 94,
       "unit_count": 10,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "1e88af6949b8076d1a85f1f50589becb6e774341cff94591cefae184224f9774",
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:5  ##status-line **Discipline v0.2 · BETA · appendix · GENERATED from findings.jsonl (A2: derived, do not hand-edit)** @...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:185  - ##MAP-ATLAS `appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). @impl/...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, executable...",
+              "the fact says this appendix is GENERATED from `findings.jsonl` and must not be hand-edited. **No file named `findings.jsonl` exists anywhere in the repository.** The only `findings.json` files are the two campaigns' F-NNN ledgers, which are a different artifact on a different schema. A generated file whose generator's input is absent cannot be regenerated, and the instruction not to hand-edit it leaves no way to change it at all. This is F-088, open on the owner, now confirmed against the tree rather than reported from reading"
+            ]
+          },
+          "totals-and-research-passes": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:7  ##totals-and-research-passes Total records: 98 · unique (non-duplicate): 87 · passes: DR-1, DR-2, blind-control, R3 (...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:19  - ##FINDING-DR1-001 **DR1-001 [CONTRADICTS]** — MoonBit flattened design for transformer KV-cache efficiency",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:205  - ##FINDING-R3-014 **R3-014** — Active-rule-set minimality: rule-paging beats rule-dumping at equal rule mass",
+              "the countable half verifies twice over and exactly: 87 distinct record ids of the form <PREFIX>-NNN and 87 `##FINDING-*` anchors, against the claimed «unique (non-duplicate): 87». «Total records: 98» is the pre-dedup count and the file carries the 87 survivors, which is consistent. Five of the six named passes are traceable to record prefixes — DR1, DR2, BLD, R2C, R3 — and `seeds` contributes none; a pass whose records all deduplicated away leaves the list honest"
+            ]
+          },
+          "distribution-by-axis": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:10  ##distribution-by-axis By axis: A=10, B=8, C=9, D=10, E=8, F=4, G=8, H=30 @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:18  ## Axis A — Language shape (10) {#axis-a-language-shape}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:146  ## Axis H — Weak-reader & swarm (30) {#axis-h-weak-reader-and-swarm}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "distribution-by-evidence-class": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:12  ##distribution-by-evidence-class By evidence class: benchmark=48, theory=17, manifesto=7, case-study=6, production=6,...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:20  _manifesto · low · contradicts:H5_ — MoonBit (AI-native general language, IDEA/Shenzhen) makes top-level vs local def...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:148  _theory · high · _ — Code uniquely offers cheap, fast, machine-readable correctness signals (compile/type/lint/test) ...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "distribution-by-status-vs-prior-knowledge": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:14  ##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=31, contradicts=5, known=5 ...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:148  _theory · high · _ — Code uniquely offers cheap, fast, machine-readable correctness signals (compile/type/lint/test) ...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:22  _production · high · new_ — Holzmann's 10 rules (2006) target restrictions that most increase analyzability per unit ...",
+              "the arithmetic sums to 87 and one of its four buckets is manufactured: `new=31` is **15 records literally marked `new` plus 16 whose status field is EMPTY**, all BLD-* in axis H. The distribution reports an absent status as a present one, so a reader counting genuinely-new findings is over by sixteen. The other three distributions — by axis (10+8+9+10+8+4+8+30) and by evidence class (48+17+7+6+6+3) — each sum to 87 and are sound"
+            ]
+          },
+          "surprise-findings-roster": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:16  ##surprise-findings-roster Surprise findings: 11 — DR1-011, DR2-003, DR2-006, DR2-015, BLD-003, BLD-007, BLD-023, R2C...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:33  - ##FINDING-R2C-002 **R2C-002 *** — EsoLang-Bench: OOD collapse confirmed; ICL gives ~0 benefit; compile errors domin...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:179  - ##FINDING-DR1-011 **DR1-011 * [CONTRADICTS]** — Inverse scaling: larger models fail Python identifier swaps harder",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-001": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:19  - ##FINDING-DR1-001 **DR1-001 [CONTRADICTS]** — MoonBit flattened design for transformer KV-cache efficiency",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:20  _manifesto · low · contradicts:H5_ — MoonBit (AI-native general language, IDEA/Shenzhen) makes top-level vs local def...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:16  - **DR1-001 [CONTRADICTS]** — MoonBit flattened design for transformer KV-cache efficiency",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-005": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:21  - ##FINDING-DR1-005 **DR1-005** — JPL Power of Ten: restrictions chosen for static decidability",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:22  _production · high · new_ — Holzmann's 10 rules (2006) target restrictions that most increase analyzability per unit ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:18  - **DR1-005** — JPL Power of Ten: restrictions chosen for static decidability",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-007": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:23  - ##FINDING-DR1-007 **DR1-007** — C++ Core Guidelines profiles + 'break-the-glass' opt-out",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:24  _manifesto · med · refines:H2_ — A 'profile' is a deterministically, portably enforceable subset of rules designed to...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:20  - **DR1-007** — C++ Core Guidelines profiles + 'break-the-glass' opt-out",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-008": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:25  - ##FINDING-DR1-008 **DR1-008** — Rust unsafe in practice: sparse, encapsulated, the model escape hatch",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:26  _benchmark · high · refines:H2_ — Large-corpus study: only 0.6% of 7.4M functions dereference a raw pointer; unsafe a...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:22  - **DR1-008** — Rust unsafe in practice: sparse, encapsulated, the model escape hatch",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-016": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:27  - ##FINDING-DR1-016 **DR1-016** — EsoLang-Bench: frontier models collapse on out-of-distribution languages",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:28  _benchmark · high · refines:H1_ — The same 80 problems solved at 100% in Python/JS by top frontier models (GPT-5.4, G...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:24  - **DR1-016** — EsoLang-Bench: frontier models collapse on out-of-distribution languages",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-014": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:29  - ##FINDING-DR2-014 **DR2-014** — Search/replace edit format aligns with pretraining (diff) distribution",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:30  _benchmark · med · refines:H5_ — SRI (Search-and-Replace Instruction) infilling outperforms NL-framed FIM; authors at...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:26  - **DR2-014** — Search/replace edit format aligns with pretraining (diff) distribution",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-024": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:31  - ##FINDING-DR2-024 **DR2-024** — Code pretraining/structure improves reasoning; canonical form is in-distribution",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:32  _benchmark · low · refines:H6_ — Surveys + studies: code data improves LLM reasoning/planning via structured patterns...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:28  - **DR2-024** — Code pretraining/structure improves reasoning; canonical form is in-distribution",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-002": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:33  - ##FINDING-R2C-002 **R2C-002 *** — EsoLang-Bench: OOD collapse confirmed; ICL gives ~0 benefit; compile errors domin...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:34  _benchmark · high · refines:H5_ — Mechanism detail behind the 89-point collapse (Sharma & Chopra, contamination-resis...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:30  - **R2C-002 *** — EsoLang-Bench: OOD collapse confirmed; ICL gives ~0 benefit; compile errors dominate failures",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-002": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:35  - ##FINDING-R3-002 **R3-002** — Contract-first ordering: intent before body within every item",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:36  _theory · med · new_ — Autoregression makes reading order conditioning order. Signature, invariants, error contract, ...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:86  - `rule-contract-first-ordering` (R3-002) — intent before body.",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-006": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be m...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:38  _theory · high · refines:H6_ — Models imitate visible neighbors. One way per operation; unmarked exceptions become fa...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:88  - `rule-uniformity` (R3-006/H6) — one idiom per operation; mark exceptions.",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-009": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:41  - ##FINDING-DR1-009 **DR1-009** — Identifier renaming alone drops LLM code comprehension 18.6 pts",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:42  _benchmark · high · refines:naming-rule_ — 'The Code Barrier' (comments stripped, then obfuscations applied) finds va...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:38  - **DR1-009** — Identifier renaming alone drops LLM code comprehension 18.6 pts",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-012": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:43  - ##FINDING-DR1-012 **DR1-012** — Token efficiency varies 2.6x across languages",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:44  _case-study · med · new_ — A RosettaCode study over ~1000 tasks across 19 languages (GPT-4 tokenizer) finds a 2.6x sp...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:40  - **DR1-012** — Token efficiency varies 2.6x across languages",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-013": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:45  - ##FINDING-DR1-013 **DR1-013** — Token Sugar: reversible token-efficient shorthand for code",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:46  _benchmark · med · new_ — Token Sugar (ASE 2025) mines 799 high-frequency verbose code patterns and maps each to a re...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:42  - **DR1-013** — Token Sugar: reversible token-efficient shorthand for code",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-003": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:47  - ##FINDING-DR2-003 **DR2-003 *** — Names carry intent; obfuscation collapses summarization but not canonical code",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:48  _benchmark · high · refines:H5_ — 'When Names Disappear' (FPT/UTD): semantics-preserving obfuscation (alpha-rename, a...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:44  - **DR2-003 *** — Names carry intent; obfuscation collapses summarization but not canonical code",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-004": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:49  - ##FINDING-DR2-004 **DR2-004** — Renaming alone mild; renaming + structural change compounds",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:50  _benchmark · med · refines:H5_ — Metamorphic APR study: renaming transformations alone rarely impair repair, but ampl...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:46  - **DR2-004** — Renaming alone mild; renaming + structural change compounds",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-005": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:51  - ##FINDING-DR2-005 **DR2-005** — Comments perturbation least impactful on logic; conditionals most",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:52  _benchmark · med · refines:H5_ — Metamorphic testing of LLM APR (MT-LAPR): of nine perturbation rules, AddingComments...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:48  - **DR2-005** — Comments perturbation least impactful on logic; conditionals most",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-021": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:53  - ##FINDING-DR2-021 **DR2-021** — Misleading identifiers survive even deobfuscation; poison persists",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:54  _case-study · med · refines:H4_ — Wang et al.: shuffled/misleading variable names degrade analysis MORE than random s...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:50  - **DR2-021** — Misleading identifiers survive even deobfuscation; poison persists",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-004": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:55  - ##FINDING-R3-004 **R3-004** — Names are token programs: closed-vocabulary composition, one name one referent, no sh...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:56  _theory · high · refines:R-020_ — Identifiers are BPE sequences; derivable patterns compress and bind attention acros...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:80  - `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-004": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:59  - ##FINDING-DR1-004 **DR1-004** — MISRA deviation regime: mandatory/required/advisory + recorded rationale",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:60  _production · high · refines:deviation-records_ — MISRA C:2012/2025 separates guidelines into mandatory (no deviation...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:56  - **DR1-004** — MISRA deviation regime: mandatory/required/advisory + recorded rationale",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-017": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:61  - ##FINDING-DR1-017 **DR1-017** — Comments help LLM comprehension but indiscriminate comments add noise",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:62  _benchmark · high · refines:H4_ — Multiple studies: comment prevalence improves LLM comprehension of legacy code and ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:58  - **DR1-017** — Comments help LLM comprehension but indiscriminate comments add noise",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-020": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:63  - ##FINDING-DR1-020 **DR1-020** — Literate programming: documentation-primary source lineage",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:64  _theory · med · known:A1_ — Knuth's literate programming (1984) interleaves prose and code so author intent is primar...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:60  - **DR1-020** — Literate programming: documentation-primary source lineage",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-001": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:65  - ##FINDING-DR2-001 **DR2-001 [CONTRADICTS]** — Misleading NL in code degrades reasoning ~23% (CodeCrash)",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:66  _benchmark · high · contradicts:H5_ — CodeCrash (NeurIPS 2025) perturbed 1,279 CRUXEval/LiveCodeBench items with stru...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:62  - **DR2-001 [CONTRADICTS]** — Misleading NL in code degrades reasoning ~23% (CodeCrash)",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-002": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:67  - ##FINDING-DR2-002 **DR2-002** — Incorrect docs hurt; missing docs don't (Macke & Doyle)",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:68  _benchmark · high · refines:H4_ — MITRE study: providing an LLM 'incorrect' documentation greatly hinders code unders...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:64  - **DR2-002** — Incorrect docs hurt; missing docs don't (Macke & Doyle)",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-006": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:69  - ##FINDING-DR2-006 **DR2-006 *** — Docstring presence has negligible effect on functional correctness",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:70  _benchmark · med · new_ — Controlled real-world class-level study across 7 models: docstrings do NOT significantly im...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:66  - **DR2-006 *** — Docstring presence has negligible effect on functional correctness",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-004": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:71  - ##FINDING-R2C-004 **R2C-004** — CodeCrash perturbation taxonomy: a direct catalog of banned anti-patterns",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:72  _benchmark · high · refines:R3-015_ — Mechanism map (Lam et al., NeurIPS 2025, 17 LLMs, CRUX+LiveCodeBench, AST-norma...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:92  - `antipattern-lying-prose` (R2C-004/H4) — unverified godoc claims near code.",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-005": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:73  - ##FINDING-R3-005 **R3-005** — Convention half-life is set by enforcement, not documentation quality",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:74  _theory · high · refines:A5_ — No persistent memory: the Nth session never read the guide. Conventions are checker-en...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:70  - **R3-005** — Convention half-life is set by enforcement, not documentation quality",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-015": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:75  - ##FINDING-R3-015 **R3-015** — Wrong prose is worse than no prose: machine-check or trust-label all code-adjacent text",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:76  _theory · high · refines:H4_ — Models condition on in-repo text with high trust; a lying comment is adversarial input...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:72  - **R3-015** — Wrong prose is worse than no prose: machine-check or trust-label all code-adjacent text",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-007": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:79  - ##FINDING-DR2-007 **DR2-007** — SWE-agent ACI design moves resolve rate 10.7pp over raw shell",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:80  _benchmark · high · known:Star-Griesemer-boundary-objects_ — SWE-agent (Yang et al., NeurIPS 2024): a purpose-built a...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:76  - **DR2-007** — SWE-agent ACI design moves resolve rate 10.7pp over raw shell",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-008": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:81  - ##FINDING-DR2-008 **DR2-008** — Aider PageRank repo map: structure-aware context beats flat inclusion",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:82  _case-study · med · refines:Hutchins-distributed-cognition_ — Aider builds a tree-sitter symbol graph of the whole re...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:78  - **DR2-008** — Aider PageRank repo map: structure-aware context beats flat inclusion",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-009": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:83  - ##FINDING-DR2-009 **DR2-009** — Code graphs improve issue localization and downstream resolve rate",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:84  _benchmark · med · new_ — Multiple papers: CGM (graph-integrated LLM + agentless graph-RAG) hits 43.00% on SWE-bench ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:80  - **DR2-009** — Code graphs improve issue localization and downstream resolve rate",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-010": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:85  - ##FINDING-DR2-010 **DR2-010** — Long context degrades retrieval and reasoning for code",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:86  _benchmark · high · known:Liu-Lost-in-the-Middle_ — Repo-QA and long-context studies: performance degrades as context...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:82  - **DR2-010** — Long context degrades retrieval and reasoning for code",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-015": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:87  - ##FINDING-DR2-015 **DR2-015 * [CONTRADICTS]** — Agentless beats complex agents at fraction of cost",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:88  _benchmark · high · contradicts:H1_ — Agentless (Xia et al., FSE 2025), a simple three-phase pipeline (localize, repa...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:84  - **DR2-015 * [CONTRADICTS]** — Agentless beats complex agents at fraction of cost",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-022": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:89  - ##FINDING-DR2-022 **DR2-022** — Repo-level context extraction beats long-context dumping for repair",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:90  _benchmark · med · refines:Liu-Lost-in-the-Middle_ — RepoBugs/RLCE: structure-aware repository context extraction (re...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:86  - **DR2-022** — Repo-level context extraction beats long-context dumping for repair",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-023": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:91  - ##FINDING-DR2-023 **DR2-023** — Context engineering: minimal high-signal tokens, compaction, JIT retrieval",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:92  _manifesto · med · known:Liu-Lost-in-the-Middle_ — Anthropic engineering guidance: LLMs have an 'attention budget'; '...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:88  - **DR2-023** — Context engineering: minimal high-signal tokens, compaction, JIT retrieval",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-001": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:93  - ##FINDING-R3-001 **R3-001** — Closure under paging: editable units declare their full semantic dependency set",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:94  _theory · high · refines:R-002/A1_ — Finite context means agents see pages, not repos. Units must be mechanically ass...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:82  - `rule-cell-closure` (R3-001) — cells declare their full semantic dependency set;",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-003": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:95  - ##FINDING-R3-003 **R3-003** — Position is a resource: critical invariants at file edges, file length bounded",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:96  _theory · med · new_ — Positional attention effects degrade mid-file content. Safety-critical facts go top/bottom; pr...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/rules/budget.rs:121  /// (R3-003 \"position is a resource\"). The audit's god-file",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-012": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:97  - ##FINDING-R3-012 **R3-012** — Written for retrieval: stable anchors + uniform one-line what/why per item",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:98  _theory · high · refines:A1/R-030_ — Context assembly is retrieval. Authored uniform one-liners in a fixed grammar pl...",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:107  ##METADATA-IS-THE-AUTHORED-RETRIEVAL-INDEX The metadata is the authored retrieval index (R3-012): stable anchors + a ...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-002": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:101  - ##FINDING-DR1-002 **DR1-002** — MoonBit semantic sampler: local+global constrained decoding",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:102  _case-study · med · refines:H2_ — MoonBit pairs the language with two custom samplers: local sampling enforces syntax...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:98  - **DR1-002** — MoonBit semantic sampler: local+global constrained decoding",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-006": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:103  - ##FINDING-DR1-006 **DR1-006** — SPARK/Ada: graded assurance levels + SPARK_Mode escape hatch",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:104  _production · high · refines:H2_ — SPARK is the largest Ada subset to which automatic formal verification is practica...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:100  - **DR1-006** — SPARK/Ada: graded assurance levels + SPARK_Mode escape hatch",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-012": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106  _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding (prefix automata + inhab...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R3-008 (misuse-resistance, theory), DR2-012/R2C-005 (9...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-005": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:108  _benchmark · high · refines:H2_ — Decisive scope boundary (Mündler et al. PLDI 2025, eth-sri repo). Method formalized...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R3-008 (misuse-resistance, theory), DR2-012/R2C-005 (9...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-007": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:109  - ##FINDING-R3-007 **R3-007** — Verification locality beats model capability: per-cell sub-minute checks (the swarm bet)",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:110  _theory · med · new_ — Tool loops substitute for understanding; value set by time-and-scope-to-first-signal. Per-cell...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a cell cannot be checked without building/testi...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-008": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:111  - ##FINDING-R3-008 **R3-008** — Misuse-resistant API shape converts probable hallucinations into compile errors",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:112  _theory · high · refines:H2_ — Make the statistically likely wrong call unrepresentable: newtypes, typestate, exhaust...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R3-008 (misuse-resistance, theory), DR2-012/R2C-005 (9...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-009": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:113  - ##FINDING-R3-009 **R3-009** — Invariants restated at use sites: redundancy is ground truth for paged readers",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:114  _theory · med · new_ — Small models cannot do whole-program inference. Restate the load-bearing invariant where used ...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a function has a non-obvious precondition; a cr...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-011": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:115  - ##FINDING-R3-011 **R3-011** — Tool output is agent food: structured, requirement-citing diagnostics",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:116  _theory · high · refines:R-010_ — Error text is the highest-leverage prompt in the loop. Diagnostics should be stable...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/rules/mod.rs:29  /// percept, and free text is wasted conditioning (R3-011).",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-003": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:119  - ##FINDING-DR1-003 **DR1-003** — Unison: content-addressed definitions, names as metadata",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:120  _production · high · refines:A2_ — Each Unison definition is identified by a hash of its (alpha-normalized) syntax tr...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:116  - **DR1-003** — Unison: content-addressed definitions, names as metadata",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-018": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:121  - ##FINDING-DR1-018 **DR1-018** — Intentional programming: intent as the invariant, implementation evolves",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:122  _manifesto · med · known:A1_ — Simonyi's intentional programming (1995-2017, Intentional Software, acquired by Micros...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:118  - **DR1-018** — Intentional programming: intent as the invariant, implementation evolves",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-019": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:123  - ##FINDING-DR1-019 **DR1-019** — Design by Contract: machine-checkable intent that survives refactoring",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:124  _production · high · refines:F_ — DbC (Meyer/Eiffel; realized in Ada/SPARK, GContracts) externalizes pre/postconditio...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: DR1-019 (contracts give success criterion without body...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-024": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:125  - ##FINDING-DR1-024 **DR1-024** — 'Intent' DSL: AI-writes / human-reads, contracts + Z3 verification",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:126  _manifesto · low · new_ — A practitioner project ('Intent') designs a language for AI assistants to write that compil...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:122  - **DR1-024** — 'Intent' DSL: AI-writes / human-reads, contracts + Z3 verification",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-010": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:129  - ##FINDING-DR1-010 **DR1-010** — 'When Names Disappear': models narrate, not reason, after obfuscation",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:130  _benchmark · high · refines:H6_ — Name-only obfuscation collapses intent-level summaries into 'surface-level, line-by...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:126  - **DR1-010** — 'When Names Disappear': models narrate, not reason, after obfuscation",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-022": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:131  - ##FINDING-DR1-022 **DR1-022** — Same syntactic paradigm in prompt and test boosts extraction up to 125%",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:132  _benchmark · med · refines:H6_ — LLM-aided code profiling finds that keeping prompt and test examples in the same syn...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:128  - **DR1-022** — Same syntactic paradigm in prompt and test boosts extraction up to 125%",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-011": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:133  - ##FINDING-DR2-011 **DR2-011** — Longer/more-complex functions are harder to repair",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:134  _benchmark · high · new_ — Empirical APR study across 6 datasets/4 LLMs: successfully repaired bugs are significantly...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:130  - **DR2-011** — Longer/more-complex functions are harder to repair",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-013": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:135  - ##FINDING-DR2-013 **DR2-013** — SWE-bench scores partly reflect memorization, not reasoning",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:136  _benchmark · high · new_ — 'SWE-Bench Illusion' (Zhang et al.): SOTA models identify buggy file paths from issue text...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:132  - **DR2-013** — SWE-bench scores partly reflect memorization, not reasoning",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-018": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:137  - ##FINDING-DR2-018 **DR2-018** — Failure taxonomies: requirement misinterpretation & incomplete fixes dominate",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:138  _benchmark · high · new_ — SWE-Compass (600 failed trajectories x3 models) six-category taxonomy: Requirement Misinte...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:134  - **DR2-018** — Failure taxonomies: requirement misinterpretation & incomplete fixes dominate",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-019": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:139  - ##FINDING-DR2-019 **DR2-019** — Code reasoning (execution prediction) is weak even on tiny functions",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:140  _benchmark · high · new_ — CRUXEval (800 functions, 5-20 LOC): GPT-4 only 67% (input-pred) / 63% (output-pred); best ...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a subsystem has non-obvious dynamics (a reconci...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-020": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:141  - ##FINDING-DR2-020 **DR2-020** — Bug localization is the bottleneck; symbol-level accuracy matters",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:142  _benchmark · med · new_ — 'How Far Are We' bug-fixing agent study: fault localization at code-symbol level is more cr...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:138  - **DR2-020** — Bug localization is the bottleneck; symbol-level accuracy matters",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-006": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:143  - ##FINDING-R2C-006 **R2C-006** — Rust benchmark contradiction resolved: difficulty mix, not Rust-unfriendliness",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:144  _benchmark · high · refines:H2_ — The 58% (SWE-bench Multilingual) vs 10-17% (Multi-SWE-bench) Rust gap is fully expl...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/appendix/CONTRADICTION-MAP.md:29  - **Resolution:** **difficulty mix, not Rust-unfriendliness.** Multi-SWE-bench is harder by construction (77% medium+...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-001": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:147  - ##FINDING-BLD-001 **BLD-001** — Fast deterministic feedback loop is why coding agents work at all",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:148  _theory · high · _ — Code uniquely offers cheap, fast, machine-readable correctness signals (compile/type/lint/test) ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:144  - **BLD-001** — Fast deterministic feedback loop is why coding agents work at all",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-003": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:149  - ##FINDING-BLD-003 **BLD-003 *** — Rust topped SWE-bench Multilingual despite larger patches",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:150  _benchmark · med · _ — On SWE-bench Multilingual (300 tasks, 9 languages, Claude 3.7 + SWE-agent), Rust had the HIGHE...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:146  - **BLD-003 *** — Rust topped SWE-bench Multilingual despite larger patches",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-004": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:151  - ##FINDING-BLD-004 **BLD-004** — Multi-SWE-bench: Python dominant, Rust far lower — benchmarks disagree",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:152  _benchmark · med · _ — ByteDance's Multi-SWE-bench (1,632 validated instances, 7 languages, multiple models) finds mo...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:148  - **BLD-004** — Multi-SWE-bench: Python dominant, Rust far lower — benchmarks disagree",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-007": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:153  - ##FINDING-BLD-007 **BLD-007 *** — AGENTS.md/CLAUDE.md: human-written +4%, auto-generated -0.5/-2%, +20% cost",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:154  _benchmark · high · _ — Gloaguen, Mündler, Müller, Raychev & Vechev (arXiv:2602.11988, Feb 13 2026) built AGENTbench ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:150  - **BLD-007 *** — AGENTS.md/CLAUDE.md: human-written +4%, auto-generated -0.5/-2%, +20% cost",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-008": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:155  - ##FINDING-BLD-008 **BLD-008** — Don't send an LLM to do a linter's job — enforce style deterministically",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:156  _anecdote · med · _ — Putting style rules in CLAUDE.md wastes context and degrades instruction-following; Claude Code...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:152  - **BLD-008** — Don't send an LLM to do a linter's job — enforce style deterministically",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-009": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:157  - ##FINDING-BLD-009 **BLD-009** — Custom lint beats written code conventions for agents (deterministic > prose)",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:158  _anecdote · med · _ — Japanese practitioner writing (Loglass/Zenn) argues code conventions are non-deterministic for ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:154  - **BLD-009** — Custom lint beats written code conventions for agents (deterministic > prose)",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-010": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:159  - ##FINDING-BLD-010 **BLD-010** — Strict lint helps agents (backpressure) but can also cause thrash loops",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:160  _anecdote · med · _ — Practitioners report two effects: (1) 'anything too annoying for humans is now free for agents'...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R3-007 (verification locality, theory), R2C interprete...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-011": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:161  - ##FINDING-BLD-011 **BLD-011** — Kani can prove small AI-generated Rust edits correct automatically",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:162  _case-study · med · _ — Kani (AWS, model-checking for Rust) verifies memory safety, overflow, and panic-freedom for a...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:158  - **BLD-011** — Kani can prove small AI-generated Rust edits correct automatically",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-012": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:163  - ##FINDING-BLD-012 **BLD-012** — Comments help LLM comprehension — but wrong comments measurably hurt",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:164  _benchmark · med · _ — Evidence is split. One 2025 study found extensive comments raised LLM comprehension of legacy ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:160  - **BLD-012** — Comments help LLM comprehension — but wrong comments measurably hurt",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-014": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:165  - ##FINDING-BLD-014 **BLD-014** — AI-generated/modified code carries a substantial vulnerability base rate",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:166  _benchmark · high · _ — Pearce et al. ('Asleep at the Keyboard?', IEEE S&P 2022) produced 1,689 Copilot programs acro...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:162  - **BLD-014** — AI-generated/modified code carries a substantial vulnerability base rate",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-018": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:167  - ##FINDING-BLD-018 **BLD-018** — Cody context engine: RAG + code-graph + BM25 reranking over enterprise repos",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:168  _production · med · _ — Sourcegraph Cody retrieves context via embeddings + adapted BM25 + precise code-intelligence ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:164  - **BLD-018** — Cody context engine: RAG + code-graph + BM25 reranking over enterprise repos",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-019": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:169  - ##FINDING-BLD-019 **BLD-019** — Monorepo enables atomic cross-cutting agent edits; polyrepo fragments context",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:170  _case-study · med · _ — With a monorepo an agent can change schema, backend, and frontend in one atomic commit and le...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:166  - **BLD-019** — Monorepo enables atomic cross-cutting agent edits; polyrepo fragments context",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-020": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:171  - ##FINDING-BLD-020 **BLD-020** — Cross-file dependency is the hard part: CrossCodeEval/RepoBench",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:172  _benchmark · med · _ — CrossCodeEval (Python/Java/TS/C#, permissively licensed repos) shows models are far worse with...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:168  - **BLD-020** — Cross-file dependency is the hard part: CrossCodeEval/RepoBench",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-021": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:173  - ##FINDING-BLD-021 **BLD-021** — llms.txt is a convention with grassroots adoption but no proven efficacy",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:174  _manifesto · med · _ — Jeremy Howard's llms.txt (Sept 2024) proposes a root markdown file linking LLM-friendly conten...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:170  - **BLD-021** — llms.txt is a convention with grassroots adoption but no proven efficacy",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-022": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:175  - ##FINDING-BLD-022 **BLD-022** — Compiler/LSP feedback can be turned into RL/process reward for agents",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:176  _benchmark · med · _ — Beyond pass/fail, fine-grained signals (diagnostics, rename-safety checks, apply-conflicts, ty...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:172  - **BLD-022** — Compiler/LSP feedback can be turned into RL/process reward for agents",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-BLD-023": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:177  - ##FINDING-BLD-023 **BLD-023 *** — Training on Rust data gave the biggest cross-lingual reasoning gain",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:178  _benchmark · low · _ — SWE-Mirror found a 7B model trained on non-Python data still resolved Python tasks; the Rust-t...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:174  - **BLD-023 *** — Training on Rust data gave the biggest cross-lingual reasoning gain",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-011": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:179  - ##FINDING-DR1-011 **DR1-011 * [CONTRADICTS]** — Inverse scaling: larger models fail Python identifier swaps harder",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:180  _benchmark · med · contradicts:H3_ — Miceli Barone et al. ('The Larger they are, the Harder they Fail', Findings of A...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:176  - **DR1-011 * [CONTRADICTS]** — Inverse scaling: larger models fail Python identifier swaps harder",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-015": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:182  _benchmark · med · refines:H3_ — Across structured-output benchmarks, guided decoding acts as a safety net for small ...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:19  ##MOTIVATION Motivation: A weak agent asked to \"add a planner variant\" must create the cell package, the conformance ...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-021": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:183  - ##FINDING-DR1-021 **DR1-021** — SLM-default / LLM-fallback agentic architecture",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:184  _manifesto · med · refines:H3_ — Survey argues small models (1-12B, up to ~20B) are sufficient and often superior for...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:180  - **DR1-021** — SLM-default / LLM-fallback agentic architecture",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR1-023": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:185  - ##FINDING-DR1-023 **DR1-023** — Identifier renaming differentially benefits LARGER models in translation",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:186  _benchmark · med · refines:H3_ — A long-code-translation study finds identifier replacement helps larger models (GPT)...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:182  - **DR1-023** — Identifier renaming differentially benefits LARGER models in translation",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-016": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:187  - ##FINDING-DR2-016 **DR2-016** — Small models gain 30-140% on code tasks with agentic scaffolding",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:188  _benchmark · med · refines:H3_ — 'David vs Goliath' (CVDP Verilog): agentic decomposition + I/O validation + iterativ...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:184  - **DR2-016** — Small models gain 30-140% on code tasks with agentic scaffolding",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-DR2-017": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:189  - ##FINDING-DR2-017 **DR2-017** — SWE-Gym: training + verifier lifts 32B agent 19.7%→26.3%",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:190  _benchmark · high · refines:H3_ — SWE-Gym training yields up to 19% absolute resolve-rate gains; 7B improves 7.0%→10....",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:186  - **DR2-017** — SWE-Gym: training + verifier lifts 32B agent 19.7%→26.3%",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-001": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:191  - ##FINDING-R2C-001 **R2C-001** — AGENTbench full-text: harm is unbounded exploration, not bad instructions",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:192  _benchmark · high · refines:R3-014_ — Mechanism behind the AGENTS.md result (ETH, n=138, 12 niche Python repos, dev-c...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:188  - **R2C-001** — AGENTbench full-text: harm is unbounded exploration, not bad instructions",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-003": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:193  - ##FINDING-R2C-003 **R2C-003 *** — Agentic metaprogramming: strong tool-equipped agents partly recover OOD via inter...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:194  _benchmark · med · refines:R3-007_ — Follow-up to EsoLang (arXiv:2606.10933, ~2 days old) builds an agentic pipeline ...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable generators transformative, benchma...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-007": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:195  - ##FINDING-R2C-007 **R2C-007 * [CONTRADICTS]** — DATING CORRECTION: EsoLang collapse is a 3-month-old static-prompt ...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:196  _benchmark · high · contradicts:H5_ — Decisive cross-paper dating result. EsoLang-Bench (arXiv 2603, 10 Mar 2026) tes...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/appendix/CONTRADICTION-MAP.md:32  - **Side A (owner, dated, correct):** 2026 models recover OOD via tools; pessimistic readings are stale (3-month-old ...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-008": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy do...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  _benchmark · high · refines:R3-010_ — The follow-up's causal core, directly relevant to the spec-vs-code debate. THRE...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:49  canonical use as compiled code (card scaffold-g-doctests; R2C-008)\"",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R2C-009": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:199  - ##FINDING-R2C-009 **R2C-009** — AGENTbench reframed (owner correction): the lesson is 'no irrelevant requirements',...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:200  _benchmark · high · refines:R2C-001_ — Re-reading AGENTbench under a less pessimistic lens. The authors' OWN conclusi...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/appendix/CONTRADICTION-MAP.md:14  - **Resolution:** the authors' own conclusion is \"minimal requirements only\" — not \"no specs.\" Bloat that triggers un...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-010": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:201  - ##FINDING-R3-010 **R3-010** — Explanation capital: authoring-time rationale outperforms maintenance-time model stre...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:202  _theory · med · refines:A2/A1_ — Strong author runs once, weak readers run thousands of times. Materialize every nont...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/ATLAS.md:198  - **R3-010** — Explanation capital: authoring-time rationale outperforms maintenance-time model strength per dollar",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-013": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:203  - ##FINDING-R3-013 **R3-013** — Swarm contention: ownership aligns with file boundaries; deterministic toolchain kill...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:204  _theory · med · refines:R-002/R-030_ — Parallel agents meet only at merge. One cell one file-set one registration poi...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/03-RAID-PLAYBOOK.md:19  4. **Batch units & checkpoints.** Per-cell or per-crate batches; each batch has a green-gate checkpoint. The raid is ...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "FINDING-R3-014": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:205  - ##FINDING-R3-014 **R3-014** — Active-rule-set minimality: rule-paging beats rule-dumping at equal rule mass",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:206  _theory · med · refines:lazy-push_ — Weak models degrade with simultaneously active instructions. Rulebook may be lar...",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:518  R3-014; minimal sufficiency, AGENTbench). @impl/done",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T09:38:29Z",
+        "verify_batch": "C2"
+      }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
       "content_hash": "92ad3c1816d15dc4d0e8c4f09a78f2d78327f53755bb3f8c9dc3b83346fa84ea",
@@ -230,7 +1307,245 @@
       },
       "marker_count": 27,
       "unit_count": 8,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "92ad3c1816d15dc4d0e8c4f09a78f2d78327f53755bb3f8c9dc3b83346fa84ea",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:5  ##status-line **Discipline v0.2 · BETA · appendix** @impl/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, executable...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/CONTRADICTION-MAP.md:2  **Discipline v0.2 · BETA · appendix**",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "contradiction-is-the-highest-value-output": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:7  ##contradiction-is-the-highest-value-output *Per Charter principle B3 (contradiction is data), the highest-value rese...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:39  - ##PRINCIPLE-B3-CONTRADICTION-IS-DATA **B3 — Contradiction is data.** Conflicting spec units are recorded (`conflict...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/CONTRADICTION-MAP.md:4  *Per Charter principle B3 (contradiction is data), the highest-value research output is where sources disagree — with...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "EMPTY-MAP-MEANS-SHALLOW-RESEARCH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:9  ##EMPTY-MAP-MEANS-SHALLOW-RESEARCH *An empty contradiction map means shallow research.* @impl/done",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/CONTRADICTION-MAP.md:4  *Per Charter principle B3 (contradiction is data), the highest-value research output is where sources disagree — with...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "ENTRY-CARRIES-FOUR-PARTS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:11  ##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:13  ## C-1 — \"AI-native = stricter/more meta\" (H1) vs \"engineered dialects underperform\" (H5) {#c-1-stricter-vs-in-distri...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:43  ## C-7 — Unresolved / open (honest) {#c-7-unresolved-open}",
+              "the format law is broken by an entry of this very map: **C-7 carries no side/resolution triple**. A four-part entry format stated in a document that holds a three-part entry is the same shape as F-121 — a rule falsified by the artifact that carries it"
+            ]
+          },
+          "c-1-side-a": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:14  - ##c-1-side-a **Side A (H1):** stricter, more machine-checkable form helps comprehension/modification. Evidence: typ...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106  _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding (prefix automata + inhab...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:102  _case-study · med · refines:H2_ — MoonBit pairs the language with two custom samplers: local sampling enforces syntax...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-1-side-b": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:15  - ##c-1-side-b **Side B (H5):** models work best on in-distribution idiomatic code; engineered surface goes OOD and u...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:27  - ##FINDING-DR1-016 **DR1-016** — EsoLang-Bench: frontier models collapse on out-of-distribution languages",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:28  _benchmark · high · refines:H1_ — The same 80 problems solved at 100% in Python/JS by top frontier models (GPT-5.4, G...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-1-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:16  - ##C-1-RESOLUTION **Resolution:** **split by location.** Surface stays idiomatic (H5 wins for syntax); strictness mo...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:58  ## 3. The central law: idiomatic inside the file, engineered around the file {#the-central-law}",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:26  > ##LAW-IDIOMATIC-INSIDE-ENGINEERED-AROUND **Idiomatic inside the file; engineered around the file.** @impl/done",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-2-side-a": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:19  - ##c-2-side-a **Side A:** spec-driven development, requirement traceability aid comprehension (our production practi...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:1  # PROP-014 — specmap: bidirectional spec↔code traceability and the source metamodel {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-2-side-b": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:20  - ##c-2-side-b **Side B:** AGENTbench (benchmark): human context files +4%, generated ones negative, all +20% inferen...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:153  - ##FINDING-BLD-007 **BLD-007 *** — AGENTS.md/CLAUDE.md: human-written +4%, auto-generated -0.5/-2%, +20% cost",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:154  _benchmark · high · _ — Gloaguen, Mündler, Müller, Raychev & Vechev (arXiv:2602.11988, Feb 13 2026) built AGENTbench ...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-2-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:21  - ##C-2-RESOLUTION **Resolution:** the authors' own conclusion is \"minimal requirements only\" — not \"no specs.\" Bloat...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:125  ##HARNESS-DELIVERS-LAZY-PUSH The harness delivers only the cards whose triggers fire, as a small activation-matched s...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:21  ##BAND-3-SHIPPED-TO-WEAK-READER Band 3 is a machine-extractable block; the harness ships **only Band 3** to a weak re...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-3-side-a": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:24  - ##c-3-side-a **Side A (our prior instinct):** a good prose explanation from a strong model lifts a weak one. @spec/...",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/appendix/CONTRADICTION-MAP.md:17  - **Side A (our prior instinct):** a good prose explanation from a strong model lifts a weak one.",
+              "the side records a prior instinct that no document in the perimeter states. A contradiction map's side is a report of what someone believed; with no document holding it, there is nothing to confirm or falsify — only the map's own assertion that it was believed"
+            ]
+          },
+          "c-3-side-b": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:25  - ##c-3-side-b **Side B:** EsoLang follow-up (benchmark): +Text ~0 effect (Sonnet 12→12); +Lib transformative (12→64)...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy do...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  _benchmark · high · refines:R3-010_ — The follow-up's causal core, directly relevant to the spec-vs-code debate. THRE...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-3-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:26  - ##C-3-RESOLUTION **Resolution:** **executable beats prose for capability transfer.** → **Runnable capital** (Manife...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:97  ## 5. Runnable capital: explanation must be executable {#runnable-capital}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:37  ## 1. The nine classes {#nine-classes}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-4-side-a": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:29  - ##c-4-side-a **Side A:** type-constrained decoding is highly effective (benchmark, TypeScript). @spec/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106  _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding (prefix automata + inhab...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-4-side-b": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:30  - ##c-4-side-b **Side B:** the method is per-language manual work; only TypeScript exists; Rust's traits/lifetimes ar...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:108  _benchmark · high · refines:H2_ — Decisive scope boundary (Mündler et al. PLDI 2025, eth-sri repo). Method formalized...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-4-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:31  - ##C-4-RESOLUTION **Resolution:** route the oracle to where it exists — **post-generation `cargo check` loop** (Clas...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:45  | ##ROW-CLASS-E **E** @impl/done | Per-cell fast verification loop @impl/done | the substrate that makes all signals ...",
+              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42  - ##TCG-CRATE-DELETED `vibe-tcg` and the vibe-mcp `tcg_*` adapters are",
+              "the resolution says `vibe-tcg` was deleted, and it was: `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42` records the deletion, `crates/` carries no tcg member, and `36461ba8 refactor(mcp)!: retire the tcg adapters and delete vibe-tcg` is the commit. The same fact confirmed independently in C1a"
+            ]
+          },
+          "c-5-side-a": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:34  - ##c-5-side-a **Side A:** Rust resolves well (highest of 9 languages at 58%). @spec/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:149  - ##FINDING-BLD-003 **BLD-003 *** — Rust topped SWE-bench Multilingual despite larger patches",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:150  _benchmark · med · _ — On SWE-bench Multilingual (300 tasks, 9 languages, Claude 3.7 + SWE-agent), Rust had the HIGHE...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-5-side-b": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:35  - ##c-5-side-b **Side B:** Rust resolves poorly (10–17%). @spec/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:151  - ##FINDING-BLD-004 **BLD-004** — Multi-SWE-bench: Python dominant, Rust far lower — benchmarks disagree",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:152  _benchmark · med · _ — ByteDance's Multi-SWE-bench (1,632 validated instances, 7 languages, multiple models) finds mo...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-5-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:36  - ##C-5-RESOLUTION **Resolution:** **difficulty mix, not Rust-unfriendliness.** Multi-SWE-bench is harder by construc...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:143  - ##FINDING-R2C-006 **R2C-006** — Rust benchmark contradiction resolved: difficulty mix, not Rust-unfriendliness",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:1  # CARD: scaffold-i-codemods — Scaffolded Edit Operations / Codemods {#root}",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-6-side-a": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:39  - ##c-6-side-a **Side A (owner, dated, correct):** 2026 models recover OOD via tools; pessimistic readings are stale ...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:195  - ##FINDING-R2C-007 **R2C-007 * [CONTRADICTS]** — DATING CORRECTION: EsoLang collapse is a 3-month-old static-prompt ...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:196  _benchmark · high · contradicts:H5_ — Decisive cross-paper dating result. EsoLang-Bench (arXiv 2603, 10 Mar 2026) tes...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "c-6-side-b": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplif...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  _benchmark · high · refines:R3-010_ — The follow-up's causal core, directly relevant to the spec-vs-code debate. THRE...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:144  - ##BOUNDARY-THERE-IS-A-FLOOR **There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-cla...",
+              "the side cites a `4–7/80` figure that appears in **no record of the ATLAS this map indexes**. A contradiction map's job is to name where each position is stated; a number with no record behind it names nothing"
+            ]
+          },
+          "C-6-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:41  - ##C-6-RESOLUTION **Resolution:** **both true, scoped by reader capability.** Optimism holds for Sonnet/GPT-mini cla...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:68  ## 4. The build/use boundary (a pilot hypothesis worth stating) {#build-use-boundary}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:75  ##prime-pilot-question Prime pilot question (R4). @spec/done",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-7-OPEN-TRANSFER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:44  - ##C-7-OPEN-TRANSFER **Transfer generation→modification:** every scaffold's value is shown for *generation*; transfe...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:143  - ##BOUNDARY-TRANSFER-UNPROVEN **Transfer is unproven.** The executable-scaffold result is generation, not modificati...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:58  ##open-question-transfer The central open question — does the",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-7-OPEN-BUILD-USE-BOUNDARY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:45  - ##C-7-OPEN-BUILD-USE-BOUNDARY **Build/use boundary:** whether weak agents can *parameterize* scaffolds (Classes A/I...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:68  ## 4. The build/use boundary (a pilot hypothesis worth stating) {#build-use-boundary}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:41  | ##ROW-CLASS-A **A** @impl/done | Generators / codegen @impl/done | structural decisions, as named inputs to an emit...",
+              "an existence-and-reachability claim, resolved: the named record, document, anchor or crate is where this fact says it is, on the refs above, each machine-verified against the file it cites"
+            ]
+          },
+          "C-7-OPEN-H6-UNIFORMITY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:46  - ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** no controlled measurement of internal-uniformity effect exists in the l...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:132  _benchmark · med · refines:H6_ — LLM-aided code profiling finds that keeping prompt and test examples in the same syn...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be m...",
+              "the entry records H6-uniformity as OPEN, and **DR1-022 in the same package's ATLAS reports a measured uniformity effect**. The question the map calls open is answered by a record the map's own index carries"
+            ]
+          },
+          "open-items-are-why-the-package-is-beta": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:48  ##open-items-are-why-the-package-is-beta These open items are why the package is BETA and why every card carries a fa...",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:146  - ##BOUNDARY-MEASUREMENT-DEFERRED **Measurement is deferred by design.** We build the core on internal logic plus oth...",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md:47  raid_role: layer=cells; order=after:contracts; batch=cell",
+              "the fact turns on a `prediction` field that does not exist: `01-PATTERN-CARD-FORMAT.md:42-47` lists the Band-3 fields and carries no such field, and no shipped card's `card-ops` block has one"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T09:38:29Z",
+        "verify_batch": "C2"
+      }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
       "content_hash": "b61f3d864c52b7311a9b487101073021da9ff4f52643d7edac064caccc42ef8b",
