@@ -1943,6 +1943,39 @@ command that would have tested it.
   thirty of its facts are marked implemented. **A design document is not drift; a
   design document whose facts claim implementation is.**
 
+- **2026-07-28 · C1b — LEDGER-INTENT, and F-121 turns out to be a family.**
+  40 verdicts: **26 confirmed / 12 drift / 2 unverifiable**. The ledger that
+  exists is the honest core of the design — a content-addressed store, epochs
+  derived from the meaning-context rather than the file hash, hard no-serve on a
+  stale epoch, a provenance line in every render, immutable content-keyed entries
+  that make last-write-wins benign. Its exclusion from git is real and enforced in
+  the only place it can be: the host's `.gitignore` carries `/.ledger/` under this
+  mechanism's own name.
+
+  What is missing is everything above the floor. There is **no LLM producer at
+  all**, so the interpretations key is producer + epoch + subject where the
+  document lists six components including `prompt_rev` and a model id; there is no
+  entry struct, only a text blob, against eight promised provenance fields; no GC,
+  no pin set, no size budget; no export, freeze, sign or ship path for a release
+  slice; and two of the four query kinds — `classify.legacy_unit` and
+  `propose.links` — do not exist. `Telemetry` counts hits, misses and rot, and
+  neither of the two cost measures the headline metric needs.
+
+  **Two facts were recorded `unverifiable` rather than either verdict**, which is
+  the distinction this phase exists to keep. «Every LLM output belongs to the
+  interpretations class, without exception» governs outputs that do not exist —
+  the rule has no instances, so it is neither working nor broken. «A new query kind
+  is added only when two consumers ask» is a governance rule that no registry, gate
+  or record encodes; with one kind in the tree it is unviolated and unexercised.
+  Calling either confirmed would report an untested policy as a working one.
+
+  **And the closing fact is ENGINE-CONFORM's closing fact again**: «anything not
+  exercised by Playbook Phase 5 is deleted, not aspirational», `@impl/done`,
+  contradicted above it by GC, release slices, signing, two query kinds,
+  `prompt_rev`, a model id and cost telemetry. **F-121 is a family, not an
+  instance** — two mechanism documents, each ending with a self-cleaning rule that
+  neither obeys and nothing checks.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

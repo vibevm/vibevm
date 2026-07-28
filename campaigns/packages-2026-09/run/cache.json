@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T06:21:47Z",
+  "updated_at": "2026-07-28T06:24:40Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -708,7 +708,365 @@
       },
       "marker_count": 47,
       "unit_count": 9,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "6c6ff1c87d589f0576e281656afe7f37564f80f95b14e5bb50aeb2112043a2dd",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:1  //! The intent ledger, local slice (LEDGER-INTENT v0.1; PLAYBOOK",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:36  pub mod ledger;",
+              "the document declares itself design/beta and that is what it is"
+            ]
+          },
+          "riskiest-mechanism-gets-its-own-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:20  specmark::scope!(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:21      \"spec://org.vibevm.ai-native/core-ai-native/mechanisms/LEDGER-INTENT-v0.1#classes\"",
+              "@spec/done — a documentation-placement decision, and this document is the thing it describes"
+            ]
+          },
+          "IMPLEMENTS-A2-UNDER-CONTEXTUAL-ROT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:12  //! `(subject subgraph, epoch, producer)` per LEDGER §2; entries under",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:32  /// The contextual-invalidation epoch (LEDGER §3): a hash over the",
+              "the epoch machinery the claim rests on is in ledger.rs, not merely described"
+            ]
+          },
+          "hash-valid-cache-becomes-confidently-wrong": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:48  /// names them either way, so adding a lockfile later changes the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:279      fn editing_cargo_lock_invalidates_the_render() {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:285          std::fs::write(tmp.path().join(\"Cargo.lock\"), \"lock v2 — dep bumped\\n\").unwrap();",
+              "@spec/done — the rationale the whole mechanism is built around; recorded, not falsified"
+            ]
+          },
+          "STALE-KNOWLEDGE-VIOLATES-A1-WORSE-THAN-RECOMPUTE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:13  //! an old epoch are simply never looked up again — hard invalidation.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:288              !after.cached,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:289              \"an epoch change must make the old render unreachable\"",
+              "the ordering it asserts is what the hard no-serve rule below implements"
+            ]
+          },
+          "ledger-designed-around-that-objection": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:11  //! id + model id). Interpretations are keyed by",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:128  /// stored entry is keyed by `(subgraph, epoch, producer)` so an",
+              "@spec/done — a design-intent statement, borne out by the epoch and no-serve code"
+            ]
+          },
+          "LEDGER-IS-A-STORE-OF-MEMOIZED-QUERIES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:141      if let Ok(text) = std::fs::read_to_string(&slot) {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:151      let text = render_prose(&subgraph, target, &epoch, PRODUCER);",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:155      std::fs::write(&slot, &text).with_context(|| format!(\"writing {}\", slot.display()))?;",
+              "the store exists and is content-addressed"
+            ]
+          },
+          "HIT-IS-FREE-MISS-RUNS-THE-PRODUCER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:142          telemetry.hits += 1;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:151      let text = render_prose(&subgraph, target, &epoch, PRODUCER);",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:9  //! deterministic template (the tool MUST be fully useful without an",
+              "the hit/miss split is the code path at ledger.rs:142, and Telemetry counts both"
+            ]
+          },
+          "EXECUTION-BORROWED-PERSISTENCE-IS-OURS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:36  anyhow = \"1\"",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:46  proc-macro2 = { version = \"1\", features = [\"span-locations\"] }",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:15  //! Storage: `.ledger/objects/<sha256[0..2]>/<sha256>` plus",
+              "the first half is a DESIGN ATTRIBUTION — where the execution model was learned from — and a grep for `salsa` cannot falsify it; the second half, that persistence and cross-process reach are ours, is the local on-disk store itself"
+            ]
+          },
+          "what-it-is-not-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:17  //! Local per checkout; never shipped, never signed, never exposed —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:18  //! `.ledger/` is git-ignored.",
+              "a lead-in; its three sub-items carry the substance and are judged separately"
+            ]
+          },
+          "NOT-GROUND-TRUTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:127  /// structured subgraph is the ground truth; the prose cites URIs; the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:5  //! - [`mdspec`] parses `spec/**/*.md` into anchored units with kind /",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:9  //!   `#[spec]` / `#[verifies]` / `specmark::scope!` tags as edges",
+              "the ledger stores rendered explanations; the spec units and code tags it renders FROM are the ground truth, and it holds no authority of its own"
+            ]
+          },
+          "NOT-COMMITTED-TO-GIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:18  //! `.ledger/` is git-ignored.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:9  //!   `target/conform/` — derived data with a deterministic producer,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:10  //!   never committed.",
+              ".gitignore (host root) carries `/.ledger/` under the comment 'The local intent ledger (LEDGER-INTENT v0.1) — derived interpretations cache, never shipped'. The exclusion is enforced by the consuming repository rather than asserted by the crate, which is the only place it CAN be enforced"
+            ]
+          },
+          "NOT-A-VECTOR-DATABASE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:34  # Third-party (all permissive licenses — PROP-000 §3). Feature sets match",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:40  sha2 = \"0.10\"",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:132      const PRODUCER: &str = \"explain.item/prose-template-1\";",
+              "absence evidence: no embedding, index or similarity surface exists anywhere in the crate"
+            ]
+          },
+          "ROW-CLASS-FACTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:7  //!   `(file content-hash, producer id+version)` (§3): facts never rot",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:85              .join(format!(\"{}-{}\", frontend.id(), frontend.version()))",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:27      Item {",
+              "the facts class is the conform store's key — (content-hash, producer id+version) — and it cannot go semantically stale"
+            ]
+          },
+          "ROW-CLASS-INTERPRETATIONS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:12  //! `(subject subgraph, epoch, producer)` per LEDGER §2; entries under",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:128  /// stored entry is keyed by `(subgraph, epoch, producer)` so an",
+              "the implemented key is producer + epoch + subject (ledger.rs:136). Of the six components the row lists — subjects, spec revs, epoch, producer, prompt rev, model — three are absent, and `prompt_rev` and a model id return zero hits across the crate"
+            ]
+          },
+          "CONFORM-FACT-STORE-IS-THE-FACTS-CLASS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:5  //!   ledger's \"facts class\" instantiated.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:3  //! conform engine's store (ENGINE-CONFORM §3), which this module",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:26  /// Content-addressed fact store under `<repo>/target/conform/facts/`.",
+              "the cross-reference holds: conform's store is exactly the facts class this document defines"
+            ]
+          },
+          "LLM-OUTPUT-IS-ALWAYS-INTERPRETATIONS": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:2  //! Phase 5). Interpretations class only — the facts class is the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:10  //! LLM; an LLM prose producer slots in later under its own producer",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:5  //!   ledger's \"facts class\" instantiated.",
+              "there is no LLM producer anywhere in the surface — grep for llm / anthropic / openai / model_id / inference over the crates returns two doc-comment mentions and no code path. The rule classifies outputs that do not yet exist, so it is neither confirmed nor falsified: it has no instances. Recorded as unverifiable rather than confirmed, because a rule that has never governed anything has not been shown to work"
+            ]
+          },
+          "EPOCH-CHANGES-WITH-THE-CONTEXT-OF-MEANING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:50  pub fn epoch(root: &Path) -> Epoch {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:67      let toolchain = std::process::Command::new(\"rustc\")",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:291          assert_ne!(first.epoch, after.epoch);",
+              "the epoch is derived from the meaning-context, not from the subject file's hash — which is the whole point of the mechanism"
+            ]
+          },
+          "OLD-EPOCH-INTERPRETATIONS-ARE-NOT-SERVED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:13  //! an old epoch are simply never looked up again — hard invalidation.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:294          assert_eq!((t.hits, t.misses), (0, 2));",
+              "the invalidation is hard: a stale-epoch entry is not served, it is recomputed"
+            ]
+          },
+          "RECOMPUTE-DECISION-HAPPENS-ABOVE-THE-FLOOR": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:79  /// contextual-rot rate, incremented when a re-verification of an",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:80  /// epoch-invalidated entry runs (none do yet — the template producer",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:151      let text = render_prose(&subgraph, target, &epoch, PRODUCER);",
+              "`prose_explain` (ledger.rs:131-163) renders from scratch on every miss and never reads a prior-epoch entry, so the 'old entry as draft input for cheap re-affirmation' path the fact describes does not exist"
+            ]
+          },
+          "ENTRY-CARRIES-ITS-PROVENANCE-FIELDS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:113  pub struct ProseRender {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:214          \"\\n— provenance: computed at {}, epoch {}, producer {producer}\\n\",",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:155      std::fs::write(&slot, &text).with_context(|| format!(\"writing {}\", slot.display()))?;",
+              "there is no entry struct: the stored object is a plain text blob (ledger.rs:155). Of the eight fields the fact lists — producer, model, prompt rev, inputs, epoch, cost, timestamp, confidence — grep finds none of confidence, created_at, timestamp, model_id or prompt_rev anywhere in the crate"
+            ]
+          },
+          "RENDERED-EXPLANATION-DISPLAYS-PROVENANCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:213      out.push_str(&format!(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:214          \"\\n— provenance: computed at {}, epoch {}, producer {producer}\\n\",",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:274          assert!(first.text.contains(\"— provenance:\"));",
+              "the provenance line is part of the render, so a reader sees where the explanation came from without asking"
+            ]
+          },
+          "staleness-becomes-reader-detectable": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:166  /// render ends with the provenance line (LEDGER §4) — the last line",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:220          epoch.short()",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:275          assert!(first.text.contains(\"epoch\"));",
+              "@spec/done — the consequence of the displayed provenance, and the display is real"
+            ]
+          },
+          "STORAGE-LAYOUT-IS-SHARDED-LIKE-GIT-OBJECTS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:120      root.join(\".ledger\")",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:122          .join(&key_hex[..2])",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:15  //! Storage: `.ledger/objects/<sha256[0..2]>/<sha256>` plus",
+              "the sharded `.ledger/objects` layout is real (ledger.rs:119-120) and the other two thirds of the fact are not: grep for `index` in ledger.rs returns zero, and no CI warm-copy path exists anywhere"
+            ]
+          },
+          "GC-IS-LRU-WITH-A-PIN-SET": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:119  fn object_path(root: &Path, key_hex: &str) -> PathBuf {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:51  /// fail the gate; stale entries are prune candidates (the file may",
+              "no garbage collection of any kind exists: grep for gc / lru / least-recently / evict / prune / size_budget / pin_set over the crates and their manifests returns one unrelated hit in conform's baseline module"
+            ]
+          },
+          "CONCURRENCY-LAST-WRITE-WINS-IS-BENIGN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:138      let slot = object_path(root, &key_hex);",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:155      std::fs::write(&slot, &text).with_context(|| format!(\"writing {}\", slot.display()))?;",
+              "entries are immutable content-keyed values, so two writers producing the same key produce the same bytes"
+            ]
+          },
+          "TELEMETRY-FEEDS-THE-HEADLINE-METRIC": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:83  pub struct Telemetry {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:86      pub rot_checks: u64,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:80  /// epoch-invalidated entry runs (none do yet — the template producer",
+              "`Telemetry` (ledger.rs:82-88) carries hits, misses, rot_checks and rot_changed. Of the four measures the fact names — hit rate, cost per kind, LLM-$ per change, rot rate — two exist and the two involving cost do not: there is no cost field and no per-kind breakdown"
+            ]
+          },
+          "QUERY-FACTS-EXTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:181      fn extract(&self, file: &str, crate_name: &str, module: &str, text: &str) -> Vec<Fact>;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:92      pub fn extract_workspace(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:91      /// `(content-hash, producer)` already has them.",
+              "the facts.extract query kind is served by the algorithmic language frontends, exactly as the fact says"
+            ]
+          },
+          "QUERY-EXPLAIN-ITEM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:131  pub fn prose_explain(root: &Path, map: &Specmap, target: &str) -> Result<ProseRender> {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:209  pub fn explain_json(map: &Specmap, target: &str) -> Result<serde_json::Value> {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:132      const PRODUCER: &str = \"explain.item/prose-template-1\";",
+              "the query kind exists and the LLM render it describes is explicitly OPTIONAL; the shipped producer is a deterministic template and ledger.rs:8-10 says so in the same words ('an LLM prose producer slots in later'). An optional component's absence does not falsify the fact that states it is optional"
+            ]
+          },
+          "QUERY-CLASSIFY-LEGACY-UNIT": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:198  pub fn classify_drift(old: &Specmap, new: &Specmap) -> Vec<String> {",
+              "the query kind does not exist: grep for classify / legacy_unit over the crates finds a conform error message and an unrelated `classify_drift` in the specmap index, and no importer path at all"
+            ]
+          },
+          "QUERY-PROPOSE-LINKS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:62      #[serde(rename = \"proposed\")]",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
+              "the query kind does not exist. The only trace is the `EdgeProvenance::Proposed` wire variant in the generated specmap module — a value the format can carry, not a producer that writes it; there is no proposals-file writer"
+            ]
+          },
+          "QUERY-KIND-ADDED-ON-TWO-CONSUMERS": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:132      const PRODUCER: &str = \"explain.item/prose-template-1\";",
+              "a governance rule about when a query kind may be added. Exactly one kind exists, so the rule is unviolated, and no registry, gate or record encodes whether it was ever applied — grep for QueryKind / query_kind / enum Query returns zero. Nothing here could show the rule working or failing"
+            ]
+          },
+          "RELEASE-SLICE-IS-EXPORTED-SIGNED-AND-SHIPPED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:17  //! Local per checkout; never shipped, never signed, never exposed —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:1  //! The intent ledger, local slice (LEDGER-INTENT v0.1; PLAYBOOK",
+              "no export, freeze, sign or ship path exists: grep for release-slice / export / sign_ / signature / ed25519 / minisign / gpg over the crates and manifests returns nothing. The ledger is local-only, which the crate's own header says"
+            ]
+          },
+          "UNSIGNED-SLICES-ARE-NEVER-EXPOSED-REMOTELY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:17  //! Local per checkout; never shipped, never signed, never exposed —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:91      root.join(\".ledger\").join(\"telemetry.json\")",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:36  anyhow = \"1\"",
+              "absence evidence, and it is the strong kind: there is no remote exposure path at all, so no unsigned slice can reach one. The prohibition holds because the capability it forbids has not been built"
+            ]
+          },
+          "SIGNING-SCHEME-IS-AN-OPEN-QUESTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:17  //! Local per checkout; never shipped, never signed, never exposed —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:1  //! The intent ledger, local slice (LEDGER-INTENT v0.1; PLAYBOOK",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:40  sha2 = \"0.10\"",
+              "the question is genuinely open and the consequence it states — the slice stays local-only — is the shipped state"
+            ]
+          },
+          "FAILURE-CONFIDENT-STALENESS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:13  //! an old epoch are simply never looked up again — hard invalidation.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:214          \"\\n— provenance: computed at {}, epoch {}, producer {producer}\\n\",",
+              "all three counters it names are real: epochs, the hard no-serve rule, and the provenance line in every render"
+            ]
+          },
+          "FAILURE-CACHE-POISONING": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:132      const PRODUCER: &str = \"explain.item/prose-template-1\";",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:7  /// a field or variant bumps the frontend version, which retires old",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:85              .join(format!(\"{}-{}\", frontend.id(), frontend.version()))",
+              "the mitigation as stated cannot work: `prompt_rev` is not in the key (zero hits crate-wide), and no predicate or command sweeps a bad producer's entries. The 'one predicate' the fact promises has no implementation"
+            ]
+          },
+          "FAILURE-KEY-UNDER-SPECIFICATION": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:132      const PRODUCER: &str = \"explain.item/prose-template-1\";",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
+              "query kinds are not a closed enum: the one kind is a `const PRODUCER: &str` string literal (ledger.rs:132), and grep for QueryKind / enum Query returns zero. A string constant is exactly the under-specification this fact claims to have closed off"
+            ]
+          },
+          "FAILURE-LEDGER-WORSHIP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:189              out.push_str(&format!(\"- `{from}` {verb} {uri}{pin} — {file}:{line}\\n\"));",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:207  /// `--json`: the raw subgraph — the items, edges, units and suspects",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:209  pub fn explain_json(map: &Specmap, target: &str) -> Result<serde_json::Value> {",
+              "the mitigation is real: renders cite spec URIs, and the raw subgraph stays available so a reader can go behind the prose"
+            ]
+          },
+          "UNEXERCISED-POLICY-IS-REMOVED-NOT-CARRIED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:1  //! The intent ledger, local slice (LEDGER-INTENT v0.1; PLAYBOOK",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
+              "the same self-falsification as ENGINE-CONFORM's closing fact (F-121), in a second document. It says anything not exercised by Playbook Phase 5 is deleted rather than carried as aspiration, marks itself @impl/done, and is contradicted above it by GC with a pin set, release-slice export, signing, classify.legacy_unit, propose.links, prompt_rev, a model id and cost telemetry — none of which exist. Nothing enforces it either"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T06:24:40Z",
+        "verify_batch": "C1"
+      }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md": {
       "content_hash": "74fdf8fef163f367e8a7b491a4285beb9aafdcc1730f76b4e837e88cba50ad13",
