@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T19:52:56Z",
+  "updated_at": "2026-07-28T19:55:21Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -33093,7 +33093,732 @@
       },
       "marker_count": 54,
       "unit_count": 11,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "db55a7f66f31a63f82d9e90e6084fe82744f9bb4d160fd2ad9685f3b1fbc19a0",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:12  ## What Sync-from-Code is {#what}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:59  ## When to run {#trigger}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:93  ## Procedure {#procedure}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:186  ## What Sync-from-Code does not do {#non-goals}",
+              "confirmed: A scope statement, checkable only against the file's own structure. Listed the headings: «What Sync-from-Code is» {#what} :12, «Why it exists» {#why} :32, «When to run» {#trigger} :59, «Procedure» {#procedure} :93, «What Sync-from-Code does not do» {#non-goals} :186, «Summary» {#summary} :197. All four promised parts have a home and nothing else is claimed. This row rests on the package only — src [1] — because a scope sentence about a document has no host referent."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "THE-ONLY-SANCTIONED-WAY-TO-CLOSE-A-BOTTOM-UP-GAP": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+              "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+              "spec/modules/vibe-progress/templates/spec-task.md:37    diff, surface for owner approval, never apply silently. @spec/done",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:232  - `reality-mismatch` resolves via the sync-from-code flow (owner approves",
+              "confirmed: The «sanctioned» half is well supported by the host, which names the flow as the closing route in four independent documents (00-core.md:45, spec-task.md:36-37, and both terraform campaigns). The word ONLY is the part I could not settle: `grep -rn -i 'reality-mismatch' spec/ campaigns/*.md` shows the flow is the route for that one obligation class, and PHASE-T-SPEC.md:373 routes a wrong FACT the same way — but I found no host statement forbidding other routes to a bottom-up spec correction, and 181 `docs(spec)` commits exist against 35 that mention the flow at all. So exclusivity is asserted b"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-normal-flow-is-top-down-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:17  head  →  WAL  →  spec  →  code",
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+              "spec/boot/STATIC.md:1230  Information flows top-down: head → WAL → spec → code. Sync-from-Code does",
+              "confirmed: The diagram the lead-in introduces is a fenced block at :16-18 reading `head  →  WAL  →  spec  →  code`, the same chain the boot snippet states inline at :10 and the host states at 00-core.md:45. Checked that the host's four layers are the same four and in the same order: 00-core.md:40-43 gives Head, WAL, Spec, Code with this repository's own paths bound to them."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-TOP-DOWN-CHAIN-FROM-INTENT-TO-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+              "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+              "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+              "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec …",
+              "confirmed: Each of the four transitions has a host counterpart: 00-core.md:40 gives Head as the human's memory that wins conflicts, :41 gives the WAL as «volatile, rewritten each session, describes *current* state» — the short-lived-state role this sentence assigns it — :42 gives spec as «stable decisions», i.e. the hardening step, and :43 gives code as artefacts. The sibling wal flow's README:7-11 independently describes the WAL as the session-bridging record. So the chain the sentence describes is the one the host actually documents."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "CODE-IS-THE-ARTEFACT-NOT-THE-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+              "spec/boot/STATIC.md:1230  Information flows top-down: head → WAL → spec → code. Sync-from-Code does",
+              "confirmed: The host says this in its own words and goes further than the flow does: 00-core.md:43 defines Code as «artefacts» and adds «Losing them is inconvenient; losing the spec is a catastrophe», which is the same ordering with a consequence attached. Searched for a host statement running the other way (`grep -rn -i 'code is the source of truth' spec/ CLAUDE.md`) and found none. Note the local tension with this same document's own :106, which calls the diff «the only source of truth for what actually changed» — a different sense of the phrase, scoped to what changed rather than to what is intended."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SYNC-FROM-CODE-IS-THE-PROTOCOL-FOR-THE-INVERSE-CASE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+              "spec/boot/STATIC.md:1532  - `sync-from-code` — the sanctioned reverse path when code changed",
+              "spec/boot/STATIC.md:1533    before the spec.",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md:8  ##SYNC-FROM-CODE-IS-THE-EXCEPTIONAL-PATH-OFF-TOP-DOWN-FLOW The normal information flow in a spec-driven project is",
+              "confirmed: The host states the inverse direction as the flow's job in two places it authored itself: 00-core.md:45 «If code changes first, reconcile up via the **sync-from-code** flow», and the redbook umbrella's package list at STATIC.md:1532-1533 «the sanctioned reverse path when code changed before the spec». Both phrase it as code-first, spec-follows, which is what the sentence claims."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "IT-IS-DELIBERATELY-THE-EXCEPTION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+              "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:232  - `reality-mismatch` resolves via the sync-from-code flow (owner approves",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:340  through sync-from-code with owner approval on every spec diff.",
+              "confirmed: Checked how narrowly the host scopes it. Every host reference is conditional or gated to one obligation class: 00-core.md:45 fires only «If code changes first»; the spec-task template ties it to `reality-mismatch` alone; both terraform campaigns route only `reality-mismatch` through it while other verdict classes (`remove`, `rework`, markup fixes) take different routes. `grep -rn -i 'sync-from-code' spec/` returns 12 hits and none presents it as a default. The «rest of the discipline pushes the other way» half is visible in the same tree: the spec-task template's other rules (genre-first, anch"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "two-everyday-situations-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:36  - ##SITUATION-DIRECT-EDITING **Direct editing.** The human opens the file and edits. Usually because",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:40  - ##SITUATION-IMPERATIVE-CHAT-COMMANDS **Imperative chat commands.** The human tells the agent \"change the",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:15  ##the-exceptional-path-for-two-legitimate-cases-lead It is the **exceptional path** for two legitimate",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md:12  ##two-legitimate-situations-lead Two legitimate situations break top-down flow: @impl/done",
+              "confirmed: Lead-in; the checkable content is the count and stability of the pair. Two bullets follow at :36 and :40, the same pair the boot snippet lists at :18/:20 and the README at :14/:16. The word choice differs across the three («legitimate» in README and snippet, «everyday» here) but the two cases are identical. STATIC.md:1231-1237 carries the snippet's version into the host."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "SITUATION-DIRECT-EDITING": {
+            "v": "confirmed",
+            "ev": [
+              "refs/book/chapter-3-memory-individual.md:368  **Сценарий А: ты правишь код руками** — потому что быстрее написать пять строк",
+              "refs/book/chapter-3-memory-individual.md:369  в редакторе, чем объяснять намерение в спеке. Это нормально и это часто правильное",
+              "spec/boot/STATIC.md:1234  - The user edited code directly because writing five lines in an editor",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:18  - ##CASE-THE-USER-EDITED-CODE-DIRECTLY The user edited code directly because writing five lines in an editor",
+              "confirmed: The longest of the three renderings of this case, and the only one that adds the «often the right call» judgement. Traced to the cited source: refs/book chapter 3 lines 368-371 carry the same framing including «Это нормально и это часто правильное решение» — normal and often the right decision — so the judgement is the book's too. Compiled into the host at STATIC.md:1234-1235 in the snippet's shorter form. No source-2: whether a human hand-edited a file is not recorded by this tree."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SITUATION-IMPERATIVE-CHAT-COMMANDS": {
+            "v": "confirmed",
+            "ev": [
+              "refs/book/chapter-3-memory-individual.md:373  **Сценарий Б: ты даёшь команду в чате** — «измени таймаут на 600s», «добавь логирование",
+              "spec/boot/STATIC.md:1236  - The user told the agent \"change the timeout to 600 s\" (or similar) in",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:25  ##RUN-WHEN-AN-IMPERATIVE-CHAT-COMMAND-CHANGED-THE-CODE You told the agent \"change the timeout to 600 s\" or \"switch the hash",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:31  ##example-imperative-chat-command *Example:* session transcript shows the user asked the agent to",
+              "confirmed: The 600 s half traces to refs/book chapter 3 line 373 and is stable across the package. The blake3/SHA-256 half is this document's own addition — it is not in the book chapter and not in the boot snippet. I checked whether it names anything real in the host: `grep -rln 'blake3' crates/ --include='*.rs'` returns nothing, and the hashing this repository actually does is SHA-256 in crates/vibe-core/src/content_hash.rs. So the example is illustrative only. `partial` because the second example points at no host object and cannot be checked, while the first can."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "left-unreconciled-either-case-produces-spec-drift": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1239  In both cases the spec is now stale. Without Sync-from-Code, the next",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:23  ##in-both-cases-the-spec-is-now-stale In both cases the spec is now stale. @spec/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md:19  ##in-both-cases-the-spec-is-now-wrong-and-gets-fixed-back In both cases the spec is now wrong; left unreconciled, the next session",
+              "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+              "confirmed: The consequence is stated in all three package documents and reaches the host at STATIC.md:1239. The host has its own name for the resulting condition and a whole campaign for measuring it: the spec-task template's obligation type is `reality-mismatch` (spec-task.md:36), and the terraform campaigns count instances — SPEC-ACTUALIZATION:1117-1119 records 212 of 311 drift rows closed in one wave, «every row was a `reality-mismatch`». So spec drift of exactly this shape is not hypothetical here; it is counted."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-next-session-corrects-the-code-back": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1240  session reads the stale spec, concludes the code is wrong, and \"fixes\"",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:25  ##without-sync-from-code-the-next-session-fixes-the-code-back Without Sync-from-Code, the next",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md:20  reads the stale spec, concludes the code is in error, and \"fixes\" the",
+              "confirmed: Stated in all three package documents and compiled into the host at STATIC.md:1240. The event it predicts is unobserved in this repository: `git log --grep='fixed the code back' -i`, `--grep='corrected the code' -i`, `--grep='reverted to match' -i` and `grep -rn 'fixed the code back' spec/ campaigns/` all return nothing. The 300/600 s figures are the fictional oproto example — `grep -rn 'oproto' spec/ crates/` returns only illustrations and one golden fixture (crates/vibe-index/fixtures/golden-flow-wal-0.1.0/spec/flows/wal/WAL-PROTOCOL.md:122)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "the-agent-is-technically-right-by-the-spec-wins-hierarchy": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-000.md:134  ##CONFLICT-ORDER vibevm's writer-conflict resolution — the **Human > Spec > Tests > Code** order (also pinned in [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) §2.2 and book chapter 1) — is the …",
+              "spec/boot/STATIC.md:1540  - `conflict-protocol` — Human > Spec > Tests > Code; REVIEW markers;",
+              "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+              "confirmed: Widened out of the package to find the hierarchy: `grep -rn 'Human > Spec' spec/ CLAUDE.md` returns PROP-000.md:134, which pins Human > Spec > Tests > Code as this repository's writer-conflict order and delegates it to the `conflict-protocol` flow; STATIC.md:1540 is the compiled restatement. Note the hierarchy's first term is Human, not Spec, and 00-core.md:40 says «Human wins conflicts with the spec» — which is precisely why the sentence says «technically right» rather than right: the agent applies the second rank while the first rank was never consulted."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-real-bug-is-upstream": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:56  ##SYNC-FROM-CODE-CLOSES-THE-DRIFT-ON-PURPOSE Sync-from-Code is how the drift is closed *on purpose* rather than",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:57  letting it accumulate until a session triggers a wrong-direction \"fix\". @impl/done",
+              "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+              "confirmed: A diagnosis, and the host holds the same one in its verdict vocabulary: the spec-task template's obligation type for this condition is `reality-mismatch` and it closes by editing the SPEC, not the code (spec-task.md:36-37). The campaign carried that through at scale — SPEC-ACTUALIZATION:1117-1119 closed 212 drift rows by correcting spec text. Two commit bodies say it outright in this repository's own voice: 4ea09ad0 «The code was right; the contract caught up. Zero code changes.» and 04d7e4ae «the normative list did not merely under-describe the code; its first entry was wrong about being firs"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SYNC-FROM-CODE-CLOSES-THE-DRIFT-ON-PURPOSE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1119    `reality-mismatch`, so the whole wave ran through **sync-from-code**:",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1120    the diffs were drafted, surfaced to the owner, and applied only on his",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1121    approval («Правь и продолжай дальше»), which also settled the licence",
+              "confirmed: The deliberate-closure half is directly observable: SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1117-1121 records a wave that closed 212 of 311 drift rows, every one a `reality-mismatch`, «so the whole wave ran through **sync-from-code**: the diffs were drafted, surfaced to the owner, and applied only on his approval». That is closure on purpose, at scale, in this repository. The avoided alternative (a wrong-direction fix) remains unobserved, as recorded on the neighbouring rows."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "RUN-THE-PROTOCOL-AT-THE-END-OF-THE-SAME-SESSION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1245  Run the protocol exactly once, as the last step of the same session that",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:31  ##RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION Run the protocol exactly once, as the last step of the same session that",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:200  - ##SUM-RUNS-ONCE-IN-THE-SESSION-THAT-CAUSED-THE-DRIFT Runs once, immediately, in the session that caused the drift. @impl/done",
+              "confirmed: Stated three times in the package and compiled at STATIC.md:1245-1246. Not observable from the tree: commits carry no session boundary, and `grep -rn -i 'same session' spec/ CLAUDE.md` returns hits about host-file WAL updates (packages/org.vibevm.fractality/CLAUDE.md:66) and campaign escalation, none about sync timing. The two commits that record an applied sync (4ea09ad0, 04d7e4ae) do say the approval happened «in session», but neither says the code change and the sync shared one."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "waiting-even-a-day-is-how-drift-accumulates": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:65  other sessions have read the stale spec and made decisions on top of",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:66  it, and now two things need reconciling instead of one. @spec/done",
+              "spec/boot/STATIC.md:1246  caused the drift. Do not postpone it to \"tomorrow\" — drift accumulates.",
+              "confirmed: The compounding this predicts is recorded in this repository, dated and measured. 812bfecc's body: «`gate` has been missing since DRIFT-008 built it, and `baseline` since this morning — so the drift is both inherited and freshly created, and the campaign that exists to catch exactly this did not catch the first one for two days». 04d7e4ae's body records the stronger form the sentence describes — a second thing built on the first: five anchors were «confirmed in Phase C on the evidence \"token loader 3-source order matches 90-user boot facts\"», i.e. a verification pass that read the stale spec a"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "do-not-run-the-protocol-for-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:70  - ##SKIP-TEMPORARY-HACKS **Temporary hacks.** Debug `println!`s, throwaway probes, reproducers",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:80  - ##SKIP-MECHANICAL-CHANGES **Mechanical changes.** `cargo fmt`, import reordering, dead-code",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:85  - ##SKIP-CODE-THE-SPEC-DOES-NOT-MENTION **Code that implements something the spec does not mention.** This is",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:48  ## Do not run it when {#skip}",
+              "the lead announces its own list and exactly three bullets follow (:70, :80, :85). Recorded: the sibling decision table's {#skip} section carries FOUR sub-sections, so the package's two renderings of the skip set differ in count — the fourth case lives only in when-to-apply.md."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "SKIP-TEMPORARY-HACKS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1262  - Never use Sync-from-Code to paper over a temporary hack. For",
+              "spec/boot/STATIC.md:1264    `<file>: temporary, do not sync to spec`.",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:77    - src/verify.rs: temporary trace logging for issue #42, do NOT sync.",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:62  - src/verify.rs: temporary trace logging for #42 reproduction,",
+              "confirmed: The rule and its mechanism are stated here and in when-to-apply.md:52-64, and the WAL heading the worked example uses (`## Constraints`) has a real counterpart: `grep -n '^## ' spec/WAL.md` shows «## Constraints — do not violate» at line 56. But the mechanism is unused: `grep -n -i 'do NOT sync' spec/WAL.md` returns nothing and the same search across spec/ and CONTINUE.md returns nothing. The WAL's 40 Constraints lines are campaign-method rules. So the sanctioned home exists and no skip has ever been recorded in it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SKIP-MECHANICAL-CHANGES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:74  ##SKIP-FORMATTING-IMPORT-ORDER-DEAD-CODE-AND-PRIVATE-RENAMES `cargo fmt`, import reorder, dead-code removal the compiler already",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:77  ##THE-SPEC-LIVES-AT-A-HIGHER-LEVEL-OF-RESOLUTION The spec lives at a higher level of resolution than these changes. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:79  ##SYNC-WOULD-PRODUCE-NOISE-NOT-A-DECISION-RECORD Sync would produce noise, not a decision record. @impl/done",
+              "confirmed: Restated at when-to-apply.md:74-79 with the same four examples. Checked host practice for a counter-example — a spec edit driven by formatting or a private rename: `git log --format=%s | grep -iE '^docs\\(spec\\).*(fmt|import|rename|dead code)'` returns nothing across 181 `docs(spec)` commits. The host does run these mechanical changes and commits them under other types: `git log --format=%s | grep -c '^refactor'` and the `chore`/`style` families carry them, and CLAUDE.md's operating ledger records `cargo fmt --all` as a routine post-delegation step (CLAUDE.md:120-122). So mechanical work here d"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "SKIP-CODE-THE-SPEC-DOES-NOT-MENTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:101  ##SKIP-WHEN-THE-CODE-IMPLEMENTS-SOMETHING-THE-SPEC-NEVER-MENTIONS The code implements something the spec does not mention at all. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:106  - ##FORWARD-FLOW-DRAFT-A-NEW-SPEC-SECTION draft a new PROP/FEAT section, @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:107  - ##FORWARD-FLOW-WRITE-THE-INTENT-FIRST write the",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:109  - ##FORWARD-FLOW-THEN-IMPLEMENT-OR-RECONCILE then implement or reconcile. @impl/done",
+              "a coherent prescription restated at when-to-apply.md:99-116 with the same three-step forward flow. One counter-instance recorded and not treated as systematic: 4ea09ad0 put four verbs the spec did not mention into PROP-042 §4 through this protocol rather than through a from-scratch draft — one instance of the bootstrap case the rule routes elsewhere."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:1  # When to run Sync-from-Code {#root}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:118  ## Quick decision flow {#flowchart}",
+              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:19    relative .md citations resolved: 23",
+              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:20    broken: 0",
+              "confirmed: The target exists and is what the pointer calls it — when-to-apply.md carries the run/skip sections plus a literal «Quick decision flow» flowchart at :118-137. The relative citation resolves; the harvest's source-1 join over these 23 files reports «relative .md citations resolved: 23, broken: 0» and this is a sibling-directory link, the simplest case in that join. Cited from the harvest per the task note rather than re-derived."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "FOUR-STEPS-ALWAYS-ENDING-IN-A-HUMAN-APPROVAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:97  ### 1. Collect the diff {#step-collect}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:109  ### 2. Reconstruct intent {#step-intent}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:126  ### 3. Draft the spec delta {#step-draft}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:156  ### 4. Surface for approval {#step-approve}",
+              "confirmed: Counted the numbered step sections in {#procedure}: {#step-collect} :97, {#step-intent} :109, {#step-draft} :126, {#step-approve} :156 — four, and the fourth is the approval. The boot snippet's numbered list at :36-42 is the same four in the same order, and STATIC.md:1248-1254 carries it into the host. The host's own restatement of the ending is at spec-task.md:36-37 («surface for owner approval, never apply silently») and at OWNER-GUIDE.md:123."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "A-WIDER-RANGE-WHEN-SEVERAL-COMMITS-HAVE-LANDED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:100  git diff HEAD",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:104  landed since the last spec-aligned state. @impl/done",
+              "confirmed: Mechanically the escape hatch is real — `git diff <base>..HEAD` is valid git and I ran the equivalent while gathering this batch. What the host does not have is the referent the sentence depends on: there is no recorded «last spec-aligned state» to use as `<base>`. `grep -rn -i 'spec-aligned' spec/ campaigns/ CLAUDE.md` returns nothing, and no tag, branch or lockfile field marks such a point. In practice the two recorded syncs used a different base entirely — the shipped code as it stands (04d7e4ae walks token.rs by function, 4ea09ad0 reads `--help` output) rather than any diff range."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "THE-DIFF-IS-THE-ONLY-SOURCE-OF-TRUTH-FOR-WHAT-CHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:100  git diff HEAD",
+              "spec/boot/STATIC.md:1248  1. Read `git diff HEAD` and reconstruct the *intent* behind each change.",
+              "refs/book/chapter-3-memory-individual.md:379  Посмотри git diff HEAD.",
+              "stated here, in the boot snippet, in the host's compiled lane at STATIC.md:1248 and in the book's prompt. Recorded rather than counted: neither of the host's two syncs was driven by a literal `git diff HEAD` — both came from campaign drift rows, which are the same spec-against-code comparison reached by another instrument, not a different source of truth."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NAME-THE-WHY-NOT-THE-WHAT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:119  ##THE-INTENT-SENTENCE-IS-WHAT-LANDS-IN-THE-SPEC The intent sentence is what lands in the spec — **not the diff itself**. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:16  2. ##PART-AN-INTENT-STATEMENT **An intent statement** — one sentence per logical change, naming",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:17     *why* the code changed. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:36  1. ##STEP-READ-THE-DIFF-AND-RECONSTRUCT-INTENT Read `git diff HEAD` and reconstruct the *intent* behind each change. @impl/done",
+              "confirmed: The rule is stated here, echoed by review-workflow.md:16-17 («An intent statement — one sentence per logical change, naming *why* the code changed»), and it is the same discipline the host's commit convention already requires of every commit body. Observable in the two recorded syncs: 04d7e4ae's body opens with why the list was wrong («its first entry was wrong about being first, in a security-relevant way») rather than with what changed, and 4ea09ad0's with why §4 was short. Both name a reason before a delta."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "example-diff": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:114  - ##example-diff *Diff:* `-const TIMEOUT: u64 = 300;` / `+const TIMEOUT: u64 = 600;`. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:138  - Unverified messages older than 300 seconds get status TIMEOUT.",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:139  + Unverified messages older than 600 seconds get status TIMEOUT.",
+              "confirmed: An illustration, and I checked whether it points at anything in this host: `grep -rn 'const TIMEOUT' crates/ --include='*.rs'` returns nothing, and `grep -rn 'oproto' spec/ crates/` returns only illustrative uses plus one golden fixture (crates/vibe-index/fixtures/golden-flow-wal-0.1.0/spec/flows/wal/WAL-PROTOCOL.md:122, itself a fixture of the sibling flow). So the example is fictional by design, consistent with the book chapter it comes from. src [1]: nothing outside the package bears on it."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "example-intent": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:115  - ##example-intent *Intent:* observed false-positive TIMEOUTs for users on high-latency",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:116    VPNs; 600 s is the empirical threshold at which the false-positive",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:141  + **Why 600 s:** 300 s produced false positives for VPN users",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:142  + (measured 2026-03-05 on 847 messages from 128 users).",
+              "confirmed: The intent half of the same fictional example. Checked it satisfies the document's own three-part rule it is meant to illustrate: it names a measurable observation (false-positive rate) rather than a preference, matching ##PART-THE-REASON at :148-149, and the fenced draft at :141-144 attaches the dated measurement and the revisit trigger. Internally consistent. Like its sibling it names no host object — `grep -rn 'VPN' crates/ spec/` returns nothing outside these flow documents."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "THE-INTENT-SENTENCE-IS-WHAT-LANDS-IN-THE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:141  + **Why 600 s:** 300 s produced false positives for VPN users",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:142  + (measured 2026-03-05 on 847 messages from 128 users).",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:16  2. ##PART-AN-INTENT-STATEMENT **An intent statement** — one sentence per logical change, naming",
+              "confirmed: The rule is illustrated by the document's own draft at :138-144, where the spec gains a reason line rather than a code fragment. Host practice matches: the spec text 04d7e4ae landed carries prose about the loader's four sources and which outranks which, not the loader's code; 4ea09ad0's landed §4 text lists verbs and the contract over them. Checked the inverse — a spec section carrying a raw diff — with `grep -rn '^+const\\|^-const' spec/`, which returns nothing."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "IF-YOU-CANNOT-NAME-THE-INTENT-STOP-AND-ASK-THE-HUMAN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:83  ##IF-THE-HONEST-ANSWER-IS-IT-FELT-BETTER-STOP If the honest answer to \"why did the code change?\" is \"it felt",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:89  1. ##PATH-RECOVER-THE-REASON **Recover the reason.** Re-read the session, the measurements,",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:92  2. ##PATH-REVERT-THE-CODE **Revert the code.** If no reason can be named, the code change",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:21  ##IF-ANY-OF-THE-THREE-IS-MISSING-THE-PROPOSAL-IS-INCOMPLETE If any of the three is missing, the proposal is incomplete. @impl/done",
+              "confirmed: The rule has a fuller treatment in the sibling decision table at when-to-apply.md:83-93, which turns the same stop into two named paths (recover the reason, or revert). review-workflow.md:21-24 states the reviewer's mirror of it. The host's escalation posture is the same shape: PHASE-T-SPEC.md:462 assigns «every fact correction (sync-from-code law); every P1; every scope question» to the human, and the terraform campaigns escalate a non-converging pair to the owner rather than guessing."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "A-HAND-WAVED-INTENT-ENCODES-A-FICTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:43  ##AN-INCORRECT-INTENT-IS-THE-MOST-DANGEROUS-THING-A-SYNC-CAN-LAND An incorrect intent is",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:44  the single most dangerous thing a sync can land — it encodes a",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:45  fiction that the future reader will trust. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:86  ##SYNC-IS-NOT-FOR-LAUNDERING-UNREASONED-DRIFT Sync-from-Code is not for",
+              "confirmed: The same judgement is the first check of the human checklist (review-workflow.md:43-45, «An incorrect intent is the single most dangerous thing a sync can land — it encodes a fiction that the future reader will trust») and the decision table's «Sync-from-Code is not for laundering unreasoned drift into the spec» at when-to-apply.md:86. The host has a live instance of the failure mode this warns about, running through verification rather than through a sync: 04d7e4ae records five anchors confirmed on evidence that «cross-checked one spec document against another spec document, and the other one"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "PRODUCE-A-UNIFIED-DIFF-PROPOSAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:135  ```diff",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:136  # spec/modules/oproto/PROP-003.md §verification.timeout",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:14  1. ##PART-A-SPEC-DIFF **A spec diff**, shown as a unified diff against the current spec",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:15     file (not a rewritten file). @impl/done",
+              "confirmed: The form is specified here and restated by the reviewer's checklist at review-workflow.md:14-15 («shown as a unified diff against the current spec file (not a rewritten file)»), and the document illustrates it with a ```diff fence at :135-145. What I cannot check is whether the host's syncs were surfaced in that form: the proposal is a chat artefact, not a repository artefact, and nothing in spec/, campaigns/ or the commit bodies records the shape of what was shown. SPEC-ACTUALIZATION:1119-1121 says «the diffs were drafted, surfaced to the owner» — the word diff, but not the format."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "NOT-A-REWRITTEN-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:15     file (not a rewritten file). @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:78  ##A-SYNC-THAT-REACHES-BEYOND-THE-AFFECTED-SECTION-IS-OUT-OF-SCOPE A sync that also reflows paragraphs, renames anchors, or reorders",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:81  ##REJECT-AND-ASK-FOR-A-NARROW-DIFF Reject and ask for a narrow diff",
+              "confirmed: The prohibition is echoed twice by the reviewer's side: review-workflow.md:14-15 requires a unified diff «(not a rewritten file)» and check 4 at :78-82 rejects a sync that «also reflows paragraphs, renames anchors, or reorders unrelated sections». Unverifiable in the same way as its sibling — the proposal never reaches the repository, so no artefact records whether a whole file was pasted. What IS checkable is the landed result, and there the host behaves narrowly: 04d7e4ae's diff touches one precedence list plus two adjacent lines, not the whole PROP."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "three-mandatory-parts-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:147  1. ##PART-THE-NEW-VALUE **The new value.** The primary change, matching the code. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:148  2. ##PART-THE-REASON **The reason.** Concrete, measurable where possible — no \"felt",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:150  3. ##PART-THE-REVISIT-TRIGGER **The revisit trigger.** The condition under which this decision",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:154  ##WITHOUT-ANY-OF-THE-THREE-THE-DRAFT-IS-INCOMPLETE Without any of the three, the draft is incomplete. @impl/done",
+              "confirmed: Lead-in; the checkable content is that exactly three follow and that the sibling document agrees. Three numbered items at :147, :148, :150, closed by :154 «Without any of the three, the draft is incomplete». review-workflow.md opens with the same three at :14-19 and the same consequence at :21. The two documents match part for part — spec diff / intent statement / revisit trigger against new value / reason / revisit trigger, which is the same triple named from the reviewer's and the author's side respectively."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "PART-THE-NEW-VALUE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:139  + Unverified messages older than 600 seconds get status TIMEOUT.",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:14  1. ##PART-A-SPEC-DIFF **A spec diff**, shown as a unified diff against the current spec",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:15     file (not a rewritten file). @impl/done",
+              "confirmed: Illustrated by the worked draft's `+` line at :139. Observable in host practice: the two recorded syncs both landed a new value matching shipped code — 4ea09ad0 put `inspect`, `pty-stop`, `pty-start` and `scrollbar` into PROP-042 §4 «matching the code», with the body noting «Zero code changes»; 04d7e4ae corrected PROP-002's precedence list to the four sources the loader walks. In both the spec moved to the code, which is what this part requires."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "PART-THE-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:141  + **Why 600 s:** 300 s produced false positives for VPN users",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:142  + (measured 2026-03-05 on 847 messages from 128 users).",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:49  ##ASK-WILL-THIS-REASON-STILL-BE-VALID-IN-A-YEAR Ask: will this reason still be valid in a year? @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:51  - ##example-durable-profiling-spike \"Profiling showed a 30 % hot-path spike on this branch\" ← yes. @impl/done",
+              "confirmed: The requirement is illustrated at :141-142 with a dated, counted measurement, and the reviewer's check 2 (review-workflow.md:47-59) tests durability with the same standard. Host practice supplies both halves: 04d7e4ae's landed correction cites the loader's functions and the two tests that pin them, and its body carries the finding id F-063; 4ea09ad0 cites each verb's own `--help`. The «no felt better» prohibition is restated by the decision table at when-to-apply.md:83-84."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "PART-THE-REVISIT-TRIGGER": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:143  + **When to revisit:** if p99 network latency drops below 100 s",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:144  + based on mon/latency-p99.",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:61  ### 3. Is the revisit trigger concrete? {#check-trigger}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:71  ##NO-TRIGGER-MEANS-NO-AUDIT-PATH No trigger means no audit path. @impl/done",
+              "DRIFT: the mandatory third part is the one the consumer never produces. measured three ways and all three agree. (1) The two syncs this repository has actually run — 4ea09ad0 «PROP-042 §4 gains the four verbs the code already shipped» and 04d7e4ae «the token loader's first source was never in the list» — carry ZERO occurrences of «revisit» anywhere in their spec diffs: 2 of 2 drafts incomplete by this document's own definition at :154. (2) Across the whole host spec tree the two notations «When to revisit» and «Revisit when» occur 13 times in 6 files, against 153 spec sections carrying a bolded Decision label. (3) Of the 11 revisit lines in `spec/`, none carries metric + threshold + observation point together. The value lands and the reason lands; the trigger does not."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WITHOUT-ANY-OF-THE-THREE-THE-DRAFT-IS-INCOMPLETE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:21  ##IF-ANY-OF-THE-THREE-IS-MISSING-THE-PROPOSAL-IS-INCOMPLETE If any of the three is missing, the proposal is incomplete. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:23  ##ASK-THE-AGENT-TO-FILL-THE-GAP-BEFORE-APPROVING Ask the",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:26  ##DO-NOT-APPROVE-AN-INCOMPLETE-SYNC Do not approve an incomplete",
+              "a definition, and it classifies this host's own output correctly: both recorded syncs land value and reason without a revisit trigger, so both are incomplete by it. A definition that classifies is confirmed; the requirement it defines against is where the drift is filed (PART-THE-REVISIT-TRIGGER). The reviewer's side mirrors it exactly — review-workflow.md:21, :23-24, :26-28."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "PRINT-THE-PROPOSED-SPEC-DIFF": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+              "spec/modules/vibe-progress/templates/spec-task.md:37    diff, surface for owner approval, never apply silently. @spec/done",
+              "spec/modules/vibe-progress/OWNER-GUIDE.md:123    sync-from-code показываются вам ДО применения — как и всегда в этом",
+              "confirmed: The surfacing step is host practice, stated by the host in its own hand: spec-task.md:36-37 requires «draft the spec diff, surface for owner approval», OWNER-GUIDE.md:123 tells the owner every sync-from-code spec edit is shown before application, and SPEC-ACTUALIZATION:1119-1121 records a 212-row wave whose diffs «were drafted, surfaced to the owner, and applied only on his approval». The compiled snippet carries the step at STATIC.md:1252."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "DO-NOT-APPLY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "spec/modules/vibe-progress/templates/spec-task.md:37    diff, surface for owner approval, never apply silently. @spec/done",
+              "spec/modules/vibe-progress/OWNER-GUIDE.md:123    sync-from-code показываются вам ДО применения — как и всегда в этом",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:26  ##DO-NOT-APPROVE-AN-INCOMPLETE-SYNC Do not approve an incomplete",
+              "confirmed: The two-word rule, and the host restates it twice in its own words: spec-task.md:37 ends «never apply silently» and OWNER-GUIDE.md:123 promises edits are shown «ДО применения» — before application. The compiled snippet's step 3 at STATIC.md:1252 carries «**Do not apply.**» into the host boot lane, so every session here reads it at boot. Corroborated by the campaign record of a wave applied «only on his approval»."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "WAIT-FOR-AN-EXPLICIT-APPLY-FROM-THE-USER": {
+            "v": "confirmed",
+            "ev": [
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1120    the diffs were drafted, surfaced to the owner, and applied only on his",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1121    approval («Правь и продолжай дальше»), which also settled the licence",
+              "spec/modules/vibe-progress/OWNER-GUIDE.md:123    sync-from-code показываются вам ДО применения — как и всегда в этом",
+              "campaigns/packages-2026-09/PHASE-T-SPEC.md:462  | **owner** | the **human** | every fact correction (sync-from-code law); every P1; every scope question |",
+              "confirmed: The host records the explicit approval, including the owner's actual words: SPEC-ACTUALIZATION:1119-1122 says the diffs were «applied only on his approval («Правь и продолжай дальше»)» — the quoted instruction is the explicit apply this step waits for. PHASE-T-SPEC.md:462 assigns «every fact correction (sync-from-code law)» to the human in the roles table. Two commit bodies name the same gate: 4ea09ad0 «applied on the owner's approval», 04d7e4ae «with the owner's approval (F-063)»."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ON-APPROVAL-WRITE-THE-DIFF-AND-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1253  4. On approval, apply + commit (`docs(spec): sync <section> with code`).",
+              "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @spec/done",
+              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
+              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:88  $ test -f spec/WAL.md && test -f CONTINUE.md && test -f SPECSPACES.md ; echo present",
+              "confirmed: Both halves hold here. Conventional Commits is pinned repo-wide at PROP-000.md:162 and the host's measured conformance is high — the W1 harvest counted 397 of 400 commits carrying a `type(scope):` header with none omitting the scope. The approval-then-commit sequence is recorded in the bodies of the two applied syncs (4ea09ad0, 04d7e4ae) and in SPEC-ACTUALIZATION:1119-1122. The narrower grammar question — which subject those commits used — belongs to the next row."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-COMMIT-TYPE-IS-DOCS-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1253  4. On approval, apply + commit (`docs(spec): sync <section> with code`).",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:171  docs(spec): sync timeout to 600s in PROP-003 §verification.timeout",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:173  Code changed TIMEOUT from 300 s to 600 s after VPN latency",
+              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
+              "both of the fact's own clauses hold: the type IS `docs(spec)` — 183 such commits in this repository, 74 of the last 400 — and the body DOES name the driving code change (4ea09ad0: «Sync-from-code, applied on the owner's approval… The code was right; the contract caught up. Zero code changes.»). Recorded and not counted here, because it is the illustration rather than the fact: the worked subject grammar `docs(spec): sync …` has been typed ZERO times in 2 041 commits."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ON-REJECT-REVERT-THE-CODE-OR-REDRAFT-THE-PROPOSAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:134  - ##REJECTION-PATH-KEEP-THE-CODE **Reject the sync, keep the code.** The code change was right but",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:137  - ##REJECTION-PATH-REVERT-THE-CODE **Reject the sync, revert the code.** The code change itself was",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:89  1. ##PATH-RECOVER-THE-REASON **Recover the reason.** Re-read the session, the measurements,",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:92  2. ##PATH-REVERT-THE-CODE **Revert the code.** If no reason can be named, the code change",
+              "a coherent two-branch prescription, expanded at review-workflow.md:132-140 and offered again by the decision table at when-to-apply.md:89-93. No rejection has occurred in this repository, so neither branch has been exercised — the searches are in the row's `searched` field."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "NEVER-SILENTLY-ACCEPT-A-REJECTED-SYNC": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:142  ##NEITHER-PATH-SILENTLY-ACCEPTS-A-BAD-SYNC Neither path silently accepts a bad sync. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:144  ##a-silently-accepted-bad-sync-makes-the-spec-fiction A silently accepted bad",
+              "spec/boot/STATIC.md:1260  - Never silently update a spec to match the code. A silent update erases",
+              "confirmed: Mirrored by review-workflow.md:142-145 («Neither path silently accepts a bad sync … A silently accepted bad sync is how the spec becomes fiction»). Since no sync in this repository was rejected — see the preceding row's searches — there is no instance in which this rule could have been kept or broken. The adjacent prohibition that IS live here is the never-apply-silently rule at STATIC.md:1260, which is a different rule about a different moment. Recorded partial rather than not-found because the adjacent rule IS on the perimeter and does bear on the neighbourhood, just not on this clause."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "review-checklist-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:1  # Sync-from-Code review workflow {#root}",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:30  ## The review checklist {#checklist}",
+              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:19    relative .md citations resolved: 23",
+              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:20    broken: 0",
+              "confirmed: The target exists as a sibling file and is what the pointer calls it — review-workflow.md:30 opens «## The review checklist {#checklist}» over six numbered checks. The relative citation resolves and is covered by the harvest's source-1 join («relative .md citations resolved: 23, broken: 0»), cited from the harvest per the task note."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NON-GOAL-DOES-NOT-REWRITE-CODE-TO-MATCH-THE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:147  - ##BOUNDARY-VIBE-BUILD **`vibe build`** (M1.5+) handles the other direction — generating",
+              "spec/common/PROP-018-agentic-standalone-modes.md:247     which is what lets a future deterministic command (`vibe build`) park a",
+              "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:854  - ##PF-BUILD-LOOP Wire into the `vibe build` LLM tool-use loop. @impl/plan",
+              "the non-goal itself is observable — 4ea09ad0's body says «Zero code changes» of a sync that moved only spec text. The parenthetical names a territory rather than a shipped command: there is no top-level `vibe build`; the nearest shipped surface is `vibe bin build` (crates/vibe-cli/src/cli.rs:249-252), which builds declared tool binaries rather than generating code from spec. A gesture at a separate flow, not a claim about a shipped one."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NON-GOAL-DOES-NOT-EDIT-THE-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:141  - ##BOUNDARY-FLOW-WAL **`flow:wal`** handles session continuity. A successful sync may",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md:63  - ##COMPOSES-WAL-FOR-THE-SESSION-END-UPDATE A successful sync *may* trigger a WAL update; that update goes",
+              "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+              "vibe.lock:422  name = \"wal\"",
+              "confirmed: The boundary is drawn identically three times in the package and the sibling flow is installed here (wal 0.2.0, vibe.lock:420-428) with its session-end ritual written into CLAUDE.md:167-195. Checked for a violation: neither of the two applied syncs touched spec/WAL.md, and `git log --format='%h %s' -- spec/WAL.md | head` shows WAL edits arriving as their own `docs(wal)` commits rather than riding a `docs(spec)` one."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NON-GOAL-DOES-NOT-BATCH": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1265  - Never batch two unrelated code changes into one spec edit. One intent",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`; @spec/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:78  ##A-SYNC-THAT-REACHES-BEYOND-THE-AFFECTED-SECTION-IS-OUT-OF-SCOPE A sync that also reflows paragraphs, renames anchors, or reorders",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:84  ##omnibus-spec-edits-make-history-unbisectable Omnibus spec edits",
+              "confirmed: The rule composes with the host's atomicity rule (PROP-000.md:163) and with the reviewer's scope check (review-workflow.md:78-85, «Omnibus spec edits are how history becomes unbisectable»). Host practice is mixed at this grain: 812bfecc is one `docs(spec)` commit whose body records three separate corrections and 4ea09ad0 lands four verbs plus four minted findings. Both are atomic at the campaign's grain — one obligation, one commit — and multi-intent at the flow's. Nothing I found rules on which grain governs, so the evidence does not settle it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-NORMAL-DIRECTION-IS-SPEC-TO-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+              "spec/boot/STATIC.md:1230  Information flows top-down: head → WAL → spec → code. Sync-from-Code does",
+              "spec/boot/STATIC.md:1532  - `sync-from-code` — the sanctioned reverse path when code changed",
+              "confirmed: A restatement of the document's opening, and the host asserts the same at spec/boot/00-core.md:45 in its own hand: top-down as the rule, sync-from-code as the conditional. The compiled lane repeats it at STATIC.md:1230 and the redbook index frames the flow as the reverse path at :1532. Consistent across package, host and installed reality."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-RUNS-ONCE-IN-THE-SESSION-THAT-CAUSED-THE-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:61  ##RUN-THE-PROTOCOL-AT-THE-END-OF-THE-SAME-SESSION Run the protocol at the end of the **same session** that produced the",
+              "spec/boot/STATIC.md:1245  Run the protocol exactly once, as the last step of the same session that",
+              "spec/boot/STATIC.md:1246  caused the drift. Do not postpone it to \"tomorrow\" — drift accumulates.",
+              "confirmed: Consistent with :61 and the boot snippet, and compiled into the host at STATIC.md:1245-1246. Not observable: commits carry no session boundary and no host document restates the timing rule (`grep -rn -i 'same session' spec/ CLAUDE.md` returns only host-file WAL-update and escalation rules). The «immediately» half is contradicted by one dated instance in this repository — 812bfecc's body records a drift left unrecorded «for two days» — while the «once» half is untested."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "SUM-OUTPUT-IS-VALUE-REASON-AND-REVISIT-TRIGGER": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:147  1. ##PART-THE-NEW-VALUE **The new value.** The primary change, matching the code. @impl/done",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:148  2. ##PART-THE-REASON **The reason.** Concrete, measurable where possible — no \"felt",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:150  3. ##PART-THE-REVISIT-TRIGGER **The revisit trigger.** The condition under which this decision",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:14  1. ##PART-A-SPEC-DIFF **A spec diff**, shown as a unified diff against the current spec",
+              "DRIFT on the third term of the triple, for the same measurement as PART-THE-REVISIT-TRIGGER — a summary restating a rule the consumer breaks is judged with the rule (W1's precedent). measured three ways and all three agree. (1) The two syncs this repository has actually run — 4ea09ad0 «PROP-042 §4 gains the four verbs the code already shipped» and 04d7e4ae «the token loader's first source was never in the list» — carry ZERO occurrences of «revisit» anywhere in their spec diffs: 2 of 2 drafts incomplete by this document's own definition at :154. (2) Across the whole host spec tree the two notations «When to revisit» and «Revisit when» occur 13 times in 6 files, against 153 spec sections carrying a bolded Decision label. (3) Of the 11 revisit lines in `spec/`, none carries metric + threshold + observation point together. The value lands and the reason lands; the trigger does not."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-ALWAYS-ENDS-WITH-HUMAN-APPROVAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+              "spec/modules/vibe-progress/templates/spec-task.md:37    diff, surface for owner approval, never apply silently. @spec/done",
+              "spec/modules/vibe-progress/OWNER-GUIDE.md:123    sync-from-code показываются вам ДО применения — как и всегда в этом",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1120    the diffs were drafted, surfaced to the owner, and applied only on his",
+              "confirmed: The approval clause is the best-evidenced claim in this package: three independent host statements (spec-task.md:36-37, OWNER-GUIDE.md:123, SPEC-ACTUALIZATION:1119-1121) plus PHASE-T-SPEC.md:462 assigning every fact correction to the human, plus two commit bodies naming the owner's approval. «Never silent» follows from the same evidence. The other two riders are weaker: «never batched» is unsettled at the flow's grain (see NON-GOAL-DOES-NOT-BATCH), and «never applied to temporary code» has no instance either way — the WAL skip mechanism has never been used here (`grep -n -i 'do NOT sync' spec/"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T19:55:21Z",
+        "verify_batch": "W2d"
+      }
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md": {
       "content_hash": "80c2c50ef2ab95440cd9c877cc5ae9d5543dcf4fc655d3c0d95c2d5136159c72",
