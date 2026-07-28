@@ -19,9 +19,14 @@ sharpest: `spec/boot/INLINE.md` does not exist, and line 5 of `CLAUDE.md` /
 `AGENTS.md` / `GEMINI.md` says the four non-negotiable commit rules are loaded first
 and verbatim from it.**
 
-**`world` batch W1 is open and its evidence is being gathered.** Five `opus5`
-workers were commissioned for the git family's 16 files / 407 anchors. **No `world`
-verdict has been written yet.**
+**`world` batch W1 is CLOSED: 407 of 407 anchors, 368 confirmed / 32 drift / 7
+unverifiable — 90.4 %, with 26 self-referential (6.4 %).** The phase predicted
+`world` would measure HIGHER than `ai-native`; the first world batch reads **90.4 %
+against 91.6 %**, and the reason inverts the prediction's own logic — these flows
+make claims about the consuming project, and this consumer is measurable. Thirteen
+of the thirty-two drifts are one law broken by its own consumer, and a second family
+runs through every package: **69 relative `../flows/…` pointers in the compiled boot
+lane, all 69 dangling.**
 
 Nothing is blocked. Tree clean, in sync with `origin/main`, mirrored to both hosts.
 Gate: `progress check --exhaustive` **clean, 259 files, 0 warnings**.
@@ -298,9 +303,9 @@ c8911c29 feat(campaign): F-116 stops being a reading and becomes a command
 ВОССТАНОВИ СЕССИЮ
 
 Затем продолжи Phase C кампании PROP-043 волны 2 (campaigns/packages-2026-09).
-Долг ревью ЗАКРЫТ: 138 строк прочитаны поштучно, кластер ai-native пересчитан в
-91.6 % (2 470 / 207 / 20). Открыты находки F-124…F-128. Кластер world не начат по
-вердиктам: 121 файл, 4 150 якорей, батчи W1…W7.
+Долг ревью ЗАКРЫТ, батч W1 ЗАКРЫТ: 407 якорей, 368 / 32 / 7 — 90.4 %, из них 26
+self-referential. Кластер ai-native пересчитан в 91.6 % (2 470 / 207 / 20). Открыты
+находки F-124…F-128. Осталось world W2…W7: 105 файлов, 3 743 якоря.
 
 Перед началом прочитай, в этом порядке:
   1. CONTINUE.md — целиком, особенно §in-flight, §w1-reading и §standard
@@ -311,11 +316,13 @@ c8911c29 feat(campaign): F-116 stops being a reading and becomes a command
   5. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md §3.1, §3.2, §5
      и §9 LOG с конца — записи этой фазы, включая стандарт вердикта
 
-ПЕРВОЕ ДЕЙСТВИЕ: проверь, лежат ли на диске таблицы
-campaigns/packages-2026-09/tasks/evidence/ev-W1{a,b,c,d,e}.json. Каждую прогони
-через verify-evidence.py ДО чтения, потом читай show-rows.py поштучно и выноси
-вердикт. Недостающие закажи заново по тому же брифу (список файлов — в CONTINUE.md
-§in-flight).
+ПЕРВОЕ ДЕЙСТВИЕ — батч W2 (two-process-model, wal, wal-specspaces,
+sync-from-code: 20 файлов, 692 якоря). Рецепт, которым закрыт W1, лежит в
+CONTINUE.md §recipe — выполняй его, а не изобретай: снять три источника §3.1 в
+harvest/, заказать по воркеру на пакет по tasks/WORLD-WORKER-BRIEF.md, прогнать
+verify-evidence.py ДО чтения, читать show-rows.py поштучно, судить каждую строку.
+Перемерь стоимость на якорь — W2 и W5 стоят условными ~695 и делятся, если дороже
+C1.
 
 Каждый world-вердикт ОБЯЗАН нести src — непустое подмножество [1,2,3] по §3.1;
 merge-verdicts.py откажет без него. src == [1] считается отдельно как
