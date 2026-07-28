@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:39:43Z",
+  "updated_at": "2026-07-28T21:45:52Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -31777,7 +31777,808 @@
       },
       "marker_count": 67,
       "unit_count": 13,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "b1310825173a10ac2751eb4931db1c53582d620c79f15e73067c697f926b6dc3",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:14  ## What the genre is {#what}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:43  ## Why the genre exists {#why}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:60  ## The five laws {#laws}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:155  ## When to write one {#when}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:172  ## What it is not {#not}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:182  ## Re-derive for your project {#re-derive}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:202  ## Summary {#summary}",
+              "confirmed: Scope statement checked against the document's own section headings, read with `grep -nE '^#{1,3} ' <file>`: §what (14), §why (43), §laws (60), §when (155), §not (172), §re-derive (182), §summary (202). Every promised element has a section; the roadmap connection is delegated to the sibling `from-research-to-roadmap.md` rather than stated here. Self-referential by nature — a scope line is a claim about its own file."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:10  ##sibling-document-pointers Copy-ready skeleton:",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:11  [`research-template.md`](research-template.md); the downstream",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:12  pipeline: [`from-research-to-roadmap.md`](from-research-to-roadmap.md). @impl/done",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:1  # Comparative research template {#root}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:1  # From research to roadmap {#root}",
+              "vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/research-template.md:1  # Comparative research template {#root}",
+              "confirmed: Both pointers are same-directory relative links, unlike the boot snippet's `../flows/…` form, so they resolve inside the package AND inside the installed slot: `find vibedeps/flow-comparative-research -type f` lists all three flow documents side by side under `0.1.0/spec/flows/comparative-research/`. No dangling-pointer problem here."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:1  # PROP-004 — Tessl comparative research and vibevm roadmap deltas",
+              "legacy-spec/research/action-systems-vscode-idea.md:1  # Action systems in VSCode and IntelliJ IDEA — a comparative study {#root}",
+              "legacy-spec/research/settings-system-vscode-idea.md:1  # Comparative research: системы настроек VSCode vs IntelliJ — clean-room study for vibevm application/user preferences",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:207  ### D-R7 — one project, one note {#d-r7}",
+              "DRIFT on «one system», broken three ways in three of the five located studies. One system: the Tessl study, and the fractality per-source notes, where «one project, one note» is an explicit decision (D-R7). TWO systems in one document: `action-systems-vscode-idea.md` and `settings-system-vscode-idea.md` each study VSCode and IntelliJ side by side. A WHOLE FIELD in one document: `RLM-SYNTHESIS.md` synthesises eleven study notes and `FUGU-SYNTHESIS.md` four — and both declare they follow this flow by name. The genre as practised here has a shape this sentence does not admit."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "IT-INVENTORIES-QUOTES-MEASURES-AND-TRANSLATES": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:39  ## 2. Primitives — the Tessl object model {#primitives}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:548  ## 5. The gap — what Tessl does that vibevm does not {#gaps}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:776  ## 6. Roadmap deltas {#roadmap-deltas}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:910  ## 8. Where vibevm leads — Tessl gaps {#vibevm-leads}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:123  Mapping to vibevm: no equivalent at all.…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. All four verbs are observable in the Tessl study, which is the fullest instance: §2 primitives (line 39) is the inventory across 20 sub-sections; §1 and §2 carry the quotes; §5 (548) + §8 (910) are the two directions; §6 (776) is the translation into M-numbered deltas. The inventory's 'maps to' idiom is used as the flow's §2 prescribes, including 'no equivalent' as a positive finding — `grep -niE 'maps to|no equivalent' <tessl>` returns hits at 123, 173, 274 among others. The other four studies inventory more thinly: action-systems inventories by research question (RQ1–RQ14), the syntheses do not inventory separately at all, folding it into the per-note tier."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "evergreen-is-the-load-bearing-adjective": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/action-systems-vscode-idea.md:5  **Genre:** research (comparative-research flow) — non-binding, evergreen.…",
+              "legacy-spec/research/settings-system-vscode-idea.md:9  **Genre:** comparative research (evergreen study, readable months later without the sources).",
+              "legacy-spec/research/README.md:3  …Each is meant to be re-readable months after publication without referring to the original sources, and to outlast any one external project's URL stability.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. The word itself is used as the genre's defining adjective in the host: `grep -rni 'evergreen' legacy-spec/ packages/ spec/ campaigns/ docs/` (vibedeps and .vibe/cache excluded) shows it in every located study's status/genre line, in `legacy-spec/research/README.md:3`, and in the archived plan at ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307. It is the adjective the project reaches for when naming the genre."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-DOCUMENT-IS-WRITTEN-TO-OUTLAST-ITS-SOURCES": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/README.md:3  …Each is meant to be re-readable months after publication without referring to the original sources, and to outlast any one external project's URL stability.",
+              ".gitignore:34  # Reference sources and author's book chapters — cloned/placed externally,",
+              ".gitignore:37  /refs/",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md:4  Clones and downloads live under the host `/refs/` tree, which is gitignored",
+              "confirmed: `legacy-spec/research/README.md:3` restates this sentence almost word for word, which makes it the host's own house rule rather than only the package's. There is a second, stronger practice the flow does not prescribe: the fractality work SNAPSHOTS its sources locally instead of relying on quotes — `ls refs/articles/` shows 10 archived `.html` pages plus ACCESS-DATES.txt, `ls refs/papers/` shows paired `.pdf`/`.txt` per paper. The catch a reviewer should weigh: `/refs/` is gitignored wholesale at `.gitignore:37`, so a fresh clone receives none of that corpus and the studies must stand on their own text — which, per the LAW-ONE rows, they largely do not do by quoting."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROT-MARKETING-PAGES-GET-REDESIGNED": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:884  …**`https://docs.tessl.io/concepts/what-is-tessl`** — pitch and problem statement (currently 404s with redirect to home; check redirect targets when refetching)…",
+              "confirmed: A recorded instance of exactly this rot inside the perimeter: the Tessl study's §7.2 marks one of its own primary sources as already 404ing with a redirect to home, and instructs the refresher to check redirect targets. Searched with `grep -niE '404|redirect|moved|dead link' legacy-spec/research/*.md` — this is the only hit."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROT-DOCS-SITES-MOVE": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:879  …**`https://docs.tessl.io/sitemap.md`** — full URL listing, useful for discovering pages not in `llms.txt`.",
+              "confirmed: Premise line. No instance of a docs site moving is recorded in the perimeter; the nearest evidence is the Tessl study's own §7.1 instruction to re-derive the URL list from a sitemap on refresh, which presupposes movement. Searched `grep -rniE 'docs site|documentation moved|url moved' legacy-spec/ packages/ spec/ campaigns/` (vibedeps excluded) — no other hit. The claim is a premise the genre rests on, not an event this repository has logged."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:55  …**The study must outlive link rot and staff turnover.** The person",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:56  …who did the research leaves; the URL 404s; the competitor pivots.",
+              "confirmed: Premise line, elaborated inside the package at §why's third cost. Searched the perimeter for a recorded instance of a studied subject disappearing (`grep -rniE 'acquired|sunset|discontinued|shut down' legacy-spec/research/ packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/`) — none of the eight studied subjects (Tessl, VSCode, IntelliJ, and the fractality source list) has been recorded as deleted. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "a-study-that-links-out-expires": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:180  - ##NOT-A-LINK-FARM **Not a link farm.** Links rot; the quotes are the evidence. @impl/done",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:871  ## 7. Source URLs and re-fetch procedure {#sources}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:877  …**`https://docs.tessl.io/llms.txt`** — high-level documentation index. Best entry-point for inventory checks.…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. The rule's own §not restates it as 'Not a link farm'. What the host shows is the tension rather than the resolution: the Tessl study's §7 is 21 bare URLs with descriptions, and the study's evidence base is 27 quotes — so it links AND quotes. What is NOT settled: whether a study whose quotes are thin relative to its link list counts as 'linking out' under this fact. The settings and action-systems studies link to local snapshot paths (`C:\\Users\\olegc\\git\\snapshot\\vscode`) rather than URLs, a third case the fact does not address."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-quoted-study-stands-after-the-links-rot": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:19  > \"Tessl is a platform for managing context for coding agents, treating agent skills and context as software with a complete lifecycle: build, evaluate, distribute, and optimize.\"",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:23  > \"AI agents are now writing real production code. But as libraries change, APIs evolve, and conventions drift, agents struggle to stay correct. The issue isn't the underlying models, but how context is created, updated, assessed and distributed.\"",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:9  …Direct quotes from the corpus appear in fenced blocks throughout.…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Quote practice, measured: the Tessl study carries 27 blockquote lines and 0 per-quote access dates (`grep -c '^> '` / `grep -niE 'accessed|capture date'`); all 22 files in `packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/` carry 0 blockquote lines. The Tessl study is the only instance that quotes at scale, and it quotes WITHOUT per-quote dates — the date lives once, in §7.4. So the perimeter contains no instance of the exact practice this fact describes (verbatim + dates together at the quote). What is NOT settled: whether a single central capture date satisfies 'with dates' for this fact's purposes."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "three-costs-justify-the-effort-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:47  …**Unexamined competitors cost roadmap mistakes.**…",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:51  …**Examined competitors yield deltas.**…",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:55  …**The study must outlive link rot and staff turnover.**…",
+              "confirmed: Lead-in for the three bullets that follow it at 47, 51 and 55; the count matches. Searched the host for an independent statement of a study's justification (`grep -rniE 'why this study exists|why this research' legacy-spec/ packages/`, vibedeps excluded) — the hits are `action-systems-vscode-idea.md:18` (`## 0. Why this study exists {#why}`) and `OPENREWRITE-RESEARCH-PLAN-v0.1.md:13` (`## 0. Why this exists — the strategic thesis`), neither of which uses this three-cost frame."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:7  …They have a non-trivial product surface and ~3,000 published skills; understanding what they do well — and what they don't — is load-bearing intelligence for vibevm's own roadmap.…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/landscape.md:1  # Landscape note — where fractality sits {#root}",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The reasoning is used as the stated motive in the host's own studies: the Tessl purpose paragraph gives exactly this argument, and the fractality specspace opens its source work with `notes/landscape.md` — 'Landscape note — where fractality sits' — before committing to a design. Whether any roadmap mistake was actually AVOIDED is not measurable from the perimeter."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COST-EXAMINED-COMPETITORS-YIELD-DELTAS": {
+            "v": "confirmed",
+            "ev": [
+              "ROADMAP.md:43  > [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):",
+              "ROADMAP.md:341  ### M1.7 — `vibe-mcp` server (Claude-native context provider)",
+              "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:12  …Second revision shipped same day after the [PROP-004 Tessl comparative research](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) surfaced eight architectural improvements that were better folded into the design proposal *before* implementation than retrofitted later.…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md:74  - **D-C3-1 Need-gate verb** (RD-1, RD-2, RD-6, RD-16; FD-1): one",
+              "confirmed: This is the fact with the strongest host evidence in the whole file, and it is LIVING, not archived. The Tessl study's deltas became real milestones: `grep -nE 'M1\\.(7|8|9|10|11)|M2\\.(7|8|9|10)|M3\\.1' ROADMAP.md` returns M1.7 at 341, M1.8 at 364, M1.9 at 382, M1.10 at 397, M1.11 at 411, M2.7 at 900 and onward, and ROADMAP.md:43 records that they 'derive from' the study. PROP-003's r2 revision note says the study surfaced eight architectural improvements folded in before implementation. On the fractality side, `FRACTALITY-RLM-PLAN-v0.1.md` cites `RD-n` 22 times, converting deltas into decisions D-C3-1…9. HARVEST NOTE: harvest §s2-comparative concludes 'almost no living source 2' for this package; that is right about the study DOCUMENTS but not about the pipeline's downstream half, which is entirely in the living tree."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:884  …**`https://docs.tessl.io/concepts/what-is-tessl`** — pitch and problem statement (currently 404s with redirect to home; check redirect targets when refetching)…",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:963  …When Tessl ships material changes, refresh this document via §7's procedure rather than rewriting it; the historical baseline has independent value.…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. The link-rot half is already realised inside the perimeter: one of the Tessl study's own primary sources 404s, recorded in the study itself. The study's closing line states the historical-baseline argument this fact makes. Staff turnover is not observable from the repository. The 'complete on its own terms' half is the one the located studies satisfy unevenly — see the LAW-ONE rows and the `/refs/` gitignore finding."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EVERY-DOCUMENT-OBEYS-ALL-FIVE-LAWS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:199  (`notes/RLM-SYNTHESIS.md`) follows flow:comparative-research:",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:200  quote-first, **two-way gaps** (where the field is ahead of the",
+              "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …(quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead; numbered roadmap deltas each naming a target Spec-1 REQ; a re-fetch/provenance table)…",
+              "legacy-spec/research/settings-system-vscode-idea.md:6  …Comparative-research genre: quote-first, two-way gaps, deltas-not-decrees.",
+              "DRIFT, and it is the cleanest measurement in the file: **no located instance obeys all five.** Per study — Tessl obeys 2, 3, 4 and 5 but not Law 1's dated-quote requirement; action-systems obeys 3 and 4, records its subject commit as `_not captured_`, and quotes `file:line` rather than prose; settings obeys 3, 4 and Law 5's dates but names no subject version; RLM-SYNTHESIS and FUGU-SYNTHESIS obey 3, 4 and 5 and explicitly DECLINE 1-2's quoting by clean-room decision. Two of the three documents that name the genre enumerate only three or four laws when they do — the settings header names three, D-R6 names four."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-laws-separate-a-study-from-a-rant": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:175  …**Not a rant.** Competitive frustration is the trigger; the",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:180  - ##NOT-A-LINK-FARM **Not a link farm.** Links rot; the quotes are the evidence. @impl/done",
+              "confirmed: Restated inside the package at §not's second and fourth bullets. No host artefact argues the distinction independently: `grep -rniE 'rant|bookmark dump|competitive envy' legacy-spec/ packages/ spec/ campaigns/ docs/` (vibedeps and .vibe/cache excluded) returns only this package and its installed copy. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "LAW-ONE-THE-DOCUMENT-MUST-STAND-WHEN-ITS-SOURCES-VANISH": {
+            "v": "drift",
+            "ev": [
+              ".gitignore:37  /refs/",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md:4  Clones and downloads live under the host `/refs/` tree, which is gitignored",
+              "legacy-spec/research/README.md:3  …Each is meant to be re-readable months after publication without referring to the original sources…",
+              "DRIFT, and the condition the law guards against is ALREADY TRUE here. `/refs/` is gitignored at `.gitignore:37` with the reason at 34-36, and the fractality INVENTORY states nothing third-party is ever committed — so for anyone who clones this repository, the studies' sources do not exist. Against that, 22 of the study notes carry **0 blockquote lines**: what they preserve is the project's own decisions, not what the subject claimed. The archived studies are in the same position, their sources being remote URLs and local snapshot paths equally absent from a clone."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-ONE-QUOTE-VERBATIM-WITH-AN-ACCESS-DATE": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:19  > \"Tessl is a platform for managing context for coding agents, treating agent skills and context as software with a complete lifecycle: build, evaluate, distribute, and optimize.\"",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:902  ### 7.4 Capture date and version",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:904  - **Capture date:** 2026-05-04.",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:196  …no text/code shapes from repos; short dated",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md:17  …take*, never its text or code shapes.",
+              "DRIFT — the practice this law names does not occur anywhere in the perimeter. `grep -rnE '— .*, accessed 20[0-9]{2}-'` over the archive, packages, spec and campaigns returns **0 hits**. The only `accessed <date>` strings live out of band, in a gitignored research record and in `refs/articles/ACCESS-DATES.txt`, never beside a quote. The Tessl study is the one instance that quotes at scale — 27 blockquote lines — and it puts its date once, at §7.4; the fractality notes forbid recording source text at all. Verbatim-and-dated together at the quote is practised zero times."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-ONE-A-FUTURE-READER-RECONSTRUCTS-WITHOUT-FETCHING": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:47  > \"A tile is a structured container of context that can include a combination of skills, documents, and rules.\"",
+              "legacy-spec/research/action-systems-vscode-idea.md:15  …Everything here is in our words; short verbatim snippets (`file:line`) ground claims,",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md:17  …take*, never its text or code shapes.",
+              "DRIFT, with one instance on each side and the host's written posture against it. The Tessl study does reconstruct — its §2 gives each primitive's canonical definition as a quote, so the object model is recoverable from the file alone. The action-systems study states the OPPOSITE posture explicitly at its line 15 (everything in our words, short `file:line` snippets only), and the fractality INVENTORY rule 2 forbids recording source text. A decisions-only note lets a future reader reconstruct what the PROJECT decided, which is a different question from what the subject claimed, and it is the shape most of this corpus takes."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-ONE-LINKS-ARE-POINTERS-QUOTES-ARE-EVIDENCE": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:871  ## 7. Source URLs and re-fetch procedure {#sources}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:9  …Direct quotes from the corpus appear in fenced blocks throughout. Re-fetch the canonical URL list under §7 to refresh this research;…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/rlm-source-selection.md:9  …All URLs accessed",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The division of labour is observed in the Tessl study's own source-corpus paragraph: quotes appear throughout, and §7's URL list is named as the refresh instrument. The fractality corpus follows the same split with a different evidence carrier — the URLs live in `rlm-source-selection.md` as the refresh list, while the evidence of record is the committed note, not a quote."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-TWO-THE-SUBJECT-SPEAKS-BEFORE-IT-IS-JUDGED": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:15  ## 1. What Tessl is — in their own words {#what-tessl-is}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:17  Tessl's one-sentence pitch:",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:19  > \"Tessl is a platform for managing context for coding agents, treating agent skills and context as software with a complete lifecycle: build, evaluate, distribute, and optimize.\"",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:37  Tessl markets itself as the closest commercial equivalent to \"what GitHub did for code, for agent context.\" Whether they fulfill that ambition is a separate question;…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Quote practice, measured: the Tessl study carries 27 blockquote lines and 0 per-quote access dates (`grep -c '^> '` / `grep -niE 'accessed|capture date'`); all 22 files in `packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/` carry 0 blockquote lines. Observed in the Tessl study's structure: §1 'What Tessl is — in their own words' opens the document, six quotes run before any assessment, and the first judgement arrives at line 37 after them. The order the law prescribes is the order the file uses. The other four studies have no quote-first section; action-systems' §1 is 'the independent design-space map (written BEFORE the sources)' — a deliberately different discipline, quoted at line 34."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-TWO-PRESENT-THE-QUOTE-THEN-ANALYZE": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:45  A **tile** is the unit of distribution — a packaged container that bundles together skills, documentation, and rules. From the glossary:",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:47  > \"A tile is a structured container of context that can include a combination of skills, documents, and rules.\"",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:51  Mapping to vibevm: roughly equivalent to a vibevm **package** — `flow:wal`, `feat:welcome-page`, etc. The distinction is that vibevm packages today carry one *kind* (flow / feat / stack / tool) while Tessl tiles can mix kinds inside one container.",
+              "DRIFT on the ordering, in the one study that could test it. The Tessl study does follow quote-then-analyze at section grain — each §2 sub-section is quote, then «Mapping to vibevm» — but at §2.1 the study's own prose description of a tile (line 45) PRECEDES the quote at line 47, so the paraphrase comes first and the quote confirms it, and the worker reports that ordering recurring across the twenty sub-sections of §2. No other located study quotes at all, so there is nothing else in the perimeter that could satisfy the rule."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "critiquing-a-paraphrase-is-critiquing-a-straw-man": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/action-systems-vscode-idea.md:15  …Everything here is in our words; short verbatim snippets (`file:line`) ground claims,",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md:16  2. Study notes record *what the source achieves and which decisions we",
+              "DRIFT, and the reviewer's call the worker rightly left open: this is a collision of principle, not neglect, and the host's side is written down. `spec/boot/90-user.md`'s `##CLEAN-ROOM-RULE` is an owner directive; the fractality clean-room register's rule 2 forbids recording a source's text at all; and the rationale is quoted verbatim from the owner at FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:167-170 on licence and patent exposure. So judgements in that corpus ARE made against the project's own summary — the shape this sentence calls a straw man — because a weighed legal constraint the flow does not contemplate says they must be. Recorded as drift on the campaign's own line: where the host's own written contract contradicts the flow, it is drift, whatever the merit of the host's reason. Same family as W3's `uncertainty-protocol` against PROP-000 §15."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-TWO-QUOTE-THEN-JUDGE-EVERY-TIME": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:47  > \"A tile is a structured container of context that can include a combination of skills, documents, and rules.\"",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:57  > \"Skills are procedural guides that teach agents how to perform specific workflows. Unlike documentation (which explains what something is), skills explain how to do something step-by-step.\"",
+              "DRIFT on «every time», which is the testable word. In the Tessl study §2 has twenty sub-sections and 27 quote lines in total, so several sub-sections carry no quote at all — §2.4, §2.8 and §2.17 among them. The remaining four located studies judge without quoting anywhere. The perimeter contains no instance of the every-time discipline and one instance of a most-of-the-time discipline."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "law-three-runs-in-both-directions-lead": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:548  ## 5. The gap — what Tessl does that vibevm does not {#gaps}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:910  ## 8. Where vibevm leads — Tessl gaps {#vibevm-leads}",
+              "legacy-spec/research/action-systems-vscode-idea.md:701  ## 5. Two-way gap analysis {#gaps}",
+              "legacy-spec/research/settings-system-vscode-idea.md:336  ## 6. Two-way gaps (где vibevm отстаёт / где может вести)",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:40  ## 2. Two-way gaps {#gaps}",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-SYNTHESIS.md:34  ## 2. Two-way gaps {#gaps}",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. All five located studies run both directions; the section headings are the evidence, read with `grep -nE '^#{1,3} '`. HARVEST CORRECTION: harvest §s2-comparative reports 'No two-way gap section' for the fractality body. That is true of the 15 `*-study.md` notes and false of the two `*-SYNTHESIS.md` documents in the same directory — `RLM-SYNTHESIS.md:40` and `FUGU-SYNTHESIS.md:34` both read `## 2. Two-way gaps {#gaps}`."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:548  ## 5. The gap — what Tessl does that vibevm does not {#gaps}",
+              "legacy-spec/research/settings-system-vscode-idea.md:338  ### 6.1 Где vibevm отстаёт (trail)",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:42  **Where the field is ahead of the fabric (we trail):**",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-SYNTHESIS.md:36  **Fugu ahead of the fabric:** learned routing/conducting (we have",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. Present in every located study, as a section (Tessl §5, settings §6.1) or as a labelled paragraph inside a combined section (action-systems, both syntheses). Tessl's is the largest at 228 lines (lines 548-775) with 14 numbered sub-gaps."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:910  ## 8. Where vibevm leads — Tessl gaps {#vibevm-leads}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:912  The opposite direction. These are decisions in vibevm's architecture that Tessl either has not made, has made differently in a way we believe is wrong, or has not yet exposed publicly.",
+              "legacy-spec/research/settings-system-vscode-idea.md:344  ### 6.2 Где vibevm может вести (lead)",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:54  **Where the fabric is ahead of the field (we lead):**…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-SYNTHESIS.md:43  **The fabric ahead of Fugu:** runtime enforcement (six-axis",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. Present in every located study; none ships with an empty lead section. Sizes, since the honesty rule turns on the comparison: Tessl §8 is 40 lines with 8 sub-sections against §5's 228 (5.7:1); settings §6.2 has 6 bullets against §6.1's 4; RLM-SYNTHESIS's lead paragraph is 13 lines against 11; FUGU-SYNTHESIS's is 10 against 6."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "one-directional-gap-analysis-is-advocacy-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:167  …A study that only finds gaps where we trail is marketing for the",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:169  …us. Neither is intelligence.…",
+              "confirmed: Lead-in for the three-row table that follows at 108-112; the same proposition is the sibling document's honesty rule. No host artefact makes the advocacy argument independently — `grep -rni 'advocacy' legacy-spec/ packages/ spec/ campaigns/ docs/` (vibedeps and .vibe/cache excluded) returns only this package and its installed copy. Source 1 only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "ROW-ONE-DIRECTIONAL-TRAIL-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:176  ##trail-only-studies-talk-teams-into-copying Trail-only studies talk teams into copying features they",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:177  do not need. @spec/done",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Table row; the sibling elaborates it at from-research-to-roadmap.md:176-177. Checked whether any located study is trail-only: none is (all five carry a lead section). The nearest thing to the failure mode is Tessl's 5.7:1 trail-to-lead line ratio, measured from the section boundaries at lines 548/775 and 910/949."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-ONE-DIRECTIONAL-LEAD-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:179  ##lead-only-studies-talk-teams-out-of-a-real-threat Lead-only studies talk teams out of taking a real",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:180  threat seriously. @spec/done",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. Table row, elaborated at from-research-to-roadmap.md:179-180. No lead-only study exists in the perimeter. The closest case is `packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/landscape.md`, whose §'Why fractality is neither' argues the project's distinctness — but it is a landscape note, not a study, and the two syntheses that do the comparing carry both directions."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-FINDS-BOTH-ARGUED-EQUALLY": {
+            "v": "confirmed",
+            "ev": [
+              "ROADMAP.md:43  > [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md:74  - **D-C3-1 Need-gate verb** (RD-1, RD-2, RD-6, RD-16; FD-1): one",
+              "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:12  …Second revision shipped same day after the [PROP-004 Tessl comparative research](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) surfaced eight architectural improvements that were better folded into the design proposal *before* implementation than retrofitted later.…",
+              "confirmed: 'Acted on' is the checkable half, and both two-way studies that reached a decision surface were acted on: the Tessl study produced ROADMAP milestones M1.7–M1.11 / M2.7–M2.10 / M3.1 and a revision of PROP-003; the RLM synthesis produced 9 Stage-B decisions citing 22 RD references. 'Argued equally' is the half the evidence does not settle uniformly — see the balance measurements in the LAW-THREE rows, where Tessl is 5.7:1 and the other four are near parity."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "WHERE-YOU-LEAD-DESERVES-THE-SAME-RIGOR": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:916  PROP-002's `[[registry]]` / `[[mirror]]` / `[[override]]` model is git-as-registry. Anyone hosts their own org. Mirrors are transparent. Tessl's registry is centralised on their hosted service — there is no documented mechanism for a team to run their own registry endpoint. This is an anti-pattern for vibevm's audience (regulated, air-gapped, sovereignty-conscious teams).",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:54  **Where the fabric is ahead of the field (we lead):**…",
+              "legacy-spec/research/settings-system-vscode-idea.md:345  …**Unified typed introspection с первого дня** — то, чего НЕТ ни у VSCode (extension-host-only `getConfiguration`), ни у IntelliJ (три несвязанных пути). AIUI-ready:…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The prescribed shape — name the decision, say why it matters — is followed in the lead sections that exist. Tessl §8.1 names PROP-002's registry model and gives the audience reason; RLM-SYNTHESIS's lead paragraph names process isolation, wall-clock kill-trees and honest metering with the reason each matters; settings §6.2 names TOML-over-XML and the layer-order law. Rigor is not equal in volume — see the 5.7:1 Tessl ratio — but each lead item is argued rather than asserted."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "envy-blinds-you-to-the-moat-you-already-have": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:916  …This is an anti-pattern for vibevm's audience (regulated, air-gapped, sovereignty-conscious teams).",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:178  cross-machine reuse, and that is a moat for regulated users.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. The word 'moat' is used in the perimeter exactly where this fact predicts — in a lead section justifying an existing decision: the package's own worked fragment at research-template.md:178, and substantively at Tessl §8.1, where the registry decision is argued as an advantage for a specific audience. `grep -rni 'moat' legacy-spec/ packages/ spec/ campaigns/` (vibedeps and `.vibe/cache` excluded) also returns `FUGU-FRACTALITY-MAPPING.md:78` — `## 4. What Fugu does not change {#moats}` — a whole section reserved for what the project keeps after studying a rival."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-FOUR-FINDINGS-BECOME-NUMBERED-PRIORITIZED-HOMED-DELTAS": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/settings-system-vscode-idea.md:358  …**D-01 [P0, settings-system PROP]** Layered deep-merge `L1 ⊂ L2 ⊂ L3` (L3 wins)…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:70  _Priority P1 = Stage B core scope; P2 = Stage B strongly",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:74  …**RD-1 (P1) The need-gate is an isolated, auditable call**…",
+              "legacy-spec/research/action-systems-vscode-idea.md:725  | Δ | Delta | Answers | → prospective PROP-039 REQ |",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-SYNTHESIS.md:56  - **FD-1** Two-tier orchestration: a cheap `route` verdict",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:782  Maps to §5.1.",
+              "DRIFT on «each with a priority». Numbering is universal (5/5) and target home is universal (5/5) — settings writes `**D-01 [P0, settings-system PROP]**`, RLM-SYNTHESIS `**RD-1 (P1) …** [MC/boss verb; VISION §V1]` with its priority key stated. Priority is present in three of five: action-systems' delta table has no priority column at all, and FUGU-SYNTHESIS carries `[need-gate]` instead. Tessl splits it — `**Priority.** HIGH` on the §5 gap, while §6's delta entry carries only `Maps to §5.x` — so the priority is not on the delta the law is about."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-FOUR-THE-DOCUMENT-PROPOSES-IT-DOES-NOT-DECIDE": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:5  **Status.** Research document — self-contained, evergreen reference. Not implementation-locked. Each numbered roadmap delta in §6 maps to a future PROP / FEAT / milestone update; this file does not itself ratify those.…",
+              "legacy-spec/research/action-systems-vscode-idea.md:723  study **proposes**; ratification happens in the contract (spec-genres).…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:9  deltas PROPOSE; acceptance happens in Stage B",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:204  …The synthesis",
+              "legacy-spec/research/settings-system-vscode-idea.md:356  > Каждый delta — предложение; исследование ратифицирует, приём — в PROP Шага 1.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. Stated explicitly by four of five studies plus the living plan decision D-R6, whose closing sentence is 'The synthesis proposes; acceptance happens in Stage B (deltas, not decrees).' ANOMALY for the reviewer: `settings-system-vscode-idea.md:356` reads 'Каждый delta — предложение; исследование ратифицирует, приём — в PROP Шага 1' — literally 'the research ratifies' — against the same file's header at line 7, 'Не ратифицирует собственные предложения'. Both lines quoted; I take no position on which is intended."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-self-ratifying-study-skips-the-review": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:778  The following entries should be added to `ROADMAP.md` between M1.6 (Multi-registry polish) and M2 (Production-readiness), with appropriate cross-references to PROP-002, PROP-003, and this PROP-004.…",
+              "ROADMAP.md:43  > [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. The separation held in the one case where it was testable: the Tessl study's §6 opens by recommending its entries for `ROADMAP.md` — a recommendation, not an edit (the line is quoted in evidence) — and `ROADMAP.md:43` records the owner-side landing separately, in the roadmap's own words ('New milestones M1.7–M1.11 and M2.7–M2.10 derive from …'). No located study edits a roadmap or spec inside itself; `grep -rn 'PROP-004' spec/ ROADMAP.md` shows the citations run from the spec toward the study, never the reverse."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-FOUR-KEEP-THE-TWO-ACTS-SEPARATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md:74  - **D-C3-1 Need-gate verb** (RD-1, RD-2, RD-6, RD-16; FD-1): one",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:205  …acceptance happens in Stage B (deltas, not decrees).",
+              "ROADMAP.md:43  > [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):",
+              "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:12  …Second revision shipped same day after the [PROP-004 Tessl comparative research](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) surfaced eight architectural improvements that were better folded into the design proposal *before* implementation than retrofitted later.…",
+              "confirmed: Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The two acts are separate documents in both trees. Fractality: the synthesis argues (`RLM-SYNTHESIS.md`), the Stage B plan decides — `grep -c 'RD-[0-9]' FRACTALITY-RLM-PLAN-v0.1.md` → 22 citations converted into decisions D-C3-1…9. Host: the Tessl study argues, `ROADMAP.md` and PROP-003 r2 decide. What the perimeter does NOT show is an explicit owner verdict per delta — see the DELTAS-DO-NOT-RATIFY and A-DELTA-WITH-NO-VERDICT rows."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:871  ## 7. Source URLs and re-fetch procedure {#sources}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:904  - **Capture date:** 2026-05-04.",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:905  - **Tessl CLI version visible in changelog:** 0.78.0.",
+              "legacy-spec/research/settings-system-vscode-idea.md:377  ## Re-fetch list (для обновления вместо переписывания)",
+              "legacy-spec/research/action-systems-vscode-idea.md:774  ## 8. Re-fetch / provenance {#refetch}",
+              "legacy-spec/research/action-systems-vscode-idea.md:778  | VSCode | `microsoft/vscode` (MIT) | `C:\\Users\\olegc\\git\\snapshot\\vscode` | 2026-07-15 | _not captured_ |",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:10  …Re-fetch list:",
+              "DRIFT on «closes with», which holds in three of five. Settings' re-fetch list is the last section and action-systems' §8 provenance table is the last section. It does NOT hold in Tessl, where §7 is followed by §8 (lead) and §9 (reading list), so the re-fetch list sits in the middle of the document. RLM-SYNTHESIS points at its list from the header and closes with prediction verdicts, and FUGU-SYNTHESIS carries no re-fetch section at all, pointing at `INVENTORY S27–S30 (all dated)` from its header instead."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-study-has-a-shelf-life": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:9  …Tessl ships product changes on a rolling basis (changelog version 0.78.0 as of capture date).",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:873  The Tessl product surface is on a rolling release schedule. To refresh this research:",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. The shelf-life premise is stated twice inside the Tessl study, in its source-corpus paragraph and again at the head of §7. Whether any study was in fact updated rather than redone is answered in the NEVER-LET-A-STUDY-SILENTLY-GO-STALE row: no study in the perimeter has been refreshed — `grep -rniE 'stale-flag|refresh history|^### 7\\.5' legacy-spec/ packages/ spec/ campaigns/` (vibedeps and .vibe/cache excluded) returns only the rule and the Tessl instruction to append such a block."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "record-enough-that-the-refresh-is-mechanical-lead": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:873  The Tessl product surface is on a rolling release schedule. To refresh this research:",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:875  ### 7.1 Canonical primary sources (the LLM-targeted docs)",
+              "legacy-spec/research/settings-system-vscode-idea.md:377  ## Re-fetch list (для обновления вместо переписывания)",
+              "confirmed as the lead-in it is — three bullets follow and each is judged on its own, two of them drifting. RECORDED: mechanical-refresh readiness varies sharply. Tessl's §7 gives 21 URLs grouped by class with a stated entry point and a version, which is close to mechanical; settings gives snapshot paths and dates but no version; action-systems records `_not captured_` for both subjects, so by its own admission its refresh cannot be mechanical. And no refresh has been attempted anywhere in the perimeter, so mechanicalness is untested rather than failed."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "REFETCH-WHICH-URLS": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:877  …**`https://docs.tessl.io/llms.txt`** — high-level documentation index. Best entry-point for inventory checks.…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/rlm-source-selection.md:19  | R1 | [alexzhang13/rlm](https://github.com/alexzhang13/rlm) | MIT |…",
+              "legacy-spec/research/settings-system-vscode-idea.md:379  …VSCode snapshot: `C:\\Users\\olegc\\git\\snapshot\\vscode` (local mirror; upstream microsoft/vscode). Доступ 2026-07-16.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. URLs are recorded in every re-fetch surface in the perimeter. Tessl §7 lists 21 URLs across three groups; `rlm-source-selection.md` records each of 15 sources as a markdown link with its license and pin; the settings study records local snapshot paths plus their upstream repo names rather than URLs — a variant the fact does not name."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "REFETCH-IN-WHAT-ORDER": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:875  ### 7.1 Canonical primary sources (the LLM-targeted docs)",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:877  …Best entry-point for inventory checks. Updated whenever they ship doc changes.",
+              "legacy-spec/research/action-systems-vscode-idea.md:776  | Subject | Upstream | Snapshot root | Accessed | Commit |",
+              "DRIFT, and the weakest of the three re-fetch bullets in practice: **no study writes a re-fetch order at all.** Tessl's §7 is grouped by source CLASS (canonical primary / marketing / indirect) rather than by refresh order, with the only ordering signal being «Best entry-point for inventory checks» on the first entry; action-systems' §8 is a two-row table with no order; settings' is a flat bullet list. The nearest thing in the perimeter is `rlm-source-selection.md`, which orders by tier with a rationale per row — and that is a selection note, not a re-fetch list."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS": {
+            "v": "drift",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:905  - **Tessl CLI version visible in changelog:** 0.78.0.",
+              "legacy-spec/research/action-systems-vscode-idea.md:778  | VSCode | `microsoft/vscode` (MIT) | `C:\\Users\\olegc\\git\\snapshot\\vscode` | 2026-07-15 | _not captured_ |",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/rlm-source-selection.md:44  | P1 | [arXiv 2512.24601](https://arxiv.org/abs/2512.24601) — Recursive Language Models (Zhang, Kraska, Khattab) | v1 2025-12, **v3 2026-05-11**…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:204  (every URL + access date + subject version). The synthesis",
+              "DRIFT, split three ways with one instance admitting the failure in its own text. RECORDED: Tessl §7.4 gives «Tessl CLI version visible in changelog: 0.78.0», and the fractality selection note pins per source (paper `v3 2026-05-11`, repo `pinned 72d6940`) with `spec/refs/INVENTORY.md` carrying a pin column. EXPLICITLY NOT RECORDED: action-systems' §8 provenance table reads `_not captured_` in the Commit column for BOTH subjects. ABSENT: the settings study's list carries access dates and names no VSCode or IntelliJ version. Two of four re-fetch lists cannot say what they captured."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "not-every-glance-warrants-a-full-study": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/landscape.md:1  # Landscape note — where fractality sits {#root}",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md:34  | S7 | Landscape scan: claude-code-router, claude_swarm, claude-squad | src/landscape/ (shallow) | snapshot 2026-07-09 | per repo | positioning only…",
+              "confirmed: Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The perimeter shows the distinction being drawn deliberately. The fractality INVENTORY's S7 row is a shallow landscape scan of three projects marked 'positioning only — never studied for implementation', producing `notes/landscape.md` rather than a study; the 15 sources that did warrant one produced `*-study.md` notes. So 'glance' and 'full study' are distinct, named artefacts here."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/OPENREWRITE-RESEARCH-PLAN-v0.1.md:17  **OpenRewrite is the most mature proof that this works** — typed, composable, *gated* refactoring \"recipes\" over a lossless, type-attributed tree, run as framework migrations across thousands of repositories. Before we finalise our design…",
+              "legacy-spec/research/action-systems-vscode-idea.md:20  We are designing a **frontend-agnostic, addressable action system** in Rust: every action a",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:7  …occupies adjacent ground to vibevm: managing AI-coding-agent context (skills, documentation, rules) as versioned, evaluated, distributable software artefacts. They have a non-trivial product surface and ~3,000 published skills; understanding what they do well — and what they don't — is load-bearing intelligence for vibevm's own roadmap. This document captures a complete-as-of-2026-05 inventory of Tessl, identifies the gaps where vibevm trails, the gaps where vibevm leads, and translates the actionable subset into concrete roadmap entries.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. This is the trigger the host actually used, three times, and each study says so in its own opening. OpenRewrite's plan states the rule almost verbatim — study 'before we finalise our design or write a line of engine code'. The action-systems study opens with 'We are designing …' before studying VSCode and IntelliJ. The Tessl study's purpose paragraph names adjacency as the reason."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-SYNTHESIS.md:14  Fugu is the first shipped **orchestration-as-a-model**: a trained",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md:1  # FRACTALITY-FUGU-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A2: the Sakana Fugu research {#root}",
+              "confirmed: Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The nearest instance is the fractality FUGU study, commissioned after Sakana shipped an orchestration model into fractality's own design space — `FUGU-SYNTHESIS.md:14` opens 'Fugu is the first shipped **orchestration-as-a-model**'. What is NOT settled: no document in the perimeter records alarm, urgency or an emotional reaction as the trigger. `grep -rniE 'alarming|alarmed|panic|urgent' legacy-spec/research/ packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/` returns no hit naming a study's motive. The mandates that ARE recorded are quoted owner commissions."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:107  …A rejected delta left in place answers the",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:109  we just add auto-update like they have\" reads D4 and gets the reason",
+              "confirmed as one trigger among several in a when-to-write table; the trigger simply has not fired here. Searched for both the question shape and a study written to answer one — `grep -rniE \"why don't we|why not just|почему бы не\"` across the archive, packages, spec, campaigns and docs returns only this package's own two statements of the pattern. Every recorded study mandate in the perimeter is an owner commission quoted verbatim. A trigger with no occasion is not a trigger the host contradicted."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-one-off-lookup-does-not-warrant-a-study": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md:34  | S7 | Landscape scan: claude-code-router, claude_swarm, claude-squad | src/landscape/ (shallow) | snapshot 2026-07-09 | per repo | positioning only…",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/landscape.md:1  # Landscape note — where fractality sits {#root}",
+              "confirmed: Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The perimeter shows the sub-study tier existing (the S7 landscape scan, `landscape.md`), which is evidence the project does not write a full study for every look. What is NOT settled is the fact's own case — a one-off factual lookup answered without any artefact leaves no trace to find, so the absence of such traces cannot be read either way."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-GENRE-IS-FOR-A-SYSTEM-WORTH-UNDERSTANDING-WHOLE": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:39  ## 2. Primitives — the Tessl object model {#primitives}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:359  ## 3. CLI surface — complete documented inventory {#cli}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:447  ## 4. File formats and on-disk shapes {#formats}",
+              "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:224  …The three modes mirror Tessl's \"rules eager-push / skills lazy-push / docs lazy-pull\" framing…",
+              "spec/modules/vibe-index/PROP-005-package-index.md:9  …[PROP-004](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) §5.x (gap analysis)…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Both halves are checkable in the Tessl case. 'Whole': §2 object model (39), §3 complete CLI surface (359), §4 file formats (447) — the study inventories the product exhaustively rather than the one feature that prompted it. 'More than once': the study is cited from four separate anchors of PROP-003 (12, 224, 364, 372, 697) and from PROP-005:9, i.e. it informed decisions repeatedly and in the LIVING spec tree, not once at capture."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NOT-A-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:963  *This PROP is research only — it ratifies no implementation.…",
+              "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:49  …**Research docs** @impl/done | What *other* projects/systems did — external studies, prior art @impl/done | Superseded by newer study @impl/done | Anyone surveying the field @impl/done | Non-binding @impl/done |",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Two independent confirmations. The Tessl study's own closing line declares it ratifies no implementation. And the sibling genre package classifies the whole genre as Non-binding in its genre table, with `when-to-write-what.md:83` naming the smell 'A research doc prescribes what *we* must build' and its fix 'Split: the external study stays research; our resulting choice becomes a contract decision'."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NOT-A-RANT": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/action-systems-vscode-idea.md:5  **Genre:** research (comparative-research flow) — non-binding, evergreen.…",
+              "legacy-spec/research/action-systems-vscode-idea.md:701  ## 5. Two-way gap analysis {#gaps}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:910  ## 8. Where vibevm leads — Tessl gaps {#vibevm-leads}",
+              "confirmed on the genre boundary it draws: none of the five located studies is a rant. Every one writes both gap directions, every one produces numbered deltas, and no study in the perimeter records frustration as its trigger — every recorded motive is a pending design decision or an owner commission quoted verbatim. RECORDED, because it is the sharper observation: the discipline rests on ONE leg in most instances, since four of the five quote nothing at all. The quoting gap is carried by the Law 1 and Law 2 rows, which drift; this sentence's own claim survives it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NOT-A-LIVE-DASHBOARD": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:904  - **Capture date:** 2026-05-04.",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:908  …Don't rewrite the existing inventory in place — keep it as a historical baseline.",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:963  …refresh this document via §7's procedure rather than rewriting it; the historical baseline has independent value.*",
+              "confirmed on the shape: the Tessl study is exactly snapshot-plus-procedure — a capture dated 2026-05-04 with an explicit instruction to append a §7.5 refresh block and keep the old capture as a historical baseline. The procedure having never been exercised is a separate fact and it drifts at `NEVER-LET-A-STUDY-SILENTLY-GO-STALE`; recording it twice would count one defect as two. Worth the next reader's eye: the study's own §7.2 already records one source 404ing."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NOT-A-LINK-FARM": {
+            "v": "confirmed",
+            "ev": [
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:871  ## 7. Source URLs and re-fetch procedure {#sources}",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:884  …(currently 404s with redirect to home; check redirect targets when refetching).",
+              "legacy-spec/research/PROP-004-tessl-comparative-research.md:9  …Direct quotes from the corpus appear in fenced blocks throughout.…",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Quote practice, measured: the Tessl study carries 27 blockquote lines and 0 per-quote access dates (`grep -c '^> '` / `grep -niE 'accessed|capture date'`); all 22 files in `packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/` carry 0 blockquote lines. The rot half is demonstrated inside the perimeter — one of the Tessl study's own listed sources already 404s. The evidence half is where the practice thins: the Tessl study carries 21 URLs against 27 quote lines, and the other four located studies carry link or snapshot lists with zero quotes. So four of five studies rest their evidence on the project's own prose rather than on quotes, which is neither a link farm nor the quoted shape this fact contrasts it with."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "re-derive-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:188  Read spec/flows/comparative-research/ in full, then run one study:",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:199  (`notes/RLM-SYNTHESIS.md`) follows flow:comparative-research:",
+              "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …in the **comparative-research genre** (quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead; numbered roadmap deltas each naming a target Spec-1 REQ; a re-fetch/provenance table)…",
+              "confirmed: Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The prompt's first line instructs the agent to read `spec/flows/comparative-research/` in full — a path that does not exist in the host (`ls spec/` → WAL.md, boot, common, design, manual-tests, modules, terraforms; no `flows`). The delivered copy is at `vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/`. What IS observed is the behaviour the lead-in asks for: both documents that adopt the genre re-derive it in their own words and their own numbering rather than copying the framing — D-R6 restates four laws in fractality's vocabulary, the archived plan restates them in the action-system's. Whether either author read this file is not checkable from the perimeter."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-A-SELF-CONTAINED-EVERGREEN-STUDY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:16  ##A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM A comparative research document is a **self-contained, evergreen",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:27  …The document is written",
+              "legacy-spec/research/README.md:3  Self-contained backgrounder documents — comparative research, threat-model analyses, prior-art surveys. Each is meant to be re-readable months after publication without referring to the original sources, and to outlast any one external project's URL stability.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Summary line; it restates §what faithfully (16, 27) and the host's own archive states the same at README:3. The two qualifiers it carries forward are the two the perimeter contradicts in part: 'of one external system' (three of five studies cover two systems or a whole field — see A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM) and 'self-contained' (four of five carry no quotes, and the source corpus is gitignored at `.gitignore:37`)."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-WHY-THE-GENRE-EXISTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:47  …**Unexamined competitors cost roadmap mistakes.**…",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:51  …**Examined competitors yield deltas.**…",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:55  …**The study must outlive link rot and staff turnover.**…",
+              "ROADMAP.md:43  > [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):",
+              "confirmed: Summary of §why's three costs; the three bullets are at 47, 51, 55 and the compression is faithful. The middle cost is the one with host evidence: `ROADMAP.md:43` records that milestones M1.7–M1.11 and M2.7–M2.10 derive from the Tessl study — deltas yielded and landed. See COST-EXAMINED-COMPETITORS-YIELD-DELTAS for the full citation chain into PROP-003 and PROP-005."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-THE-FIVE-LAWS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:67  ### Law 1 — Self-containedness {#law-self-contained}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:82  ### Law 2 — Quote first, critique second {#law-quote-first}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:97  ### Law 3 — Two-way gaps {#law-two-way}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:120  ### Law 4 — Deltas, not decrees {#law-deltas}",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:137  ### Law 5 — The re-fetch list {#law-refetch}",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:200  quote-first, **two-way gaps** (where the field is ahead of the",
+              "legacy-spec/research/settings-system-vscode-idea.md:6  …Comparative-research genre: quote-first, two-way gaps, deltas-not-decrees.",
+              "confirmed: The five law headings exist in the stated order and the summary's parenthetical for each matches its section. On adoption: the two documents that name the laws name FOUR (D-R6: quote-first, two-way gaps, numbered deltas with priority and home, re-fetch list) and THREE (settings header: quote-first, two-way gaps, deltas-not-decrees) respectively. No host document enumerates all five. Conformance per law is in the individual LAW-* rows."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-WHEN-TO-WRITE-ONE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:162  …Before building in a space others occupy @spec/done | Cheaper to learn their dead ends than to re-walk them @spec/done |",
+              "legacy-spec/research/OPENREWRITE-RESEARCH-PLAN-v0.1.md:17  …Before we finalise our design or write a line of engine code, we study OpenRewrite and its neighbours **rigorously and clean-room**, distil the lessons in our own words, and let that distillation drive the spec redesign.",
+              "confirmed: Three genre instances sit in `legacy-spec/research/`: PROP-004-tessl-comparative-research.md (963 lines), action-systems-vscode-idea.md (782), settings-system-vscode-idea.md (382) — counted with `wc -l legacy-spec/research/*.md`. legacy-spec/ is an archive, so nothing living rests on them as a normative source; that is the finding, not conformance. Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. Faithful compression of the §when table's three rows. Trigger usage in the perimeter, counted from each study's own opening: trigger 1 (occupied space) fired for all five located studies plus the OpenRewrite plan; trigger 2 (a competitor ships something alarming) is at best the Fugu case and no document records alarm; trigger 3 (recurring question) fired zero times — see ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION, which is `not-found` after widening."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:34  ##THE-STUDY-PROPOSES-THE-OWNER-DECIDES The study **proposes**; the owner **decides**. @impl/done",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md:1  # From research to roadmap {#root}",
+              "ROADMAP.md:43  > [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md:74  - **D-C3-1 Need-gate verb** (RD-1, RD-2, RD-6, RD-16; FD-1): one",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:205  …acceptance happens in Stage B (deltas, not decrees).",
+              "confirmed: Widened past the brief's default perimeter into `packages/org.vibevm.fractality/**` (nested `vibedeps/**` and `.vibe/cache/**` excluded), which is where the living practice sits. The pointer resolves (same-directory link, present in the package and in `vibedeps/flow-comparative-research/0.1.0/`), and the proposition is the one with the strongest downstream evidence in this batch: the Tessl deltas landed in ROADMAP.md by owner decision, and the RLM deltas landed as Stage B decisions citing `RD-n` 22 times. What the perimeter does not show is the owner's verdict recorded PER delta at the delta — see A-DELTA-WITH-NO-VERDICT-IS-NOT-DONE-BEING-REVIEWED."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T21:45:52Z",
+        "verify_batch": "W4"
+      }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md": {
       "content_hash": "f0fcb508ee7fd223e02e0b3de273e5c55a22f156aad256aebc22ddaa6c3e4f15",
