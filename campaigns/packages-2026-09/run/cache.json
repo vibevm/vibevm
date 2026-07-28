@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T20:03:00Z",
+  "updated_at": "2026-07-28T20:04:56Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -25440,7 +25440,327 @@
       },
       "marker_count": 24,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "17f15c4e9a554da8fd56873b9d93c92bca377a981788619d5ab461190f9853a3",
+        "verdicts": {
+          "PACKAGE-INSTALLS-THE-DECISIONS-NOT-FACTS-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:5  ##PACKAGE-INSTALLS-THE-DECISIONS-NOT-FACTS-DISCIPLINE A `flow` package that installs the **decisions, not facts**",
+              "packages/org.vibevm.world/decision-records/v0.1.0/vibe.toml:1  [package]",
+              "vibe.lock:216  name = \"decision-records\"",
+              "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+              "confirmed: Read the package manifest (kind = \"flow\", group org.vibevm.world), confirmed the lockfile entry at vibe.lock:216 and the dependency pin at vibe.lock:46, and confirmed the discipline text reaches the host's compiled boot lane at spec/boot/STATIC.md:235-301. Widened beyond the package to vibedeps/ (7 files materialised under vibedeps/flow-decision-records/0.1.0/) and to spec/boot/INDEX.md, where the flow does NOT appear as an [[entry]] — it is a static contribution compiled into STATIC.md, which is what the harvest records at campaigns/packages-2026-09/harvest/world-w3-ipc-core-ii.md:34."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "FACT-IS-RECOVERABLE-REASON-IS-NOT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:8  ##FACT-IS-RECOVERABLE-REASON-IS-NOT A fact (\"timeout is 600 s\") is",
+              "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+              "spec/boot/STATIC.md:241  600 s cannot be recovered at all — unless it was written down when",
+              "confirmed: The asymmetry claim is an argument, not a host behaviour, so I checked whether the host restates it and whether the host's own tree exhibits the gap. Restatement: verbatim in the compiled boot lane. Exhibition: grep for `**Decision` across spec/ returns 158 labels; 127 of the 153 sections in the PROP tree carry the decision with no why (see the census in the ANY-REOPENABLE-CHOICE-GETS-A-RECORD row). Searched spec/, CLAUDE.md, crates/ for a counter-statement; none."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:12  ##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR So every choice a future reader could plausibly",
+              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
+              "spec/modules/vibe-progress/PROP-043-progress-markup.md:91  ##DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.** @impl/done",
+              "spec/modules/vibe-cli/PROP-036-package-tree.md:88  ##DECISION-ARTIFACTS-CANONICAL **Decision — read the effective type from the artifacts, not a fresh recompute.** @spec/done",
+              "DRIFT on completeness, not on placement. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The anchor half holds — all 153 sit in the section governing the value and no ADR directory exists — so the claim's «at the governing anchor» is right and its «four-field record» is met 2.6 % of the time."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "tribal-knowledge-in-a-pure-human-team": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:17  ##tribal-knowledge-in-a-pure-human-team In a pure-human team, unrecorded reasoning limps along as tribal",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:41  ##tribal-knowledge-in-a-pure-human-team In a pure-human team, unrecorded reasoning survives as tribal",
+              "confirmed: A claim about human teams generally, with no host referent. Searched spec/, CLAUDE.md, AGENTS.md, GEMINI.md, crates/ and campaigns/ for \"Vasya\"/\"tribal\": the only occurrences are inside this package and its compiled copy in spec/boot/STATIC.md:284. Widened to vibedeps/flow-decision-records/0.1.0/ (same text) and to the redbook source (packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:190 «Решения, а не факты»). Nothing outside the package family bears on it; the two package statements agree with each other but differ in verb (\"limps along as\" vs \"survives as\""
+            ],
+            "src": [
+              1
+            ]
+          },
+          "AGENT-CANNOT-ASK-VASYA": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:20  ##AGENT-CANNOT-ASK-VASYA The agent cannot ask Vasya. @spec/done",
+              "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+              "confirmed: The same anchor id is carried by three files in this package (README:20, boot snippet:56, protocol:45) and by the compiled boot lane. Searched the whole host perimeter for any mechanism by which a session could reach the original decider mid-session (CLAUDE.md, spec/boot/00-core.md, spec/boot/90-user.md, spec/WAL.md, the session-end/session-resume contracts in CLAUDE.md): the host's own model is the opposite — CLAUDE.md's session-end command exists precisely because context does not survive the boundary."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "re-derivation-ends-in-re-litigation": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:22  ##re-derivation-ends-in-re-litigation It re-derives from the code, the code",
+              "spec/boot/STATIC.md:287  300 s for performance.\" A recorded decision is immunity from",
+              "confirmed: Searched the host for a real instance of a value re-litigated for want of a recorded reason. The nearest documented host instance runs the other way: spec/common/PROP-000.md:57 records that LICENSE-REVISIT's trigger had already fired and was confirmed anyway under a file-level sweep, which the commit body for 71d8383b calls \"a verdict correction\". Widened to AUDIT.md, BACKLOG.md and spec/terraforms/: spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:801 and :1142 record the same episode. No host instance of the 600 s/300 s shape — the host has no verification timeout (grep 'verification.time"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "RECORD-IS-IMMUNITY-TRIGGER-KEEPS-IT-HONEST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:27  ##RECORD-IS-IMMUNITY-TRIGGER-KEEPS-IT-HONEST A recorded decision is immunity from re-litigation;",
+              "spec/boot/STATIC.md:288  re-litigation. A recorded trigger is what keeps the immunity from",
+              "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+              "confirmed: The host has exactly one worked instance of the immunity-plus-trigger cycle: PROP-000 §3's licence record, whose trigger fired 2026-07-12 and was re-issued with two new conditions in the same edit (commit 71d8383b, subject \"docs(spec): Phase D d1b — the foundation catches up with reality\", body: \"the spent revisit trigger is re-issued with two conditions that can actually fire\"). Against that, of the 11 revisit lines in spec/ two say the decision is never to be revisited (PROP-000.md:23 \"Never, in the scope of v1\"; PROP-043-progress-markup.md:141 \"never expected\"), which is the dogma end of th"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NO-ADR-DIRECTORY-NO-NUMBERED-LOG": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:30  ##NO-ADR-DIRECTORY-NO-NUMBERED-LOG There is deliberately no `adr/` directory and no immutable numbered",
+              "spec/boot/STATIC.md:257  There is no separate ADR directory and no immutable numbered log.",
+              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:214  ## 7. Version history {#history}",
+              "spec/common/PROP-029-fully-qualified-addresses.md:47  ## Changelog {#changelog}",
+              "confirmed: `find . -type d -name adr` excluding .git/, vibedeps/, .vibe/ and node_modules/ returns nothing — no ADR silo anywhere in the repository. The changelog-line half is present at scale: 15 `## Version history {#history}` / `## Changelog {#changelog}` sections across spec/, and their entries are dated one-liners (PROP-008:218 \"**2026-05-23 — Phases 5 + 6 + 8 shipped with M1.19.**\"). Widened to legacy-spec/ and refs/ for a surviving ADR directory: none."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:34  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
+              "packages/org.vibevm.world/decision-records/v0.1.0/vibe.toml:15  [boot_snippet]",
+              "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:1  # Flow: Decision Records {#root}",
+              "confirmed: Listed the package directory: 5 markdown files plus LICENSE.md and vibe.toml. The three content files are DECISION-RECORDS-PROTOCOL.md, record-template.md and revisit-triggers.md under spec/flows/decision-records/, and the snippet is spec/boot/25-flow-decision-records.md, declared at vibe.toml:16. Widened to the installed slot: vibedeps/flow-decision-records/0.1.0/ carries all seven files (LICENSE.md, README.md, vibe.toml, the boot snippet and the three protocol documents)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:36  - ##CONTENT-THE-PROTOCOL `spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md` — full",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:15  ## Facts versus decisions {#facts-vs-decisions}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:69  ## The four-field record {#four-fields}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:87  ## Where records live {#placement}",
+              "confirmed: Read the protocol document in full and matched each promised topic to a heading; all seven named topics have a section, and the classic-ADR contrast is the table at lines 98-103. Widened to the installed copy vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md (present). The harvest already measured the mechanical half of this source: 24 relative .md citations across the three W3 packages, 0 broken (campaigns/packages-2026-09/harvest/world-w3-ipc-core-ii.md:19-20)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-RECORD-TEMPLATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:42  - ##CONTENT-THE-RECORD-TEMPLATE `spec/flows/decision-records/record-template.md` — the copy-ready",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:14  ## The template {#template}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:47  ## Worked example: a constant with consequences {#example-timeout}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:103  ## Worked example: a library choice {#example-library}",
+              "confirmed: Read record-template.md in full: the template fence is at 22-36, the timeout example at 54-72, the library example at 105-125, and the anti-pattern table at 136-143 (6 rows). Every promised item is present and the count (\"two fully worked examples\") is exact. Widened to the installed copy under vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md (present)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-REVISIT-TRIGGERS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:45  - ##CONTENT-THE-REVISIT-TRIGGERS `spec/flows/decision-records/revisit-triggers.md` — trigger anatomy",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:42  ## Anatomy of a measurable trigger {#anatomy}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:75  ## Good and bad triggers {#good-bad}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:95  ## The periodic sweep {#periodic-sweep}",
+              "confirmed: Read revisit-triggers.md in full: the three-part anatomy table is at 46-50, the good/bad table at 77-86 (8 rows, 4 good / 4 bad), the sweep prompt fence at 112-124, and the four-step reopening procedure at 146-163. All four promised items present. Widened to the installed copy under vibedeps/flow-decision-records/0.1.0/ (present)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:49  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/25-flow-decision-records.md` — boot snippet loaded at",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:14  ## Core rule {#core-rule}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:35  ## In session {#in-session}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:69  ## Never {#never}",
+              "confirmed: All three named sections are in the snippet. The \"loaded at session start\" half is checkable on the host: the snippet is compiled into spec/boot/STATIC.md at lines 235-301 with a provenance marker, and CLAUDE.md's vibevm block instructs a session to read spec/boot/STATIC.md first and in full. Note it is NOT a separate [[entry]] in spec/boot/INDEX.md — grep 'decision' over INDEX.md returns 0; it reaches the session through the compiled static lane only. The harvest records the same line at campaigns/packages-2026-09/harvest/world-w3-ipc-core-ii.md:34 and calls all three W3 slots \"INSTALLED, SOU"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:65  ##UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot",
+              "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its",
+              "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+              "crates/vibe-install/src/record.rs:167  /// `files_written` stays empty and the `NN-` `boot_snippet` filename",
+              "confirmed: Read the uninstall command implementation: it removes the vibedeps/ slot (vibedeps::remove_slot / remove_in_place_slot at uninstall.rs:120-124), drops the lockfile entry and regenerates the boot artifacts, so the snippet leaves STATIC.md by regeneration rather than by file deletion. The phrase \"every file the package wrote\" has no mechanism behind it: crates/vibe-install/src/record.rs:167 documents that `files_written` is deliberately left empty, and vibe.lock carries `files_written = []` for all 36 packages (the fact the batch plan §2.3 records at PHASE-C-BATCH-PLAN.md:127-133). Widened from "
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:68  ##USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files are never touched. @impl/done",
+              "spec/common/PROP-000.md:320  3. ##INV-USER-FILES **User-owned files are never written by `vibe`.** `spec/boot/00-core.md` and `spec/boot/90-user.md` are off-limits to install/uninstall/update. @spec/done",
+              "crates/vibe-cli/src/commands/show/effective.rs:213  if filename == \"00-core.md\" || filename == \"90-user.md\" {",
+              "crates/vibe-cli/src/commands/tree/build.rs:33  const HOST_BOOT_FILES: &[&str] = &[\"00-core.md\", \"90-user.md\"];",
+              "confirmed: The host states the same rule as a numbered invariant in PROP-000 §Invariants, and the two user-owned filenames are named as constants in the CLI. Widened from the package into crates/ (grep '90-user' over crates/ --include=*.rs, 10 hits) and into spec/boot/: the host tree carries 00-core.md and 90-user.md alongside the generated STATIC.md/INDEX.md, and the generated files carry the do-not-edit banner rather than the authored ones."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-ADDRESSABLE-SPECS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:72  - ##COMPOSES-ADDRESSABLE-SPECS `flow:addressable-specs` — records live at anchors; the stable",
+              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md:26  commit bodies, code markers, review notes — cite the anchor, never a",
+              "crates/vibe-cli/src/commands/uninstall.rs:8  //! Spec: spec://vibevm/modules/vibe-workspace/PROP-009-loading-model.",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).",
+              "confirmed: Both packages are installed here (packages/org.vibevm.world/addressable-specs/ exists; the harvest records addressable-specs as the first contribution in the compiled boot lane, STATIC.md line 5). The composition is exercised in all three of the surfaces the fact names: code comments (crates/vibe-cli/src/commands/uninstall.rs:8), commit bodies (520 of 2061 commits contain `spec://` — `git log --all --grep='spec://'` counted against `git rev-list --count HEAD`), and the host contract file CLAUDE.md:5. Counter-fact already measured in W2a and repeated in the W3 harvest at campaigns/packages-2026"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-SYNC-FROM-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:75  - ##COMPOSES-SYNC-FROM-CODE `flow:sync-from-code` — its spec delta (value + reason + revisit",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md:30  contain (value + reason + revisit trigger), and what it explicitly",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:18  3. ##PART-A-REVISIT-TRIGGER **A revisit trigger** — the condition under which the decision",
+              "confirmed: sync-from-code is present at packages/org.vibevm.world/sync-from-code/v0.1.0/ and its own text uses the identical trio wording, so the two packages agree. The host-side half is measured and negative: spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2783 records \"of three mandatory draft parts | value and reason land; the **revisit trigger never does**\", and the same table row records the sync grammar `docs(spec): sync <section> with code` at 0 uses in 2 041 commits. Widened to vibedeps/: the W3 harvest notes sync-from-code was NO-SOURCE in the boot join at W2 (harvest:39-40), which is a"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:79  - ##COMPOSES-WAL `flow:wal` — WAL Constraints entries cite recorded decisions",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a",
+              "spec/WAL.md:69  ## Constraints — do not violate",
+              "confirmed: The wal flow does specify that each Constraints entry carries a brief why citing a spec anchor or issue (WAL-PROTOCOL.md:83-88). The host's spec/WAL.md has the section (line 69, a structural heading — I avoid citing the volatile prose beneath it because CLAUDE.md rewrites this file at every session end). Measured instead: `grep -c 'spec://' spec/WAL.md` returns 0, and the WAL's own Current-phase prose records \"Constraints citing a spec anchor in 4 of 26 entries\". So the composition is specified on both sides and exercised in 4 of 26 host entries, none of them via a `spec://` URI. Widened to CO"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-ATOMIC-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:82  - ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — commit bodies cite the record, never",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:53  - ##WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place",
+              "spec/common/PROP-000.md:321  4. ##INV-ATOMIC-COMMITS **One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @spec/done",
+              "confirmed: The sibling package is at packages/org.vibevm.world/git-atomic-commits/v0.1.0/ (snippet filename is 30-flow-atomic-commits.md, not 30-flow-git-atomic-commits.md). The two flows do not say the same thing: git-atomic-commits:53-54 calls the commit message \"the only place where *why* survives after the WAL and spec prose decay\", while this package's boot snippet forbids exactly that (spec/boot/STATIC.md:297 \"Never put a decision's why into a commit message only\"). Host practice: 520 of 2061 commits carry `spec://` in the message; commit 71d8383b's body carries several paragraphs of why for a reco"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "practice-extracted-from-the-book": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:88  ##practice-extracted-from-the-book The practice is extracted from *AI-native development*, chapter 3",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:1  # Глава третья.<br>Архитектура памяти",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:190  ## Решения, а не факты",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:221  ## Архитектура памяти",
+              "confirmed: Both named locations resolve: chapter 3 is titled Архитектура памяти and carries the subsection Решения, а не факты at line 190, and chapter 1 has its own Архитектура памяти sections at 221 and 269. The chapter-3 passage at 190-200 contains the same 600 s / 15 % VPN worked example this package's record-template.md uses. Checked both redbook slots — v0.1.0 carries the identical heading at the identical line 190; v0.2.0 is the live slot."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "BOOK-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:92  ##BOOK-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK The book ships in",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:1  # Глава третья.<br>Архитектура памяти",
+              "confirmed: `find packages/org.vibevm.world/redbook -type d -name ru` returns two slots: v0.1.0/spec/book/ru and v0.2.0/spec/book/ru. v0.1.0 holds three chapter files, v0.2.0 holds at least chapters 1-3, all in Russian. Widened to the other language directories under redbook and to vibedeps/ for an installed redbook slot; the claim's path shape (`spec/book/ru/`) matches exactly."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "AGENT-HAS-NO-MEMORY-BETWEEN-SESSIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:95  ##AGENT-HAS-NO-MEMORY-BETWEEN-SESSIONS Short version: the",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:47  ##EVERY-SESSION-IS-A-NEW-DEVELOPER-WITH-ZERO-MEMORY Every session is a brilliant new",
+              "confirmed: The host's whole session-boundary machinery is built on the same premise and is checkable: CLAUDE.md defines a session-end checkpoint command whose stated point is \"to make session-boundary loss-of-context cheap\", and a session-resume command that re-reads CLAUDE.md, spec/boot/, spec/WAL.md and CONTINUE.md from scratch. Searched for any host mechanism that carries state across sessions other than committed files: none in CLAUDE.md, spec/boot/00-core.md or spec/boot/90-user.md. I cite the package pair rather than CLAUDE.md prose here because the host statement is a procedure, not an assertion o"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:101  ##license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @impl/done",
+              "packages/org.vibevm.world/decision-records/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+              "packages/org.vibevm.world/decision-records/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. See [`LICENSE.md`](../../LICENSE.md) at the repo root for the terms. The scope is *this* repository's shipped surface — the host tree and every `packages/org.vibevm.*` package; separately-developed products carry their own licences and are not governed here. The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+              "confirmed: The relative link resolves (LICENSE.md sits beside README.md in the package), the file's own text names UPL 1.0, and the manifest's SPDX field agrees. Widened to the host's licence record: PROP-000 §3 puts every packages/org.vibevm.* package under UPL-1.0 as of the 2026-07-12 relicense, so package and host agree."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T20:04:56Z",
+        "verify_batch": "W3"
+      }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md": {
       "content_hash": "c1531d51b2f2ef018cb55e61bee96411863dd4b84f817c5ef9f49a9fad36f312",
@@ -25463,7 +25783,362 @@
       },
       "marker_count": 30,
       "unit_count": 5,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "c1531d51b2f2ef018cb55e61bee96411863dd4b84f817c5ef9f49a9fad36f312",
+        "verdicts": {
+          "PROJECT-RECORDS-DECISIONS-NOT-FACTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:5  ##PROJECT-RECORDS-DECISIONS-NOT-FACTS This project records **decisions, not facts**. @impl/done",
+              "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+              "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:1  # Flow: Decision Records {#root}",
+              "confirmed: The snippet is installed and compiled into the host's static boot lane word-identically (STATIC.md:235-301; the harvest's boot-join found none of the three W3 slots on its problem list — harvest:29-37). Whether the host actually records decisions rather than facts is the batch's question and is counted in full in the ANY-REOPENABLE-CHOICE-GETS-A-RECORD row: Host record census (my own count, nothing in the tree computes it): a section-scoped scan of every markdown file under spec/common/ + spec/modules/** for a bolded **Decision** label (four notations occur: `**Decision:**` 25, `**Decision.**`"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "FACT-IS-RECOVERABLE-FROM-THE-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:7  ##FACT-IS-RECOVERABLE-FROM-THE-CODE A fact (\"timeout is",
+              "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+              "confirmed: Installed verbatim in the compiled lane. Searched the host for a value of exactly this shape to test the recoverability half: `grep -rn 'verification.timeout' spec/ crates/` returns the addressing example at spec/modules/vibe-workspace/PROP-035-spec-compiler.md:80 and the wal golden fixture under crates/vibe-index/fixtures/, not a live constant — the host has no verification timeout of its own, so the example is a teaching value, not a host fact."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "REASON-IS-LOST-UNLESS-WRITTEN-DOWN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:10  ##REASON-IS-LOST-UNLESS-WRITTEN-DOWN The reason it is",
+              "spec/boot/STATIC.md:241  600 s cannot be recovered at all — unless it was written down when",
+              "confirmed: Installed verbatim. Host exhibition of the loss: of the 153 spec sections in spec/common/ + spec/modules/** carrying a bolded **Decision** label, 127 carry no Why at all — the reason for those was either never written or written somewhere the anchor does not reach. Widened to spec/design/, where 10 four-field records D1-D10 hold reasons for PROP-039's decisions; spec/design/README.md:7 declares that lane non-normative."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "ANY-REOPENABLE-CHOICE-GETS-A-RECORD": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
+              "spec/boot/STATIC.md:246  Any choice a future reader could plausibly re-open — a library pick,",
+              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
+              "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done",
+              "DRIFT: the host writes at the reopenable choices and writes a RECORD at four of them. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-FIELD-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:22  | ##ROW-FIELD-DECISION **Decision** @impl/done | The chosen value or approach. One line. @impl/done |",
+              "spec/boot/STATIC.md:252  | **Decision** | The chosen value or approach. One line. |",
+              "spec/modules/vibe-progress/PROP-043-progress-markup.md:91  ##DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.** @impl/done",
+              "confirmed: Row is installed verbatim in the compiled table. Host use of the field label: 158 bolded **Decision** labels across spec/, in four notations — `**Decision.**` 125, `**Decision:**` 25, `**Decision — …**` 4, `**Decision (…)**` 3, bare `**Decision**` 1. The \"one line\" requirement is not met at scale: PROP-002-decentralized-registry.md:42 is a single Decision spanning roughly 900 characters. Searched for a checker enforcing the field: none in crates/vibe-check/ (grep 'Decision' over crates/ returns no rule)."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-FIELD-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:23  | ##ROW-FIELD-WHY **Why** @impl/done | Concrete and cited: a measurement, a constraint, an incident — with data. @impl/done |",
+              "spec/boot/STATIC.md:253  | **Why** | Concrete and cited: a measurement, a constraint, an incident — with data. |",
+              "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`, `serde`, `toml`, `reqwest`, `git2`, `tokio`, `anyhow`, `thiserror`, `tracing`, `dialoguer`, `console`, `sha2`). See `VIBEVM-SPEC.md` §10.1. @spec/done",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:103  **Why:** the first probe of §3.2 returned this, in 0.03 s:",
+              "confirmed: Installed verbatim. Host census of the label: 26 bolded `**Why` labels across spec/, of which 16 are the record-field form `**Why:**`; only 26 of the 153 Decision-bearing sections carry one (22 in spec/common + spec/modules). On the \"with data\" requirement the host splits: PHASE-C-BATCH-PLAN.md:103-109 cites a captured console run with a timing, and PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:127-133 cites a grep and its count 36; PROP-000.md:18 by contrast lists properties and a spec section with no measurement."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-FIELD-CONSIDERED-AND-REJECTED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:24  | ##ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @impl/done | One line per alternative, each carrying its rejection reason. @impl/done |",
+              "spec/boot/STATIC.md:254  | **Considered and rejected** | One line per alternative, each carrying its rejection reason. |",
+              "spec/modules/vibe-progress/PROP-043-progress-markup.md:96  - ##element-name-rejected **Considered and rejected:** `progress` (HTML collision), `vp`/`prg`",
+              "spec/modules/vibe-workspace/PROP-009-loading-model.md:210  - ##REJ-BUBBLE-UP **Bubble every dependency's boot into the root `spec/boot/`.** Rejected — it is the \"merge dependency specs into the authored spec\" the owner ruled out, and it makes one flat namespace for the whole workspace. @spec/done",
+              "confirmed: Installed verbatim. This is the field the host most often omits: `grep -rn 'Considered and rejected' spec/` returns 7 lines total — 1 is the installed table row in STATIC.md:254, 4 are in PROPs (PROP-036:93 and PROP-043:96, :139, :251) and 2 are in the terraform (§3.1 and §3.2). Every one of the 3 three-field host records is missing precisely this field. But the host carries the SECTION-level substitute at scale: 19 `## Rejected alternatives` / `## Rejected / deferred alternatives` sections across spec/, each entry one line with its reason — that is the protocol's §rejected-alternatives patter"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-FIELD-WHEN-TO-REVISIT": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
+              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NO-SEPARATE-ADR-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:27  ##NO-SEPARATE-ADR-DIRECTORY There is no separate ADR directory and no immutable numbered log. @impl/done",
+              "spec/boot/STATIC.md:257  There is no separate ADR directory and no immutable numbered log.",
+              "confirmed: `find . -type d -name adr` over the whole repository, excluding .git/, vibedeps/, .vibe/ and node_modules/, returns nothing. Widened the term set to 'ADR' as a word across spec/, CLAUDE.md, AUDIT.md, BACKLOG.md and legacy-spec/: it appears only as the practice this flow contrasts itself with (this package, its compiled copy, and the `adr` keyword in the package manifest's keywords list). No numbered-log directory of any name."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "GOVERNING-SPEC-SECTION-IS-THE-RECORD": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:29  ##GOVERNING-SPEC-SECTION-IS-THE-RECORD The spec section that governs the value IS the record; evolution is",
+              "spec/boot/STATIC.md:258  The spec section that governs the value IS the record; evolution is",
+              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:214  ## 7. Version history {#history}",
+              "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
+              "confirmed: All three clauses check out on the host separately. (a) Placement: every one of the 153 Decision labels sits inside the spec section that governs it — there is no separate record file anywhere. (b) Changelog line: 15 `## Version history` / `## Changelog` sections across spec/, entries dated. (c) Git history: the one worked re-open on the host (PROP-000 §3's licence record) was an in-place rewrite in commit 71d8383b whose body says \"the spent revisit trigger is re-issued with two conditions that can actually fire\", with the anchor ##LICENSE-REVISIT unchanged. Commit refs go here because they ca"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "full-protocol-pointer": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:32  ##full-protocol-pointer Full protocol:",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:33  [`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md). @impl/done",
+              "spec/boot/STATIC.md:262  [`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md).",
+              "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "in-session-duty-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:37  ##in-session-duty-lead When the user makes a decision during a session: @impl/done",
+              "spec/boot/STATIC.md:266  When the user makes a decision during a session:",
+              "confirmed: A lead-in to the three numbered duties at 39-46. Installed verbatim (STATIC.md:266). Host analogue searched for: CLAUDE.md's session-end contract lists five required behaviours and none of them is \"propose recording the session's decisions at their governing anchors\" — it covers CONTINUE.md, spec/WAL.md, commits, push and a chat TL;DR. Widened to spec/boot/00-core.md and spec/boot/90-user.md: no in-session recording duty there either."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:39  1. ##PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS Propose recording it at the governing anchor, with all four",
+              "spec/boot/STATIC.md:268  1. Propose recording it at the governing anchor, with all four",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:76  ## 2. Three decisions taken at the opening {#decisions}",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:78  *All three were surfaced with their measurements and ratified by the owner,",
+              "confirmed: Installed verbatim. The host's clearest positive instance is the batch plan's own §2: three decisions, each with all four fields, surfaced with measurements and ratified 2026-07-28 \"before the first verdict was written\". The negative side is measurable too: CLAUDE.md's END SESSION contract enumerates five required behaviours and none mentions decision records, so the duty has no host-side hook. Widened to spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2783, which records \"value and reason land; the **revisit trigger never does**\" for the sync-from-code draft parts."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ASK-RATHER-THAN-INVENT-DATA": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:42  2. ##ASK-RATHER-THAN-INVENT-DATA If the why or the trigger is not known, ask. Do not invent data;",
+              "spec/boot/STATIC.md:271  2. If the why or the trigger is not known, ask. Do not invent data;",
+              "spec/common/PROP-000.md:29  ##WORKSPACE-LAYOUT **Decision:** Single Cargo workspace at repo root. Crates live under `crates/` per `VIBEVM-SPEC.md` §10.2: @spec/done",
+              "DRIFT on its second clause, which is countable: «do not record a two-field stub» — the host records 19 of them in `spec/common/` + `spec/modules/**`, plus 3 three-field records, against 4 complete ones. The do-not-invent-data half holds: no fabricated measurement was found in any host why."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:44  3. ##READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE Before changing any value governed by a record, read the record.",
+              "spec/boot/STATIC.md:273  3. Before changing any value governed by a record, read the record.",
+              "spec/boot/STATIC.md:274  Re-open it only by naming its trigger state (\"the trigger fired:",
+              "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+              "confirmed: Installed verbatim. Searched the host for uses of the naming-the-trigger-state form: `grep -rn 'trigger fired|fired on|trigger has not fired|is spent'` over spec/, CLAUDE.md and the batch plan returns 5 hits, of which 3 are the same episode (PROP-000.md:57 plus its two retrospectives at spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:801 and :1142) and 2 are the prescribing text in STATIC.md:274-275. So the host has exactly one instance of the duty being discharged, and SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1142 records that the same record had earlier been confirmed by a file-level sweep al"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "template-and-examples-pointer": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:48  ##template-and-examples-pointer Copy-ready template and worked examples:",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:49  [`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md). @impl/done",
+              "spec/boot/STATIC.md:278  [`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md).",
+              "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "trigger-design-pointer": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:51  ##trigger-design-pointer Trigger design and the periodic sweep:",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:52  [`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md). @impl/done",
+              "spec/boot/STATIC.md:280  [`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md).",
+              "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "AGENT-CANNOT-ASK-VASYA": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:56  ##AGENT-CANNOT-ASK-VASYA The agent cannot ask Vasya why the library was chosen. @spec/done",
+              "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+              "confirmed: Third occurrence of this anchor id in the package (README:20, here, protocol:45); this is the only one that reaches the host, at STATIC.md:284. Searched the host perimeter for a mid-session channel back to the original decider: CLAUDE.md, spec/boot/00-core.md, spec/boot/90-user.md, spec/WAL.md carry none; the owner is reachable only by stopping and asking, which CLAUDE.md's Rule 4 posture prescribes for non-routine work — a different mechanism from recovering a past reason."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "re-derivation-ends-in-re-litigation": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:58  ##re-derivation-ends-in-re-litigation It re-derives",
+              "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+              "spec/boot/STATIC.md:286  constraint — so it re-litigates: \"600 s looks arbitrary, propose",
+              "confirmed: Installed verbatim. Searched the host's own history for a re-litigation caused by a missing reason: the documented episodes run the other way — SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1142 records a record CONFIRMED although its trigger had fired, not a value reopened for want of a why. Widened to AUDIT.md and BACKLOG.md for a logged re-derivation incident: none found under the terms 're-litigat', 're-deriv', 'arbitrary'."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "RECORD-IS-IMMUNITY-FROM-RE-LITIGATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:63  ##RECORD-IS-IMMUNITY-FROM-RE-LITIGATION A recorded decision is immunity from",
+              "spec/boot/STATIC.md:287  300 s for performance.\" A recorded decision is immunity from",
+              "confirmed: Installed verbatim (STATIC.md:287-288). The host instance where a record actually blocked a re-open is PROP-000 §3: the licence record's spent trigger is named in the record itself, so the next reader inherits the argument rather than re-running it. Searched for the converse — a host record cited to stop a proposal — in spec/WAL.md's Constraints section (heading at :69) and in AUDIT.md: the WAL constraints carry prose whys, and its own count records only 4 of 26 entries citing a spec anchor."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "TRIGGER-KEEPS-IMMUNITY-FROM-HARDENING-INTO-DOGMA": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:66  ##TRIGGER-KEEPS-IMMUNITY-FROM-HARDENING-INTO-DOGMA A recorded trigger is what keeps the immunity from",
+              "spec/boot/STATIC.md:288  re-litigation. A recorded trigger is what keeps the immunity from",
+              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+              "confirmed: Installed verbatim. Measured on the host: 11 revisit lines in spec/, of which 2 explicitly refuse the trigger (PROP-000.md:23 \"Never, in the scope of v1\"; PROP-043-progress-markup.md:141 \"never expected; the cycle-of-improvement premise is core\"), 8 are event-shaped without a threshold, and 1 carries metric + threshold (PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116). Against 153 Decision-bearing sections, that is 11 triggers total — 142 decisions on the host carry no revisit condition of any kind."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-WRITE-BECAUSE-IT-IS-BETTER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:71  - ##NEVER-WRITE-BECAUSE-IT-IS-BETTER Never write \"because it is better\" — a why cites a measurement, a",
+              "spec/boot/STATIC.md:293  - Never write \"because it is better\" — a why cites a measurement, a",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:103  **Why:** the first probe of §3.2 returned this, in 0.03 s:",
+              "confirmed: Installed verbatim. Searched the host's 26 Why fields for taste-appeals: `grep -rn 'because it is better|cleaner|feels right|more elegant'` over spec/ returns no hit inside a **Why** field. The strongest host whys cite runnable data (PHASE-C-BATCH-PLAN.md:103-109 quotes a console run with a 0.03 s timing; PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:127-133 quotes a grep returning 36). The weakest cite properties and a spec section rather than a measurement (PROP-000.md:18, :39, :71). None is the forbidden form."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:73  - ##NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE Never re-litigate a recorded decision without naming its trigger",
+              "spec/boot/STATIC.md:295  - Never re-litigate a recorded decision without naming its trigger",
+              "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+              "confirmed: Installed verbatim. The host has one compliant instance and one recorded violation of the same record: PROP-000.md:57 names the fired state explicitly (\"**fired on 2026-07-12** and is spent\"), while spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1142 records that an earlier pass \"c3b's file-level confirm although its trigger had fired on 2026-07-12\" — the record was touched without its trigger state being named. Searched all 11 host triggers for a second naming instance: none."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:75  - ##NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY Never put a decision's why into a commit message only. The commit",
+              "spec/boot/STATIC.md:297  - Never put a decision's why into a commit message only. The commit",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:53  - ##WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place",
+              "spec/common/PROP-000.md:321  4. ##INV-ATOMIC-COMMITS **One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @spec/done",
+              "a coherent prohibition, installed verbatim. Recorded because it is a corpus-level finding rather than this fact's falsity: a sibling flow the host installs in the SAME boot lane calls the commit message «the only place where *why* survives after the WAL and spec prose decay» (git-atomic-commits). One lane, two flows, opposite advice about where a why belongs — a tension worth the report, not a broken rule, since atomic-commits argues durability while this argues the reading path."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:77  - ##NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a missing revisit",
+              "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
+              "spec/common/PROP-000.md:100  - ##REG-M0 **Decision:** **M0:** local-directory registry only. No git. Registry is a path on disk with the layout from `VIBEVM-SPEC.md` §8.2. @spec/done",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:157  ##RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE Re-derive the split when the underlying capabilities move —",
+              "DRIFT, and this is the never the host breaks most often: «a fact with decoration, not a record» is precisely what 149 of its 153 Decision sections are. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The rule names the failure exactly and the corpus is made of it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T20:04:56Z",
+        "verify_batch": "W3"
+      }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md": {
       "content_hash": "fc347433b5c71707cec90d03a6027c104d9e1479d95fab83605c18af9d4d275c",
@@ -26334,7 +27009,391 @@
       },
       "marker_count": 56,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "c81e61e9493d719f342125b3992312953e3687da53d632529b1d9ee749b87a3e",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:5  ##scope-of-this-document **Scope of this document.** The copy-ready shape of a decision",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:14  ## The template {#template}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:38  ## What each field must contain {#fields}",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:47  ## Worked example: a constant with consequences {#example-timeout}",
+              "confirmed: Every promised item has a section and the counts are exact (two worked examples, one anti-pattern table of 6 rows at 136-143). Widened to the installed copy at vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md, which is present. A scope statement about its own file has no host referent."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "companion-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:9  ##companion-document-pointers The reasoning behind the",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:11  [`DECISION-RECORDS-PROTOCOL.md`](DECISION-RECORDS-PROTOCOL.md);",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:12  trigger design in [`revisit-triggers.md`](revisit-triggers.md). @impl/done",
+              "confirmed: Both same-directory relative links resolve inside the package and inside vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/. Counted among the harvest's 24 resolved relative citations with 0 broken (campaigns/packages-2026-09/harvest/world-w3-ipc-core-ii.md:19-20)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "PASTE-UNDER-THE-GOVERNING-SPEC-HEADING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:16  ##PASTE-UNDER-THE-GOVERNING-SPEC-HEADING Paste under the spec heading that governs the value. @impl/done",
+              "spec/modules/vibe-cli/PROP-036-package-tree.md:88  ##DECISION-ARTIFACTS-CANONICAL **Decision — read the effective type from the artifacts, not a fresh recompute.** @spec/done",
+              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
+              "confirmed: Placement is the clause the host keeps: all 153 bolded **Decision** sections in spec/common/ + spec/modules/** sit under the heading governing the value, and the four complete records sit under `### 2.3 Effective load type {#effective-load}`, `### 3.1 The `<status>` element {#element}`, `### 3.3 Stages {#stages}` and `### 3.8 Placement {#placement}`. The exception found by widening: the action system's ten records sit in spec/design/action-system.md §5 rather than under PROP-039's headings."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:18  ##GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR Give that",
+              "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+              "spec/modules/vibe-cli/PROP-036-package-tree.md:77  ### 2.3 Effective load type {#effective-load}",
+              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md:31  ##EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR Each fact has exactly one authoritative anchor. @impl/done",
+              "confirmed: Every record-bearing heading I checked carries an explicit `{#…}`: PROP-036 §2.3 {#effective-load}, PROP-043 §3.1 {#element}, §3.3 {#stages}, §3.8 {#placement}, PROP-000 §1 {#language}, §3 {#license}, the terraform's §3.1 {#world-verdicts}, §3.2 {#ai-native-verdicts}, §3.3 {#versions}, and the batch plan's §2.1 {#src-field}, §2.2 {#no-init}, §2.3 {#source-three}. The sibling flow addressable-specs supplies the rule and is installed here (first contribution in the compiled boot lane, per the harvest). I found no record-bearing host heading without an anchor."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-FIELD-DECISION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:42  | ##ROW-FIELD-DECISION **Decision** @impl/done | A reader can act on it without asking anyone. @impl/done | It hedges (\"probably\", \"for now\") without a trigger. @impl/done |",
+              "spec/common/PROP-000.md:255  - ##PROD-QUALITY-DAY-ONE **Decision:** Load-bearing surfaces — lockfile schema, registry protocol, dep-resolver semantics, wire formats, identity model — are designed to production quality from day one. @spec/done",
+              "confirmed: This is the pass/fail variant of the field, stricter than the boot snippet's requirement row. Tested the fail condition on the host: grepped the 153 Decision lines for both hedge words the row names; neither occurs inside a Decision field. The cited PROP-000 §17 line is actionable as written and is a one-field record (no Why, no rejections, no trigger). Widened to campaigns/ and spec/terraforms/: the batch plan's and terraform's Decision lines are all actionable and unhedged."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-FIELD-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:43  | ##ROW-FIELD-WHY **Why** @impl/done | It cites data someone could check: a log, a count, a benchmark, a version. @impl/done | It appeals to taste (\"cleaner\") or restates the decision. @impl/done |",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:127  **Why:** the field §3.1 names is empty for every package that exists here.",
+              "spec/common/PROP-000.md:71  ##TOML-WHY **Why:** TOML is the Rust ecosystem default (cargo), readable, has clear escaping rules, and maps cleanly to `serde` structs. See `VIBEVM-SPEC.md` §10.1. @spec/done",
+              "confirmed: I read all 26 bolded `**Why` fields in spec/ plus the batch plan's three and classified them by this row's own test. Cite checkable data: the batch plan's three (a grep returning 36 at :127-133; a captured console run at :103-109; a substring-match trap named by finding id F-065 at :91-94) and the terraform's two (:109-115, :127-131). Cite properties or a spec section rather than data: PROP-000:18, :39, :71, :177, :211, :234, :275, :307 and the module PROPs' whys. None appeals to taste in the forbidden 'cleaner' form (grep returns no hit inside a Why field). None restates its own Decision verb"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-FIELD-CONSIDERED-AND-REJECTED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:44  | ##ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @impl/done | Each line names the loser *and* the reason it lost. @impl/done | It lists losers without reasons — or lists nothing. @impl/done |",
+              "spec/modules/vibe-progress/PROP-043-progress-markup.md:139  - ##freeze-rejected **Considered and rejected:** `stage=\"done\"` (ambiguous against",
+              "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+              "confirmed: \"Or lists nothing\" is the host's dominant failure for this field: only 7 lines in all of spec/ contain the string 'Considered and rejected' (1 is the installed table row in STATIC.md:254, 4 are in PROPs, 2 in the terraform), against 153 Decision-bearing sections. The 6 real ones all pass the format test — PROP-043:139 names two losers with their reasons in parentheses; PROP-036:93 names one with its reason. The cited PROP-000 §1 record is a fail-by-omission: Rust chosen, no alternative named, although the section is one of the three that carry a why and a trigger."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-FIELD-WHEN-TO-REVISIT": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:45  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | Metric + threshold + observation point; a stranger can answer \"has it fired?\". @impl/done | \"Later\", \"when it breaks\", \"when we refactor\". @impl/done |",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+              "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "worked-example-session-narration": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:49  ##worked-example-session-narration The session that produced this record: the human measured VPN",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:52  same session, before close. @unknown",
+              "confirmed: The only anchor in the batch carrying `@unknown` rather than `@impl/done` or `@spec/done`; the mirror lists it as marked with a non-empty id, so it is in scope. It narrates a session that happened in the book's story, not in this repository: searched spec/, crates/, AUDIT.md, campaigns/ and git log for a VPN latency measurement or a 300→600 s timeout change and found none (`grep -rn 'vpn|VPN'` over spec/ and crates/ returns nothing outside this package). The narration's source is packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:190 onward, which tells the sa"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "side-by-side-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:74  ##side-by-side-lead The difference this buys, side by side: @impl/done",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:76  ```",
+              "confirmed: Lead-in to the before/after fence at 76-80; the fence is present and contains both halves. Searched the host for a before/after comparison of a record against its bare value: none in spec/, campaigns/ or spec/terraforms/. The nearest host analogue is the batch plan's practice of quoting a measurement inside the Why, which is the 'after' half without the contrast. Package text only."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "the-first-line-is-a-fact": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:82  ##the-first-line-is-a-fact The first line is a fact; the code already says it. @spec/done",
+              "spec/modules/vibe-registry/PROP-001-git-backend.md:225  ##FRESHNESS-TTL **Decision:** the default freshness TTL is **1 hour**, checked against",
+              "confirmed: Exercised the claim on a host value: PROP-001 §2.5's 1-hour TTL is stated in the spec and is also in the code, so the spec line is the fact the code already says; the section adds a Why at :231 and stops there — no rejections, no trigger. Searched crates/vibe-registry/ for the constant to confirm the duplication: the freshness check is implemented there per the same section. So the host does write fact-lines into specs that the code already carries."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-second-line-is-a-decision": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:84  ##the-second-line-is-a-decision The second is a",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:87  standing in the way. @spec/done",
+              "confirmed: The 847-message measurement is the book's example, not a host fact — grep for '847' over spec/, crates/ and campaigns/ returns nothing outside this package and the redbook. Searched for a host record whose measured why has stopped a proposal: the licence record (PROP-000 §3) stopped one by naming a spent trigger, not by a measurement. Widened to AUDIT.md and BACKLOG.md for a blocked optimisation proposal: none logged."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "that-is-the-immunity-working": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:89  ##that-is-the-immunity-working That is the immunity working. @spec/done",
+              "spec/boot/STATIC.md:287  300 s for performance.\" A recorded decision is immunity from",
+              "confirmed: A one-line conclusion to the worked example. The immunity concept reaches the host through the compiled boot lane; the example it concludes does not (no 600 s timeout here). Searched the host for a documented instance of a record deflecting a change proposal: only PROP-000 §3's licence record, and that one was reopened rather than deflected. Widened to campaigns/ and AUDIT.md: none."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "field-by-field-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:91  ##field-by-field-lead Field by field: @impl/done",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:93  - ##WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE The **why** survives audit because it is *checkable*: the log file",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:100  - ##TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION The **trigger** names the exact world-state that reopens the",
+              "confirmed: Lead-in to three bullets at 93-101 covering why, rejections and trigger — the Decision field itself is not given a bullet, so 'field by field' covers three of four. Searched the host for a field-by-field analysis of its own records: none in spec/, spec/terraforms/ or campaigns/ (the campaign's harvest files measure counts, not field quality)."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:93  - ##WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE The **why** survives audit because it is *checkable*: the log file",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:103  **Why:** the first probe of §3.2 returned this, in 0.03 s:",
+              "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`, `serde`, `toml`, `reqwest`, `git2`, `tokio`, `anyhow`, `thiserror`, `tracing`, `dialoguer`, `console`, `sha2`). See `VIBEVM-SPEC.md` §10.1. @spec/done",
+              "confirmed: Split the host's 26 whys by this test. Re-verifiable today because the data is named: the batch plan's §2.2 (a console transcript with a 0.03 s timing at :103-109), §2.3 (a grep with its output 36 at :127-133), and the terraform's §3.1/§3.2. Believable-or-ignorable because no data is named: the PROP-000 whys (:18, :39, :71, :177, :211, :234, :275, :307) and the module PROPs'. Ratio in the normative PROP tree: 0 of the 22 whys in spec/common + spec/modules names a log path, sample size or benchmark run — the closest is PROP-001:231, which reasons from behaviour rather than a measurement."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "REJECTIONS-ARE-ONE-LINE-EACH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:97  - ##REJECTIONS-ARE-ONE-LINE-EACH The **rejections** are one line each — enough to stop the",
+              "spec/modules/vibe-cli/PROP-036-package-tree.md:93  - ##decision-artifacts-rejected **Considered and rejected:** recomputing `EffectiveBoot` fresh every run —",
+              "spec/common/PROP-024-code-bearing-packages.md:277  ## 4. Rejected / deferred alternatives {#rejected}",
+              "confirmed: The one-line form holds in all 6 host `**Considered and rejected:**` fields (PROP-036:93 one loser; PROP-043:96 three; :139 two; :251 one; the terraform's two at :111-115 and :129-132 each name two). It also holds in the 19 section-level rejected-alternatives lists, though there the lines run longer — PROP-024's five bullets at :279-300 average roughly four wrapped lines each, above the 'one line' the fact asks for while keeping one entry per loser."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:100  - ##TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION The **trigger** names the exact world-state that reopens the",
+              "spec/modules/vibe-cli/PROP-036-package-tree.md:95  - ##decision-artifacts-revisit **When to revisit:** if the artifacts stop being committed (generated",
+              "spec/modules/vibe-progress/PROP-043-progress-markup.md:255  - ##registers-revisit **Revisit when:** the post-campaign fold",
+              "confirmed: Names the world-state: 9 of the host's 11 triggers do (the 2 exceptions say 'Never' / 'never expected'). Names WHERE TO LOOK: 1 of 11 — PROP-043:255 points at the post-campaign fold (§3.9) as the observation point. PROP-036:95 names a world-state (the artifacts stop being committed) whose observation point is implicit in the repository. The remaining 8 name a state with no stated place to check it. I read each of the 11 separately rather than classifying by file."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "note-the-trigger-shape": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:127  ##note-the-trigger-shape Note the trigger's shape: two disjunct conditions, both observable —",
+              "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+              "confirmed: The host has exactly one trigger of the two-disjunct shape this fact describes, and it is the one written after the previous trigger fired: PROP-000:57's '(a) a crate is to be published to crates.io … or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb'. Both branches are unambiguous external events; neither carries a numeric threshold, so it matches half the described shape. Checked the other 10 host triggers for disjunction: all single-condition except PROP-001:113, whose list is a conjunction of capability needs."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "either-condition-fires-unprompted": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:131  ##either-condition-fires-unprompted Either fires without",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:132  anyone having to remember to wonder. @spec/done",
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:97  ##TRIGGERS-DO-NOT-FIRE-THEMSELVES Triggers do not fire themselves. @spec/done",
+              "DRIFT, and its own package supplies the refutation: revisit-triggers.md:97 states «Triggers do not fire themselves» and «Nothing pages anyone… unless the project wires an alert», naming re-reading as the only mechanism that fires them. The host settles it. Its single event-shaped trigger — PROP-000 §3's licence record, branch (b) — did NOT fire unprompted: the condition was met on 2026-07-12, the record went on stating the superseded posture for roughly six weeks, and a re-reading pass caught it. Nobody was fired at by an unprompted condition."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-ANTI-TAUTOLOGY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:138  | ##ROW-ANTI-TAUTOLOGY Tautology @impl/done | \"600 s, because that is our timeout.\" @impl/done | We do X because we do X — restates the decision, zero information. @impl/done | Name the observation that forced the value. @impl/done |",
+              "spec/common/PROP-000.md:77  - ##LAYOUT-PER-SPEC **Decision:** Per `VIBEVM-SPEC.md` §4.2. @spec/done",
+              "confirmed: Read all 26 host whys looking for a why that restates its own decision. None is a literal tautology. The nearest shape is authority-by-reference rather than tautology: PROP-000 §5's whole decision is 'Per VIBEVM-SPEC.md §4.2' with no why at all, and several whys end at 'See VIBEVM-SPEC.md §10.1' (:18, :71). Widened to campaigns/ and spec/terraforms/: no tautological why there either."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-ANTI-UNFALSIFIABLE-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:139  | ##ROW-ANTI-UNFALSIFIABLE-WHY Unfalsifiable why @impl/done | \"blake3 felt cleaner.\" / \"because it is better.\" @impl/done | Cannot be checked, cannot be outgrown; blocks revisiting forever without justifying anything. @impl/done | Cite a measurement, constraint, or incident. @impl/done |",
+              "spec/boot/STATIC.md:293  - Never write \"because it is better\" — a why cites a measurement, a",
+              "spec/common/PROP-000.md:39  ##BUILD-WHY **Why:** Standard Rust workspace layout, enables shared dependency versions via `[workspace.dependencies]`, supports independent testing of each crate. @spec/done",
+              "confirmed: The rule reaches every host session through the compiled boot lane. Searched all 26 host whys for the forbidden forms: `grep -rn 'because it is better|felt cleaner|cleaner|more elegant'` inside Why fields returns nothing. What the host writes instead is property lists — PROP-000:39 names three concrete properties of a Cargo workspace, each checkable in principle but none measured. So the host avoids the anti-pattern without meeting the positive requirement ('cite a measurement, constraint, or incident') in its normative tree; it meets it in the campaign documents."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-ANTI-REJECTIONS-WITHOUT-REASONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:140  | ##ROW-ANTI-REJECTIONS-WITHOUT-REASONS Rejections without reasons @impl/done | \"Considered: adaptive timeout, 300 s + retry.\" @impl/done | The evaluation gets re-run; the bare list answers nothing. @impl/done | One line per loser, each with the reason it lost. @impl/done |",
+              "spec/modules/vibe-workspace/PROP-009-loading-model.md:210  - ##REJ-BUBBLE-UP **Bubble every dependency's boot into the root `spec/boot/`.** Rejected — it is the \"merge dependency specs into the authored spec\" the owner ruled out, and it makes one flat namespace for the whole workspace. @spec/done",
+              "confirmed: Searched every rejection the host writes — the 6 `**Considered and rejected:**` fields and the bullets of the 19 section-level rejected-alternatives lists (read PROP-009 §6, PROP-024 §4, PROP-001 §3, PROP-002 §3 in full) — for a bare list without reasons. Found none: every entry carries its reason after 'Rejected —' or 'rejected:'. The host's failure on this field is omission (147 of 153 Decision sections list no alternatives at all), not the bare-list anti-pattern."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-ANTI-REVISIT-LATER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:141  | ##ROW-ANTI-REVISIT-LATER \"Revisit: later\" @impl/done | \"Revisit when needed.\" @impl/done | Never fires; the record hardens into a sacred cow. @impl/done | Metric + threshold + observation point. @impl/done |",
+              "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+              "confirmed: The host writes this anti-pattern in two variants. Need-based, which is the row's 'Revisit when needed' almost verbatim: PROP-001:113 'if and when we need one of:' followed by three capability wishes at :114-116. Explicit never: PROP-000:23 'Never, in the scope of v1' and spec/modules/vibe-progress/PROP-043-progress-markup.md:141 'never expected'. That is 3 of the host's 11 triggers landing in this row's fail column, against 1 that carries metric + threshold. `grep -rn 'revisit.*later|when it breaks|when we refactor'` over spec/ returns no literal instance of the row's example strings outside "
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-ANTI-WHY-IN-THE-COMMIT-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:142  | ##ROW-ANTI-WHY-IN-THE-COMMIT-ONLY Why lives in the commit only @impl/done | Reasoning in the commit body; spec carries the bare value. @impl/done | Commit history is not in the reading path at the anchor; the agent reads the section, not `git log`. @impl/done | The spec carries the why; the commit cites the anchor. @impl/done |",
+              "spec/boot/STATIC.md:297  - Never put a decision's why into a commit message only. The commit",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:53  - ##WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place",
+              "an anti-pattern row, confirmed by instantiation at scale: 127 of the host's 153 Decision sections carry no why at the anchor, which is exactly the failure the row names, and the host's commit bodies are where the reasoning does live. A row that describes a failure mode is confirmed when the failure is found, not falsified by it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-ANTI-BACKFILLED-MEMORY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:143  | ##ROW-ANTI-BACKFILLED-MEMORY Backfilled memory @impl/done | Writing the why a week later, from recollection. @impl/done | Reconstructed reasoning is fiction with confidence; the data is gone. @impl/done | Record in the session that decides — or mark the why TODO(owner). @impl/done |",
+              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:218  - ##HISTORY-PHASES-5-6-8 **2026-05-23 — Phases 5 + 6 + 8 shipped with M1.19.** Short-name resolution at the CLI input boundary (`vibe-cli::commands::short_name` — index-backed candidate sets, lockfile-prefers-locked); collision detection with the dedicated exit code `7` (`InstallError::AmbiguousPackage`); the live-registry migration to `fqdn` naming and the `vibe init` default fix (`cc32d7e` — the M1.19 defect AUDIT 2026-05-23-02 records). This entry back-fills the record: the work shipped with M1.19 but the history was not updated at the time. @spec/done",
+              "confirmed: The host has one self-labelled backfill (PROP-008:218) and it does the honest thing the row asks for — it says so in the entry. The row's other escape hatch is absent: `grep -rn 'TODO(owner)' spec/ CLAUDE.md` returns 0 hits, so the host has no marker for a why it could not source. Widened to crates/, AUDIT.md, BACKLOG.md and TASKS.md for TODO(owner): 0. Undeclared backfills are undetectable from the text and I did not infer any."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-PASTE-AT-THE-GOVERNING-ANCHOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:147  - ##SUM-PASTE-AT-THE-GOVERNING-ANCHOR Paste the template at the governing anchor; never under a heading",
+              "spec/modules/vibe-cli/PROP-036-package-tree.md:77  ### 2.3 Effective load type {#effective-load}",
+              "spec/modules/vibe-progress/PROP-043-progress-markup.md:243  - ##DECISION-TWO-REGISTERS **Decision — two anchor-id registers (owner ruling, 2026-07-24).**",
+              "confirmed: Every one of the host's 4 complete records, 3 three-field and 19 two-field records sits under a heading carrying an explicit `{#…}` anchor — I checked each of the 26 section headings named by the census. The campaign records do too (batch plan §2.1 {#src-field}, §2.2 {#no-init}, §2.3 {#source-three}; terraform §3.1 {#world-verdicts}, §3.2 {#ai-native-verdicts}, §3.3 {#versions}). Found no record-bearing heading without an anchor anywhere in the widened perimeter."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
+              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+              "DRIFT on all three clauses, each measured. Why with data: 0 of the 22 whys in `spec/common/` + `spec/modules/**` names a log path, a sample size or a benchmark run. Rejections with reasons: the field appears 6 times against 153 records. Trigger with metric + threshold + observation point: 0 of 11. The one place all three land is the campaign's own batch plan §2, outside the spec tree this summary governs."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-THE-BEFORE-AFTER-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:151  - ##SUM-THE-BEFORE-AFTER-TEST The before/after test: if the record only says what the code",
+              "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
+              "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done",
+              "a test, and it classifies the host correctly: 127 of 153 Decision sections say only what the code already says, so by this test they are facts with decoration. The test working is the test confirmed; the completeness it measures is filed on the four-field rows."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-RECORD-IN-THE-DECIDING-SESSION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:154  - ##SUM-RECORD-IN-THE-DECIDING-SESSION Record in the same session the decision is made. Backfilled whys",
+              "spec/boot/STATIC.md:268  1. Propose recording it at the governing anchor, with all four",
+              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:78  *All three were surfaced with their measurements and ratified by the owner,",
+              "confirmed: Fourth restatement of the same-session rule in the package (protocol:149, protocol:233, boot:39, here); all consistent. Host evidence for: the batch plan's §2 (ratified 2026-07-28 before the first verdict) and PROP-043 §3.8's inline '(owner ruling, 2026-07-24)'. Host evidence against: PROP-008:218's declared backfill and the absence of any decision-recording step in CLAUDE.md's five-part END SESSION contract."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T20:04:56Z",
+        "verify_batch": "W3"
+      }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md": {
       "content_hash": "2bebf0743365006bb5b8038d5472decd1c548d2334f21d031109956835cae7fd",
