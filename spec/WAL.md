@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1
-is CLOSED at 407 of 407; W2…W7 remain**)_
+_Updated: 2026-07-28 (**Phase C — the reviewing debt and `world` batch W1 are CLOSED
+at 407 of 407; W2's evidence is in flight, two of four tables returned**)_
 
 ## Current phase
 
