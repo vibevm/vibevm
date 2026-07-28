@@ -46,6 +46,22 @@ _spec.loader.exec_module(_ve)
 norm = _ve.norm
 
 
+def indent_of(text):
+    """The indent width the table was written with, so a repair is a small diff.
+
+    The nine delegated tables are not written by one hand: some arrive at
+    `indent=1`, some at `indent=2`. Re-dumping at a fixed width re-writes every
+    line of the file and buries fifty repaired coordinates in four thousand
+    cosmetic ones — which defeats the one thing a reviewer has, reading the
+    diff. Measure the first indented line instead and dump at that width.
+    """
+    for line in text.splitlines()[1:]:
+        stripped = line.lstrip(" ")
+        if stripped and stripped != "]":
+            return len(line) - len(stripped)
+    return 2
+
+
 def locate(path, snippet):
     """Every 1-based line whose text (or its 4-line window) contains the quote."""
     f = ROOT / path
@@ -67,7 +83,9 @@ def main():
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     p = pathlib.Path(sys.argv[1])
-    rows = json.loads(p.read_text(encoding="utf-8"))
+    raw = p.read_text(encoding="utf-8")
+    rows = json.loads(raw)
+    indent = indent_of(raw)
     apply = "--apply" in sys.argv
 
     tally = collections.Counter()
@@ -113,7 +131,7 @@ def main():
 
     print(f"\n{p.name}: " + ", ".join(f"{k}={v}" for k, v in sorted(tally.items())))
     if apply and changed:
-        p.write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8", newline="")
+        p.write_text(json.dumps(rows, indent=indent, ensure_ascii=False), encoding="utf-8", newline="")
         print(f"applied: {changed} ref(s) re-pointed")
     elif apply:
         print("applied: nothing to change")
