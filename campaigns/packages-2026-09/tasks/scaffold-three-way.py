@@ -45,7 +45,21 @@ WORD = re.compile(r"[^\W_]+", re.UNICODE)
 ANCHOR = re.compile(r"##([A-Za-z][A-Za-z0-9_-]*)")
 
 
+# C7's trio is the same shape one directory over: three near-identical MCP briefs,
+# one per language, and F-116 was filed from reading them side by side. The same
+# instrument answers it, so it is named here rather than re-implemented.
+TRIOS = {
+    "discipline-mcp": {
+        "rust": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md",
+        "ts": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md",
+        "go": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md",
+    },
+}
+
+
 def cards(letter):
+    if letter in TRIOS:
+        return {lang: ROOT / p for lang, p in TRIOS[letter].items() if (ROOT / p).is_file()}
     out = {}
     for lang, d in STACKS.items():
         hits = sorted((ROOT / d).glob(f"scaffold-{letter}-*.md"))
