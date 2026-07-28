@@ -2060,6 +2060,62 @@ command that would have tested it.
   artifacts may be deleted only because **the sources carry the knowledge**. An
   evidence table is not derived from the sources; it is a reading of them.
 
+- **2026-07-28 · C1 CLOSED — 353 verdicts, and the perimeter was wrong three
+  times.** **272 confirmed / 70 drift / 11 unverifiable — 77.1 %.**
+
+  | file | conf | drift | unver | |
+  |---|---:|---:|---:|---:|
+  | MCP-CORE-v0.1 | 34 | 0 | 0 | 100.0 % |
+  | BROWNFIELD-PROTOCOL-v0.1 | 51 | 9 | 3 | 81.0 % |
+  | PROP-014-specmap | 140 | 27 | 6 | 80.9 % |
+  | LEDGER-INTENT-v0.1 | 26 | 12 | 2 | 65.0 % |
+  | ENGINE-CONFORM-v0.1 | 21 | 22 | 0 | 48.8 % |
+
+  **PROP-014 read at 80.9 %, and it would have read far lower on the evidence as
+  gathered.** Nine of its rows turned on facts outside the package: the pilot
+  target `crates/vibe-resolver/src/conditional.rs` **exists**; the host carries
+  **120 files with `#[spec(implements=…)]` and 402 with `specmark::scope!`**;
+  `specmap.json` **is committed** (3.1 MB — 5 266 spec units, 898 code items, 912
+  edges); `schemas/specmap.jtd.json` **exists**; `xtask/src/specmap.rs` and the
+  `Trace` subcommand **exist**; and **`vibe trace` exists**, a delegating alias
+  whose own help text cites «PROP-014 §2.6» — so the Phase-4 promotion this
+  document plans has *happened*. Every one of those had been located as absent
+  because I confined the search to `core-ai-native`'s crates, and PROP-014 is a
+  mechanism whose implementation ships in `rust-ai-native-lang` and whose
+  deployment is the host.
+
+  **That is three perimeter errors in one batch** — BROWNFIELD's registries,
+  PROP-014's deployment, and my own «never adopted» claim corrected above. The
+  lesson has a sharper form than the one recorded in C1c: **the delegated
+  `not-found` was accurate every time; the brief that produced it was not.** A
+  worker cannot report a perimeter it was not given.
+
+  **Where the index does fall short, it is exact and the index says so itself.**
+  Read from the committed file: its keys are `code_items`, `edges`, `schema`,
+  `spec_units`, `suspects`, `warnings` — so of the six contents §2.5 promises,
+  **coverage-per-REQ and the orphans table are absent**; `code_item` carries **no
+  content hash** where `spec_unit` does, which is exactly why «a code change keeps
+  edges valid» is true and structural; and nothing constructs `Proposed` or
+  `Generated`, so the whole LLM-proposer half of §2.7 is an enum variant with no
+  producer. The runtime channel — MCP tools, `[metamodel] profile`, signing — does
+  not exist at all, and the document's own open question calls signing *blocking*
+  while marking the security invariant that depends on it `@impl/done`.
+
+  **The rule that settled the awkward middle**, stated once and applied to every
+  file: *a fact naming a specific artifact, flag, type, file or command that does
+  not exist is drift; a fact stating a discipline the corpus demonstrably follows
+  is confirmed, even where no checker enforces it.* It is why «every normative
+  statement is addressable» confirms — this campaign's own gate exits 0 over 11 288
+  anchors — while «`vibe check` warns beyond ~120 lines» does not: `vibe check` has
+  eleven checks and no such warning.
+
+  **F-121 closed at four instances.** ENGINE-CONFORM, LEDGER-INTENT, BROWNFIELD and
+  PROP-014 each end with a rule that unexercised mechanisms are removed from the
+  document rather than carried as aspiration; each marks it `@impl/done`; each is
+  contradicted by its own contents; and none is enforced by anything. **Four
+  documents, one habit: the rule that exists to keep a document honest is the rule
+  nobody gave a checker.**
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
