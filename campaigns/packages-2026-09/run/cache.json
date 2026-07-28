@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T06:03:18Z",
+  "updated_at": "2026-07-28T06:21:47Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -299,7 +299,393 @@
       },
       "marker_count": 68,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "dc043662c20520236ea40b8626d6d19416e1834a1cc27b6b4de541a695365147",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:11  description = \"The conform engine core (ENGINE-CONFORM v0.1): fact model, content-addressed store, rules, SARIF, ratchet baseline\"",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:12      \"crates/core-ai-native-conform\",",
+              "the document's own status element agrees: `<status stage=\"spec\" state=\"done\"/>` at line 3. This fact is the one place in the file that is true BECAUSE the rest is design: it says so"
+            ]
+          },
+          "IMPLEMENTS-T3-OWN-ENGINE-BORROWED-FRONTENDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:7  # drift). The per-language FRONTENDS and CLI drivers stay in the stacks;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:1  //! `conform-core` — the cross-language conformance engine core",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:1  //! The Rust T-syn frontend (ENGINE-CONFORM §2): `syn` in-process, the",
+              "the shape holds even where the roster does not: the engine is ours (core-ai-native-conform) and every frontend is borrowed — `syn` for Rust, the TypeScript compiler API through a node child, go/parser via tools/go-extract/extract.go"
+            ]
+          },
+          "rationale-compiler-is-a-page-reimplementation-is-weeks": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:2  //! one-page-AST path. Emits the facts the Phase 4 rules consume —",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`",
+              "@spec/done — an owner-decided rationale recorded at decision time; nothing in the tree falsifies it, and the Rust frontend header still calls the compiler path 'the one-page-AST path'"
+            ]
+          },
+          "derives-from-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:2  //! (ENGINE-CONFORM v0.1; PLAYBOOK Phase 4).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:32      /// Why the rule exists — the axiom trace rendered into SARIF.",
+              "a lead-in to the four axiom items below; the axioms it introduces are present"
+            ]
+          },
+          "DERIVES-A1-EXPLANATION-CHAINS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:7  /// One finding with its A1 chain.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:32      /// Why the rule exists — the axiom trace rendered into SARIF.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:24                  \"shortDescription\": { \"text\": r.why() }",
+              "`Finding` carries `why` (finding.rs:27-35) — the explanation chain A1 requires is a field, not a convention"
+            ]
+          },
+          "DERIVES-A2-CACHED-INCREMENTAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:26  /// Content-addressed fact store under `<repo>/target/conform/facts/`.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:91      /// `(content-hash, producer)` already has them.",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:86          \"a 1-file diff re-extracts exactly 1 file\"",
+              "store.rs:83-87 keys a slot on frontend id+version over a content hash, so re-extraction happens only when the file or the frontend moves"
+            ]
+          },
+          "DERIVES-A3-BELOW-THE-ALGORITHMIC-FLOOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:20  walkdir.workspace = true",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:79  pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) -> Vec<Finding> {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:80      let mut findings: Vec<Finding> = rules.iter().flat_map(|r| r.check(facts)).collect();",
+              "absence evidence: the crate's dependency list carries no model, client or network surface at all — the checking path is pure Rust over extracted facts"
+            ]
+          },
+          "DERIVES-A5-RULES-SHIP-WITH-CHECKERS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:24  pub use structure::{CellHasOracle, CellIsolation, FlagSites};",
+              "every in-tree rule is a `Rule` impl with a `check` (rules/mod.rs:21-25 rosters them); a rule without a checker is unrepresentable here"
+            ]
+          },
+          "rule-examples-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:23  pub use go::{GoCellIsolation, GoUnsafeInDomain};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:25  pub use typescript::{TsCellIsolation, TsUnsafeInDomain};",
+              "a lead-in; the examples it introduces do follow as text. Their content is judged one by one below"
+            ]
+          },
+          "EXAMPLE-TYPE-FLOW-RULES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:25  pub use typescript::{TsCellIsolation, TsUnsafeInDomain};",
+              "@spec/done and explicitly marked future — absence is what this fact predicts, so absence confirms it. grep for type-flow / taint / dataflow over the crate returns 0, as stated"
+            ]
+          },
+          "SIDECAR-PROTOCOL-IS-NDJSON-OVER-STDIO": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:95          // Bump with the extractor protocol / fact schema: retires every",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:52          let records = match typescript_ai_native_extract_bridge::extract_tree(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:4 — 'Parse .go files with go/parser and emit one NDJSON record per file'. The sidecar that exists speaks exactly the stated protocol, and the versioned half is store.rs:83-87's frontend id+version slot"
+            ]
+          },
+          "fact-store-is-the-ledgers-facts-class-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:4  //! - [`Fact`] — the language-neutral normalized fact model (§3); the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:5  //!   ledger's \"facts class\" instantiated.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:5  /// One normalized fact (ENGINE-CONFORM §3). Variants carry exactly",
+              "the fact store exists as a cell (store.rs) and the normalized `Fact` enum is facts.rs:25"
+            ]
+          },
+          "KEY-IS-FILE-HASH-PLUS-FRONTEND-VERSION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:85              .join(format!(\"{}-{}\", frontend.id(), frontend.version()))",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:86              .join(format!(\"{content_hash}.json\"))",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:86          \"a 1-file diff re-extracts exactly 1 file\"",
+              "store.rs:83-87 — the slot path is (content hash, frontend id+version), which is the claim verbatim"
+            ]
+          },
+          "STORE-IS-CONTENT-ADDRESSED-NEVER-COMMITTED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:26  /// Content-addressed fact store under `<repo>/target/conform/facts/`.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:54              root: repo.join(\"target\").join(\"conform\").join(\"facts\"),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:9  //!   `target/conform/` — derived data with a deterministic producer,",
+              "store.rs:26 and :54 — content-addressed under `target/conform/`, which is not committed. The 'CI-cache' half names a consumer's deployment choice rather than engine code, and no CI cache configuration exists here"
+            ]
+          },
+          "QUERY-DSL-IS-DELIBERATELY-DEFERRED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:11  //! - [`Rule`] — rules as compiled queries over facts (§4); the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:12  //!   declarative DSL is deliberately deferred (Open Question 2).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:38  /// A rule is a compiled query over facts (ENGINE-CONFORM §4).",
+              "@spec/done, a deliberate deferral — its absence is the fact. The in-tree rule roster (rules/mod.rs:21-25) is well under the ~30 rules the deferral names as its trigger"
+            ]
+          },
+          "OUTPUT-IS-SARIF-PLUS-THE-RATCHET-BASELINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:18  pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:11  /// fingerprint. The file only shrinks.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:50  /// fail the gate; stale entries are prune candidates (the file may",
+              "both halves live: SARIF is emitted (harvest/go-ai-native-lang-floor.md shows 'SARIF at target\\conform\\report-go.sarif' from a real run) and baseline.rs:10/:34 names `conform-baseline.json` exactly as the spec does"
+            ]
+          },
+          "SAME-INPUTS-BYTE-IDENTICAL-SARIF": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:7  /// Byte-stable minimal SARIF 2.1.0: stable ordering (findings are",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:8  /// pre-sorted), no wall-clock, no absolute paths.",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:124      assert_eq!(sarif_a, sarif_b, \"same inputs — byte-identical SARIF\");",
+              "finding.rs:84 `findings.sort()` — the stable ordering the claim rests on is in the code, and sarif.rs:2 carries a `specmark::scope!` citing this very unit. (Whether it is TESTED is a separate fact, judged drift below.)"
+            ]
+          },
+          "OPEN-RUST-T-SEM-BACKEND": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:1  //! The Rust T-syn frontend (ENGINE-CONFORM §2): `syn` in-process, the",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true",
+              "@spec/done — an open question, and it is genuinely open: grep for rust-analyzer / rustc_driver / ra_ap / hir returns 0. The only Rust backend present is `syn`, which is the T-syn side the question says is enough for now"
+            ]
+          },
+          "OPEN-QUERY-DSL-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:12  //!   declarative DSL is deliberately deferred (Open Question 2).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:25  pub use typescript::{TsCellIsolation, TsUnsafeInDomain};",
+              "@spec/done — open by design, and unresolved in the tree"
+            ]
+          },
+          "OPEN-FACT-SCHEMA-VERSIONING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:7  /// a field or variant bumps the frontend version, which retires old",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:8  /// cache slots wholesale — facts never deserialize across schemas).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:85              .join(format!(\"{}-{}\", frontend.id(), frontend.version()))",
+              "@spec/done — an open question carrying a proposal, and the proposal's operative half is already in place: store.rs:83-87 segregates slots by frontend version, facts.rs:6-8 bumps the cache slot wholesale on a schema move"
+            ]
+          },
+          "OPEN-PERFORMANCE-ENVELOPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:19  pub struct ExtractionLog {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:23      pub cached: usize,",
+              "@spec/done — open, and no envelope has been set: grep for Instant / elapsed / Duration / benchmark over the crate returns 0 timing sites"
+            ]
+          },
+          "BALANCE-IS-EXPLICIT-THROUGH-ESCALATION-TIERS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:157  /// A fact producer for one language (ENGINE-CONFORM §2). T-syn for",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
+              "no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+            ]
+          },
+          "RULE-RECORD-DECLARES-ITS-TIER": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:54      fn id(&self) -> &'static str;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:55      fn why(&self) -> &'static str;",
+              "read directly 2026-07-28: `pub trait Rule { fn id(); fn why(); fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>; }` (finding.rs:53-57). There is no `tier` on a rule record. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+            ]
+          },
+          "ENGINE-RUNS-THE-CHEAPEST-ADEQUATE-FRONTEND": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:95          frontend: &dyn Frontend,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go(",
+              "there is no selection at all: store.rs:95-105 exposes per-language entry points that each take a caller-supplied `&dyn Frontend`. Nothing chooses, so nothing can choose the cheapest. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+            ]
+          },
+          "ROW-TIER-T-LEX": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:22  pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:20  walkdir.workspace = true",
+              "the tier does not exist, and neither does its stated backend: grep for T-lex / ripgrep / forbidden-token / license header over the crate returns 0. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+            ]
+          },
+          "ROW-TIER-T-SYN": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:1  //! The Rust T-syn frontend (ENGINE-CONFORM §2): `syn` in-process, the",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
+              "`syn` is real (the Rust frontend depends on it), but the row's universal backend is not: grep for tree-sitter / tree_sitter over the engine and both named frontends returns 0. The tier itself is unbuilt. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+            ]
+          },
+          "ROW-TIER-T-SEM": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:157  /// A fact producer for one language (ENGINE-CONFORM §2). T-syn for",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:158  /// Phase 4; the trait carries id+version so the store key changes when",
+              "the TypeScript frontend does reach a compiler, but as a frontend rather than as a tier: there is no T-sem to escalate to. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+            ]
+          },
+          "EXAMPLE-R-021-FORBIDDEN-IDIOM": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:24  pub use structure::{CellHasOracle, CellIsolation, FlagSites};",
+              "R-021 does not exist. The complete in-tree rule roster is rules/mod.rs:21-25 and grep for 'R-021' / forbidden-idiom over the crate returns 0"
+            ]
+          },
+          "EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:77  /// R-002 — cell isolation: a cell module imports seams and core",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:91          \"R-002\"",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:106                  let Fact::Import { to_path, line, .. } = f else {",
+              "R-002 itself is real — structure.rs:77-91 `CellIsolation` with id \"R-002\", projected as TsCellIsolation and GoCellIsolation — but the fact as written maps it onto tiers that do not exist and onto a C++ frontend that does not exist. The half that is true is the rule; the half that is stated is the mapping"
+            ]
+          },
+          "EXAMPLE-R-020-NAMING-VS-MANIFEST": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:22  pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:14  specmark.workspace = true",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
+              "R-020 does not exist, and neither does the specmap join it names: grep for 'R-020' returns 0, and the conform crate does not depend on the specmap crate at all"
+            ]
+          },
+          "ROW-FRONTEND-RUST": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:11  description = \"The conform engine's Rust T-syn frontend (ENGINE-CONFORM §2): syn-precision facts — items, attributes, imports, ctor sites, unsafe\"",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:61          let Ok(ast) = syn::parse_file(text) else {",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true",
+              "the T-syn column is right (`syn` in-process) and the T-sem column names software that is absent: grep for rust-analyzer / rustc_driver / ra_ap / hir over the engine and both named frontends returns 0"
+            ]
+          },
+          "ROW-FRONTEND-CPP": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:25  pub enum Fact {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = [",
+              "there is no C++ frontend. grep for tree-sitter / libclang / clang-sys / cpp over the engine, its manifests and both named frontends returns 0, and no C++ variant exists in the `Fact` model"
+            ]
+          },
+          "ROW-FRONTEND-TS-JS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:12  //! Process economics: `warm()` (the store's batch hook) runs ONE node",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set",
+              "the T-sem column is right — the TypeScript Compiler API through a node child process — and the T-syn column names tree-sitter / SWC, of which grep finds neither"
+            ]
+          },
+          "ROW-FRONTEND-GO": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:120      /// produced by the `go-extract` frontend: `kind` is one of",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:2  //! `go-extract` frontend's facts: the ban census with its",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:71      /// `go-ai-native-conform` (the `go-extract` frontend). Absent for",
+              "the T-syn column is exactly right: tools/go-extract/extract.go:21-22 imports go/ast and go/parser and is stdlib-only. The T-sem column names gopls, which appears nowhere; `go vet` runs as a FLOOR STEP (harvest/go-ai-native-lang-floor.md) and is not ingested as an evidence provider by conform"
+            ]
+          },
+          "ROW-FRONTEND-PYTHON": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go(",
+              "there is no Python frontend. grep for rustpython / python / symtable / cpython over the engine, its manifests and both named frontends returns 0"
+            ]
+          },
+          "FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:47      /// lowered facts. Failures surface on stderr here and again as an",
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:59                  eprintln!(\"conform ts-tsc: extraction failed — {error}\");",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:4  //! sites, and `unsafe` uses. B5: an unparseable file yields zero facts",
+              "the degradation the fact promises has no representation: `Finding` (finding.rs:27-36) carries no status field, and grep for 'frontend unavailable' / 'skipped (' over the engine and both named frontends returns 0. A crash cannot produce the report line this fact says it produces"
+            ]
+          },
+          "FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs:6  //! for routing these through conform instead of ESLint).",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:180      /// The step name (`prettier` / `tsc` / `tests` / `eslint` /",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:18  pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {",
+              "conform EMITS SARIF (harvest/go-ai-native-lang-floor.md) and ingests none: grep for clippy / eslint / ruff / clang-tidy over the engine finds an `#[allow(clippy::…)]` and `eslint` as a floor STEP NAME (config.rs:180), and no SARIF reader at all. The direction of the claim is the opposite of the direction of the code"
+            ]
+          },
+          "LINTERS-ARE-CITED-NOT-REIMPLEMENTED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:87  pub struct CellIsolation;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs:5  //! cannot drift between language projections (the Ф6 brief's argument",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:35  #[serde(default, deny_unknown_fields)]",
+              "the `check: { tool, id, status }` shape the fact quotes does not exist on a rule; grep over the engine returns 0. The second half is true — cell isolation, the check no generic linter can know, is structure.rs:87"
+            ]
+          },
+          "RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "the shape is right and the quoted signature is wrong. Read directly 2026-07-28: `fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>` (finding.rs:56) against the document's `fn check(&self, facts: &FactStore, specmap: &Index) -> Vec<Finding>` — both parameters differ, and the specmap argument could not exist because the conform crate does not depend on the specmap crate"
+            ]
+          },
+          "FINDINGS-CARRY-THE-A1-CHAIN": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:27  pub struct Finding {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:56      /// a matching deviates record downgrades the finding). Fn-grain",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:93                      if *in_deviation {",
+              "three of the five links are there — rule id, why, span (finding.rs:28-35: rule, file, line, message, why, fingerprint) — and the last two are not: there is no involved-facts field and no deviation status, so nothing can be downgraded to `deviation-acknowledged`"
+            ]
+          },
+          "DETERMINISM-TESTED-BY-RUN-TWICE-DIFF": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:82      fn sarif_is_byte_stable() {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:99          assert_eq!(a, b);",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:123      assert_eq!(findings_a, findings_b);",
+              "the crate carries 30 tests and none of them runs anything twice: grep for twice / double-run / same_inputs over the crate returns 0. The claim that it is tested survives only as a doc comment (lib.rs:14, 'byte-identical output, tested by double-run diff') — a WISH in the position where the Discipline's own law demands a checker"
+            ]
+          },
+          "GATE-EXIT-CODE-IS-THE-ACCEPTANCE-CRITERION": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:20  //! whole workspace; **findings** are reported only inside the gate's",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:79  pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) -> Vec<Finding> {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:38  pub fn load(path: &Path) -> Result<Baseline> {",
+              "the command as written cannot be run: core-ai-native ships library crates only — no `[[bin]]`, no `fn main` — so `conform check --baseline … --scope …` has no binary here, and the language stacks' `<lang>-ai-native conform check` takes only `--path` (see its --help). The exit code is real; the invocation this fact names is not"
+            ]
+          },
+          "UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = [",
+              "THIS FACT IS FALSIFIED BY THE DOCUMENT THAT STATES IT. It says an unexercised frontend or tier is removed rather than carried as aspiration, and it is marked @impl/done. The same document still carries three tiers that do not exist, a C++ frontend, a Python frontend, tree-sitter, SWC, rust-analyzer, rustc_driver, gopls and SARIF linter ingestion — none of which the engine exercises. Nothing enforces the rule either: no test, gate or lint checks it"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T06:21:47Z",
+        "verify_batch": "C1"
+      }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
       "content_hash": "6c6ff1c87d589f0576e281656afe7f37564f80f95b14e5bb50aeb2112043a2dd",
@@ -345,7 +731,292 @@
       },
       "marker_count": 35,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "74fdf8fef163f367e8a7b491a4285beb9aafdcc1730f76b4e837e88cba50ad13",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/Cargo.toml:2  name = \"core-ai-native-mcp\"",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:13      \"crates/core-ai-native-mcp\",",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:20  version = \"0.8.0\"",
+              "the `discipline-core 0.6.0` half is a DATED HISTORICAL RECORD and confirms unless falsified (wave-1 stage semantics); the live half — the crate ships as core-ai-native-mcp after the PROP-028 rename — is the manifest itself"
+            ]
+          },
+          "TRANSPORT-EVERY-MCP-KIND-SERVER-BUILDS-ON": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:2  //! MCP-SOVEREIGNTY-PLAN Wave 2). The `mcp`-kind packages (PROP-027)",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:3  //! build their servers on this crate: it owns the line-delimited",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:8  # this package owns what no single language owns.",
+              "and the consumers demonstrably do build on it: diff -rq against both vendored copies reports no difference (see CONSUMERS-VENDOR-THIS-CRATE-BYTE-IDENTICALLY)"
+            ]
+          },
+          "CONSUMERS-VENDOR-THIS-CRATE-BYTE-IDENTICALLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:5  # every language stack ships as byte-identical vendored copies under its own",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:6  # `crates/vendor/` (`cargo xtask sync-engines` mirrors them; `--check` gates",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:3  # It AUTHORS the neutral engine crates — the conform fact/rule engine, the",
+              "diff -rq crates/core-ai-native-mcp <-> rust-ai-native-mcp/v0.7.0/crates/vendor/core-ai-native-mcp: IDENTICAL (0 differences), 2026-07-28",
+              "diff -rq crates/core-ai-native-mcp <-> typescript-ai-native-mcp/v0.6.0/crates/vendor/core-ai-native-mcp: IDENTICAL (0 differences), 2026-07-28. Both consumers also vendor the other four engine crates"
+            ]
+          },
+          "RELATED-LAWS-LIVE-IN-THE-CONSUMING-REPO": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:2  //! MCP-SOVEREIGNTY-PLAN Wave 2). The `mcp`-kind packages (PROP-027)",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:22  //! (PROP-027 §2.6).",
+              "spec/modules/vibe-mcp/PROP-027-mcp-packages.md:154 — the cited consumer-side law exists in the host: '### 2.6 Serving is vibe-free {#vibe-free}'"
+            ]
+          },
+          "kind-line-wire": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:7  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#wire\");",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:5  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#wire\");",
+              "the `req` kind is defined by spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:94 (##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR). The RANK half — `r1` — is defined nowhere in the repository; the verdict answers the @impl/done marker's stage semantics (presence evidence for the unit this line heads) and the rank-vocabulary gap is filed as F-120 rather than converted into a per-fact unverifiable"
+            ]
+          },
+          "WIRE-IS-LINE-DELIMITED-JSON-RPC-OVER-STDIO": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:2  //! §2 — the MCP stdio form; one JSON object per line, protocol revision",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:58          writeln!(out, \"{line}\")",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:183          assert!(!line.contains('\\n'));"
+            ]
+          },
+          "ANSWERED-PROTOCOL-REVISION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:15  pub const PROTOCOL_VERSION: &str = \"2024-11-05\";",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:123                      \"protocolVersion\": PROTOCOL_VERSION,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:240          assert_eq!(out[0][\"result\"][\"protocolVersion\"], PROTOCOL_VERSION);"
+            ]
+          },
+          "inbound-frames-classify-by-id-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:62      match v.get(\"id\") {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:17  /// One inbound frame, already classified.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:164      fn classifies_requests_and_notifications_by_id() {"
+            ]
+          },
+          "FRAME-WITH-ID-IS-A-REQUEST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:63          Some(id) if !id.is_null() => Ok(JsonRpcMessage::Request(JsonRpcRequest {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:104                  Ok(JsonRpcMessage::Request(req)) => Some(self.answer(req)),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:31      Request(JsonRpcRequest),"
+            ]
+          },
+          "FRAME-WITHOUT-ID-IS-A-NOTIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:68          _ => Ok(JsonRpcMessage::Notification(JsonRpcNotification {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:105                  Ok(JsonRpcMessage::Notification(_)) => None,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:239          assert_eq!(out.len(), 4);"
+            ]
+          },
+          "MALFORMED-LINE-MUST-NOT-KILL-THE-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:106                  Err(detail) => Some(JsonRpcResponse::error(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/wire.rs:137              code: -32700,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:280          assert_eq!(out[1][\"id\"], 9, \"the loop survived to answer the ping\");"
+            ]
+          },
+          "TRANSPORT-FAILURE-IS-ONE-THISERROR-ENUM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:22  pub enum McpCoreError {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:25           (violates spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#wire; \\",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:26            fix surface: the host closed the pipe — check the agent host's \\"
+            ]
+          },
+          "kind-line-server": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:9  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#server\");",
+              "the `req` kind is defined by spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:94 (##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR). The RANK half — `r1` — is defined nowhere in the repository; the verdict answers the @impl/done marker's stage semantics (presence evidence for the unit this line heads) and the rank-vocabulary gap is filed as F-120 rather than converted into a per-fact unverifiable"
+            ]
+          },
+          "SERVER-IS-NAME-VERSION-TOOLSET-OVER-A-TRANSPORT-SEAM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:81  pub struct Server {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:23      fn read_line(&mut self) -> Result<Option<String>, McpCoreError>;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:162      pub struct Scripted {"
+            ]
+          },
+          "methods-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:119          match req.method.as_str() {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:118      fn answer(&mut self, req: crate::JsonRpcRequest) -> JsonRpcResponse {",
+              "read directly 2026-07-28: server.rs:118-151 is one `match req.method.as_str()` covering initialize / ping / tools/list / tools/call / other"
+            ]
+          },
+          "METHOD-INITIALIZE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:120              \"initialize\" => JsonRpcResponse::ok(",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:124                      \"serverInfo\": { \"name\": self.name, \"version\": self.version },",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:125                      \"capabilities\": { \"tools\": { \"listChanged\": false } },"
+            ]
+          },
+          "METHOD-TOOLS-LIST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:131                  serde_json::json!({ \"tools\": self.tools.descriptors() }),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:110      tools: BTreeMap<String, Box<dyn Tool>>,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:126          self.tools.values().map(|t| t.descriptor()).collect()",
+              "the sorted order is structural, not sorted at call time: toolset.rs:110 stores tools in a BTreeMap keyed by name, and toolset.rs:155 is the test that pins it"
+            ]
+          },
+          "METHOD-TOOLS-CALL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:138                          JsonRpcError::invalid_params(\"missing `name`\"),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:146                          JsonRpcError::method_not_found(&format!(\"tools/{name}\")),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:141                  let args = params.get(\"arguments\").cloned().unwrap_or(Value::Null);",
+              "read directly 2026-07-28: server.rs:135-149 — a missing `name` returns invalid_params before dispatch, an unresolved name returns method_not_found(\"tools/<name>\")"
+            ]
+          },
+          "METHOD-PING": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:128              \"ping\" => JsonRpcResponse::ok(req.id, Value::Object(serde_json::Map::new())),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:249          assert_eq!(out[3][\"id\"], 3);"
+            ]
+          },
+          "METHOD-ANYTHING-ELSE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:150              other => JsonRpcResponse::error(req.id, JsonRpcError::method_not_found(other)),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:268          assert_eq!(out[1][\"error\"][\"code\"], -32601);"
+            ]
+          },
+          "kind-line-toolset": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:6  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#toolset\");",
+              "the `req` kind is defined by spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:94 (##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR). The RANK half — `r1` — is defined nowhere in the repository; the verdict answers the @impl/done marker's stage semantics (presence evidence for the unit this line heads) and the rank-vocabulary gap is filed as F-120 rather than converted into a per-fact unverifiable"
+            ]
+          },
+          "TOOL-IS-DESCRIPTOR-PLUS-RUN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:77      fn descriptor(&self) -> ToolDescriptor;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:78      fn run(&mut self, args: &Value) -> ToolOutput;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:27      #[serde(rename = \"inputSchema\")]"
+            ]
+          },
+          "REGISTRY-LAST-REGISTRATION-OF-A-NAME-WINS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:121          self.tools.insert(tool.descriptor().name, tool);",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:118      /// Mount a tool; a repeated name overwrites the previous entry (the",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:155      fn descriptors_are_sorted_and_last_registration_wins() {"
+            ]
+          },
+          "TOOL-FAILURE-IS-A-RESULT-NEVER-A-PROTOCOL-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:66              \"content\": [{ \"type\": \"text\", \"text\": self.report }],",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:143                      Some(output) => JsonRpcResponse::ok(req.id, output.into_result_value()),",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:257          assert!(out[0].get(\"error\").is_none(), \"{:?}\", out[0]);"
+            ]
+          },
+          "REPORTS-SPEAK-THE-CLASS-F-REQ-CITING-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:44      pub report: String,",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:1  //! The one error enum of the transport layer (Class F): every variant",
+              "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md — a captured run shows the grammar live: 'go-ai-native-conform: NEW go-unsafe-in-domain …:17 — violates REQ discipline://go-ai-native-lang/guide#errors: … fix surface: …'. The wrapped runner cites the REQ and names a fix surface, which is what this fact claims the reports do"
+            ]
+          },
+          "kind-line-capture": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:23  specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#capture\");",
+              "the `req` kind is defined by spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:94 (##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR). The RANK half — `r1` — is defined nowhere in the repository; the verdict answers the @impl/done marker's stage semantics (presence evidence for the unit this line heads) and the rank-vocabulary gap is filed as F-120 rather than converted into a per-fact unverifiable"
+            ]
+          },
+          "CAPTURE-IS-A-PROCESS-LEVEL-REDIRECT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:80      let sink = fs::File::create(&path).map_err(|e| err(\"create\", e))?;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:147              if dup2(sink.as_raw_fd(), 2) < 0 {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:202              if SetStdHandle(STD_ERROR_HANDLE, sink.as_raw_handle().cast::<c_void>()) == 0 {",
+              "the file-not-pipe half is capture.rs:80 `fs::File::create(&path)`, which is the claim's operative detail — a filling pipe would block the writer"
+            ]
+          },
+          "threaded-write-was-rejected-at-the-spike": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:5  //! threaded `&mut dyn Write` was tried on paper and rejected: children",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:6  //! inherit the PROCESS handle and would bypass it entirely (the plan's",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:229          /// the Wave-0 S3 finding is about), and the rustdoc example on",
+              "a DATED HISTORICAL RECORD of a rejected design, marked @spec/done; capture.rs:5-6 carries the same reason in the cell it decided"
+            ]
+          },
+          "LAWS-CAPTURES-MUST-NOT-NEST-OR-RUN-CONCURRENTLY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:58      if ACTIVE.swap(true, Ordering::SeqCst) {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:61              \"a capture is already active — tool dispatch is sequential by design, \\",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:272          assert!(msg.contains(\"MCP-CORE-v0.1#capture\"), \"{msg}\");",
+              "read directly 2026-07-28: capture.rs:58-63 refuses on `ACTIVE.swap(true, SeqCst)` with the message 'a capture is already active — tool dispatch is sequential by design, and captures never nest'; capture.rs:272 asserts the refusal message cites MCP-CORE-v0.1#capture, so the 'refuses with this unit cited' half is itself under test"
+            ]
+          },
+          "RESTORATION-RIDES-DROP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:102  impl Drop for RestoreOnDrop {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:110              if platform::restore_stderr(r).is_err() {",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:277          let result = std::panic::catch_unwind(|| {"
+            ]
+          },
+          "CAPTURE-CELL-IS-THE-AUDITED-HOME-OF-UNSAFETY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:140              // restore. This cell is the audited home of that unsafety —",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:141              // nothing else in the crate touches raw fds.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/capture.rs:180      unsafe extern \"system\" {"
+            ]
+          },
+          "kind-line-no-prompts": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:73  /// (MCP-CORE §5: a server has no interactive channel; anything that",
+              "this section heads a prohibition, not a cell, so it carries no `specmark::scope!` tag of its own; its presence evidence is the seam that makes the prohibition unrepresentable — toolset.rs:72-78",
+              "the `req` kind is defined by spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:94 (##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR). The RANK half — `r1` — is defined nowhere in the repository; the verdict answers the @impl/done marker's stage semantics (presence evidence for the unit this line heads) and the rank-vocabulary gap is filed as F-120 rather than converted into a per-fact unverifiable"
+            ]
+          },
+          "NO-INTERACTIVE-CHANNEL-TOOLS-MUST-NOT-PROMPT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:72  /// One mounted tool. `run` returns [`ToolOutput`] — tools NEVER prompt",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/toolset.rs:78      fn run(&mut self, args: &Value) -> ToolOutput;",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:16  //!   never prompt (a server has no interactive channel).",
+              "read directly 2026-07-28: the rule is structural rather than documentary — `fn run(&mut self, args: &Value) -> ToolOutput` (toolset.rs:78) gives a tool no input channel at all, so prompting is unrepresentable at the seam rather than forbidden beside it"
+            ]
+          },
+          "CRATE-KNOWS-NEITHER-VIBE-NOR-A-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:20  //! Nothing here knows any language, any discipline rule, or vibe: a",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/lib.rs:21  //! server built on this crate serves with `vibe` absent from PATH",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/Cargo.toml:14  specmark.workspace = true",
+              "spec/modules/vibe-mcp/PROP-027-mcp-packages.md:164 — the acceptance the fact claims exists: the chain 'passes with `vibe` absent from `PATH` and no vibevm process'"
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T06:18:01Z",
+        "verify_batch": "C1"
+      }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
       "content_hash": "a31e1c7778da5f25eacfd140047c59ea490255b313974fb6987bfdc7f06a4421",

@@ -1867,6 +1867,82 @@ command that would have tested it.
   rests on, and it is clean *because* the one defect sits in a file nothing
   measures. A scope that excludes a shipped directory does not stop shipping it.
 
+- **2026-07-28 · C1a — the transport holds completely and the engine spec is half
+  false.** Two of C1's five mechanism files judged, 77 verdicts.
+
+  **MCP-CORE-v0.1: 34 / 34 confirmed, zero drift.** Every claim is in the code and
+  most are under test — `PROTOCOL_VERSION = "2024-11-05"`, `-32700` on a malformed
+  line with a test asserting the loop survived it, `-32602` / `-32601` in
+  `tools/call`, a `BTreeMap` making `tools/list`'s sorted order structural rather
+  than sorted-at-call-time, `dup2` and `SetStdHandle` into a **file** (not a pipe,
+  which would deadlock a chatty floor), restoration on `Drop` under
+  `catch_unwind`, and a nesting refusal whose message is asserted to cite this very
+  unit. Two claims were checkable only outside the package and both held:
+  `diff -rq` reports the vendored copies in `rust-ai-native-mcp` and
+  `typescript-ai-native-mcp` **byte-identical**, and PROP-027 §2.6 «Serving is
+  vibe-free» exists in the host exactly as cited. The prohibition «tools MUST NOT
+  prompt» turned out to be structural rather than documentary: `fn run(&mut self,
+  args: &Value) -> ToolOutput` gives a tool no input channel, so prompting is
+  unrepresentable at the seam rather than forbidden beside it.
+
+  **ENGINE-CONFORM-v0.1: 21 confirmed / 22 drift — 48.8 %.** The engine that
+  exists is a good one, and it is not the engine this document describes. **There
+  is no `Tier` type, no `tier` field and no escalation anywhere**, so the whole of
+  §1 — three tier rows, the rule-record declaration, the cheapest-adequate-frontend
+  claim — describes a mechanism that was never built; `store.rs` takes a
+  caller-supplied `&dyn Frontend` and nothing selects. Of five frontends tabled,
+  **C++ and Python do not exist at all** and tree-sitter, SWC, rust-analyzer,
+  `rustc_driver` and gopls appear nowhere in the tree. Two of three example rules
+  (R-021, R-020) do not exist; R-002 does, and is mapped onto tiers that do not.
+  Foreign-linter ingestion runs the wrong way: conform **emits** SARIF and reads
+  none. The quoted trait signature is wrong in both parameters —
+  `fn check(&self, facts: &[SourceFacts])` against the document's
+  `fn check(&self, facts: &FactStore, specmap: &Index)` — and the `specmap`
+  argument could not exist, because the conform crate does not depend on the
+  specmap crate.
+
+  What confirms is worth naming too, because it is not nothing: the fact store's
+  `(content-hash, frontend id+version)` key is exact, the sidecar protocol is
+  exactly the NDJSON the spec describes (`tools/go-extract/extract.go:4`), SARIF
+  output and `conform-baseline.json` are both real, and `findings.sort()` gives the
+  byte-identical ordering §5 claims.
+
+- **2026-07-28 · F-120 — a notation used 102 times, defined by one example, cited
+  to a document that does not exist.** The kind-line grammar (`` `req r1` ``) is
+  defined in exactly one place: BROWNFIELD-PROTOCOL-v0.1.md's
+  `##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR`, which gives examples — «`req r2`
+  (default: ratified) · `req r1 planned` · `req r2 disputed(#other-anchor)`» — and
+  cites **GUIDE-SPEC-AUTHORING** for the amendment. **No such document exists in
+  the repository**; `01-PATTERN-CARD-FORMAT.md` says it «supersedes part of
+  GUIDE-SPEC-AUTHORING-v0.1», so the only cited definition source is a document
+  that was partly superseded and never shipped. Meanwhile the corpus uses eight
+  ranks — r1 ×75, r2 ×10, r3–r8 ×13 — and **none of r1…r8 is defined anywhere**.
+  The one definition-bearing sentence pairs `r1` with «planned» and `r2` with
+  «ratified»; 75 of 102 uses are a bare `r1` carrying neither word.
+
+  *Recorded as a finding rather than as five unverifiable verdicts.* The
+  `kind-line-*` facts carry `@impl/done`, whose stage semantics ask for presence
+  evidence for the unit the line heads, and that evidence exists — four of the five
+  head cells with `specmark::scope!` tags citing them. Marking them unverifiable
+  would report as unmeasured a corpus that is in fact implemented; the undefined
+  rank is a defect in the notation, not an unfalsifiable claim about the world.
+
+- **2026-07-28 · F-121 — a document falsified by its own last line.**
+  ENGINE-CONFORM-v0.1's closing fact reads: *«Any frontend or tier specified here
+  that is not exercised by Playbook Phase 4 is removed from this document rather
+  than carried as aspiration»* — and it is marked **`@impl/done`**. The same
+  document carries three tiers, a C++ frontend, a Python frontend, tree-sitter,
+  SWC, rust-analyzer, `rustc_driver`, gopls and SARIF linter ingestion, and the
+  engine exercises none of them. Nothing enforces the rule: no test, gate or lint
+  checks it, so the one fact whose job was to keep the document honest is the fact
+  with no checker.
+
+  It is the sharper twin of F-114, and the pattern now has two instances: a
+  normative claim contradicted not by the world but by the artifact that carries
+  it. The document's own status line says «Design, beta» — accurately — while
+  thirty of its facts are marked implemented. **A design document is not drift; a
+  design document whose facts claim implementation is.**
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
