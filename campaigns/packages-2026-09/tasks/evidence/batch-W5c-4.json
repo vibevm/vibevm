@@ -1,0 +1,733 @@
+{
+ "batch": "W5",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:15  ## What a mode is {#what}",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:44  ## Why codewords rather than a settings flag {#why}",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:58  ## The five-part codeword shape {#shape}",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:76  ## The red-lines law {#red-lines}",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:3  **Scope of this document.** This file defines *what* a codeword-",
+     "confirmed: Each of the four promised parts has its own section under the anchor named. Section headings and #ids are identical in the package copy and the materialised vibedeps copy; the only difference between the two files is the stripped fact markup."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:122  ## The catalogue {#catalogue}",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:1  # Codeword: «move fast and break things» {#root}",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:9  [`mfbt-mode.md`](mfbt-mode.md).",
+     "spec/common/PROP-006-operating-modes.md:13  ##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.md`](../boot/90-user.md). @freeze/done",
+     "confirmed: The §catalogue section is the second-to-last in the document and the mfbt-mode.md link is a sibling-relative path that resolves inside the package and inside the vibedeps slot (both files sit in the same directory). Note the host does NOT follow the placement half of this claim: its catalogue is not at the end of this document but in spec/boot/90-user.md:62-68, and PROP-006:13 records that placement as deliberate."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "a-session-has-a-default-operating-posture-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:13  A session has a **default operating posture**: routine work proceeds,",
+     "spec/boot/STATIC.md:952  ## The default posture {#default}",
+     "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
+     "confirmed: The host names its default posture explicitly and identifies it with a specific document — \"the four rules from CLAUDE.md in their plain reading\" — which is the same move this section makes generically. Same shape difference as the boot snippet: the package source breaks the definition into three anchored bullets, the installed copy runs them as one sentence."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "DEFAULT-ROUTINE-WORK-PROCEEDS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:13  A session has a **default operating posture**: routine work proceeds,",
+     "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:8  Routine large changes proceed and are committed/pushed **without** a confirmation handshake:",
+     "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+     "confirmed: The host's Rule 4 is exactly this clause plus its exceptions, and PROP-000.md:164 phrases it in the flow's own words (\"routine proceeds\"). The installed git-autonomy snippet at line 8-10 enumerates what routine covers — planned milestone, feature slice, many files for one coherent reason — which the operating-modes documents do not."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "DEFAULT-NON-ROUTINE-STOPS-FOR-CONFIRMATION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:14  anything non-routine stops for the owner's confirmation, and the",
+     "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+     "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. …",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:13  ## Non-routine — stop and ask first {#red-lines}",
+     "confirmed: The host uses the same routine/non-routine cut and the same verb (\"stops for the owner\") at CLAUDE.md:31, extending it to delegated work — the strongest form of adoption in the corpus, because it applies the rule to a case the flow never anticipated."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "DEFAULT-A-QUESTION-IS-PREFERRED-TO-A-MISTAKE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:15  agent prefers a clarifying question to an irreversible mistake. That",
+     "spec/boot/STATIC.md:958  confirmation. When uncertain whether something is routine, ask.",
+     "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+     "confirmed, and the apparent counter-evidence is a different rule about a different thing. The ask-when-uncertain half is present in the host's compiled boot lane. `spec/boot/00-core.md`'s four-step ladder does end by picking the conservative reading and PROCEEDING with a REVIEW marker rather than asking — but that ladder governs unclear SEMANTICS, where this fact governs the default posture before an irreversible ACT. Rule 4 and the uncertainty ladder answer different questions and the host runs both."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-DEFAULT-IS-RIGHT-FOR-MOST-SESSIONS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:16  default is right for most sessions.",
+     "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
+     "confirmed: The host operates the default as its standing state and the alternate as the exception, which is the claim's operational content. The quantified version was in the host's own words at commit a6df6050, where PROP-006 §1 read \"That default is right for ~90% of sessions\"; that sentence left the tree when 4d5ccf83 reduced the file to a pointer on 2026-07-14, and no live host file now quantifies it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-DEFAULT-IS-WRONG-FOR-PRE-APPROVED-WORK": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:18  It is the *wrong* posture when the owner has already thought a large",
+     "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.md#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:10  coherent reason. The approval was given upstream, when the work was authorised; a mid-work",
+     "confirmed: The host's catalogue entry exists precisely for this case and names it \"pre-authorised heads-down execution\". The upstream-approval argument is delivered independently by the git-autonomy snippet. The host's own longer statement of the case was PROP-006 §1 at a6df6050 (\"wrong for sustained heads-down work the owner has already pre-authorised\"); the surviving live form is the 90-user.md catalogue line."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-handshake-is-overhead-already-paid-for": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:20  end. There, every \"shall I proceed?\" is overhead the owner already",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:11  \"shall I proceed?\" is overhead already paid for.",
+     "spec/boot/STATIC.md:498  \"shall I proceed?\" is overhead already paid for.",
+     "confirmed: Same finding as the README's identically-named anchor: the sentence reaches every host session through the git-autonomy lane (STATIC.md:498 and :692), and no source-2 host file authors it. This is one of two anchors in the package that share a name across files (`the-handshake-is-overhead-already-paid-for` in README.md:19 and here at line 31); `scope-of-this-document` is repeated across the three flow documents in the same way."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "A-CODEWORD-FLIPS-THE-SESSION-FOR-ONE-WORK-CYCLE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:23  A **codeword** is a short trigger phrase that flips the session into",
+     "spec/boot/STATIC.md:947  has one safe default posture; the owner can flip it into an alternate",
+     "spec/common/PROP-006-operating-modes.md:8  ##modes-extracted vibevm's codeword-triggered operating postures — the safety-first default, why a codeword is an explicit opt-in into an alternate posture for a work cycle, the activation lifecycle and reporting cadence, and the shape for writing a new codeword — are the **operating-modes** flow: @freeze/done",
+     "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). …",
+     "confirmed: The host defines a codeword the same way in two files, using the same two nouns (trigger phrase, alternate posture) and the same scope (one work cycle). PROP-006:8 attributes the definition to this flow by name."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CODEWORDS-ARE-EXPLICIT-OPT-INS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:24  an alternate posture for one work cycle. The default is unchanged;",
+     "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
+     "spec/common/PROP-006-operating-modes.md:8  ##modes-extracted vibevm's codeword-triggered operating postures — the safety-first default, why a codeword is an explicit opt-in into an alternate posture for a work cycle, … @freeze/done",
+     "confirmed: PROP-006:8 uses the phrase \"explicit opt-in\" verbatim, and 90-user.md:64 states the otherwise-clause (\"otherwise treat the session as default posture\"), which is the opt-in property restated from the negative side. Nothing in the host makes a mode a persistent setting: there is no configuration key for it — `grep -rn 'mode' vibe.toml conform.toml` returns no posture setting."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-MODE-CHANGES-CONFIRMATION-BEHAVIOUR-NEVER-WHAT-IS-PERMITTED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:26  until the work they cover ends. A mode changes *confirmation",
+     "spec/common/PROP-006-operating-modes.md:21  - ##MFBT-SUSPENDS It suspends **only** Rule 4's \"ask before routine large changes\". @freeze/done",
+     "spec/common/PROP-006-operating-modes.md:22  - ##MFBT-RULES-SURVIVE The four non-negotiable rules survive unchanged. @freeze/done",
+     "spec/boot/STATIC.md:949  change *confirmation behaviour* — they never change what is",
+     "confirmed: Third statement of the same law in the package (README:10, boot snippet line 11, here at line 41) and the host restates it as a pair of PROP-006 bullets. The host's phrasing differs in one respect worth recording: it scopes the change to a named clause of a named rule rather than to \"confirmation behaviour\" as a category."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WHY-OPT-IN-PER-WORK-CYCLE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:31  - **Opt-in per work cycle.** The posture shift is scoped to what the",
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. …",
+     "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
+     "confirmed: The host has no persistent posture setting to compare against — I checked vibe.toml, conform.toml and .claude/settings.json for any mode/posture key and found none, so the argument's premise holds here. The host's resume contract is the mechanism that prevents inheritance by surprise (CLAUDE.md:203-209)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WHY-RECOGNISED-BY-INTENT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:34  - **Recognised by intent.** A spoken phrase carries the owner's",
+     "CLAUDE.md:171  **Trigger phrases** (case-insensitive; exact wording not required, recognise the intent):",
+     "CLAUDE.md:198  When the user issues a resume trigger phrase, the job is to **restore context and report — nothing else**. Recognise the intent, not the exact wording:",
+     "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture … @impl/done",
+     "confirmed: The host implements intent-matching for its two session codewords with published variant lists in two languages (CLAUDE.md:173-174 and :200-201, identical in AGENTS.md / GEMINI.md), each headed by the recognise-the-intent instruction. That is the rule exercised, not merely restated."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WHY-AUDITABLE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:36  - **Auditable.** The trigger is visible in the transcript. Anyone",
+     "spec/boot/90-user.md:24  ##TOKEN-DISCIPLINE **Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. … Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка. …",
+     "confirmed as a rationale whose evidence class this repository does not keep. The claim rests on a session transcript being readable, and there is no transcripts/ or sessions/ directory here. The host DOES record that sessions are captured — `spec/boot/90-user.md` states every session in this repository is video-recorded — but that is a different medium and not readable by «anyone reading the session» from the repository. What IS in the tree is after-the-fact naming of the posture in commit bodies, which shows when a mode was in force and not when it ended."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "WHY-BOUNDED-BY-LAW": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:38  - **Bounded by law.** Because a codeword only ever relaxes the",
+     "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+     "spec/boot/STATIC.md:982  threshold?\" handshake. No codeword can be defined that erodes this.",
+     "confirmed: The no-flag half is checkable and holds: there is no configuration key anywhere in the host that sets a posture (checked vibe.toml, conform.toml, progress.toml, .claude/settings.json and .claude/settings.local.json). The bounded half is the host's PROP-006:23, which restates the red lines specifically for the case where the codeword is active."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "every-codeword-is-specified-with-the-same-five-parts-lead": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:45  Every codeword in a project's catalogue is specified with the same",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:14  ## 1. Trigger phrase {#trigger}",
+     "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — aim at the maximum version of the deliverable, phase the work into testable iterations, begin without asking, drive to completion without confirmation handshakes, and spend whatever time / tokens / reasoning depth it takes (the owner's verbatim description is recorded in the flow) — is the operating-modes flow's `spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root`. @freeze/done",
+     "DRIFT on «every», and the host's own commit supplies the counter-example. The five-part vocabulary IS the host's — commit `251987b1`, which created PROP-006, names it exactly («trigger / description / interpretation / changes-and-limits / lifecycle»). But the host acts on TWO phrase-triggered contracts and specifies only one in five parts: «move fast and break things», catalogued in `spec/boot/90-user.md`, and the session-end / session-resume commands in `CLAUDE.md`, which carry a trigger list and operative rules and have no verbatim owner description, no changes/does-not-change section and no red-lines restatement. The same commit calls the second «the existing session-end codeword … same pattern, generalised», so the host itself has treated it as one."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PART-TRIGGER-PHRASE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:50  | **1. Trigger phrase** | the words (and recognisable variants) that activate it; case-insensitive; matched by intent |",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:16  ##THE-TRIGGER-IS-CASE-INSENSITIVE-AND-MATCHED-BY-INTENT `move fast and break things` — case-insensitive, matched by intent. @impl/done",
+     "CLAUDE.md:171  **Trigger phrases** (case-insensitive; exact wording not required, recognise the intent):",
+     "confirmed: The host's session-end command specifies its trigger in exactly these terms — case-insensitive, variants listed, matched by intent — at CLAUDE.md:171-174. The MFBT trigger's variant list in the host was richer than the flow's: PROP-006 §2 at commit a6df6050 recognised `MFBT`, `move fast` AND `MFAT`, where mfbt-mode.md:18 lists only the first two. `MFAT` is now absent from the entire working tree (full-tree grep, including ignored paths, returns 0), having left with 4d5ccf83."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-PART-AUTHORITATIVE-DESCRIPTION": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:51  | **2. Authoritative description** | the owner's own framing of what the mode is for, recorded verbatim |",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:23  ##the-owners-framing-lead The owner's framing, recorded as spoken: @impl/done",
+     "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — … (the owner's verbatim description is recorded in the flow) — is the operating-modes flow's `spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root`. @freeze/done",
+     "DRIFT, and this is the row where the host's record disagrees with itself in writing — the same finding ruled at `mfbt-mode.md`'s verbatim family and recorded here because this row is what defines the part. `PROP-006:19` today says the owner's verbatim description «is recorded in the flow». Commit `a6df6050` (2026-07-13), which performed the extraction, stated the OPPOSITE reason for keeping the Russian in the host: «the package's own copy is an English paraphrase and a paraphrase of an authorisation is a different authorisation». `4d5ccf83` removed it the next day on the ground that the package already carries the verbatim. A full-tree search including ignored paths finds the Russian nowhere; the only text now presented as the authoritative description is the one the extraction commit called a paraphrase."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-PART-OPERATIVE-INTERPRETATION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:52  | **3. Operative interpretation** | a numbered list of concrete behavioural rules the agent follows while it is active |",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:35  ## 3. Operative interpretation {#interpretation}",
+     "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.md#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
+     "confirmed: mfbt-mode.md §3 supplies the numbered list (seven rules, lines 39-61) and the host condenses the same rules to four clauses in its boot catalogue line and to a single sentence at PROP-006:19. Commit 251987b1's body enumerates them in the host's own words: \"maximum-version target, testable phased iterations, full test coverage, no mid-work asking, full reasoning depth\"."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-PART-CHANGES-AND-DOES-NOT-CHANGE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:53  | **4. Changes / does NOT change** | what confirmation behaviour it relaxes, and an explicit restatement that the red lines survive it |",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:63  ## 4. What it changes / does NOT change {#limits}",
+     "spec/common/PROP-006-operating-modes.md:21  - ##MFBT-SUSPENDS It suspends **only** Rule 4's \"ask before routine large changes\". @freeze/done",
+     "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+     "confirmed: The host's own catalogue entry obeys this part exactly: PROP-006:21-23 is a relaxes-clause followed by a full re-typing of the five red lines, and spec/boot/90-user.md:68 does the same in one sentence. That re-typing is what writing-a-codeword.md:66 calls deliberate friction, and the host performed it twice independently."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-PART-LIFECYCLE-AND-CADENCE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:54  | **5. Lifecycle + cadence** | activation, persistence within a session, non-persistence across sessions, the abort words, and the reporting cadence |",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:94  ## 5. Lifecycle + cadence {#lifecycle}",
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. …",
+     "confirmed on its subject: `mfbt-mode.md` §5 supplies all five sub-parts, so the part this row defines is present in the package's own worked codeword. RECORDED: the host's live PROP-006 does NOT carry a lifecycle section at all — after `4d5ccf83` it holds three bullets and nothing more — while at `a6df6050` it DID, naming activation, within-session persistence, non-persistence across sessions, owner-side abort with examples in two languages, agent-side abort and the cadence. The abort words now exist nowhere in the host. What survives as a host lifecycle rule is the session-boundary reset enforced by the resume contract."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-PHRASE-MISSING-A-PART-IS-A-PROPOSAL-NOT-A-CODEWORD": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:56  A phrase that does not carry all five parts is not yet a codeword —",
+     "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+     "CLAUDE.md:196  ## Session-resume command — `ВОССТАНОВИ СЕССИЮ` / `RESUME SESSION`",
+     "DRIFT: the host has two live trigger-phrase families that carry two of the five parts and are acted on as binding, not held as proposals. `CLAUDE.md` calls the session-end contract «a hard contract, not a courtesy», and both families are recognised by intent from Russian and English trigger lists — the codeword mechanism exactly. Neither carries a verbatim owner description, a changes/does-not-change section or a red-lines restatement. The live catalogue lists only one codeword «currently in force», so the host does not NAME them codewords; its own creating commit does, and its behaviour toward them is the behaviour this fact reserves for a full five-part codeword."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DO-NOT-ACT-UNTIL-THE-OWNER-HAS-FIXED-THE-FIVE": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:57  it is a proposal. Do not act on it until the owner has fixed the five.",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:121  not treat any phrase as active until I approve its five parts.",
+     "spec/boot/STATIC.md:996  - Never act on a codeword that is not in the catalogue — propose",
+     "DRIFT, on the same evidence and as the instruction rather than the definition. The one catalogued codeword WAS fixed in five parts at PROP-006's creation, which is the rule satisfied. But the host acts — as a hard contract, every session — on two phrase families the owner fixed in a different shape, carrying two of the five parts. No instance exists anywhere of a phrase being held as a proposal pending the missing parts: `grep -rn 'propose adding'` returns only WAL-flow hits."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-RED-LINES-ARE-THE-INVARIANT-THE-PRACTICE-PROTECTS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:61  This is the invariant the whole practice is built to protect. A small",
+     "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+     "spec/boot/STATIC.md:982  threshold?\" handshake. No codeword can be defined that erodes this.",
+     "confirmed: The host's reduction of PROP-006 to a pointer is itself the evidence for what it considered load-bearing: of the whole §2, the three bullets kept are ##MFBT-SUSPENDS, ##MFBT-RULES-SURVIVE and ##MFBT-RED-LINES — the limits, not the operative rules. Commit 251987b1's body makes the same emphasis (\"and — importantly — what it does NOT change\")."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "a-small-set-of-operations-survives-every-mode-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:61  This is the invariant the whole practice is built to protect. A small",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:62  set of operations survives **every** mode and always requires the",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:15  Ask first for anything whose reversal costs work:",
+     "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+     "confirmed: This document's list is the same five items as the boot snippet's, in the same order, with three items spelled differently (\"importing large binary blobs\" vs \"importing large binaries\"; \"changing CI, signing, or secrets configuration\" vs \"touching CI/signing/secrets configuration\"). The host's authoritative statement at PROP-000.md:164 names four explicitly plus the catch-all in the lead-in of the flow it cites."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RED-LINE-REWRITING-PUBLISHED-HISTORY": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:65  - rewriting published history;",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:17  - rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work);",
+     "spec/boot/STATIC.md:418  - Never `git commit --amend` on a pushed commit without explicit human",
+     "spec/boot/90-user.md:34  - ##CMD-ROUTINE-PUSH Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @impl/done",
+     "confirmed: Item 1 of 5, identical wording to the git-autonomy list the host installs. The host also states the operational form on this machine at spec/boot/90-user.md:34 and receives the atomic-commits never-rule at STATIC.md:418-419 and again at :612-613."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RED-LINE-FORCE-PUSHING": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:66  - force-pushing;",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:18  - `git push --force` / `--force-with-lease`;",
+     "spec/boot/90-user.md:35  - ##CMD-MIRROR Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14: `cargo xtask mirror` — reads `mirrors.toml`, pushes `main` + tags to every target fast-forward-only, never `--force`. …",
+     "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+     "confirmed: Item 2 of 5. The host has gone further than restating it: its standard rollout tool is specified to be fast-forward-only and never to force (spec/boot/90-user.md:35), so the red line is enforced by the mechanism rather than only by the rule."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RED-LINE-IMPORTING-LARGE-BINARY-BLOBS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:67  - importing large binary blobs;",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:19  - bringing in large binary blobs;",
+     "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+     "confirmed: Item 3 of 5, present in every host form of the list. This document's wording (\"large binary blobs\") is the same as the installed git-autonomy snippet's; the boot snippet in the same package says \"large binaries\" instead, so the package is not internally uniform on this item."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RED-LINE-CHANGING-CI-SIGNING-OR-SECRETS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:68  - changing CI, signing, or secrets configuration;",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:20  - changing CI, signing, or secrets configuration;",
+     "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+     "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+     "confirmed: Item 4 of 5, and this document's wording is character-identical to the installed git-autonomy snippet's line 20. Same internal host divergence recorded on the boot snippet's equivalent row: spec/boot/00-core.md:24 drops \"secrets\" from this item while PROP-000.md:164, CLAUDE.md:31, PROP-006:23 and 90-user.md:68 keep it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:69  - **anything whose reversal would cost work.**",
+     "vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md:21  - **any operation whose reversal would cost work.**",
+     "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. …",
+     "CLAUDE.md:74  better (this is the whole point of the delegation-first directive).** Rule 4's",
+     "confirmed: Item 5 of 5, the catch-all, present in every host form and load-bearing in the one place where the host granted itself an autonomy exception: the standing owner grant that makes fractality runs unmetered (CLAUDE.md:71-78) is fenced immediately by this clause, so the grant covers spend and not irreversibility."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-CODEWORD-REMOVES-THE-ROUTINE-WORK-HANDSHAKE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:71  A codeword removes the *\"may I proceed with routine work?\"*",
+     "spec/common/PROP-006-operating-modes.md:21  - ##MFBT-SUSPENDS It suspends **only** Rule 4's \"ask before routine large changes\". @freeze/done",
+     "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … The four `CLAUDE.md` rules survive unchanged; only Rule 4's \"ask before routine large changes\" is suspended. …",
+     "confirmed: The host states the positive half twice with the word \"only\" carrying the limit, and names the exact clause suspended. Note the host's clause is \"ask before routine LARGE changes\" — Rule 4's phrasing — where this flow says \"routine work\"; both refer to the same handshake but the host's is narrower on its face."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-CODEWORD-DOES-NOT-REMOVE-THE-IRREVERSIBLE-THRESHOLD-HANDSHAKE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:72  handshake. It does **not** remove the *\"may I cross an irreversible",
+     "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — … — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+     "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @impl/done",
+     "confirmed: Both host statements use capitalised STILL for emphasis on exactly this point, and 90-user.md:68 abbreviates the catch-all to \"irreversible ops\", which is this flow's threshold language. The host's own version of the two-handshake sentence was live at PROP-006 §2.1 until 4d5ccf83 on 2026-07-14."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ONLY-THE-FIRST-QUESTION-IS-EVER-WAIVED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:73  threshold?\"* handshake. The two are different questions, and only the",
+     "spec/common/PROP-006-operating-modes.md:21  - ##MFBT-SUSPENDS It suspends **only** Rule 4's \"ask before routine large changes\". @freeze/done",
+     "spec/boot/STATIC.md:982  threshold?\" handshake. No codeword can be defined that erodes this.",
+     "confirmed: The host encodes the exclusivity with the same word in the same position — \"It suspends **only** Rule 4's …\" — and reinforces it at 90-user.md:68 (\"only Rule 4's 'ask before routine large changes' is suspended\"). No host file waives any second question under any mode."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "consequences-that-follow-directly-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:76  Consequences that follow directly:",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:78  - No codeword may be defined that relaxes a red line. A proposed mode",
+     "confirmed: Structural lead-in; the three bullets it introduces are lines 78-86 of the installed copy and lines 101-109 of the package source, and each carries its own anchor and its own row below. No host analogue is expected for a lead-in and none was found."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONSEQUENCE-NO-CODEWORD-MAY-RELAX-A-RED-LINE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:78  - No codeword may be defined that relaxes a red line. A proposed mode",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:79    that would is malformed — refuse it and say why.",
+     "spec/boot/STATIC.md:982  threshold?\" handshake. No codeword can be defined that erodes this.",
+     "confirmed: The prohibition reaches the host through the boot snippet. The refusal half has no instance: the host's catalogue has held exactly one codeword since 2026-05-06 and it restates the red lines, so no malformed proposal exists to refuse. `grep -rn 'malformed'` across CLAUDE.md / AGENTS.md / GEMINI.md / spec/ / campaigns/ returns no codeword-related hit."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-THE-MODES-OWN-ESCAPE-HATCH": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:80  - If work under an active mode cannot land without crossing a red",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:83    escape hatch firing.",
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "confirmed: The host has the same construction under a pre-authorised command rather than under a codeword: the session-end contract pre-authorises the push as routine, then names the escape hatch by that word for the case where the push would be non-fast-forward (CLAUDE.md:191, identical in AGENTS.md / GEMINI.md). The host's own codeword-scoped version was PROP-006 §2.1 at commit a6df6050 (\"the agent stops at that phase boundary, reports, and asks — the flow's own escape hatch firing, not a forbidden confirmation\"), removed by 4d5ccf83."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-EVERY-STANDING-INVARIANT-IS-A-RED-LINE-TOO": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:84  - Every other standing invariant of the project (its attribution",
+     "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+     "spec/boot/90-user.md:24  ##TOKEN-DISCIPLINE **Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. **Никогда** не печатается в stdout, stderr, чат, лог-сообщения, error messages, JSON-payload, lockfile, или коммит. …",
+     "spec/common/PROP-006-operating-modes.md:22  - ##MFBT-RULES-SURVIVE The four non-negotiable rules survive unchanged. @freeze/done",
+     "confirmed: All four named invariant classes exist in the host as standing rules: attribution (spec/boot/00-core.md:21, PROP-000.md:161), secrets hygiene (spec/boot/90-user.md:24-28, PROP-000 §20 at line 295), licence constraints (CLAUDE.md's licence-state ledger; PROP-000 §3), output conventions (spec/boot/90-user.md:7, the Russian-register rule). PROP-006:22 asserts they survive the codeword. The host's version at commit a6df6050 §2.1 was more explicit still, naming token secrecy, the licence-permissive invariant and the Russian-output invariant individually as in force under the mode; that enumeration left the tree with 4d5ccf83 and the surviving form is the one-line ##MFBT-RULES-SURVIVE."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AN-ACTIVE-MODE-STILL-REPORTS-AS-STATUS-NOT-REQUESTS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:90  Even with routine confirmations suspended, an active mode still",
+     "spec/boot/STATIC.md:986  Under any accelerated mode, report **status, not requests**: \"phase N",
+     "vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md:42  3. Refresh the plan's status line (\"Phase N landed, floor green,",
+     "confirmed: Same evidence base as the boot snippet's cadence row: 25 commit subjects of the form \"Phase N landed …\" (`git log --oneline --all -i --grep='phase .* landed'`), none phrased as a request, and a phase-boundary status-line rule delivered independently by campaign-plans. The literal phrase appears in host prose only in legacy-spec/, which is an archive."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-right-cadence-versus-the-overhead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:91  reports — as **status, not requests**. \"Phase N landed, tests green,",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:92  moving to N+1\" is the right cadence; \"Phase N landed — shall I",
+     "vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md:42  3. Refresh the plan's status line (\"Phase N landed, floor green,",
+     "vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md:43     next: Phase N+1\").",
+     "confirmed: The campaign-plans snippet's template is the same sentence with one substitution — \"floor green\" for \"tests green\" — and the host's commit subjects instantiate it: 32f4d491 \"Phase 3 landed — ordering + display modes in the ledger\", 11ccea48 \"TERMINAL-AIUI-PLAN — Phase 3b landed (terminal control plane)\", c3386fe8 \"Phase 1 landed — execution ledger + close-out reinstall\". `git log --oneline --all -i --grep='shall I'` returns 0."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-OWNER-READS-THESE-PASSIVELY": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:94  The owner reads these passively and need not answer.",
+     "spec/boot/STATIC.md:986  Under any accelerated mode, report **status, not requests**: \"phase N",
+     "confirmed: This is a claim about what the owner does with a message, and the repository holds no record of owner responses — there is no transcript artefact. The nearest checkable proxy is the absence of request-shaped status reports in the commit record (0 hits for 'shall I'), which shows the agent side of the arrangement but not the owner side. Widened to CLAUDE.md / AGENTS.md / GEMINI.md, spec/boot, spec/common and campaigns/ for any rule about owner acknowledgement and found none; the only host rule about owner reading is the opposite case — campaign plans escalate review points as OPEN and require the ruling recorded verbatim (vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md:44-45)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "A-PROJECT-KEEPS-ITS-CODEWORDS-CATALOGUED-IN-ONE-PLACE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:98  A project keeps its codewords catalogued in one place (this document,",
+     "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
+     "spec/common/PROP-006-operating-modes.md:13  ##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.md`](../boot/90-user.md). @freeze/done",
+     "spec/common/PROP-006-operating-modes.md:5  ##status-line **Status:** accepted 2026-05-06; the framework and its codewords were extracted to the `operating-modes` flow 2026-07-14 (reached via the redbook dependency). This entry is now a thin pointer.",
+     "confirmed: The one-place half holds — the host keeps exactly one catalogue and it is at spec/boot/90-user.md:62-68, reachable at boot. The parenthetical (\"this document, in a consuming project\") does not: the host's catalogue is not in a consuming-project copy of OPERATING-MODES-PROTOCOL.md, which does not exist here — there is no spec/flows/ directory at all. The host chose a boot file plus a PROP registry instead, and commit 251987b1 gives the reason: \"Definition stays in PROP-006; 90-user.md just says 'they exist; here is the index'.\" After the 2026-07-14 extraction the definition moved to the package and PROP-006 became the pointer; the catalogue stayed in 90-user.md throughout."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SHIP-RECOGNISE-AND-PROPOSE-THROUGH-THE-FIVE-PART-SHAPE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:99  in a consuming project). Ship the ones the project actually uses;",
+     "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
+     "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
+     "spec/boot/STATIC.md:996  - Never act on a codeword that is not in the catalogue — propose",
+     "confirmed on the two clauses with instances and honest about the third. Ship-what-you-use holds literally — the host's catalogue heading is «Codewords currently in force». Recognise-only-if-catalogued holds with its otherwise-branch stated. The propose clause has no instance: no codeword has ever been proposed and refused or held pending its parts, and PROP-006 §3's list of anticipated future codewords was never acted on and left the tree with `4d5ccf83`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "one-worked-mode-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:102  This collection ships one worked mode as a reference:",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:1  # Codeword: «move fast and break things» {#root}",
+     "confirmed: Exactly one worked mode document exists in the package and in the vibedeps slot (`find` over both returns mfbt-mode.md and no sibling mode file). The number matches the host's catalogue, which also holds one."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CATALOGUE-MFBT-MODE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:104  - [`mfbt-mode.md`](mfbt-mode.md) — «move fast and break things»:",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:105    pre-authorised heads-down execution.",
+     "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.md#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
+     "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — … — is the operating-modes flow's `spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root`. @freeze/done",
+     "confirmed: The host's catalogue line uses the identical phrase \"pre-authorised heads-down execution\" and the identical guillemet spelling of the codeword. The sibling link mfbt-mode.md resolves inside both the package and the vibedeps slot. `git log --oneline --all -i` on the codeword returns 14 commits, so the entry is not decorative."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:109  Copy the prompt-task, not the prompt-implementation. Paste this to",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:136  ## Re-derive for your project {#re-derive}",
+     "confirmed: The re-derive block ships and installs. Whether the host ever ran it cannot be settled from artefacts, and the direction of travel here was the reverse: this flow was extracted FROM the host (PROP-006:5, commits 1bddd604 and a6df6050), so the host's catalogue predates the re-derive prompt by two months rather than being produced by it. `grep -rn 'Read spec/flows/operating-modes'` across the tree returns only the package and its vendored copies."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "re-derive-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:109  Copy the prompt-task, not the prompt-implementation. Paste this to",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:113  Read spec/flows/operating-modes/ end to end. Then define THIS",
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:121  not treat any phrase as active until I approve its five parts.",
+     "confirmed: The fenced prompt exists in both copies (package lines 143-153, vibedeps lines 112-122) and its instruction \"Read spec/flows/operating-modes/ end to end\" names a path that does not exist in this consuming project — `ls spec/flows` errors; the installed documents live under vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/. Same pointer family as the boot snippet's two ../flows/ links, here inside a prompt rather than a markdown link."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SUM-A-CODEWORD-FLIPS-THE-POSTURE-FOR-ONE-WORK-CYCLE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:126  - A codeword flips the session into an alternate posture for one work",
+     "spec/boot/STATIC.md:947  has one safe default posture; the owner can flip it into an alternate",
+     "spec/common/PROP-006-operating-modes.md:8  ##modes-extracted vibevm's codeword-triggered operating postures — the safety-first default, why a codeword is an explicit opt-in into an alternate posture for a work cycle, the activation lifecycle and reporting cadence, and the shape for writing a new codeword — are the **operating-modes** flow: @freeze/done",
+     "confirmed: Restates §what; PROP-006:8 carries the same two properties (explicit opt-in, one work cycle) in one host sentence that attributes them to this flow by name."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:128  - Every codeword is fixed by the five-part shape, or it is a proposal,",
+     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:14  ## 1. Trigger phrase {#trigger}",
+     "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+     "DRIFT, carrying the verdict of the two rules it summarises, per W1's summary-restatement precedent. The host's one catalogued codeword satisfies the shape; its two session commands are acted on as hard contracts without it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-RED-LINES-SURVIVE-EVERY-MODE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:130  - The red lines survive every mode: a codeword waives the routine",
+     "spec/common/PROP-006-operating-modes.md:23  - ##MFBT-RED-LINES Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active. @freeze/done",
+     "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @impl/done",
+     "confirmed: Two independent host restatements, both of which re-type the full five-item list rather than referring to it — the deliberate friction writing-a-codeword.md:66 prescribes. This is the most heavily corroborated fact in the batch."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-REPORT-STATUS-NOT-REQUESTS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:132  - Report status, not requests, while a mode is active.",
+     "spec/boot/STATIC.md:986  Under any accelerated mode, report **status, not requests**: \"phase N",
+     "vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md:42  3. Refresh the plan's status line (\"Phase N landed, floor green,",
+     "confirmed: Third statement of the cadence in this package; the host evidence is the 25 status-shaped \"Phase N landed\" commit subjects and the campaign-plans phase-boundary rule. The literal phrase in host prose exists only at legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:38, an archive file, which cites `operating-modes` by name — recorded as a finding about where the phrase landed, not as support."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-CATALOGUE-BEFORE-ACTING": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md:133  - Catalogue the modes in one place; propose new ones through the five",
+     "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
+     "spec/boot/STATIC.md:996  - Never act on a codeword that is not in the catalogue — propose",
+     "confirmed: Catalogue-in-one-place holds (spec/boot/90-user.md:62-68). Propose-before-acting has no recorded instance in this repository — the catalogue has held at one entry since 2026-05-06 and no proposal appears in any commit body, plan or spec file that I searched (CLAUDE.md, AGENTS.md, GEMINI.md, spec/boot, spec/common, spec/modules, campaigns/, TASKS.md, BACKLOG.md, AUDIT.md — the last three contain no occurrence of 'codeword' at all)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
