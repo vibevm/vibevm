@@ -2407,6 +2407,62 @@ command that would have tested it.
   own projection. The `FlagSites` rule exists in the vendored engine and is mounted on
   neither, which is why both guides' flag families cite an R-001 that cannot fire.
 
+- **2026-07-28 · C6 CLOSED at 92.7 %, and it caught two errors of mine in the
+  batch before it.** 330 verdicts over the six skills, three boot snippets and eight
+  READMEs: **306 confirmed / 24 drift / 0 unverifiable**, on the cleanest evidence
+  table of the phase — **865 refs, every one OK, zero elided and zero unresolvable.**
+
+  **The drift is almost all one shape: a path or a name that does not resolve.**
+  The three boot snippets cite `rust/…`, `typescript/…`, `go/…` and `cards/INDEX.md`
+  where every one lives under `spec/` — the third instance of that family after the
+  Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`. The Rust
+  README ships `crates/specmark` (it is `crates/vendor/core-ai-native-specmark`) and
+  `schemas/specmap.jtd.json` (host-only). The go-mcp README cites a plan that lives
+  in the host's `legacy-spec/`. And **four names in one fact**: the Go sweep's census
+  says `gated_packages` where the field is `gated_crates`, and `init_in_cell` /
+  `ambient_call_in_cell` / `naked_go_in_cell` where the shipped kinds are
+  `init_decl` / `ambient_call` / `naked_go`.
+
+  Two further drifts are about output that is never printed: all three sweeps tell a
+  reader to check for `Defaulted` and `DISABLED by policy`, and **neither string
+  exists in any shipped source or captured run**. And the TypeScript sweep's outcome
+  table cites «Playbook §5», which is «What the sweep deliberately does NOT do» — the
+  output section is §4 and the table is in neither.
+
+  **Four of the six skills are installed here** — `.claude/skills/` carries the rust
+  and typescript sweep/terraform pairs — and the Go pair is not, consistently with
+  `vibe.lock` carrying no `go-ai-native` and `vibedeps/` no `stack-go-ai-native-lang`.
+
+- **2026-07-28 · Two corrections to C3, both mine, both found by the next batch.**
+
+  **First: I confirmed ten TypeScript facts on a count of `node_modules`.** C3a
+  confirmed the scaffold-tooling family — vitest, fast-check, `expectTypeOf`, `tsd`,
+  Twoslash, ts-morph, `assertNever` — citing «vitest in 46 files» and the rest in
+  `research/ts-demo/`. That grep did not exclude `node_modules`, `.vibe/cache/` or
+  `vibedeps/`, so **it counted the demo's dependencies and a cache of superseded
+  package versions as the demo's own practice.** Over the demo's own sources every
+  one of the eight returns **zero**; its devDependencies are `@types/node`, `eslint`,
+  `prettier`, `typescript`, `typescript-eslint`, its test script is literally
+  `node --test`, and its two test files are `src/cells/{farewell,greeting}/index.test.ts`.
+  Ten verdicts restated confirmed → **drift**. The tsconfig half of that same evidence
+  stands, because it was read by parsing the file rather than grepping it.
+
+  **Second: I recorded fifteen Go facts unverifiable on an absence I asserted and
+  never checked.** The reason given was «there is no `research/go-demo`». **There
+  is**, and it is a complete consumer: `go.mod`, 15 production files in the cell
+  layout the guide prescribes, `conform.toml` with `cells_dir = "internal/cells"`,
+  `specmap.json`, a conform baseline and four `discipline/` files. Measured over it:
+  `func init(` 0, blank imports 0, `go func` 0, `context.Context` 8, `func Example`
+  **4**, `Fuzz` 5, `//spec:` 18, one `recover()` and it is in a test. Twelve of the
+  fifteen become **confirmed**, one becomes drift (`DisallowUnknownFields` occurs zero
+  times against a MUST), and two stay unverifiable for the right reason — the consumer
+  starts no goroutines and generates no code, so two rules have nothing to govern.
+
+  **What found both:** C6's brief named `.claude/skills/` and the go README's own
+  `WORKED-PILOT-IS-RESEARCH-GO-DEMO` fact, which pointed at the directory I had
+  declared absent. **The corpus corrected the reviewer**, twice, through a batch that
+  was looking at something else.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
