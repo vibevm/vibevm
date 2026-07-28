@@ -1,0 +1,291 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md": {
+   "THE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:804  # Flow: Licensing {#root}",
+     "spec/boot/STATIC.md:806  This project has a **deliberate licensing posture**, decided once and",
+     "spec/boot/STATIC.md:807  recorded, not inherited from whatever a scaffold dropped in. Two",
+     "spec/common/PROP-000.md:45  ## 3. License {#license}",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, … @spec/done",
+     "confirmed: Source 3: this exact sentence reaches the host's boot at spec/boot/STATIC.md:806-808. Source 2: the host satisfies it — PROP-000 §3 is a once-decided, recorded posture with an owner, a date and a reason (lines 45-57). The 'decided once' wording is worth a caveat the reviewer may want: it has been decided twice, once at scaffold time (proprietary EULA, 2026-04-17) and once at relicense time (UPL-1.0, 2026-07-12), both recorded. Neither was inherited from a scaffold — the first was written deliberately from this package's own template shape."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "two-things-are-always-true-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:808  things are always true and must not drift:",
+     "spec/boot/STATIC.md:810  - The product ships under one stated licence (a `LICENSE.md` at the",
+     "spec/boot/STATIC.md:813  - Every third-party dependency stays **permissive-only** — MIT /",
+     "confirmed: Structural lead-in; its two items are the next two anchors. Source 3 confirms both reach the host boot intact at spec/boot/STATIC.md:808-816. The 'must not drift' clause is the checkable part and it is checked in the two rows below — one of the two has drifted on this host."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "ONE-STATED-PRODUCT-LICENCE": {
+    "v": "confirmed",
+    "ev": [
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "crates/vibe-core/Cargo.toml:7  license-file.workspace = true",
+     "xtask/Cargo.toml:7  license-file.workspace = true",
+     "crates/vibe-index/Cargo.toml:2  name = \"vibe-index\"",
+     "crates/vibe-index/Cargo.toml:7  publish = false",
+     "spec/common/PROP-000.md:48  - ##NO-CRATES-IO Crates in this workspace set `license-file = \"LICENSE.md\"` and `publish = false` so none of them can be accidentally pushed to crates.io. @spec/done",
+     "spec/boot/STATIC.md:810  - The product ships under one stated licence (a `LICENSE.md` at the",
+     "spec/boot/STATIC.md:811    repository root; every sub-package states the same in its",
+     "confirmed at 18 of 19, a single-digit exception rather than a share, and both counts were re-derived rather than taken from the harvest. `ls crates/*/Cargo.toml xtask/Cargo.toml | wc -l` = 19 manifests; `grep -hoE '^license(-file)?[^=]*=.*' … | sort | uniq -c` = 18 × `license-file.workspace = true`, every one of them on line 7 of its file. The per-file loop names the single exception: `crates/vibe-index/Cargo.toml`, whose line 7 is `publish = false` and which declares no licence field of any kind — its whole `[package]` table (lines 1-13) was read to confirm. The `LICENSE.md`-at-the-root half holds unconditionally. A crate marked unpublishable is the least consequential place for the gap, and it is still a gap."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "EVERY-DEPENDENCY-STAYS-PERMISSIVE-ONLY": {
+    "v": "unverifiable",
+    "ev": [
+     "spec/common/PROP-000.md:53  - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+     "spec/boot/STATIC.md:813  - Every third-party dependency stays **permissive-only** — MIT /",
+     "spec/boot/STATIC.md:815    (GPL / AGPL / LGPL) is forbidden by default; weak copyleft",
+     "VIBEVM-SPEC.md:1135  Avoid GPL/AGPL/LGPL dependencies entirely. The user's license preference is permissive only.",
+     "UNVERIFIABLE on the «every», because the evidence class needed to settle it does not exist in this repository. What IS settled: the rule reaches the host boot verbatim at `spec/boot/STATIC.md:813-816`, and the host restates it in three places with the same class boundaries including the MPL-2.0 case-by-case carve-out at `PROP-000.md:216`. What cannot be settled: the resolved dependency graph's actual licences. `cargo metadata --format-version 1 --offline` exits 101 («failed to download block2 v0.6.2»), so enumeration needs the network; `Cargo.lock` carries no licence field at all (`grep -c 'license' Cargo.lock` = 0), so the lockfile cannot substitute and any grep of it counts package NAMES; and there is no cached listing in the perimeter — no `deny.toml`, no `about.toml`, no vendored licence manifest. WHAT WOULD SETTLE IT: a networked `cargo metadata` run, or a committed `deny.toml` / `about.toml`. The one dependency-level licence judgement on record, `PROP-003-dep-evolution.md:92`, points the right way but covers one crate."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "a-dependencys-licence-mingles-with-the-products": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:818  ## The dependency rule is load-bearing {#deps}",
+     "spec/boot/STATIC.md:820  A dependency's licence mingles with the product's. A proprietary or",
+     "spec/common/PROP-000.md:55  - ##PROPRIETARY-TIGHTENS The permissive license of vibevm itself does not relax that constraint — a copyleft dependency mingles with our code and would force the whole product to relicense, which is exactly what UPL-1.0 exists to prevent. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "confirmed: Source 2: the host states the mingling mechanism in its own words at PROP-000.md:55 — 'a copyleft dependency mingles with our code and would force the whole product to relicense' — using the same verb. It is also the operative reason in the one real case: PROP-003-dep-evolution.md:92 refuses libdnf5 because its LGPL 'places a copyleft obligation on every consumer'."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-STRICTER-PRODUCT-LICENCE-MAKES-THE-RULE-MORE-IMPORTANT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:822  to relicense — so the stricter the product's own licence, the *more*",
+     "spec/common/PROP-000.md:55  - ##PROPRIETARY-TIGHTENS The permissive license of vibevm itself does not relax that constraint — a copyleft dependency mingles with our code and would force the whole product to relicense, which is exactly what UPL-1.0 exists to prevent. @spec/done",
+     "VIBEVM-SPEC.md:8  **License of the produced software:** proprietary EULA (source-available); for third-party dependency choices, assume permissive (MIT/Apache-2.0)",
+     "VIBEVM-SPEC.md:1135  Avoid GPL/AGPL/LGPL dependencies entirely. The user's license preference is permissive only.",
+     "confirmed as the package's own reasoning, with the host's related-but-distinct statement recorded so the two are not conflated. `PROP-000.md:55` argues the INVERSE direction — that vibevm's now-permissive licence does not RELAX the constraint. «Looser does not loosen» and «stricter tightens» are consistent and neither implies the other, so the host does not settle this sentence. The natural test is available and comes out neutral: the one period when this host held the strict licence (2026-04-17 to 2026-07-12) has a readable dependency rule at `VIBEVM-SPEC.md:1135`, written under the EULA, and it is worded identically to the post-relicense rule — the host's rule neither tightened nor loosened across the transition. No host statement makes product-licence strictness a factor in the dependency rule at all."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "REJECT-A-COPYLEFT-DEPENDENCY-ON-LICENCE-GROUNDS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:823  important the permissive-only rule, not less. Reject a copyleft",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "confirmed: The host has done this, on the record, in the exact 'regardless of how good it is' form. spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92 reads: 'We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer.' The rejected library is named as the BEST option and rejected anyway, on licence grounds alone. The paired decision at :90 forbids 'any LGPL-licensed shim' by class, not just that one crate. I found this by widening from the flow package to spec/modules/ with `grep -rn -i 'license = \\|license-file\\|permissive\\|copyleft' spec/modules/` — it is nowhere in spec/common/ or the package, and the harvest does not mention it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WHEN-ADDING-A-DEPENDENCY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:828  - Adding a dependency: check its licence before adopting it. A",
+     "spec/common/PROP-000.md:214  ##reject-reasons-lead **Legitimate reasons to reject a dep:** @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:95  5. ##WHY-LICENSING **Licensing.** `git` is GPL v2, but shell-out is `exec` not",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:98     `libgit2` is GPL v2 with a Linking Exception (permissive for our",
+     "confirmed: Source 2: the host has two pre-adoption licence checks written up before the dependency was taken. PROP-003-dep-evolution.md:92 is labelled '**License audit (load-bearing).**' and classifies libsolv (BSD-3-Clause / FreeBSD → permissive → proceed) while rejecting libdnf5 in the same paragraph. PROP-001-git-backend.md:95-100 is a licence check on the git backend choice — GPL-v2 `git` cleared because shell-out is exec not linkage, and libgit2's GPL-with-Linking-Exception noted. Both are checks performed BEFORE adoption and recorded, which is the behaviour this line prescribes. What is absent is any per-dependency check for the ~60 crates in Cargo.toml's third-party block; those carry only the blanket comment at Cargo.toml:106."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WHEN-CHANGING-THE-PRODUCTS-LICENCE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:830  - Changing the product's licence, or any bulk relicensing: this is an",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, … @spec/done",
+     "CLAUDE.md:130    (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed",
+     "CLAUDE.md:131    2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:10  **Owner authorization:** RP1 (resolved 2026-07-09) names exactly this",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:77  **PASS — signed off by the owner, 2026-07-10** (firing #2 + the",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:145  shipped surface was the host root `LICENSE.md` (the \"EULA placeholder\"). Owner",
+     "confirmed: The host relicensed and it was not autonomous — this is checkable on three independent records. PROP-000.md:50 attributes it: \"Owner's call, taken 2026-07-12 and executed the same day\". CLAUDE.md:130-131 names the MT-05 run id. The relicense commit's own body ends 'Owner authorisation: RP1.' (`git show --format='%b' 5086c5b5`; commit bodies are not citable refs). And the dogfood spec itself, which I reached by following CLAUDE.md:137 out of the nominal perimeter into packages/org.vibevm.fractality/, records the authorisation chain at MT-05-dogfood-relicense.md:10 ('**Owner authorization:** RP1 (resolved 2026-07-09)'), the sign-off at :77, and the host-root case at :145. The earlier package-family relicensing (893e314, 79938ab, both 2026-07-10) was the same authorisation. I found no relicensing anywhere in this repository's history that lacks an owner instruction."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:833  - A change touching the licence file, the manifest `license` field,",
+     "README.md:162  ## License",
+     "README.md:164  vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the moment; the eventual target is UPL 1.0. Third-party dependencies are permissive-only (MIT / Apache-2.0 / BSD / Unlicense; MPL-2.0 case-by-case; GPL / AGPL / LGPL forbidden) per [PROP-000 §3](spec/common/PROP-000.md).",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "spec/common/PROP-000.md:47  - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done",
+     "VIBEVM-SPEC.md:8  **License of the produced software:** proprietary EULA (source-available); for third-party dependency choices, assume permissive (MIT/Apache-2.0)",
+     "DRIFT, on the ONE occasion the rule applied, and the divergence is still live today. The rule says a change touching the licence file, the manifest field or the carve-out updates all of them together in one commit. The relicense touched exactly one file: `git show --stat 5086c5b5` = `LICENSE.md | 65 ++++---`, 1 file changed. Three statements, three different fates. (1) `LICENSE.md` moved 2026-07-12. (2) `PROP-000` §3 caught up THIRTEEN DAYS later in a separate commit — `git log -S'UPL-1.0' -- spec/common/PROP-000.md` returns `71d8383b` 2026-07-25. (3) `README.md:164` was never updated and TODAY still reads «vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the moment; the eventual target is UPL 1.0» — a sentence that contradicts the very file it links to, sixteen days after that file changed. This is not a sanctioned exception: `CLAUDE.md:132-137` enumerates the deliberately-stale `\"EULA\"` strings — `refs/**`, `vibedeps/**`, `.vibe/cache/**`, `fixtures/**`, `crates/**` test data, the licensing package, `VIBEVM-SPEC.md` and specs — and `README.md` is on none of them, while `VIBEVM-SPEC.md:8`, which says the same stale thing, IS listed. The ledger draws the distinction correctly and the README was simply missed."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-DRAFT-EULA-SKILL-DRAFTS-OR-REVIEWS-THE-POSTURE": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:837  The `draft-eula` skill drafts or reviews the posture. Full detail:",
+     "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:19  [[skill]]",
+     "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:20  name = \"draft-eula\"",
+     "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:21  path = \"spec/skills/draft-eula\"",
+     "DRIFT for the same structural reason as the pointer three lines above it: the boot lane tells every session in this repository that a tool is available, and from where that sentence is read the tool cannot be reached. It lands at `spec/boot/STATIC.md:837`. The skill file IS installed, at `vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md`. It is materialised into NONE of the three harness skill homes — `.claude/skills/` (5 entries), `.agents/skills/` (4), `.opencode/skills/` (4) — and `grep -rn 'draft-eula' .claude/ .agents/ .opencode/` returns nothing; there is no host `spec/skills/`. So a session that reads this boot line cannot act on it without opening the `vibedeps/` path by hand. RECORDED, and it is the sharper version of the same gap noted at the README's `##CONTENT-THE-DRAFT-EULA-SKILL`, which is confirmed there because it claims only that the skill is installable — this one puts the capability in front of a session that cannot invoke it. The host performed its 2026-07-12 relicensing, this skill's exact job, without it."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:838  [`LICENSING-PROTOCOL.md`](../flows/licensing/LICENSING-PROTOCOL.md).",
+     "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md:3  **Scope of this document.** This file defines a product's *licensing",
+     "DRIFT, W1's dangling family, fourth package in a row. `../flows/licensing/LICENSING-PROTOCOL.md` is read from the snippet's compiled position at `spec/boot/STATIC.md:838`, and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms — no `spec/flows/`, so the link has no target from the one lane where a session meets it. The document itself exists at `vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md`, where the same relative path resolves correctly against the package's own `spec/boot/`. A fact about the pointer, not about the protocol it names."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "NEVER-ADD-A-COPYLEFT-DEPENDENCY-BY-DEFAULT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:842  - Never add a GPL / AGPL / LGPL dependency by default — surface it as",
+     "spec/common/PROP-000.md:54  - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done",
+     "spec/common/PROP-000.md:216  - ##REJECT-LICENSE non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:90  ##LIBSOLV-DECISION **Decision.** The SAT engine of `SatDepSolver` is **libsolv** … do not pull in `libdnf5` or any LGPL-licensed shim. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "VIBEVM-SPEC.md:1135  Avoid GPL/AGPL/LGPL dependencies entirely. The user's license preference is permissive only.",
+     "confirmed: Stated by the host in the same three-licence form ('GPL / AGPL / LGPL are forbidden, period.', PROP-000.md:54) and observed once in practice at PROP-003-dep-evolution.md:90-92, where an LGPL shim is refused by class. The 'surface it as an owner decision' half is also observable there: the refusal is written into a PROP the owner reads, not decided silently in a commit. What I could not verify is the absence of copyleft in the current graph — see the EVERY-DEPENDENCY row; `cargo metadata --offline` fails and the lockfile has no licence data."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-RELICENSE-WITHOUT-THE-OWNERS-EXPLICIT-INSTRUCTION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:844  - Never relicense the product, or any part of it, without the owner's",
+     "spec/common/PROP-000.md:50  - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, … @spec/done",
+     "CLAUDE.md:129    fractality, delegation-rules, wal-specspaces) were relicensed by MT-05 firing #2",
+     "CLAUDE.md:130    (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed",
+     "CLAUDE.md:131    2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:10  **Owner authorization:** RP1 (resolved 2026-07-09) names exactly this",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:42     (branches + review before merge; a licence FIELD swap the owner",
+     "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:77  **PASS — signed off by the owner, 2026-07-10** (firing #2 + the",
+     "confirmed: Three relicensings happened in this repository and all three carry an explicit owner instruction. The two package-family merges (893e314, 79938ab, 2026-07-10) and the host root (5086c5b5, 2026-07-12) are all attributed to owner authorisation RP1: PROP-000.md:50 for the host root, CLAUDE.md:129-131 for the packages, and MT-05-dogfood-relicense.md:10 / :42 / :77 for the authorisation, the scope ('a licence FIELD swap the owner ordered — the owner decision already happened, RP1') and the sign-off. I looked specifically for a counter-example — a relicense done autonomously — by scanning `git log --format='%h %ad %s' -- LICENSE.md` (2 commits, both accounted for) and `grep -rn -i 'relicens' CLAUDE.md spec/common/PROP-000.md`; none found."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-LET-THE-MANIFEST-AND-THE-LICENCE-FILE-DISAGREE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:846  - Never let the manifest `license` field and the `LICENSE.md`",
+     "Cargo.toml:55  license-file = \"LICENSE.md\"",
+     "crates/vibe-core/Cargo.toml:7  license-file.workspace = true",
+     "crates/vibe-index/Cargo.toml:7  publish = false",
+     "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "spec/common/PROP-000.md:48  - ##NO-CRATES-IO Crates in this workspace set `license-file = \"LICENSE.md\"` and `publish = false` so none of them can be accidentally pushed to crates.io. @spec/done",
+     "README.md:164  vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the moment; the eventual target is UPL 1.0. Third-party dependencies are permissive-only (MIT / Apache-2.0 / BSD / Unlicense; MPL-2.0 case-by-case; GPL / AGPL / LGPL forbidden) per [PROP-000 §3](spec/common/PROP-000.md).",
+     "docs/authoring-flow.md:60  license = \"EULA\"",
+     "docs/authoring-feat.md:72  license = \"EULA\"",
+     "docs/authoring-stack.md:75  license = \"EULA\"",
+     "confirmed: On the literal terms — manifest field versus licence file — the host CANNOT disagree, and that is the interesting part: no manifest states a licence, they state a POINTER to the file (`license-file = \"LICENSE.md\"`, Cargo.toml:55, inherited by 18 of 19 crates on line 7). A pointer cannot contradict its target. PROP-000.md:48 records this as deliberate. The disagreement the host actually has is one the rule does not name: README.md:164 states a different licence from LICENSE.md:3 (see the WHEN-A-CHANGE row). Separately, three authoring guides in docs/ still instruct package authors to write `license = \"EULA\"` in their minimal manifest — docs/authoring-flow.md:60, docs/authoring-feat.md:72, docs/authoring-stack.md:75. Those are example manifests a reader copies, and docs/ is not on CLAUDE.md:132-137's off-limits list (which covers refs/**, vibedeps/**, .vibe/cache/**, fixtures/** + crates/** test data, the licensing package, and VIBEVM-SPEC.md + specs). I confirmed the crates/** hits ARE the sanctioned test data — `grep -rn '\"EULA\"' crates/` returns assertions like crates/vibe-index/src/scanner/manifest.rs:342 `assert_eq!(pkg.license, Some(\"EULA\".into()));`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-REJECT-A-DEPENDENCY-FOR-BEING-TOO-HEAVY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:848  - Never reject a dependency for being \"too heavy\" — weight is not a",
+     "spec/common/PROP-000.md:208  - ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. @spec/done",
+     "spec/common/PROP-000.md:209  - ##PICK-STRONGEST Pick the strongest available library for the job — for both the Rust CLI and any future Java / frontend side. @spec/done",
+     "spec/common/PROP-000.md:212  - ##WHY-DEBT Under-specifying a load-bearing component to save megabytes creates ongoing architectural debt that is much more expensive to repay than the weight it saves. … @spec/done",
+     "spec/common/PROP-000.md:221  ##TOO-HEAVY-NOT-REASON \"Too heavy\" alone is **not** a reason. @spec/done",
+     "spec/common/PROP-000.md:223  - ##READMISSIBLE **Concrete consequences:** libraries previously rejected on footprint grounds are re-admissible. Notable: `libsolv` (C, with Rust bindings), `git2` (wrapping `libgit2`), bundled native C deps, embedded interpreters when justified. @spec/done",
+     "confirmed: The host holds this rule in an unusually strong form and has acted on it. PROP-000.md:208 makes it a Decision ('Binary size, crate count, transitive dep weight are NOT decision factors'), :221 restates it as a negative ('\"Too heavy\" alone is **not** a reason'), and :223 records the consequence: 'libraries previously rejected on footprint grounds are re-admissible', naming libsolv, git2, bundled native C deps and embedded interpreters. That is the rule applied retroactively to reverse earlier rejections — the strongest form of conformance available. PROP-000.md:224 goes further and orders a size-based argument pruned out of PROP-001 §2.1."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:850  - Never claim a licence is permissive without checking; when unsure,",
+     "spec/boot/STATIC.md:851    treat it as non-permissive and ask.",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92  ##license-audit **License audit (load-bearing).** libsolv is dual-licensed BSD-3-Clause / FreeBSD … Permissive, satisfies PROP-000 §3 … We MUST NOT link against `libdnf5` (LGPL-2.1-or-later) — its API is the most ergonomic layer over libsolv but its license places a copyleft obligation on every consumer. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:95  5. ##WHY-LICENSING **Licensing.** `git` is GPL v2, but shell-out is `exec` not",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:98     `libgit2` is GPL v2 with a Linking Exception (permissive for our",
+     "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+     "LICENSE.md:42  vibevm links against third-party Rust crates distributed under permissive",
+     "LICENSE.md:43  licenses (MIT, Apache-2.0, BSD, or equivalent); their terms are unaffected by",
+     "DRIFT at two of the four claims, and the two that fail are the two with the widest reach. Checked, with evidence cited: `PROP-003-dep-evolution.md:92` names libsolv's actual licence files (BSD-3-Clause / FreeBSD, with a link) BEFORE classifying it permissive, and `PROP-001-git-backend.md:95-98` reasons about GPL-v2 `git` and libgit2's Linking Exception rather than asserting. Unchecked, and blanket: `Cargo.toml:106` asserts «Third-party (all permissive licenses — PROP-000 §3)» over roughly sixty crates, and `LICENSE.md:42-43` tells every reader of the licence that vibevm «links against third-party Rust crates distributed under permissive licenses». Neither is backed by a listing that exists anywhere in the perimeter — no `deny.toml`, no `about.toml`, no CI, and `cargo metadata --format-version 1 --offline` exits 101, so nothing here re-derives them. Two careful judgements and two claims about the whole graph made without the check this rule forbids skipping."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
