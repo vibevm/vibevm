@@ -1,172 +1,295 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written 2026-07-28 (**Phase C: the `ai-native` cluster is CLOSED, 80 of 80 files;
-`world` is untouched**). `spec/WAL.md` is the canonical living state and supersedes
-this snapshot wherever they diverge._
+_Written 2026-07-28 (**Phase C: the reviewing debt is CLOSED; W1's evidence
+gathering is in flight**). `spec/WAL.md` is the canonical living state and
+supersedes this snapshot wherever they diverge._
 
 ## TL;DR
 
-**Phase C of the packages campaign is 39.4 % done: 2 697 verdicts written, sealed
-and committed; 4 150 anchors remain, all of them in the `world` cluster.**
+**The 138-row reviewing debt is paid.** Every one was read individually and judged
+on its own evidence: **101 confirmed / 36 drift / 3 unverifiable**, against 138
+confirmed-or-unverifiable before. The `ai-native` cluster restates from 92.4 % to
+**91.6 %** — 2 470 confirmed / 207 drift / 20 unverifiable over 2 697 verdicts — and
+that number is now comparable across the three languages, which it was not.
 
-The `ai-native` cluster measured **92.4 % confirmed** (2 491 / 175 drift / 31
-unverifiable) across 80 files and six batches. Seven findings were opened, four of
-which need the owner. The exit gate's clause (iii) — the one wave 1 skipped — is
-**satisfied**: 39 captured runs live under `campaigns/packages-2026-09/harvest/`.
+**Five findings opened: F-124 … F-128.** Three are cross-language (unresolvable
+evidence ids; one measurement published twice with different numbers; one tool name
+carried by two different tools), one is a single missing flag, and **F-128 is the
+sharpest: `spec/boot/INLINE.md` does not exist, and line 5 of `CLAUDE.md` /
+`AGENTS.md` / `GEMINI.md` says the four non-negotiable commit rules are loaded first
+and verbatim from it.**
 
-**Nothing is blocked. Nothing is running.** The next session has a paste-ready
-prompt in
-[`campaigns/packages-2026-09/PHASE-C-RESUME.md`](campaigns/packages-2026-09/PHASE-C-RESUME.md).
+**`world` batch W1 is open and its evidence is being gathered.** Five `opus5`
+workers were commissioned for the git family's 16 files / 407 anchors. **No `world`
+verdict has been written yet.**
+
+Nothing is blocked. Tree clean, in sync with `origin/main`, mirrored to both hosts.
+Gate: `progress check --exhaustive` **clean, 259 files, 0 warnings**.
 
 ## Where the numbers are {#numbers}
 
 | | |
 |---|---|
 | host | 58 / 58 files, 4 499 verdicts (4 496 confirmed · 3 unverifiable) |
-| **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, **2 491 / 175 / 31, 92.4 %** |
+| **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, **2 470 / 207 / 20, 91.6 %** |
 | **world** | **0 / 121 files** — **4 150 anchors owed**, batches W1…W7 |
 | phase | **2 697 of 6 847 — 39.4 %** |
 | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |
 | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |
 
-**Never decrement these; re-measure.** Every figure came from a command.
-
-## The one thing to do first {#first}
-
-**Not `world`. Close the reviewing debt.** 138 rows were classified in bulk instead
-of read: 60 `partial` rows in `tasks/evidence/ev-C45-go.json` sorted by filename, and
-78 in `ev-C45-rust.json` sorted by a single two-branch rule. A `partial` is *related
-code that does not settle the claim* — the class that carries drift — so sorting 138
-of them by filename is the thinnest reviewing this phase has done, and the verdicts
-do not say so.
-
-Read them, judge each on its own evidence, restate what moves with
-`merge-verdicts.py … --force`. The tables are on disk and their refs are already
-machine-verified, so the job is reading plus a merge.
-
-## Then: the `world` cluster {#world}
-
-Seven batches, fixed in `tasks/PHASE-C-BATCHES.json`: **W1** git family (16 files,
-407) · **W2** two-process-model/wal/wal-specspaces/sync-from-code (20, 692) ·
-**W3** addressable-specs/decision-records/conflict-protocol (15, 615) · **W4**
-campaign-plans/discovery-prompt/comparative-research/redbook (15, 564) · **W5**
-operating-modes/health-audit/manual-tests/secrets-hygiene (21, 697) · **W6**
-licensing/source-mirrors/spec-genres/dev-runtime-docs (19, 572) · **W7**
-managed-blocks/qualified-naming/tool-design-lessons (15, 603).
-
-**Two of §3.1's three sources are already mechanised and captured**: the source-1
-link join reads **185 citations, 0 broken** over the observed corpus, and the
-source-2/3 boot-lane join reads **17 of 31 contributions carrying the package's exact
-word stream**. W2 and W5 are provisional at ~695 anchors; re-measure the per-anchor
-cost after the first world batch.
-
-**`world` verdicts need a `src` field that `ai-native` did not** — a non-empty subset
-of `[1,2,3]` naming which source class the evidence rests on (amendment A2).
-`merge-verdicts.py` refuses a `world` batch without it.
-
-## Non-obvious findings from this phase {#findings}
-
-1. **The discipline gates everything except itself.** No package under
-   `packages/org.vibevm.ai-native/` carries a `conform.toml` or a `discipline/`
-   directory, so every discipline-specific floor step fails or is skipped in all six
-   slots, while the three portable steps pass wherever the toolchain is present.
-2. **F-121 is a family of four.** ENGINE-CONFORM, LEDGER-INTENT, BROWNFIELD and
-   PROP-014 each end with «any unexercised mechanism is removed from this document
-   rather than carried as aspiration», each marks it `@impl/done`, each is
-   contradicted by its own contents, and nothing enforces any of them.
-3. **F-122 — one `name@version`, two contents, 173 files across 33 packages.** Phase
-   B marked package files inside already-published version slots. Closing it is a
-   release event, not an edit.
-4. **F-123 — we break a rule we ship.** 82 of the last 400 commit subjects exceed
-   `conventional-commits`' 72-character hard limit (20.5 %), spread across the
-   campaign's working days. F-087 measured at the same time: 4 model mentions in 400
-   bodies, **none an authorship claim** — two are a colour-theme name.
-5. **The perimeter was wrong five times, and never in a worker's work.** A
-   mechanism's spec lives in `core-ai-native`, its engine in that package's library
-   crates, its driver in each stack's CLI, and its deployment in a consuming
-   project — `research/{rust,ts,go}-demo/`. A fact can be true at one layer and
-   invisible at the other three.
-6. **A count that includes `node_modules` is a count of somebody else's code.** Ten
-   TypeScript verdicts were confirmed on such a count and had to be restated to
-   drift; fifteen Go verdicts were recorded unverifiable on an absence asserted
-   without checking (`research/go-demo` exists and is complete).
-7. **Rust 100 %, TypeScript 98.8 %, Go 93.9 %** on the same nine scaffolds and the
-   same oracle shape. The ordering is about this repository: the host dogfoods the
-   Rust stack, the TypeScript consumer is complete, and the Go consumer's toolchain
-   (gopls) is not installed.
-
-## Decisions in force {#decisions}
-
-- **Verdicts live in the cache, never in markup** (PROP-043 §7.1/§7.5); mutate by
-  **load-and-merge only**; `verified_at` and `processed_hash` are written by
-  `vibe progress seal` and never by hand.
-- **Three ratified at the phase opening** (2026-07-28): a verdict carries its §3.1
-  source class in an `src` field rather than as a prose prefix; the subject is never
-  modified to make the measurement pass, so `<lang>-ai-native init` is not run; and
-  `vibedeps/` substitutes for §3.1's third source because `files_written` is `[]` for
-  all 36 packages.
-- **A finding is reported, never fixed, by a Phase C batch.**
-- **Delegation goes to the harness's built-in `opus5` subagents, not fractality**
-  (owner ruling, 2026-07-28). The verdict is never delegated; neither is the review
-  of delegated output.
-- **Owner grant:** work autonomously across batch and cluster boundaries; stop only
-  for a genuine semantic or architectural decision.
-
-## Campaign tooling built this phase {#tools}
-
-All under `campaigns/packages-2026-09/tasks/`, each with its refusals tested before
-use:
-
-| tool | what it settles |
-|---|---|
-| `merge-verdicts.py` | the three verdict rules stop being prose — six refusals, all made to fire |
-| `verify-evidence.py` | a delegated `path:line` is checked by machine — 3 947 refs, 12 unresolvable |
-| `source1-join.py` | §3.1 source 1: does every cited document exist and carry its anchor |
-| `source23-boot-join.py` | §3.1 sources 2 and 3, over the compiled boot lane |
-| `scaffold-three-way.py` | the parallel corpora — nine scaffolds ×3, and the `discipline-mcp` trio |
-| `coordinate-divergence.py` | one `name@version`, two contents (F-122) |
-
-## Quick start {#quickstart}
+**Never decrement these; re-measure.** One command now prints all of it:
 
 ```bash
+python campaigns/packages-2026-09/tasks/summary.py
+```
+
+## What is in flight, and exactly how to pick it up {#in-flight}
+
+**Five delegated evidence tables for W1 were commissioned and had not landed when
+this checkpoint was written.** Check first:
+
+```bash
+ls campaigns/packages-2026-09/tasks/evidence/ev-W1*.json
+```
+
+| table | files | anchors |
+|---|---|---:|
+| `ev-W1a.json` | `git-atomic-commits` README + boot + `ATOMIC-COMMITS-PROTOCOL.md` | 101 |
+| `ev-W1b.json` | `git-atomic-commits/…/splitting-large-changes.md` | 52 |
+| `ev-W1c.json` | `git-attribution-policy` — all five files | 132 |
+| `ev-W1d.json` | `git-autonomy` (3 files) + `git-practices/README.md` | 54 |
+| `ev-W1e.json` | `git-conventional-commits` — all three files | 68 |
+
+**If a table is missing, re-commission it** with the same brief — the prompt is
+reconstructible from `tasks/WORLD-WORKER-BRIEF.md` plus the file list above. The
+worker contract is: read the brief and `harvest/world-w1-git-family.md`, key the
+anchor list on the campaign mirror (`run/mirror/<path with / → __>.json`, every
+fact with `marked` true and a non-empty `id`), return
+`{file, anchor, marker, claim, evidence[], src, found, searched}`, write the JSON
+array to the named path, and never write a verdict.
+
+**Then, for every table that exists:**
+
+```bash
+python campaigns/packages-2026-09/tasks/verify-evidence.py campaigns/packages-2026-09/tasks/evidence/ev-W1a.json
+python campaigns/packages-2026-09/tasks/show-rows.py campaigns/packages-2026-09/tasks/evidence/ev-W1a.json --start 0 --count 20
+```
+
+`verify-evidence.py` runs **before** you read a word: it resolves every
+`path:line  snippet` and lands each in `OK` / `OFF-BY` / `ELIDED` (pass) or `PATH` /
+`LINE` / `TEXT` (fail). `show-rows.py` prints each row joined with the verdict
+standing in the cache — empty for `world`, so it will read `CACHE: (none)`.
+
+**Every `world` verdict MUST carry `src`** — a non-empty subset of `[1,2,3]` naming
+which of §3.1's source classes it rests on. `merge-verdicts.py` refuses a `world`
+batch without it, and `src == [1]` alone is self-referential and counted separately
+(amendment A2, exit-gate clause iv). The counter exists now:
+`python campaigns/packages-2026-09/tasks/summary.py --batch W1`.
+
+## Reading already done for W1, so you do not repeat it {#w1-reading}
+
+Read in full this session and worth knowing before judging:
+
+- **`git-practices/README.md` is stale about its own family.** It lists **two**
+  members in prose (`conventional-commits`, `atomic-commits`) and says the family
+  «grows to include human-authored attribution and commit autonomy **as those
+  members land**» — while its own `vibe.toml` already pins **all four** at `=0.1.0`
+  and `vibe.lock` records the same four as its dependencies. The package ships only
+  `LICENSE`, `README.md`, `vibe.toml`, so «no boot snippet of its own» is true of
+  the package; the INSTALLED copy at `vibedeps/flow-git-practices/0.1.0/` carries a
+  generated `spec/boot/STATIC.md` containing all four members' snippets. That
+  generated file is the mechanism of **F-078** — the host compiles each git flow
+  twice, once directly and once through the umbrella.
+- **The single-place law is broken by the host, measurably.**
+  `ATTRIBUTION-POLICY.md#single-place` says the policy is stated in «exactly one
+  always-loaded place … and nowhere else». The host states it in **six**:
+  `CLAUDE.md:5`, `AGENTS.md:5`, `GEMINI.md:5`, `spec/boot/00-core.md:21`, and
+  `spec/boot/STATIC.md` at **:423 and :617**. `spec/common/PROP-000.md:161` does
+  *not* restate it — it points at the flow by URI — which matters because
+  `00-core.md:21` claims «the rule itself (and its copy in PROP-000 §12.1) is the
+  only place in the project where that topic is discussed», and that claim is false
+  twice over.
+- **F-128's chain, verified end to end.** `link = "inline"` occurs **zero** times in
+  every `vibe.toml` under `packages/` and `vibedeps/`, while all four git members
+  carry the comment «suggest the inline priority lane» one line above
+  `link = "static"`.
+- **`AUTONOMY-PROTOCOL.md` and `ATOMIC-COMMITS-PROTOCOL.md` were read end to end.**
+  The autonomy red-line list is five items — published-history rewrite, force
+  operations, large binary blobs, CI/signing/secrets, anything whose reversal costs
+  work — and the host restates the same five in `CLAUDE.md` rule 4 and
+  `spec/boot/00-core.md`'s `RULE-AUTONOMY`. A force-push leaves no positive trace in
+  a log, so a verdict resting on «no force-push is visible» is an absence asserted,
+  not checked.
+- The three §3.1 sources for W1 are captured by command in
+  [`harvest/world-w1-git-family.md`](campaigns/packages-2026-09/harvest/world-w1-git-family.md) —
+  cite it by path and line rather than re-deriving.
+
+## The standard that judges a verdict {#standard}
+
+Written down this session because it had not been, after the same claim turned out
+to have been judged two ways in three languages:
+
+> **A fact that PRESCRIBES what the discipline requires** — an intent, a
+> participants list, a detector seed, a goal, a tradeoff, an alternative, a risk, a
+> routine step — **is confirmed when it is coherent and every referent it names
+> resolves**, including a referent the package itself declares as future work (a
+> card registry's `specified` column, a brief's «vision, NOT an implementation
+> plan» status line).
+>
+> **A fact that DESCRIBES what this repository already ships or does** — a rule id,
+> a CLI signature, a returned key set, a resolution order, a floor's steps, a
+> recorded measurement — **is checked against the tree, and a description that does
+> not match is drift.**
+>
+> **A fact whose subject cannot be exercised here** (a toolchain that is not
+> installed) **is unverifiable, and says so in its own words** rather than by a
+> blanket rule over a filename.
+
+For `world` there is a fourth clause, and it is §3.1's whole point: **a flow's fact
+is also checked against the host's observed conformance.** The host is a living
+consumer; if a flow states a law and the host breaks it, that is source-2 evidence
+and it is what this cluster exists to measure.
+
+## The findings this session opened {#findings}
+
+| id | what | who closes it |
+|---|---|---|
+| **F-124** | `H4`, `DR1-014`, `DL1-015` cited as evidence ids and resolving in no register; the `H`-series is in daily use across `core-ai-native`'s appendices with no roster anywhere | **owner** |
+| **F-125** | `core-ai-native` v0.8.0 publishes one PLDI'25 measurement twice — ATLAS 75.3 % / 70.2 %, CONTRADICTION-MAP 74.8 % — and four documents across three stacks quote whichever they read | **owner** |
+| **F-126** | `rust-ai-native-tcg` names both a shipped consultation oracle and an unbuilt token-level masker; with `vibe-tcg-ts` and `vibe-tcg`, three names in one family point elsewhere | **owner** |
+| **F-127** | the Go stack prescribes `go test -race` 15 times across 5 documents and passes it 0 times | an edit |
+| **F-128** | `spec/boot/INLINE.md` does not exist; `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` line 5 say the four commit rules load from it and are not restated elsewhere | **owner** (3 host files) |
+
+Carried and unchanged: **F-117 … F-123**, plus **F-114**, **F-087 / F-088**,
+**F-078**, **F-092**, **F-069**, and the `specmap` ratchet's 37 gated orphans.
+
+## What remains — `world`, W1 … W7 {#world}
+
+Seven batches, 121 files, 4 150 anchors, fixed in
+[`tasks/PHASE-C-BATCHES.json`](campaigns/packages-2026-09/tasks/PHASE-C-BATCHES.json):
+
+| batch | packages | files | anchors |
+|---|---|---:|---:|
+| **W1** | the git family — practices, atomic-commits, conventional-commits, attribution-policy, autonomy | 16 | 407 |
+| **W2** | two-process-model, wal, wal-specspaces, sync-from-code | 20 | 692 |
+| **W3** | addressable-specs, decision-records, conflict-protocol | 15 | 615 |
+| **W4** | campaign-plans, discovery-prompt, comparative-research, redbook | 15 | 564 |
+| **W5** | operating-modes, health-audit, manual-tests, secrets-hygiene | 21 | 697 |
+| **W6** | licensing, source-mirrors, spec-genres, dev-runtime-docs | 19 | 572 |
+| **W7** | managed-blocks, qualified-naming, tool-design-lessons | 15 | 603 |
+
+**W2 and W5 are provisional at 692 and 697.** The unit is anchors; re-measure the
+per-anchor cost after W1 closes and split them if it is higher than C1's.
+
+**At the phase close:** the X/Y/Z summary in the LOG, the self-referential count
+(`summary.py` produces both), and `baseline.json` (amendment A6). **Phases T and G
+are designed and unrun; neither starts without an explicit instruction.**
+
+## Mechanics — fixed, not re-invented {#mechanics}
+
+Verdicts live in the per-file `campaign` map inside `run/cache.json`, **never in
+markup** (PROP-043 §7.1/§7.5). Mutate by **load-and-merge only**.
+
+```bash
+python campaigns/packages-2026-09/tasks/merge-verdicts.py <batch.json> [--force]
+cargo run -q -p vibe-cli --bin vibe -- progress seal --campaign campaigns/packages-2026-09 <paths…>
 cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09
+python campaigns/packages-2026-09/tasks/summary.py [--batch W1] [--by-file]
 ```
 
-```bash
-python campaigns/packages-2026-09/tasks/verify-evidence.py campaigns/packages-2026-09/tasks/evidence/*.json
-```
+`merge-verdicts.py` refuses: a non-addressable anchor, a verdict outside
+`{confirmed, drift, unverifiable}`, an empty or too-short `ev`, a missing `src` on
+`world`, an `src` outside `world`, and a silent overwrite.
 
-```bash
-bash tools/self-check.sh ; echo "EXIT=$?"
-```
+**Never hand-write `verified_at` or `processed_hash`** — `seal` writes them, and a
+hand-written stamp fails UNSAFE (`moved_crate` calls a crate moved when its commits
+are *newer* than the verdict).
 
-```bash
-cargo xtask mirror
-```
+## The campaign tools, and what each removes from the reviewer {#tools}
 
-Always pass `--campaign`. Use `--no-cache` after any parser change.
+| tool | what it removes |
+|---|---|
+| `merge-verdicts.py` | the six rules that are trivially broken by hand |
+| `verify-evidence.py` | whether a ref points where it says (3 947 refs checked, 12 unresolvable — 0.3 %) |
+| `show-rows.py` | opening the cache by hand per anchor — the arithmetic that makes a reviewer skim |
+| `summary.py` | the X/Y/Z rollup and the self-referential count the exit gate needs and nothing ships |
+| `source1-join.py` | does every cited document exist and carry its anchor |
+| `source23-boot-join.py` | does the host receive and carry what each boot snippet claims |
+| `scaffold-three-way.py` · `coordinate-divergence.py` | the parallel-corpus diffs |
+
+## Decisions still in force {#decisions}
+
+- **Delegation goes to the harness's built-in `opus5` subagents, not fractality**
+  (owner ruling 2026-07-28). Verdicts are never delegated; neither is the review of
+  delegated output. Only evidence gathering is.
+- **The subject is not modified to make the measurement pass** (batch plan §2.2):
+  no `<lang>-ai-native init` against a package under verification. The unmodified
+  run, refusal included, is the evidence.
+- **`vibedeps/` stands in for §3.1's third source** (§2.3), because
+  `files_written = []` for all 36 lockfile packages.
+- **A verdict records its source class in a field, not in prose** (§2.1 / A2).
+- **Superseded version slots are marked, never verified** (§3.3): `redbook` v0.1.0
+  and `core-ai-native` v0.7.0.
+- **The perimeter law** (batch plan §4.5): a mechanism's SPEC lives in
+  `core-ai-native`, its ENGINE in that package's library crates, its DRIVER in each
+  language stack's CLI, its DEPLOYMENT in a consuming project. A `not-found` is a
+  fact about the search perimeter until the perimeter has been checked.
+- **A finding spanning a package boundary is a release event** (§5-D), not an edit.
 
 ## Repository map {#map}
 
-- `spec/` — living corpus (0 unmarked) + `WAL.md` + both campaign plans in
-  `spec/terraforms/`. The §9 LOG of `PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` carries
-  this phase's record, entry by entry.
-- `packages/` — wave 2's subject. `org.vibevm.ai-native/` is **judged in full**;
-  `org.vibevm.world/` is next. `org.vibevm.fractality` and `org.vibevm.vibeapp` are
-  out of scope.
-- `campaigns/packages-2026-09/` — **live.** `PHASE-C-RESUME.md` (start here),
-  `PHASE-C-BATCH-PLAN.md`, `PHASE-C-KICKOFF.md`, `BATCH-PLAN.md`, `baseline.json`,
-  `harvest/` (39 captured runs), `tasks/` (6 tools + 15 evidence tables + the batch
-  assignment), `run/` (cache, journal, state).
-- `research/{rust,ts,go}-demo/` — **the discipline's consuming projects.** Not a
-  sandbox: they carry `conform.toml`, `specmap.toml`, `specmap.json` and
-  `discipline/registry/`, and they are where a language guide's rules are in force.
-- `crates/progress-core/` — the gate's parser. `xtask/src/batch_review/` — the review
-  tool. `BACKLOG.md` — P1/P2/P3.
+```
+crates/           the vibe workspace — cli, resolver, registry, progress-core, check, mcp, wire, llm
+xtask/            build-side drivers: codegen, specmap, sync-engines, mirror
+spec/             the contract tree — boot/, common/PROP-*, modules/, flows/, terraforms/
+packages/         the authored corpus: org.vibevm.world (27 flows), org.vibevm.ai-native (11), org.vibevm.fractality
+vibedeps/         the installed copies a consumer actually receives
+campaigns/        packages-2026-09 (live) · progress-2026-08 (archival)
+research/         rust-demo · ts-demo · go-demo — the three consuming projects; tcg-bench
+discipline/       the host's own conform / specmap / health artefacts
+docs/  legacy-spec/  refs/  neworder2/  fixtures/  schemas/  apps/
+```
 
-## Recent commits {#commits}
+## Quick start {#quick-start}
+
+```bash
+cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09
+python campaigns/packages-2026-09/tasks/summary.py
+bash tools/self-check.sh ; echo "EXIT=$?"
+cargo xtask mirror --check
+```
+
+## Standing traps {#traps}
+
+1. **`run/cache.json` carries every verdict.** Load-and-merge only; no second copy.
+2. **Every parsing `progress` subcommand writes the cache — `check` included.**
+   Always pass `--campaign`; never point one at `campaigns/progress-2026-08`.
+3. **A count including `node_modules`, `.vibe/cache/` or `vibedeps/` is a count of
+   somebody else's code** — except when `vibedeps/` is the subject (source 3).
+4. **An absence you assert is not an absence you checked.**
+5. **A Python `str.replace` with `\n` no-ops on this tree** — CRLF working copy, LF
+   blobs. Use an editor tool that errors on a missed match.
+6. **Never `git add -A` while a worker is running.** Stage explicit paths.
+7. **Do not run a `vibe` command while `tools/self-check.sh` runs.**
+8. **`grep -v '\.vibe'` deletes this repository's own packages** — the namespace is
+   literally `org.vibevm`.
+9. **Set `PYTHONIOENCODING=utf-8`** before any Python that prints this corpus;
+   PowerShell 5.1 corrupts UTF-8-no-BOM round-trips, so edit through editor tools.
+
+## The recent commit chain {#commits}
 
 ```
+dbd20c74 chore(campaign): the derived corpus projection catches up
+9281cfe9 docs(campaign): F-128 — the boot lane the contract reads first is absent
+f0b8109b feat(campaign): the two counts the exit gate asks for and nothing ships
+e8438cda feat(campaign): W1 opens with its three sources on disk
+f00f28c9 docs(campaign): the debt's ledger entry and four findings it opened
+fcb195b6 chore(campaign): the Rust half, and what comparing twins moved
+fc46cfd0 chore(campaign): the Go half of the debt, read row by row
+01260aaa feat(campaign): the reviewer's join, so reading is not arithmetic
+1824fac9 docs(wal): the cluster that gates everything except itself
+a45bb31e docs(continue): cold-resume at the ai-native close
+a7556d7e docs(campaign): the resume document, and the debt it opens with
 6d82b5cf chore(campaign): the ai-native cluster closes at 80 of 80 files
 d9270e75 chore(campaign): C4+C5 in two languages, and a name that outlived its crate
 106e09c5 chore(campaign): C6 closes at 92.7 % and corrects C3 twice
@@ -181,17 +304,63 @@ c8911c29 feat(campaign): F-116 stops being a reading and becomes a command
 2ff1cbed fix(campaign): an elided quote is one rule, not a list of cases
 0413154a chore(campaign): C2a — the ATLAS keeps its books and misstates its own source
 666fe2c6 feat(campaign): sources 2 and 3 become one command, over the boot lane
-1480aa25 docs(campaign): the perimeter law, written after C1 paid for it three times
-38f9816c chore(campaign): C1 closes at 353 verdicts, and the perimeter was wrong thrice
-036c7525 docs(campaign): the host does adopt PROP-014, by citation
-fd6d5ac2 chore(campaign): five workers' readings stop living in a scratchpad
-55bb7e71 chore(campaign): C1c — a not-found is a fact about the perimeter first
-423d2883 fix(campaign): the evidence checker stops crying wolf twice
-8a4d6b08 chore(campaign): C1b — the ledger is honest below the floor and empty above it
-1bd51ee4 chore(campaign): C1a — the transport holds and the engine spec does not
-f45202fc feat(campaign): a delegated line number gets checked by machine
-6f276b5d docs(campaign): the one broken citation sits where nothing looks
-726160a1 feat(campaign): source 1's mechanical half stops being a reading task
+```
+
+## The resume prompt {#prompt}
+
+```text
+ВОССТАНОВИ СЕССИЮ
+
+Затем продолжи Phase C кампании PROP-043 волны 2 (campaigns/packages-2026-09).
+Долг ревью ЗАКРЫТ: 138 строк прочитаны поштучно, кластер ai-native пересчитан в
+91.6 % (2 470 / 207 / 20). Открыты находки F-124…F-128. Кластер world не начат по
+вердиктам: 121 файл, 4 150 якорей, батчи W1…W7.
+
+Перед началом прочитай, в этом порядке:
+  1. CONTINUE.md — целиком, особенно §in-flight, §w1-reading и §standard
+  2. campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md — §2.1 (поле src),
+     §4.5 (закон периметра), §5 (как цитируется harvest)
+  3. campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md — контракт делегата
+  4. campaigns/packages-2026-09/harvest/world-w1-git-family.md — три источника W1
+  5. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md §3.1, §3.2, §5
+     и §9 LOG с конца — записи этой фазы, включая стандарт вердикта
+
+ПЕРВОЕ ДЕЙСТВИЕ: проверь, лежат ли на диске таблицы
+campaigns/packages-2026-09/tasks/evidence/ev-W1{a,b,c,d,e}.json. Каждую прогони
+через verify-evidence.py ДО чтения, потом читай show-rows.py поштучно и выноси
+вердикт. Недостающие закажи заново по тому же брифу (список файлов — в CONTINUE.md
+§in-flight).
+
+Каждый world-вердикт ОБЯЗАН нести src — непустое подмножество [1,2,3] по §3.1;
+merge-verdicts.py откажет без него. src == [1] считается отдельно как
+self-referential: `python campaigns/packages-2026-09/tasks/summary.py --batch W1`.
+
+Стандарт вердикта зафиксирован в CONTINUE.md §standard и в §9 LOG — не изобретай
+заново. Для world есть четвёртый пункт: факт флоу проверяется ещё и наблюдаемым
+поведением хоста (§3.1 источник 2), и хост — живой потребитель.
+
+Механика: вердикт живёт в per-file карте campaign внутри run/cache.json и НИКОГДА
+в разметке; мутировать только load-and-merge; verified_at и processed_hash пишет
+только `vibe progress seal`. Каждое число в отчёте приходит из команды. Вердикт
+без evidence ref отклоняется — «probably true» не вердикт, пиши unverifiable.
+
+ДЕЛЕГИРОВАНИЕ: во встроенные агенты opus5 через инструмент Agent. Fractality НЕ
+использовать. Вердикт не делегируется никогда — делегируется только сбор
+доказательств; ревью делегированного — тоже твоё.
+
+АВТОНОМИЯ: работай полностью автоматически. Все механические операции — сама:
+правки, скрипты, cargo, git commit, git push через `cargo xtask mirror`.
+Останавливайся ТОЛЬКО когда нужно настоящее смысловое решение владельца.
+Находка — не повод останавливаться: фаза C находки заводит, а не чинит.
+
+НЕ ОСТАНАВЛИВАЙСЯ НА ГРАНИЦАХ РАБОТЫ. Закрытый батч, закрытый кластер, написанный
+отчёт, зафиксированный коммит — это не точки сдачи хода. Сводку пиши и СРАЗУ
+переходи к следующей единице работы в том же ходе.
+
+ТОКЕНЫ НЕ ЭКОНОМЬ. Не классифицируй строки пачкой ради экономии — именно так
+возник долг из 138 строк. Если контекст подходит к концу: остановись, сохрани
+состояние (CONTINUE.md + spec/WAL.md + запись в §9 LOG кампании), напиши новый
+промт для продолжения по образцу этого, зафиксируй и раскатай — и скажи прямо.
 ```
 
 **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,
