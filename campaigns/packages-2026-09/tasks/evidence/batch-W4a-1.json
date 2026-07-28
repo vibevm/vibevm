@@ -1,0 +1,330 @@
+{
+ "batch": "W4",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-THE-CAMPAIGN-PLAN-FORMAT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/vibe.toml:4  kind = \"flow\"",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/vibe.toml:16  source = \"spec/boot/40-flow-campaign-plans.md\"",
+     "vibe.lock:43      \"flow:org.vibevm.world/campaign-plans@=0.1.0\",",
+     "spec/boot/STATIC.md:65  <!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->",
+     "confirmed: Read the manifest (kind = flow, boot_snippet declared). Checked the host is a real consumer: `vibe.lock` pins the package at =0.1.0 and `spec/boot/STATIC.md` carries the compiled snippet with a provenance marker naming `vibedeps/flow-campaign-plans/0.1.0/…`. `find vibedeps/flow-campaign-plans -type f` returns 7 files (LICENSE, README, the boot snippet, the three flow documents, vibe.toml) — the full payload arrives. Note `vibe.lock:191  files_written = []` for this package, so `vibedeps/` is the only installed-reality surface, per the batch plan §2.3 rule."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "FEATURE-FROZEN-BASELINE-ARITHMETIC": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:115  ##BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE Baseline and exit state as **exact counts** that reconcile: every",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:39  ## 1. Baseline (verified at authoring time, 2026-07-24) {#baseline}",
+     "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:15  ## 0. Target arithmetic",
+     "confirmed: Traced the feature word to its own section in the format document (§4 target arithmetic, anchor at :115). Checked the host: both live plans in `spec/terraforms/` open with a dated `## 1. Baseline (verified at authoring time, …)` section. `grep -rlE '^## .*Target arithmetic' legacy-spec/terraforms/*.md spec/terraforms/*.md` returns 4 files, all under `legacy-spec/` (AINATIVE-ANALYSIS-RAID, HYBRID-LINKING, PACKAGE-TREE, SHRINK) and none under `spec/terraforms/` — the live plans call the section BASELINE, the archived ones call it target arithmetic."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FEATURE-FALSIFIABLE-PREDICTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:165  ##PREDICTIONS-ARE-NUMBERED-FALSIFIABLE-AND-CHECKED-ONE-BY-ONE Numbered, falsifiable, stated before execution, checked one by one in",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:413  ## 6. Predictions (falsifiable, campaign-wide) {#predictions}",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:327  ## 8. Predictions (falsifiable, campaign-wide) {#predictions}",
+     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:467  ## 4. Predictions (falsifiable; checked per wave and at close)",
+     "confirmed: `grep -rnE '^#{2,3} .*[Pp]rediction' legacy-spec/terraforms/*.md spec/terraforms/*.md` returns 13 files carrying a Predictions section, 11 archived and both live plans. The word 'falsifiable' is in the heading itself in both live plans and in 5 archived ones."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FEATURE-PHASES-GATED-ON-THE-GREEN-FLOOR": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:103  ##ANY-PHASE-BOUNDARY-IS-A-SAFE-STOP **Any phase boundary is a safe stop, and the project's green floor",
+     "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:5  _Status: **EXECUTED 2026-07-15** · all phases shipped, floor green at every",
+     "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:889    propagated by `sync-engines` (33 pairs, 6 sets, clean), floor green on 25 steps.",
+     "confirmed: `grep -rliE 'safe stop' legacy-spec/terraforms/*.md` = 12 files; the same grep over `spec/terraforms/*.md` and `campaigns/packages-2026-09/*.md` returns 0 — neither live plan carries a safe-stop clause. The gate panel itself is `tools/self-check.sh` (present; 58 lines match 'step'). In the live wave-2 plan the floor is asserted inside LOG entries (e.g. :889) rather than as a phase-exit law."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FEATURE-AN-EXECUTION-LEDGER-OF-HASH-LEVEL-EVIDENCE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:76  ##ONE-ENTRY-PER-COMMIT One entry per commit — **hash, the conventional-commit",
+     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:694  ### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE",
+     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
+     "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
+     "confirmed: `grep -rnE '^#{2,3}.*[Ee]xecution ledger' legacy-spec/terraforms/*.md` = 8 archived plans with a dedicated Execution ledger section; the same grep over `spec/terraforms/*.md` returns 0 — the two live plans call the section `## 7. LOG` / `## 9. LOG`. I re-ran the harvest's hash counts myself: `grep -oE '\\b[0-9a-f]{8}\\b' … | sort -u | wc -l` gives 17 for wave 2 and 20 for wave 1, matching the harvest exactly. I did not re-run the `git log` half (no git per this task's instruction) and cite the harvest for the 189/125 commit counts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FEATURE-A-DEFERRALS-LEDGER-THAT-SEEDS-THE-NEXT-MANDATE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:173  ##the-next-mandate-is-drained-from-the-deferrals-ledger-lead The next campaign's mandate is drained **from** the deferrals ledger: @impl/done",
+     "campaigns/progress-2026-08/deferrals.md:5  repository, and sign-offs only a person may give. The next campaign's mandate",
+     "BACKLOG.md:19  | ##REL-DEFERRALS `campaigns/<id>/deferrals.md` | **one campaign's** tails; dies with the zone | the next campaign's mandate (`campaign-plans` law) |",
+     "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:1  # DEFERRALS-CLOSEOUT-PLAN v0.1 — close every §10 deferral of the Self-Sufficiency campaign",
+     "confirmed: The host names this rule by the package's own name: `BACKLOG.md:19` attributes 'the next campaign's mandate' to the `campaign-plans` law in a four-row table distinguishing TASKS.md / deferrals.md / AUDIT.md / BACKLOG.md. The mechanism is instantiated twice: `campaigns/progress-2026-08/deferrals.md:5-6` states it as its own purpose, and the archived DEFERRALS-CLOSEOUT-PLAN's title and §0 table are a whole campaign built out of a predecessor's §10 deferral list."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "package-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/vibe.toml:15  [boot_snippet]",
+     "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
+     "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md:1  # The Execution Ledger {#root}",
+     "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md:1  # Phase Gates {#root}",
+     "confirmed: `find packages/org.vibevm.world/campaign-plans -type f` returns exactly 7 paths: LICENSE.md, README.md, vibe.toml, the boot snippet, and the three flow documents. `find vibedeps/flow-campaign-plans -type f` returns the same 7. Three content documents plus one boot snippet is what both the authored tree and the installed slot hold."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-PLAN-FORMAT": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:33  ## The five artifact roles {#artifacts}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:61  ## The section skeleton {#skeleton}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:236  ### 15 — Deferrals ledger {#s15-deferrals}",
+     "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:431  ## 15 — Deferrals ledger",
+     "DRIFT on its last clause, measured section by section rather than taken. «The canonical fifteen-section plan skeleton» is exact — the document's `### N — …` headings run 1 through 15, `{#s1-status}` … `{#s15-deferrals}`. «Each section with a spec and a worked mini example» is not: I counted fenced blocks per section and read the four that have none. Seven sections carry a fenced example (§1, §3, §4, §6, §11, §12, §15); four more carry a worked example inline in prose (§5's stale-trio, §7's «P3 — fewer than 10 test expectations break…», §9's «flaky network: re-probe…», §10's «does NOT extend the gate…»); and **four carry no example of any kind — §2 Execution record, §8 Phases, §13 Review points, §14 Execution ledger**, which are bullets and pointers to sibling documents. Eleven of fifteen, not each. The worker counted thirteen of fifteen and also did not reach «each»; my count is lower because I required an example rather than any illustrative text."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CONTENT-THE-PHASE-GATES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:14  ## Phase 0 — spikes and probes, no commits {#phase-zero}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:57  ## Anatomy of a phase {#anatomy}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:145  ## Review points {#review-points}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:174  ## Discovered-necessary work {#discovered-work}",
+     "confirmed: Read the whole document and matched the six promised topics to its six `##` sections: `{#phase-zero}` (:14), `{#anatomy}` (:57), `{#safe-stop}` (:101), `{#resume}` (:122), `{#review-points}` (:145), `{#discovered-work}` (:174), plus `{#summary}` (:195). Every named topic has its own section; nothing promised is missing. This row is the package agreeing with itself — the same claims are checked against host instances in the phase-gates rows below."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "CONTENT-THE-EXECUTION-LEDGER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:30  ## Flipping the status line {#status-flip}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:47  ## The execution-record block {#execution-record}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:100  ## Honesty rules {#honesty}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:171  ## The lineage law {#lineage}",
+     "confirmed: Matched all seven promised topics to sections: `{#status-flip}` (:30), `{#execution-record}` (:47), `{#commit-maps}` (:71), `{#honesty}` (:100), `{#report}` (:122), `{#deferrals}` (:149), `{#lineage}` (:171), plus `{#why}` (:14) and `{#summary}` (:192). The enumeration is complete and in the same order as the sections. Self-referential; host instances are checked in the execution-ledger rows below."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/vibe.toml:16  source = \"spec/boot/40-flow-campaign-plans.md\"",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md:9  ## When to propose a campaign {#when}",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md:62  ## At every phase boundary {#boundary}",
+     "spec/boot/STATIC.md:113  ## Never {#never}",
+     "confirmed: The manifest declares the file as the boot snippet; the compiled host lane carries it verbatim (anchors stripped) at `spec/boot/STATIC.md:65-126`, so it is genuinely loaded at session start — `CLAUDE.md`'s generated `<vibevm>` block orders `spec/boot/STATIC.md` read first and in full. Checked `spec/boot/INDEX.md`: it holds only 8 `[[entry]]` tables and does NOT name campaign-plans; this snippet reaches the session through the static lane, not the index."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its",
+     "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+     "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+     "vibe.lock:191  files_written = []",
+     "confirmed: Read the uninstall command. It removes the `vibedeps/` slot (`vibedeps::remove_slot` at :123), drops the lockfile entry (:129) and the `[requires]` declaration, then regenerates boot artifacts (:144) so the snippet leaves `spec/boot/STATIC.md`. `grep -rn 'files_written' crates/ --include='*.rs'` shows `files_written` is a PROP-003 §2.10 manifest field checked by `vibe-check`, not the uninstall path; for this package it is `[]` (vibe.lock:191), so the whole written surface is the slot plus the compiled boot lane, and both are removed."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/uninstall.rs:58      // `vibedeps/<kind>-<name>/` git working tree (PROP-022 §2.4); every other",
+     "spec/boot/00-core.md:28  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:519    are generated and were already excluded by the morning ruling;",
+     "campaigns/progress-2026-08/deferrals.md:28    user-owned (`00-core` `NOTOUCH-90-USER`), so no session may edit it; the",
+     "confirmed, settled in the code exactly as its twin in discovery-prompt's README was. `vibe uninstall` writes the user-authored `vibe.toml`, but only via `drop_from_manifest_requires` (crates/vibe-cli/src/commands/uninstall.rs:164-177), a `retain` minus exactly the entry `vibe install` wrote, and `Manifest::write` is documented as «preserving operator comments where the existing file carries any» (crates/vibe-core/src/manifest/document.rs:307-309) with `toml_edit` behind it. Everything else uninstall touches is the vibedeps slot, the lockfile and the generated boot artefacts — none of them user-authored. The host's own user-owned regime is real and enforced elsewhere (`NOTOUCH-*` anchors in spec/boot/00-core.md; a deferral in campaigns/progress-2026-08/deferrals.md:28 created because spec/boot/90-user.md is user-owned), which is the regime this line inherits rather than invents."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THIS-PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-FORMAT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:33  \"flow:org.vibevm.world/campaign-plans\" = \"=0.1.0\"",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:54  - ##MEMBER-CAMPAIGN-PLANS `campaign-plans` — cold-executable plans with phase gates,",
+     "vibe.lock:189  source_url = \"file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/campaign-plans/v0.1.0\"",
+     "confirmed: `find . -name 'CAMPAIGN-PLAN-FORMAT.md'` returns 10 paths; exactly one is an authored source (`packages/org.vibevm.world/campaign-plans/v0.1.0/…`). The other nine are all regenerated consumer copies excluded from any count of practice: `vibedeps/flow-campaign-plans/`, `vibedeps/flow-delegation-rules/…/vibedeps/`, `.vibe/cache/**`, and four under `packages/org.vibevm.fractality/**/{vibedeps,.vibe/cache}/`. The `redbook` umbrella both pins and names it, and the lockfile resolves it back to the authored directory — one home, many copies."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "core-ai-native-defers-from-its-next-release": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:11  ##THIS-DOCUMENT-IS-THE-PAPER-TRAIL *This document is the",
+     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:28  | ##ROW-ARTIFACT-PLAN **PLAN** @impl/done | before work starts @impl/done | the cold-executable recipe (see §2) @impl/done |",
+     "vibedeps/flow-core-ai-native/0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
+     "DRIFT, and the SECOND instance of one defect — W2 measured the flow:wal half and the redbook README states it for both packages at once (ruled drift in that slice). Measured here on my own commands and independently by the worker. The campaign-form document exists and duplicates this package's artifact-role table almost row for row; the deference does not exist anywhere. `grep -rn 'campaign-plans' packages/org.vibevm.ai-native/` returns zero across BOTH version slots, and zero in `vibedeps/flow-core-ai-native/`. The release the claim points at has arrived and passed: campaign-plans reached org.vibevm.world 2026-07-12 (`69708287`), core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`) five days later, `vibe.lock:111` shows v0.8.0 is the installed slot, and its `spec/05-CAMPAIGN-FORM.md` is 117 lines with zero occurrences of `campaign-plans`, `defer` or `superseded`. The next release came; it did not defer."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-WAL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/README.md:83  - ##COMPOSES-CAMPAIGN-PLANS `flow:campaign-plans` — a campaign checkpoint updates the WAL at",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:222  messages carry session summaries, a plan's status line carries campaign",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:136  ##the-journal-points-at-the-plan If the project keeps a working journal, the campaign updates the",
+     "campaigns/packages-2026-09/run/RESUME.md:15  Take the first unfinished step above; when none remain, continue with the next queued batch/wave/task per the plan's LOG section.",
+     "confirmed: The composition is reciprocal at package level: `flow:wal` names `flow:campaign-plans` back, and its protocol carries the same division of labour ('a plan's status line carries campaign …'). The host's living instance of a pointer-to-the-plan is `campaigns/packages-2026-09/run/RESUME.md:15`, a generated file that sends the reader to the plan's LOG. I deliberately did not cite `spec/WAL.md` — it is rewritten wholesale at every wind-down — so the host-side WAL half of this claim is not evidenced here; the durable half is the reciprocal package text plus the generated RESUME pointer."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-ATOMIC-COMMITS": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:67  | ##ROW-ELEMENT-COMMIT-SET **Commit set** @impl/done | the planned commits, subjects spelled in advance @impl/done |",
+     "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:374  **Commits:** `build(packages): bump the discipline packages to 0.3.0` +",
+     "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:298    runnable); host floor green. *Commit:* `feat(ai-native): go-ai-native family skeletons`.",
+     "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
+     "DRIFT on the two clauses that are measurable, over a window where they fail completely. The member flow is installed and pinned, and «one idea per commit» is kept — that half stands. But «subjects are spelled in the plan» has NO live instance: `grep -rlE '\\*Commits' legacy-spec/terraforms/*.md` finds 4 archived plans and the same grep over `spec/terraforms/*.md` and `campaigns/packages-2026-09/*.md` returns 0, with `grep -ciE 'commits:'` returning 0 for both live plans. And «the ledger binds hashes to the planned subjects» has none either: `grep -niE 'commit map|commit-map'` over the live plans and campaign zones returns 0 hits, against 3 in the archive. This is not non-adoption — the host adopted the practice, wrote four plans that spell subjects in advance, and stopped: 0 of 2 live campaigns do it, which is the whole live window. The harvest's related count is the same defect from the other side, 17 unique hashes cited against 189 commits in the wave-2 zone."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-DECISION-RECORDS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:44  | ##ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @impl/done | Each line names the loser *and* the reason it lost. @impl/done | It lists losers without reasons — or lists nothing. @impl/done |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:111  consumer that does not behave as promised. **Considered and rejected:**",
+     "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:104  Options considered:",
+     "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:110  - (γ) **vendor-sync (chosen):** authored source of the language-neutral",
+     "confirmed: The composition is one-directional at package level: `grep -rniE 'campaign' packages/org.vibevm.world/decision-records/v0.1.0/` returns 0 hits — decision-records never mentions campaigns. But the practice joins in the host: the live wave-2 plan's §3 decisions each carry a bolded '**Considered and rejected:**' clause plus '**Revisit when:**', which are decision-records' own template fields; and the archived DEFERRALS-CLOSEOUT-PLAN's D1 is a numbered inline decision with α/β/γ options, the chosen one marked and each rejection given a reason."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-CONFLICT-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:38  <!-- REVIEW: <what you would change> because <reason> -->",
+     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md:32  ## The REVIEW contract {#review}",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:443  - **RESOLVED review point (owner, 2026-07-24) — anchor naming",
+     "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:355  - **RP1 — `load` column = effective, not declared.** RESOLVED (owner, 2026-07-15): \"да\" to the message stating exactly this reading. See D3.",
+     "confirmed as an identification the package is entitled to make, with the shape difference recorded rather than smoothed. Both mechanisms exist and both are attested: conflict-protocol's REVIEW is an inline `<!-- REVIEW: … -->` comment, and the campaign review point is a numbered plan section going OPEN then RESOLVED — 6 `**RESOLVED …**` entries in wave 1 and a numbered `## 13 — Review points` in the archived PACKAGE-TREE-PLAN. Neither package names the other (`grep -rniE 'campaign|review point'` over conflict-protocol returns 0), so «review points are the campaign-scale REVIEW marker» is this README's own framing of a relationship the sibling does not assert. A package naming a correspondence its sibling has not named is a coinage, not a contradiction; nothing in either flow denies it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "format-crystallized-over-a-dozen-real-campaigns": {
+    "v": "confirmed",
+    "ev": [
+     "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:7  *Execution record: all six phases ran to the exit state in one session — baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files, exactly §0's arithmetic). 19 commits (`254b974` … `475fa75`). …",
+     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501  ## 5. Wave 0 — spikes (no commits; gates for everything after)",
+     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:851  - **S3 — F5a RESOLVED BY ANALYSIS, plan amended.** Writer-threading is",
+     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:674  3. **Kind** — **OWNER RESOLUTION, reverses the draft**: `mcp` is a",
+     "confirmed on the count and on two of its three named campaigns, traced to exact host text. «A dozen» is a floor the host clears with room: 25 archived plans in legacy-spec/terraforms/ plus 2 live. The debt drain is SHRINK-PLAN-v0.1, whose execution record carries the exact «130 → 10» figure and the exact hash pair this package quotes in its own §2 example. The six-wave landing is MCP-SOVEREIGNTY-PLAN, Waves 0-6 with per-wave commit maps, whose ledger records two corrections to its own decisions. NOT PINNED, and named here so the next reader does not re-search it: «a package-family rename across five packages» matches no archived plan by title or status line — `grep -rlniE 'rename' legacy-spec/terraforms/*.md` returns 10 candidates and none names a five-package rename. Every instance is in legacy-spec/, which is an archive; this is a provenance claim about the origin project's history, which is the right place for it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "each-was-executed-cold-and-the-format-kept-what-survived": {
+    "v": "confirmed",
+    "ev": [
+     "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:7  > **Read-first / boot.** This plan is written to be executed cold. Boot the",
+     "legacy-spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md:5  **status: PLANNED · not started · the deferred sibling of the conform relocation (PROP-024 Ф4) · executes in a fresh session from cold context**",
+     "legacy-spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md:7  > **How to run this.** You (the executing model) are launched under `/goal` with this file as your operating manual. …",
+     "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:41  any phase is a safe stop; the floor must be green at every phase boundary._",
+     "confirmed: `grep -rliE 'cold-executable|executed cold|cold context' legacy-spec/terraforms/*.md` finds the cold-start declaration in the status block or a read-first blockquote of most archived plans; three representative instances quoted. CULTURAL-EXTRACTION-PLAN is the explicit across-session case — its blockquote plans for 'session restarts at the 80% context frame'. The 'format kept what survived' half is a historical claim about authoring and has no artifact to check; nothing in the repository records which candidate sections were dropped."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-PLAN-IS-A-PROGRAM-AND-THE-LEDGER-IS-ITS-OUTPUT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:24  Поэтому правильная формулировка не «пиши спеки для AI». Правильная — **«пиши для системы",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:3  This directory carries the source text of *AI-native development* —",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md:10  - `ru/` — the Russian text, included **as-is** from the author's",
+     "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:33  \"flow:org.vibevm.world/campaign-plans\" = \"=0.1.0\"",
+     "confirmed: The shipping half is exact: `ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/` returns three Russian chapters, and the book README names the work *AI-native development*. The quoted spirit is a paraphrase, not the book's words: the nearest text is chapter 3 line 24, which reads «пиши для системы целиком» ('write for the system as a whole') set against «пиши спеки для AI», with the three readers named as the next AI session, yourself in two months, and a new developer. 'not for yourself' is the README's framing; the book's contrast is with writing for the AI. Note the chapter files are outside this campaign's scan — the `exclude` globs drop `redbook/*/spec/book/ru/`."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "packages/org.vibevm.world/campaign-plans/v0.1.0/LICENSE.md:1  Copyright (c) 2026 Oleg Chirukhin",
+     "vibedeps/flow-campaign-plans/0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: Manifest field and licence text agree, and the licence file is part of the installed payload. `CLAUDE.md`'s licence-state ledger records the whole `packages/org.vibevm.*/**` surface as relicensed to UPL-1.0, which is consistent with what this slot carries."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  }
+ }
+}
