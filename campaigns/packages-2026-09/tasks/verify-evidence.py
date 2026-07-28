@@ -41,6 +41,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[3]
 REF = re.compile(r"^\s*([^\s:]+(?::[^\s:]*)??[^\s:]*\.[A-Za-z0-9]+):(\d+)\s*(.*)$")
 FUZZ = 3
 SPAN = 4          # how many lines a single quote may legitimately span
+BLOCK_CAP = 40    # and the ceiling on the block an elided quote may range over
 
 
 def norm(s):
@@ -73,15 +74,35 @@ def check_ref(ref):
     # that cries wolf gets skipped, and then it protects nothing.
     if want in norm(" ".join(lines[line - 1: line - 1 + SPAN])):
         return "OK", ""
-    # A quote may be elided — `description = "The specmap engine (PROP-014 §2.5):
-    # markdown unit parser, ..."`. That is honest quoting and must not read as a
-    # fiction, but it is also where a fabrication could hide, so it gets its own
-    # name rather than passing silently as OK.
-    head = re.split(r"\.\.\.|…", snippet, maxsplit=1)[0].strip()
-    if head != snippet.strip() and len(head) >= 12:
-        window = norm(" ".join(lines[line - 1: line - 1 + SPAN]))
-        if norm(head) in window:
-            return "ELIDED", f"{path}:{line} — verified to the ellipsis only ({len(head)} chars)"
+    # A quote may be elided anywhere — leading (`... third supported language,
+    # after Rust`), trailing (`markdown unit parser, ...`) or in the middle. The
+    # rule is stated once, generally: every non-empty segment between ellipses must
+    # appear IN ORDER inside the window. Two earlier versions of this check handled
+    # the trailing case only and then the trailing-plus-spanning case, and each
+    # reported honest quotes as fictions — the rule was narrower than the
+    # convention twice before it was written down as one rule instead of a list of
+    # cases.
+    if re.search(r"\.\.\.|…", snippet):
+        segs = [s.strip() for s in re.split(r"\.\.\.|…", snippet) if len(s.strip()) >= 8]
+        if segs:
+            # The window for an elided quote is the BLOCK it starts in, not a fixed
+            # number of lines: an ATLAS record wraps over eleven lines and a quote
+            # spanning it is one quote. Capped so a file with no blank lines cannot
+            # turn the check into a whole-file substring search.
+            end = line - 1
+            while end < len(lines) and lines[end].strip() and end - line < BLOCK_CAP:
+                end += 1
+            window = norm(" ".join(lines[line - 1: max(end, line - 1 + SPAN)]))
+            pos, ok_all = 0, True
+            for s in segs:
+                at = window.find(norm(s), pos)
+                if at < 0:
+                    ok_all = False
+                    break
+                pos = at + len(norm(s))
+            if ok_all:
+                shown = sum(len(s) for s in segs)
+                return "ELIDED", f"{path}:{line} — {len(segs)} segment(s), {shown} chars verified around the ellipsis"
     for d in range(1, FUZZ + 1):
         for cand in (line - 1 - d, line - 1 + d):
             if 0 <= cand < len(lines) and want in norm(lines[cand]):
