@@ -1,0 +1,1036 @@
+{
+ "batch": "W5",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:15  ## The gate versus the audit {#gate-vs-audit}",
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:78  ## `AUDIT.md` is the durable home {#audit-md}",
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:129  ## Disposition and carry-forward {#disposition}",
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:155  ## The checklist is living {#living}",
+     "confirmed: Walked the file's 11 section headings (`grep -nE '^## ' HEALTH-AUDIT-PROTOCOL.md`): gate-vs-audit, blind-spots, categories, audit-md, finding, disposition, living, cadence, why-not, re-derive, summary. Every element the scope line promises has its own section. src [1] only — a document describing its own contents has no host or install counterpart to check."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "companion-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:1  # Running an audit {#root}",
+     "confirmed: Both relative targets exist as siblings in the package and in the installed payload (`ls vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/` returns audit-checklist.md, HEALTH-AUDIT-PROTOCOL.md, running-an-audit.md). These are same-directory pointers, so unlike the boot snippet's ../flows/ pointers they resolve wherever the three files travel together. The harvest's source-1 join reported 35 relative .md citations across the four W5 packages with 0 broken, which is consistent."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "EVERY-SERIOUS-PROJECT-HAS-A-GATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:13  - ##GATE-DEF vibevm's per-commit gate is `tools/self-check.sh` (`cargo fmt --check`, `cargo test --workspace`, `cargo clippy -D warnings`, `vibe check`). @spec/done",
+     "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+     "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+     "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+     "tools/self-check.sh:9  #   3. `cargo clippy --workspace ...`     — zero warnings under `-D warnings`.",
+     "tools/self-check.sh:10  #   4. `vibe check --path . --quiet`      — spec linter clean against the",
+     "tools/self-check.sh:12  #   5. `cargo xtask conform check`        — the discipline gate (Class-F/G",
+     "confirmed: The host has one and names it: PROP-013 ##GATE-DEF says the per-commit gate is tools/self-check.sh and lists four commands. The script itself documents 10 numbered steps in its header and invokes them with run_step (`grep -nE 'run_step' tools/self-check.sh` shows fmt/test/clippy/vibe check/conform check/sync-engines plus per-package gates). Worth a reviewer's eye: PROP-013's four-command description of the gate is now a subset of the script's ten steps — the PROP's gate description has not tracked the script."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-GATE-IS-A-MECHANICAL-REGRESSION-DETECTOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+     "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+     "confirmed: PROP-013 ##GATE-BLIND-SPOTS calls the host gate 'a regression detector' in the same words. The mechanical half is checkable: tools/self-check.sh runs `cargo test --workspace`, `cargo clippy --workspace --all-targets -- -D warnings` and `cargo fmt --all --check` with no judgment step. The 'fast' claim is not something I could measure without running it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-GATE-IS-INDISPENSABLE-AND-BLIND-TO-FOUR-THINGS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:18  - ##M119-INIT-DEFECT The M1.19 session shipped a milestone — eight phases, ~800 hermetic tests green, the gate passing on every commit — in which `vibe init` scaffolded **broken projects**: it wrote `naming = \"kind-name\"`, so a freshly-initialised project could not install any package at all. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:21  - ##VIBE-INDEX-ROT Earlier, the `vibe-index` crate — then a separate Cargo workspace, outside `cargo test --workspace` — rotted unnoticed until a state review found its suite red. @spec/done",
+     "AUDIT.md:219  **`cargo xtask specmap --check` was red on a clean checkout of `main` —",
+     "confirmed: PROP-013 ##GATE-BLIND-SPOTS restates 'blind by construction to uncovered code, out-of-gate trees, drift, and slow debt' and cites this document's #blind-spots anchor as the source. The host has recorded instances of three of the four: uncovered code (M1.19 / AUDIT 2026-05-23-01), out-of-gate trees (vibe-index rotting outside `cargo test --workspace`), drift (AUDIT 2026-06-12-01, the emptied content hashes)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK": {
+    "v": "drift",
+    "ev": [
+     "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+     "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+     "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "DRIFT on «breadth-first», which is the leg the artefact does not carry. Deliberate, judgment-heavy and durably recorded all hold — the 2026-06-12 run is owner-requested, describes its method as three structural deep-reads plus one empirical gate probe, and wrote 12 findings. But two of the three runs disclaim a full sweep IN THEIR OWN TEXT: `AUDIT.md:23` «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist» and `:158` «It is **not** the full §2.2 breadth sweep». The third claims a sweep and is scoped to the new category E. No run in the artefact records walking A, B, C and D breadth-first."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:10  Where the gate answers *\"did this commit regress covered code?\"*, the",
+     "spec/boot/STATIC.md:755  **The gate is the floor; the audit is what the gate cannot see.**",
+     "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+     "AUDIT.md:219  **`cargo xtask specmap --check` was red on a clean checkout of `main` —",
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "confirmed: Third occurrence of this sentence in the package (README:11, boot:13, here at :32); the boot copy reaches the host verbatim in the compiled lane. The host's own example of a finding no commit would flag is AUDIT 2026-06-12-01, where the committed specmap index had lost every content hash and the unbumped-hash detector was 'structurally blind'."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-TWO-ARE-COMPLEMENTS-AND-MORE-GATE-NEVER-SUBSTITUTES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:6  **Related:** [PROP-000](PROP-000.md) (the per-commit gate this audit complements), … `vibe check` (the automated *subset* of what this audit does by hand), … [`AUDIT.md`](../../AUDIT.md) (the inventory this process writes). @spec/done",
+     "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
+     "AUDIT.md:425  the new `cargo xtask conform freeze`: `error-message-cites-req`",
+     "AUDIT.md:426  (68 frozen), `file-length` 600 (28), `no-unwrap-in-domain` (24 —",
+     "tools/self-check.sh:12  #   5. `cargo xtask conform check`        — the discipline gate (Class-F/G",
+     "confirmed: PROP-013's Related line calls PROP-000's gate the thing 'this audit complements' and `vibe check` 'the automated *subset* of what this audit does by hand'. The host has actually added gate since the last audit — AUDIT 2026-06-12-08's fix shipped three new conform rules (error-message-cites-req, file-length 600, no-unwrap-in-domain) plus a widening of seam-has-doctest, all frozen via `cargo xtask conform freeze` — and the audit did not stop existing; the audit is what produced them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-BLIND-UNCOVERED-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:30  - ##A1-COVERAGE-GAPS **A1 · Coverage gaps.** *Known:* install e2e tests overwhelmingly drive `LocalRegistry`, shadowing the real `GitPackageRegistry` + `NamingConvention` path; the `vibe init` default-config path had no e2e at all. @spec/done",
+     "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+     "AUDIT.md:34  **Production git-registry + naming path is under-tested.** The install",
+     "spec/common/PROP-013-periodic-health-audit.md:18  - ##M119-INIT-DEFECT The M1.19 session shipped a milestone — eight phases, ~800 hermetic tests green, the gate passing on every commit — in which `vibe init` scaffolded **broken projects**: it wrote `naming = \"kind-name\"`, so a freshly-initialised project could not install any package at all. @spec/done",
+     "confirmed: The host's standing instance is PROP-013 ##A1-COVERAGE-GAPS: install e2e tests drive LocalRegistry and shadow the real GitPackageRegistry + NamingConvention path, and the `vibe init` default-config path had no e2e at all. AUDIT.md 2026-05-23-01 is that finding, P1, and its body at :39 says explicitly 'This is the gap that let finding `-02` ship green through eight milestone phases'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-BLIND-CODE-OUTSIDE-THE-GATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:21  - ##VIBE-INDEX-ROT Earlier, the `vibe-index` crate — then a separate Cargo workspace, outside `cargo test --workspace` — rotted unnoticed until a state review found its suite red. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:36  - ##B1-UNREACHED-TREES **B1 · Unreached trees.** Separate workspaces, scripts, `fixtures/**` and `manual-tests/**` no test parses. *Known:* `fixtures/manual-test-packages/` carries retired schema across two milestones. @spec/done",
+     "AUDIT.md:76  ### 2026-05-23-05 · B1 · P3 · open",
+     "AUDIT.md:78  **`fixtures/manual-test-packages/` carries retired schema.**",
+     "confirmed: Two host instances, both of them literally the examples this row names. A separate workspace: PROP-013 ##VIBE-INDEX-ROT — vibe-index 'then a separate Cargo workspace, outside `cargo test --workspace` — rotted unnoticed until a state review found its suite red'. An unparsed fixture: AUDIT 2026-05-23-05, `fixtures/manual-test-packages/` carrying retired schema with 'No hermetic test parses these fixtures, so the gate stays green while they rot' (AUDIT.md:81-82). It is still open — discipline/DEBT.md:10 carries it as DBT-0003."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-BLIND-DRIFT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:41  - ##C1-DOC-DRIFT **C1 · Doc drift.** `docs/**` versus `VIBEVM-SPEC.md` versus the code's actual behavior. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:42  - ##C2-SPEC-DRIFT **C2 · Spec drift.** A PROP self-contradicting or contradicting another; dead `spec://` references. *Known:* PROP-008 §3 said lockfile v4 while §7 said v5; PROP-005 references a `crates/vibe-index/schemas/` directory that does not exist. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:43  - ##C3-WAL-DRIFT **C3 · WAL / CONTINUE drift.** Does the checkpoint match the tree, the branch, the commit chain? @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:44  - ##C4-OUTWARD-DRIFT **C4 · Outward drift.** Live registry orgs and other external state versus what the tool now expects. @spec/done",
+     "AUDIT.md:110  ### 2026-05-23-09 · C2 · P3 · open",
+     "AUDIT.md:112  **PROP-005 references a non-existent `schemas/` directory.** PROP-005",
+     "AUDIT.md:355  ### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)",
+     "AUDIT.md:357  **WAL and CONTINUE cited commit hashes that no longer exist**",
+     "confirmed: The host split this blind spot into four checklist rows (C1 doc / C2 spec / C3 WAL-CONTINUE / C4 outward) at PROP-013:41-44, and has recorded a finding under each of C1, C2, C3 and C4. The clearest is 2026-05-23-09: PROP-005 cites `crates/vibe-index/schemas/index-entry.jtd.json` and no schemas/ directory exists — spec-versus-reality drift with no test to fail. Still open; discipline/DEBT.md:13 carries it as DBT-0007."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-BLIND-SLOW-DEBT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:48  - ##D1-DEFERRED **D1 · Deferred & parked items** — walk every \"deferred\" / \"parked\" / \"Known issues\" entry in the WAL and the PROPs. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:50  - ##D3-ESCAPE-HATCHES **D3 · Escape hatches** — `#[allow(dead_code)]`, `#[allow(clippy::…)]` (`grep -rn '#\\[allow'`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:51  - ##D4-DEP-STALENESS **D4 · Dependency staleness** — `cargo update --dry-run`; `cargo audit` / `cargo outdated`. @spec/done",
+     "AUDIT.md:346  ### 2026-06-12-11 · D · P3 · open",
+     "AUDIT.md:348  Hygiene census for the record: `#[ignore]` 5 (vibe-cli live quartet +",
+     "AUDIT.md:349  1 specmap-core); `#[allow]` 28 src-side (19 in vibe-cli); `anyhow`",
+     "confirmed: The host counts exactly this set. AUDIT 2026-06-12-11 is a hygiene census of it: '#[ignore] 5 … #[allow] 28 src-side (19 in vibe-cli) … TODO-family ≈ 17 raw'. Those numbers have moved since: `grep -rn '#\\[ignore\\]' crates/ --include='*.rs' | wc -l` now returns 2 and `grep -rn '#\\[allow' crates/*/src --include='*.rs' | wc -l` now returns 82 — so the ignore count fell and the allow count roughly tripled in the 1546 commits since the last audit, un-re-counted."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "none-of-these-is-hypothetical": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:22  - ##AUDIT-NON-OPTIONAL These are the concrete failures that made the audit non-optional here. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:18  - ##M119-INIT-DEFECT The M1.19 session shipped a milestone — eight phases, ~800 hermetic tests green, the gate passing on every commit — in which `vibe init` scaffolded **broken projects**: it wrote `naming = \"kind-name\"`, so a freshly-initialised project could not install any package at all. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:21  - ##VIBE-INDEX-ROT Earlier, the `vibe-index` crate — then a separate Cargo workspace, outside `cargo test --workspace` — rotted unnoticed until a state review found its suite red. @spec/done",
+     "AUDIT.md:78  **`fixtures/manual-test-packages/` carries retired schema.**",
+     "AUDIT.md:219  **`cargo xtask specmap --check` was red on a clean checkout of `main` —",
+     "confirmed: PROP-013 ##AUDIT-NON-OPTIONAL says the same thing about the same repository: 'These are the concrete failures that made the audit non-optional here.' Each of the four has at least one dated host finding — uncovered code 2026-05-23-01, out-of-gate trees 2026-05-23-05 plus the vibe-index rot, drift 2026-05-23-09 and 2026-06-12-01, debt 2026-06-12-11."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-canonical-failure-is-the-broken-initializer": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:18  - ##M119-INIT-DEFECT The M1.19 session shipped a milestone — eight phases, ~800 hermetic tests green, the gate passing on every commit — in which `vibe init` scaffolded **broken projects**: it wrote `naming = \"kind-name\"`, so a freshly-initialised project could not install any package at all. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:19  - ##M119-TEST-ASSERTED-BROKEN The defect survived the entire milestone; a `cli_init` test even *asserted the broken value as correct*, staying green the whole time. @spec/done",
+     "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
+     "AUDIT.md:48  **`vibe init` / `vibe registry add` scaffolded `kind-name`.** PROP-008",
+     "AUDIT.md:56  ### 2026-05-23-03 · A3 · P2 · fixed (`cc32d7e`)",
+     "AUDIT.md:58  **A test encoded the `vibe init` bug as correct.**",
+     "confirmed: This is vibevm's M1.19, told in the generic voice. PROP-013:18 gives the numbers ('eight phases, ~800 hermetic tests green') and :19 the test ('a `cli_init` test even *asserted the broken value as correct*'). AUDIT.md carries both as findings 2026-05-23-02 (the broken `naming = \"kind-name\"` scaffold) and -03 (the test that guarded it). The generic wording drops the identifying detail, which is what makes it copyable; nothing in it conflicts with the host record."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ONLY-A-READER-CATCHES-A-TEST-THAT-ENCODES-THE-WRONG-ANSWER": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:20  - ##M119-CAUGHT-BY-SMOKE It was caught only by a live smoke run during the registry migration. @spec/done",
+     "AUDIT.md:58  **A test encoded the `vibe init` bug as correct.**",
+     "DRIFT on the mechanism, in the host's one instance of exactly this defect. The first half is settled and vivid: the `cli_init` test asserted `primary.naming == NamingConvention::KindName` and stayed green, and PROP-013's `##A3-WRONG-BEHAVIOR` calls it «Detectable only by reading the assertion against the spec». How it was ACTUALLY caught is recorded one line away, at PROP-013:20 — «It was caught only by a live smoke run during the registry migration». A live integration run, not a reader judging an assertion. The host's own record names a third mechanism this sentence excludes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "not-more-gate-but-a-different-activity": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
+     "AUDIT.md:425  the new `cargo xtask conform freeze`: `error-message-cites-req`",
+     "tools/self-check.sh:42  # packages were gated for months and \"all green\" was true the whole time",
+     "tools/self-check.sh:43  # (F-086); a count with no denominator cannot be wrong. The sync gate's",
+     "confirmed, and the apparent counter-evidence is the flow's own design rather than a contradiction. The host's response to its audits WAS substantially more gate — 2026-06-12-08's fix added three conform rules and widened a fourth, and F-086's response added a denominator assertion inside `tools/self-check.sh`. But this document's own `#living` section says a mechanisable category SHOULD migrate into the gate, so gate-building as an audit OUTCOME is prescribed. What the sentence denies is that more gate substitutes for the audit activity, and the judgment work — three structural deep-reads producing 12 findings — is recorded as having happened."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
+     "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+     "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
+     "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+     "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+     "DRIFT on the walking, not on the mapping. The mapping is adopted — PROP-013's `##CHECKLIST-WALK` says vibevm walks the checklist breadth-first and cites this document's own anchor, and AUDIT.md's header enumerates the same A/B/C/D groups. The walking never happened: two of three runs disclaim it in their own text, and of the 29 finding headings the sub-rows that have ever produced a finding are A1, A2, A3, B1, B2, C1, C2, C3, C4, D1 plus two group-level entries — **nothing has ever been filed under D2, D3 or D4**."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GROUP-A-TEST-INTEGRITY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:28  ##CAT-A **A — Test integrity.** @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:30  - ##A1-COVERAGE-GAPS **A1 · Coverage gaps.** *Known:* install e2e tests overwhelmingly drive `LocalRegistry`, shadowing the real `GitPackageRegistry` + `NamingConvention` path; the `vibe init` default-config path had no e2e at all. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:31  - ##A2-QUARANTINED **A2 · Quarantined tests.** `#[ignore]`d tests — red? stale? (`grep -rn '#\\[ignore\\]'`.) *Known:* `cli_live_e2e.rs` — ignored and red. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
+     "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+     "confirmed: PROP-013 §2 carries group A with exactly three sub-rows in the same order and the same names (A1 Coverage gaps, A2 Quarantined tests, A3 Tests that encode the wrong behavior), each annotated with a *Known:* host instance. AUDIT.md's header line names '**A** test integrity'. Findings filed under A: 2026-05-23-01 (A1), -02 (A1), -03 (A3), -04 (A2)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GROUP-B-ROT-OUTSIDE-THE-GATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:34  ##CAT-B **B — Rot outside the gate.** @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:36  - ##B1-UNREACHED-TREES **B1 · Unreached trees.** Separate workspaces, scripts, `fixtures/**` and `manual-tests/**` no test parses. *Known:* `fixtures/manual-test-packages/` carries retired schema across two milestones. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:37  - ##B2-GATE-COMPLETENESS **B2 · Gate completeness.** A new crate, a `[lib] test = false`, or a moved file can quietly carve a hole in what the gate covers. @spec/done",
+     "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
+     "AUDIT.md:76  ### 2026-05-23-05 · B1 · P3 · open",
+     "confirmed: PROP-013 §2 carries CAT-B with two sub-rows (B1 Unreached trees, B2 Gate completeness), matching the checklist file exactly. AUDIT.md's header names '**B** rot outside the gate'. Findings: 2026-05-23-05 (B1) and 2026-06-12-01 (E4/B2, dual-categorised)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GROUP-C-DRIFT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:39  ##CAT-C **C — Drift.** @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:41  - ##C1-DOC-DRIFT **C1 · Doc drift.** `docs/**` versus `VIBEVM-SPEC.md` versus the code's actual behavior. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:42  - ##C2-SPEC-DRIFT **C2 · Spec drift.** A PROP self-contradicting or contradicting another; dead `spec://` references. *Known:* PROP-008 §3 said lockfile v4 while §7 said v5; PROP-005 references a `crates/vibe-index/schemas/` directory that does not exist. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:43  - ##C3-WAL-DRIFT **C3 · WAL / CONTINUE drift.** Does the checkpoint match the tree, the branch, the commit chain? @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:44  - ##C4-OUTWARD-DRIFT **C4 · Outward drift.** Live registry orgs and other external state versus what the tool now expects. @spec/done",
+     "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+     "confirmed: PROP-013 §2 carries CAT-C with four sub-rows in the same order and the same subject split (C1 doc, C2 spec, C3 WAL/CONTINUE, C4 outward). It is the most exercised group in the artefact: findings 2026-05-23-06, -07 (C4), -09 (C2), -10 (C1), 2026-06-12-12 (C3), and the whole 2026-06-10 run, which was scoped to C and reported it as 'now machine-fed, which PROP-013 never had before' (AUDIT.md:160)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "GROUP-D-DEBT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:46  ##CAT-D **D — Debt.** @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:48  - ##D1-DEFERRED **D1 · Deferred & parked items** — walk every \"deferred\" / \"parked\" / \"Known issues\" entry in the WAL and the PROPs. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:50  - ##D3-ESCAPE-HATCHES **D3 · Escape hatches** — `#[allow(dead_code)]`, `#[allow(clippy::…)]` (`grep -rn '#\\[allow'`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:51  - ##D4-DEP-STALENESS **D4 · Dependency staleness** — `cargo update --dry-run`; `cargo audit` / `cargo outdated`. @spec/done",
+     "AUDIT.md:346  ### 2026-06-12-11 · D · P3 · open",
+     "AUDIT.md:348  Hygiene census for the record: `#[ignore]` 5 (vibe-cli live quartet +",
+     "confirmed: PROP-013 §2 carries CAT-D with four sub-rows matching this list one for one. Host findings: three D1 entries in the seed run (2026-05-23-11, -12, -13) and one group-level D entry (2026-06-12-11), which is a census covering the D2 and D3 subjects (#[ignore], #[allow], anyhow, TODO-family) without filing them as separate rows. No D4 (dependency staleness) finding has ever been filed."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "checklist-pointer-and-the-list-is-not-fixed": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:197  ## Extending the checklist {#extending}",
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:199  ##THE-LIST-IS-A-STARTING-SET-NOT-A-CLOSED-ONE This list is a starting set, not a closed one. @impl/done",
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "confirmed: The pointer resolves and the pointed-at file does carry all three elements per sub-row (39 LOOK-FOR/AID/BAD anchors over 13 rows) plus its own #extending section restating the not-fixed law. The host has exercised the not-fixed half once — category E, added 2026-06-12, with four sub-rows E1-E4 that exist only in PROP-013 and not in the package checklist."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EACH-RUN-RECORDS-ITS-FINDINGS-IN-AUDIT-MD": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:1  # AUDIT.md — project health inventory",
+     "AUDIT.md:5  run appends a dated section; findings carry forward until they are",
+     "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "confirmed: AUDIT.md is at the repository root (24363 bytes) and holds exactly three dated `## Audit run — <date>` sections at lines 20, 154 and 191, in chronological order, i.e. appended. PROP-013 ##INVENTORY-AUDIT-MD names the same file and calls it 'the append-only chronicle'. The CHANGELOG shape holds: dated sections, newest last, prose notes under each."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AUDIT-MD-IS-COMMITTED-TO-GIT": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:6  dispositioned. This file is committed to git — its history is the",
+     "BACKLOG.md:20  | ##REL-AUDIT `AUDIT.md` | the periodic health sweep; an append-only **trend** | re-judged at the next audit |",
+     "confirmed: `git log --format='%h %ad %s' --date=short -- AUDIT.md` returns 5 commits (b98227ce 2026-05-23, 9283132f 2026-06-10, 21d47694 / f11ed38a / 3656f362 all 2026-06-12); `git log --oneline -- AUDIT.md | wc -l` = 5. The file is tracked, not ignored, and AUDIT.md:6 states the rule about itself."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ITS-HISTORY-IS-THE-PROJECTS-HEALTH-TREND": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:7  project's health trend.",
+     "BACKLOG.md:20  | ##REL-AUDIT `AUDIT.md` | the periodic health sweep; an append-only **trend** | re-judged at the next audit |",
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "confirmed on the mechanism, which is what the sentence asserts: five commits across three runs each add a dated section, the file is committed, and `BACKLOG.md:20` independently classifies it as «an append-only **trend**». RECORDED: what a trend needs and this one does not yet have is length and regularity — three runs in twenty days and then nothing across 1 546 commits. That gap is the cadence drift, ruled at five other facts; counting it here too would count one defect six times."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-READER-CAN-DIFF-TWO-RUNS-AND-SEE-THE-TREND": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+     "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+     "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+     "AUDIT.md:370  - **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`",
+     "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
+     "confirmed: All three of the named diffs are actually readable in this artefact. Open P1s: the seed run reports '2 P1' (AUDIT.md:29), the 2026-06-12 run '1 P1 (fixed in-run)' (:202). Recurrence: the carry-forward section re-lists -04 as 'open, unchanged' across two runs. Gate absorption: the same run's -08 fix moved four checks into `cargo xtask conform`. The one thing a reader cannot do is see three runs of recurrence for any finding, because the 2026-06-10 run carried nothing forward."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-DURABLE-HOME-IS-NOT-THE-CHECKPOINT-FILE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+     "discipline/DEBT.md:1  <!-- GENERATED by `rust-ai-native ledger render` from discipline/registry/debt.json — do not edit;",
+     "discipline/DEBT.md:2       edit the registry and re-render. `ledger render --check` gates drift. -->",
+     "discipline/DEBT.md:5  22 entr(ies).",
+     "confirmed: PROP-013 ##INVENTORY-AUDIT-MD names AUDIT.md as the home and ##RECONCILE-WAL puts the checkpoint on the receiving end of the reconciliation, which is the flow's direction. The finding a reviewer should weigh: the host keeps a THIRD durable home the flow does not name. discipline/registry/debt.json holds 22 typed entries whose `disposition` values are exactly this flow's four words and whose `severity` values are exactly P1/P2/P3; 11 of them name an `AUDIT 2026-05-23-NN` run in `source` and 12 carry an `AUDIT.md#<id>` string in `evidence`. It renders to discipline/DEBT.md and `ledger render --check` gates drift between the two. Per the campaign's citation rule I read but did not cite spec/WAL.md or CONTINUE.md."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-volatile-file-erases-a-finding-tracked-only-there": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:27  WAL's standing Known-issues list.",
+     "AUDIT.md:355  ### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)",
+     "AUDIT.md:357  **WAL and CONTINUE cited commit hashes that no longer exist**",
+     "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+     "confirmed: The host's checkpoint is rewritten wholesale at every session wind-down — CLAUDE.md's END SESSION contract instructs 'Overwrite `CONTINUE.md` at repo root … replace it wholesale (do not append — staleness compounds otherwise)'. The erasure the sentence predicts has a recorded instance: AUDIT 2026-06-12-12, 'WAL and CONTINUE cited commit hashes that no longer exist', dispositioned fixed. This campaign has the same fact independently — 62 refs into those two files died under a later checkpoint, which is why the brief forbids citing them. I therefore state this in prose rather than citing the two files."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-CHECKPOINT-IS-RECONCILED-BUT-THE-INVENTORY-IS-THE-SOURCE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+     "AUDIT.md:27  WAL's standing Known-issues list.",
+     "AUDIT.md:355  ### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)",
+     "confirmed: PROP-013 §3 ##RECONCILE-WAL adopts the rule verbatim in the host's own words: 'Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes.' The direction has been exercised in both directions historically — the seed run's findings came partly FROM the checkpoint's standing Known-issues list (AUDIT.md:26-27), and 2026-06-12-12 records the checkpoint being brought back into line. I read both checkpoint files to confirm and cite the durable statement instead, per the campaign rule."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVERY-FINDING-CARRIES-FIVE-FIELDS": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+     "AUDIT.md:34  **Production git-registry + naming path is under-tested.** The install",
+     "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+     "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:23  One dated section in `AUDIT.md` per run, each finding carrying an ID,",
+     "confirmed: Checked all 29 findings in the artefact. The 25 heading-form ones put four fields in the heading ('### 2026-05-23-01 · A1 · P1 · filed') and the locator in the bolded lead sentence of the body ('**Production git-registry + naming path is under-tested.**'). The 4 table-form ones (2026-06-10) put all five in columns id/cat/sev/finding/disposition. Zero findings are missing a field. Two carry a compound category (E4/B2, E2/E3) and two carry a group letter rather than a sub-row code (D, C3-as-written-is-fine but 2026-06-12-11 is bare 'D')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FIELD-ID": {
+    "v": "drift",
+    "ev": [
+     "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+     "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+     "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
+     "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
+     "DRIFT on the format, in one run of three. The 2026-05-23 and 2026-06-12 runs both use `<run-date>-NN`, unique within the run. The 2026-06-10 run numbers its four findings AUD-0014 … AUD-0017 — a repository-wide sequence, not a run-date — and a third id space runs alongside all of them in `discipline/registry/debt.json` as DBT-0001…DBT-0022. Stability across carry-forward does hold for both schemes, and that half is confirmed by the 2026-06-12 carry-forward re-listing originals under their own ids."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-FIELD-CATEGORY": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+     "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+     "AUDIT.md:346  ### 2026-06-12-11 · D · P3 · open",
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "AUDIT.md:16  (added 2026-06-12).",
+     "confirmed: The project-specific-code clause is what the host exercises: E1-E4 are vibevm's own codes, added 2026-06-12 and recorded permanently in PROP-013 ##CAT-E. Of the 29 findings, 24 carry a sub-row code (A1/A2/A3/B1/C1/C2/C3/C4/D1/E1/E2/E3/E4), 2 carry a compound (E4/B2, E2/E3) and 3 carry a bare group letter (the 2026-06-10 table's C, C, C and D, and 2026-06-12-11's D). So the field is always present; its grain varies."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-FIELD-LOCATOR": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:34  **Production git-registry + naming path is under-tested.** The install",
+     "AUDIT.md:68  **`cli_live_e2e.rs` is `#[ignore]`d and red.** Live e2e tests against",
+     "AUDIT.md:112  **PROP-005 references a non-existent `schemas/` directory.** PROP-005",
+     "AUDIT.md:184  | AUD-0014 | C | P3 | `expand_features` doc-string says cycles are \"rejected\"; the seen-set silently terminates them (test `cycles_terminate` pins the actual behaviour) | open — one-line doc fix, flagged in the Phase 2 proposals note |",
+     "confirmed: Sampled across all three runs. The locators do carry actionable pointers: 'crates/vibe-cli/tests/cli_init.rs::init_writes_default_registry' (2026-05-23-03 body), '`cli_live_e2e.rs` is `#[ignore]`d and red' (-04), 'PROP-005 §2.6 / §3.1 cite `crates/vibe-index/schemas/index-entry.jtd.json`' (-09), '`expand_features` doc-string' (AUD-0014). Where the format bends is length: the heading-form findings carry a one-line bold locator plus a multi-paragraph body, so 'one line' describes the locator, not the record."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-FIELD-SEVERITY": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:9  **Severity** — `P1` blocker (resolve before the next milestone ships) ·",
+     "AUDIT.md:10  `P2` debt (scheduled) · `P3` note (recorded, low cost of leaving).",
+     "BACKLOG.md:34  The scale is **P1 / P2 / P3**, taken from the `health-audit` flow rather than",
+     "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
+     "discipline/DEBT.md:9  - **DBT-0002** `failing-test` [P2] — cli_live_e2e is #[ignore]d and red",
+     "confirmed: Exactly three severity tokens appear in the artefact and they are these three. AUDIT.md's own header defines all three with the same meanings the protocol gives them. The scale has spread past AUDIT.md: BACKLOG.md:34 says 'The scale is **P1 / P2 / P3**, taken from the `health-audit` flow rather than invented. One severity vocabulary in the project, not two', and discipline/registry/debt.json carries `severity` as a typed field over 22 entries with distribution P1 1 / P2 7 / P3 14."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-FIELD-DISPOSITION": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:11  **Disposition** — `fixed` (resolved in-run, with the commit hash) ·",
+     "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
+     "AUDIT.md:13  (deliberate no-action, with the reason) · `open` (carries to the next",
+     "discipline/DEBT.md:7  ## open (12)",
+     "discipline/DEBT.md:22  ## accepted (2)",
+     "discipline/DEBT.md:27  ## filed (1)",
+     "discipline/DEBT.md:31  ## fixed (7)",
+     "confirmed: Zero out-of-vocabulary dispositions. `grep -oE '^### 20[0-9-]+ · [^·]+ · P[123] · [a-z]+' AUDIT.md | grep -oE '[a-z]+$' | sort | uniq -c` returns exactly open 10, filed 9, fixed 4, accepted 2. The 2026-06-10 table rows use 'open' and 'filed'. discipline/DEBT.md's four section headings are the four words, and debt.json's disposition field takes exactly those four values across 22 entries (open 12, fixed 7, accepted 2, filed 1)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SEVERITY-IS-THE-COST-OF-LEAVING-IT": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:9  **Severity** — `P1` blocker (resolve before the next milestone ships) ·",
+     "AUDIT.md:10  `P2` debt (scheduled) · `P3` note (recorded, low cost of leaving).",
+     "BACKLOG.md:39  | ##SEV-P1 **P1** | security, data loss, structural integrity — **or a gate reporting green while not looking** | **stops the wave, reaches the owner the same session.** It never enters this file as a plan; it appears only afterwards, as record |",
+     "confirmed: AUDIT.md's header states severity in exactly cost-of-leaving terms — 'P1 blocker (resolve before the next milestone ships) · P2 debt (scheduled) · P3 note (recorded, low cost of leaving)'. BACKLOG.md re-derives the same scale in routing terms and adds a host-specific P1 clause, 'a gate reporting green while not looking', which is the F-086 / 2026-06-12-01 defect class."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SEVERITY-P1-BLOCKER": {
+    "v": "drift",
+    "ev": [
+     "AUDIT.md:9  **Severity** — `P1` blocker (resolve before the next milestone ships) ·",
+     "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+     "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
+     "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+     "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+     "DRIFT on «resolve before the next milestone ships», and the record disagrees with itself about the finding that proves it. The definition is adopted verbatim in AUDIT.md's header. Three P1s exist; two were fixed in-run. The third, 2026-05-23-01, was never fixed — it was re-judged DOWN to P3 at AUDIT.md:369 and survives as DBT-0001 carrying **[P1]** in `discipline/DEBT.md:29`, still «filed as INT-0002» — while M1.26 and M1.24 were both declared SHIPPED on 2026-07-07. So a P1 outlived two milestones, and the two durable records carry different severities for it today."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SEVERITY-P2-DEBT": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:10  `P2` debt (scheduled) · `P3` note (recorded, low cost of leaving).",
+     "AUDIT.md:238  ### 2026-06-12-02 · E1 · P2 · filed",
+     "AUDIT.md:387  ### Same-day disposition update — the depth program executed",
+     "AUDIT.md:389  The owner directed the filed program to completion the same day",
+     "confirmed: The clearest host instance of the 'dedicated pass' half is the 2026-06-12 run: seven P2s filed, then closed the same day under owner direction — 'The owner directed the filed program to completion the same day … all seven filed P2s closed in one commit series' (AUDIT.md:389-391). AUDIT.md's header carries the definition as '`P2` debt (scheduled)'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SEVERITY-P3-NOTE": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:10  `P2` debt (scheduled) · `P3` note (recorded, low cost of leaving).",
+     "AUDIT.md:102  ### 2026-05-23-08 · C4 · P3 · accepted",
+     "AUDIT.md:339  ### 2026-06-12-10 · E3 · P3 · accepted",
+     "AUDIT.md:373  migrations) — open, owner-court. **-08** (archived legacy repos) —",
+     "discipline/DEBT.md:24  - **DBT-0006** `external-drift` [P3] — Legacy vibespecs/flow-* repos archived, not deleted",
+     "confirmed: AUDIT.md's header carries it verbatim ('`P3` note (recorded, low cost of leaving)'). The re-judge-rather-than-rediscover half is exercised: 2026-05-23-08 (P3, accepted) is re-listed in the 2026-06-12 carry-forward as 'accepted, stands', and it also survives in discipline/DEBT.md:24 as DBT-0006 [P3]. P3 is the modal severity in both inventories — 7 of 13 in the seed run, 14 of 22 in the debt registry."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVERY-FINDING-IS-DISPOSITIONED-BEFORE-THE-RUN-CLOSES": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+     "AUDIT.md:30  1 accepted, 9 open. **10 carry forward** to the next run.",
+     "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+     "AUDIT.md:387  ### Same-day disposition update — the depth program executed",
+     "confirmed: All 29 findings carry a disposition in the section they were first written into — the seed run's own tally line reads '2 fixed, 1 filed, 1 accepted, 9 open', which sums to 13, the number of findings it reports. Note that 'open' is itself one of the four words, so 'dispositioned' includes 'not yet dispositioned'; nothing is left blank. Two same-day update sub-sections were appended to the 2026-06-12 section afterwards, re-dispositioning findings that had closed within the same day."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOTHING-IS-LEFT-SILENT": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:13  (deliberate no-action, with the reason) · `open` (carries to the next",
+     "discipline/DEBT.md:7  ## open (12)",
+     "discipline/DEBT.md:5  22 entr(ies).",
+     "confirmed: No finding in AUDIT.md lacks a disposition word, and the machine registry enforces the same shape — every one of debt.json's 22 entries carries a `disposition` key, and `ledger render --check` gates DEBT.md against it. The one silence a reviewer might weigh is a different kind: 11 of the 22 debt entries were raised by processes other than an audit run ('Phase −1 conflict scan' ×3, 'Discipline Sweep P4/P6 (2026-06-17)', 'depth-program P1 (2026-06-12)', 'Phase 6 ratchet expansion'), and those never appear in AUDIT.md at all."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-DISP-FIXED": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:11  **Disposition** — `fixed` (resolved in-run, with the commit hash) ·",
+     "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
+     "AUDIT.md:56  ### 2026-05-23-03 · A3 · P2 · fixed (`cc32d7e`)",
+     "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+     "AUDIT.md:444  - **AUD-0016 · fixed** (`be4aaef` and the two commits before it).",
+     "confirmed: Four heading-form findings are `fixed` and three of them carry a hash: 2026-05-23-02 and -03 both `(\\`cc32d7e\\`)`, 2026-06-12-01 `(\\`9f06fbf\\`)`, plus AUD-0016 `(\\`be4aaef\\` and the two commits before it)`. The fourth, 2026-06-12-12, records 'fixed (this run's WAL/AUDIT commits)' with no hash. The finding a reviewer should see: I resolved every short hash in AUDIT.md with `git cat-file -e <h>^{commit}` and `cc32d7e` DOES NOT RESOLVE in this repository — the 2026-06-11 history rewrite that AUDIT.md's own finding -01 describes killed it, and the seed section is frozen history so it was never repaired. 9f06fbf -> 9f06fbf2 and be4aaef -> be4aaef7 both resolve. (09d0da5, 1792c14 and e3f06ec also fail to resolve, but those are cited AS examples of dead pre-rewrite hashes, so their failure is the point.)"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-DISP-FILED": {
+    "v": "drift",
+    "ev": [
+     "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
+     "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+     "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+     "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
+     "DRIFT on the destination the row names. Nine findings are `filed` and where-it-went is recorded for three of them (AUD-0017 «filed — DBT-0019», 2026-06-12-03 «filed (DBT-0019, escalated P3→P2)», and the registry's typed `filed_as` field); the other six are bare «filed» in their headings with the destination only in body prose. On the named destinations: **`TASKS.md` contains ZERO occurrences of «audit»**, so no finding has ever been filed as a TASKS.md line. The destination the host actually uses is `discipline/registry/debt.json`, which this flow does not name."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-DISP-ACCEPTED": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:13  (deliberate no-action, with the reason) · `open` (carries to the next",
+     "AUDIT.md:102  ### 2026-05-23-08 · C4 · P3 · accepted",
+     "AUDIT.md:104  **Legacy `vibespecs/flow-*` repos archived, not deleted.** The M1.19",
+     "AUDIT.md:339  ### 2026-06-12-10 · E3 · P3 · accepted",
+     "AUDIT.md:344  60 s budget; revisit at the first breach or when vibe-cli decomposes.",
+     "discipline/DEBT.md:24  - **DBT-0006** `external-drift` [P3] — Legacy vibespecs/flow-* repos archived, not deleted",
+     "confirmed: Both accepted findings carry a why and a trigger. 2026-05-23-08: '**Accepted:** archive is the reversible tidy; the owner can delete them outright if a fully-clean org is wanted. Re-judge next run' (AUDIT.md:106-108) — and it WAS re-judged, at :373-374 ('accepted, stands'). 2026-06-12-10: '**Accepted** while every crate fits the 60 s budget; revisit at the first breach or when vibe-cli decomposes' — a measurable trigger. The debt registry formalises both fields: `accepted_reason` and `sunset` are typed keys on debt.json entries."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-DISP-OPEN": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:13  (deliberate no-action, with the reason) · `open` (carries to the next",
+     "AUDIT.md:66  ### 2026-05-23-04 · A2 · P2 · open",
+     "AUDIT.md:346  ### 2026-06-12-11 · D · P3 · open",
+     "discipline/DEBT.md:7  ## open (12)",
+     "confirmed: Ten heading-form findings are `open`, the modal disposition, and AUDIT.md's header glosses it as '(carries to the next run)' rather than the protocol's 'not yet dispositioned' — the same state described by what happens to it rather than by what is missing. discipline/DEBT.md's open section carries 12 entries, of which 8 map to still-open AUDIT.md findings from the seed run."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AN-OPEN-OR-UNLANDED-FILED-FINDING-CARRIES-FORWARD": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+     "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
+     "AUDIT.md:369  unverified this run. Re-judged P2 → P3, open.",
+     "AUDIT.md:370  - **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`",
+     "AUDIT.md:377  - **-13** (NaiveDepSolver the only solver) — **superseded in",
+     "AUDIT.md:30  1 accepted, 9 open. **10 carry forward** to the next run.",
+     "confirmed: The 2026-06-12 run has a dedicated carry-forward section re-listing the whole 2026-05-23 series plus the 2026-06-10 AUD- series, each with a re-judgement: -01 'Re-judged P2 → P3, open', -04 'open, unchanged', -08 'accepted, stands', -13 'superseded in substance … Re-pointed, P3', AUD-0016 'filed, owner decision → **fixed**'. The seed run predicted '**10 carry forward** to the next run' and 12 items are re-listed. The gap: the 2026-06-10 run carried nothing forward — it re-lists none of the seed run's 10, and describes itself as not the full sweep."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-FINDING-THAT-RECURS-WITHOUT-PROGRESS-IS-ITSELF-A-SIGNAL": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:370  - **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`",
+     "discipline/DEBT.md:9  - **DBT-0002** `failing-test` [P2] — cli_live_e2e is #[ignore]d and red",
+     "discipline/DEBT.md:24  - **DBT-0006** `external-drift` [P3] — Legacy vibespecs/flow-* repos archived, not deleted",
+     "confirmed: The host has the shape and reads it: -04 is re-listed as 'open, unchanged (4 `#[ignore]` sites in vibe-cli)' — recurrence noted explicitly. The signal is louder outside AUDIT.md, where a reviewer can see how long: DBT-0002 (the same cli_live_e2e finding), DBT-0003, DBT-0004, DBT-0005, DBT-0007, DBT-0008, DBT-0009 and DBT-0010 are all still in discipline/DEBT.md's open section, sourced from the 2026-05-23 run, 14 months of commit history later. Eight seed-run findings have recurred without progress and no fourth run has re-judged them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-P2-RIDING-THREE-AUDITS-IS-REALLY-A-P1-OR-AN-ACCEPTANCE": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:370  - **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`",
+     "discipline/DEBT.md:9  - **DBT-0002** `failing-test` [P2] — cli_live_e2e is #[ignore]d and red",
+     "discipline/DEBT.md:7  ## open (12)",
+     "confirmed as a rule whose condition cannot yet be met in the artefact: only three runs exist and the middle one carried nothing forward, so the maximum any finding has been re-listed is twice. RECORDED because the condition IS arguably met outside it — DBT-0002 (= AUDIT 2026-05-23-04, `cli_live_e2e` ignored and red) and DBT-0004/DBT-0005, all P2, have sat open in the debt registry since 2026-05-23 without escalation or acceptance. A fourth run is what would settle it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-CHECKLIST-IS-NOT-FROZEN": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:5  ##status-line **Status:** accepted 2026-05-23 — owner-requested; in force. The audit-category checklist (§2) is **living** — it grows as new defect classes surface.",
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
+     "AUDIT.md:16  (added 2026-06-12).",
+     "confirmed: PROP-013's own status line says it in the host's words: 'The audit-category checklist (§2) is **living** — it grows as new defect classes surface.' It has grown once, by a whole category group (E, four sub-rows), recorded in AUDIT.md's header and in PROP-013 §5."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
+     "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
+     "AUDIT.md:425  the new `cargo xtask conform freeze`: `error-message-cites-req`",
+     "DRIFT on «every run». Both forces are real and both have fired here — a new defect class became category E and mechanisable checks migrated into `cargo xtask conform` — but both fired in the SAME single run, 2026-06-12. The 2026-05-23 seed added no category and moved nothing into the gate; the 2026-06-10 run added none either. One of three runs exercised both forces and two exercised neither."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
+     "AUDIT.md:16  (added 2026-06-12).",
+     "AUDIT.md:195  category **E (discipline depth)** this run adds to PROP-013 §2.2.",
+     "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
+     "confirmed: This is the flow's best-confirmed law on this host. The 2026-06-12 run discovered that adoption was 'real but approximately one crate deep' (AUDIT.md:202-203), and rather than filing it as a finding it added a category: '**E** discipline depth (added 2026-06-12)' in AUDIT.md's header, CAT-E with sub-rows E1-E4 in PROP-013 §2, and ##HIST-CATEGORY-E in §5 stating 'Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed.' The header edit is visible in git: `git show 21d47694 -- AUDIT.md | grep '^-[^-]'` returns one deleted line, the old four-category sentence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FORCE-A-MECHANISABLE-CATEGORY-MIGRATES-INTO-THE-GATE": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
+     "AUDIT.md:425  the new `cargo xtask conform freeze`: `error-message-cites-req`",
+     "AUDIT.md:426  (68 frozen), `file-length` 600 (28), `no-unwrap-in-domain` (24 —",
+     "tools/self-check.sh:12  #   5. `cargo xtask conform check`        — the discipline gate (Class-F/G",
+     "crates/vibe-check/src/checks/review_aging.rs:1  //! Check 9 — every `<!-- REVIEW: YYYY-MM-DD ... -->` marker in",
+     "spec/common/PROP-013-periodic-health-audit.md:6  **Related:** [PROP-000](PROP-000.md) (the per-commit gate this audit complements), … `vibe check` (the automated *subset* of what this audit does by hand), … [`AUDIT.md`](../../AUDIT.md) (the inventory this process writes). @spec/done",
+     "confirmed: Four host instances of a check moving out of the audit and into the gate. (a) AUDIT 2026-06-12-08's fix shipped `error-message-cites-req` (68 frozen), `file-length` 600 (28), `no-unwrap-in-domain` (24) and widened `seam-has-doctest`, all under `cargo xtask conform check`, which is step 5 of the gate. (b) The D2 aging-markers row is partly mechanised: crates/vibe-check/src/checks/review_aging.rs is 'Check 9', and `vibe check` is gate step 4. (c) F-086's denominator assertion became step 0b of self-check.sh. (d) PROP-013's Related line names `vibe check` as 'the automated *subset* of what this audit does by hand'. The 2026-06-10 run also reports category C being 'now machine-fed, which PROP-013 never had before'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "one-corollary-deserves-its-own-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:176  ##ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION **A project that has adopted a",
+     "confirmed: A structural sentence introducing the depth-of-adoption corollary that follows at line 176. src [1] only — it makes no claim about the world to check against the host."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
+     "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+     "AUDIT.md:203  the adoption is real but approximately one crate deep.** vibe-resolver",
+     "spec/common/PROP-013-periodic-health-audit.md:55  - ##E1-SPEC-GRANULARITY **E1 · Spec granularity & typing.** … *Aid:* `specmap.json`. *Known:* at the category's birth, 347 of 352 units were untyped. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:57  - ##E3-CELL-SEAM **E3 · Cell & seam structure.** Seam traits without `#[cell]` manifests; god-files; single-impl speculative seams; hardcoded dispatch where a seam belongs; test monoliths. *Aid:* `grep '#\\[cell('`, the `pub trait` inventory, a file-length census. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:58  - ##E4-CHECKER-CARD-GAPS **E4 · Checker-vs-card gaps.** Conform rules implemented weaker than the card they cite; guide-mandated checkers that do not exist (a rule with no checker is a WISH); committed gate artifacts that have silently rotted. *Aid:* read each rule's `check()` against its card's ops block; probe gates empirically on a clean tree. @spec/done",
+     "confirmed: The host did exactly this and said so. PROP-013 ##CAT-E introduces category E as 'vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists)' — it cites the corollary as its reason. The run it came from found the answer the corollary predicts: 'the adoption is real but approximately one crate deep' (AUDIT.md:203), with 80 of 198 edges and 42 of 50 #[verifies] in a single crate."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "adopted-is-true-at-the-surface-first": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:203  the adoption is real but approximately one crate deep.** vibe-resolver",
+     "spec/common/PROP-013-periodic-health-audit.md:55  - ##E1-SPEC-GRANULARITY **E1 · Spec granularity & typing.** … *Aid:* `specmap.json`. *Known:* at the category's birth, 347 of 352 units were untyped. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
+     "confirmed: The host's own measurement is the confirmation. At category E's birth the numbers were: 347 of 352 spec units untyped (PROP-013 ##E1-SPEC-GRANULARITY), 42 of 50 #[verifies] attributes in one crate, all 4 #[cell] manifests in one crate, 57 of 352 units (16%) with any inbound edge (AUDIT.md:262-263). PROP-013 ##HIST-CATEGORY-E names the gap this row closes as 'surface adoption mistaken for depth'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-CHECKLIST-IS-YOURS-TO-EXTEND": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:55  - ##E1-SPEC-GRANULARITY **E1 · Spec granularity & typing.** … *Aid:* `specmap.json`. *Known:* at the category's birth, 347 of 352 units were untyped. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:57  - ##E3-CELL-SEAM **E3 · Cell & seam structure.** Seam traits without `#[cell]` manifests; god-files; single-impl speculative seams; hardcoded dispatch where a seam belongs; test monoliths. *Aid:* `grep '#\\[cell('`, the `pub trait` inventory, a file-length census. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:58  - ##E4-CHECKER-CARD-GAPS **E4 · Checker-vs-card gaps.** Conform rules implemented weaker than the card they cite; guide-mandated checkers that do not exist (a rule with no checker is a WISH); committed gate artifacts that have silently rotted. *Aid:* read each rule's `check()` against its card's ops block; probe gates empirically on a clean tree. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:5  ##status-line **Status:** accepted 2026-05-23 — owner-requested; in force. The audit-category checklist (§2) is **living** — it grows as new defect classes surface.",
+     "confirmed: The host extended it: four sub-rows E1-E4 that exist only in PROP-013 §2, each with its own *Aid* and *Known* clause, and none of them appear in the package's audit-checklist.md. That is the extension mechanism working as described — the project's rows live in the project's document, not upstream in the flow."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+     "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+     "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
+     "DRIFT on the floor, confirmed on the trigger — the same ruling as this fact's twin in the boot snippet. Owner-triggered holds (the 2026-06-12 run is recorded «Owner-requested» with the instruction quoted). The floor does not: M1.26 and M1.24 both SHIPPED (2026-07-07) against a last audit of 2026-06-12, with 1 546 commits in the gap and no audit section between."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:71  2. ##open-vibe-audit **`vibe audit` aggregator.** Once enough §2 categories are mechanical, a `vibe audit` subcommand could run them and pre-fill the `AUDIT.md` skeleton — a FEAT worth opening when that threshold is reached. @spec/work",
+     "confirmed: Run dates 2026-05-23, 2026-06-10, 2026-06-12 — intervals of 18 and 2 days, not a cron. I searched the perimeter for any scheduled or automated trigger: no CI workflow directory in scope, no audit step in tools/self-check.sh, zero 'audit' hits in CLAUDE.md/AGENTS.md/GEMINI.md, and PROP-013 §4's second open question records that a `vibe audit` aggregator subcommand does not exist yet ('a FEAT worth opening when that threshold is reached')."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX": {
+    "v": "drift",
+    "ev": [
+     "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+     "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+     "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+     "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+     "DRIFT on the half the sentence insists on. The fix half holds cleanly — the seed run left 9 of 13 open and the 2026-06-12 run filed 7 P2s rather than fixing them in-run, which is the rule working. The INVENTORY half fails in two of three runs, by their own admission: «it is **not** a fresh full sweep … The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». INT-0001 is the full-sweep window both runs name, and no run has closed it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "fixing-is-the-work-the-inventory-schedules": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:387  ### Same-day disposition update — the depth program executed",
+     "AUDIT.md:389  The owner directed the filed program to completion the same day",
+     "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
+     "confirmed: The host's clearest instance: the seven P2s filed by the 2026-06-12 run were then executed as a program on owner direction — 'The owner directed the filed program to completion the same day … all seven filed P2s closed in one commit series' (AUDIT.md:389-391), each with its own '· fixed' line at :393-432. The scheduling channel is also visible in the debt registry, where DBT-0001 carries `filed_as: 'INT-0002 (the test-hardening work)'` and a `sunset` of 're-disposition at the first full PROP-013 audit run (INT-0001)'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "three-rejected-shapes-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:207  - ##REJECTED-A-ONE-TIME-HARDENING-PASS **A one-time hardening pass instead of a recurring process** —",
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:211  - ##REJECTED-RELY-ON-THE-GATE-ALONE **Rely on the gate alone** — rejected: the gate is a regression",
+     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:215  - ##REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT **Track findings only in the checkpoint file** — rejected: the",
+     "confirmed: Three rejected alternatives follow the lead, each with its own anchor and a stated reason — the shape the decision-records flow calls 'Considered and rejected'. src [1] only: a claim about this document's own structure."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "REJECTED-A-ONE-TIME-HARDENING-PASS": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+     "AUDIT.md:348  Hygiene census for the record: `#[ignore]` 5 (vibe-cli live quartet +",
+     "AUDIT.md:349  1 specmap-core); `#[allow]` 28 src-side (19 in vibe-cli); `anyhow`",
+     "confirmed by the failure it predicts, which is the strongest form a rejected-alternative record can have. The rejection says a one-time pass decays without recurrence; the host is currently the rejected shape — three runs in twenty days and none in the 1 546 commits since — and the decay is measurable in the very numbers the last run recorded: `#[ignore]` was 5 and is now 2, `#[allow]` src-side was 28 and is now 82, neither re-counted. A decision record whose rejected option is being lived out, with the cost visible."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "REJECTED-RELY-ON-THE-GATE-ALONE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:18  - ##M119-INIT-DEFECT The M1.19 session shipped a milestone — eight phases, ~800 hermetic tests green, the gate passing on every commit — in which `vibe init` scaffolded **broken projects**: it wrote `naming = \"kind-name\"`, so a freshly-initialised project could not install any package at all. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "tools/self-check.sh:42  # packages were gated for months and \"all green\" was true the whole time",
+     "tools/self-check.sh:43  # (F-086); a count with no denominator cannot be wrong. The sync gate's",
+     "confirmed: The named proof is the host's own: M1.19 passed the gate on every commit for eight phases with ~800 tests green while `vibe init` scaffolded broken projects (PROP-013:18). The host has since produced a second instance of the same shape — F-086, written into the gate script: 'Four of seven packages were gated for months and \"all green\" was true the whole time … a count with no denominator cannot be wrong.'"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "AUDIT.md:355  ### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)",
+     "AUDIT.md:357  **WAL and CONTINUE cited commit hashes that no longer exist**",
+     "discipline/DEBT.md:1  <!-- GENERATED by `rust-ai-native ledger render` from discipline/registry/debt.json — do not edit;",
+     "discipline/DEBT.md:2       edit the registry and re-render. `ledger render --check` gates drift. -->",
+     "confirmed: The host built the separate AUDIT.md and PROP-013 ##INVENTORY-AUDIT-MD names it as the home. The rejection's premise is confirmed by a recorded failure of the checkpoint: 2026-06-12-12, 'WAL and CONTINUE cited commit hashes that no longer exist'. The host then went one step past the flow and built a THIRD, machine-checked home — discipline/registry/debt.json, rendered to discipline/DEBT.md, drift-gated by `ledger render --check` — carrying 22 entries with typed disposition/severity/evidence/sunset fields, 11 of them sourced from AUDIT runs and 11 from other processes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FULL-AUTOMATION-IS-DEFERRED-NOT-REJECTED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:71  2. ##open-vibe-audit **`vibe audit` aggregator.** Once enough §2 categories are mechanical, a `vibe audit` subcommand could run them and pre-fill the `AUDIT.md` skeleton — a FEAT worth opening when that threshold is reached. @spec/work",
+     "AUDIT.md:160  category C is now machine-fed, which PROP-013 never had before.",
+     "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
+     "tools/self-check.sh:12  #   5. `cargo xtask conform check`        — the discipline gate (Class-F/G",
+     "confirmed: The deferral is live and named on the host: PROP-013 §4's second open question is a `vibe audit` aggregator subcommand, still `@spec/work` with no owner ruling ('B1 2026-07-24: three questions still open'). The category-by-category growth is visible: the 2026-06-10 run reports category C 'now machine-fed, which PROP-013 never had before', and 2026-06-12-08 moved four more checks into `cargo xtask conform check`. The unmechanisable core is confirmed too — the A3 defect was found by reading an assertion, and PROP-013 ##A3-WRONG-BEHAVIOR records it as detectable only that way."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COPY-THE-TASK-NOT-THE-CATEGORY-LETTERS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:13  - ##GATE-DEF vibevm's per-commit gate is `tools/self-check.sh` (`cargo fmt --check`, `cargo test --workspace`, `cargo clippy -D warnings`, `vibe check`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:55  - ##E1-SPEC-GRANULARITY **E1 · Spec granularity & typing.** … *Aid:* `specmap.json`. *Known:* at the category's birth, 347 of 352 units were untyped. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:57  - ##E3-CELL-SEAM **E3 · Cell & seam structure.** Seam traits without `#[cell]` manifests; god-files; single-impl speculative seams; hardcoded dispatch where a seam belongs; test monoliths. *Aid:* `grep '#\\[cell('`, the `pub trait` inventory, a file-length census. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:58  - ##E4-CHECKER-CARD-GAPS **E4 · Checker-vs-card gaps.** Conform rules implemented weaker than the card they cite; guide-mandated checkers that do not exist (a rule with no checker is a WISH); committed gate artifacts that have silently rotted. *Aid:* read each rule's `check()` against its card's ops block; probe gates empirically on a clean tree. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:9  - ##prop-scope This PROP records vibevm's **instance** of it: the concrete gate, the known findings per category, vibevm's added discipline-depth category, and the open questions. @spec/done",
+     "confirmed: The host did the re-derivation the prompt describes, step for step. Step 1 (name the gate exactly): PROP-013 ##GATE-DEF names tools/self-check.sh and its commands. Steps 2-3 (what escapes THIS gate, with a mechanical aid): PROP-013 §2's rows carry host-specific aids — `grep -rn '#\\[ignore\\]'`, `grep -rn '#\\[allow'`, `cargo update --dry-run`, `specmap.json`, `grep '#\\[cell('`. Step 4 (a depth-of-adoption row): category E. Step 5 (draft the AUDIT.md skeleton): AUDIT.md's header defines the five fields before the first section. PROP-013 ##prop-scope states the same division of labour — the flow holds the methodology, the PROP holds vibevm's instance."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-GATE-AND-AUDIT-ARE-COMPLEMENTS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:6  **Related:** [PROP-000](PROP-000.md) (the per-commit gate this audit complements), … `vibe check` (the automated *subset* of what this audit does by hand), … [`AUDIT.md`](../../AUDIT.md) (the inventory this process writes). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:13  - ##GATE-DEF vibevm's per-commit gate is `tools/self-check.sh` (`cargo fmt --check`, `cargo test --workspace`, `cargo clippy -D warnings`, `vibe check`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+     "confirmed: A restatement of the #gate-vs-audit section, and it lands the same way: PROP-013's Related line calls PROP-000's gate the thing this audit 'complements' and `vibe check` its 'automated *subset*'. Both artefacts exist and are separate — tools/self-check.sh (10 steps, per commit) and AUDIT.md (3 dated sections, 29 findings)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-FOUR-BLIND-SPOTS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:52  - Never mistake a green gate for a healthy project. The gate is blind",
+     "confirmed: The list is quoted verbatim by the host at PROP-013 ##GATE-BLIND-SPOTS ('blind by construction to uncovered code, out-of-gate trees, drift, and slow debt') and reaches session boot through the compiled snippet's last Never line. Each spot has at least one dated host finding — see the four ROW-BLIND-* rows."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-FINDINGS-LIVE-IN-AUDIT-MD": {
+    "v": "confirmed",
+    "ev": [
+     "AUDIT.md:1  # AUDIT.md — project health inventory",
+     "AUDIT.md:6  dispositioned. This file is committed to git — its history is the",
+     "AUDIT.md:11  **Disposition** — `fixed` (resolved in-run, with the commit hash) ·",
+     "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "discipline/DEBT.md:1  <!-- GENERATED by `rust-ai-native ledger render` from discipline/registry/debt.json — do not edit;",
+     "confirmed: Every clause holds inside AUDIT.md: three dated sections, 5 commits, 29 findings with five fields each, four dispositions and no fifth word, a carry-forward section in the last run. The clause a reviewer should test hardest is 'findings live in AUDIT.md' as an exclusive: discipline/registry/debt.json carries 22 typed finding records, 11 of them raised by processes that never wrote an AUDIT.md section at all (Phase −1 conflict scan ×3, Discipline Sweep P4/P6 of 2026-06-17, depth-program P1, Phase 6 ratchet expansion)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-CHECKLIST-IS-LIVING": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:5  ##status-line **Status:** accepted 2026-05-23 — owner-requested; in force. The audit-category checklist (§2) is **living** — it grows as new defect classes surface.",
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "AUDIT.md:16  (added 2026-06-12).",
+     "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
+     "AUDIT.md:425  the new `cargo xtask conform freeze`: `error-message-cites-req`",
+     "confirmed: Both halves have fired on this host and both are recorded. Joining: category E, added 2026-06-12, permanent per PROP-013 ##HIST-CATEGORY-E. Migrating: three conform rules plus a widening shipped from finding -08 into `cargo xtask conform check`, which is step 5 of tools/self-check.sh. PROP-013's own status line calls the checklist 'living'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+     "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+     "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
+     "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. Five facts across this package now assert the once-per-milestone floor or its `#never`, and all five fail on the same two ship lines."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
