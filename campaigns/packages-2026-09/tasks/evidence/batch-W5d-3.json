@@ -1,0 +1,786 @@
+{
+ "batch": "W5",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:15  ## The surface secret {#surface-secret}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:37  ## The four laws {#laws}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:123  ## The agent era changes the threat model {#agent-era}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:158  ## Blast radius — why the rules are global {#blast-radius}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:178  ## Suspected-leak drill — rotate first {#leak-drill}",
+     "confirmed: Each of the five promised subjects has its own `##` section, in the order the scope sentence lists them. This is a self-description of the document; nothing host-side bears on it, so `src` is [1]."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:1  # Scope Discipline {#root}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md:1  # Third-Party Code Consent {#root}",
+     "vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:1  # Scope Discipline {#root}",
+     "confirmed: Unlike the boot snippet's pointers, these two are SAME-DIRECTORY relative links (`scope-discipline.md`, not `../flows/secrets-hygiene/scope-discipline.md`), so they resolve wherever the document sits — in the package and in `vibedeps/`. The W5 harvest's source-1 join reports 35 relative citations resolved and 0 broken across the four W5 packages, consistent with this."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "A-SURFACE-SECRET-IS-A-VALUE-THAT-MUST-NEVER-APPEAR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:299  their **value** MUST NOT appear on any surface vibevm produces, though their **source** (env-var name, file path) may be printed.",
+     "docs/registry-auth.md:82  Treat the env-var value as a surface secret:",
+     "confirmed: PROP-000 §20's `##TOKEN-SURFACE-SECRET` cites this exact anchor by qualified URI (`…/SECRETS-HYGIENE-PROTOCOL#surface-secret`) and restates the definition. `docs/registry-auth.md:82` — outside `spec/`, in the user-facing docs tree — uses the term for the registry-read token. Two independent host restatements of one definition."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "WHAT-COUNTS-AS-A-SURFACE-SECRET": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:299  Publish tokens, registry-API tokens, and any LLM-provider keys handled by vibevm are **surface secrets**",
+     "crates/vibe-cli/src/commands/show/config.rs:112  const CONFIG_ENV_VARS: &[(&str, &str, bool /* sensitive */)] = &[",
+     "confirmed: Six classes here (this list adds «signing keys» to the boot snippet's five). The host binds three: publish tokens, registry-API tokens, LLM-provider keys, at PROP-000 §20 line 299. The code's sensitivity table (`show/config.rs:112-138`) marks three variables sensitive and two not, covering only the publish-token class. Signing keys: `grep -rn 'signing' crates/` found no credential-handling path — the host's commit-signing posture is git's, not vibevm's, and CLAUDE.md Rule 4 lists signing among the non-routine red lines rather than as a vibevm-held secret. Database passwords and SSH passphrases: no host instance, vibevm holds neither. So three of six classes are bound and three are inapplicable to this consumer."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "value-versus-source-lead": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:48  /// Where the loaded token came from. Not the value — that stays inside",
+     "crates/vibe-publish/src/token.rs:54  pub enum TokenSource {",
+     "confirmed: The host makes this distinction a TYPE distinction, which is the strongest possible form of it: `TokenSource` (token.rs:53-58) is a separate public enum whose doc comment opens «Where the loaded token came from. Not the value — that stays inside the `Token`», and `Token::source()` (token.rs:79-81) returns it while `Token::value()` (token.rs:75-77) returns the secret. The CLI only ever calls `source()` for display."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-SOURCE-IS-SAFE-TO-PRINT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:55          Explicit,",
+     "crates/vibe-publish/src/token.rs:56          EnvVar(String),",
+     "crates/vibe-publish/src/token.rs:57          File(PathBuf),",
+     "crates/vibe-cli/src/commands/registry/publish.rs:188                  vibe_publish::TokenSource::EnvVar(name) => format!(\"$ {name}\"),",
+     "docs/registry-auth.md:85  - Do not commit it. `vibe.toml` carries the env-var **name**, never the value.",
+     "confirmed: The three variants of `TokenSource` map one-to-one onto the three source kinds this anchor enumerates: `Explicit` (the flow's \"passed explicitly on the command line\"), `EnvVar(String)` (env-var name), `File(PathBuf)` (file path). All three are printed by the CLI at `registry/publish.rs:186-190`. The env-var-name-not-value rule is also the documented contract for `vibe.toml` registry auth (`docs/registry-auth.md:85`) and is visible in the host's own boot lane, which names `VIBEVM_PUBLISH_TOKEN_GITHUB` and `~/.vibe/github.publish.token` freely (spec/boot/90-user.md:22, :26) while never showing contents."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-VALUE-IS-THE-SECRET": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:63      value: String,",
+     "crates/vibe-publish/src/token.rs:95          f.write_str(\"***\")",
+     "crates/vibe-publish/src/token.rs:292          assert!(!s.contains(\"super-secret-12345\"));",
+     "confirmed: `Token.value` (token.rs:63) is a private field; the only way out is `value()`, whose four call sites are all sanctioned boundaries (`github.rs:112` Authorization header, `github.rs:166` push URL, and the two GitVerse equivalents). Every display path yields `***`, asserted absent-of-value by the two tests at token.rs:280 and :289."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "everything-below-is-that-discipline": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:37  ## The four laws {#laws}",
+     "confirmed: A structural bridging sentence pointing at the rest of its own document; the four-laws section follows immediately at line 37. Nothing host-side bears on a claim about this document's own organisation, so `src` is [1]."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "ROW-LAW-NEVER-PRINTED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:302  - ##TS-NEVER-PRINTED **Never printed.** Not to stdout, stderr, the CLI log, the `--json` event stream, error messages, panic traces, telemetry, or the lockfile.",
+     "crates/vibe-publish/src/git_publish.rs:141          let safe_stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());",
+     "confirmed: The host's `##TS-NEVER-PRINTED` reproduces the same eight-surface list. The failure the row names — «a value scraped from a log or a captured error» — is exactly what `redact_credentials` guards: git_publish.rs:141, :268, :365, :416 all scrub captured child stderr before it reaches a `PublishError`. Note this row and its two sibling cells share one anchor; the mirror counts three markers on this line but only one addressable anchor."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LAW-NEVER-PERSISTED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:303  The single sanctioned at-rest location is the operator's `~/.vibe/<host>.publish.token` file (per-user, chmod-protected).",
+     "crates/vibe-registry/src/git_package_registry/auth.rs:351          // token out of the persistent `.git/config`.",
+     "confirmed: The «cached» leg of the failure this row prevents has a named host guard with a test: the registry cache clone is bootstrapped with a credentialed URL and `set_remote_url` immediately rewrites `origin` to the plain URL, asserted by `token_present_credentialises_bootstrap_and_scrubs_origin` (auth.rs:258-360, assertion at :354-357). The «committed» leg is clean by measurement (0 credential-shaped strings in `vibe.lock`). The «permission-protected» qualifier is the unsupported part — no `set_permissions` call touches a token file anywhere in `crates/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LAW-SANCTIONED-BOUNDARIES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:304  No other path is allowed — in particular, never into a spawned third-party hook's environment (the flow's `#law-boundaries`).",
+     "crates/vibe-workspace/src/hooks.rs:357  fn build_env(ctx: &HookContext, phase: HookPhase) -> Vec<(String, String)> {",
+     "confirmed: PROP-000 §20's `##TS-BOUNDARIES` closes with the same «no other path» clause and cites this flow's `#law-boundaries` anchor. The channel-that-records-or-forwards failure is realised concretely in the host as the hook environment, and `build_env` (hooks.rs:357-372) is the closed six-element vector that keeps it credential-free."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LAW-REDACTION-IS-TESTED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:279          #[specmark::verifies(\"spec://vibevm/common/PROP-000#token-secrecy\")]",
+     "crates/vibe-publish/src/token.rs:283          assert!(!s.contains(\"super-secret-12345\"));",
+     "crates/vibe-publish/src/token.rs:293          assert_eq!(s, \"***\");",
+     "confirmed: «A wrapper redacts on display; a unit test proves it» is satisfied literally. The failure the row names — a redaction assumed but never verified — is what the `#[specmark::verifies]` attribute at token.rs:279 and :288 mechanically prevents from recurring silently: the tests are linked to the governing spec anchor, so the traceability tooling can detect their removal. Verified the assertion shape before writing this row, per the harvest's instruction: these are not helper `fn redact_*` functions, they are `#[test]` functions whose bodies assert the planted value is absent."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-value-goes-to-no-surface-the-tool-emits-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:302  Not to stdout, stderr, the CLI log, the `--json` event stream, error messages, panic traces, telemetry, or the lockfile.",
+     "confirmed: Lead-in to the eight-item enumeration that follows; the host's `##TS-NEVER-PRINTED` is its binding. Each of the eight is treated as its own row below."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-STDOUT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/tests/cli_registry_mgmt.rs:488      let stdout = String::from_utf8_lossy(&out.stdout);",
+     "crates/vibe-cli/tests/cli_registry_mgmt.rs:490          !stdout.contains(\"secret-do-not-leak\"),",
+     "crates/vibe-cli/tests/cli_registry_mgmt.rs:491          \"token bytes leaked into stdout:\\n{stdout}\"",
+     "confirmed: The stdout leg is the one with an end-to-end integration test rather than a unit test: `show_config_user_token_default_redacts_value` (`crates/vibe-cli/tests/cli_registry_mgmt.rs:457-501`) plants a value in a user-config `[env]` table, runs the real `vibe` binary, captures stdout, and asserts the value is absent from the raw byte stream before parsing the JSON. That is a surface-level assertion, not a type-level one — it would catch a leak from any code path, not only from `Token`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-STDERR": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/git_publish.rs:141          let safe_stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());",
+     "crates/vibe-publish/src/git_publish.rs:268          let safe_stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());",
+     "crates/vibe-publish/src/git_publish.rs:416      let safe_stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());",
+     "confirmed: Three separate capture sites scrub child-process stderr through `redact_credentials` before it can reach a user-facing error, plus git_publish.rs:365 for the generic git-command path. The doc comment at git_publish.rs:425-430 states the reason explicitly: modern git already redacts its own output, but vibe-publish «cannot rely on the version of git the operator has installed and MUST scrub anything that could end up in a `PublishError` message rendered to the user». That is a defence-in-depth stance the flow does not require but the host adopts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-THE-LOG": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:34  //! Tokens are surface secrets; never logged at any level. The",
+     "crates/vibe-publish/src/token.rs:60  /// Wraps a publish token string so it never accidentally lands in a log.",
+     "spec/common/PROP-000.md:302  Not to stdout, stderr, the CLI log, the `--json` event stream",
+     "confirmed: The token module's own doc states «never logged at any level» (token.rs:34) and the wrapper's doc names logs as the failure it exists to prevent (token.rs:60). The host's log surface is `tracing` (the `VIBE_LOG` variable at `show/config.rs:119-122` is documented as a `tracing-subscriber::EnvFilter`); since a `tracing` field renders through `Debug` or `Display`, both of which are overridden to `***`, an accidental `?token` or `%token` in a span emits the mask. That is the mechanism the wrapper doc calls «visible at code-review time»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-A-JSON-OR-EVENT-STREAM": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/tests/cli_registry_mgmt.rs:480          .arg(\"--json\")",
+     "crates/vibe-cli/tests/cli_registry_mgmt.rs:499      assert_eq!(token[\"provenance\"], \"redacted\");",
+     "crates/vibe-cli/tests/cli_registry_mgmt.rs:500      assert!(token[\"value\"].as_str().unwrap().contains(\"redacted\"));",
+     "crates/vibe-cli/src/commands/show/config.rs:234                      Some(\"(redacted; set in environment)\".to_string()),",
+     "confirmed: The `--json` leg is the best-covered surface in the host. `show/config.rs:229-251` is a match on `(live_value, from_user_config, sensitive)` that, for any sensitive variable with a live value, substitutes the literal `\"(redacted; set in environment)\"` or `\"(redacted; defaulted in user config)\"` and stamps `provenance = \"redacted\"` — the value never enters the serialisable struct at all. The integration test at cli_registry_mgmt.rs:457-501 runs with `--json`, asserts absence from raw stdout, then parses the payload and asserts both the provenance stamp and that the rendered value itself contains \"redacted\". A second test at cli_registry_mgmt.rs:642-651 asserts the provenance of `VIBEVM_PUBLISH_TOKEN` is `default` or `redacted`, «Never the raw value»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-AN-ERROR-MESSAGE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/git_publish.rs:426  /// output (≥ 2.31), but `vibe-publish` cannot rely on the version of git",
+     "crates/vibe-publish/src/git_publish.rs:496  fn join_args_redacted(args: &[&str]) -> String {",
+     "crates/vibe-publish/src/git_publish.rs:497      let parts: Vec<String> = args.iter().map(|a| redact_credentials(*a)).collect();",
+     "crates/vibe-publish/src/git_publish/tests.rs:141      assert!(!scrubbed.contains(\"secret\"));",
+     "confirmed: Error messages are the surface the host guards most actively, because a credentialed URL is legitimately present in argv. `join_args_redacted` (git_publish.rs:496-499) maps every argv element through the scrubber and is used only in error construction (git_publish.rs:362, :368, :382, :419) — its own doc says «Used in error messages — never on a fast path». The test `redact_credentials_within_message` (git_publish/tests.rs:136-144) plants a credentialed URL inside a longer error-shaped sentence and asserts the secret is gone while the surrounding message survives. `redact_credentials_multiple_urls_in_message` (tests.rs:234-242) covers two credentials in one message."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-A-PANIC-OR-STACK-TRACE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:84  impl fmt::Debug for Token {",
+     "crates/vibe-publish/src/token.rs:87              .field(\"value\", &\"***\")",
+     "spec/common/PROP-000.md:302  error messages, panic traces, telemetry, or the lockfile.",
+     "confirmed: A panic message renders values through `Debug` (this is what `unwrap()` / `expect()` on a struct containing a `Token` would print), so the hand-written `Debug` impl at token.rs:84-91 is precisely the guard for this leg — and it is the reason the impl is hand-written rather than derived. `debug_redacts_value` (token.rs:278-285) is the test. The host binds the leg at PROP-000 §20 line 302. Widened to check for any `panic!` carrying a token: `grep -rn 'panic!' crates/vibe-publish/src/` found none in the token or adapter paths."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-TELEMETRY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:302  error messages, panic traces, telemetry, or the lockfile.",
+     "confirmed: The host binds the rule at PROP-000 §20 line 302 but has no telemetry to bind it to: `grep -rn 'telemetry' crates/ --include='*.rs'` returns ZERO hits across the whole workspace. vibevm emits no telemetry, so this leg of Law 1 is vacuously satisfied and has no code surface to check. That is a non-adoption shape — the surface does not exist — rather than an unmet rule. Widened to `xtask/` and `tools/` for any reporting sink; nothing found."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NOT-PRINTED-THE-LOCKFILE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:181                          let url = reg.package_repo_url(&resolved.group, &resolved.name)?;",
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:185                              source_url: url,",
+     "crates/vibe-registry/src/git_package_registry/urls.rs:46      pub fn credentialed_url(&self, plain_url: &str) -> String {",
+     "spec/common/PROP-000.md:303  not written into the lockfile",
+     "confirmed: Checked both by measurement and by code path. Measurement: `grep -ciE 'x-access-token|ghp_|publish.token|VIBEVM_PUBLISH' vibe.lock` returns 0 over 428 lines. Code path: the registry crate keeps the plain and credentialed forms as two separate methods — `package_repo_url` (urls.rs:25-35) builds the plain URL and `credentialed_url` (urls.rs:46-58) injects the token — and the resolver fills the lockfile's `source_url` from the PLAIN one at walk.rs:181-185, while the credentialed form goes only to git invocations. Note the lockfile field's type gives no protection of its own: `SourceUrl` (crates/vibe-core/src/provenance.rs:95-98) is a `#[serde(transparent)]` newtype whose module doc says the newtypes «exist for type clarity … not for validation», and it derives a normal `Debug`. The guarantee is in the call site, not the type."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "WHEN-THE-TOOL-MENTIONS-A-CREDENTIAL-IT-NAMES-THE-SOURCE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/registry/publish.rs:185          \"Loaded publish token from {} (value redacted)\",",
+     "crates/vibe-cli/src/commands/registry/publish.rs:188                  vibe_publish::TokenSource::EnvVar(name) => format!(\"$ {name}\"),",
+     "crates/vibe-cli/src/commands/registry/publish.rs:189                  vibe_publish::TokenSource::File(p) => p.display().to_string(),",
+     "crates/vibe-cli/src/commands/workspace/publish.rs:213              \"Loaded publish token from {} (value redacted)\",",
+     "confirmed: This is the anchor with the closest host code instance in the batch. The flow's two illustrative forms are «using the token from `$DEPLOY_TOKEN`» and «reading `<config-dir>/host.token`»; the host emits `Loaded publish token from $ VIBEVM_PUBLISH_TOKEN_GITHUB (value redacted)` or `Loaded publish token from <path> (value redacted)` from the same match. Four call sites do this: `registry/publish.rs:184-191`, `registry/redirect/create.rs:197`, `registry/redirect/update.rs:87`, `workspace/publish.rs:211-213`. The registry-read side names the source too — `RegistryError::MissingToken { registry, env_var }` (auth.rs:51-54) surfaces the env-var NAME the loader would have consulted, and the test at auth.rs:241-247 asserts the hint names the conventional prefix."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-VALUE-IS-NEVER-INTERPOLATED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/show/config.rs:234                      Some(\"(redacted; set in environment)\".to_string()),",
+     "crates/vibe-cli/src/commands/show/config.rs:243                  (None, _, _) => (None, \"default\"),",
+     "crates/vibe-publish/src/github.rs:243              // appears in this user-facing struct.",
+     "confirmed: «Structured record» is the strictest of the three and is where the host is most explicit. In `show/config.rs:229-251` the sensitive branches never bind the live value at all — the match arms are `(Some(_), false, true)` and `(Some(_), true, true)`, discarding the value with `_` so it cannot be interpolated even by accident, while the non-sensitive arms bind `Some(v)` and clone it. On the publish side, `github.rs:240-257` builds the user-facing `RepoInfo` from the API response's public `clone_url`/`html_url` and the comment at :243 records that the credentialed push URL «never appears in this user-facing struct»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EXACTLY-ONE-SANCTIONED-AT-REST-LOCATION": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:223  /// This is the entire disk surface for credentials. One directory means",
+     "crates/vibe-publish/src/token.rs:387          assert_eq!(candidates.len(), 2, \"expected exactly two on-disk legs\");",
+     "spec/common/PROP-000.md:303  The single sanctioned at-rest location is the operator's `~/.vibe/<host>.publish.token` file (per-user, chmod-protected).",
+     "DRIFT on «permission-protected … readable only by the owner», the same clause ruled at this package's boot snippet and here stated at full strength. «Exactly one» IS enforced, as exactly one DIRECTORY with a pinned two-candidate list: `token_file_candidates` returns the per-host file then the legacy host-agnostic one, both from `settings_dir()`, and the test `token_file_precedence_holds_no_second_home` asserts the list is length 2 and that neither escapes the settings root — the doc calls it «the entire disk surface for credentials». The protection half has no implementation anywhere: the whole crates tree yields one `set_permissions` and it is `chmod +x` on a launcher script. vibevm neither sets nor verifies the mode of a token file, while `PROP-000` §20 describes that file as «chmod-protected»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ci-substitutes-a-secret-environment-variable": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:7  //! 2. `VIBEVM_PUBLISH_TOKEN_<HOST>` environment variable — host-specific",
+     "crates/vibe-publish/src/token.rs:10  //!    hold tokens for several hosts in the same env without a single",
+     "docs/registry-auth.md:67      VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM: ${{ secrets.INTERNAL_REGISTRY_TOKEN }}",
+     "confirmed: The env-var leg exists and is documented as the CI form: `token.rs:6-14` puts the two env vars ABOVE the two file legs in precedence and gives the CI multi-host rationale explicitly. `docs/registry-auth.md:67` shows the exact GitHub Actions shape — a workflow env key fed from `${{ secrets.… }}`, i.e. the platform's secret store, which is what this anchor describes. Note that shape is documentation only: `.github/` does NOT exist in this repository (`test -d .github` → ABSENT), so no workflow in this repo actually injects a secret. The pattern is specified and never exercised here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-VALUE-IS-NEVER-COMMITTED-CACHED-OR-DROPPED-IN-TREE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:303  Not committed to the repository, not written into the lockfile, not embedded in cache files, not landed in the `.vibe/` tree.",
+     "crates/vibe-registry/src/git_package_registry/auth.rs:350          // set_remote_url was called immediately after — scrubbing the",
+     "crates/vibe-registry/src/git_package_registry/auth.rs:355              scrub_to_plain.is_some(),",
+     "confirmed: PROP-000 §20's `##TS-NEVER-PERSISTED` binds all four legs and adds the host's own fourth (`.vibe/` tree). The cache leg is the one that could plausibly fail — a `git clone` with a credentialed URL writes that URL into the clone's `.git/config` — and the host closes it: the bootstrap path calls `set_remote_url` with the plain URL immediately after, and `token_present_credentialises_bootstrap_and_scrubs_origin` (auth.rs:258-360) asserts the scrub happened with `remote == \"origin\"` and the plain URL. Lockfile leg measured clean (0 hits in `vibe.lock`). Working-tree leg: `grep` for credential-shaped strings across `vibedeps/` found none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-CREDENTIALED-URL-IS-BUILT-IN-MEMORY-AND-DISCARDED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/github.rs:156      fn push_url(&self, org: &str, name: &str) -> String {",
+     "crates/vibe-publish/src/github.rs:157          // Embed the token only at the moment of push. The receiving",
+     "crates/vibe-publish/src/orchestrator.rs:273              let push_url = self.creator.push_url(&org_segment, &repo_name);",
+     "crates/vibe-publish/src/orchestrator.rs:274              git_publish::push_release(&config.source_dir, &push_url, &tag, &name, &version)?;",
+     "crates/vibe-registry/src/multi_registry_resolver/walk.rs:185                              source_url: url,",
+     "confirmed: Every clause of this anchor has a code instance. Built in memory: `push_url` (github.rs:156-171) is a pure function returning a fresh `String`, called exactly once at `orchestrator.rs:273` and passed straight to `push_release` on the next line — the local is never stored, serialised, or logged. Handed to the child: `git_publish` passes it as an argv parameter. Discarded: it goes out of scope at the end of the `if !config.dry_run` block. Lockfile records the canonical form: `walk.rs:181-185` fills `source_url` from `package_repo_url`, the plain builder. The one deviation from «never touches disk by the tool's hand» is the registry-read path, where a credentialed URL DOES reach `.git/config` via `git clone` — and the host handles it by scrubbing rather than by avoiding (auth.rs:258-360)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "audited-paths-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:304  - ##TS-BOUNDARIES **Sanctioned process boundaries.** The token may cross a process boundary only via: (a) the host API's `Authorization: Bearer …` header, sent over TLS; (b) a single `git remote add` / `git push` invocation",
+     "confirmed: PROP-000 §20's `##TS-BOUNDARIES` binds the lead-in and enumerates the same two paths with the same (a)/(b) lettering. Enumerated the actual call sites of `Token::value()` across `crates/` to check the set is closed: `github.rs:112` (auth header), `github.rs:166` (push URL), and the two GitVerse equivalents — four sites, all inside the two sanctioned shapes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PATH-TLS-AUTHORIZATION-HEADER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/github.rs:16  //! Authentication: `Authorization: Bearer <token>`. Two headers are",
+     "crates/vibe-publish/src/github.rs:111      fn auth_header(&self) -> String {",
+     "crates/vibe-publish/src/github.rs:112          format!(\"Bearer {}\", self.token.value())",
+     "crates/vibe-publish/src/github.rs:179              .header(reqwest::header::AUTHORIZATION, self.auth_header())",
+     "crates/vibe-publish/src/github.rs:49  pub const DEFAULT_GITHUB_API_BASE: &str = \"https://api.github.com\";",
+     "confirmed: Exact match, including the TLS qualifier. `auth_header` (github.rs:111-113) is a private method producing the `Bearer` string; its only two consumers are the `AUTHORIZATION` header on the `repo_exists` GET (github.rs:179) and the `create_repo` POST (github.rs:227). The base URL is `https://api.github.com` (github.rs:49), so the channel is TLS. `GitVerseCreator` mirrors the shape. The `auth_header` return value is never logged — it is constructed inline at the call site."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PATH-SINGLE-CHILD-PROCESS-INVOCATION": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/github.rs:31  //! clone URL as `https://x-access-token:<TOKEN>@github.com/{org}/{repo}.git`",
+     "crates/vibe-publish/src/github.rs:33  //! Modern git (≥ 2.31) redacts URL passwords in its own log output to",
+     "crates/vibe-publish/src/github.rs:165              \"https://x-access-token:{}@{}/{}/{}.git\",",
+     "spec/boot/90-user.md:22  Modern git (≥ 2.31) редактирует пароли в собственных логах автоматически, поэтому stderr remains safe.",
+     "confirmed: The URL shape in the flow and in the host are character-for-character the same, including the `x-access-token` user segment. The «relying on the child tool's own redaction» clause is stated in three independent host places — `github.rs:33`, `spec/boot/90-user.md:22`, and PROP-000 §20 line 304 — all naming git ≥ 2.31. The host does NOT rely on it alone: `redact_credentials` (git_publish.rs:431) scrubs the same shape independently, with the doc at :426-428 giving the reason (the operator's git version is unknown). Same shape reused on the registry-read side by `inject_token` (auth.rs:107-116), whose doc at :92-93 says «Same shape `vibe-publish` uses on the push side»."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NO-OTHER-PATH-IS-ALLOWED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:304  No other path is allowed — in particular, never into a spawned third-party hook's environment (the flow's `#law-boundaries`).",
+     "crates/vibe-registry/src/git_package_registry/auth.rs:111      if !plain_url.starts_with(\"https://\") || plain_url.contains(\"x-access-token:\") {",
+     "crates/vibe-registry/src/git_package_registry/auth.rs:182                  \"ssh / file / http URLs must never carry a token: {url}\"",
+     "confirmed: PROP-000 §20 restates «No other path is allowed» verbatim and cites the flow's `#law-boundaries`. The closure is testable at the injection helper: `inject_token` (auth.rs:107-116) refuses to inject into anything that is not `https://`, and the test `inject_token_skips_non_https` (auth.rs:171-185) iterates four URL shapes — ssh shorthand, `ssh://`, `file://`, and `http://` — asserting each comes back unchanged, with the message «ssh / file / http URLs must never carry a token». The doc at auth.rs:96-98 gives the reason for the http case specifically: it «would expose the secret in the clear». `credentialed_url` (urls.rs:46-58) applies the same refusal."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-IN-A-THIRD-PARTY-SCRIPTS-ENVIRONMENT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-workspace/PROP-020-install-hooks.md:110  - ##TOKEN-NEVER-IN-ENV The publish token",
+     "spec/modules/vibe-workspace/PROP-020-install-hooks.md:112    a hook's environment. @impl/done",
+     "crates/vibe-workspace/src/hooks.rs:356  /// token is deliberately never placed here.",
+     "crates/vibe-workspace/src/hooks.rs:357  fn build_env(ctx: &HookContext, phase: HookPhase) -> Vec<(String, String)> {",
+     "spec/common/PROP-000.md:304  never into a spawned third-party hook's environment (the flow's `#law-boundaries`).",
+     "confirmed: Three independent host bindings: PROP-000 §20 line 304 (as the sharpest case of Law 3), PROP-020's `##TOKEN-NEVER-IN-ENV` at lines 110-112 (which cites PROP-000 §20 back), and the code comment at hooks.rs:355-356. The implementation is `build_env` (hooks.rs:357-372), a closed vector of six `VIBE_*` pairs, consumed by `SystemHookRunner::run` (hooks.rs:245-258) which sets only those. PROP-020's own header comment at lines 26-27 names PROP-000 §20 as «the publish token a hook never sees». Residual noted for the reviewer: `Command::new` inherits the parent environment and there is no `env_clear()`, so an operator-exported `VIBEVM_PUBLISH_TOKEN*` would still be visible to a hook — vibevm's guarantee is that it adds none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-WRAPPER-REDACTS-ON-DISPLAY-AND-DEBUG": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:62  pub struct Token {",
+     "crates/vibe-publish/src/token.rs:84  impl fmt::Debug for Token {",
+     "crates/vibe-publish/src/token.rs:87              .field(\"value\", &\"***\")",
+     "crates/vibe-publish/src/token.rs:93  impl fmt::Display for Token {",
+     "crates/vibe-publish/src/token.rs:95          f.write_str(\"***\")",
+     "spec/common/PROP-000.md:302  The in-process wrapper types (`vibe_publish::Token`, future `vibe_llm::ApiKey`) MUST redact on `Display` and `Debug`",
+     "confirmed: The wrapper exists and BOTH representations are hand-written, not derived — `Token` has `#[derive(Clone)]` only (token.rs:61), so neither `Debug` nor `Display` could be produced automatically. `Debug` (token.rs:84-91) substitutes the literal `\"***\"` for the value field while deliberately keeping `source` visible, which is the value-versus-source distinction realised inside one impl. `Display` (token.rs:93-97) emits nothing but `***`. The mask string is exactly the `***` the anchor names. PROP-000 §20 line 302 binds this as a MUST and names both the current type and a planned second one (`vibe_llm::ApiKey`), which does not yet exist — `grep -rn 'ApiKey' crates/` returns no such type."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-REDACTION-IS-BACKED-BY-A-UNIT-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:280          fn debug_redacts_value() {",
+     "crates/vibe-publish/src/token.rs:281              let t = Token::from_explicit(\"super-secret-12345\");",
+     "crates/vibe-publish/src/token.rs:283              assert!(!s.contains(\"super-secret-12345\"));",
+     "crates/vibe-publish/src/token.rs:289          fn display_redacts_value() {",
+     "crates/vibe-publish/src/token.rs:292              assert!(!s.contains(\"super-secret-12345\"));",
+     "confirmed: The test shape matches the law clause by clause. «Constructs the wrapper around a known value»: `Token::from_explicit(\"super-secret-12345\")` at token.rs:281 and :290. «Asserts the value does not appear»: the negative `assert!(!s.contains(…))` at :283 and :292 — an absence assertion on the planted literal, not merely a positive assertion that `***` is present (though both tests assert that too, at :284 and :293). «In EITHER representation»: two separate tests, one formatting with `{t:?}` and one with `{t}`. Checked the harvest's warning that a `fn redact_*` may be a helper rather than the law's test: of the 11 `fn .*redact` hits, these two plus `crates/vibe-cli/tests/cli_registry_mgmt.rs:458` are `#[test]` functions; `git_publish.rs:431` and `:496` are the helper and its formatter, and the six in `git_publish/tests.rs` are tests of that helper. So the law's named test exists twice over."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-PROMISE-IS-NOT-A-PASSING-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-publish/src/token.rs:279          #[specmark::verifies(\"spec://vibevm/common/PROP-000#token-secrecy\")]",
+     "crates/vibe-publish/src/token.rs:288          #[specmark::verifies(\"spec://vibevm/common/PROP-000#token-secrecy\")]",
+     "crates/vibe-publish/src/token.rs:40  specmark::scope!(\"spec://vibevm/common/PROP-000#token-secrecy\");",
+     "confirmed: The host goes one step past the rule: not only do the tests exist rather than comments, they are machine-linked to the governing anchor by `#[specmark::verifies]` (token.rs:279, :288) while the module itself declares `specmark::scope!` for the same anchor (token.rs:40). That makes the promise-versus-fact distinction traceable by tooling — the anchor can be queried for whether a verifying test exists. Counted the comment-only redaction promises for contrast: `grep -rn 'redact'` across `crates/` returns 19 files, of which comments assert redaction in `creator.rs:137`, `direct_git.rs:85`, `orchestrator.rs:188` and `:268`, `urls.rs:43`, `mod.rs:85` and `auth.rs:105` — seven promise sites resting on the tested guarantee at the centre, which is the arrangement the rule permits."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVERY-NEW-CODE-PATH-IS-REVIEWED-AGAINST-THE-FOUR-LAWS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  so the rules are global and every code path touching a `Token` or a `RepoCreator` is audited.",
+     "confirmed as an obligation the host binds in its own contract — `PROP-000` §20's `##BLAST-RADIUS` names the two change types that trigger the review. RECORDED: there is no mechanical enforcement of the review step. `test -d .github` is ABSENT so no CI runs, and no `cargo xtask` gate scans new code paths for credential handling. The obligation rests on human review; the `specmark::scope!` / `#[specmark::verifies]` pairing gives traceability for paths already covered but cannot force a new path to declare itself."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-traditional-policy-assumes-the-value-is-seen-once": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка.",
+     "confirmed: The premise is stated by contrast in the host: the reason the host's rule is absolute rather than once-and-move-on is recorded at `spec/boot/90-user.md:24` — sessions are video-recorded, so a single echo is a leak. That is the host explicitly rejecting the traditional assumption this anchor describes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "three-ways-each-tightening-the-rule": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:131  - ##AGENT-ERA-SESSIONS-MAY-BE-RECORDED **Sessions may be recorded or logged.**",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:134  - ##AGENT-ERA-ONE-ECHO-IS-A-LEAK **One echo is a leak.**",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:138  - ##AGENT-ERA-NEVER-LOAD-A-SECRET-INTO-THE-CONVERSATION **Never load a secret into the conversation.**",
+     "confirmed: Structural lead-in; exactly three bullets follow, at lines 131, 134 and 138, each with its own anchor. The count matches. Nothing host-side bears on the count itself, so `src` is [1]; the three bullets are each evidenced separately below."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "AGENT-ERA-SESSIONS-MAY-BE-RECORDED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка.",
+     "confirmed: The host asserts the specific case of this general claim — «all sessions of this repository are conducted under video recording» — which is the screen-capture form the anchor lists first. It is stated in the boot lane, so every session is told at boot that it is being recorded. This is the fact from which the host derives its absolute token rule."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AGENT-ERA-ONE-ECHO-IS-A-LEAK": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  одно эхо токена = утечка.",
+     "confirmed: The host states the proposition as an equation — «одно эхо токена = утечка» (one echo of the token = a leak) — which is the cost-equivalence clause of this anchor rendered literally. The three media the anchor names (chat, diff, output) are the three the host enumerates in the next sentence of the same fact."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AGENT-ERA-NEVER-LOAD-A-SECRET-INTO-THE-CONVERSATION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  Файл редактируется только напрямую через editor, не через `cat` / `Read` / `echo` инструменты.",
+     "confirmed: The host binds all three forbidden mechanisms the anchor names and maps them onto its own toolchain: `cat` (the flow's `cat`), `Read` (the flow's «a file-reading tool», named as the Claude Code tool), `echo` (the flow's `echo`). The remedy clause matches too — «edited only directly through an editor». This is the flow's rule with the abstract tool-name resolved to the concrete harness."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "accidental-read-drill-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  Если случайно прочитал содержимое токена — не вставляй в ответ под видом цитаты, не дублируй в коммит-сообщения, не показывай в дифах.",
+     "confirmed: The host has its own accidental-read clause opening with the same conditional — «if you accidentally read the token's contents» — and gives a fixed list of prohibitions rather than a judgement call, which is the «mechanical» quality this lead names. The host's list covers the drill's step 2 but not steps 1 and 3; see those rows."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ACCIDENTAL-STOP": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  Файл редактируется только напрямую через editor, не через `cat` / `Read` / `echo` инструменты.",
+     "confirmed as a session-behaviour step with no artefact class and no code instance possible. RECORDED: the host's `##TOKEN-DISCIPLINE` covers prevention and non-propagation and contains no stop-the-action instruction, and a search across the whole boot lane and `PROP-000` finds only a general stop-and-reconcile rule about violated invariants, which is a different drill. So of this drill's two host-bindable steps, the second is bound verbatim and the first is unbound."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ACCIDENTAL-DO-NOT-PROPAGATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  не вставляй в ответ под видом цитаты, не дублируй в коммит-сообщения, не показывай в дифах.",
+     "confirmed: Three of the anchor's four prohibitions are bound verbatim and in the same order: quote-back («не вставляй в ответ под видом цитаты» — do not insert into your reply in the guise of a quotation), commit message, diff. The fourth — «do not summarize \"the token is …\"» — has no separate host clause, but the host's first prohibition covers the quoting case that summarising is a variant of. This is the highest-fidelity host binding of any single sentence in the flow."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ACCIDENTAL-ROTATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  - ##ROTATE-FIRST On any suspected leak, rotate first (the flow's `#leak-drill`). @spec/done",
+     "confirmed on the rotation obligation, which the host binds at the PROP level and cites this flow's `#leak-drill` anchor by name. RECORDED: the step's TELL-THE-HUMAN clause is unbound anywhere — the boot lane's accidental-read clause ends with the propagation prohibitions and never instructs the agent to escalate to the owner. Escalation is a chat act with no artefact class, so the gap is in what the host wrote down rather than in what it does."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "global-invariants-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  - ##BLAST-RADIUS **Why global, not module-local.**",
+     "spec/common/PROP-000.md:295  ## 20. Token secrecy and adapter scope {#token-secrecy}",
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "confirmed: The host's binding fact is literally titled «Why global, not module-local» (PROP-000:307) — the same phrase as this anchor. The placement is itself the evidence: the rule lives in PROP-000, the repository's cross-cutting decisions document, as §20 of 20 numbered sections, immediately before the `## Invariants` section — not in any of the per-module PROPs under `spec/modules/`. The one part that IS module-local is the consent gate, which lives in `spec/modules/vibe-workspace/PROP-020-install-hooks.md`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BLAST-A-LEAKED-TOKEN-IS-THE-ORGANIZATION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  The blast radius of a leaked publish token is the entire organization it can reach (cross-repo writes, branch deletes, CI-secret reads)",
+     "confirmed: PROP-000 §20's `##BLAST-RADIUS` states this with the same three consequences in the same order — cross-repo writes, branch deletes, CI-secret reads. The organization at risk is concrete and named in the host's boot lane: `spec/boot/90-user.md:14` records the package registry as the GitHub org `vibespecs`, and `spec/boot/90-user.md:22` records that `~/.vibe/github.publish.token` is used exclusively by the publisher against `github.com/vibespecs/<repo>`. So the host's own blast radius is that org."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BLAST-AN-ESCALATED-INTEGRATION-IS-THE-ACCOUNT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  of an escalated adapter, the entire host account (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#blast-radius`).",
+     "crates/vibe-publish/src/github.rs:351          // A token with broad scopes could in principle target a user",
+     "crates/vibe-publish/src/github.rs:352          // namespace; the adapter's scope guard refuses.",
+     "confirmed: PROP-000 §20 binds the claim and cites this document's `#blast-radius` anchor by full qualified URI. The host also encodes the reasoning in a test comment: `validate_scope_blocks_user_namespace` (github.rs:349-359) opens by noting that a broadly-scoped token «could in principle target a user namespace» and that the guard refuses — the technical-reach-is-not-permission argument, in the test that enforces it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-ONLY-SAFE-POSTURE-IS-GLOBAL-RULES-AND-AUDIT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  so the rules are global and every code path touching a `Token` or a `RepoCreator` is audited.",
+     "confirmed: PROP-000 §20's closing clause binds both halves and names the two concrete types that stand in for «touches a secret» (`Token`) and «acts under one» (`RepoCreator`) — a sharper formulation than the flow's, because it makes the audit scope mechanically enumerable. Both types exist and are the seams the code is organised around: `Token` at token.rs:62, `RepoCreator` at creator.rs:116 with three impls (`GitHubCreator`, `GitVerseCreator`, `DirectGitCreator`), each carrying a `#[specmark::cell(seam = \"RepoCreator\", variant = …)]` attribute so the set of impls is machine-enumerable."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "scope-discipline-follows-the-same-logic": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:130  ## Why scope rules live globally {#global}",
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md:135  ##the-reason-is-again-blast-radius The reason is again blast radius: an escalated",
+     "spec/common/PROP-000.md:295  ## 20. Token secrecy and adapter scope {#token-secrecy}",
+     "confirmed: The sibling document does carry the same argument under its own `#global` section, whose lead sentence names blast radius as the reason «again». The host merges the two subjects into one PROP section whose very title joins them — «Token secrecy and adapter scope» — so the host treats them as one global invariant rather than two, which is what «follows the same logic» predicts."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "leak-drill-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  - ##ROTATE-FIRST On any suspected leak, rotate first (the flow's `#leak-drill`). @spec/done",
+     "confirmed: The host binds the drill by reference — PROP-000 §20's `##ROTATE-FIRST` cites the flow's `#leak-drill` anchor, which is this section — and binds its first step inline. The «order is fixed» framing is preserved by the host's phrasing «rotate FIRST». The host does not restate the three steps; it delegates to the flow."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LEAK-ROTATE-FIRST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  - ##ROTATE-FIRST On any suspected leak, rotate first (the flow's `#leak-drill`). @spec/done",
+     "confirmed: Bound in PROP-000 §20 as its own anchored fact, `##ROTATE-FIRST`, whose name matches this step's. The revoke-and-reissue mechanics are issuer-side (GitHub) and have no vibevm code surface — the CLI has no rotate command (`grep -rn 'rotate' crates/vibe-cli/src/` returns nothing relevant), which is consistent with rotation being an owner action at the issuer, as the flow describes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LEAK-INVESTIGATE-SECOND": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  On any suspected leak, rotate first (the flow's `#leak-drill`).",
+     "confirmed: The host binds the ordering implicitly — «rotate FIRST» presupposes a second step — but never states the investigation step or what closing the path means. `grep -niE 'investigate|расследов' spec/common/PROP-000.md spec/boot/90-user.md` returns nothing. Widened to `AUDIT.md` for a recorded leak investigation: the two credential-adjacent hits at lines 90-91 concern a GitVerse API limitation, not a leak. No leak has been investigated in this repository's recorded artefacts, so the step has no instance to check — which is the good outcome, not a gap in the rule."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LEAK-PURGE-BUT-ASSUME-CAPTURE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  On any suspected leak, rotate first (the flow's `#leak-drill`).",
+     "confirmed as a drill step with no instance — no leak has occurred in this repository's recorded artefacts, which is the good outcome rather than a gap. RECORDED because two host rules interact here and neither document says so: the purge step's mechanism is history rewriting, and `CLAUDE.md` Rule 4 places history rewrites and force-push on the ask-first list. So in this repository the purge half of the drill is itself gated on owner approval, while the rotate half is not."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "investigating-first-is-the-classic-mistake": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  On any suspected leak, rotate first (the flow's `#leak-drill`).",
+     "confirmed: The host adopts the conclusion (rotate first) without the rationale. `grep` across `spec/common/PROP-000.md`, `spec/boot/90-user.md` and `AUDIT.md` for the diagnose-while-exposed argument returns nothing. This is a rationale sentence in the flow whose operative half is bound; the argument itself is carried only by the package."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "KILL-IT-THEN-DIAGNOSE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  - ##ROTATE-FIRST On any suspected leak, rotate first (the flow's `#leak-drill`). @spec/done",
+     "confirmed: The four-word restatement of the drill's ordering. The host's one-line binding at PROP-000 §20 line 308 carries the same ordering in the same compressed form («rotate first»), which is the operative content of this sentence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:202  ## Re-derive for your project {#re-derive}",
+     "confirmed: The re-derive convention, stated as its own fact ahead of the prompt block at lines 209-222. It is a claim about how a consumer should use the document. Searched the host for a re-derived secrets-hygiene boot section produced from this prompt — `spec/boot/90-user.md`'s three token facts ARE such a section in substance, but nothing records that they were produced by running this prompt, and PROP-000 §20's provenance runs the other way (the flow was extracted from the host, per the README's `##crystallized-from-the-origin-projects-token-secrecy-law`). So no host instance of the re-derivation; `src` is [1]."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "re-derive-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:210  Read spec/flows/secrets-hygiene/ end to end. Then map it onto THIS",
+     "confirmed on its own sentence — the prompt block exists immediately below it and asks for five concrete things, each answerable. RECORDED, and it is the same shape found in `discovery-prompt`'s re-derive prompt: the block's FIRST instruction is «Read spec/flows/secrets-hygiene/ end to end», a ROOT-relative path that does not exist in a consuming project — this host's `spec/` holds WAL.md, boot, common, design, manual-tests, modules and terraforms. An agent following it verbatim here would find nothing; the installed copy is under `vibedeps/`. Judged on the rule rather than the pointer, per the family's line, with the pointer named so it is not lost."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-VALUE-NEVER-APPEARS-SOURCE-MAY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:299  their **value** MUST NOT appear on any surface vibevm produces, though their **source** (env-var name, file path) may be printed.",
+     "crates/vibe-publish/src/token.rs:48  /// Where the loaded token came from. Not the value — that stays inside",
+     "confirmed: Summary restatement of `#surface-secret`; bound by PROP-000 §20 line 299 in the same value-versus-source shape, and realised in the type system by the `Token` / `TokenSource` split (token.rs:48-58)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-FOUR-LAWS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:302  - ##TS-NEVER-PRINTED **Never printed.**",
+     "spec/common/PROP-000.md:303  - ##TS-NEVER-PERSISTED **Never persisted.**",
+     "spec/common/PROP-000.md:304  - ##TS-BOUNDARIES **Sanctioned process boundaries.**",
+     "spec/common/PROP-000.md:302  MUST redact on `Display` and `Debug` — verified by unit tests",
+     "confirmed on substance, with the host's restructuring recorded rather than counted as a defect. Three of the four laws are host facts with their own anchors at `PROP-000` §20, in this flow's order. The fourth is not a separate host anchor — the tested-redaction requirement is folded into `##TS-NEVER-PRINTED`'s last clause, and the host's fourth numbered binding is the scope-discipline document instead. So the host merges Law 4 into Law 1 and promotes scope to a peer. The SUBSTANCE of Law 4 is present and implemented — two absence-asserting tests carrying `specmark::verifies` pointers — and only its status as a separate law is unmirrored."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-AGENT-ERA-TIGHTENS-THE-RULE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/90-user.md:24  Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка.",
+     "spec/boot/90-user.md:24  Файл редактируется только напрямую через editor, не через `cat` / `Read` / `echo` инструменты.",
+     "confirmed: Three of the four summarised items are bound in one host fact (`spec/boot/90-user.md:24`): recorded sessions, one-echo-is-a-leak, and never-read-into-the-conversation. The fourth — the three-step drill — is only partly bound: step 2 (do-not-propagate) is verbatim, step 1 (stop) is absent everywhere I searched, and step 3 (rotate + tell the human) is bound for rotation at PROP-000:308 but not for the escalation clause. So the agent-era half of this flow is the most thoroughly adopted part of it, with one drill step missing."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-BLAST-RADIUS-MAKES-THE-RULES-GLOBAL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:307  - ##BLAST-RADIUS **Why global, not module-local.** The blast radius of a leaked publish token is the entire organization it can reach (cross-repo writes, branch deletes, CI-secret reads); of an escalated adapter, the entire host account",
+     "confirmed: One host fact carries both halves of this summary in the same order and cites this document's `#blast-radius` anchor. The globality is confirmed by placement — PROP-000, the cross-cutting decisions document, not a module PROP."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-ROTATE-FIRST-INVESTIGATE-SECOND": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:308  - ##ROTATE-FIRST On any suspected leak, rotate first (the flow's `#leak-drill`). @spec/done",
+     "confirmed: The host's `##ROTATE-FIRST` reproduces the summary's opening clause almost word for word — «On any suspected leak, rotate first» — and cites the flow's `#leak-drill`. The investigate-second and value-is-dead clauses are not restated host-side; the operative instruction is."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
