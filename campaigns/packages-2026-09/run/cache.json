@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T13:49:53Z",
+  "updated_at": "2026-07-28T13:57:48Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -25785,7 +25785,307 @@
       },
       "marker_count": 21,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "eb51325693a1fe24cc0ebe56eb3fd055129d8854d06befbb1d489bbead4dbe99",
+        "verdicts": {
+          "PACKAGE-INSTALLS-A-DELIBERATE-ATTRIBUTION-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:5  ##PACKAGE-INSTALLS-A-DELIBERATE-ATTRIBUTION-POSTURE A vibevm `flow` package that installs a **deliberate attribution",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:8  description = \"A deliberate authorship-attribution posture for AI-assisted repositories: human-authored surface by default, with the disclosure alternative documented\"",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "vibe.lock:261  files_written = []",
+              "the manifest declares kind = flow, the lockfile carries the package, and the compiled host lane names it; vibedeps/ holds the 7-file payload"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "agents-self-attribute-and-an-undecided-project-drifts": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:8  ##agents-self-attribute-and-an-undecided-project-drifts Coding agents attribute",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:124  > Внимательно и осознанно подойдите к тому, можно ли нейросети рассказывать, что комит сделала она. Часто нейросети пишут в Git себя в качестве соавтора через co-authored-by или внутри сообщения о коммите. … Безопасный (но не факт что лучший) способ — спрятаться. … если ты объяснишь нейросети настоящую причину своих действий.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "the premise is corroborated outside this flow by the source book the family is extracted from (redbook chapter 2:124, «нейросети пишут в Git себя в качестве соавтора через co-authored-by»). The counterfactual half — what an undecided project accumulates — has no instance in the perimeter, because this one decided",
+              "recorded honestly: the only support is corpus prose, so this rests on source 1"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:14  ##PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED This package makes the choice explicit",
+              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "**explicit yes, enforced no.** The rule is explicit twice over in the always-loaded lane, and the package ships a pre-push scan as prose. **nothing enforces it in this consumer.** `ls .git/hooks/ | grep -v sample` returns nothing, there is no `.github/` and no tracked CI file of any kind, AUDIT.md is 458 lines and carries no attribution line, and `git config --local --list` shows no trailer setting. The flow's own law names the state: «A policy with no checker is a wish».",
+              "the fact is marked @impl/done and claims the choice is *enforced*; what is implemented is a checklist, and the flow's own A-POLICY-WITH-NO-CHECKER-IS-A-WISH is the standard that convicts it"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-DEFAULT-POSTURE-IS-CONCEALMENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:17  ##THE-DEFAULT-POSTURE-IS-CONCEALMENT **The default posture is concealment**: the repository presents a",
+              "spec/boot/STATIC.md:425  This project keeps its repository **human-authored on every",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "the default is the one the host runs, and the surface itself is clean and was measured over the full 2 024-commit history: 0 `^Co-authored-by:` and 0 `^Signed-off-by:` trailer lines, 0 authorship-phrasing hits, one author / committer / email, 0 model names across 18 refs and 1 tag, 0 AI-generated markers in crates/** and xtask/**, no credit line in README.md or CHANGELOG.md, and no CI configuration to carry metadata."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-honest-rationale-ships-with-the-rule": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:20  ##the-honest-rationale-ships-with-the-rule The honest rationale ships",
+              "spec/boot/STATIC.md:443  Some jurisdictions regulate or may come to regulate machine",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "the rationale does travel with the rule where it matters: spec/boot/STATIC.md:441-453 is the whole «Why» section and it sits between the rule and the never-list, in both compiled copies. Recorded: the two restatements a session meets first — spec/boot/00-core.md:21 and CLAUDE.md:5 — carry the rule without the reason"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "DISCLOSURE-IS-A-FIRST-CLASS-ALTERNATIVE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:25  ##DISCLOSURE-IS-A-FIRST-CLASS-ALTERNATIVE The open-disclosure posture is",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:34  ##when-it-is-mandatory-lead **When it is mandatory — no choice exists:** @spec/done",
+              "spec/boot/STATIC.md:428  [`disclosure-alternative.md`](../flows/attribution-policy/disclosure-alternative.md)",
+              "vibedeps/flow-git-attribution-policy/0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:1  # The disclosure alternative {#root}",
+              "disclosure-alternative.md exists (103 lines), is shipped to consumers under vibedeps/, and is linked from the snippet. the pointer resolves in the package and in neither place a consumer stands. Measured corpus-wide: 60 relative `../flows/…` pointers in the packages with 0 dangling; 120 in the installed vibedeps trees with 15 dangling; and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host at all."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "VERIFY-BOTH-BEFORE-ADOPTING-THE-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:29  ##VERIFY-BOTH-BEFORE-ADOPTING-THE-DEFAULT Verify both before adopting the default; the protocol tells you how.",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:84  ##before-adopting-verify-lead **Before adopting, verify two things:** @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:86  - ##VERIFY-YOUR-JURISDICTION **Your jurisdiction.** If law or regulation applicable to you",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:89  - ##VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION **Your upstream and your organization.** Some employers, some",
+              "the protocol does say how — ATTRIBUTION-POLICY.md:84-93 names both verifications. Whether this host performed them is unrecorded, which is the COMPOSES-DECISION-RECORDS row's business, not this one's"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:31  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:1  # Attribution Policy {#root}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:1  # The disclosure alternative {#root}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:1  # Enforcement checklist {#root}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:1  # Flow: Attribution Policy {#root}",
+              "vibedeps/flow-git-attribution-policy/0.1.0/README.md:20  This package ships three pieces of content plus a boot snippet:",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:16  source = \"spec/boot/55-flow-attribution-policy.md\"",
+              "the tree holds exactly the three protocol documents plus one boot snippet, and the installed copy mirrors all four — a consumer receives all three, not a subset"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-FULL-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:33  - ##CONTENT-THE-FULL-POLICY `spec/flows/attribution-policy/ATTRIBUTION-POLICY.md` — the full",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:15  ## What this governs {#what}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:95  ## The single-place law {#single-place}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:112  ## Instructing an agent {#instructing}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:133  ## When a slip lands {#slips}",
+              "every named part maps to a heading: what-it-governs, why-deliberate, concealment plus rationale, single-place, instructing, slips"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-DISCLOSURE-ALTERNATIVE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:37  - ##CONTENT-THE-DISCLOSURE-ALTERNATIVE `spec/flows/attribution-policy/disclosure-alternative.md` — the",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:32  ## When to choose it {#when}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:53  ## What it costs {#costs}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:78  ## Switching postures {#switching}",
+              "each promised part has its own section: posture, when to choose, costs, the comparison table, switching forward-only, summary"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-ENFORCEMENT-CHECKLIST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:40  - ##CONTENT-THE-ENFORCEMENT-CHECKLIST `spec/flows/attribution-policy/enforcement-checklist.md` — the",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:20  | ##ROW-SURFACE-COMMIT-MESSAGE-BODIES Commit message bodies @spec/done | …",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:27  | ##ROW-SURFACE-GENERATED-FILE-HEADERS Generated-file headers @spec/done | …",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:55  ## Tool configuration beats scanning {#configure}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:70  ## The periodic audit line {#audit}",
+              "the surface table runs exactly eight rows, and the scan, the tool configuration and the audit line are each where the claim says"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:43  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:16  source = \"spec/boot/55-flow-attribution-policy.md\"",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              "the snippet exists, is declared `link = \"static\"`, and is compiled into the always-loaded lane — that half holds. **The «one place in a consuming project» half does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:60  ##UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the",
+              "vibe.lock:261  files_written = []",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:11  [compatibility]",
+              "vibedeps/flow-git-attribution-policy/0.1.0/README.md:46  vibe uninstall flow:attribution-policy",
+              "the claim rests on a written-file ledger this consumer does not have: `vibe.lock` records `files_written = []` for this package — and for all 36 — and the package declares no `[writes]` table, so the set an uninstall would remove is enumerated nowhere. Settling it needs an uninstall run or a populated ledger, and neither exists"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:63  ##USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files are never touched. @impl/done",
+              "CLAUDE.md:212  <!-- Generated by vibe — do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->",
+              "CHANGELOG.md:55  - **The managed `<vibevm>` block (PROP-012).** `vibe` no longer overwrites the whole of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` — it owns only a delimited `<vibevm>` … `</vibevm>` block and preserves every byte outside it …",
+              "the mechanism is host-wide and real: vibe writes only inside a delimited managed block and regenerates the boot lane wholesale, so no user-owned file is in this package's write set at all"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-ATOMIC-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:67  - ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` (`30-…`) pins the commit-message format this",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:16  source = \"spec/boot/30-flow-atomic-commits.md\"",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:137  - ##SLIP-PUSHED **Pushed:** pushed history is frozen (see `flow:git-atomic-commits`).",
+              "vibedeps/flow-git-attribution-policy/0.1.0/README.md:54  - `flow:atomic-commits` (`30-…`) pins the commit-message format this",
+              "git-atomic-commits exists at the `30-` prefix claimed and its frozen-history section is the anchor both sibling documents cite"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "COMPOSES-DECISION-RECORDS": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:70  - ##COMPOSES-DECISION-RECORDS `flow:decision-records` (`25-…`): the posture choice is a recorded",
+              "packages/org.vibevm.world/decision-records/v0.1.0/vibe.toml:16  source = \"spec/boot/25-flow-decision-records.md\"",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:82  1. ##SWITCH-EDIT-THE-SINGLE-POLICY-PLACE The owner edits the single policy place (the boot snippet) to the",
+              "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:1  # Flow: Decision Records {#root}",
+              "the composed flow exists at the `25-` prefix claimed and is installed here. **The artifact the fact asserts does not exist**: there is no recorded decision for the attribution posture and no revisit trigger tied to regulation changes — `git ls-files | grep -iE 'decision|adr'` returns only the flow package and vendored copies, there is no spec/decisions/, and PROP-000 §12 records the posture as a pointer with no trigger",
+              "the flow states a composition whose whole point is that the choice is recorded as a decision; in the one consumer that installs both flows, it is not"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMPOSES-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:72  - ##COMPOSES-WAL `flow:wal` (`10-…`): AI-workflow documents like the WAL protocol",
+              "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:16  source = \"spec/boot/10-flow-wal.md\"",
+              "spec/boot/STATIC.md:464  - **Technical AI-workflow documents remain legal and unchanged** —",
+              "spec/WAL.md:1  # WAL — Project Continuation State",
+              "flow:wal is at the `10-` prefix claimed and installed, the carve-out text is compiled into the host lane, and the host's own workflow documents mark nothing"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "extracted-from-the-books-aside-on-commit-metadata": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:78  ##extracted-from-the-books-aside-on-commit-metadata Extracted from *AI-native development*, chapter 2 («Shared state:",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:124  > Внимательно и осознанно подойдите к тому, можно ли нейросети рассказывать, что комит сделала она. Часто нейросети пишут в Git себя в качестве соавтора через co-authored-by или внутри сообщения о коммите. … Безопасный (но не факт что лучший) способ — спрятаться. … если ты объяснишь нейросети настоящую причину своих действий.",
+              "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:124  > Внимательно и осознанно подойдите к тому, …",
+              "the chapter exists with that exact title and line 124 is the aside, covering all four elements the fact names. Recorded: the book's stated reason is criminal exposure in repressive regimes, where the flow's is regulation of machine authorship — a rewording of the rationale, not of the rule"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "collections-spirit-is-the-redbook": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:83  ##collections-spirit-is-the-redbook The book ships in Russian inside",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:16  ##THE-BOOK-SHIPS-IN-THIS-PACKAGE The book itself ships in this package at `spec/book/ru/` (currently",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:1  Подробности об использовании документа — в разделе [Safe Harbor](safeharbor.md).",
+              "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+              "three Russian chapters under spec/book/ru/ in the package and the same three in the installed slot"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:88  ##license-line UPL-1.0. See `LICENSE.md`. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "LICENSE.md, the manifest field and the host's licence ledger agree on UPL-1.0"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:57:48Z",
+        "verify_batch": "W1c"
+      }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md": {
       "content_hash": "56f6d27306238ab0b7964600a26c610801e19af2d7bebf67d2938b379c225d7a",
@@ -25808,7 +26108,266 @@
       },
       "marker_count": 17,
       "unit_count": 5,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "56f6d27306238ab0b7964600a26c610801e19af2d7bebf67d2938b379c225d7a",
+        "verdicts": {
+          "THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:5  ##THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE This project keeps its repository **human-authored on every",
+              "spec/boot/STATIC.md:425  This project keeps its repository **human-authored on every",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "every surface the snippet enumerates was measured and the surface itself is clean and was measured over the full 2 024-commit history: 0 `^Co-authored-by:` and 0 `^Signed-off-by:` trailer lines, 0 authorship-phrasing hits, one author / committer / email, 0 model names across 18 refs and 1 tag, 0 AI-generated markers in crates/** and xtask/**, no credit line in README.md or CHANGELOG.md, and no CI configuration to carry metadata."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:8  ##THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the",
+              "spec/boot/STATIC.md:428  [`disclosure-alternative.md`](../flows/attribution-policy/disclosure-alternative.md)",
+              "spec/boot/STATIC.md:429  and a project may adopt it instead by editing this snippet.",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md:5  alternative (open disclosure) is documented in this flow's",
+              "**the escape hatch the fact names is not available to a consumer.** «A project may adopt it instead by editing this snippet» — in this host the only copy of the snippet is inside spec/boot/STATIC.md, whose line 1 reads «generated by vibe, do not edit», and it is there twice (421 and 615). There is no spec/boot/55-flow-attribution-policy.md to edit; the editable artifacts are the package source and the vibedeps copy, and editing either means a re-install"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:15  ##NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM Never attribute authorship of any part of this repository to an",
+              "spec/boot/STATIC.md:433  Never attribute authorship of any part of this repository to an",
+              "spec/boot/STATIC.md:435  no commit messages, no Git trailers (`Co-Authored-By`,",
+              "spec/boot/STATIC.md:437  names, no code comments, no README lines, no release notes, no CI",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "surface by surface over the full history — messages, trailers, branch and worktree names, code comments, README, release notes, CI metadata — every one is clean. the surface itself is clean and was measured over the full 2 024-commit history: 0 `^Co-authored-by:` and 0 `^Signed-off-by:` trailer lines, 0 authorship-phrasing hits, one author / committer / email, 0 model names across 18 refs and 1 tag, 0 AI-generated markers in crates/** and xtask/**, no credit line in README.md or CHANGELOG.md, and no CI configuration to carry metadata."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:22  ##THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION This applies to every such system regardless of provider,",
+              "spec/boot/STATIC.md:438  metadata. This applies to every such system regardless of provider,",
+              "crates/vibe-cli/src/commands/mcp/mod.rs:36  //! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |",
+              "CHANGELOG.md:155  - **Auth-aware 401 classifier** (PROP-002 §2.3.1): … Closes the GitVerse-returns-401-for-missing-public-repo regression that surfaced via opencode + glm-flash.",
+              "the host touches five agent products and several model families as configuration data and attributes authorship to none of them"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "some-jurisdictions-regulate-machine-authorship": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:27  ##some-jurisdictions-regulate-machine-authorship Some jurisdictions regulate or may come to regulate machine",
+              "spec/boot/STATIC.md:443  Some jurisdictions regulate or may come to regulate machine",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:56  ##the-honest-rationale-some-jurisdictions-regulate **The honest rationale.** Some jurisdictions regulate — or are",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:124  > Внимательно и осознанно подойдите к тому, можно ли нейросети рассказывать, что комит сделала она. Часто нейросети пишут в Git себя в качестве соавтора через co-authored-by или внутри сообщения о коммите. … Безопасный (но не факт что лучший) способ — спрятаться. … если ты объяснишь нейросети настоящую причину своих действий.",
+              "an assertion about the world outside this repository. `git grep` for any statute — EU AI Act, copyright office, 17 U.S.C., regulation (EU), GDPR — returns nothing anywhere in the perimeter, so no source in reach can confirm or falsify it. §3.1's rule is that a verdict without one of the three sources is unverifiable and never «probably true».",
+              "internally consistent with ATTRIBUTION-POLICY.md:56 and compiled into the host lane; the source book states a different and stronger reason"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-owner-removes-the-hook-proactively": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:30  ##the-owner-removes-the-hook-proactively This project is not currently subject to",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              "the proactive-owner half is corroborated — single owner, posture in force. **The legal half is not checkable**: «not currently subject to such regulation and violates no present law» has no in-repo referent and no owner-recorded determination. an assertion about the world outside this repository. `git grep` for any statute — EU AI Act, copyright office, 17 U.S.C., regulation (EU), GDPR — returns nothing anywhere in the perimeter, so no source in reach can confirm or falsify it. §3.1's rule is that a verdict without one of the three sources is unverifiable and never «probably true»."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:35  ##THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE The surface this repository presents is: a human",
+              "spec/boot/STATIC.md:447  this repository. The surface this repository presents is: a human",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:181  the finding that there are none* — the measurement's own prose, not a trailer. One",
+              "2 024 of 2 024 commits by one author, one committer, one email, and no trailer line of any kind. The only two co-authorship strings in the whole log are commit bodies quoting the finding that there are none — mentions, counted separately from instances throughout"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "a-publication-posture-not-a-deception": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:38  ##a-publication-posture-not-a-deception This is a *publication posture chosen by the repository's owner*,",
+              "spec/boot/STATIC.md:450  This is a *publication posture chosen by the repository's owner*,",
+              "spec/boot/STATIC.md:452  executing it is told the real reason (this section), and the policy",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "both honesty conditions hold on the compiled lane: the «Why» section travels with the rule in the always-loaded artifact, and the policy is recorded in git-tracked files README.md:158 points contributors at. Recorded: the two restatements a session meets first give the rule without the reason"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "spec/common/PROP-000.md:161  - ##GP-ATTRIBUTION human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @spec/done",
+              "spec/common/PROP-000.md:323  6. ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @spec/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
+              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "**the claim is that this snippet and the flow's documents are the ONLY places the topic is discussed, and eight further host locations discuss it.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SCOPE-PRODUCT-IS-CARVED-OUT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:461  - **Product scope is carved out.** If the product itself has AI",
+              "crates/vibe-cli/src/commands/mcp/mod.rs:36  //! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |",
+              "crates/vibe-cli/src/cli.rs:61      /// string; conventional values are `claude-code`, `claude-desktop`,",
+              "README.md:99  | [`CLAUDE.md`](CLAUDE.md) (and identical `AGENTS.md` / `GEMINI.md`) | AI agents working in the repo | The four non-negotiable rules + memory discipline + boot read-order. |",
+              "CHANGELOG.md:155  - **Auth-aware 401 classifier** (PROP-002 §2.3.1): … Closes the GitVerse-returns-401-for-missing-public-repo regression that surfaced via opencode + glm-flash.",
+              "the host exercises the product carve-out at scale — 263 model-name lines across 32 files in crates/** and xtask/**, every one agent-enum values, MCP paths or filenames, and zero of them an authorship mark"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:464  - **Technical AI-workflow documents remain legal and unchanged** —",
+              "spec/WAL.md:1  # WAL — Project Continuation State",
+              "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "the host is full of workflow documents — the WAL, the cold-resume file, the session protocols, the agent definitions — and none marks an artifact; the single edge case is an agent instruction whose text is the rule itself"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-ADD-A-TRAILER-NAMING-A-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:471  - Never add a trailer or signature naming a model or an AI product",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:181  the finding that there are none* — the measurement's own prose, not a trailer. One",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:174  $ git log -400 --grep='[Cc]o-[Aa]uthored-[Bb]y' --format='%h %s'",
+              "zero trailer lines of either kind across the full history. The two string hits are commit bodies quoting the measurement, and mentions were counted separately from instances on every row of this batch"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:473  - Never mention model, agent, or AI-tool names in commit messages,",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:184  commit bodies name a model, two as a colour-theme name and two as configuration",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:185  data, and **none states or implies machine authorship**.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:182  author across four hundred commits. The attribution posture holds on the surface it",
+              "crates/vibe-cli/src/cli.rs:61      /// string; conventional values are `claude-code`, `claude-desktop`,",
+              "**this is the one never-item the host does not satisfy, and the numbers are large.** 11 commit SUBJECTS and 354 message LINES name a model, vendor or tool; 263 lines in crates/** and xtask/** do the same. Branch names are clean — 0 of 18 refs, the ten agent-generated ones named after this repository's own harness.",
+              "every instance read is configuration or product data and none states authorship, so the sibling never-item (NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP) holds while this one does not. That is F-087 extended from 4 hits in a 400-commit window to the full history, and the distinction between naming a model and claiming it wrote something is the whole of it"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:475  - Never state or imply machine authorship in any repository",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:185  data, and **none states or implies machine authorship**.",
+              "zero authorship-phrasing hits in commit messages and in code across the full history; the 6 generated-file headers name `vibe`, this project's own package manager, and `git log | grep -c '🤖'` returns 0"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:477  - Never weaken, widen, or restate this policy anywhere else in the",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "spec/common/PROP-000.md:161  - ##GP-ATTRIBUTION human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @spec/done",
+              "spec/common/PROP-000.md:323  6. ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @spec/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "**the policy is restated in eight host locations, each a copy of the rule rather than a pointer.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself.",
+              "and the «one edit» half fails with it: the compiled copies live in a file whose line 1 says «generated by vibe, do not edit». Two copies have already drifted in wording — spec/boot/00-core.md:21 cites «its copy in PROP-000 §12.1», and PROP-000 has no §12.1; its §12 is a flat bullet list carrying a spec:// pointer, not a copy"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:69  ##sibling-document-pointers Full policy and rationale:",
+              "spec/boot/STATIC.md:482  [`ATTRIBUTION-POLICY.md`](../flows/attribution-policy/ATTRIBUTION-POLICY.md).",
+              "spec/boot/STATIC.md:484  [`enforcement-checklist.md`](../flows/attribution-policy/enforcement-checklist.md).",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:69  `git-practices` itself. **`git-attribution-policy` is not on it**: both of its",
+              "**both sibling links are dangling for every consumer.** the pointer resolves in the package and in neither place a consumer stands. Measured corpus-wide: 60 relative `../flows/…` pointers in the packages with 0 dangling; 120 in the installed vibedeps trees with 15 dangling; and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host at all.",
+              "the two documents a reader would need exist only under vibedeps/flow-git-attribution-policy/0.1.0/spec/flows/attribution-policy/"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:57:48Z",
+        "verify_batch": "W1c"
+      }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md": {
       "content_hash": "94de27b95debb4ee7c2eb48bb87b7134eed54811a0b1023347797561ae2d1129",
@@ -25831,7 +26390,505 @@
       },
       "marker_count": 36,
       "unit_count": 9,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "94de27b95debb4ee7c2eb48bb87b7134eed54811a0b1023347797561ae2d1129",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:5  ##scope-of-this-document **Scope of this document.** This file defines *what* an attribution",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:15  ## What this governs {#what}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:33  ## Why choose deliberately {#why-deliberate}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:50  ## The concealment posture (this package's default) {#concealment}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:71  ##run-it-honestly-lead **Run it honestly.** Two things keep this posture clean rather than",
+              "each of the four promised parts has its own heading, and the installed copy carries identical prose"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:11  ##sibling-document-pointers The open-disclosure posture is a first-class",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:1  # The disclosure alternative {#root}",
+              "vibedeps/flow-git-attribution-policy/0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:1  # The disclosure alternative {#root}",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+              "the relative link resolves beside the file in the package and beside its installed copy. Recorded: this anchor id is reused — the boot snippet has a different fact under the same id"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "ATTRIBUTION-MEANS-AUTHORSHIP-MARKS-IN-REPOSITORY-SURFACES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:17  ##ATTRIBUTION-MEANS-AUTHORSHIP-MARKS-IN-REPOSITORY-SURFACES Attribution here means **authorship marks in repository surfaces**:",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:20  | ##ROW-SURFACE-COMMIT-MESSAGE-BODIES Commit message bodies @spec/done | …",
+              "spec/boot/STATIC.md:435  no commit messages, no Git trailers (`Co-Authored-By`,",
+              "the enumeration is consistent across the flow's three documents; the checklist adds two surfaces this sentence omits (PR titles and generated-file headers) and folds tags in with branches"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "what-it-does-not-govern-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:23  ##what-it-does-not-govern-lead It does **not** govern: @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:25  - ##NOT-GOVERNED-PRODUCT-SCOPE **Product scope.** A product may itself have AI features; its",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:28  - ##NOT-GOVERNED-WORKFLOW-DOCUMENTS **Workflow documents.** Checkpoint-file protocols, session",
+              "a lead-in whose two-item list follows immediately, both items anchored, both compiled into the host lane"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "NOT-GOVERNED-PRODUCT-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:25  - ##NOT-GOVERNED-PRODUCT-SCOPE **Product scope.** A product may itself have AI features; its",
+              "spec/boot/STATIC.md:461  - **Product scope is carved out.** If the product itself has AI",
+              "crates/vibe-cli/src/commands/mcp/mod.rs:36  //! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |",
+              "README.md:99  | [`CLAUDE.md`](CLAUDE.md) (and identical `AGENTS.md` / `GEMINI.md`) | AI agents working in the repo | The four non-negotiable rules + memory discipline + boot read-order. |",
+              "the host is a working instance of the carve-out: 263 product-scope model-name lines and 0 authorship marks"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NOT-GOVERNED-WORKFLOW-DOCUMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:28  - ##NOT-GOVERNED-WORKFLOW-DOCUMENTS **Workflow documents.** Checkpoint-file protocols, session",
+              "spec/boot/STATIC.md:464  - **Technical AI-workflow documents remain legal and unchanged** —",
+              "spec/WAL.md:1  # WAL — Project Continuation State",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "the host's workflow documents were checked one by one and mark nothing"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "agents-attribute-themselves-by-default": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:35  ##agents-attribute-themselves-by-default Coding agents attribute themselves by default: trailers in commits,",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:124  > Внимательно и осознанно подойдите к тому, можно ли нейросети рассказывать, что комит сделала она. Часто нейросети пишут в Git себя в качестве соавтора через co-authored-by или внутри сообщения о коммите. … Безопасный (но не факт что лучший) способ — спрятаться. … если ты объяснишь нейросети настоящую причину своих действий.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "corroborated only as a restatement of the source book. Not observable here — the policy has been in force, so no default was ever allowed to apply, and no tool configuration in the tree sets a trailer either",
+              "src is 1 alone: the only support is the corpus agreeing with itself, which is exactly what amendment A2 exists to count"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "an-unmanaged-repository-accumulates-an-accidental-record": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:38  ##an-unmanaged-repository-accumulates-an-accidental-record Left unmanaged, a repository",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "a counterfactual about repositories that did not choose, and this one chose: 0 marks across the full history, so there is no partial record here to hold up as the failure mode",
+              "src 1 alone — no independent source in reach"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "an-accidental-record-is-the-worst-of-both-postures": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:42  ##an-accidental-record-is-the-worst-of-both-postures It discloses inconsistently (some commits marked, some",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:27  ##a-partial-record-reads-as-a-false-claim A provenance record that marks some",
+              "the flow arguing with itself from two sides — the same argument is made from the disclosure side at disclosure-alternative.md:27-30. Self-referential and recorded as such"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "A-POSTURE-IS-CHOSEN-ONCE-RECORDED-AND-ENFORCED": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:47  ##A-POSTURE-IS-CHOSEN-ONCE-RECORDED-AND-ENFORCED Whatever posture a project wants, it must be chosen once,",
+              "spec/boot/STATIC.md:425  This project keeps its repository **human-authored on every",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "chosen and recorded, yes, and more than once. **Enforced, no.** **nothing enforces it in this consumer.** `ls .git/hooks/ | grep -v sample` returns nothing, there is no `.github/` and no tracked CI file of any kind, AUDIT.md is 458 lines and carries no attribution line, and `git config --local --list` shows no trailer setting. The flow's own law names the state: «A policy with no checker is a wish»."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONCEALMENT-IS-A-HUMAN-AUTHORED-SURFACE-ON-EVERY-ARTIFACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:52  ##CONCEALMENT-IS-A-HUMAN-AUTHORED-SURFACE-ON-EVERY-ARTIFACT The repository presents a human-authored surface on every artifact:",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:185  data, and **none states or implies machine authorship**.",
+              "measured on every artifact class the flow names. the surface itself is clean and was measured over the full 2 024-commit history: 0 `^Co-authored-by:` and 0 `^Signed-off-by:` trailer lines, 0 authorship-phrasing hits, one author / committer / email, 0 model names across 18 refs and 1 tag, 0 AI-generated markers in crates/** and xtask/**, no credit line in README.md or CHANGELOG.md, and no CI configuration to carry metadata.",
+              "«regardless of how much AI assistance actually happened» is visible in the same tree: the operating-facts ledger documents routine delegation, and none of it reached an artifact mark"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-honest-rationale-some-jurisdictions-regulate": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:56  ##the-honest-rationale-some-jurisdictions-regulate **The honest rationale.** Some jurisdictions regulate — or are",
+              "spec/boot/STATIC.md:443  Some jurisdictions regulate or may come to regulate machine",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:124  > Внимательно и осознанно подойдите к тому, можно ли нейросети рассказывать, что комит сделала она. Часто нейросети пишут в Git себя в качестве соавтора через co-authored-by или внутри сообщения о коммите. … Безопасный (но не факт что лучший) способ — спрятаться. … если ты объяснишь нейросети настоящую причину своих действий.",
+              "an assertion about the world outside this repository. `git grep` for any statute — EU AI Act, copyright office, 17 U.S.C., regulation (EU), GDPR — returns nothing anywhere in the perimeter, so no source in reach can confirm or falsify it. §3.1's rule is that a verdict without one of the three sources is unverifiable and never «probably true»."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "explicit-marks-hand-regulation-a-ready-made-hook": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:59  ##explicit-marks-hand-regulation-a-ready-made-hook A",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:55  - ##COST-PERMANENCE **Permanence.** Git history is immutable-by-convention; every",
+              "the mechanical half is corroborated by the composed frozen-history rule — a mark once pushed cannot be cleanly withdrawn. The regulatory half is an argument the repository cannot check, and the fact is a reasoning step rather than a claim about this tree",
+              "src 1 alone: the argument appears three times inside this flow and nowhere outside it"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "a-project-may-remove-that-hook-proactively": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:63  ##a-project-may-remove-that-hook-proactively A project not currently subject",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "a conditional — a project not subject to regulation MAY remove the hook — and the host behaves as the sentence describes"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-posture-is-the-owners-publication-decision": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:67  ##the-posture-is-the-owners-publication-decision The posture is the owner's publication",
+              "spec/boot/STATIC.md:450  This is a *publication posture chosen by the repository's owner*,",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "corroborated as far as a repository can: single owner, posture framed as owner discipline in the rule files and as a publication posture in the boot lane"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "run-it-honestly-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:71  ##run-it-honestly-lead **Run it honestly.** Two things keep this posture clean rather than",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:74  1. ##HONEST-THE-AGENT-IS-TOLD-THE-REAL-REASON **The agent is told the real reason.** The policy text (the boot",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:79  2. ##HONEST-THE-POLICY-IS-RECORDED-OPENLY **The policy itself is recorded openly.** The repository states,",
+              "a lead-in whose two numbered conditions follow, both anchored, both in the installed copy"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "HONEST-THE-AGENT-IS-TOLD-THE-REAL-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:74  1. ##HONEST-THE-AGENT-IS-TOLD-THE-REAL-REASON **The agent is told the real reason.** The policy text (the boot",
+              "spec/boot/STATIC.md:443  Some jurisdictions regulate or may come to regulate machine",
+              "spec/boot/STATIC.md:452  executing it is told the real reason (this section), and the policy",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "in the compiled lane the reason does travel with the rule — the «Why» section sits between the rule and the never-list in both copies. Recorded: the restatements a session meets alongside it carry the rule stripped of the reason, and the delegated-worker instruction is one bare sentence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "HONEST-THE-POLICY-IS-RECORDED-OPENLY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:79  2. ##HONEST-THE-POLICY-IS-RECORDED-OPENLY **The policy itself is recorded openly.** The repository states,",
+              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
+              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "«recorded openly» holds without qualification. **«In exactly one place» does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "before-adopting-verify-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:84  ##before-adopting-verify-lead **Before adopting, verify two things:** @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:86  - ##VERIFY-YOUR-JURISDICTION **Your jurisdiction.** If law or regulation applicable to you",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:89  - ##VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION **Your upstream and your organization.** Some employers, some",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:29  ##VERIFY-BOTH-BEFORE-ADOPTING-THE-DEFAULT Verify both before adopting the default; the protocol tells you how.",
+              "the two items follow and both are in the installed copy"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "VERIFY-YOUR-JURISDICTION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:86  - ##VERIFY-YOUR-JURISDICTION **Your jurisdiction.** If law or regulation applicable to you",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:36  - ##MANDATORY-LAW-OR-REGULATION Law or regulation applicable to the owner requires disclosing AI",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "a conditional instruction, internally consistent with the disclosure document's first mandatory trigger"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:89  - ##VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION **Your upstream and your organization.** Some employers, some",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:39  - ##MANDATORY-UPSTREAM-OR-REGISTRY The upstream project or registry you contribute to requires it —",
+              "a conditional instruction; the destination-rules principle is stated identically in the sibling document"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:97  ##THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE The policy is stated in **exactly one always-loaded place** (the",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "spec/boot/STATIC.md:551  <!-- vibe:static org.vibevm.world/git-practices — vibedeps/flow-git-practices/0.1.0/spec/boot/STATIC.md -->",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              "**both halves fail in this consumer.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself.",
+              "and «plus this flow's documents» fails too: the flow's documents are not in the host at all — spec/flows/ does not exist, so the three protocol files exist only under vibedeps/"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NO-RESTATEMENT-ANYWHERE-ELSE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:101  ##NO-RESTATEMENT-ANYWHERE-ELSE No repeating it in the README, no per-directory",
+              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "taken clause by clause: **the README repeats it** (README.md:158 names the four non-negotiable rules including attribution, and :99 describes the rule files as carrying them), and **a per-directory reminder exists** (.claude/agents/opus5.md:15, a standing per-agent instruction). The third clause holds — the attribution grep over crates/** and xtask/** returns 0 comment citations"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-reason-is-structural": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:104  ##the-reason-is-structural The reason is structural: every restatement of the policy is itself",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "spec/common/PROP-000.md:323  6. ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @spec/done",
+              "the mechanism this sentence predicts is observable and counted: every one of the eight rule restatements is itself an instance of the topic being discussed outside the sanctioned place, which is precisely the structural argument"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "one-place-to-read-one-place-to-change": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:109  ##one-place-to-read-one-place-to-change One place to read it, one place to change",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "counted both ways. **Places to read:** two compiled copies plus eight restatements. **Places to change:** the compiled copies are in a do-not-edit generated file, so a change means editing the package, re-installing, and separately editing eight host files. Two copies have already drifted in wording — «PROP-000 §12.1» names a section that does not exist"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "instruction-block-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:114  ##instruction-block-lead A working instruction block for a project's agent-facing rules",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:118  ```",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:129  procedures) are unaffected. This paragraph is the only place in",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:130  the repository where this topic is discussed.",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "the block is given, at lines 118-131, which is what the fact claims. That the host adopted none of its wording, and that the block's own closing sentence is false of this repository, is the single-place family's business and is charged there"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SLIP-UNPUSHED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:135  - ##SLIP-UNPUSHED **Unpushed:** amend or rebase the local commit; the surface never",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:84  1. ##DRILL-CAUGHT-BEFORE-PUSH **Caught before push:** amend or rebase locally. No further",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+              "consistent with the enforcement checklist's own drill step. Unobservable by construction — an amended-away slip leaves no trace — and the surface it protects is clean anyway"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SLIP-PUSHED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:137  - ##SLIP-PUSHED **Pushed:** pushed history is frozen (see `flow:git-atomic-commits`).",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:160  - ##FROZEN-NEVER-REBASE-THE-PUSHED-RANGE **Never** `git rebase -i` the pushed range. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:164  in a repository's own log, so **history can corroborate the attribution and",
+              "the cited rule exists and says what is claimed, and the host's own rule 4 puts history rewrites in the stop-and-ask set. Unexercised: no slip has ever landed"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:146  ##COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION Copy the prompt-task, not the prompt-implementation. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:144  ## Re-derive for your project {#re-derive}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:151  ```",
+              "the section it heads is a task rather than a finished policy to paste, which is exactly what it instructs"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "re-derive-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:148  ##re-derive-lead Paste this to",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:151  ```",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:161  to regulation changes. Show me the draft; do not apply until I",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:162  approve.",
+              "the prompt block is where the fact says and ends as claimed. Whether this host ran it is unrecorded — the host's policy section is the package's own snippet, not a re-derived one — which is the COMPOSES-DECISION-RECORDS row's finding, not this one's"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-CHOOSE-THE-POSTURE-DELIBERATELY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:167  - ##SUM-CHOOSE-THE-POSTURE-DELIBERATELY An attribution posture must be chosen deliberately; tool defaults",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:47  ##A-POSTURE-IS-CHOSEN-ONCE-RECORDED-AND-ENFORCED Whatever posture a project wants, it must be chosen once,",
+              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
+              "a faithful restatement of the body fact; the host has chosen and recorded"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-THE-DEFAULT-IS-A-HUMAN-AUTHORED-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:169  - ##SUM-THE-DEFAULT-IS-A-HUMAN-AUTHORED-SURFACE The default here: a human-authored surface on every artifact,",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "the measurable half holds on every artifact class. the surface itself is clean and was measured over the full 2 024-commit history: 0 `^Co-authored-by:` and 0 `^Signed-off-by:` trailer lines, 0 authorship-phrasing hits, one author / committer / email, 0 model names across 18 refs and 1 tag, 0 AI-generated markers in crates/** and xtask/**, no credit line in README.md or CHANGELOG.md, and no CI configuration to carry metadata.",
+              "the legal half has no in-repo referent and is charged on the rows that assert it rather than on this summary"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-RUN-IT-HONESTLY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:173  - ##SUM-RUN-IT-HONESTLY Run it honestly: the agent knows the real reason; the policy is",
+              "spec/boot/STATIC.md:443  Some jurisdictions regulate or may come to regulate machine",
+              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "first clause holds on the static lane. **Second clause does not: «recorded openly in exactly one place».** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself.",
+              "and the agent-facing instruction at .claude/agents/opus5.md:15 states the rule with no reason attached, so even the first clause is partial off the static lane"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-PRODUCT-AND-WORKFLOW-DOCUMENTS-ARE-CARVED-OUT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:175  - ##SUM-PRODUCT-AND-WORKFLOW-DOCUMENTS-ARE-CARVED-OUT Product scope and AI-workflow documents are carved out. @impl/done",
+              "spec/boot/STATIC.md:461  - **Product scope is carved out.** If the product itself has AI",
+              "spec/boot/STATIC.md:464  - **Technical AI-workflow documents remain legal and unchanged** —",
+              "crates/vibe-cli/src/commands/mcp/mod.rs:36  //! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |",
+              "a faithful restatement, and both carve-outs are compiled into the host lane and exercised here"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-SLIPS-BEFORE-AND-AFTER-PUSH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:176  - ##SUM-SLIPS-BEFORE-AND-AFTER-PUSH Slips: fix freely before push; after push, the frozen-history rule",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:135  - ##SLIP-UNPUSHED **Unpushed:** amend or rebase the local commit; the surface never",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:164  in a repository's own log, so **history can corroborate the attribution and",
+              "a faithful restatement, consistent with the composed frozen-history rule; unexercised because no slip has landed either side of a push"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:57:48Z",
+        "verify_batch": "W1c"
+      }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md": {
       "content_hash": "3db4408a1ef8e7c683aa371e73056e7859b06b4cef6384b0846cc20f85a8f908",
@@ -25854,7 +26911,428 @@
       },
       "marker_count": 42,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "3db4408a1ef8e7c683aa371e73056e7859b06b4cef6384b0846cc20f85a8f908",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:5  ##scope-of-this-document **Scope of this document.** This file defines the *open-disclosure*",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:11  ## The posture {#posture}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:32  ## When to choose it {#when}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:53  ## What it costs {#costs}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:78  ## Switching postures {#switching}",
+              "each promised part has its own section, plus a comparison table the scope line does not announce"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "every-marked-artifact-carries-a-consistent-mark-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:13  ##every-marked-artifact-carries-a-consistent-mark-lead Every artifact with AI involvement carries an explicit, consistent",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:16  - ##DISCLOSURE-MARK-COMMITS **Commits:** a trailer per assisting system, e.g.",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:20  - ##DISCLOSURE-MARK-GENERATED-FILES **Substantial generated files:** a header line naming the",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:22  - ##DISCLOSURE-MARK-RELEASE-NOTES **Release notes / README:** one standing sentence describing the",
+              "a lead-in whose three-item list follows, each item anchored"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "DISCLOSURE-MARK-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:16  - ##DISCLOSURE-MARK-COMMITS **Commits:** a trailer per assisting system, e.g.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:181  the finding that there are none* — the measurement's own prose, not a trailer. One",
+              "spec/boot/STATIC.md:471  - Never add a trailer or signature naming a model or an AI product",
+              "the mark this posture would require is absent by design here — 0 trailer lines across the full history — and the host's own boot lane forbids exactly it. The two string hits are prose quoting the measurement"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DISCLOSURE-MARK-GENERATED-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:20  - ##DISCLOSURE-MARK-GENERATED-FILES **Substantial generated files:** a header line naming the",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "CLAUDE.md:212  <!-- Generated by vibe — do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "the host does use generator headers and all 6 name `vibe`, the project's own package manager; no header names a model"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DISCLOSURE-MARK-RELEASE-NOTES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:22  - ##DISCLOSURE-MARK-RELEASE-NOTES **Release notes / README:** one standing sentence describing the",
+              "CHANGELOG.md:1  # Changelog",
+              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
+              "spec/boot/STATIC.md:437  names, no code comments, no README lines, no release notes, no CI",
+              "CHANGELOG.md is the only release document and carries no standing AI-assistance sentence; the host's rule forbids release-note attribution"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "CONSISTENCY-IS-THE-WHOLE-VALUE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:25  ##CONSISTENCY-IS-THE-WHOLE-VALUE Consistency is the whole value. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:59  - ##COST-CONSISTENCY-BURDEN **Consistency burden.** The posture is only truthful if enforced",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:97  - ##SUM-VALUE-IS-CONSISTENCY Its value is consistency; a partial record is worse than either",
+              "stated three times in the document and consistently; no host instance because the host does not run the posture"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "a-partial-record-reads-as-a-false-claim": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:27  ##a-partial-record-reads-as-a-false-claim A provenance record that marks some",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:42  ##an-accidental-record-is-the-worst-of-both-postures It discloses inconsistently (some commits marked, some",
+              "the flow arguing with itself from the other side. The host's record is not partial — 0 marks — so there is no counter-instance to test the inference against"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "when-it-is-mandatory-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:34  ##when-it-is-mandatory-lead **When it is mandatory — no choice exists:** @spec/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:36  - ##MANDATORY-LAW-OR-REGULATION Law or regulation applicable to the owner requires disclosing AI",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:38  - ##MANDATORY-EMPLOYER-OR-CLIENT-POLICY The employer's or client's policy requires it. @spec/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:39  - ##MANDATORY-UPSTREAM-OR-REGISTRY The upstream project or registry you contribute to requires it —",
+              "a lead-in whose three-item mandatory list follows, matching the two verification items in the sibling document"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "MANDATORY-LAW-OR-REGULATION": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:36  - ##MANDATORY-LAW-OR-REGULATION Law or regulation applicable to the owner requires disclosing AI",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:86  - ##VERIFY-YOUR-JURISDICTION **Your jurisdiction.** If law or regulation applicable to you",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "an assertion about the world outside this repository. `git grep` for any statute — EU AI Act, copyright office, 17 U.S.C., regulation (EU), GDPR — returns nothing anywhere in the perimeter, so no source in reach can confirm or falsify it. §3.1's rule is that a verdict without one of the three sources is unverifiable and never «probably true»."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "MANDATORY-EMPLOYER-OR-CLIENT-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:38  - ##MANDATORY-EMPLOYER-OR-CLIENT-POLICY The employer's or client's policy requires it. @spec/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:89  - ##VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION **Your upstream and your organization.** Some employers, some",
+              "a conditional: where an employer's policy requires disclosure, disclosure is mandatory. No employer policy exists in the perimeter to exercise it"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "MANDATORY-UPSTREAM-OR-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:39  - ##MANDATORY-UPSTREAM-OR-REGISTRY The upstream project or registry you contribute to requires it —",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:90    open-source projects, and some package registries require AI",
+              "a conditional stating the destination-rules principle; two publish destinations exist and neither's requirements are recorded anywhere"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "when-it-is-the-better-fit-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:43  ##when-it-is-the-better-fit-lead **When it is the better fit even though optional:** @spec/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:45  - ##BETTER-FIT-RESEARCH-AND-AUDIT Research and audit contexts, where provenance is the point — which",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:47  - ##BETTER-FIT-MEASURING-ASSISTANCE-IMPACT Teams measuring AI-assistance impact: the trailer *is* the",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:50  - ##BETTER-FIT-AI-FORWARD-PROJECTS Projects whose public stance is AI-forward, where the mark is",
+              "a lead-in whose three-item optional-fit list follows"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "BETTER-FIT-RESEARCH-AND-AUDIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:45  - ##BETTER-FIT-RESEARCH-AND-AUDIT Research and audit contexts, where provenance is the point — which",
+              "spec/boot/STATIC.md:464  - **Technical AI-workflow documents remain legal and unchanged** —",
+              "this repository is a live instance of the described need and resolves it the other way, which is the interesting half: it runs recorded model trials and keeps 0 provenance marks in git metadata, so provenance lives in run artifacts and workflow documents — the surfaces the policy carves out"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "BETTER-FIT-MEASURING-ASSISTANCE-IMPACT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:47  - ##BETTER-FIT-MEASURING-ASSISTANCE-IMPACT Teams measuring AI-assistance impact: the trailer *is* the",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:184  commit bodies name a model, two as a colour-theme name and two as configuration",
+              "the mechanical claim is sound and demonstrably unavailable here: with 0 trailer lines the assistance fraction cannot be recovered by any `git log` query, which is why this campaign measures the topic by grepping message prose instead"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "BETTER-FIT-AI-FORWARD-PROJECTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:50  - ##BETTER-FIT-AI-FORWARD-PROJECTS Projects whose public stance is AI-forward, where the mark is",
+              "README.md:99  | [`CLAUDE.md`](CLAUDE.md) (and identical `AGENTS.md` / `GEMINI.md`) | AI agents working in the repo | The four non-negotiable rules + memory discipline + boot read-order. |",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:8  description = \"A deliberate authorship-attribution posture for AI-assisted repositories: human-authored surface by default, with the disclosure alternative documented\"",
+              "an assertion about positioning with a near-miss worth recording: this project's public surface IS AI-forward in product terms while its authorship surface stays unmarked — the product/attribution split the policy carves out, illustrated"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COST-PERMANENCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:55  - ##COST-PERMANENCE **Permanence.** Git history is immutable-by-convention; every",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:160  - ##FROZEN-NEVER-REBASE-THE-PUSHED-RANGE **Never** `git rebase -i` the pushed range. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "the immutable-by-convention premise is not merely asserted — the composed flow makes it a rule, and the host's own rule 4 puts rewrites in the stop-and-ask set"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COST-CONSISTENCY-BURDEN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:59  - ##COST-CONSISTENCY-BURDEN **Consistency burden.** The posture is only truthful if enforced",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:12  ##written-for-concealment-flipped-for-disclosure Written for the concealment posture;",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:14  for *missing* marks instead of present ones). @impl/done",
+              "the cross-reference resolves and the two documents state the polarity flip from both sides"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "COST-HETEROGENEITY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:64  - ##COST-HETEROGENEITY **Heterogeneity.** Multi-tool teams produce differently-shaped",
+              "crates/vibe-cli/src/commands/mcp/mod.rs:36  //! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |",
+              "crates/vibe-cli/src/cli.rs:61      /// string; conventional values are `claude-code`, `claude-desktop`,",
+              "the multi-tool premise is real in this perimeter — the host integrates five agents and routes work to a GLM worker — so a disclosure posture here would face exactly the described heterogeneity"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-COMPARE-REPOSITORY-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:72  | ##ROW-COMPARE-REPOSITORY-SURFACE Repository surface @impl/done | human-authored, uniformly @impl/done | provenance-marked, uniformly @impl/done |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:177  Oleg Chirukhin",
+              "the concealment cell is measurable here and holds uniformly. the surface itself is clean and was measured over the full 2 024-commit history: 0 `^Co-authored-by:` and 0 `^Signed-off-by:` trailer lines, 0 authorship-phrasing hits, one author / committer / email, 0 model names across 18 refs and 1 tag, 0 AI-generated markers in crates/** and xtask/**, no credit line in README.md or CHANGELOG.md, and no CI configuration to carry metadata."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-COMPARE-REGULATORY-POSTURE": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:73  | ##ROW-COMPARE-REGULATORY-POSTURE Regulatory posture @spec/done | no hook for future regulation @spec/done | compliant where disclosure is required @spec/done |",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:36  - ##MANDATORY-LAW-OR-REGULATION Law or regulation applicable to the owner requires disclosing AI",
+              "an assertion about the world outside this repository. `git grep` for any statute — EU AI Act, copyright office, 17 U.S.C., regulation (EU), GDPR — returns nothing anywhere in the perimeter, so no source in reach can confirm or falsify it. §3.1's rule is that a verdict without one of the three sources is unverifiable and never «probably true».",
+              "both cells are regulatory assertions and neither has an in-repo referent"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "ROW-COMPARE-PROVENANCE-DATA": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:74  | ##ROW-COMPARE-PROVENANCE-DATA Provenance data @impl/done | none in artifacts (sessions/logs only) @impl/done | in-history, queryable @impl/done |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "spec/boot/STATIC.md:464  - **Technical AI-workflow documents remain legal and unchanged** —",
+              "the concealment cell is exactly what this host looks like, parenthetical included: no provenance in artifacts, while session-level provenance exists outside the artifact surface in run reports and the operating-facts ledger"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-COMPARE-MAIN-RISK": {
+            "v": "unverifiable",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:75  | ##ROW-COMPARE-MAIN-RISK Main risk @spec/done | none under present law; posture must be re-verified as law changes @spec/done | permanent record; withdrawal impossible @spec/done |",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "spec/boot/STATIC.md:444  authorship of software. This project is not currently subject to",
+              "the disclosure cell's mechanism is corroborated by the frozen-history rule. **The concealment cell asserts «carries none under present law»**, which is the legal claim this repository cannot check. an assertion about the world outside this repository. `git grep` for any statute — EU AI Act, copyright office, 17 U.S.C., regulation (EU), GDPR — returns nothing anywhere in the perimeter, so no source in reach can confirm or falsify it. §3.1's rule is that a verdict without one of the three sources is unverifiable and never «probably true».",
+              "its «must be re-verified as law changes» implies a revisit trigger, and no such trigger exists here"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-COMPARE-ENFORCEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:76  | ##ROW-COMPARE-ENFORCEMENT Enforcement @impl/done | scan for present marks @impl/done | scan for missing marks @impl/done |",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:40    grep -inE 'co-authored-by|signed-off-by:.*(claude|gpt|gemini|copilot|llama|codex|model)|generated (with|by) [^ ]*(ai|llm|claude|gpt|copilot)' \\",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:12  ##written-for-concealment-flipped-for-disclosure Written for the concealment posture;",
+              "consistent with the checklist, and the shipped scan was actually RUN against this host: it returns 2 hits and prints its alarm, both hits being commit-body prose about there being no marks — the anticipated cheap false positive, observed"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-posture-change-is-forward-only-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:80  ##a-posture-change-is-forward-only-lead A posture change is **forward-only**: @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:82  1. ##SWITCH-EDIT-THE-SINGLE-POLICY-PLACE The owner edits the single policy place (the boot snippet) to the",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:85  2. ##SWITCH-NEW-WORK-FOLLOWS-FROM-THAT-COMMIT New work follows the new posture from that commit on. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:86  3. ##SWITCH-HISTORY-IS-NEVER-REWRITTEN **Existing history is never rewritten to match** — in either",
+              "a lead-in whose three-step forward-only procedure follows"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "SWITCH-EDIT-THE-SINGLE-POLICY-PLACE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:82  1. ##SWITCH-EDIT-THE-SINGLE-POLICY-PLACE The owner edits the single policy place (the boot snippet) to the",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "packages/org.vibevm.world/decision-records/v0.1.0/vibe.toml:16  source = \"spec/boot/25-flow-decision-records.md\"",
+              "**both preconditions of step 1 are unmet in this consumer.** «The single policy place»: **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself.",
+              "«a dated decision record with a revisit trigger»: flow:decision-records is installed and no host decision record for the posture exists"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SWITCH-NEW-WORK-FOLLOWS-FROM-THAT-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:85  2. ##SWITCH-NEW-WORK-FOLLOWS-FROM-THAT-COMMIT New work follows the new posture from that commit on. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:88     both mean rewriting published history; the frozen-history rule",
+              "internally consistent with step 3; no posture switch has occurred here to observe"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "SWITCH-HISTORY-IS-NEVER-REWRITTEN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:86  3. ##SWITCH-HISTORY-IS-NEVER-REWRITTEN **Existing history is never rewritten to match** — in either",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:160  - ##FROZEN-NEVER-REBASE-THE-PUSHED-RANGE **Never** `git rebase -i` the pushed range. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "the cited rule exists and is unambiguous, and the host's own rule 4 puts rewrites and force-push in the stop-and-ask set"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-MANDATORY-WHERE-REQUIRED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:94  - ##SUM-MANDATORY-WHERE-REQUIRED Disclosure is the mandatory posture where law, employer, or",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:36  - ##MANDATORY-LAW-OR-REGULATION Law or regulation applicable to the owner requires disclosing AI",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:86  - ##VERIFY-YOUR-JURISDICTION **Your jurisdiction.** If law or regulation applicable to you",
+              "a faithful restatement of the three mandatory triggers, each a conditional"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "SUM-VALUE-IS-CONSISTENCY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:97  - ##SUM-VALUE-IS-CONSISTENCY Its value is consistency; a partial record is worse than either",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:25  ##CONSISTENCY-IS-THE-WHOLE-VALUE Consistency is the whole value. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:27  ##a-partial-record-reads-as-a-false-claim A provenance record that marks some",
+              "a faithful restatement; no host instance because this record is not partial"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "SUM-COST-IS-PERMANENCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:99  - ##SUM-COST-IS-PERMANENCE Its cost is permanence — a published record that cannot be",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:55  - ##COST-PERMANENCE **Permanence.** Git history is immutable-by-convention; every",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "a faithful restatement whose premise is backed by the composed frozen-history rule"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-SWITCHING-IS-FORWARD-ONLY": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:101  - ##SUM-SWITCHING-IS-FORWARD-ONLY Switching postures is one edit in one place, forward-only, with a",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "«forward-only, history never rewritten» holds. **«One edit in one place» does not**: the policy is compiled twice into a do-not-edit generated file and restated in eight further host locations, so a switch here is at least ten edits plus a re-install — and «with a dated decision record» has nothing behind it, because no decision record for the posture exists"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:57:48Z",
+        "verify_batch": "W1c"
+      }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md": {
       "content_hash": "62556b017f70c386220bb7c978b546a81fb9e475db6a3e82dc0c5b8373ca437d",
@@ -25877,7 +27355,425 @@
       },
       "marker_count": 47,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "62556b017f70c386220bb7c978b546a81fb9e475db6a3e82dc0c5b8373ca437d",
+        "verdicts": {
+          "A-POLICY-WITH-NO-CHECKER-IS-A-WISH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:5  ##A-POLICY-WITH-NO-CHECKER-IS-A-WISH **Scope of this document.** A policy with no checker is a wish. @spec/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "the statement is the flow's own law and it is true; this consumer is the case it describes. **nothing enforces it in this consumer.** `ls .git/hooks/ | grep -v sample` returns nothing, there is no `.github/` and no tracked CI file of any kind, AUDIT.md is 458 lines and carries no attribution line, and `git config --local --list` shows no trailer setting. The flow's own law names the state: «A policy with no checker is a wish».",
+              "and the surface is nonetheless clean, which is what makes the law's own verdict on the single-place claim — the one surface with no mechanical check — the sharpest result in this batch"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:7  ##scope-of-this-document This",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:16  ## The surfaces {#surfaces}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:29  ## The pre-push scan {#pre-push}",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:82  ## When a slip lands {#slip-drill}",
+              "each promised part has a section, plus two the scope line does not announce"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "written-for-concealment-flipped-for-disclosure": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:12  ##written-for-concealment-flipped-for-disclosure Written for the concealment posture;",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:59  - ##COST-CONSISTENCY-BURDEN **Consistency burden.** The posture is only truthful if enforced",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:76  | ##ROW-COMPARE-ENFORCEMENT Enforcement @impl/done | scan for present marks @impl/done | scan for missing marks @impl/done |",
+              "the reciprocal statement exists in the sibling document from both angles and all three sentences agree"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "ROW-SURFACE-COMMIT-MESSAGE-BODIES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:20  | ##ROW-SURFACE-COMMIT-MESSAGE-BODIES Commit message bodies @spec/done | \"generated with…\", tool ads, model names @spec/done | pre-push scan (below) @spec/done |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:184  commit bodies name a model, two as a colour-theme name and two as configuration",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:185  data, and **none states or implies machine authorship**.",
+              "measured over the full history and separated by kind: 354 message lines and 11 subjects name a model or vendor; 8 «generated with/by» lines all describe tool-generated files; 0 tool ads and 0 authorship phrasing. The surface carries names and no attribution"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-SURFACE-COMMIT-TRAILERS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:21  | ##ROW-SURFACE-COMMIT-TRAILERS Commit trailers @spec/done | `Co-Authored-By`, `Signed-off-by: <model>` @spec/done | pre-push scan (below) @spec/done |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:181  the finding that there are none* — the measurement's own prose, not a trailer. One",
+              "0 trailer lines of either kind, line-anchored so it counts trailers rather than prose; 2 mentions counted separately"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-SURFACE-BRANCH-AND-TAG-NAMES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:22  | ##ROW-SURFACE-BRANCH-AND-TAG-NAMES Branch / tag names @spec/done | agent-generated branch names carrying tool names @spec/done | `git branch -a` eyeball at review; naming convention in the boot file @spec/done |",
+              "spec/boot/STATIC.md:473  - Never mention model, agent, or AI-tool names in commit messages,",
+              "spec/boot/STATIC.md:437  names, no code comments, no README lines, no release notes, no CI",
+              "the prescribed check was run: 18 refs and 1 tag, 0 model or vendor names; the ten agent-generated branches are named after this repository's own harness. Recorded: the naming convention the row also prescribes is not in the host boot file"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-SURFACE-CODE-COMMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:23  | ##ROW-SURFACE-CODE-COMMENTS Code comments @spec/done | \"AI-generated\", model names in TODO/FIXME @spec/done | repo-wide grep, periodically @spec/done |",
+              "crates/vibe-cli/src/commands/mcp/mod.rs:36  //! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |",
+              "crates/vibe-cli/src/cli.rs:61      /// string; conventional values are `claude-code`, `claude-desktop`,",
+              "spec/boot/STATIC.md:473  - Never mention model, agent, or AI-tool names in commit messages,",
+              "the repo-wide grep was run: 0 AI-generated marks, 263 model-name lines that are all product data. Recorded: «periodically» is unscheduled here — AUDIT.md carries no attribution line"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-SURFACE-README-DOCS-RELEASE-NOTES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:24  | ##ROW-SURFACE-README-DOCS-RELEASE-NOTES README / docs / release notes @spec/done | boilerplate credit lines @spec/done | part of release checklist @spec/done |",
+              "README.md:99  | [`CLAUDE.md`](CLAUDE.md) (and identical `AGENTS.md` / `GEMINI.md`) | AI agents working in the repo | The four non-negotiable rules + memory discipline + boot read-order. |",
+              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
+              "CHANGELOG.md:155  - **Auth-aware 401 classifier** (PROP-002 §2.3.1): … Closes the GitVerse-returns-401-for-missing-public-repo regression that surfaced via opencode + glm-flash.",
+              "README and CHANGELOG carry no credit line. Recorded: the prescribed release checklist does not exist, and CHANGELOG records that no stable release has shipped"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:25  | ##ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS PR titles and descriptions @spec/done | tool-inserted footers @spec/done | PR template with an explicit placeholder to overwrite @spec/done |",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "a checklist row naming a leak surface and its check; **neither exists in this consumer** — there is no .github/, no PR template and no hosted PR flow, and the history shows work merged directly. The row prescribes; it does not report"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-SURFACE-CI-CONFIGURATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:26  | ##ROW-SURFACE-CI-CONFIGURATION CI configuration @spec/done | marketplace actions inserting attribution steps @spec/done | review any new CI step's output once @spec/done |",
+              "spec/boot/STATIC.md:437  names, no code comments, no README lines, no release notes, no CI",
+              "spec/common/PROP-000.md:153  - ##CI-MATRIX-M2 CI matrix for all three OSes lands in M2 per `VIBEVM-SPEC.md` §11.4. @spec/done",
+              "same shape: no CI configuration of any kind exists, so no marketplace action has ever run. The host's own plan schedules a CI matrix for M2, and the boot rule already forbids CI metadata ahead of the surface existing"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-SURFACE-GENERATED-FILE-HEADERS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:27  | ##ROW-SURFACE-GENERATED-FILE-HEADERS Generated-file headers @spec/done | scaffolding tools stamping their names @spec/done | check scaffold output the first time a generator is adopted @spec/done |",
+              "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+              "CLAUDE.md:212  <!-- Generated by vibe — do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->",
+              "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+              "the host does have stamped generated headers and every one names `vibe`. Recorded: the prescribed one-time inspection is not recorded anywhere"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "MESSAGES-AND-TRAILERS-ARE-MECHANICALLY-CHECKABLE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:31  ##MESSAGES-AND-TRAILERS-ARE-MECHANICALLY-CHECKABLE The two highest-volume surfaces — messages and trailers — are",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:40    grep -inE 'co-authored-by|signed-off-by:.*(claude|gpt|gemini|copilot|llama|codex|model)|generated (with|by) [^ ]*(ai|llm|claude|gpt|copilot)' \\",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "verified by running the shipped scan: it executes and returns. The contrast worth carrying: the sibling flow's capitalisation rule has no checker because it cannot distinguish a name from a word, and messages and trailers do not have that problem"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "pre-push-scan-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:34  ##pre-push-scan-lead Run before every push (or wire as a",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:40    grep -inE 'co-authored-by|signed-off-by:.*(claude|gpt|gemini|copilot|llama|codex|model)|generated (with|by) [^ ]*(ai|llm|claude|gpt|copilot)' \\",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:41    && echo 'ATTRIBUTION MARK FOUND — fix before push' || true",
+              "the script exists and is runnable as written. **nothing enforces it in this consumer.** `ls .git/hooks/ | grep -v sample` returns nothing, there is no `.github/` and no tracked CI file of any kind, AUDIT.md is 458 lines and carries no attribution line, and `git config --local --list` shows no trailer setting. The flow's own law names the state: «A policy with no checker is a wish».",
+              "one property the reviewer should know: the script scans `@{u}..HEAD`, i.e. unpushed commits only, so every measurement in this batch that used a wider window said so"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ADAPT-THE-PATTERN-LIST-TO-YOUR-OWN-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:44  ##ADAPT-THE-PATTERN-LIST-TO-YOUR-OWN-TOOLS Adapt the pattern list to the tools your team actually runs — the",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:40    grep -inE 'co-authored-by|signed-off-by:.*(claude|gpt|gemini|copilot|llama|codex|model)|generated (with|by) [^ ]*(ai|llm|claude|gpt|copilot)' \\",
+              "CHANGELOG.md:155  - **Auth-aware 401 classifier** (PROP-002 §2.3.1): … Closes the GitVerse-returns-401-for-missing-public-repo regression that surfaced via opencode + glm-flash.",
+              "the instruction is load-bearing here and the host demonstrates why: the shipped pattern list is `claude|gpt|gemini|copilot|llama|codex|model` and does **not** cover GLM, which is the model family this repository actually delegates to. An unadapted copy of this scan would miss every GLM-shaped mark here"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-real-hook-beats-ten-generic-ones": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:47  ##a-real-hook-beats-ten-generic-ones A hook that fires on",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:44  ##ADAPT-THE-PATTERN-LIST-TO-YOUR-OWN-TOOLS Adapt the pattern list to the tools your team actually runs — the",
+              "a comparative judgement about hook design with no instance in the perimeter — this host has neither kind installed. Its checkable half is the adjacent ADAPT row, where the shipped generic list is shown not to cover this repository's real model family"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-scan-covers-all-co-authored-by-trailers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:50  ##the-scan-covers-all-co-authored-by-trailers Note the",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:40    grep -inE 'co-authored-by|signed-off-by:.*(claude|gpt|gemini|copilot|llama|codex|model)|generated (with|by) [^ ]*(ai|llm|claude|gpt|copilot)' \\",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:181  the finding that there are none* — the measurement's own prose, not a trailer. One",
+              "both halves check out, the second empirically: the allowlist would be empty (0 trailers, one author), and running the shipped scan produced exactly the cheap false positive the fact anticipates — two commit bodies that say there are no trailers"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SCANNING-CATCHES-SLIPS-CONFIGURATION-PREVENTS-THEM": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:57  ##SCANNING-CATCHES-SLIPS-CONFIGURATION-PREVENTS-THEM Scanning catches slips; configuration prevents them. @impl/done",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:100  - ##SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP Configure tools not to produce marks; scan as the backstop. @impl/done",
+              "this host is the configuration-only case: no scan installed anywhere, the standing instruction configured in the always-loaded lane and in three rule files, and the measured result is 0 marks. The prevention half is exercised here and the catching half is not"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "most-agents-accept-standing-instructions": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:59  ##most-agents-accept-standing-instructions Most coding",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
+              "crates/vibe-cli/src/commands/mcp/mod.rs:36  //! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |",
+              "crates/vibe-cli/src/cli/mcp.rs:27      /// Five agents supported: Claude Code, Claude Desktop, Cursor,",
+              "the host is a working instance — three byte-identical rules files read at session start plus a generated boot lane, and its own tooling enumerates five agents that consume such files. «Most» is a generalisation beyond the perimeter"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "PUT-THE-POLICY-IN-THE-AGENTS-STANDING-INSTRUCTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:63  ##PUT-THE-POLICY-IN-THE-AGENTS-STANDING-INSTRUCTIONS Put the policy there — this package's boot snippet",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:19  link = \"static\"",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
+              "the package declares the priority lane and the host compiles it twice; the claimed effect is measurable and holds — instruction standing, no scan installed, 0 marks across the full history — and it propagates to delegated workers"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SET-A-TOOLS-HARD-TRAILER-SETTING-ONCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:67  ##SET-A-TOOLS-HARD-TRAILER-SETTING-ONCE Where a tool has a hard setting for",
+              ".claude/settings.json:3        \"defaultMode\": \"bypassPermissions\"",
+              "an instruction, and no such setting is recorded in this consumer: neither setup document, no tracked agent configuration and no local git config carries one. Prevention here rests entirely on the standing instruction"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SLOW-SURFACES-ARE-NOT-WORTH-A-PER-PUSH-SCAN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:72  ##SLOW-SURFACES-ARE-NOT-WORTH-A-PER-PUSH-SCAN Slow-accumulating surfaces (comments, docs, release notes) are not",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:78  > ##THE-AUDIT-CHECKLIST-LINE Attribution: repo-wide grep for the pattern set; check surfaces",
+              "internally consistent — the pre-push scan reads only messages and trailers and routes the three slow surfaces to the periodic audit — and the premise holds by volume in this host"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "periodic-audit-line-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:75  ##periodic-audit-line-lead Put one line in the project's periodic audit",
+              "packages/org.vibevm.world/health-audit/v0.1.0/README.md:70  - ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` — its periodic-audit line item is exactly",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:1  # Flow: Health Audit {#root}",
+              "the named flow exists, is installed, and reciprocates the composition in its own README. Recorded: the line itself is absent from this host's audit surface — AUDIT.md is 458 lines with no attribution line"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-AUDIT-CHECKLIST-LINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:78  > ##THE-AUDIT-CHECKLIST-LINE Attribution: repo-wide grep for the pattern set; check surfaces",
+              "AUDIT.md:1  # AUDIT.md — project health inventory",
+              "packages/org.vibevm.world/health-audit/v0.1.0/README.md:70  - ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` — its periodic-audit line item is exactly",
+              "the line the fact gives is a blockquote in the package, which is what the fact claims. That the host has not added it is the periodic-audit row's observation; both examples it names are still empty here — no CI steps and one generator, `vibe`"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DRILL-CAUGHT-BEFORE-PUSH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:84  1. ##DRILL-CAUGHT-BEFORE-PUSH **Caught before push:** amend or rebase locally. No further",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:135  - ##SLIP-UNPUSHED **Unpushed:** amend or rebase the local commit; the surface never",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
+              "consistent with the policy document's twin step. Unobservable by construction: an amended-away slip leaves no trace, no scan is installed to have caught one, and the surface is clean anyway"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DRILL-CAUGHT-AFTER-PUSH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:86  2. ##DRILL-CAUGHT-AFTER-PUSH **Caught after push:** do **not** rewrite published history on",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — … stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:164  in a repository's own log, so **history can corroborate the attribution and",
+              "the cited rule resolves and the host's own boot contract already puts history rewrites in the stop-and-ask set, so the escalation the drill prescribes is the standing rule here. Unexercised: no pushed slip has ever existed"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DRILL-EITHER-WAY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:92  3. ##DRILL-EITHER-WAY **Either way:** if the same surface slips twice, the checklist —",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:104  - ##SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE A surface that slips twice earns a new checklist line. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "a prescription about what to do when a surface slips twice, and no surface has slipped once here — 0 trailer lines, 0 authorship-phrasing hits and 0 AI-generated code markers across the full history. The rule is stated and its trigger has never fired"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:97  - ##SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL Eight surfaces; two of them (messages, trailers) get a mechanical",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:20  | ##ROW-SURFACE-COMMIT-MESSAGE-BODIES Commit message bodies @spec/done | …",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:27  | ##ROW-SURFACE-GENERATED-FILE-HEADERS Generated-file headers @spec/done | …",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
+              "counted: the table's data rows run 20-27 inclusive, exactly eight, and exactly the first two name the pre-push scan as their check while the other six name templates, eyeballs, a periodic grep or a one-time review. Both the count and the split are accurate"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:100  - ##SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP Configure tools not to produce marks; scan as the backstop. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:57  ##SCANNING-CATCHES-SLIPS-CONFIGURATION-PREVENTS-THEM Scanning catches slips; configuration prevents them. @impl/done",
+              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "a faithful restatement, and this host is the configure-only half of it: the policy is configured into the always-loaded lane and the rules files, the backstop is absent, and the measured outcome is 0 marks"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:101  - ##SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS Pre-push slips are amended freely; pushed slips default to",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:84  1. ##DRILL-CAUGHT-BEFORE-PUSH **Caught before push:** amend or rebase locally. No further",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — … stop and ask for history rewrites, force-push, …",
+              "a faithful restatement of the drill, consistent with the composed frozen-history rule and with the host's own rule 4, which already makes a rewrite an owner-level decision. Unexercised: no slip of either kind exists"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:104  - ##SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE A surface that slips twice earns a new checklist line. @impl/done",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:92  3. ##DRILL-EITHER-WAY **Either way:** if the same surface slips twice, the checklist —",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:180  **Zero `Co-Authored-By` trailers.** The single grep hit is a commit *body quoting",
+              "a faithful restatement whose trigger has never fired here — no surface has slipped once, let alone twice"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T13:57:48Z",
+        "verify_batch": "W1c"
+      }
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/README.md": {
       "content_hash": "42b025697efe36a0b3e620d121ff13f777091988e4a574978413d960e6c9e421",

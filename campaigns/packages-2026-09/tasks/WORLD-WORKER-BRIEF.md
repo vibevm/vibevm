@@ -99,6 +99,27 @@ Return a JSON array. One object per marked fact, in document order:
   The line number must be right; a checker resolves every one of them before the
   reviewer reads a word, and a ref that does not resolve discredits the row. Quote
   verbatim; if you shorten, use `…` and keep the segments in order.
+
+  **The grammar is exactly that and nothing else.** W1 returned 43 refs the
+  checker could not resolve and **not one of them was a fiction** — every one was
+  a notation the grammar does not admit. Avoid all four:
+
+  - **No bare paths.** `path/to/file.md  [installed; present in the payload]` has
+    no line number and cannot be checked. Cite a line — even line 1 — or put the
+    observation in `searched`.
+  - **No ranges.** `AUDIT.md:1-458  [458 lines; no attribution line]` is an
+    *absence*, and an absence has no line to point at. Absences belong in
+    `searched`, stated as the command that found nothing.
+  - **No added markup.** If the file's line reads `type(scope): subject`, quote it
+    that way. Wrapping it in a code span — `` `type(scope): subject` `` — is your
+    formatting, not the file's text.
+  - **No re-escaping.** A line ending in a shell continuation `\` must be quoted
+    with ONE backslash. JSON-escaping it twice produces `\\`, which is a different
+    string from the one in the file.
+
+  A ref that will not fit the grammar is not evidence you should drop — it is an
+  observation that belongs in `searched`, where prose is welcome and nothing is
+  parsed.
 - **`found`** — exactly one of:
   - `located` — the evidence settles the claim, one way or the other;
   - `partial` — you found related material that does **not** settle it. This is the
