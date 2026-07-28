@@ -48,6 +48,32 @@ Gate: `progress check --exhaustive` **clean, 259 files, 0 warnings**.
 python campaigns/packages-2026-09/tasks/summary.py
 ```
 
+## W2 is open and its evidence is in flight {#w2-in-flight}
+
+**Four `opus5` workers were commissioned for W2's 20 files / 692 anchors and had not
+returned when this checkpoint was written.** Check first:
+
+```bash
+ls campaigns/packages-2026-09/tasks/evidence/ev-W2*.json
+```
+
+| table | files | anchors |
+|---|---|---:|
+| `ev-W2a.json` | `wal` — README, boot snippet, `WAL-PROTOCOL.md`, the `wal-status` SKILL | 111 |
+| `ev-W2b.json` | `wal` — `cold-resume.md`, `morning-routine.md`, `session-end-hook.md` | 149 |
+| `ev-W2c.json` | `two-process-model` — all five files | 179 |
+| `ev-W2d.json` | `sync-from-code` (5 files) + `wal-specspaces` (3) | 253 |
+
+Their three §3.1 sources are captured in
+[`harvest/world-w2-wal-family.md`](campaigns/packages-2026-09/harvest/world-w2-wal-family.md),
+and **two findings are already on the table from that capture alone**: the host runs
+a `two-process-model` boot snippet **three words shorter** than the package ships —
+`architecture`, `consequences`, `never`, the corpus's first WORDS-DIFFER — and the
+`wal-status` skill this package ships is **not installed** in `.claude/skills/`.
+
+**Do not touch a table while its worker may still be writing**, and do not edit the
+harvest while they cite it. Both lessons are below and both were paid for in W1.
+
 ## The recipe that closed W1, to run again on W2 {#recipe}
 
 W1 cost five delegated tables, 1 645 refs and zero unresolvable after the checker's

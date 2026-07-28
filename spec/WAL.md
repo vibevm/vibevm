@@ -161,17 +161,24 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
 ## In progress
 
-Nothing running. The tree is clean and in sync with `origin/main`.
+**W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for
+the 20 files / 692 anchors of `two-process-model`, `wal`, `wal-specspaces` and
+`sync-from-code`, writing to `tasks/evidence/ev-W2{a,b,c,d}.json`. **No W2 verdict
+has been written.** Its three §3.1 sources are captured in
+`harvest/world-w2-wal-family.md`, and two findings already fall out of that capture
+alone: the host runs a `two-process-model` boot snippet **three words shorter** than
+the package ships — `architecture`, `consequences`, `never` — and the `wal-status`
+skill the wal package ships is **not installed**. `CONTINUE.md` §w2-in-flight carries
+the table list and the two rules that protect a running delegation.
 
 ## Next
 
-1. **W2 — `two-process-model`, `wal`, `wal-specspaces`, `sync-from-code`**: 20 files,
-   692 anchors, per `tasks/PHASE-C-BATCHES.json`. The recipe is W1's and it works:
-   capture the batch's three §3.1 sources into `harvest/`, commission per-package
-   evidence tables from `opus5` workers against `tasks/WORLD-WORKER-BRIEF.md`, run
-   `verify-evidence.py` BEFORE reading, then `show-rows.py` row by row and judge.
-   **Re-measure the per-anchor cost now that W1 has closed** — W2 and W5 are
-   provisional at ~695 anchors and split if the cost is higher than C1's.
+1. **W2 — check for the four tables first**, then `verify-evidence.py` each one
+   BEFORE reading it, `repair-refs.py` if anything moved under the workers, then
+   `show-rows.py --brief` row by row and judge. The harvest and the brief are on
+   disk; `CONTINUE.md` §recipe is the loop and §w2-in-flight the file list.
+   **Re-measure the per-anchor cost when W2 closes** — W5 is provisional at ~697 and
+   splits if the cost is higher than C1's.
 2. **Every `world` verdict must carry `src`** (a non-empty subset of `[1,2,3]`,
    amendment A2); `merge-verdicts.py` refuses a batch without it, and `src == [1]`
    counts separately as self-referential — `summary.py --batch <id>` prints both.
