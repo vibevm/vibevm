@@ -1,0 +1,301 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:4  kind = \"flow\"",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:8  description = \"Design lessons for self-updating tools and package systems: pointer-flip activation, immutable instances, ...",
+     "vibe.lock:401  kind = \"flow\"",
+     "vibe.lock:402  name = \"tool-design-lessons\"",
+     "spec/boot/STATIC.md:1271  <!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->",
+     "vibedeps/flow-tool-design-lessons/0.1.0/README.md:1",
+     "confirmed: `vibe.toml` declares `kind = \"flow\"` and a description naming the same subjects the catalog covers. `vibe.lock` carries the package at lines 400-408 with `kind = \"flow\"`, `group = \"org.vibevm.world\"`, `version = \"0.1.0\"`. The host's generated `spec/boot/STATIC.md` line 1271 carries the provenance marker pointing at `vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md`, so the snippet is compiled into the host's boot lane. Source 3 measured directly: `vibedeps/flow-tool-design-lessons/0.1.0/` holds 7 files (LICENSE.md, README.md, spec/boot/70-…, the three spec/flows/… docs, vibe.toml). A byte comparison of each of the five markdown files against the package source, after stripping the campaign's own `##ANCHOR ` prefixes, ` @stage/state` markers and the `<status …/>` line (`sed -E 's/##[A-Za-z0-9_-]+ //g; s/ @[a-z]+\\/[a-z]+//g; /<status /d'` then md5 of the whitespace-stripped text) returns SAME for all five. So the installed copy carries every sentence of the package verbatim; it is the PRE-markup revision (Phase B's fact-grain edits have not been re-installed)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "EACH-LESSON-IS-A-SCAR-CAPTURED-AS-CONTEXT-LAW-WHY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:18  ##s1-context-env-was-the-single-source-of-truth **Context.** The first design made an environment variable the single",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:28  ##S1-LAW-ACTIVATION-TRUTH-IS-A-LIVE-POINTER **The law.** *The active version is a live pointer file read on every",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:32  ##S1-MECHANICS-A-LAUNCHER-SHIM-READS-THE-POINTER-EACH-RUN **Mechanics.** A tiny launcher shim reads an active-pointer file each",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:50  ##s1-symptoms **Symptoms you need this.** Users must open a new terminal after every",
+     "spec/common/PROP-019-version-manager.md:579  - ##V1-ENV-TRUTH v1 made `$VIBEVM_HOME` the single source of truth for the active version.",
+     "spec/common/PROP-019-version-manager.md:589  - ##V1-REVERSED This reverses v1's decision deliberately; env-as-truth was the cause of the",
+     "confirmed on form, measured exactly: `grep -cE '\\*\\*Context\\.\\*\\*|\\*\\*The law\\.\\*\\*|\\*\\*Mechanics\\.\\*\\*|\\*\\*Symptoms you need this\\.\\*\\*'` returns 7/7/7/7 in `self-updating-tools.md` and 7/7/7/7 in `packaging-lessons.md` — all fourteen lessons carry all four parts, with no partial entry. RECORDED on the scars themselves, because it changes how a reader should weight them: S1-S4's originating failure is PROP-019 v1, and `git log` puts v1 at `d605facb` 2026-06-17T11:51:41 and its reversal at `d6b10398` 2026-06-17T14:25:07 — two hours thirty-four minutes apart, in the same session, never released, with `d6b10398`'s own body calling them «(same-session, unreleased) PROP-019 units». So four of the fourteen lessons are scars from a wound that closed before anyone else could see it. That is still a scar and still cost real work; it is simply not the field report a reader might assume."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AUDIENCE-IS-TOOL-AUTHORS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:26  ##THE-AUDIENCE-IS-TOOL-AUTHORS The audience is tool authors: anyone building a self-updating CLI, an",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:5  ##PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF This project builds a tool that manages itself — a self-updating CLI,",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:9  keywords = [\"tool-design\", \"version-manager\", \"installer\", \"packaging\", \"lessons\"]",
+     "confirmed: The same audience sentence appears three times inside the package: README line 14, the catalog index line 26, and the boot snippet's opening line 5 (\"This project builds a tool that manages itself — a self-updating CLI, an installer, a version manager, or a package system\"). `vibe.toml`'s keywords line repeats the four roles. This is the package agreeing with itself; I found no host artifact that independently states the flow's audience — `grep -rn 'tool-design-lessons' spec/boot/STATIC.md spec/boot/INDEX.md CLAUDE.md` returns only the compiled snippet at STATIC.md:1271 and a one-line catalogue entry at STATIC.md:1571, both generated from the package itself. src [1] only."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "IT-IS-A-LESSONS-CATALOG-NOT-A-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:38  | ##ROW-LESSON-S1 S1 @impl/done | The active version is a live pointer file read per launc ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:51  | ##ROW-LESSON-P7 P7 @impl/done | Extract the general mechanism when the second consumer a ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:61  ### Split by strength, not as a workaround {#maxim-split}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:76  ### One operation, thin transports {#maxim-transports}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:90  ### Fail loud, never degrade silently {#maxim-fail-loud}",
+     "confirmed: Counted, not asserted. `grep -cE '^\\| ##ROW-LESSON' TOOL-DESIGN-LESSONS.md` = 14 index rows (S1-S7, P1-P7); `grep -cE '\\*\\*The law\\.\\*\\*'` = 7 in each of the two lesson files, so 14 laws, one per index row. `grep -n '^### ' TOOL-DESIGN-LESSONS.md` returns exactly three `### ` headings under `## Cross-cutting maxims` — lines 61, 76, 90 — so three maxims. The package ships no procedure document: the whole tree is 7 files (`find packages/org.vibevm.world/tool-design-lessons -type f`), none of them a PROTOCOL, in contrast to its two W7 batch-mates which each ship a `*-PROTOCOL.md`."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "package-contents-lead": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/LICENSE.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:1",
+     "DRIFT, and it is the second half of a pair `spec-genres` predicted. `find packages/org.vibevm.world/tool-design-lessons -type f | sort` returns exactly 7 files — LICENSE.md, README.md, vibe.toml, the boot snippet, and three documents under `spec/flows/tool-design-lessons/` — so the shipped content is THREE flow documents plus a snippet, and «four pieces of content plus a boot snippet» over-counts by one. The installed slot mirrors all 7 (`find vibedeps/flow-tool-design-lessons -type f`). This is decidable rather than a reading because the collection has a convention: across every `packages/org.vibevm.world/*/v*/README.md` carrying this anchor, 14 of 16 say «three», and the two saying «four» are `spec-genres` and this package — both shipping three. When `spec-genres` was judged, its worker named this package as the other outlier without opening it; the count here confirms that prediction independently."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-CATALOG-INDEX": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:5  ##scope-of-this-document **Scope of this document.** This file is the catalog index: *what* this",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:36  | ID | The law (one line) | Lives in |",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:53  ## Cross-cutting maxims {#maxims}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:103  ## The meta-lesson — record the why {#meta-lesson}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:122  ## Re-derive for your project {#re-derive}",
+     "vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:1",
+     "confirmed: Opened the file and checked each promised part exists: the index table header at line 36 with 14 `##ROW-LESSON` rows (37-51), `## Cross-cutting maxims {#maxims}` at 53 with three `### ` subsections, `## The meta-lesson — record the why {#meta-lesson}` at 103, and `## Re-derive for your project {#re-derive}` at 122 with a fenced prompt block at 130-145. Every column-3 link in the index table resolves: I checked all 14 `{#…}` targets by hand — self-updating-tools.md carries #live-pointer(16), #immutable-instances(54), #cheap-identity(93), #sources-by-reference(131), #durable-env-edits(163), #runnable-knowledge(205), #safe-removal(244); packaging-lessons.md carries #package-is-project(18), #ship-runtime(53), #identity-is-source(85), #build-output-elsewhere(120), #vendor-bootstrap(152), #spike-first(182), #build-on-demand(211). `python campaigns/packages-2026-09/tasks/source1-join.py packages/org.vibevm.world/tool-design-lessons` → 18 relative .md citations resolved, 0 broken."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-SELF-UPDATING-LESSONS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:16  ## S1 — activation truth is a live pointer, not the environment {#live-pointer}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:54  ## S2 — the unit of install is a directory, switched by a pointer {#immutable-instances}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:93  ## S3 — cheap identity: count instances, do not hash gigabytes {#cheap-identity}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:131  ## S4 — hold sources by reference, never bulk-copy them {#sources-by-reference}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:163  ## S5 — durable environment edits: idempotent, additive, consented, testable {#durable-env-edits}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:205  ## S6 — required tools live in one runnable table {#runnable-knowledge}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:244  ## S7 — removal and garbage collection that protect {#safe-removal}",
+     "confirmed: `grep -n '^## S' self-updating-tools.md` returns seven lesson headings at 16, 54, 93, 131, 163, 205, 244 and their subjects match the README's list one for one, in order. The installed slot carries the same file (byte-identical modulo the campaign markup — see the comparison recorded under PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-PACKAGING-LESSONS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:18  ## P1 — a package is a project {#package-is-project}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:53  ## P2 — ship the runtime, not a description of it {#ship-runtime}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:85  ## P3 — identity is the source, excluded by denylist {#identity-is-source}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:120  ## P4 — build output goes to a gitignored location {#build-output-elsewhere}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:152  ## P5 — vendor and commit the bootstrap toolchain {#vendor-bootstrap}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:182  ## P6 — spike before the irreversible move {#spike-first}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:211  ## P7 — build the general mechanism on real demand {#build-on-demand}",
+     "confirmed: `grep -n '^## P' packaging-lessons.md` returns seven lesson headings at 18, 53, 85, 120, 152, 182, 211, and each heading's short title matches the README bullet's phrase in the same order. Installed slot carries the same file."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:16  source = \"spec/boot/70-flow-tool-design-lessons.md\"",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:17  category = \"flow\"",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:13  ## When to read {#when}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:31  ## Never {#never}",
+     "spec/boot/STATIC.md:1271  <!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->",
+     "confirmed: `vibe.toml`'s `[boot_snippet]` names `source = \"spec/boot/70-flow-tool-design-lessons.md\"` with `category = \"flow\"`. The file carries `## When to read {#when}` at line 13 and `## Never {#never}` at 31 — the two halves the README promises. Source 2 confirms it is actually loaded: the host's generated `spec/boot/STATIC.md` carries the snippet under a provenance marker at line 1271, so a host session reads it at boot."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its",
+     "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+     "crates/vibe-cli/src/commands/uninstall.rs:5  //! declaration, and regenerates every node's boot artifacts so the",
+     "crates/vibe-cli/src/commands/uninstall.rs:202          \"\\nUninstalled {group}/{name}@{version} — removed its vibedeps/ slot, regenerated boot.\"",
+     "vibe.lock:407  files_written = []",
+     "confirmed: Read the implementation. `crates/vibe-cli/src/commands/uninstall.rs` removes the `vibedeps/` slot, drops the lockfile entry and the `[requires]` declaration, and calls `regenerate_boot` so the snippet leaves the computed boot sequence; its own summary line 202 says so. Worth naming for the reviewer: this package's `files_written` in `vibe.lock` is `[]` (line 407), so 'every file the package wrote' is exactly the slot plus the regenerated boot artifacts — the package writes nothing into user-owned files itself. I did not run `vibe uninstall`; the evidence is the code path, not an execution."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:211  <vibevm>",
+     "CLAUDE.md:212  <!-- Generated by vibe — do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->",
+     "CLAUDE.md:228  </vibevm>",
+     "crates/vibe-workspace/src/install/bootgen.rs:214  /// user-owned `00-core.md` / `90-user.md` are `Foundation` / `UserOverride`",
+     "confirmed: Re-ran the harvest's command myself: `grep -n '<vibevm>\\|</vibevm>' CLAUDE.md AGENTS.md GEMINI.md` returns the identical six lines the harvest printed — one delimited block per file at 211/228, with the do-not-edit notice at 212 stating that text outside the markers is the human's. The 210 lines above each block are the owner's own text, including the four rules this campaign runs under, and they survive every `vibe install`. `crates/vibe-workspace/src/install/bootgen.rs:214` names `00-core.md` / `90-user.md` as user-owned boot files the generator does not author. Note the scope: this is the general vibe guarantee, not something this prompt-only package does specially — it ships 7 files into one slot and nothing else."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-MANAGED-BLOCKS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:197  ##s5-mechanics-managed-blocks-pointer (The",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:199  lesson of their own — see `flow:managed-blocks`.) @impl/done",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:1",
+     "vibe.lock:52      \"flow:org.vibevm.world/managed-blocks@=0.1.0\",",
+     "crates/vibe-cli/src/commands/vvm/env.rs:171  const BLOCK_BEGIN: &str = \"# >>> vibevm (VVM) — managed, do not edit by hand >>>\";",
+     "crates/vibe-cli/src/commands/vvm/env.rs:172  const BLOCK_END: &str = \"# <<< vibevm (VVM) <<<\";",
+     "confirmed: The pointer exists where the README says it does — self-updating-tools.md lines 197-199, inside S5. The target package exists at `packages/org.vibevm.world/managed-blocks/v0.1.0/` with its protocol document, and is installed (`vibedeps/flow-managed-blocks/`, and `vibe.lock:52` lists `flow:org.vibevm.world/managed-blocks@=0.1.0` in the redbook collection's dependencies). Source 2 is stronger than the pointer: the host's own VVM writes a marked block into the user's shell rc with exactly this discipline — `BLOCK_BEGIN`/`BLOCK_END` constants at env.rs:171-172. Caveat for the reviewer: tool-design-lessons' `vibe.toml` declares no dependencies at all (`requires_kinds = []`, no `[dependencies]` table), so 'composes' is a documentation relation, not a manifest one."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-QUALIFIED-NAMING": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:1",
+     "vibe.lock:55      \"flow:org.vibevm.world/qualified-naming@=0.1.0\",",
+     "vibe.lock:403  group = \"org.vibevm.world\"",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:2  name = \"tool-design-lessons\"",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:3  group = \"org.vibevm.world\"",
+     "confirmed: The sibling package exists and is installed: `packages/org.vibevm.world/qualified-naming/v0.1.0/` with its protocol, `vibedeps/flow-qualified-naming/`, and `vibe.lock:55` (`flow:org.vibevm.world/qualified-naming@=0.1.0`). The link the sentence draws is visible in this package's own manifest: `vibe.toml` lines 2-3 give `name = \"tool-design-lessons\"` beside `group = \"org.vibevm.world\"`, and `vibe.lock` line 403 stores the same group — the qualified pair. No manifest-level dependency is declared between the two packages (grep for `dependencies` in tool-design-lessons/vibe.toml returns nothing)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "COMPOSES-MANUAL-TESTS": {
+    "v": "unverifiable",
+    "ev": [
+     "vibe.lock:53      \"flow:org.vibevm.world/manual-tests@=0.1.0\",",
+     "spec/manual-tests/MT-01-vibe-tree.md:1",
+     "spec/manual-tests/MT-02-vibe-tree-tui.md:1",
+     "spec/manual-tests/MT-03-vibe-prefs-tui.md:1",
+     "crates/vibe-cli/src/commands/vvm/env.rs:238  /// processes (PROP-019 §2.6). Not exercised by gate tests (it mutates the",
+     "UNVERIFIABLE on the half that matters, and the half that is settleable is settled. The package exists and is installed — `packages/org.vibevm.world/manual-tests/v0.1.0/`, `vibedeps/flow-manual-tests/`, `vibe.lock:53`. The claim that several of THESE lessons were caught by a human-run walk cannot be checked, because no artefact in this repository ties a lesson to the walk that found it. `ls spec/manual-tests/` returns exactly three records — MT-01-vibe-tree, MT-02-vibe-tree-tui, MT-03-vibe-prefs-tui — none about VVM, installs or packaging, and widening with `find . -name 'MT-*' | grep -v vibedeps` reaches only the 13 under the fractality package. WHAT WOULD SETTLE IT: an MT record naming a lesson id, or a lesson citing the walk that produced it. Absence of a record is not evidence the walks did not happen — these lessons are scars, and a scar predates the practice of writing MT records here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-DECISION-RECORDS": {
+    "v": "confirmed",
+    "ev": [
+     "vibe.lock:46      \"flow:org.vibevm.world/decision-records@=0.1.0\",",
+     "packages/org.vibevm.world/decision-records/v0.1.0/README.md:1",
+     "spec/common/PROP-019-version-manager.md:574  ##rationale-lead The decisions above were reached by working through several sharp questions;",
+     "spec/common/PROP-024-code-bearing-packages.md:279  - ##REJ-HASH-BUILD-OUTPUT **Hash and copy build output too** — rejected: non-deterministic and",
+     "confirmed: The package exists (`packages/org.vibevm.world/decision-records/v0.1.0/`), is materialised (`vibedeps/flow-decision-records/`) and is listed in `vibe.lock` line 46. The host practises the discipline the sentence describes in exactly the places these lessons came from: PROP-019 §9 opens (line 574) \"recording them so a cold reader sees *why*, not just *what*\" — the sentence the catalog quotes verbatim at TOOL-DESIGN-LESSONS.md:106 — and PROP-024 §4 keeps a `## Rejected / deferred alternatives` list with the reason each was rejected, line 279 onward."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "catalog-crystallized-from-the-origin-projects-rework": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:577  ### 9.1 Why `current` file + `current_exe`, not `$VIBEVM_HOME` (v1) {#rationale-truth}",
+     "spec/common/PROP-019-version-manager.md:592  ### 9.2 Why not content-hash the distribution {#rationale-no-hash}",
+     "spec/common/PROP-019-version-manager.md:605  ### 9.3 Why whole-directory instances, not in-place file replace {#rationale-instances}",
+     "spec/common/PROP-019-version-manager.md:618  ### 9.4 Why a monotonic counter for the instance key {#rationale-counter}",
+     "spec/common/PROP-024-code-bearing-packages.md:87  ### 2.1 A package is a project — `spec/` for prompts, the root for code {#package-is-project}",
+     "spec/common/PROP-024-code-bearing-packages.md:112  ### 2.2 The shippable tree excludes build output {#shippable-tree}",
+     "spec/common/PROP-024-code-bearing-packages.md:213  ### 2.5 Self-hosting bootstrap — the toolchain is vendored {#bootstrap}",
+     "confirmed: The origin project is this repository, and the two source documents are identifiable by title. PROP-019 §9.1 'Why `current` file + `current_exe`, not `$VIBEVM_HOME` (v1)' is S1; §9.2 'Why not content-hash the distribution' is S3; §9.3 'Why whole-directory instances, not in-place file replace' is S2; §9.4 'Why a monotonic counter for the instance key' is S3's mechanic; §9.6 is S4. PROP-024 §2.1 'A package is a project' is P1, §2.2 'The shippable tree excludes build output' is P3, §2.5 'Self-hosting bootstrap — the toolchain is vendored' is P5. The single commit that carries the version-manager rework is d6b10398 (2026-06-17, 'docs(spec): PROP-019 v2 — instances, live current, diff-copy'), whose body enumerates the same four reversals in the same order the catalog does. Direction matters here and I state it plainly: the host is the SOURCE of these lessons, so this is provenance, not independent confirmation."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "collections-spirit-is-the-redbook": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:1",
+     "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.md:1",
+     "vibe.lock:60      \"flow:org.vibevm.world/tool-design-lessons@=0.1.0\",",
+     "confirmed: `ls packages/org.vibevm.world/redbook/v*/spec/book/ru/` lists Russian chapter files under both the v0.1.0 and v0.2.0 slots, so the path the sentence gives is real. The redbook is the collection that pulls this package in: `vibe.lock` line 60 lists `flow:org.vibevm.world/tool-design-lessons@=0.1.0` inside the redbook collection's `dependencies` array (the array spanning lines ~45-64), alongside the other 26 world flows. `ls vibedeps/flow-redbook/` confirms the collection is installed."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-SELF-MANAGING-TOOL-EDITS-A-LIVE-MACHINE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:236  /// A Windows persister: edits the user environment in the registry via",
+     "crates/vibe-cli/src/commands/vvm/env.rs:285          \"[Environment]::SetEnvironmentVariable('{}', '{}', 'User')\",",
+     "crates/vibe-cli/src/commands/vvm/env.rs:128  pub(crate) fn write_shims(bin_dir: &Path) -> Result<()> {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:306      // Flip the live pointer — the switch is instant, no console reload.",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:307      store.write_current(&home)?;",
+     "confirmed: The 'edits a live machine' half is directly checkable and holds: the host's own VVM writes the user's Windows registry environment through PowerShell's `[Environment]::SetEnvironmentVariable(…, 'User')` (env.rs:285), writes a marked block into the detected shell's rc file on POSIX (RcFilePersister, env.rs:176-234), writes shim executables into `<root>/bin` (write_shims, env.rs:128), and flips a live `current` pointer file (mod.rs:306-307). Four distinct classes of durable machine state, all written by `vibe self use`. The 'obvious design cost more' half is a summary of the fourteen lessons and is settled row by row below, not here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "vibedeps/flow-tool-design-lessons/0.1.0/LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: `vibe.toml` line 7 declares `license = \"UPL-1.0\"` and `LICENSE.md` line 3 carries 'The Universal Permissive License (UPL), Version 1.0'. `cmp` of the package's LICENSE.md against the installed `vibedeps/flow-tool-design-lessons/0.1.0/LICENSE.md` reports them identical, so the consumer receives the same licence text. The README's relative link `[`LICENSE.md`](LICENSE.md)` resolves — it is one of the 18 citations the source-1 join checked with 0 broken."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   }
+  }
+ }
+}

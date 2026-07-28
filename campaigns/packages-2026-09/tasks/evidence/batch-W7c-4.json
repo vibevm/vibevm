@@ -1,0 +1,908 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:18  ## P1 — a package is a project {#package-is-project}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:53  ## P2 — ship the runtime, not a description of it {#ship-runtime}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:85  ## P3 — identity is the source, excluded by denylist {#identity-is-source}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:120  ## P4 — build output goes to a gitignored location {#build-output-elsewhere}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:152  ## P5 — vendor and commit the bootstrap toolchain {#vendor-bootstrap}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:182  ## P6 — spike before the irreversible move {#spike-first}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:211  ## P7 — build the general mechanism on real demand {#build-on-demand}",
+     "confirmed: `grep -n '^## P' packaging-lessons.md` returns exactly seven lesson headings — 18, 53, 85, 120, 152, 182, 211 — and their subjects map one-to-one onto the five topics the scope sentence names (what a package is → P1; what ships → P2; identity → P3; building without polluting → P4 with P5; when to generalise → P7; P6 is the spike discipline that guards the P1/P4 move). No eighth lesson and no lesson outside those topics."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "each-lesson-is-self-contained": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:20  ##p1-context-a-bespoke-layout-costs-an-author-and-the-tooling **Context.** If a package has its own bespoke layout, an author must",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:28  ##P1-LAW-A-PACKAGE-IS-A-PROJECT **The law.** *A package is a project — the distributable unit is",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:32  ##P1-MECHANICS-SPEC-SUBTREE-CODE-AT-THE-ROOT-ONE-MANIFEST **Mechanics.** Prompt and spec content lives under a `spec/` subtree",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:48  ##p1-symptoms **Symptoms you need this.** A package-only folder convention nobody",
+     "confirmed: Measured over the whole file: `grep -cE '\\*\\*Context\\.\\*\\*'` = 7, `'\\*\\*The law\\.\\*\\*'` = 7, `'\\*\\*Mechanics\\.\\*\\*'` = 7, `'\\*\\*Symptoms you need this\\.\\*\\*'` = 7. Seven lessons, four parts each, no omissions. Self-containment holds on inspection too: no lesson body requires another to be read first — the only cross-references are a forward pointer from P4 to P3 ('folding that output into identity (P3)') and P3's own '(P3)' back-reference, both parenthetical."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "vocabulary-is-generic": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:14  ##vocabulary-is-generic Vocabulary is generic — *the",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:99  ##P3-MECHANICS-A-SHORT-DENYLIST-NAMES-WHAT-WAS-NEVER-SOURCE **Mechanics.** A short denylist names what was **n ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:164  ##P5-MECHANICS-THE-CONSUMED-TOOLCHAIN-LIVES-IN-A-COMMITTED-SLOT **Mechanics.** The consumed toolchain lives in ...",
+     "confirmed: Measured: `grep -ncE '\\bvibe\\b|\\bcargo\\b|\\bVVM\\b|\\bWindows\\b|\\bRust\\b|\\bvibevm\\b'` over this file returns 0 — no product, platform or language is named anywhere in its 257 lines. Where a concrete example is unavoidable the file marks it as one: 'for example `.git/`, `target/`, `node_modules/`' (99-101). The three generic terms the sentence lists are the ones actually used: 'the package' / 'the consumer' / 'the slot' appear throughout, e.g. the P5 mechanics at 164-166."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "p1-context-a-bespoke-layout-costs-an-author-and-the-tooling": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:59  - ##format-cause The package format is the cause: a package is defined as a bundle of prompt",
+     "spec/common/PROP-024-code-bearing-packages.md:62  - ##nowhere-for-code There is nowhere to put code. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:107  ##RETIRES-FLAT-LAYOUT This **retires the flat package layout** (boot snippets and content at the",
+     "spec/common/PROP-024-code-bearing-packages.md:108  package root) that the real packages drifted into; it aligns them with — and",
+     "confirmed: PROP-024 §1.1 records precisely this cost in the host's own words: the package format 'is defined as a bundle of prompt files … materialised verbatim' (59-61) and 'There is nowhere to put code' (62). §2.1 `RETIRES-FLAT-LAYOUT` (107-110) records that the real packages had 'drifted into' a flat package-root layout — the bespoke convention this context describes — and that PROP-024 retires it. Direction, stated because the harvest asks for it: PROP-024 is dated 2026-06-27 and this package restates it, so a match here is the lesson's SOURCE, not an independent witness."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p1-context-two-shapes-means-two-of-everything": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:102  - ##CONS-CHECK-UNCHANGED `vibe check` applies unchanged (its §12 Check 7 — `spec/boot/` exists and holds",
+     "spec/common/PROP-024-code-bearing-packages.md:105  - ##CONS-NO-CONVENTION There is no package-only directory convention to learn. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:101  - ##CONS-DEV-IS-DEV **Consequence.** Developing a package is developing a project. @spec/done",
+     "confirmed: The positive form is settled: PROP-024 §2.1 states the consequences of having ONE shape — 'Developing a package is developing a project' (101), '`vibe check` applies unchanged' (102-103), 'There is no package-only directory convention to learn' (105). The counterfactual — that two shapes would have cost two linters — is not recorded anywhere I could find: `grep -rn 'two linters\\|package linter\\|package-only' spec/ crates/` returns only PROP-024:105 and the package itself, and there is no second checker in `crates/vibe-check/` for packages."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P1-LAW-A-PACKAGE-IS-A-PROJECT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:91  ##PKG-PROJECT-LAW **Decision.** A package has the identical on-disk shape as a consumer project: @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:74  ##PACKAGE-SHAPE **prompt/spec content under `spec/`, arbitrary code at the root, one `vibe.toml`.** @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:105  - ##CONS-NO-CONVENTION There is no package-only directory convention to learn. @spec/done",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:16  source = \"spec/boot/70-flow-tool-design-lessons.md\"",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:17  category = \"flow\"",
+     "confirmed: PROP-024 §2.1 is the same law: 'A package has the identical on-disk shape as a consumer project' (91) and §1.2's one-line form 'prompt/spec content under `spec/`, arbitrary code at the root, one `vibe.toml`' (74). Measured across the registry: all 35 packages that declare a boot snippet give a `spec/`-relative source (`grep -h '^source = ' packages/*/*/*/vibe.toml | grep -c 'source = \"spec/'` = 35 of 35), and 35 of the 45 package version directories carry a `spec/boot/` directory — the same shape a project has. Direction, stated because the harvest asks for it: PROP-024 is dated 2026-06-27 and this package restates it, so a match here is the lesson's SOURCE, not an independent witness."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P1-MECHANICS-SPEC-SUBTREE-CODE-AT-THE-ROOT-ONE-MANIFEST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:93  - ##SPEC-SUBTREE **Prompt/spec content lives under the package's `spec/` subtree** — boot",
+     "spec/common/PROP-024-code-bearing-packages.md:97  - ##ROOT-CODE **The package root holds arbitrary code** (e.g. `Cargo.toml` + `crates/`) and",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:1  [package]",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:1",
+     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/Cargo.toml:1",
+     "confirmed: All three clauses are observable on disk. `spec/` subtree: this package's content lives at `spec/boot/` and `spec/flows/tool-design-lessons/`, the same layout a project uses. Code at the root: 9 of the 45 package version dirs carry `Cargo.toml` and/or `crates/` and/or `tools/` at the root — core-ai-native v0.7.0 and v0.8.0, go-ai-native-lang, go-ai-native-mcp, rust-ai-native-lang, rust-ai-native-mcp, typescript-ai-native-lang, typescript-ai-native-mcp, and fractality. One manifest: every package version dir carries exactly one `vibe.toml`. PROP-024 §2.1 states the same split at 93-99."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P1-MECHANICS-AUTHORING-A-PACKAGE-IS-AUTHORING-A-PROJECT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:101  - ##CONS-DEV-IS-DEV **Consequence.** Developing a package is developing a project. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:102  - ##CONS-CHECK-UNCHANGED `vibe check` applies unchanged (its §12 Check 7 — `spec/boot/` exists and holds",
+     "spec/common/PROP-024-code-bearing-packages.md:104  - ##CONS-BOOT-SAME The package's own boot sequence is computed the same way as any project's. @spec/done",
+     "crates/vibe-check/src/lib.rs:18  //! 7. [`CheckId::BootDirectory`] — `spec/boot/` exists and holds only",
+     "spec/common/PROP-024-code-bearing-packages.md:321    `vibe check` passes on it as a project (`spec/boot/` markdown-only). @spec/done",
+     "confirmed: The rule is stated by the host (PROP-024 §2.1 lines 101-104) and its acceptance criterion is recorded (`ACC-SHAPE`, line 320-321: '`vibe check` passes on it as a project'). The shape the check tests holds everywhere: Check 7 is `CheckId::BootDirectory` — '`spec/boot/` exists and holds only [markdown]' (`crates/vibe-check/src/lib.rs:18`) — and `find packages/*/*/*/spec/boot -type f ! -name '*.md'` returns nothing across all 35 package boot directories, so no package would fail it. What I could not settle is the 'same check command applies unchanged' half as an execution: I did not run `vibe check` against a package directory, and I found no test or CI step that does — `grep -rn 'vibe check' xtask/ .github/ 2>/dev/null` and a scan of `crates/vibe-check/` turn up no package-directory fixture."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P1-MECHANICS-CODE-IS-OPTIONAL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:97  - ##ROOT-CODE **The package root holds arbitrary code** (e.g. `Cargo.toml` + `crates/`) and",
+     "spec/common/PROP-024-code-bearing-packages.md:98    `vibe.toml`, exactly as a project root does. Code is optional — a prompt-only",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:4  kind = \"flow\"",
+     "confirmed: Measured both ways. Prompt-only is the majority: 36 of the 45 package version dirs carry no `Cargo.toml`, no `crates/` and no `tools/` — including every one of the 27 `org.vibevm.world` flows, which I tested individually and none has any. This package is one of them: `find packages/org.vibevm.world/tool-design-lessons -type f` returns 7 files, all markdown plus one `vibe.toml`. Code-bearing is the minority: 9 dirs carry root code. PROP-024 §2.1 line 98 states the rule ('Code is optional — a prompt-only package … simply has no code at its root')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "P1-MECHANICS-ONE-OBJECT-MADE-INSTALLABLE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:69  ##project-shape A vibe *project* already has the right shape: an authored `spec/` corpus",
+     "spec/common/PROP-024-code-bearing-packages.md:72  should be the same object, made installable: @spec/done",
+     "vibe.lock:405  source_url = \"file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/tool-design-lessons/v0.1.0\"",
+     "vibedeps/flow-tool-design-lessons/0.1.0/vibe.toml:1",
+     "confirmed: Observable in the lockfile: this package's `source_url` is `file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/tool-design-lessons/v0.1.0` — the working directory in the repository IS the distributable, resolved in place. Materialising it copies the same tree: `cmp` of `vibe.toml` and `LICENSE.md` between the package and `vibedeps/flow-tool-design-lessons/0.1.0/` reports them identical, and the five markdown files are identical once the campaign's own markup is stripped. PROP-024 §1.2 puts it the same way: a package 'should be the same object, made installable' (72)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "p1-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:107  ##RETIRES-FLAT-LAYOUT This **retires the flat package layout** (boot snippets and content at the",
+     "spec/common/PROP-024-code-bearing-packages.md:109  extends — `VIBEVM-SPEC.md` §13.1's own canonical example, which already places a",
+     "confirmed: The first symptom is recorded as having actually occurred here: PROP-024 §2.1 `RETIRES-FLAT-LAYOUT` says 'the real packages drifted into' a flat package-root layout (107-110), which is a package-only convention nobody kept. The second and third I could not find evidence of: `crates/vibe-check/` contains no package-specific refusal (its Check 7 is shape-based and would pass on a package), and `grep -rln 'how packages differ from projects\\|package layout' spec/` returns PROP-024 and `VIBEVM-SPEC.md` §13.1 only — both of which define the layout rather than explaining a divergence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p2-context-the-tooling-was-hardcoded-inside-one-workspace": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:44  - ##machinery-hardcoded But the machinery that makes the discipline *real* — the conform checker",
+     "spec/common/PROP-024-code-bearing-packages.md:45    (Class-F/G rules, the file-length budget, the unwrap ban) and the",
+     "spec/common/PROP-024-code-bearing-packages.md:47    vibevm workspace** (`crates/conform-core`, `crates/conform-frontend-rust`,",
+     "spec/common/PROP-024-code-bearing-packages.md:48    `crates/specmark`, `crates/specmap-core`, the `cargo xtask conform`/`specmap`",
+     "confirmed: PROP-024 §1.1 `##machinery-hardcoded` states it and names the crates: the conform checker and the specmap/specmark traceability engine were 'hardcoded as crates inside the vibevm workspace (`crates/conform-core`, `crates/conform-frontend-rust`, `crates/specmark`, `crates/specmap-core`, the `cargo xtask conform`/`specmap` drivers)' (44-49). Verified they have since left: `ls crates/` today lists 18 crates and none of those five is among them, while `ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/` returns core-ai-native-conform, core-ai-native-specmap, core-ai-native-specmark and core-ai-native-specmark-grammar. The move is commit 788e67c8 (2026-07-12, 'refactor(packages): move the AI-Native discipline to org.vibevm.ai-native')."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p2-context-installing-gave-a-description-of-checkers-you-lacked": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:51  - ##install-gets-description Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *des ...",
+     "spec/common/PROP-024-code-bearing-packages.md:52    checkers you do not have. To actually run the discipline you would have to",
+     "spec/common/PROP-024-code-bearing-packages.md:53    re-implement the very tools vibevm already wrote. @spec/done",
+     "confirmed: PROP-024 §1.1 `##install-gets-description` is the same sentence: 'Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *description* of checkers you do not have. To actually run the discipline you would have to re-implement the very tools vibevm already wrote' (51-53). The condition no longer holds: `vibedeps/stack-rust-ai-native-lang/0.7.0/` now carries `Cargo.toml` + `crates/`, so a consumer installing that stack today receives the runtime. Direction, stated because the harvest asks for it: PROP-024 is dated 2026-06-27 and this package restates it, so a match here is the lesson's SOURCE, not an independent witness."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p2-context-documented-but-not-distributable": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:54  - ##not-distributable The discipline is therefore **not distributable**: its strong-author artifacts",
+     "spec/common/PROP-024-code-bearing-packages.md:55    (guide, cards) ship, but its runtime (the checkers) does not. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:56  - ##gap-consequence This is the gap that, left open, makes spec-conformance \"fall apart\" for any",
+     "confirmed: PROP-024 §1.1 `##not-distributable`: 'The discipline is therefore **not distributable**: its strong-author artifacts (guide, cards) ship, but its runtime (the checkers) does not' (54-55), and `##gap-consequence` adds that left open it 'makes spec-conformance \"fall apart\" for any consumer that is not vibevm itself' (56-57). Present state measured: 5 of the 36 installed slots now carry runnable code, so the gap is closed for the discipline families."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P2-LAW-SHIP-THE-RUNTIME-NOT-A-DESCRIPTION-OF-IT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:5  ##status-line **Status: IMPLEMENTED** (proposed 2026-06-27, owner-directed; verified against",
+     "spec/common/PROP-024-code-bearing-packages.md:11  workspace. A consumer who installs `stack:org.vibevm.ai-native/rust-ai-native-lang` then has",
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml:1",
+     "vibedeps/stack-typescript-ai-native-lang/0.6.0/Cargo.toml:1",
+     "vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.toml:1",
+     "confirmed: PROP-024's status line records the same law as delivered: 'A consumer who installs `stack:org.vibevm.ai-native/rust-ai-native-lang` then has the working checkers, not a prose description of them' (11-12). Measured over the installed reality: I tested each of the 36 slots under `vibedeps/` for `Cargo.toml` / `crates/` / `tools/`; 5 carry code — flow-core-ai-native/0.8.0, mcp-rust-ai-native-mcp/0.7.0, mcp-typescript-ai-native-mcp/0.6.0, stack-rust-ai-native-lang/0.7.0, stack-typescript-ai-native-lang/0.6.0. The other 31 describe no tooling, so they are not counter-examples."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "P2-MECHANICS-THE-PACKAGE-CARRIES-THE-EXECUTABLE-FORM": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml:1",
+     "vibedeps/stack-typescript-ai-native-lang/0.6.0/Cargo.toml:1",
+     "spec/common/PROP-024-code-bearing-packages.md:236  ##PLACEMENT-LAW **Decision.** The discipline's tools are code and obey the four-layer model:",
+     "spec/common/PROP-024-code-bearing-packages.md:239  - ##THIS-PASS-WHOLE-TOOLCHAIN For **this pass**, the **entire Rust discipline toolchain** — the conform",
+     "confirmed: Checked on disk, per slot. `vibedeps/stack-rust-ai-native-lang/0.7.0/` ships `Cargo.toml`, `Cargo.lock`, `crates/`, `spec/`, `specmap.toml` — the guide and cards under `spec/` beside the crates that implement them; the TypeScript stack additionally ships a `tools/` directory. PROP-024 §2.6 states the placement rule ('L4 (implemented checkers) ships in the package whose language they check', 236-237) and §2.6 `THIS-PASS-WHOLE-TOOLCHAIN` names what moved (239-245). The prompt-only packages, this one included, document no checker and therefore carry none."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "P2-MECHANICS-THE-EXACT-FAILURE-TO-DESIGN-OUT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:51  - ##install-gets-description Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *des ...",
+     "spec/common/PROP-024-code-bearing-packages.md:56  - ##gap-consequence This is the gap that, left open, makes spec-conformance \"fall apart\" for any",
+     "confirmed: The sentence is a paraphrase of PROP-024:51 with the product name removed — the generic-vocabulary rule this file states at line 14 applied to the host's own text. §1.1 `##gap-consequence` (56-57) records why it had to be designed out. No independent host artifact restates it; the two are the same statement at different levels of abstraction."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P2-MECHANICS-THE-ARTIFACTS-AND-THE-RUNTIME-SHIP-TOGETHER": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:11  workspace. A consumer who installs `stack:org.vibevm.ai-native/rust-ai-native-lang` then has",
+     "spec/common/PROP-024-code-bearing-packages.md:54  - ##not-distributable The discipline is therefore **not distributable**: its strong-author artifacts",
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/README.md:1",
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml:1",
+     "confirmed: Same-slot co-location verified: `ls vibedeps/stack-rust-ai-native-lang/0.7.0/` returns Cargo.lock, Cargo.toml, LICENSE.md, README.md, crates, spec, specmap.toml, vibe.toml — the prose (`spec/`, README) and the runtime (`crates/`) arrive in the same directory from the same install, so there is no moment at which a consumer holds one without the other. PROP-024 line 11 states the same outcome."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "p2-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:51  - ##install-gets-description Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *des ...",
+     "spec/common/PROP-024-code-bearing-packages.md:56  - ##gap-consequence This is the gap that, left open, makes spec-conformance \"fall apart\" for any",
+     "spec/common/PROP-024-code-bearing-packages.md:57    consumer that is not vibevm itself. @spec/done",
+     "confirmed: All three symptoms are recorded as having occurred in this repository before PROP-024: the first is §1.1:51-53 verbatim in substance, the second and third are `##gap-consequence` — the gap 'makes spec-conformance \"fall apart\" for any consumer that is not vibevm itself' (56-57), i.e. only the author could run it. Direction, stated because the harvest asks for it: PROP-024 is dated 2026-06-27 and this package restates it, so a match here is the lesson's SOURCE, not an independent witness."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p3-context-hashing-the-whole-directory-pulls-in-build-output": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:63  - ##identity-fights-code The identity/materialisation machinery (`content_hash` over every file,",
+     "spec/common/PROP-024-code-bearing-packages.md:64    full-tree copy) actively fights it — a Rust crate's `target/` would make",
+     "spec/common/PROP-024-code-bearing-packages.md:128  - ##WHY-SOURCE-IDENTITY **Why.** Identity is the *source*, never build artifacts: build output is",
+     "spec/common/PROP-024-code-bearing-packages.md:130    gigabytes — hashing or copying it would make identity unstable and",
+     "confirmed: PROP-024 §1.1 `##identity-fights-code` states the mechanism — 'The identity/materialisation machinery (`content_hash` over every file, full-tree copy) actively fights it — a Rust crate's `target/` would make identity non-deterministic and the copy ruinous' (63-65) — and §2.2 `WHY-SOURCE-IDENTITY` repeats the three non-determinism sources verbatim: 'timestamps, host paths, incremental state' (128-132). The 'whole directory' behaviour is still what the algorithm does when nothing is excluded: `compute_content_hash` walks every regular file (crates/vibe-registry/src/shippable.rs:78-99); only `filter_entry(is_shippable)` keeps it off build output."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p3-context-that-makes-identity-unstable-and-materialisation-ruinous": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:130    gigabytes — hashing or copying it would make identity unstable and",
+     "spec/common/PROP-024-code-bearing-packages.md:131    materialisation ruinous, the exact failure PROP-022 §1.1 names for \"big in file",
+     "spec/common/PROP-019-version-manager.md:637  - ##COPY-UNTENABLE Copying a checkout into the install root is untenable — a working tree's",
+     "confirmed as reasoning the host recorded, with its magnitude independently measured elsewhere in the same repository. `PROP-024` §2.2 states it at 128-132 — «hashing or copying it would make identity unstable and materialisation ruinous» — and the «tens of GB» figure has a separate witness at `PROP-019` §9.6 line 637, «a working tree's cargo `target/` is already tens of GB», written for a different subsystem. RECORDED: an unstable hash was never actually observed here, so the reasoning is a prediction the design acted on rather than an incident it responded to — which is the honest reading and is what the P3 symptom rows say too."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P3-LAW-IDENTITY-IS-THE-SOURCE-EXCLUDED-BY-DENYLIST": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "crates/vibe-registry/src/shippable.rs:18  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "spec/common/PROP-024-code-bearing-packages.md:116  ##SHIPPABLE-TREE-DEF **Decision.** A package's **shippable tree** is its directory minus a",
+     "spec/common/PROP-024-code-bearing-packages.md:120  .git/        .vibe/        target/        node_modules/",
+     "spec/common/PROP-024-code-bearing-packages.md:297  - ##REJ-ALLOW-LIST **A per-file `[ship]`/`[files]` allow-list in the manifest** — rejected: it",
+     "vibe.lock:406  content_hash = \"sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004\"",
+     "confirmed: Both halves implemented and measured. Denylist: the constant `SHIPPABLE_EXCLUDES = [\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"]` at content_hash.rs:28 and shippable.rs:18, applied via `WalkDir::filter_entry`. Identity-is-source: I re-implemented the algorithm in python and hashed `vibedeps/flow-tool-design-lessons/0.1.0` → `sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004`, exactly `vibe.lock:406`; the same tree with `target/debug/x.bin` and `node_modules/junk.js` added hashes identically. Not-an-allow-list: PROP-024 §4 `REJ-ALLOW-LIST` (297-300) records the rejection."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "P3-MECHANICS-A-SHORT-DENYLIST-NAMES-WHAT-WAS-NEVER-SOURCE": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "spec/common/PROP-024-code-bearing-packages.md:120  .git/        .vibe/        target/        node_modules/",
+     "spec/common/PROP-024-code-bearing-packages.md:123  - ##VIBEIGNORE-EXTENDS plus any glob listed in an optional `.vibeignore` at the package root. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:268  - ##SURF-VIBEIGNORE **Optional `.vibeignore`** at the package root — newline-delimited globs added",
+     "DRIFT on the trailing clause, with the main claim exact. The named list matches: the code's five entries are `.git` (VCS internals), `.vibe` (the per-project cache), `target` and `node_modules` (build output), and `.vibeignore` itself — against `PROP-024` §2.2's four-item block at line 120 plus the ignore file. «Plus an optional package-level ignore file» is where it stops short: `.vibeignore` is excluded from the hash by NAME, and no code reads globs out of it, so the file is honoured as a denylist entry and not as a denylist. RECORDED as a live consequence the reviewer may want: `vibedeps` is NOT on `SHIPPABLE_EXCLUDES`, so a package carrying its own `vibedeps/` folds it into its identity and ships it — and one exists on disk, `vibedeps/flow-delegation-rules/0.1.0/vibedeps/flow-tool-design-lessons/0.1.0/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P3-MECHANICS-HASH-COPY-AND-SLOT-OPERATE-OVER-SOURCE-MINUS-DENYLIST": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-registry/src/shippable.rs:20  /// Prune build output from a [`WalkDir`] walk so the hash and slot cover only",
+     "crates/vibe-registry/src/shippable.rs:36          .into_iter()",
+     "crates/vibe-registry/src/shippable.rs:80          .filter_entry(is_shippable)",
+     "crates/vibe-index/src/content_hash.rs:43          .filter_entry(is_shippable)",
+     "crates/vibe-registry/src/shippable.rs:128          assert!(",
+     "spec/common/PROP-024-code-bearing-packages.md:124  - ##SHIPPABLE-CONSUMERS The `content_hash` (PROP-002 §2.1), the snapshot copy (PROP-022 §2.2), and the",
+     "confirmed: All three consumers use the same predicate, in code. `copy_dir_recursive` (the snapshot copy) calls `WalkDir::new(src).into_iter().filter_entry(is_shippable)` at shippable.rs:35-39; `compute_content_hash` calls the same at shippable.rs:78-81; the `vibe-index` port repeats it at content_hash.rs:41-44. The in-tree test `copy_and_hash_exclude_build_output` (shippable.rs:118-140) asserts both — 'target/ must not be copied' and 'build output must not affect the content hash'. PROP-024 §2.2 `SHIPPABLE-CONSUMERS` (124-126) names the same three. One duplication worth flagging: the denylist constant exists twice (vibe-index and vibe-registry) with comments on both sides saying they MUST stay in lockstep; the parity gate is `crates/vibe-index/tests/content_hash_parity.rs` per content_hash.rs:1-5."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P3-MECHANICS-IT-MUST-BE-A-DENYLIST-NOT-AN-ALLOW-LIST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:297  - ##REJ-ALLOW-LIST **A per-file `[ship]`/`[files]` allow-list in the manifest** — rejected: it",
+     "spec/common/PROP-024-code-bearing-packages.md:298    resurrects the per-file write list PROP-009 §2.6 retired. A denylist of build",
+     "spec/common/PROP-024-code-bearing-packages.md:299    output (§2.2) keeps \"what ships\" == \"the source\", preserving the verbatim",
+     "spec/common/PROP-024-code-bearing-packages.md:136  - ##VERBATIM-PRESERVED **\"Verbatim\" is preserved for the source.** PROP-009 §2.1 / `VIBEVM-SPEC.md`",
+     "spec/common/PROP-024-code-bearing-packages.md:137    §13.1 guarantee no path rewriting and no per-file write list — a human reading",
+     "vibe.lock:407  files_written = []",
+     "confirmed: PROP-024 §4 `REJ-ALLOW-LIST` rejects it in the same terms: 'A per-file `[ship]`/`[files]` allow-list in the manifest — rejected: it resurrects the per-file write list PROP-009 §2.6 retired' (297-300). The verbatim guarantee is §2.2 `VERBATIM-PRESERVED`: 'no path rewriting and no per-file write list — a human reading the package directory sees exactly what materialises' (136-138). Observable in the lockfile: `files_written = []` for this package (line 407) and, per the batch plan, for all 36 — there is no per-file manifest anywhere. And the slot does mirror the package exactly: 7 files in, 7 files out."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "P3-MECHANICS-THE-DENYLIST-INTRODUCES-NO-CHOICE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:142  - ##DENYLIST-NOT-SELECTION The denylist formalises \"what was never source\", it does not introduce",
+     "spec/common/PROP-024-code-bearing-packages.md:143    selection. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:139  - ##VERBATIM-HOLDS-SHIPPABLE That guarantee holds unchanged for the shippable tree: build output was never",
+     ".gitignore:2  /target/",
+     ".gitignore:3  **/target/",
+     "confirmed: PROP-024 §2.2 `DENYLIST-NOT-SELECTION` states it (142-143) and `VERBATIM-HOLDS-SHIPPABLE` gives the test: 'build output was never part of the authored tree (it is gitignored in the package's own repository too)' (139-141). Checked against this repository's own `.gitignore`: `/target/` and `**/target/` at lines 2-3 and `.vibe/` at line 14 — three of the five denylist entries are already git-ignored here, `.git` is git itself, and `.vibeignore` is the ignore file. So every entry is something git already refuses to track; none of them is an authored file a maintainer chose to withhold."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p3-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:279  - ##REJ-HASH-BUILD-OUTPUT **Hash and copy build output too** — rejected: non-deterministic and",
+     "spec/common/PROP-024-code-bearing-packages.md:297  - ##REJ-ALLOW-LIST **A per-file `[ship]`/`[files]` allow-list in the manifest** — rejected: it",
+     "spec/common/PROP-024-code-bearing-packages.md:281    exists to avoid. Identity is source (§2.2). @spec/done",
+     "confirmed: All three symptoms are recorded as REASONS FOR REJECTION rather than as observed events: §4 `REJ-HASH-BUILD-OUTPUT` — 'Hash and copy build output too — rejected: non-deterministic and potentially gigabytes' (279-281) — and `REJ-ALLOW-LIST` for the ship list (297-300). I looked for an occurrence: `git log --oneline --all -S 'SHIPPABLE_EXCLUDES'` shows the constant landing with the feature, and there is no DRIFT/E-BUG entry for a flipping hash or an oversized materialise. So the symptoms were anticipated, not suffered — here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p4-context-building-consumer-side-in-place-is-tempting": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:149  - ##MATERIALISE-AS-TODAY **Decision.** `vibe install` materialises the shippable tree — including code —",
+     "spec/common/PROP-024-code-bearing-packages.md:151  - ##BUILD-CONSUMER-SIDE Turning that source into a runnable tool is consumer-side and **must never",
+     "spec/common/PROP-024-code-bearing-packages.md:289  - ##REJ-IN-PLACE **`materialization = \"in-place\"` for tool packages** — rejected: `in-place`",
+     "confirmed: PROP-024 §2.3 sets up exactly this tension: `vibe install` materialises the code into the `vibedeps/` slot (149-150), and 'Turning that source into a runnable tool is consumer-side and **must never write into the committed slot or the hash**' (151-152) — a prohibition written because the in-place option is the obvious one. §4 `REJ-IN-PLACE` (289-292) rejects `materialization = \"in-place\"` for tool packages for a related reason."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p4-context-in-tree-output-pollutes-and-flips-the-hash": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:151  - ##BUILD-CONSUMER-SIDE Turning that source into a runnable tool is consumer-side and **must never",
+     "spec/common/PROP-024-code-bearing-packages.md:152    write into the committed slot or the hash**: @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:63  - ##identity-fights-code The identity/materialisation machinery (`content_hash` over every file,",
+     "crates/vibe-index/src/content_hash.rs:149          // A package with build output hashes identically to the same package",
+     "confirmed: The causal chain is stated in PROP-024 (§2.3:151-152 for the pollution, §1.1:63-65 for the hash flip) and the second half is checkable: `compute_content_hash` reads the bytes of every file it walks (shippable.rs:88-99), so an unexcluded `target/` really would change the digest on every build. The in-tree test that guards it says so in its own comment: 'A package with build output hashes identically to the same package without it — identity is the shippable source' (content_hash.rs:148-150). I confirmed the property empirically — adding `target/debug/x.bin` to a copy of the slot left the digest unchanged."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P4-LAW-BUILD-OUTPUT-GOES-TO-A-GITIGNORED-LOCATION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:154  - ##HOOK-BUILD A code-bearing tool package builds via a **`post-install` hook**",
+     "spec/common/PROP-024-code-bearing-packages.md:156    output is directed to a **gitignored** location (e.g.",
+     ".gitignore:2  /target/",
+     ".gitignore:3  **/target/",
+     ".gitignore:14  .vibe/",
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "confirmed: Both clauses hold in this repository. Gitignored: `.gitignore` lines 2-3 ignore `/target/` and `**/target/`, and line 14 ignores `.vibe/` — the two locations PROP-024 §2.3 names for build output ('e.g. `<project-root>/.vibe/<pkg>-target/`', 156-157). Never the hash: `target` and `.vibe` are both on `SHIPPABLE_EXCLUDES` (content_hash.rs:28), measured above. The host's own self-build follows the same law from the other direction — `CargoBuilder` targets a VVM-managed `--target-dir` outside the source tree (builder.rs:50-60)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:154  - ##HOOK-BUILD A code-bearing tool package builds via a **`post-install` hook**",
+     "spec/common/PROP-024-code-bearing-packages.md:158    that location, the hook runner gains a `VIBE_PROJECT_ROOT` environment",
+     "spec/common/PROP-024-code-bearing-packages.md:270  - ##SURF-HOOKS **`[hooks].post-install`** (PROP-020) is the build lever; **`VIBE_PROJECT_ROOT`**",
+     "crates/vibe-workspace/src/hooks.rs:355  /// The documented environment a hook receives (PROP-020 §2.2). The publish",
+     "crates/vibe-workspace/src/hooks.rs:367              \"VIBE_PACKAGE_DIR\".to_string(),",
+     "crates/vibe-workspace/src/hooks.rs:370          (\"VIBE_HOOK_PHASE\".to_string(), phase.as_str().to_string()),",
+     "DRIFT on the second half: the variable the mechanic depends on is specified in two PROPs and shipped in none. First half specified — `PROP-024` §2.3 `HOOK-BUILD` makes the `post-install` hook the build lever with output to a gitignored path (154-157). Second half not implemented: `build_env` is «The documented environment a hook receives (PROP-020 §2.2)» (`hooks.rs:355-372`) and supplies exactly six variables — VIBE_PACKAGE_GROUP, VIBE_PACKAGE_NAME, VIBE_PACKAGE_VERSION, VIBE_PACKAGE_KIND and two more — and `VIBE_PROJECT_ROOT` is not among them. `grep -rn 'VIBE_PROJECT_ROOT\\|PROJECT_ROOT' crates/ spec/ packages/` returns 3 hits, ALL of them spec text (`PROP-024:158`, `:270`, `PROP-020:108`), none under `crates/`. So a hook cannot address the path this mechanic tells it to write to."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P4-MECHANICS-THE-SLOTS-RESET-SEMANTICS-ARE-TRIVIALLY-SAFE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:167  ##HOOK-RESET-UNAFFECTED The hook's own reset semantics (PROP-020 §2.1 — slot re-materialised on update,",
+     "spec/common/PROP-024-code-bearing-packages.md:168  edits never compound) are unaffected: the build output lives outside the slot,",
+     "spec/common/PROP-024-code-bearing-packages.md:169  so there is nothing in the slot to reset. @spec/done",
+     "confirmed: PROP-024 §2.3 `HOOK-RESET-UNAFFECTED` states it (167-169): 'the build output lives outside the slot, so there is nothing in the slot to reset'. Observable in this corpus: every one of the 36 installed slots contains only materialised source — I checked the five code-bearing ones for build artifacts and `find vibedeps -type d -name target` returns nothing, so no slot holds build output that a re-materialise would have to clobber."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P4-MECHANICS-A-LANGUAGE-NATIVE-CONSUMER-MAY-SKIP-THE-HOOK": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:162  - ##NATIVE-CONSUMER-SKIP A **language-native consumer** (vibevm itself is a Rust consumer) MAY instead",
+     "spec/common/PROP-024-code-bearing-packages.md:164    skip the build hook entirely — the hook is the path for a consumer that wants",
+     "Cargo.toml:7  exclude = [\"packages\", \"vibedeps\"]",
+     "Cargo.toml:97  conform-core = { package = \"core-ai-native-conform\", path = \"packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendo ...",
+     "Cargo.toml:104  specmark = { package = \"core-ai-native-specmark\", path = \"packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/c ...",
+     "confirmed: This host IS that consumer, and it does skip the hook. `Cargo.toml:7` excludes `packages` and `vibedeps` from the root workspace, and lines 97-104 declare seven external path-deps straight into the package tree (conform-core, specmap-core, specmark and four `rust-ai-native-*` crates), so cargo builds the shipped crates directly. No `post-install` hook is declared for those packages — `grep -rn 'post-install' packages/org.vibevm.ai-native/*/*/vibe.toml` returns nothing. PROP-024 §2.3 `NATIVE-CONSUMER-SKIP` (162-165) authorises exactly this and names vibevm as the example."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P4-MECHANICS-THE-TREE-AND-THE-HASH-SEE-ONLY-SOURCE": {
+    "v": "confirmed",
+    "ev": [
+     ".gitignore:2  /target/",
+     ".gitignore:3  **/target/",
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "crates/vibe-registry/src/shippable.rs:128          assert!(",
+     "spec/common/PROP-024-code-bearing-packages.md:322  - ##ACC-HASH-EXCLUDES `content_hash`, the snapshot copy, and the materialised slot exclude `.git/`,",
+     "confirmed: Measured on both surfaces. Committed tree: `git status` reports the tree clean at session start and `.gitignore:2-3` keeps `/target/` and `**/target/` untracked, so a build cannot dirty it. Identity: the hash experiment above — adding `target/` and `node_modules/` to a copy of the slot left `sha256:fc250e20…7004` unchanged — plus the in-tree assertion 'build output must not affect the content hash' (shippable.rs:128-139). PROP-024 §6 `ACC-HASH-EXCLUDES` (322-324) is the acceptance criterion for exactly this."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "p4-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:279  - ##REJ-HASH-BUILD-OUTPUT **Hash and copy build output too** — rejected: non-deterministic and",
+     "spec/common/PROP-024-code-bearing-packages.md:289  - ##REJ-IN-PLACE **`materialization = \"in-place\"` for tool packages** — rejected: `in-place`",
+     "spec/common/PROP-024-code-bearing-packages.md:167  ##HOOK-RESET-UNAFFECTED The hook's own reset semantics (PROP-020 §2.1 — slot re-materialised on update,",
+     "confirmed: As with P3's symptoms, all three are recorded as anticipated failures rather than observed ones: §4 `REJ-HASH-BUILD-OUTPUT` (279-281) for the flipping identity, `REJ-IN-PLACE` (289-292) for the slot-clobbering case, and §2.3 `HOOK-RESET-UNAFFECTED` (167-169) for the re-materialise. I searched for an occurrence — `git log --oneline --all --grep='dirt\\|clobber' -i` and a scan of `BACKLOG.md` — and found no incident in this repository."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p5-context-a-chicken-and-egg-risk": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:217  - ##SELF-HOST-VENDORED **Decision.** vibevm consumes its own discipline toolchain from the **committed**",
+     "spec/common/PROP-024-code-bearing-packages.md:223  - ##NO-CHICKEN-EGG There is no chicken-and-egg: the toolchain a build needs is vendored",
+     "spec/common/PROP-024-code-bearing-packages.md:224    beside the code that needs it. @spec/done",
+     "confirmed: PROP-024 §2.5 states the risk and names the resolution in the same breath: vibevm 'consumes its own discipline toolchain from the **committed** `vibedeps/` slot' (217-218) and 'There is no chicken-and-egg: the toolchain a build needs is vendored beside the code that needs it' (223-224). The risk is real for this repository specifically because ~300 sites compile against the shipped `specmark` proc-macro — `Cargo.toml:95` records the count — so without a committed copy the first build could not run."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p5-context-the-bootstrap-must-exist-before-the-first-build": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:219  - ##CLEAN-CLONE-BUILDS Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone",
+     "spec/common/PROP-024-code-bearing-packages.md:221    target (`vibedeps/stack-rust-ai-native-lang/0.2.0/crates/specmark`, …) already exists",
+     "spec/common/PROP-024-code-bearing-packages.md:327  - ##ACC-CLEAN-CLONE vibevm builds from a clean checkout, consuming its discipline toolchain (incl.",
+     "spec/common/PROP-024-code-bearing-packages.md:329    committed `vibedeps/` slot, with no prior `vibe install`. @spec/done",
+     "confirmed: PROP-024 §2.5 `CLEAN-CLONE-BUILDS`: 'Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone builds from a clean checkout **with no prior `vibe install`** — the path-dep target … already exists in the tree' (219-222), with §6 `ACC-CLEAN-CLONE` (327-329) as the acceptance criterion naming the `specmark` proc-macro. Verified the targets are tracked, not generated: the path-dep directories named in `Cargo.toml:97-104` all exist under `packages/` and are committed (the working tree is clean and they are not in `.gitignore`)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P5-LAW-VENDOR-AND-COMMIT-THE-BOOTSTRAP-TOOLCHAIN": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:217  - ##SELF-HOST-VENDORED **Decision.** vibevm consumes its own discipline toolchain from the **committed**",
+     "spec/common/PROP-024-code-bearing-packages.md:224    beside the code that needs it. @spec/done",
+     "Cargo.toml:84  # Code-bearing package crates (PROP-024): the ENGINE-CONFORM + specmap",
+     "Cargo.toml:104  specmark = { package = \"core-ai-native-specmark\", path = \"packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/c ...",
+     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml:1",
+     "confirmed: Implemented, with one relocation worth naming. The toolchain is vendored and committed: `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/` holds core-ai-native-conform, core-ai-native-specmap, core-ai-native-specmark and core-ai-native-specmark-grammar, and the root `Cargo.toml` path-deps into them (97-104) after excluding both trees from the workspace (7). The relocation: PROP-024 §2.5 and its example at line 186 describe the consumed copy living in `vibedeps/`, whereas the live path-deps point at `packages/…` — the in-repo package source. Both directories are committed, so the law's no-chicken-and-egg property is unaffected; the address in the PROP is stale."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P5-MECHANICS-THE-CONSUMED-TOOLCHAIN-LIVES-IN-A-COMMITTED-SLOT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:219  - ##CLEAN-CLONE-BUILDS Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone",
+     "spec/common/PROP-024-code-bearing-packages.md:221    target (`vibedeps/stack-rust-ai-native-lang/0.2.0/crates/specmark`, …) already exists",
+     "Cargo.toml:97  conform-core = { package = \"core-ai-native-conform\", path = \"packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendo ...",
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml:1",
+     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml:1",
+     "confirmed on the mechanic, which is what this fact asserts — with the ADDRESS recorded as stale, because that is the host's problem and not the flow's. The mechanic holds: the consumed toolchain lives in a committed directory and a clean clone builds. `vibedeps/` is committed and populated — 36 slots on disk, including `vibedeps/stack-rust-ai-native-lang/0.7.0/` with its own `Cargo.toml` and `crates/` — so the `PROP-024` §2.5 arrangement exists. But the dependency targets cargo actually resolves are under `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/…` (`Cargo.toml:97-104`), not `vibedeps/…` as §2.5 and its example at line 186 describe. Both locations are committed, so the law this fact states holds either way; the PROP's address has moved out from under its own example."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "P5-MECHANICS-THE-DEVELOPMENT-LOOP-STAYS-ERGONOMIC": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:226  ##DEV-LOOP-MUTABLE The development loop stays ergonomic: editing the in-repo package source under",
+     "spec/common/PROP-024-code-bearing-packages.md:228  the next `vibe install` (PROP-011 §2.6 — in-workspace `file://` sources are",
+     "spec/common/PROP-024-code-bearing-packages.md:229  mutable), so the consumed `vibedeps/` copy tracks the edited source without a",
+     "vibe.lock:405  source_url = \"file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/tool-design-lessons/v0.1.0\"",
+     "confirmed: PROP-024 §2.5 `DEV-LOOP-MUTABLE` states it and cites the rule that makes it work — PROP-011 §2.6, in-workspace `file://` sources are mutable (226-230). Observable: this package's `source_url` in `vibe.lock` is a `file:///…/packages/…` URL with `source_kind = \"local\"`, which is the mutable case. And the drift it predicts is visible right now: the campaign's Phase B edited the package source but the slot has not been re-installed, so a python re-hash of `packages/org.vibevm.world/tool-design-lessons/v0.1.0` gives `sha256:6e2c966373fd3bbf2a5dedad52a5cd3b75d5e7bddebe10bb8d3c96014fd7bd4c` against the slot's and lockfile's `sha256:fc250e20…7004`. The loop re-materialises on the NEXT install; until then the consumed copy lags, which is the honest shape of the guarantee."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "P5-MECHANICS-VENDORED-VERSIONED-AND-OFFLINE-BUILDABLE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:224    beside the code that needs it. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:289  - ##REJ-IN-PLACE **`materialization = \"in-place\"` for tool packages** — rejected: `in-place`",
+     "spec/common/PROP-024-code-bearing-packages.md:291    toolchain must be **vendored and versioned** so a clone is buildable offline",
+     "Cargo.toml:87  # resolve into each package's own Cargo workspace. Path-only — the crate",
+     "spec/common/PROP-024-code-bearing-packages.md:293  - ##REJ-CRATES-IO **Publish the tool crates to crates.io and depend on the published versions** —",
+     "confirmed: Versioned: the path-deps are version-qualified directories (`…/rust-ai-native-lang/v0.7.0/…`), and `Cargo.toml:87-88` records the deliberate 'Path-only — the crate versions are the packages' concern'. Offline: PROP-024 §4 `REJ-IN-PLACE` rejects the unversioned gitignored slot precisely so 'a clone is buildable offline' (289-292), and `REJ-CRATES-IO` (293-296) defers publishing the tool crates so 'the installed package *is* the distribution' rather than a registry fetch. I checked that no engine crate is pulled from a registry: every `conform-core` / `specmap-core` / `specmark` entry in `[workspace.dependencies]` is `path = …` with no `version = …`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p5-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:219  - ##CLEAN-CLONE-BUILDS Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone",
+     "spec/common/PROP-024-code-bearing-packages.md:289  - ##REJ-IN-PLACE **`materialization = \"in-place\"` for tool packages** — rejected: `in-place`",
+     "spec/common/PROP-024-code-bearing-packages.md:327  - ##ACC-CLEAN-CLONE vibevm builds from a clean checkout, consuming its discipline toolchain (incl.",
+     "confirmed: The first two symptoms are the exact failures PROP-024 §2.5 and §4 `REJ-IN-PLACE` design out, and §6 `ACC-CLEAN-CLONE` is the acceptance test that would catch them (327-329). The third — a bootstrap assuming the tool is on PATH — has a near-relative in this repository but not in the packaging path: the VVM doctor checks the shim dir is on PATH and reports 'MISS shim dir … (NOT on PATH)' rather than assuming (doctor.rs:73-82). I found no recorded instance of any of the three actually occurring: no DRIFT/E-BUG entry and no commit message matching `git log --oneline --all --grep='chicken' -i`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p6-context-a-cross-workspace-topology-has-sharp-platform-edges": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:205  - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace path-deps and the",
+     "spec/common/PROP-024-code-bearing-packages.md:206    `exclude` topology are validated empirically on the target host (Windows, where",
+     "spec/common/PROP-024-code-bearing-packages.md:207    `canonicalize()` adds a `\\\\?\\` prefix and Cargo path handling has sharp edges)",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:23      // `canonicalize()` on Windows returns a `\\\\?\\` verbatim path; cmd.exe and",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:43  /// `\\\\?\\C:\\…` → `C:\\…`) that `canonicalize()` adds; a no-op elsewhere.",
+     "confirmed: The platform edge is real and named identically in the host: PROP-024 §2.4 `SPIKE-FIRST` says '(Windows, where `canonicalize()` adds a `\\\\?\\` prefix and Cargo path handling has sharp edges)' (205-208). The prefix problem is not hypothetical — `crates/vibe-cli/src/commands/vvm/selfloc.rs` carries `strip_verbatim` (42-51) with the comment 'cmd.exe and the shims cannot exec one once it lands in `current`' (23-25) and a regression test at 100-116. That is the same OS edge in a different subsystem; I did not find a Cargo-specific instance."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p6-context-discovering-it-after-the-move-costs-an-unwind": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:205  - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace path-deps and the",
+     "spec/common/PROP-024-code-bearing-packages.md:209  - ##SPIKE-FALLBACK The fallback, if cross-workspace path-deps prove unworkable on a host, is §4's",
+     "spec/common/PROP-024-code-bearing-packages.md:211    own workspace members) — chosen only on evidence. @spec/done",
+     "confirmed: The reasoning is recorded (PROP-024 §2.4:205-211, where the fallback is retained precisely against this outcome), but I found no unwind in this repository's history to point at. `git log --oneline --all --grep='revert\\|unwind' -i -- Cargo.toml` and `git log --oneline --date=short -- Cargo.toml | head -20` show the workspace `exclude` arriving with the code-bearing work and not being reversed. So the cost this context describes was anticipated, not paid."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P6-LAW-SPIKE-THE-RISKY-TOPOLOGY-BEFORE-THE-IRREVERSIBLE-MOVE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:205  - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace path-deps and the",
+     "spec/common/PROP-024-code-bearing-packages.md:208    *before* any crate is physically relocated. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:209  - ##SPIKE-FALLBACK The fallback, if cross-workspace path-deps prove unworkable on a host, is §4's",
+     "spec/common/PROP-024-code-bearing-packages.md:282  - ##REJ-CONSUMER-MEMBERS **Consumer adds the slot crates as its own workspace members** (no package",
+     "spec/common/PROP-024-code-bearing-packages.md:286    generated `vibedeps/` state. **Retained as the §2.4 fallback** if",
+     "confirmed on adoption, with the evidence the host claims for it not filed anywhere. The law is stated verbatim in substance — `PROP-024` §2.4 `SPIKE-FIRST`: «Cross-workspace path-deps and the `exclude` topology are validated empirically on the target host … *before* any crate is physically relocated» (205-208) — and the fallback is retained and named, §4 `REJ-CONSUMER-MEMBERS`, «a decision made on spike evidence, not on preference». RECORDED: the spike RECORD does not exist. `grep -rn 'cross-workspace'` across every `*.md` hits only `PROP-024` and this package's own copies; `git log --grep='spike' -i` returns ten commits, all terminal/TUI work; `spec/manual-tests/` holds three records, none about packaging. So the host asserts it decided on spike evidence and kept none. Confirmed rather than drift because the law was adopted and the fallback retained, which is what the sentence prescribes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P6-MECHANICS-VALIDATE-ON-THE-ACTUAL-TARGET-HOST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:205  - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace path-deps and the",
+     "spec/common/PROP-024-code-bearing-packages.md:207    `canonicalize()` adds a `\\\\?\\` prefix and Cargo path handling has sharp edges)",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:87          // A managed `vibe` must derive a PLAIN path — never a `\\\\?\\` verbatim",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:102      fn strip_verbatim_drops_the_windows_prefix() {",
+     "confirmed: The rule names Windows as the target host, and this repository is developed on Windows (`vibe.lock` source URLs are `file:///C:/Users/…`), so the sharp-edge host is the working host — which is the strongest form of the mechanic. There is a validated-on-target artifact for the prefix edge: `strip_verbatim_drops_the_windows_prefix` (selfloc.rs:100-116) and the assertion 'A managed `vibe` must derive a PLAIN path — never a `\\\\?\\` verbatim one, which the shims cannot exec (the bug this guards)' (87-90). But that guards PROP-019's activation path, not PROP-024's Cargo path-dep topology; for the latter I found no validation artifact of any kind."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P6-MECHANICS-CHOOSE-THE-FALLBACK-ON-SPIKE-EVIDENCE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:282  - ##REJ-CONSUMER-MEMBERS **Consumer adds the slot crates as its own workspace members** (no package",
+     "spec/common/PROP-024-code-bearing-packages.md:286    generated `vibedeps/` state. **Retained as the §2.4 fallback** if",
+     "spec/common/PROP-024-code-bearing-packages.md:288    evidence, not by default. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:209  - ##SPIKE-FALLBACK The fallback, if cross-workspace path-deps prove unworkable on a host, is §4's",
+     "spec/common/PROP-024-code-bearing-packages.md:211    own workspace members) — chosen only on evidence. @spec/done",
+     "confirmed: This half IS documented in full. PROP-024 §4 `REJ-CONSUMER-MEMBERS` records the alternative (consumer adds the slot crates as its own workspace members), why it was rejected as primary ('it denies the package standalone-buildability … and couples the consumer's workspace membership to generated `vibedeps/` state'), and that it is '**Retained as the §2.4 fallback** if cross-workspace path-deps prove unworkable on a host — a decision made on spike evidence, not by default' (282-288). §2.4 `SPIKE-FALLBACK` (209-211) points at it from the other side. A rejected option kept live with its trigger is exactly what the mechanic asks for."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P6-MECHANICS-THE-MOVE-HAPPENS-ONLY-AFTER-THE-TOPOLOGY-IS-PROVEN": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:205  - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace path-deps and the",
+     "spec/common/PROP-024-code-bearing-packages.md:5  ##status-line **Status: IMPLEMENTED** (proposed 2026-06-27, owner-directed; verified against",
+     "spec/common/PROP-024-code-bearing-packages.md:6  the tree 2026-07-25 by the spec-actualization campaign — this very session boots on a",
+     "Cargo.toml:3  # Code-bearing packages (PROP-024 §2.4) carry their own Cargo workspaces; the",
+     "Cargo.toml:7  exclude = [\"packages\", \"vibedeps\"]",
+     "confirmed: The move happened and the topology works — `Cargo.toml:3-7` carries the `exclude = [\"packages\", \"vibedeps\"]` arrangement with its rationale, PROP-024's status line records it as IMPLEMENTED and 'verified against the tree 2026-07-25 … this very session boots on a vendored toolchain delivered exactly this way' (5-7), and the toolchain crates have physically left `crates/`. What I cannot establish is the ORDER — that proof preceded the move. The relocation commit is 788e67c8 (2026-07-12) and I found no earlier spike commit, document or manual-test record; the searches are listed under P6-LAW."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p6-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:207    `canonicalize()` adds a `\\\\?\\` prefix and Cargo path handling has sharp edges)",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:88          // one, which the shims cannot exec (the bug this guards).",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:101  /// On Windows a PATH-resolved tool is often a `.cmd`/`.bat` shim (`npm`,",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:168  /// file inside this directory\" lock? On Windows that is `ERROR_ACCESS_DENIED`",
+     "confirmed: The first symptom has three recorded instances in this repository, all Windows-versus-elsewhere and all fixed after the fact rather than before: the `\\\\?\\` verbatim prefix the shims cannot exec (selfloc.rs:87-90, 'the bug this guards'); `Command::new` not consulting `PATHEXT`, so a PATH-resolved `.cmd` shim is invisible without routing through `cmd /C` (tools.rs:100-113); and the scanner-held-handle `ERROR_ACCESS_DENIED` that 'turns a flaky install into a reliable one' only because of a retry (placer.rs:167-177). Each is exactly 'works on the author's OS' inverted — the author's OS is the sharp one here. The second and third symptoms I found no instance of."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p7-context-a-neutral-core-is-tempting-to-extract-up-front": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:251  - ##DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral conform engine (`conform-core`)",
+     "spec/common/PROP-024-code-bearing-packages.md:252    is a genuine L1 artifact — a future `conform-frontend-typescript` would reuse",
+     "spec/common/PROP-024-code-bearing-packages.md:253    it unchanged. Extracting `conform-core` up into `discipline-core` is a clean",
+     "confirmed: PROP-024 §2.6 `DEFERRED-ENGINE-SPLIT` says exactly this about `conform-core`: it 'is a genuine L1 artifact — a future `conform-frontend-typescript` would reuse it unchanged. Extracting `conform-core` up into `discipline-core` is a clean follow-up' (251-254). The temptation is named and the extraction is deferred in the same sentence, which is the shape the lesson describes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p7-context-extracting-before-a-second-consumer-is-speculative": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:254    follow-up, taken when the first non-Rust pilot needs it (YAGNI until then).",
+     "spec/common/PROP-024-code-bearing-packages.md:256    test-gate) versus its Rust `rscan` frontend. The end state is symmetric; the",
+     "spec/common/PROP-024-code-bearing-packages.md:257    ordering is driven by real second-language demand, not built speculatively.",
+     "spec/common/PROP-024-code-bearing-packages.md:244    shipping the toolchain whole avoids carving language-neutral cores out under",
+     "confirmed: The reasoning is recorded — PROP-024 §2.6 defers 'until then (YAGNI)' (254) and states 'the ordering is driven by real second-language demand, not built speculatively' (256-257), with `THIS-PASS-WHOLE-TOOLCHAIN` giving the concrete reason that shipping the toolchain whole 'avoids carving language-neutral cores out under time pressure' (244-245). The 'pay for generality twice' prediction was never tested here, because the extraction was NOT done early — so the counterfactual cost has no measurement in this repository. I checked for an early-extraction attempt: `git log --oneline --all -- 'crates/conform-core*'` finds no such crate in the current tree."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P7-LAW-EXTRACT-WHEN-THE-SECOND-CONSUMER-ARRIVES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:246  - ##CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:org.vibevm.ai-native/core-ai-native` was to stay",
+     "spec/common/PROP-024-code-bearing-packages.md:248    second language actually needed the shared engine. The TypeScript pilot shipped, so",
+     "spec/common/PROP-024-code-bearing-packages.md:258    **Executed** — the TypeScript pilot was that demand, and the neutral halves now live",
+     "spec/common/PROP-024-code-bearing-packages.md:259    in core-ai-native, vendored into each family by `cargo xtask sync-engines`. @impl/done",
+     "sync-engines.toml:1",
+     "confirmed: Executed, not merely stated — this is the strongest source-2 row in the file. PROP-024 §2.6 held core-ai-native prompt-only 'until a second language actually needed the shared engine', then records '**The condition fired.** … The TypeScript pilot shipped, so core-ai-native now **authors the neutral engines**' (246-250) and '**Executed** — the TypeScript pilot was that demand, and the neutral halves now live in core-ai-native, vendored into each family by `cargo xtask sync-engines`' (258-259). Measured on disk: the four neutral crates (core-ai-native-conform, core-ai-native-specmap, core-ai-native-specmark, core-ai-native-specmark-grammar) now appear under `crates/vendor/` in three families — rust-ai-native-lang/v0.7.0, typescript-ai-native-lang/v0.6.0 and go-ai-native-lang/v0.1.0 — with `sync-engines.toml` at the repo root and the gate in `xtask/src/sync_engines.rs`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P7-MECHANICS-SHIP-IN-ONE-PLACE-AND-DOCUMENT-THE-EXTRACTION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:239  - ##THIS-PASS-WHOLE-TOOLCHAIN For **this pass**, the **entire Rust discipline toolchain** — the conform",
+     "spec/common/PROP-024-code-bearing-packages.md:243    in `stack:org.vibevm.ai-native/rust-ai-native-lang`. Its centre of gravity is Rust, and",
+     "spec/common/PROP-024-code-bearing-packages.md:251  - ##DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral conform engine (`conform-core`)",
+     "spec/common/PROP-024-code-bearing-packages.md:254    follow-up, taken when the first non-Rust pilot needs it (YAGNI until then).",
+     "spec/common/PROP-024-code-bearing-packages.md:246  - ##CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:org.vibevm.ai-native/core-ai-native` was to stay",
+     "confirmed: Both halves are in PROP-024 §2.6 and both were honoured. Ship in one place: `THIS-PASS-WHOLE-TOOLCHAIN` — 'the **entire Rust discipline toolchain** … ships in `stack:org.vibevm.ai-native/rust-ai-native-lang`. Its centre of gravity is Rust' (239-245). Document with a trigger: `DEFERRED-ENGINE-SPLIT` — 'a clean follow-up, taken when the first non-Rust pilot needs it (YAGNI until then)' (251-254). The trigger was later marked fired in the same document (246), which is only possible because it was written down explicitly rather than left implicit."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P7-MECHANICS-THE-ORDERING-IS-DRIVEN-BY-REAL-DEMAND": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:256    test-gate) versus its Rust `rscan` frontend. The end state is symmetric; the",
+     "spec/common/PROP-024-code-bearing-packages.md:257    ordering is driven by real second-language demand, not built speculatively.",
+     "spec/common/PROP-024-code-bearing-packages.md:255    Likewise the neutral half of `specmap-core` (markdown parse, index, ledger,",
+     "spec/common/PROP-024-code-bearing-packages.md:311  - ##OOS-TS-CHECKER **Out of scope when written; since delivered.** TypeScript shipped no",
+     "confirmed: PROP-024 §2.6 states both clauses in one sentence: 'The end state is symmetric; the ordering is driven by real second-language demand, not built speculatively' (255-257). The end state did turn out symmetric and I verified it on disk: three language families (rust-ai-native-lang, typescript-ai-native-lang, go-ai-native-lang) each vendor the identical four neutral crates under `crates/vendor/` and add their own frontends. §5 `OOS-TS-CHECKER` (311-314) records the demand arriving: 'The `typescript-ai-native` family shipped with its floor, conform and specmap engines — the deferral is closed.'"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "P7-MECHANICS-EXTRACT-AGAINST-TWO-REAL-USES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:258    **Executed** — the TypeScript pilot was that demand, and the neutral halves now live",
+     "spec/common/PROP-024-code-bearing-packages.md:311  - ##OOS-TS-CHECKER **Out of scope when written; since delivered.** TypeScript shipped no",
+     "spec/common/PROP-024-code-bearing-packages.md:313    TS pilot existed (§2.6 deferral). The `typescript-ai-native` family shipped with its",
+     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/Cargo.toml:1",
+     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/Cargo.toml:1",
+     "confirmed and then exceeded — there are now THREE real uses, not two. The same four neutral crates are vendored into `rust-ai-native-lang/v0.7.0`, `typescript-ai-native-lang/v0.6.0` and `go-ai-native-lang/v0.1.0`, and `PROP-024` §5 records the TypeScript family shipping «with its floor, conform and specmap engines» (311-314), with `sync-engines.toml` keeping the three in step. RECORDED: the «fits on the first try» half cannot be confirmed, because it would need a record of the extraction NOT being reshaped on contact with the second consumer, and no such record exists. This is the one lesson in the package with a clean execution trail — trigger written (§2.6:251-254), fired (:246), executed (:258-259)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "p7-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:251  - ##DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral conform engine (`conform-core`)",
+     "spec/common/PROP-024-code-bearing-packages.md:254    follow-up, taken when the first non-Rust pilot needs it (YAGNI until then).",
+     "spec/common/PROP-024-code-bearing-packages.md:258    **Executed** — the TypeScript pilot was that demand, and the neutral halves now live",
+     "confirmed: The first symptom is the state PROP-024 §2.6 deliberately accepted rather than suffered: `conform-core` had exactly one caller and was left where it was (251-254). The second and third have no instance in this repository — the extraction happened only after the TypeScript pilot (258-259), so no core was reshaped on contact and no generality was paid for early. I looked for a counter-example among the other engines (`grep -rn 'neutral' spec/common/PROP-024*.md` and the vendor listings) and found none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-P1-A-PACKAGE-IS-A-PROJECT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:28  ##P1-LAW-A-PACKAGE-IS-A-PROJECT **The law.** *A package is a project — the distributable unit is",
+     "spec/common/PROP-024-code-bearing-packages.md:91  ##PKG-PROJECT-LAW **Decision.** A package has the identical on-disk shape as a consumer project: @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:105  - ##CONS-NO-CONVENTION There is no package-only directory convention to learn. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:102  - ##CONS-CHECK-UNCHANGED `vibe check` applies unchanged (its §12 Check 7 — `spec/boot/` exists and holds",
+     "confirmed: Restates the P1 law and mechanics; PROP-024 §2.1 carries all three clauses (91 the law, 102 'the same checks', 105 'no package-only directory convention to learn'). Measured: 35 of 35 packages with a boot snippet use a `spec/`-relative source, and no package `spec/boot/` holds a non-`.md` file, so the shape the checks test is universal here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-P2-SHIP-THE-RUNTIME": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:65  ##P2-LAW-SHIP-THE-RUNTIME-NOT-A-DESCRIPTION-OF-IT **The law.** *Ship the runtime, not a description of it — a practice's",
+     "spec/common/PROP-024-code-bearing-packages.md:11  workspace. A consumer who installs `stack:org.vibevm.ai-native/rust-ai-native-lang` then has",
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml:1",
+     "confirmed: Restates the P2 law. Measured over the installed reality: 5 of 36 slots carry runnable code and the other 31 describe no tooling, so no slot in this corpus ships a description without its runtime."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-P3-IDENTITY-IS-THE-SOURCE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:95  ##P3-LAW-IDENTITY-IS-THE-SOURCE-EXCLUDED-BY-DENYLIST **The law.** *Identity is the source, never build artifacts — exclude",
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "spec/common/PROP-024-code-bearing-packages.md:297  - ##REJ-ALLOW-LIST **A per-file `[ship]`/`[files]` allow-list in the manifest** — rejected: it",
+     "vibe.lock:406  content_hash = \"sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004\"",
+     "confirmed: Restates the P3 law. Both clauses measured: the python re-hash of the installed slot reproduces `vibe.lock:406` exactly and is unchanged by added `target/` and `node_modules/`; `files_written = []` in the lockfile shows there is no per-file ship list."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:129  ##P4-LAW-BUILD-OUTPUT-GOES-TO-A-GITIGNORED-LOCATION **The law.** *Build output goes to a gitignored location, never the",
+     ".gitignore:2  /target/",
+     ".gitignore:14  .vibe/",
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "confirmed: Restates the P4 law. `.gitignore` ignores `/target/`, `**/target/` and `.vibe/`; `target` and `.vibe` are both on the identity denylist. The summary does not repeat the hook clause, which is the part with the `VIBE_PROJECT_ROOT` gap recorded under P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-P5-VENDOR-THE-BOOTSTRAP": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:161  ##P5-LAW-VENDOR-AND-COMMIT-THE-BOOTSTRAP-TOOLCHAIN **The law.** *Vendor and commit the bootstrap toolchain beside the code",
+     "Cargo.toml:7  exclude = [\"packages\", \"vibedeps\"]",
+     "Cargo.toml:104  specmark = { package = \"core-ai-native-specmark\", path = \"packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/c ...",
+     "spec/common/PROP-024-code-bearing-packages.md:217  - ##SELF-HOST-VENDORED **Decision.** vibevm consumes its own discipline toolchain from the **committed**",
+     "confirmed: Restates the P5 law. Verified the vendored crates exist in the committed tree and that every `[workspace.dependencies]` engine entry is `path = …` with no registry version; the location differs from PROP-024 §2.5's `vibedeps/` wording (it is `packages/…/crates/vendor/`), which is recorded on the P5 law row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-P6-SPIKE-FIRST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:191  ##P6-LAW-SPIKE-THE-RISKY-TOPOLOGY-BEFORE-THE-IRREVERSIBLE-MOVE **The law.** *Spike the risky topology empirically on the target",
+     "spec/common/PROP-024-code-bearing-packages.md:205  - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace path-deps and the",
+     "spec/common/PROP-024-code-bearing-packages.md:282  - ##REJ-CONSUMER-MEMBERS **Consumer adds the slot crates as its own workspace members** (no package",
+     "confirmed on the same footing as the body law it restates. The fallback half is fully documented — §4 `REJ-CONSUMER-MEMBERS`, retained with its trigger. The spike half has no filed evidence, and the three searches that establish that are recorded at `##P6-LAW-SPIKE-THE-RISKY-TOPOLOGY-BEFORE-THE-IRREVERSIBLE-MOVE`: `grep -rn 'cross-workspace'` over all `*.md`, `git log --grep='spike' -i`, and `ls spec/manual-tests/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-P7-BUILD-ON-REAL-DEMAND": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:221  ##P7-LAW-EXTRACT-WHEN-THE-SECOND-CONSUMER-ARRIVES **The law.** *Extract the general mechanism when the second consumer",
+     "spec/common/PROP-024-code-bearing-packages.md:246  - ##CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:org.vibevm.ai-native/core-ai-native` was to stay",
+     "spec/common/PROP-024-code-bearing-packages.md:258    **Executed** — the TypeScript pilot was that demand, and the neutral halves now live",
+     "sync-engines.toml:1",
+     "confirmed: Restates the P7 law, and it is the lesson with the cleanest execution record: the trigger was written down (§2.6:251-254), fired (246), and the extraction was carried out (258-259), with the four neutral crates now vendored identically into three language families and kept in step by `sync-engines.toml` + `cargo xtask sync-engines`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}

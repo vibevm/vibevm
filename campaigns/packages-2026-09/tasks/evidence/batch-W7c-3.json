@@ -1,0 +1,657 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:13  ## What this catalog is {#what}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:34  ## Index {#index}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:53  ## Cross-cutting maxims {#maxims}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:103  ## The meta-lesson — record the why {#meta-lesson}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:122  ## Re-derive for your project {#re-derive}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:147  ## Summary {#summary}",
+     "confirmed: Opened the file and matched the promised parts to its headings: `## What this catalog is {#what}` (13), `## Index {#index}` (34), `## Cross-cutting maxims {#maxims}` (53), `## The meta-lesson — record the why {#meta-lesson}` (103), `## Re-derive for your project {#re-derive}` (122), `## Summary {#summary}` (147). Every promised part is present and nothing else is; the file carries no lesson body of its own, which is what makes it an index. src [1] — a scope statement about a document is checkable only against that document."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "the-lessons-live-in-two-sibling-documents": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:38  | ##ROW-LESSON-S1 S1 @impl/done | The active version is a live pointer file read per launc ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:45  | ##ROW-LESSON-P1 P1 @impl/done | A package is a project — the same layout, no package-onl ...",
+     "confirmed: `find packages/org.vibevm.world/tool-design-lessons -type f` returns exactly two lesson documents beside this one: self-updating-tools.md and packaging-lessons.md, both in the same `spec/flows/tool-design-lessons/` directory. Every one of the 14 index rows' third column links into one of those two files and nowhere else; I resolved all 14 `{#…}` targets by hand and all 14 exist. Both siblings are in the installed slot as well."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THESE-ARE-PAID-FOR-LESSONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:1  # PROP-019 — VibeVM Version Manager (VVM) {#root}",
+     "spec/common/PROP-024-code-bearing-packages.md:1  # PROP-024 — Code-bearing packages (a package is a project) {#root}",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:1  //! `vibe self` — the VibeVM Version Manager (VVM): build, install, switch,",
+     "crates/vibe-registry/src/shippable.rs:1  //! The shippable tree (PROP-024 §2.2): identity is the source,",
+     "confirmed: The tool exists and both halves of the sentence have a real subject in this repository: the version manager is PROP-019 + `crates/vibe-cli/src/commands/vvm/` (3824 lines, 17 files), the package ecosystem is PROP-024 + `crates/vibe-registry`, `vibe-resolver`, `vibe-index`, `vibe-install`, `vibe-publish`. What I could not settle is 'paid-for' in the sense of a cost actually incurred: for the S-lessons the failing design was reversed the same session before release (d605facb 11:51 → d6b10398 14:25 on 2026-06-17, the latter calling them '(same-session, unreleased) PROP-019 units'), and for the P-lessons PROP-024 §1.1 states the gap as a diagnosis rather than reporting a consumer who hit it. I searched for a bug report or incident behind either — `git log --oneline --all --grep='rename-aside'` and `git log --oneline -S 'rename-aside' --all` return only documentation commits, and there is no E-BUG / DRIFT record for any of the fourteen."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EACH-LESSON-IS-A-SCAR": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:18  ##s1-context-env-was-the-single-source-of-truth **Context.** The first design made an environment variable the single",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:56  ##s2-context-the-rename-aside-trick **Context.** The first idea for \"reinstall over the running binary\" was",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:95  ##s3-context-a-content-hash-is-a-natural-key **Context.** A natural key for an instance is a content hash of the",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:133  ##s4-context-copying-a-checkout-is-untenable **Context.** Copying a source checkout into the tool's own storage is",
+     "spec/common/PROP-019-version-manager.md:607  - ##RENAME-ASIDE-IDEA The first idea for \"reinstall over the running binary\" was the Windows",
+     "spec/common/PROP-019-version-manager.md:616  - ##RENAME-ASIDE-DROPPED rename-aside was dropped as unnecessary. @spec/done",
+     "confirmed: Every one of the fourteen does open with a `**Context.**` paragraph describing a design that was tried (`grep -cE '\\*\\*Context\\.\\*\\*'` = 7 and 7), and four of them are traceable to a real abandoned design in this repository: PROP-019 §9.3 records the Windows rename-aside trick as 'empirically verified to work' and then dropped (lines 607-616). The 'shipped' word is the part that does not survive checking — see the timestamps under THESE-ARE-PAID-FOR-LESSONS. Note also that no VVM code implementing the rejected v1 designs was ever committed: `git log --oneline --diff-filter=A -- crates/vibe-cli/src/commands/vvm/store.rs` gives 7cabb1a3 (2026-06-20), after the v2 rework."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-LESSON-IS-CONTEXT-THE-LAW-AND-WHY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:18  ##s1-context-env-was-the-single-source-of-truth **Context.** The first design made an environment variable the single",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:28  ##S1-LAW-ACTIVATION-TRUTH-IS-A-LIVE-POINTER **The law.** *The active version is a live pointer file read on every",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:32  ##S1-MECHANICS-A-LAUNCHER-SHIM-READS-THE-POINTER-EACH-RUN **Mechanics.** A tiny launcher shim reads an active-pointer file each",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:50  ##s1-symptoms **Symptoms you need this.** Users must open a new terminal after every",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:20  ##p1-context-a-bespoke-layout-costs-an-author-and-the-tooling **Context.** If a package has its own bespoke layout, an author must",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:28  ##P1-LAW-A-PACKAGE-IS-A-PROJECT **The law.** *A package is a project — the distributable unit is",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:32  ##P1-MECHANICS-SPEC-SUBTREE-CODE-AT-THE-ROOT-ONE-MANIFEST **Mechanics.** Prompt and spec content lives under a `spec/` subtree",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:48  ##p1-symptoms **Symptoms you need this.** A package-only folder convention nobody",
+     "confirmed: Measured across both lesson files: `**Context.**` 7 and 7, `**The law.**` 7 and 7, `**Mechanics.**` 7 and 7, `**Symptoms you need this.**` 7 and 7 — fourteen lessons, four parts each, no exceptions. Self-containment checked the same way: no lesson body cites another lesson as a prerequisite; the only in-file cross-references are parenthetical back-pointers (S2 'the active pointer (S1)', S7 'Hardlinked files (S3)'), which name a related law rather than requiring it to be read first."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "THE-AUDIENCE-IS-TOOL-AUTHORS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md:14  ##AUDIENCE-IS-TOOL-AUTHORS **Audience: tool authors** — anyone building a self-updating CLI, an",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:5  ##PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF This project builds a tool that manages itself — a self-updating CLI,",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:6  an installer, a version manager, or a package system. @impl/done",
+     "confirmed: The same four roles are named in three places inside the package — README:14, boot snippet:5-6, and here at 26-27 — in the same order and the same words. No host artifact states the flow's audience independently; `grep -rn 'tool-design-lessons' spec/ CLAUDE.md AGENTS.md GEMINI.md` returns only the two generated STATIC.md lines (1271, 1571). src [1]."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "THE-VOCABULARY-IS-GENERIC-ON-PURPOSE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:13  ##vocabulary-is-generic Vocabulary is generic — *the launcher*, *the active pointer*,",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:14  ##vocabulary-is-generic Vocabulary is generic — *the",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:29  ##THE-VOCABULARY-IS-GENERIC-ON-PURPOSE The vocabulary is generic",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:124  ##THE-LAWS-ARE-PORTABLE-THE-MECHANICS-ARE-YOURS The laws are portable; the mechanics are yours to re-derive from your",
+     "confirmed: Measured rather than taken on trust. `grep -ncE '\\bvibe\\b|\\bcargo\\b|\\bVVM\\b|\\bWindows\\b|\\bRust\\b|\\bvibevm\\b'` over the package's four prose files returns 0 for packaging-lessons.md, 0 for self-updating-tools.md, 0 for the boot snippet, and 3 for this file — and inspecting those three (lines 110, 112, 154) shows they are all the English idiom 'cargo-cult', not the Rust tool. So the two lesson documents and the boot snippet name no platform, no language, and no product anywhere, while the mechanics they describe are demonstrably the ones in `crates/vibe-cli/src/commands/vvm/` (Windows registry, PowerShell, cargo `--target-dir`, `\\\\?\\` verbatim paths). The abstraction claim is exact."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "ROW-LESSON-S1": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:38  | ##ROW-LESSON-S1 S1 @impl/done | The active version is a live pointer file read per launch, plus th ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:28  ##S1-LAW-ACTIVATION-TRUTH-IS-A-LIVE-POINTER **The law.** *The active version is a live pointer file read on every",
+     "crates/vibe-cli/src/commands/vvm/store.rs:130      pub fn current_path(&self) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:101           home=\\\"$(cat \\\"$self/../vibevm/current\\\" 2>/dev/null)\\\"\\n\\",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:22  pub fn derive_self(exe: Option<&Path>) -> Option<SelfLocation> {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:51  pub const VIBEVM_HOME_ENV: &str = \"VIBEVM_HOME\";",
+     "confirmed: The row's link `self-updating-tools.md#live-pointer` resolves — the `{#live-pointer}` heading is at self-updating-tools.md:16 — and its one-line law matches the lesson's law at 28-30 word for word on all three clauses. Implementation checked, not assumed: the pointer file is `<root>/vibevm/current` (store.rs:128-132), the shim reads it each launch (env.rs:94-124), the binary derives its own identity from `current_exe()` (selfloc.rs:22-40), and the env var is documented as advisory at mod.rs:48-51."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-S2": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:39  | ##ROW-LESSON-S2 S2 @impl/done | The unit of install and switch is a whole immutable instance direc ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:67  ##S2-LAW-THE-UNIT-IS-A-WHOLE-IMMUTABLE-INSTANCE-DIRECTORY **The law.** *The unit of install and switch is a whole immutable",
+     "crates/vibe-cli/src/commands/vvm/store.rs:97      pub fn instance_dir(&self, id: &VersionId, instance: u64) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:226      let staging = store.version_id_dir(id).join(\".staging\");",
+     "crates/vibe-cli/src/commands/vvm/install.rs:105          let instance = store.alloc_instance()?;",
+     "crates/vibe-cli/src/commands/vvm/install.rs:122          store.write_current(&inst_dir)?;",
+     "confirmed: Link `self-updating-tools.md#immutable-instances` resolves to the heading at 54; the row's law matches the lesson law at 67-69. In code: `instance_dir` is `<root>/vibevm/versions/<kind>/<id>/<instance>` (store.rs:97-99), `place` stages then renames a whole directory (placer.rs:226-290), install allocates a new instance and flips `current` (install.rs:105-122). Test `instance_paths_nest_under_kind_id_instance` (store.rs:305-316)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-S3": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:40  | ##ROW-LESSON-S3 S3 @impl/done | Never content-hash a large payload for identity; use a monotonic c ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:104  ##S3-LAW-NEVER-CONTENT-HASH-A-LARGE-PAYLOAD **The law.** *Never content-hash a large payload to establish identity;",
+     "crates/vibe-cli/src/commands/vvm/store.rs:175          let n = state.next_instance.max(1);",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:71  const SMALL_FILE_MAX: u64 = 16 * 1024 * 1024;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:147          _ => new.size == prev.size && new.mtime_nanos == prev.mtime_nanos,",
+     "spec/common/PROP-019-version-manager.md:596  - ##HASH-DOESNT-SCALE It does not scale: a distribution may grow to gigabytes and ship as",
+     "confirmed: Link `#cheap-identity` resolves to the heading at 93; the row's law matches the lesson law at 104-106. In code: the counter is `state.next_instance` (store.rs:172-179, test `alloc_instance_is_monotonic_from_one`), and change detection hashes only files at or below `SMALL_FILE_MAX = 16 MiB` (placer.rs:71, 114-131), falling back to `(size, mtime)` otherwise (144-149). PROP-019 §9.2 gives the reason."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-S4": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:41  | ##ROW-LESSON-S4 S4 @impl/done | Hold sources by reference; never bulk-copy them into the tool's ow ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:140  ##S4-LAW-HOLD-SOURCES-BY-REFERENCE **The law.** *Hold sources by reference; never bulk-copy them into the",
+     "crates/vibe-cli/src/commands/vvm/source.rs:252  /// source (PROP-019 §2.7, §2.16). The clone is updated incrementally",
+     "crates/vibe-cli/src/commands/vvm/model.rs:187      Managed,",
+     "crates/vibe-cli/src/commands/vvm/git.rs:94  pub(crate) fn fetch(dir: &Path) -> Result<(), GitError> {",
+     "spec/common/PROP-019-version-manager.md:637  - ##COPY-UNTENABLE Copying a checkout into the install root is untenable — a working tree's",
+     "confirmed: Link `#sources-by-reference` resolves to the heading at 131; the row's law matches the lesson law at 140-141. In code: `Origin::External` is 'a committer's own checkout, referenced by `source_path`; never touched' (model.rs:187), the managed clone is fetched not re-cloned (source.rs:250-283, git.rs:92-97), and `linked_source` rebuilds from the remembered absolute path (source.rs:296-315). Test `prepare_from_mirror_clones_then_fetches` (source.rs:386-403)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-S5": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:42  | ##ROW-LESSON-S5 S5 @impl/done | Edit durable environment state idempotently, additively, with cons ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:172  ##S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY **The law.** *Edit durable environment state idempotently and",
+     "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:171  const BLOCK_BEGIN: &str = \"# >>> vibevm (VVM) — managed, do not edit by hand >>>\";",
+     "crates/vibe-cli/src/commands/vvm/env.rs:304  fn path_with_prefix(current: &str, target: &str) -> Option<String> {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:433      fn rc_persister_is_idempotent_and_repoints() {",
+     "confirmed: Link `#durable-env-edits` resolves to the heading at 163; the row's law matches the lesson law at 172-174. Four of the five clauses are in code: the `EnvPersister` trait is the injectable seam (env.rs:164-169) and the tests drive `RcFilePersister` in a tempdir (433-462); idempotence is the marker-guarded block plus `set_or_add` (171-172, 344-355); additivity is `path_with_prefix`, which dedupes and preserves the rest of PATH (304-318). CONSENT is the weak clause — see the detailed row on S5-MECHANICS-CONSENT-AND-HONESTY, where `vibe self use` writes durable state with no confirmation at all."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-S6": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:43  | ##ROW-LESSON-S6 S6 @impl/done | Keep required tools in one table the doctor reads and a test asser ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:215  ##S6-LAW-REQUIRED-TOOLS-LIVE-IN-ONE-RUNNABLE-TABLE **The law.** *Keep the required tools in one table the doctor command",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:22  pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:142      fn required_tools_table_is_well_formed() {",
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:30      let tools = tools::check_all();",
+     "spec/common/PROP-019-version-manager.md:541  ",
+     "confirmed: Link `#runnable-knowledge` resolves to the heading at 205; the row's law matches the lesson law at 215-217. Fully implemented: `REQUIRED_TOOLS` is one `const` slice (tools.rs:22-41), `run_doctor_cmd` iterates it (doctor.rs:30, 61-70), and `required_tools_table_is_well_formed` asserts every row has a check command, a parseable `min_version` and an `https://` help URL (tools.rs:140-157). PROP-019 §7 line 541 names the table as the single source of truth."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-S7": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:44  | ##ROW-LESSON-S7 S7 @impl/done | Removal protects the active and the running instance; a full wipe ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:253  ##S7-LAW-REMOVAL-PROTECTS-THE-ACTIVE-AND-RUNNING-INSTANCE **The law.** *Removal protects the active and the running instance and",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:127              .unwrap_or(false)",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:102          if !confirm(",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:67                      Err(e) => ctx.summary(&format!(\"skipped {} (in use?): {e}\", dir.display())),",
+     "spec/common/PROP-019-version-manager.md:564  - ##ACC-REMOVE-GC-SAFE `self remove` never wipes without `--all` + reconfirm; `self gc` never",
+     "confirmed: Link `#safe-removal` resolves to the heading at 244; the row's law matches the lesson law at 253-255. In code: removing the active id is skipped unless `--force` (remove.rs:124-134), `--all` goes through `confirm` (102-109), and a locked instance dir is skipped rather than forced (62-69). PROP-019 §8 line 564 states the same acceptance."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-P1": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:45  | ##ROW-LESSON-P1 P1 @impl/done | A package is a project — the same layout, no package-only conventi ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:28  ##P1-LAW-A-PACKAGE-IS-A-PROJECT **The law.** *A package is a project — the distributable unit is",
+     "spec/common/PROP-024-code-bearing-packages.md:91  ##PKG-PROJECT-LAW **Decision.** A package has the identical on-disk shape as a consumer project: @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:93  - ##SPEC-SUBTREE **Prompt/spec content lives under the package's `spec/` subtree** — boot",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:16  source = \"spec/boot/70-flow-tool-design-lessons.md\"",
+     "spec/common/PROP-024-code-bearing-packages.md:105  - ##CONS-NO-CONVENTION There is no package-only directory convention to learn. @spec/done",
+     "confirmed: Link `packaging-lessons.md#package-is-project` resolves to the heading at 18; the row's law matches the lesson law at 28-30. PROP-024 §2.1 is the host's own statement of the identical rule (lines 87-110). Measured: all 35 `[boot_snippet].source` values across `packages/*/*/*/vibe.toml` begin with `spec/` (`grep -h '^source = ' packages/*/*/*/vibe.toml | grep -c 'source = \"spec/'` = 35 of 35), so the `spec/`-subtree half of the layout is universal in this registry."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-P2": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:46  | ##ROW-LESSON-P2 P2 @impl/done | Ship the runtime, not a description of it. @impl/done | [`packagin ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:65  ##P2-LAW-SHIP-THE-RUNTIME-NOT-A-DESCRIPTION-OF-IT **The law.** *Ship the runtime, not a description of it — a practice's",
+     "spec/common/PROP-024-code-bearing-packages.md:51  - ##install-gets-description Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *des ...",
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml:1",
+     "vibedeps/flow-core-ai-native/0.8.0/Cargo.toml:1",
+     "confirmed: Link `#ship-runtime` resolves to the heading at 53; the row's law matches the lesson law at 65-66. Measured over `vibedeps/`: 5 of the 36 installed slots carry runnable code (each tested for `Cargo.toml` / `crates/` / `tools/`) — the two `-lang` stacks, the two `-mcp` servers, and core-ai-native. PROP-024 §1.1 line 51 is the host's record of the failure this law names."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-P3": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:47  | ##ROW-LESSON-P3 P3 @impl/done | Identity is the source; exclude build artifacts by denylist, never ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:95  ##P3-LAW-IDENTITY-IS-THE-SOURCE-EXCLUDED-BY-DENYLIST **The law.** *Identity is the source, never build artifacts — exclude",
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "crates/vibe-registry/src/shippable.rs:18  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "spec/common/PROP-024-code-bearing-packages.md:297  - ##REJ-ALLOW-LIST **A per-file `[ship]`/`[files]` allow-list in the manifest** — rejected: it",
+     "vibe.lock:406  content_hash = \"sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004\"",
+     "confirmed: Link `#identity-is-source` resolves to the heading at 85; the row's law matches the lesson law at 95-97. The denylist is real and I measured its effect: re-implementing `compute_content_hash` in python over `vibedeps/flow-tool-design-lessons/0.1.0` reproduces `vibe.lock:406` exactly, and adding `target/debug/x.bin` + `node_modules/junk.js` leaves the digest unchanged. The allow-list prohibition is PROP-024 §4 `REJ-ALLOW-LIST` (line 297)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-P4": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:48  | ##ROW-LESSON-P4 P4 @impl/done | Build output goes to a gitignored location, never the committed tr ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:129  ##P4-LAW-BUILD-OUTPUT-GOES-TO-A-GITIGNORED-LOCATION **The law.** *Build output goes to a gitignored location, never the",
+     "spec/common/PROP-024-code-bearing-packages.md:154  - ##HOOK-BUILD A code-bearing tool package builds via a **`post-install` hook**",
+     ".gitignore:2  /target/",
+     ".gitignore:3  **/target/",
+     "crates/vibe-cli/src/commands/vvm/builder.rs:50          // Build into a VVM-managed `--target-dir`, never the source tree's",
+     "confirmed: Link `#build-output-elsewhere` resolves to the heading at 120; the row's law matches the lesson law at 129-130. `.gitignore` lines 2-3 ignore `/target/` and `**/target/`, and `target` is on the identity denylist, so both halves hold for a Rust build. The host's own analogue is `CargoBuilder`, which builds into a VVM-managed `--target-dir` and never the source tree's `target/` (builder.rs:50-60). PROP-024 §2.3 line 154 states the rule. See the P4 mechanics rows for the gap: `VIBE_PROJECT_ROOT`, the variable that would let a hook address that location, is specified but absent from the hook environment."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-P5": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:49  | ##ROW-LESSON-P5 P5 @impl/done | Vendor and commit the bootstrap toolchain beside the code that nee ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:161  ##P5-LAW-VENDOR-AND-COMMIT-THE-BOOTSTRAP-TOOLCHAIN **The law.** *Vendor and commit the bootstrap toolchain beside the code",
+     "Cargo.toml:7  exclude = [\"packages\", \"vibedeps\"]",
+     "Cargo.toml:104  specmark = { package = \"core-ai-native-specmark\", path = \"packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/c ...",
+     "spec/common/PROP-024-code-bearing-packages.md:217  - ##SELF-HOST-VENDORED **Decision.** vibevm consumes its own discipline toolchain from the **committed**",
+     "spec/common/PROP-024-code-bearing-packages.md:219  - ##CLEAN-CLONE-BUILDS Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone",
+     "confirmed: Link `#vendor-bootstrap` resolves to the heading at 152; the row's law matches the lesson law at 161-162. The host does exactly this: the root workspace excludes `packages` and `vibedeps` (Cargo.toml:7) and path-deps into a committed package tree for the proc-macro every product crate compiles against (Cargo.toml:97-104). One difference from PROP-024 §2.5's own wording worth flagging: the live path-deps point at `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/…` (the in-repo package source), not at `vibedeps/…` (the materialised slot) as §2.5 and its `ACC-CLEAN-CLONE` describe. Both are committed, so the no-chicken-and-egg property survives; the vendoring location has moved."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-P6": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:50  | ##ROW-LESSON-P6 P6 @impl/done | Spike the risky topology on the target platform before the irrever ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:191  ##P6-LAW-SPIKE-THE-RISKY-TOPOLOGY-BEFORE-THE-IRREVERSIBLE-MOVE **The law.** *Spike the risky topology empirically on the target",
+     "spec/common/PROP-024-code-bearing-packages.md:205  - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace path-deps and the",
+     "spec/common/PROP-024-code-bearing-packages.md:209  - ##SPIKE-FALLBACK The fallback, if cross-workspace path-deps prove unworkable on a host, is §4's",
+     "spec/common/PROP-024-code-bearing-packages.md:282  - ##REJ-CONSUMER-MEMBERS **Consumer adds the slot crates as its own workspace members** (no package",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:23      // `canonicalize()` on Windows returns a `\\\\?\\` verbatim path; cmd.exe and",
+     "confirmed: Link `#spike-first` resolves to the heading at 182; the row's law matches the lesson law at 191-193. PROP-024 §2.4 `SPIKE-FIRST` (205-208) and `SPIKE-FALLBACK` (209-211) state both halves, and §4 `REJ-CONSUMER-MEMBERS` (282-288) is the retained fallback. What I could NOT find is a spike RECORD: `grep -rn 'cross-workspace'` across every `*.md` in the repository returns hits in exactly two non-package files — PROP-024 lines 209/283/287 — and nowhere else; `git log --oneline --all --grep='spike' -i` returns ten commits, all about the terminal/TUI plans, none about the workspace topology. The sharp Windows edge the lesson describes IS handled in code (`strip_verbatim`, selfloc.rs:42-51, with a regression test at 100-116), but that is PROP-019's `\\\\?\\` problem, not PROP-024's Cargo path-dep spike."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-LESSON-P7": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:51  | ##ROW-LESSON-P7 P7 @impl/done | Extract the general mechanism when the second consumer arrives, no ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:221  ##P7-LAW-EXTRACT-WHEN-THE-SECOND-CONSUMER-ARRIVES **The law.** *Extract the general mechanism when the second consumer",
+     "spec/common/PROP-024-code-bearing-packages.md:251  - ##DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral conform engine (`conform-core`)",
+     "spec/common/PROP-024-code-bearing-packages.md:258    **Executed** — the TypeScript pilot was that demand, and the neutral halves now live",
+     "sync-engines.toml:1",
+     "Cargo.toml:91  # stack's VENDORED copies (crates/vendor/*, `cargo xtask sync-engines`), so the",
+     "confirmed: Link `#build-on-demand` resolves to the heading at 211; the row's law matches the lesson law at 221-222. This is the one lesson the host can be shown to have EXECUTED rather than merely stated: PROP-024 §2.6 `DEFERRED-ENGINE-SPLIT` deferred the neutral-engine extraction 'taken when the first non-Rust pilot needs it', and lines 258-259 record it as 'Executed — the TypeScript pilot was that demand'. Measured on disk: the four neutral crates (core-ai-native-conform, core-ai-native-specmap, core-ai-native-specmark, core-ai-native-specmark-grammar) now appear identically under `crates/vendor/` in THREE families — rust-ai-native-lang/v0.7.0, typescript-ai-native-lang/v0.6.0 and go-ai-native-lang/v0.1.0 — synced by `sync-engines.toml` + `cargo xtask sync-engines` (xtask/src/sync_engines.rs)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "three-design-principles-run-under-the-lessons": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:61  ### Split by strength, not as a workaround {#maxim-split}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:76  ### One operation, thin transports {#maxim-transports}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:90  ### Fail loud, never degrade silently {#maxim-fail-loud}",
+     "confirmed: `grep -n '^### ' TOOL-DESIGN-LESSONS.md` returns exactly three headings, all inside `## Cross-cutting maxims`: 61, 76, 90. The hedge 'most' is not testable as written — the maxims are not cross-referenced from the individual lessons, so which of the fourteen each runs under is not stated anywhere in the package; I checked by grepping the two lesson files for 'maxim', 'transport', 'fail loud' and 'by strength' and found no hits."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "the-maxims-are-about-how-a-tool-should-be-shaped": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:61  ### Split by strength, not as a workaround {#maxim-split}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:76  ### One operation, thin transports {#maxim-transports}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:90  ### Fail loud, never degrade silently {#maxim-fail-loud}",
+     "spec/common/PROP-018-agentic-standalone-modes.md:44  - ##executor-vs-author For reasoning work in that setting the agent is the right",
+     "crates/vibe-actions/src/lib.rs:1  //! `vibe-actions` — the frontend-agnostic, addressable action system.",
+     "confirmed: Checkable by subject: none of the three maxim headings mentions versions, instances, installs or packages, and their host counterparts sit outside both PROP-019 and PROP-024 — split-by-strength is PROP-018 (agentic/standalone modes), one-operation-thin-transports is PROP-039/`vibe-actions` plus `vibe-mcp`, fail-loud is the repository-wide Class-F error convention. So the maxims' scope is genuinely wider than the fourteen lessons' two subjects."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "LET-THE-KNOWLEDGE-HOLDER-AUTHOR-AND-THE-CONTEXT-HOLDER-EXECUTE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-018-agentic-standalone-modes.md:44  - ##executor-vs-author For reasoning work in that setting the agent is the right",
+     "spec/common/PROP-018-agentic-standalone-modes.md:45    **executor** — but vibevm is the right **author** of the task. @spec/done",
+     "spec/common/PROP-018-agentic-standalone-modes.md:50  - ##roles-named This PROP gives the two their natural roles — vibevm composes the",
+     "crates/vibe-mcp/src/agentic.rs:1  //! The agentic relay — vibevm composes a domain-grounded instruction and",
+     "crates/vibe-mcp/src/agentic.rs:2  //! the calling agent executes it (PROP-018 §2.2, §2.7, §2.10).",
+     "crates/vibe-cli/src/cli.rs:145      /// Compose an LLM instruction for the calling agent and park it in the",
+     "confirmed: This maxim is PROP-018 §1.1 almost word for word: 'the agent is the right **executor** … but vibevm is the right **author** of the task' (lines 44-45), 'vibevm composes the domain-grounded instruction, the agent carries it out' (50-51). It is implemented, not only written: `crates/vibe-mcp/src/agentic.rs` is the relay — vibevm composes an `Intent` and parks it in `.vibe/agentic/` for the agent to drain with `vibe command` — and `crates/vibe-cli/src/cli.rs:145` documents the `Agentic` subcommand doing exactly that. Direction: PROP-018 predates the package and is the source of this maxim, so this is provenance."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-composed-instruction-is-more-trustworthy-than-an-improvised-one": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-018-agentic-standalone-modes.md:46  - ##domain-knowledge vibevm carries stable, algorithmic knowledge of its own domain (the",
+     "spec/common/PROP-018-agentic-standalone-modes.md:47    spec-driven model, the dependency and package rules, the discipline), so an",
+     "spec/common/PROP-018-agentic-standalone-modes.md:48    instruction it composes is more informative and more trustworthy than one",
+     "crates/vibe-mcp/src/agentic.rs:10  //! tools), while vibevm is the right author of the instruction (its domain",
+     "crates/vibe-mcp/src/agentic.rs:11  //! knowledge makes the prompt more informative and more trustworthy than an",
+     "confirmed: PROP-018 §1.1 `##domain-knowledge` (lines 46-49) states the identical reasoning — 'vibevm carries stable, algorithmic knowledge of its own domain … so an instruction it composes is more informative and more trustworthy than one the agent would improvise from scratch'. The same sentence is repeated in the relay's module doc (agentic.rs:10-12). The claim itself is a judgement about instruction quality; nothing in the repository measures it, and I found no A/B record — `grep -rn 'improvis' crates/ spec/` returns only these restatements."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-DIVISION-IS-BY-STRENGTH-NOT-A-WORKAROUND": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-018-agentic-standalone-modes.md:65    its LLM with the live context vibevm lacks. The split is by strength, not",
+     "spec/common/PROP-018-agentic-standalone-modes.md:66    a workaround: the agent is the better executor in-session, vibevm the",
+     "crates/vibe-mcp/src/agentic.rs:8  //! out. This is a deliberate division of labour, not a fallback: in agent",
+     "crates/vibe-llm/src/lib.rs:3  //! **STATUS: M0 stub.** Concrete providers (Anthropic, OpenAI, OpenRouter,",
+     "spec/common/PROP-018-agentic-standalone-modes.md:53  - ##standalone-aside vibevm can also reason with *no* agent present, via a",
+     "confirmed: PROP-018 §1.2 says it in the same words: 'The split is by strength, not a workaround: the agent is the better executor in-session, vibevm the better author of the instruction' (65-66), and the relay's own doc calls it 'a deliberate division of labour, not a fallback' (agentic.rs:8). The 'survives once the feature arrives' clause is testable in principle and the missing feature is named: `crates/vibe-llm/src/lib.rs:3` records the inference engine as an M0 stub pending the v1.5 milestone, and PROP-018 line 53 keeps standalone mode as a separate axis rather than a replacement. Since the engine has not landed, the survival clause has not yet been put to the test — I checked `crates/vibe-llm/src/` and it contains exactly one file, lib.rs."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DEFINE-THE-OPERATION-ONCE-AND-EXPOSE-IT-THROUGH-THIN-ADAPTERS": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-actions/src/lib.rs:1  //! `vibe-actions` — the frontend-agnostic, addressable action system.",
+     "crates/vibe-actions/src/lib.rs:12  //! # The frontend-agnostic invariant (§1 `#no-render-dep`)",
+     "crates/vibe-actions/src/lib.rs:14  //! This crate has **zero rendering dependencies** — no `ratatui`, no",
+     "crates/vibe-mcp/src/transport.rs:1  //! Transport abstraction for the MCP server.",
+     "crates/vibe-mcp/src/transport.rs:11  ",
+     "crates/vibe-mcp/src/tools.rs:15  use vibe_core::{Group, PackageRef};",
+     "confirmed: Two independent instances in the host, and they over-count in opposite directions so I name both. (a) `crates/vibe-actions` is the transport-agnostic core by construction — its module doc calls it 'the frontend-agnostic, addressable action system' with 'zero rendering dependencies … and no dependency on any surface or consumer crate' (lines 1, 12-16); surfaces (the TUI, the headless AIUI) are the adapters. That is a UI-transport story, slightly wider than the maxim's 'reasoning or acting operation'. (b) `crates/vibe-mcp` exposes the same package operations as the CLI over JSON-RPC behind a `Transport` trait (transport.rs:1-11, with `StdioTransport` in production and `MemoryTransport` in tests), and its tools import the same `vibe_core` types the CLI uses (tools.rs:15). That is the closer match but covers only the MCP surface. Neither is a counter-example; both are real."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AN-ADAPTER-ONLY-MARSHALS-AND-THE-CORE-NEVER-KNOWS-ITS-CALLER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-actions/src/lib.rs:14  //! This crate has **zero rendering dependencies** — no `ratatui`, no",
+     "crates/vibe-actions/src/lib.rs:15  //! `crossterm`, no UI toolkit, and no dependency on any surface or consumer",
+     "crates/vibe-mcp/src/transport.rs:3  //! The trait keeps the server testable without spawning a real child",
+     "crates/vibe-mcp/src/transport.rs:4  //! process. Production uses [`StdioTransport`]; tests use",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:54  /// (`main.rs`) and threaded in — the domain never reads the process env",
+     "crates/vibe-cli/src/commands/vvm/store.rs:3  //! §2.5). The store reads no ambient environment — the root is resolved at",
+     "confirmed: Half settled. The 'core never knows its caller' half is enforced in two places I read: `vibe-actions` forbids any dependency on a surface or consumer crate (lib.rs:14-16), and the VVM store 'reads no ambient environment — the root is resolved at the composition root and handed in' (store.rs:3-4), with `VvmEnv` threaded from `main.rs` so 'the domain never reads the process env itself' (mod.rs:53-56). The 'adapter only marshals' half does not hold uniformly: `crates/vibe-cli/src/commands/vvm/mod.rs` is a command surface that also decides policy — it chooses between in-tree, linked and managed sources (194-234) and picks the persister for the OS (427-437) — so that adapter carries logic beyond marshalling. I did not find a counter-example on the MCP side."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-new-transport-costs-an-adapter-not-a-re-implementation": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-mcp/src/transport.rs:3  //! The trait keeps the server testable without spawning a real child",
+     "crates/vibe-mcp/src/transport.rs:5  //! [`MemoryTransport`] which buffers input and captures output.",
+     "crates/vibe-actions/src/lib.rs:16  //! crate. That invariant is what makes every surface (the TUI, a future web UI)",
+     "crates/vibe-actions/src/lib.rs:17  //! and the headless AIUI possible.",
+     "confirmed: The mechanism that would deliver the payoff exists — a `Transport` trait with two implementations (`StdioTransport` for production, `MemoryTransport` for tests) is literally a second transport added at the cost of an adapter (transport.rs:3-5), and `vibe-actions` states the invariant that makes 'every surface … and the headless AIUI possible' (lib.rs:16-17). What I could not settle is the no-drift half: I looked for a test that runs the same operation through two transports and asserts equal results and did not find one — `grep -rn 'MemoryTransport' crates/ --include='*.rs'` shows it used for MCP protocol tests only, never paired against the CLI path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-MISSING-REQUIRED-CAPABILITY-IS-AN-ERROR": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-workspace/src/hooks.rs:425          return Err(HookError::NoInterpreter {",
+     "crates/vibe-cli/src/commands/vvm/error.rs:44      #[error(",
+     "crates/vibe-cli/src/commands/vvm/error.rs:45          \"{detail} \\",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:445      if !std::io::stdin().is_terminal() {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:446          return Err(VvmError::NoTty {",
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:39      let problems = tools.iter().filter(|t| !t.ok).count()",
+     "confirmed: Implemented as a habit, not a slogan. Concrete instances I read: a hook whose interpreter is missing returns `HookError::NoInterpreter` rather than skipping (hooks.rs:424-431); a confirmation prompt with no TTY and no `--yes` returns `VvmError::NoTty` rather than proceeding silently (mod.rs:445-449, error.rs:44-49); `require_tty` makes an unattended `remove`/`gc` with no selector an error rather than a wipe or a no-op (mod.rs:461-468); `self doctor` counts problems and reports a non-zero count instead of degrading (doctor.rs:39-42, 110-114). Counter-current worth naming: `run_package_hook` returns `Ok(HookReport{status:\"post-install-failed\"})` for a post-install failure — deliberate, because the package is already durable (hooks.rs:381-384)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STOP-WITH-A-MESSAGE-NAMING-WHAT-IS-MISSING": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/error.rs:17          \"cannot determine the VVM root \\",
+     "crates/vibe-cli/src/commands/vvm/error.rs:18           (violates spec://vibevm/common/PROP-019#surface; \\",
+     "crates/vibe-cli/src/commands/vvm/error.rs:19            fix: set $VIBEVM_INSTALL_ROOT, or ensure a home directory exists)\"",
+     "crates/vibe-cli/src/commands/vvm/git.rs:22           (violates spec://vibevm/common/PROP-019#build; \\",
+     "crates/vibe-cli/src/commands/vvm/git.rs:23            fix: install git and put it on PATH — see `vibe self doctor`)\"",
+     "crates/vibe-cli/src/commands/vvm/store.rs:23          \"reading the VVM inventory `{path}` failed: {source} \\",
+     "confirmed: Measured, not sampled. A multiline grep for an error string containing both `violates spec://` and `fix:` (`rg -U 'violates spec://[^\"]*?fix:' crates/ -g '*.rs' --count`) returns 217 occurrences across 45 files — every one of them names the requirement violated and the remedy. The pattern is visible in the quoted lines: 'cannot determine the VVM root … fix: set $VIBEVM_INSTALL_ROOT'; 'spawning `git {args}` failed … fix: install git and put it on PATH — see `vibe self doctor`'. A second, independent selector agrees: `grep -rn 'violates spec://' crates/ --include='*.rs' | wc -l` = 232 lines in 48 files — higher than 217 because it counts the `violates` line of variants whose `fix:` sits outside the same string, and because a doc comment can mention the phrase."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "silent-degradation-trains-users-to-mistrust-success": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/mod.rs:458  /// remove / gc pickers): an unattended or non-TTY run errors with `msg` —",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:459  /// which names the explicit flags to pass — rather than silently doing",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:460  /// nothing (PROP-019 §2.9).",
+     "crates/vibe-workspace/src/hooks.rs:411                  status: \"skipped-needs-consent\",",
+     "confirmed: The rationale is a claim about user psychology and nothing in this repository measures it. What is checkable is that the codebase acts on it: `require_tty`'s doc comment gives the same reasoning in the same shape — an unattended run 'errors with `msg` — which names the explicit flags to pass — rather than silently doing nothing' (mod.rs:458-462) — and where a degraded path IS taken it is labelled rather than hidden, e.g. `status: \"skipped-needs-consent\"` with a note telling the user how to re-run (hooks.rs:408-414). I searched for a recorded incident of mistrust caused by silent degradation (`grep -rn 'silent' spec/ BACKLOG.md AUDIT.md`) and found none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:574  ##rationale-lead The decisions above were reached by working through several sharp questions;",
+     "spec/common/PROP-019-version-manager.md:575  recording them so a cold reader sees *why*, not just *what*. @spec/done",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:18  ##s1-context-env-was-the-single-source-of-truth **Context.** The first design made an environment variable the single",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:20  ##p1-context-a-bespoke-layout-costs-an-author-and-the-tooling **Context.** If a package has its own bespoke layout, an author must",
+     "confirmed: The quoted phrase is verbatim from this repository: PROP-019 §9's lead reads 'recording them so a cold reader sees *why*, not just *what*' (lines 574-575) — the catalog quotes it with quotation marks but does not attribute it, and I could not find the phrase anywhere else (`grep -rn 'cold reader sees' spec/ packages/ crates/` returns PROP-019:575, the two copies of this catalog line, and nothing more). The 'every lesson' half is measured: `grep -cE '\\*\\*Context\\.\\*\\*'` = 7 and 7, so all fourteen carry a stated failure."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THAT-IS-THE-META-LESSON-AND-IT-IS-LOAD-BEARING": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:572  ## 9. Design rationale & questions explored {#rationale}",
+     "spec/common/PROP-024-code-bearing-packages.md:277  ## 4. Rejected / deferred alternatives {#rejected}",
+     "spec/common/PROP-024-code-bearing-packages.md:279  - ##REJ-HASH-BUILD-OUTPUT **Hash and copy build output too** — rejected: non-deterministic and",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:103  ## The meta-lesson — record the why {#meta-lesson}",
+     "confirmed: That the host practises it is settled: PROP-019 devotes §9 'Design rationale & questions explored' (line 572) to seven why-sections, and PROP-024 §4 'Rejected / deferred alternatives' (277) lists five rejected designs each with its reason. 'Load-bearing' is the unsettled half — it asserts that removing the why would cost something, and I found no record of that cost being paid: no DRIFT or E-BUG entry in `campaigns/packages-2026-09/tasks/` attributes a defect to a missing rationale, and `grep -rn 'cargo-cult' spec/ crates/` returns nothing outside this package."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-decision-only-document-decays-into-cargo-cult": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:574  ##rationale-lead The decisions above were reached by working through several sharp questions;",
+     "spec/common/PROP-024-code-bearing-packages.md:246  - ##CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:org.vibevm.ai-native/core-ai-native` was to stay",
+     "spec/common/PROP-024-code-bearing-packages.md:251  - ##DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral conform engine (`conform-core`)",
+     "spec/common/PROP-024-code-bearing-packages.md:258    **Executed** — the TypeScript pilot was that demand, and the neutral halves now live",
+     "confirmed: The mechanism the sentence describes is exactly what PROP-024 §2.6 avoided: it recorded the deferral WITH its trigger — 'taken when the first non-Rust pilot needs it' (251-254) — and when the trigger fired the document could be updated in place: '**The condition fired.**' (246) and '**Executed** — the TypeScript pilot was that demand' (258). That is a reason expiring and being recognised, which is the positive case of the claim. The negative case — a decision-only document in this repository that actually decayed — I did not find; I grepped `spec/` for PROPs with no rationale section (`grep -Ln '## .*[Rr]ationale|## .*[Rr]ejected' spec/common/PROP-*.md`) and the hits are short module PROPs, none with a recorded cargo-cult incident."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-REASON-IS-WHAT-LETS-A-FUTURE-READER-RE-DECIDE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:589  - ##V1-REVERSED This reverses v1's decision deliberately; env-as-truth was the cause of the",
+     "spec/common/PROP-024-code-bearing-packages.md:246  - ##CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:org.vibevm.ai-native/core-ai-native` was to stay",
+     "spec/common/PROP-024-code-bearing-packages.md:258    **Executed** — the TypeScript pilot was that demand, and the neutral halves now live",
+     "spec/common/PROP-019-version-manager.md:577  ### 9.1 Why `current` file + `current_exe`, not `$VIBEVM_HOME` (v1) {#rationale-truth}",
+     "confirmed: Two re-decisions in this repository were made from a recorded reason, and both are visible. (1) PROP-019 §9.1 line 589: 'This reverses v1's decision deliberately; env-as-truth was the cause of the reload friction' — the reversal is stated together with the cause that justified it, and commit d6b10398's body repeats it. (2) PROP-024 §2.6: the deferral carried its trigger, the trigger fired, and the document records both the firing (246) and the execution (258). In each case the recorded constraint, not the recorded decision, is what made the change decidable."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RECORD-THE-CONSTRAINT-THAT-FORCED-THE-CHOICE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:596  - ##HASH-DOESNT-SCALE It does not scale: a distribution may grow to gigabytes and ship as",
+     "spec/common/PROP-019-version-manager.md:597    binaries (merged projects), and hashing 2 GB+ on every install would be",
+     "spec/common/PROP-019-version-manager.md:610  - ##ONE-FILE-LIMIT It handles one file; a distribution is many (exe + DLLs + assets), all",
+     "spec/common/PROP-019-version-manager.md:637  - ##COPY-UNTENABLE Copying a checkout into the install root is untenable — a working tree's",
+     "spec/common/PROP-024-code-bearing-packages.md:128  - ##WHY-SOURCE-IDENTITY **Why.** Identity is the *source*, never build artifacts: build output is",
+     "confirmed: The constraints are recorded as measurable quantities, not as taste — which is what makes them re-checkable. PROP-019 §9.2: 'a distribution may grow to gigabytes … hashing 2 GB+ on every install would be prohibitive' (596-598). §9.3: 'It handles one file; a distribution is many (exe + DLLs + assets), all locked while running' (610-611). §9.6: 'a working tree's cargo `target/` is already tens of GB' (637-638). PROP-024 §2.2 `WHY-SOURCE-IDENTITY`: build output is 'non-deterministic (timestamps, host paths, incremental state) and may be gigabytes' (128-132). Each names a threshold a future reader could test against their own numbers."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-LAWS-ARE-PORTABLE-THE-MECHANICS-ARE-YOURS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:29  ##THE-VOCABULARY-IS-GENERIC-ON-PURPOSE The vocabulary is generic",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:13  ##vocabulary-is-generic Vocabulary is generic — *the launcher*, *the active pointer*,",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:14  ##vocabulary-is-generic Vocabulary is generic — *the",
+     "crates/vibe-cli/src/commands/vvm/env.rs:184      }",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:44  pub(crate) fn linker_hint() -> (&'static str, &'static str) {",
+     "confirmed: Portability is measurable in the text: zero platform, language or product names in the two lesson documents and the boot snippet (the `grep -ncE` over `vibe|cargo|VVM|Windows|Rust|vibevm` returns 0/0/0, with this file's three hits all being the idiom 'cargo-cult'). That the mechanics are platform-specific is equally visible in the implementation the lessons came from: S5's 'OS/shell-aware' clause is `WindowsEnvPersister` versus `RcFilePersister` (env.rs:184-187, 236-262), and S6's tool table needs a per-OS `linker_hint()` returning MSVC Build Tools / Xcode CLT / build-essential (tools.rs:44-61). Same law, three different mechanics."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "re-derive-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:130  ```",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:134  1. Unit of install and switch: a single file, or a whole directory?",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:136  2. Active-version truth: an environment variable, or a file read each",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:138  3. Identity: the source, or the build output? What must it never",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:140  4. Host requirements: where is the build's tool list written so a",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:142  5. Durable machine edits: which state, and how is the edit idempotent,",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:144  Answer from your platform's edges, not from this catalog's examples.",
+     "confirmed: The prompt exists as a fenced block at lines 130-145 with five numbered questions, and each maps onto a lesson: Q1 unit of install → S2, Q2 active-version truth → S1, Q3 identity source vs build output and denylist vs allow-list → P3, Q4 host requirements table → S6, Q5 durable machine edits → S5. Every one of the five has an answered counterpart in this repository (PROP-019 §2.4/§2.5/§2.8, PROP-024 §2.2), so the questions are answerable and not rhetorical. Not settled: whether the prompt has ever been run. There is no packaged runner and no recorded output — `grep -rn 're-derive' spec/ campaigns/ crates/` returns nothing outside the package, and the package ships no script (its 7 files contain no `.sh`, `.py` or `.ps1`)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-CATALOG-IS-FOURTEEN-SCARS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:16  ## S1 — activation truth is a live pointer, not the environment {#live-pointer}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:244  ## S7 — removal and garbage collection that protect {#safe-removal}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:18  ## P1 — a package is a project {#package-is-project}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:211  ## P7 — build the general mechanism on real demand {#build-on-demand}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:36  | ID | The law (one line) | Lives in |",
+     "confirmed: Counted three independent ways and they agree on 14: `grep -cE '^\\| ##ROW-LESSON'` on the index = 14; `grep -c '^## S' self-updating-tools.md` = 7 and `grep -c '^## P' packaging-lessons.md` = 7; `grep -cE '\\*\\*The law\\.\\*\\*'` = 7 and 7. The ids run S1..S7 and P1..P7 with no gaps and no duplicates. The 'scars' word carries the same qualification recorded under EACH-LESSON-IS-A-SCAR."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "SUM-THREE-MAXIMS-SIT-ABOVE-THEM": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:61  ### Split by strength, not as a workaround {#maxim-split}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:76  ### One operation, thin transports {#maxim-transports}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:90  ### Fail loud, never degrade silently {#maxim-fail-loud}",
+     "spec/common/PROP-018-agentic-standalone-modes.md:65    its LLM with the live context vibevm lacks. The split is by strength, not",
+     "crates/vibe-actions/src/lib.rs:1  //! `vibe-actions` — the frontend-agnostic, addressable action system.",
+     "confirmed: `grep -n '^### ' TOOL-DESIGN-LESSONS.md` returns exactly three headings and their short titles match the summary bullet's three phrases in the same order. Each has a distinct host counterpart, which is why they are not restatements of one another: PROP-018 §1.2 for split-by-strength, `vibe-actions` / `vibe-mcp` for thin transports, and the 217 `violates … fix:` error variants for fail-loud."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:18  ##s1-context-env-was-the-single-source-of-truth **Context.** The first design made an environment variable the single",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:20  ##p1-context-a-bespoke-layout-costs-an-author-and-the-tooling **Context.** If a package has its own bespoke layout, an author must",
+     "spec/common/PROP-019-version-manager.md:574  ##rationale-lead The decisions above were reached by working through several sharp questions;",
+     "confirmed: The 'every lesson' half is measured: `grep -cE '\\*\\*Context\\.\\*\\*'` returns 7 in self-updating-tools.md and 7 in packaging-lessons.md, so all fourteen open with the failure. The 'decays into cargo-cult' half is the rationale restated from line 110 and carries the same qualification recorded there — I found no instance of that decay in this repository."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-RE-DERIVE-THE-MECHANICS-FOR-YOUR-PLATFORM": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:124  ##THE-LAWS-ARE-PORTABLE-THE-MECHANICS-ARE-YOURS The laws are portable; the mechanics are yours to re-derive from your",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:130  ```",
+     "crates/vibe-cli/src/commands/vvm/env.rs:240  pub(crate) struct WindowsEnvPersister;",
+     "crates/vibe-cli/src/commands/vvm/env.rs:176  pub(crate) struct RcFilePersister {",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:105  fn tool_command(name: &str) -> Command {",
+     "confirmed: The same measurement as THE-LAWS-ARE-PORTABLE, plus the concrete divergence it predicts. In this repository one law needs three implementations: durable env is the Windows registry via PowerShell (env.rs:240-262) or a marked block in bash/zsh/fish/.profile (176-234); even running a version probe needs `cmd /C` on Windows and a bare name elsewhere, because Rust's `Command::new` does not consult `PATHEXT` (tools.rs:100-113). That is exactly 'the laws port, the implementation does not', observed."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,1164 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:16  ## S1 — activation truth is a live pointer, not the environment {#live-pointer}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:54  ## S2 — the unit of install is a directory, switched by a pointer {#immutable-instances}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:93  ## S3 — cheap identity: count instances, do not hash gigabytes {#cheap-identity}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:131  ## S4 — hold sources by reference, never bulk-copy them {#sources-by-reference}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:163  ## S5 — durable environment edits: idempotent, additive, consented, testable {#durable-env-edits}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:205  ## S6 — required tools live in one runnable table {#runnable-knowledge}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:244  ## S7 — removal and garbage collection that protect {#safe-removal}",
+     "confirmed: `grep -n '^## S' self-updating-tools.md` returns exactly seven lesson headings — 16, 54, 93, 131, 163, 205, 244 — covering install (S2), switch (S1/S2) and remove (S7) on a live machine, plus the three supporting subjects. The tool the scope describes exists here: `crates/vibe-cli/src/commands/vvm/` implements `vibe self install / use / remove / gc` over PROP-019."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "each-lesson-is-self-contained": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:18  ##s1-context-env-was-the-single-source-of-truth **Context.** The first design made an environment variable the single",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:28  ##S1-LAW-ACTIVATION-TRUTH-IS-A-LIVE-POINTER **The law.** *The active version is a live pointer file read on every",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:32  ##S1-MECHANICS-A-LAUNCHER-SHIM-READS-THE-POINTER-EACH-RUN **Mechanics.** A tiny launcher shim reads an active-pointer file each",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:50  ##s1-symptoms **Symptoms you need this.** Users must open a new terminal after every",
+     "confirmed: Measured: `grep -cE '\\*\\*Context\\.\\*\\*'` = 7, `'\\*\\*The law\\.\\*\\*'` = 7, `'\\*\\*Mechanics\\.\\*\\*'` = 7, `'\\*\\*Symptoms you need this\\.\\*\\*'` = 7 in this file. Seven lessons, four parts each. The only cross-lesson references are parenthetical — S2 cites 'the active pointer (S1)', S4 cites 'diff-copied per S3', S7 cites 'Hardlinked files (S3)' — none of which requires the other lesson to be read first."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "vocabulary-is-generic": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:13  ##vocabulary-is-generic Vocabulary is generic — *the launcher*, *the active pointer*,",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:32  ##S1-MECHANICS-A-LAUNCHER-SHIM-READS-THE-POINTER-EACH-RUN **Mechanics.** A tiny launcher shim reads an active- ...",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:71  ##S2-MECHANICS-EACH-INSTALL-WRITES-A-NEW-DIRECTORY **Mechanics.** Each install writes a **new** instance direc ...",
+     "confirmed: Measured: `grep -ncE '\\bvibe\\b|\\bcargo\\b|\\bVVM\\b|\\bWindows\\b|\\bRust\\b|\\bvibevm\\b'` over this file returns 0 across its 296 lines — no product, platform or language is named anywhere, even though every mechanic it describes is implemented in `crates/vibe-cli/src/commands/vvm/` against Windows and POSIX. The three generic terms it lists are the ones used: 'a tiny launcher shim' (32), 'the active pointer' (74), 'a **new** instance directory' (71)."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "s1-context-env-was-the-single-source-of-truth": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:579  - ##V1-ENV-TRUTH v1 made `$VIBEVM_HOME` the single source of truth for the active version.",
+     "spec/common/PROP-019-version-manager.md:580    Environment variables are inherited at process start, so a shell's",
+     "spec/common/PROP-019-version-manager.md:176  file.** (v1's \"env is truth\" violated the first; see §9.1.) The model has",
+     "confirmed: PROP-019 §9.1 `##V1-ENV-TRUTH` states it verbatim: 'v1 made `$VIBEVM_HOME` the single source of truth for the active version' (579-582), and §2.5's law line adds '(v1's \"env is truth\" violated the first; see §9.1)' (176). The v1 document itself is commit d605facb (2026-06-17T11:51:41+03:00, 'docs(spec): PROP-019 — VibeVM Version Manager (VVM)'). Direction: PROP-019 §9 is dated 2026-06-17 and this package restates it, so a match is the lesson's SOURCE rather than an independent witness."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s1-context-env-is-frozen-until-the-shell-reloads": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:580    Environment variables are inherited at process start, so a shell's",
+     "spec/common/PROP-019-version-manager.md:581    `$VIBEVM_HOME` is frozen until the shell is reloaded — every `self use`/",
+     "spec/common/PROP-019-version-manager.md:582    reinstall forced \"open a new terminal\". @spec/done",
+     "spec/common/PROP-019-version-manager.md:191     truth. They may lag (new shells only); `vibe vars` (§2.14) reconciles,",
+     "confirmed: PROP-019 §9.1: 'Environment variables are inherited at process start, so a shell's `$VIBEVM_HOME` is frozen until the shell is reloaded — every `self use`/reinstall forced \"open a new terminal\"' (580-582). The property is still acknowledged in the shipped design: §2.5 `LAYER-ENV-ADVISORY` notes the env values 'may lag (new shells only)' (189-195), and the Windows persister's activation hint says 'open a new terminal (the registry change reaches new processes)' (crates/vibe-cli/src/commands/vvm/env.rs:260)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s1-context-the-friction-was-structural": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:589  - ##V1-REVERSED This reverses v1's decision deliberately; env-as-truth was the cause of the",
+     "spec/common/PROP-019-version-manager.md:590    reload friction. @spec/done",
+     "spec/common/PROP-019-version-manager.md:583  - ##FIX-LIVE-FILE The fix: the **shim reads a live `current` file** each launch (filesystem",
+     "confirmed: PROP-019 §9.1 treats it as a design defect rather than a defect in code: 'This reverses v1's decision deliberately; env-as-truth was the cause of the reload friction' (589-591), and the fix is a different mechanism, not a patch — 'the **shim reads a live `current` file** each launch' (583-584). Corroborating that it was never a code bug: no v1 implementation was ever committed (`git log --oneline --diff-filter=A -- crates/vibe-cli/src/commands/vvm/store.rs` → 7cabb1a3, 2026-06-20, three days after the v2 rework)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S1-LAW-ACTIVATION-TRUTH-IS-A-LIVE-POINTER": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:185  2. ##LAYER-CURRENT-FILE **`current` file → the live active instance.** The shim reads",
+     "spec/common/PROP-019-version-manager.md:179  1. ##LAYER-CURRENT-EXE **`current_exe()` → the running process's truth.** A managed `vibe` lives",
+     "spec/common/PROP-019-version-manager.md:189  3. ##LAYER-ENV-ADVISORY **`$VIBEVM_HOME` / `$VIBEVM_INSTALL_ROOT` (env) → advisory.** Still set",
+     "crates/vibe-cli/src/commands/vvm/store.rs:130      pub fn current_path(&self) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:22  pub fn derive_self(exe: Option<&Path>) -> Option<SelfLocation> {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:48  /// Env var advertising the active version's prefix — advisory only; the",
+     "confirmed: All three clauses implemented. Live pointer: `current_path()` = `<root>/vibevm/current` (store.rs:128-132), read by `read_current` and written atomically by `write_current`. Running binary's own path: `derive_self` walks up from `current_exe()` and returns the instance dir as 'the `$VIBEVM_HOME` truth' (selfloc.rs:10-40). Env advisory: mod.rs:48-51 documents `VIBEVM_HOME` as 'advisory only; the truth is the `current` file + `current_exe`'. PROP-019 §2.5 states the same three layers at 179-195."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S1-MECHANICS-A-LAUNCHER-SHIM-READS-THE-POINTER-EACH-RUN": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:95      // Read the live `current` pointer (instant switch, no reload); fall back",
+     "crates/vibe-cli/src/commands/vvm/env.rs:101           home=\\\"$(cat \\\"$self/../vibevm/current\\\" 2>/dev/null)\\\"\\n\\",
+     "crates/vibe-cli/src/commands/vvm/env.rs:107           exec \\\"$home/{BINARY_NAME}\\\" \\\"$@\\\"\\n\"",
+     "crates/vibe-cli/src/commands/vvm/env.rs:116           if exist \\\"%VVM_CUR%\\\" set /p VVM_HOME=<\\\"%VVM_CUR%\\\"\\r\\n\\",
+     "crates/vibe-cli/src/commands/vvm/env.rs:418          assert!(posix.contains(\"vibevm/current\"), \"reads the live pointer\");",
+     "spec/common/PROP-019-version-manager.md:196  - ##SHIMS-MINIMAL The shims (`bin/{vibe,vibe.cmd}`) are minimal: resolve `current`, exec; if",
+     "confirmed: Read both shims. `posix_shim()` (env.rs:94-109) resolves its own directory, reads `$self/../vibevm/current`, falls back to `$VIBEVM_HOME`, and `exec`s `$home/vibe`; `cmd_shim()` (111-124) does the same with `set /p` and `%VIBEVM_HOME%`. Both are under 15 lines — the 'tiny' claim holds, and PROP-019 §2.5 `SHIMS-MINIMAL` (196-200) says why both forms exist. The test `shims_read_the_current_pointer` (414-429) asserts the POSIX shim contains 'vibevm/current' and the advisory fallback."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S1-MECHANICS-SWITCHING-REWRITES-THE-POINTER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/mod.rs:306      // Flip the live pointer — the switch is instant, no console reload.",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:307      store.write_current(&home)?;",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:324      ctx.summary(\"  switched live; the next `vibe` in this shell uses it\");",
+     "crates/vibe-cli/src/commands/vvm/store.rs:238      pub fn write_current(&self, instance_dir: &Path) -> Result<(), StoreError> {",
+     "spec/common/PROP-019-version-manager.md:185  2. ##LAYER-CURRENT-FILE **`current` file → the live active instance.** The shim reads",
+     "spec/common/PROP-019-version-manager.md:187     `self use` rewrites `current` → the **next** `vibe` in the **same shell**",
+     "confirmed: `run_use_cmd` flips the pointer with the comment 'Flip the live pointer — the switch is instant, no console reload' (mod.rs:306-307) and tells the user so: 'switched live; the next `vibe` in this shell uses it' (324). `write_current` is tmp-write + rename, so a concurrent shim never reads a half-written pointer (store.rs:238-256). PROP-019 §2.5 `LAYER-CURRENT-FILE` states the same (185-188)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S1-MECHANICS-THE-BINARY-DERIVES-ITS-IDENTITY-FROM-ITS-OWN-PATH": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:1  //! Deriving the VVM location from the running binary's own path (PROP-019",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:4  //! knows its root and home from `current_exe()` — no env var required.",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:26      let exe = strip_verbatim(exe?.canonicalize().ok()?);",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:33      let shaped = versions.file_name().is_some_and(|n| n == \"versions\")",
+     "crates/vibe-cli/src/main.rs:56      let self_loc = commands::vvm::derive_self(std::env::current_exe().ok().as_deref());",
+     "spec/common/PROP-019-version-manager.md:179  1. ##LAYER-CURRENT-EXE **`current_exe()` → the running process's truth.** A managed `vibe` lives",
+     "confirmed: `derive_self` takes `current_exe()`, canonicalises, strips the Windows verbatim prefix, then walks five parents and requires the shape `…/opt/vibevm/versions/<kind>/<id>/<instance>` before returning root + home (selfloc.rs:22-40) — reading no environment variable at any step. It is called at the composition root, `crates/vibe-cli/src/main.rs:56`. Test `derive_self_parses_a_managed_layout` (selfloc.rs:67-98) asserts both the parse and that a non-managed path yields `None`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S1-MECHANICS-KEEP-THE-VARIABLE-BUT-DEMOTE-IT-TO-ADVISORY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/mod.rs:48  /// Env var advertising the active version's prefix — advisory only; the",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:49  /// truth is the `current` file + `current_exe` (PROP-019 §2.5). Read for the",
+     "crates/vibe-cli/src/main.rs:54      // VVM: derive the running version from the binary's own path, and warn",
+     "crates/vibe-cli/src/main.rs:62              \"vibe: note: $VIBEVM_HOME is stale (env={env_home}); the running version is {} \\",
+     "crates/vibe-cli/src/commands/vars.rs:1  //! `vibe vars` — reconcile the actual runtime variable context with the",
+     "spec/common/PROP-019-version-manager.md:189  3. ##LAYER-ENV-ADVISORY **`$VIBEVM_HOME` / `$VIBEVM_INSTALL_ROOT` (env) → advisory.** Still set",
+     "confirmed: Every clause is in code. Still set: `run_use_cmd` calls `persister.set_vibevm_home(&home)` on each switch (mod.rs:311). Demoted: mod.rs:48-51's doc comment. Reconciled on demand: `crates/vibe-cli/src/commands/vars.rs` is `vibe vars`, whose module doc reads 'reconcile the actual runtime variable context with the environment (PROP-019 §2.14)'. Warns at startup: `crates/vibe-cli/src/main.rs:54-66` prints 'vibe: note: $VIBEVM_HOME is stale (env=…)' only when `derive_self` succeeds AND the two disagree — so it is silent outside a managed run, which PROP-019 §9.7 gives as the reason."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s1-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:581    `$VIBEVM_HOME` is frozen until the shell is reloaded — every `self use`/",
+     "crates/vibe-cli/src/commands/vvm/env.rs:260          \"open a new terminal (the registry change reaches new processes)\".to_string()",
+     "crates/vibe-cli/src/main.rs:62              \"vibe: note: $VIBEVM_HOME is stale (env={env_home}); the running version is {} \\",
+     "crates/vibe-cli/src/commands/vvm/env.rs:230              \"source `{}` (or open a new shell) to apply now\",",
+     "confirmed: The first symptom is recorded as having happened: PROP-019 §9.1 says v1 'forced \"open a new terminal\"' (581-582). The second has a live guard rather than a live occurrence — the startup note exists precisely for a stale `$VIBEVM_HOME` (main.rs:56-66). And the residue of the symptom is still visible where env genuinely cannot be live: both activation hints tell the user to open a new shell (env.rs:229-232 for POSIX, 260 for Windows) — for EXTERNAL tools only, since the shim path needs no reload."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s2-context-the-rename-aside-trick": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:607  - ##RENAME-ASIDE-IDEA The first idea for \"reinstall over the running binary\" was the Windows",
+     "spec/common/PROP-019-version-manager.md:608    *rename-aside* trick (rename the running `.exe`, write the new one;",
+     "spec/common/PROP-019-version-manager.md:609    empirically verified to work). @spec/done",
+     "confirmed: PROP-019 §9.3 `##RENAME-ASIDE-IDEA` records it: 'The first idea for \"reinstall over the running binary\" was the Windows *rename-aside* trick (rename the running `.exe`, write the new one; empirically verified to work)' (607-609). I checked whether it was ever implemented: `git log --oneline -S 'rename-aside' --all` returns only documentation commits and `grep -rn 'rename.aside' crates/ --include='*.rs'` returns nothing — the trick lives in the rationale, never in the code."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s2-context-it-worked-and-handles-exactly-one-file": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:609    empirically verified to work). @spec/done",
+     "spec/common/PROP-019-version-manager.md:610  - ##ONE-FILE-LIMIT It handles one file; a distribution is many (exe + DLLs + assets), all",
+     "confirmed: Both halves are in PROP-019 §9.3: 'empirically verified to work' (609) and 'It handles one file' (610). The empirical verification itself is not filed anywhere I could find — no manual-test record (`ls spec/manual-tests/` returns three, all about `vibe tree` / TUI / prefs) and no commit (`git log --oneline --all --grep='rename' -i` shows nothing matching). So 'verified' rests on the PROP's own assertion."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s2-context-a-real-distribution-is-many-locked-files": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:610  - ##ONE-FILE-LIMIT It handles one file; a distribution is many (exe + DLLs + assets), all",
+     "spec/common/PROP-019-version-manager.md:611    locked while running. @spec/done",
+     "spec/common/PROP-019-version-manager.md:410  - ##VIBETERM-PARTICIPATES The `vibeterm/` subtree (~220 MB, ~3-4 k files) participates in the same",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:168  /// file inside this directory\" lock? On Windows that is `ERROR_ACCESS_DENIED`",
+     "confirmed: PROP-019 §9.3: 'a distribution is many (exe + DLLs + assets), all locked while running' (610-611). The multi-file case was real here, not hypothetical: §2.15 `VIBETERM-PARTICIPATES` describes a `vibeterm/` subtree of '~220 MB, ~3-4 k files' inside an instance (410-413), and `placer.rs:167-177` still carries the retry for a scanner holding a handle on 'a freshly written `.exe` / `.dll` (the placer stages the full distribution — the Electron apps included)'. Those apps have since moved to a separate products repo (install.rs:5-12), but the locking problem the context describes was met."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S2-LAW-THE-UNIT-IS-A-WHOLE-IMMUTABLE-INSTANCE-DIRECTORY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:612  - ##WHOLE-DIR-UNIT So the unit of install and switch became the **whole immutable instance",
+     "spec/common/PROP-019-version-manager.md:613    directory**: each install writes a *new* dir and switching is a pointer",
+     "crates/vibe-cli/src/commands/vvm/store.rs:96      /// distribution instance (PROP-019 §2.4, §2.15).",
+     "crates/vibe-cli/src/commands/vvm/store.rs:97      pub fn instance_dir(&self, id: &VersionId, instance: u64) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:286      rename_into_place(&staging, &final_dir).map_err(|source| PlaceError::Layout {",
+     "crates/vibe-cli/src/commands/vvm/install.rs:122          store.write_current(&inst_dir)?;",
+     "confirmed: PROP-019 §9.3 `WHOLE-DIR-UNIT` states the law (612-615) and the code implements it: `instance_dir(id, instance)` is the unit (store.rs:97-99), `place` renames a fully staged directory into position (placer.rs:286-289), and activation is `store.write_current(&inst_dir)` (install.rs:122). Immutability is asserted in the spec ('instances are immutable after publish', §2.15:406) and honoured in code — nothing outside `place` writes into an instance dir; I checked every `fs::write` / `fs::copy` call under `crates/vibe-cli/src/commands/vvm/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S2-MECHANICS-EACH-INSTALL-WRITES-A-NEW-DIRECTORY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/install.rs:105          let instance = store.alloc_instance()?;",
+     "crates/vibe-cli/src/commands/vvm/install.rs:107          placer::place(store, id, instance, &dist, &manifest, prev_ref)?;",
+     "crates/vibe-cli/src/commands/vvm/store.rs:175          let n = state.next_instance.max(1);",
+     "crates/vibe-cli/src/commands/vvm/install.rs:241          assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 2);",
+     "crates/vibe-cli/src/commands/vvm/install.rs:258          assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 3);",
+     "confirmed: `perform_install` allocates a fresh instance number and places into it (install.rs:105-107); nothing in that path deletes a prior instance. The test `install_makes_instance_skips_unchanged_and_forces_rebuild` (191-259) asserts the counts directly: one instance after the first install, still one after an identical rebuild (dedup-skip), two after a changed build, three after `--force` on identical bytes — so prior instances survive every case. One nuance: `place` DOES remove an existing directory at the target instance number (placer.rs:274-279), which is reachable only if the counter is reused, not in the normal path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S2-MECHANICS-SWITCHING-FLIPS-THE-ACTIVE-POINTER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/mod.rs:306      // Flip the live pointer — the switch is instant, no console reload.",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:307      store.write_current(&home)?;",
+     "crates/vibe-cli/src/commands/vvm/install.rs:122          store.write_current(&inst_dir)?;",
+     "crates/vibe-cli/src/commands/vvm/install.rs:99          store.write_current(prev_dir)?;",
+     "spec/common/PROP-019-version-manager.md:405  - ##STAGE-ATOMIC The new instance is staged then atomically renamed, then `current` flips. @spec/done",
+     "confirmed: Two call sites and both are a pointer write, not a copy: `run_use_cmd` (mod.rs:306-307) for an explicit switch, and `perform_install` (install.rs:122) after a new instance is published — plus install.rs:99, which points `current` at the PREVIOUS instance when the build turned out identical. PROP-019 §2.15 `STAGE-ATOMIC` gives the order: 'The new instance is staged then atomically renamed, then `current` flips' (405)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S2-MECHANICS-NO-LOCKS-AND-NO-RELOAD": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:613    directory**: each install writes a *new* dir and switching is a pointer",
+     "spec/common/PROP-019-version-manager.md:614    flip, so **nothing in use is ever overwritten** — no lock for any file on",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:168  /// file inside this directory\" lock? On Windows that is `ERROR_ACCESS_DENIED`",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:175  fn is_transient_lock(e: &io::Error) -> bool {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:198      const BACKOFF_MS: [u64; 7] = [100, 200, 400, 800, 800, 800, 800];",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:324      ctx.summary(\"  switched live; the next `vibe` in this shell uses it\");",
+     "DRIFT on «no locks», and the codebase says so itself. The NO RELOAD half is settled — the shim reads the pointer each launch, and `self use` states it: «switched live; the next `vibe` in this shell uses it» (`mod.rs:324`). The NO FILE LOCKS half is too strong as written: `is_transient_lock` exists precisely because on Windows `fs::rename` / `fs::remove_dir_all` of a directory holding a freshly written `.exe` or `.dll` trips one. The design AVOIDS holding locks itself; it does not operate in a world without them, and it carries retry machinery that proves the difference."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S2-MECHANICS-THE-RUNNING-PROCESS-KEEPS-ITS-OWN-DIRECTORY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/install.rs:105          let instance = store.alloc_instance()?;",
+     "crates/vibe-cli/src/commands/vvm/install.rs:121          let inst_dir = store.instance_dir(id, instance);",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:15      /// The running instance dir — the `$VIBEVM_HOME` truth.",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:49  /// `source_path`, not under `src/`). Best-effort: a locked instance dir is",
+     "spec/common/PROP-019-version-manager.md:614    flip, so **nothing in use is ever overwritten** — no lock for any file on",
+     "confirmed: By construction: a reinstall allocates a NEW instance number (install.rs:105) and writes only there, so the directory the running binary was launched from — the one `derive_self` returns as its `home` (selfloc.rs:15-17) — is never a write target. Removal respects the same boundary: `remove_id` is documented 'Best-effort: a locked instance dir is skipped' and does skip rather than force (remove.rs:47-69). PROP-019 §9.3 states the outcome: 'nothing in use is ever overwritten' (614)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s2-mechanics-the-rename-aside-trick-was-dropped": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:616  - ##RENAME-ASIDE-DROPPED rename-aside was dropped as unnecessary. @spec/done",
+     "spec/common/PROP-019-version-manager.md:612  - ##WHOLE-DIR-UNIT So the unit of install and switch became the **whole immutable instance",
+     "confirmed: PROP-019 §9.3 `##RENAME-ASIDE-DROPPED`: 'rename-aside was dropped as unnecessary' (616), directly after `WHOLE-DIR-UNIT` (612-615) gives the reason. Confirmed it left no residue: `grep -rn 'rename.aside\\|rename_aside' crates/ --include='*.rs'` returns nothing, and the only rename in the placer is the staging→final publish (`rename_into_place`, placer.rs:182-184), which is a different operation."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s2-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/placer.rs:169  /// (5); `fs::rename` / `fs::remove_dir_all` of a directory holding a freshly",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:172  /// releases within a second or two, so a short retry turns a flaky install",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:67                      Err(e) => ctx.summary(&format!(\"skipped {} (in use?): {e}\", dir.display())),",
+     "spec/common/PROP-019-version-manager.md:610  - ##ONE-FILE-LIMIT It handles one file; a distribution is many (exe + DLLs + assets), all",
+     "confirmed: All three symptoms have a concrete trace here. The first is the exact error the placer retries on — `ERROR_ACCESS_DENIED` (5) from a scanner handle, 'moments after the write' (placer.rs:167-177) — and the remove path surfaces it as 'skipped {dir} (in use?)' (remove.rs:67). The second is why PROP-019 exists at all (§9.3's opening problem, 'reinstall over the running binary'). The third is PROP-019 §9.3:610-611, 'exe + DLLs + assets, all locked while running'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s3-context-a-content-hash-is-a-natural-key": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:594  - ##HASH-NATURAL A natural instance key is a content hash of the built distribution",
+     "spec/common/PROP-019-version-manager.md:595    (dedup + self-describing). @spec/done",
+     "confirmed: PROP-019 §9.2 `##HASH-NATURAL`: 'A natural instance key is a content hash of the built distribution (dedup + self-describing)' (594-595). Worth noting for the reviewer that the repository DOES use content hashing elsewhere, for package identity (`compute_content_hash`, crates/vibe-registry/src/shippable.rs:77) — the rejection here is specific to the multi-GB distribution payload, a different object."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s3-context-it-does-not-scale": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:596  - ##HASH-DOESNT-SCALE It does not scale: a distribution may grow to gigabytes and ship as",
+     "spec/common/PROP-019-version-manager.md:597    binaries (merged projects), and hashing 2 GB+ on every install would be",
+     "confirmed: PROP-019 §9.2 `##HASH-DOESNT-SCALE`: 'It does not scale' (596), with the quantity given in the following clause. The scaling boundary is realised in code as a threshold rather than a ban: `SMALL_FILE_MAX = 16 * 1024 * 1024` (placer.rs:71) — files at or below it are hashed, larger ones are not."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s3-context-hashing-gigabytes-is-prohibitive": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:596  - ##HASH-DOESNT-SCALE It does not scale: a distribution may grow to gigabytes and ship as",
+     "spec/common/PROP-019-version-manager.md:597    binaries (merged projects), and hashing 2 GB+ on every install would be",
+     "spec/common/PROP-019-version-manager.md:598    prohibitive. @spec/done",
+     "spec/common/PROP-019-version-manager.md:408  - ##SCALES-MULTI-GB This scales to a multi-GB distribution: an 80 GB asset that did not change",
+     "confirmed: PROP-019 §9.2 gives the same figure: 'a distribution may grow to gigabytes and ship as binaries (merged projects), and hashing 2 GB+ on every install would be prohibitive' (596-598). §2.15 `SCALES-MULTI-GB` puts a number on the design target — 'an 80 GB asset that did not change is shared by hardlink' (408-409). I found no benchmark backing the 'prohibitive' word: `grep -rn 'bench' crates/vibe-cli/ --include='*.rs'` returns nothing for the placer, so the figure is an engineering estimate, recorded as such."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S3-LAW-NEVER-CONTENT-HASH-A-LARGE-PAYLOAD": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:599  - ##KEY-NEVER-READS So the instance key never reads the payload (§9.4), and change detection",
+     "spec/common/PROP-019-version-manager.md:620  - ##COUNTER-KEY With content-hash rejected (§9.2), the instance key is a monotonic counter:",
+     "crates/vibe-cli/src/commands/vvm/store.rs:172      /// Allocate the next monotonic instance number (PROP-019 §9.4).",
+     "crates/vibe-cli/src/commands/vvm/store.rs:175          let n = state.next_instance.max(1);",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:71  const SMALL_FILE_MAX: u64 = 16 * 1024 * 1024;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:122      } else {",
+     "confirmed: Both clauses in code. The key never reads the payload: `alloc_instance` touches only `state.next_instance` (store.rs:172-179), asserted monotonic from one by `alloc_instance_is_monotonic_from_one` (319-326). Change detection is tiered at 16 MiB (placer.rs:71, 114-131). PROP-019 §9.2 `KEY-NEVER-READS` (599-601) and §9.4 `COUNTER-KEY` (620-621) state the same. Direction: PROP-019 §9 is dated 2026-06-17 and this package restates it, so a match is the lesson's SOURCE rather than an independent witness."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S3-MECHANICS-THE-INSTANCE-KEY-IS-A-MONOTONIC-COUNTER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/store.rs:172      /// Allocate the next monotonic instance number (PROP-019 §9.4).",
+     "crates/vibe-cli/src/commands/vvm/store.rs:174          let mut state = self.load_state()?;",
+     "crates/vibe-cli/src/commands/vvm/store.rs:175          let n = state.next_instance.max(1);",
+     "crates/vibe-cli/src/commands/vvm/store.rs:320      fn alloc_instance_is_monotonic_from_one() {",
+     "spec/common/PROP-019-version-manager.md:620  - ##COUNTER-KEY With content-hash rejected (§9.2), the instance key is a monotonic counter:",
+     "confirmed: `alloc_instance` reads `state.next_instance.max(1)`, stores `n + 1`, returns `n` — three lines, no file reads, no dependence on what is being installed (store.rs:172-179). Uniqueness is monotonic rather than checked, so it holds as long as `state.toml` is the only allocator; `save_state` writes it atomically (tmp + rename, 151-170) and `perform_install` holds an exclusive `.install.lock` while allocating (install.rs:28-51, 82). Test at store.rs:319-326 asserts 1, 2, 3."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S3-MECHANICS-HASH-SMALL-FILES-AND-STAT-LARGE-ONES": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/placer.rs:69  /// larger files are compared by `(size, mtime)` only — never read in bulk",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:71  const SMALL_FILE_MAX: u64 = 16 * 1024 * 1024;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:120      let hash = if size <= SMALL_FILE_MAX {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:123          None",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:147          _ => new.size == prev.size && new.mtime_nanos == prev.mtime_nanos,",
+     "spec/common/PROP-019-version-manager.md:397  - ##COMPARE-RULES On install, for each dist file: compare to the previous instance's",
+     "confirmed: Exactly as described. `entry_for` stats the file, then `let hash = if size <= SMALL_FILE_MAX { small_file_hash(src) } else { None }` (placer.rs:114-131) — a file above 16 MiB is never read, only `fs::metadata`'d. `unchanged` compares hashes when both sides have one and falls back to `new.size == prev.size && new.mtime_nanos == prev.mtime_nanos` otherwise (144-149). PROP-019 §2.15 `COMPARE-RULES` states the same rule including 'stat only, never read' (397-402)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S3-MECHANICS-HARDLINK-UNCHANGED-FILES": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/placer.rs:246          let reuse = prev.and_then(|(pdir, pman)| {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:251          let hardlinked = match &reuse {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:252              Some(prev_file) => fs::hard_link(prev_file, &dest).is_ok(),",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:255          if !hardlinked {",
+     "spec/common/PROP-019-version-manager.md:400    read). Unchanged → **hardlink** the previous instance's file into the new",
+     "confirmed: `place` computes `reuse` from the previous manifest, attempts `fs::hard_link(prev_file, &dest)`, and copies only `if !hardlinked` (placer.rs:246-261). Note the fallback is silent-by-design and matches the spec: PROP-019 §2.15 says 'Hardlink failure (cross-volume / unsupported) → copy' (402), and the code achieves that with `.is_ok()` rather than an error. The second half of `place_creates_an_instance_with_a_manifest` (placer.rs:335-343) exercises the reuse path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S3-MECHANICS-A-BUILD-CACHE-ANSWERS-DID-ANYTHING-CHANGE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/store.rs:106      /// `<root>/vibevm/build` — the shared cargo `--target-dir` (PROP-019",
+     "crates/vibe-cli/src/commands/vvm/store.rs:108      pub fn build_dir(&self) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/builder.rs:60          cmd.arg(\"--target-dir\").arg(target_dir);",
+     "spec/common/PROP-019-version-manager.md:394  - ##MANIFEST-PER-INSTANCE Each instance carries `.vvm-manifest.toml`: per dist file `(rel, size,",
+     "spec/common/PROP-019-version-manager.md:396    so cargo preserves the mtime of unchanged outputs across builds. @spec/done",
+     "confirmed: The persistent cache is real: `build_dir()` is `<root>/vibevm/build`, documented as 'the shared cargo `--target-dir` (PROP-019 §2.7); never the source tree's own `target/`' (store.rs:106-110), and `CargoBuilder` passes it as `--target-dir` on every build (builder.rs:60). PROP-019 §2.15 `MANIFEST-PER-INSTANCE` gives the reason it works — 'The build dir is **persistent** (shared `--target-dir`), so cargo preserves the mtime of unchanged outputs across builds' (394-396). Caveat: `vibe self gc --build` deletes that cache (remove.rs:180-188), after which mtimes are new and the cheap answer is unavailable until the next build settles."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S3-MECHANICS-WHEN-NOTHING-CHANGED-MAKE-NO-NEW-INSTANCE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/install.rs:95      if let Some((prev_dir, prev_man, prev_rec)) = &prev",
+     "crates/vibe-cli/src/commands/vvm/install.rs:97          && placer::matches(&manifest, prev_man)",
+     "crates/vibe-cli/src/commands/vvm/install.rs:99          store.write_current(prev_dir)?;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:159  pub(crate) fn matches(new: &Manifest, prev: &Manifest) -> bool {",
+     "crates/vibe-cli/src/commands/vvm/install.rs:217          // Identical bytes → no new instance (dedup-skip).",
+     "spec/common/PROP-019-version-manager.md:403  - ##DEDUP-SKIP If **every** file is unchanged, no new instance is made — `current` stays",
+     "confirmed: The dedup-skip is implemented and tested. `perform_install` compares the new manifest to the previous instance's with `placer::matches` and, absent `--force`, just re-points `current` at the previous directory (install.rs:94-103). `matches` requires equal file counts and every entry `unchanged` (placer.rs:159-165). The test asserts it explicitly — after a second install with identical bytes, `instances_of(...).len()` is still 1 (install.rs:217-228) — and that `--force` overrides (247-258). PROP-019 §2.15 `DEDUP-SKIP` (403-404) is the spec."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S3-MECHANICS-A-PREBUILT-ARTIFACT-IS-KEYED-AT-PUBLISH": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/model.rs:189      External,",
+     "crates/vibe-cli/src/commands/vvm/model.rs:190      /// A prebuilt artifact (far-backlog).",
+     "spec/common/PROP-019-version-manager.md:427  - ##PROV-BINARY `binary` (far-backlog) — a prebuilt artifact identified by the publisher's",
+     "spec/common/PROP-019-version-manager.md:602  - ##BINARY-PUBLISHER-DIGEST Future binary artifacts are keyed by the **publisher's** digest (computed",
+     "confirmed as a mechanic specified and deliberately deferred — a recorded far-backlog item is non-adoption with a date on it, not drift. `Origin::Binary` exists in the model annotated «A prebuilt artifact (far-backlog)» (`model.rs:189-190`), and `PROP-019` marks the same variant far-backlog twice: §2.16 `PROV-BINARY` (427-428) and §9.2 `BINARY-PUBLISHER-DIGEST`, «Future binary artifacts are keyed by the **publisher's** digest» (602-603). The spec and the code agree with each other and with this fact about what has not been built yet."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s3-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:596  - ##HASH-DOESNT-SCALE It does not scale: a distribution may grow to gigabytes and ship as",
+     "spec/common/PROP-019-version-manager.md:408  - ##SCALES-MULTI-GB This scales to a multi-GB distribution: an 80 GB asset that did not change",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:69  /// larger files are compared by `(size, mtime)` only — never read in bulk",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:110      Some(format!(\"{:x}\", h.finalize()))",
+     "confirmed: The symptoms are the predicted consequences of the rejected design (PROP-019 §9.2:594-598, §2.15 `SCALES-MULTI-GB`:408-409), and the code is shaped to avoid them — the 16 MiB threshold and `small_file_hash` being the only read path (placer.rs:69-71, 106-111). What I could not find is an occurrence: there is no timing record, no benchmark and no bug report for a slow install (`grep -rn 'install time\\|slow install' spec/ BACKLOG.md` returns nothing), so the symptoms are diagnostic guidance rather than a report of something suffered here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s4-context-copying-a-checkout-is-untenable": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:637  - ##COPY-UNTENABLE Copying a checkout into the install root is untenable — a working tree's",
+     "spec/common/PROP-019-version-manager.md:638    cargo `target/` is already tens of GB. @spec/done",
+     "spec/common/PROP-019-version-manager.md:419  ##PROVENANCE-LEAD Sources are never bulk-copied into the install root (a checkout's `target/`",
+     "confirmed: PROP-019 §9.6 `##COPY-UNTENABLE`: 'Copying a checkout into the install root is untenable — a working tree's cargo `target/` is already tens of GB' (637-638), repeated in §2.16 `PROVENANCE-LEAD` (419-420). The figure is consistent with the rest of the repository's reasoning — PROP-024 §1.1 gives the same cause for excluding `target/` from package identity (63-65)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s4-context-copy-once-or-copy-always-both-fail": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:639  - ##MANAGED-INCREMENTAL So managed sources are git clones VVM updates incrementally, and external",
+     "spec/common/PROP-019-version-manager.md:253    products repo (`vibevm-term`) and now publish themselves to `PATH`",
+     "crates/vibe-cli/src/commands/vvm/source.rs:253  /// (`git fetch`), never re-cloned — a full rebuild can take hours.",
+     "confirmed on the horn this repository actually faced, with a magnitude attached. The copy-always horn is recorded in the code itself: `crates/vibe-cli/src/commands/vvm/source.rs:252-253` says the clone is updated incrementally and «never re-clones — a full rebuild can take hours», with `PROP-019` §2.7 repeating it. The copy-once horn — a stale enormous duplicate — has no instance, because nothing in this repository ever copied a checkout, so «stale» never had the chance to happen. One horn measured, the other designed around before it could cut."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S4-LAW-HOLD-SOURCES-BY-REFERENCE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:419  ##PROVENANCE-LEAD Sources are never bulk-copied into the install root (a checkout's `target/`",
+     "crates/vibe-cli/src/commands/vvm/model.rs:186      /// A VVM-owned clone under `src/<kind>/<id>` (VVM updates/drops it).",
+     "crates/vibe-cli/src/commands/vvm/model.rs:187      Managed,",
+     "crates/vibe-cli/src/commands/vvm/source.rs:287  pub(crate) fn external_path(root: &Path) -> String {",
+     "crates/vibe-cli/src/commands/vvm/install.rs:91      let dist = vec![(out.binary.clone(), BINARY_NAME.to_string())];",
+     "confirmed: Implemented. The `Origin` enum encodes the two by-reference forms — `Managed` ('A VVM-owned clone under `src/<kind>/<id>`') and `External` ('A committer's own checkout, referenced by `source_path`; never touched') — with no copy variant (model.rs:180-191). The only thing carried into an instance is the build product: `let dist = vec![(out.binary.clone(), BINARY_NAME.to_string())]` (install.rs:91). I checked for a source copy in the VVM path and found none — no `copy_dir`, no recursive copy anywhere under `crates/vibe-cli/src/commands/vvm/`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S4-MECHANICS-A-TOOL-OWNED-SOURCE-IS-UPDATED-INCREMENTALLY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/source.rs:252  /// source (PROP-019 §2.7, §2.16). The clone is updated incrementally",
+     "crates/vibe-cli/src/commands/vvm/source.rs:260      if dir.join(\".git\").is_dir() {",
+     "crates/vibe-cli/src/commands/vvm/source.rs:261          super::git::fetch(&dir)?;",
+     "crates/vibe-cli/src/commands/vvm/source.rs:278      super::git::checkout(&dir, &resolved.commit)?;",
+     "crates/vibe-cli/src/commands/vvm/git.rs:94  pub(crate) fn fetch(dir: &Path) -> Result<(), GitError> {",
+     "crates/vibe-cli/src/commands/vvm/git.rs:95      run(dir, &[\"fetch\", \"--all\", \"--tags\", \"--quiet\"])?;",
+     "confirmed: Fetch-and-checkout, never re-clone: settled. `prepare_from_mirror` fetches when `.git` is present and clones only otherwise (source.rs:259-276), then checks out the resolved commit (278); `git::fetch` is `fetch --all --tags --quiet` (git.rs:92-97), documented 'incremental update of a managed clone — no re-clone'. Test `prepare_from_mirror_clones_then_fetches` (386-403) asserts the second call reuses the clone. The 'stash first if dirty' clause is NOT implemented: `grep -rn 'stash' crates/ --include='*.rs'` returns two hits and both are in `crates/vibe-resolver/src/resolvo_engine/provider.rs` about a stashed error value — there is no `git stash` anywhere, and `git.rs` exposes only run/rev_parse/current_branch/clone/checkout/fetch/list_tags/verify. A dirty managed clone would make the checkout fail rather than be stashed."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S4-MECHANICS-A-USERS-CHECKOUT-IS-BUILT-IN-PLACE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/model.rs:187      Managed,",
+     "crates/vibe-cli/src/commands/vvm/source.rs:285  /// The friendly absolute path of an external source for provenance — strips",
+     "crates/vibe-cli/src/commands/vvm/source.rs:288      let canon = root.canonicalize().unwrap_or_else(|_| root.to_path_buf());",
+     "crates/vibe-cli/src/commands/vvm/builder.rs:55          cmd.current_dir(source_root)",
+     "crates/vibe-cli/src/commands/vvm/builder.rs:50          // Build into a VVM-managed `--target-dir`, never the source tree's",
+     "spec/common/PROP-019-version-manager.md:424  - ##PROV-EXTERNAL `external` — a committer's own checkout, identified by its **canonical",
+     "confirmed: All three clauses hold. Canonical absolute path: `external_path` canonicalises and strips the Windows `\\\\?\\` prefix (source.rs:285-291). Built in place: `CargoBuilder::build` runs `cmd.current_dir(source_root)` on the checkout itself (builder.rs:54-56). Never mutating VCS state: the only git calls made against an in-tree source are `rev_parse` and `rev-parse --abbrev-ref HEAD` (source.rs:81-88 via git.rs:60-72), both read-only — `checkout` is called only on the managed mirror (source.rs:278). Never copying: build output goes to the VVM-managed `--target-dir`, explicitly 'never the source tree's own `target/`' (builder.rs:50-53)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S4-MECHANICS-RECORDING-THE-PATH-YIELDS-A-LINKED-SOURCE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/source.rs:296  /// without being in the checkout (PROP-019 §2.16).",
+     "crates/vibe-cli/src/commands/vvm/source.rs:306      if rec.origin == model::Origin::External",
+     "crates/vibe-cli/src/commands/vvm/source.rs:310          if find_source_root(&path).is_some() {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:220              ctx.step(&format!(\"rebuilding from linked source {}\", root.display()));",
+     "spec/common/PROP-019-version-manager.md:430  - ##LINKED-SOURCE The remembered `source_path` makes an external source a **linked source**:",
+     "crates/vibe-cli/src/commands/vvm/relocate/mod.rs:47            fix: install from a checkout first (`vibe self install`), or pass `--from <old-path>`)\"",
+     "confirmed: The linked-source rebuild is implemented: `linked_source` resolves the selector to an installed record, requires `origin == External` with a `source_path`, and returns it only if `find_source_root` still recognises it as a checkout (source.rs:296-315); `run_install_cmd` then rebuilds from it, printing 'rebuilding from linked source {path}' (mod.rs:218-223). The 'clear error if it has moved' half is weaker than the sentence: when the path no longer resolves, `linked_source` returns `Ok(None)` and the install SILENTLY falls through to the mirror clone (mod.rs:217-234) rather than reporting the move. The clear error exists in a different command — `vibe self relocate`, whose error names the fix ('install from a checkout first (`vibe self install`), or pass `--from <old-path>`', relocate/mod.rs:47) — but the user must already know to run it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S4-MECHANICS-ONLY-THE-BUILT-DISTRIBUTION-ENTERS-AN-INSTANCE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/install.rs:90      let out = builder.build(source_root, &store.build_dir(), req.profile)?;",
+     "crates/vibe-cli/src/commands/vvm/install.rs:91      let dist = vec![(out.binary.clone(), BINARY_NAME.to_string())];",
+     "crates/vibe-cli/src/commands/vvm/install.rs:92      let manifest = placer::manifest_for(&dist)?;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:238      for (src, rel) in dist {",
+     "spec/common/PROP-019-version-manager.md:644  - ##DIST-COPIED-NOT-SOURCE The built distribution *is* copied (small relative to source; diff-copy",
+     "confirmed: The `dist` vector is built from exactly one thing — the binary the builder returned — and `place` iterates only that vector (install.rs:90-92, placer.rs:238-262). No path under the source root ever reaches the placer. PROP-019 §9.6 `DIST-COPIED-NOT-SOURCE` states the same (644-646). Since the terminal apps moved out (install.rs:5-12) the distribution is a single file, which makes the 'small next to the source' clause trivially true today."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s4-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:637  - ##COPY-UNTENABLE Copying a checkout into the install root is untenable — a working tree's",
+     "crates/vibe-cli/src/commands/vvm/source.rs:253  /// (`git fetch`), never re-cloned — a full rebuild can take hours.",
+     "crates/vibe-cli/src/commands/vvm/model.rs:187      Managed,",
+     "spec/common/PROP-019-version-manager.md:424  - ##PROV-EXTERNAL `external` — a committer's own checkout, identified by its **canonical",
+     "confirmed: Each symptom has a named guard in this codebase, which is the checkable form of the claim: the ballooning root is prevented by never copying a source (install.rs:90-92); the re-clone by the fetch-first branch and its comment 'never re-clones — a full rebuild can take hours' (source.rs:252-253, 259-276); the git mutation by `Origin::External` being documented 'never touched' (model.rs:187) and the in-tree path issuing only read-only git commands. I found no record of any of the three actually occurring."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s5-context-durable-machine-state-outlives-the-process": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:151  // durable env persistence",
+     "crates/vibe-cli/src/commands/vvm/env.rs:161  /// Persists durable user-environment settings (PROP-019 §2.6). A",
+     "crates/vibe-cli/src/commands/vvm/env.rs:285          \"[Environment]::SetEnvironmentVariable('{}', '{}', 'User')\",",
+     "spec/common/PROP-019-version-manager.md:208  - ##PATH-SHIM-DIR **The shim dir on `PATH`** (stable; set once). @spec/done",
+     "confirmed: Directly observable in the host's own code: `EnvPersister` is 'Persists durable user-environment settings (PROP-019 §2.6)' (env.rs:161-163) with two implementations that outlive the process — the Windows one writes the user environment through `[Environment]::SetEnvironmentVariable(…, 'User')` (285-288), the POSIX one writes a marked block into the user's shell rc (176-234). PROP-019 §2.6 lists both durable settings: the shim dir on PATH and the advisory `VIBEVM_HOME` (206-211)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s5-context-get-it-wrong-and-you-corrupt-a-users-machine": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:5  //! the POSIX rc-file path in a temp file and never mutate the real machine;",
+     "crates/vibe-cli/src/commands/vvm/env.rs:6  //! the Windows registry path is only ever taken by a live `man use`.",
+     "crates/vibe-cli/src/commands/vvm/env.rs:238  /// processes (PROP-019 §2.6). Not exercised by gate tests (it mutates the",
+     "crates/vibe-cli/src/commands/vvm/env.rs:460          // The user's own lines survive.",
+     "confirmed: All three failure modes are named in the code as things being guarded against, which is the strongest available evidence short of an incident. Profile corruption: the rc test asserts 'The user's own lines survive' (env.rs:460-461). Duplication: the same test asserts `text.matches(\"export VIBEVM_HOME=\").count() == 1` after a repoint (456). Silent mutation from a test: the module doc says the durable writes 'sit behind the [`EnvPersister`] seam so tests drive the POSIX rc-file path in a temp file and never mutate the real machine' (5-7), and the Windows impl is annotated 'Not exercised by gate tests (it mutates the real user env)' (238-239)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:215  - ##RULE-IDEMPOTENT **idempotent** (a marker guards the edit; no duplicate lines/entries), @spec/done",
+     "spec/common/PROP-019-version-manager.md:216  - ##RULE-NEVER-CLOBBER **never clobber** (only our entry is added; the rest of `PATH` is",
+     "spec/common/PROP-019-version-manager.md:218  - ##RULE-OS-AWARE **OS/shell-aware** (Windows: `HKCU\\Environment` via PowerShell's",
+     "spec/common/PROP-019-version-manager.md:221  - ##RULE-CONSENT and **consent + honesty** (mutating edits need a confirm / `-y` /",
+     "spec/common/PROP-019-version-manager.md:224  - ##RULE-INJECTABLE-SEAM The durable writer is an injectable seam so tests exercise the POSIX rc",
+     "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
+     "DRIFT at one of five, and the law is otherwise the host's own — `PROP-019` §2.6 lists the identical five rules at 215-226: idempotent, never clobber, OS/shell-aware, consent + honesty, injectable seam. Four are implemented and verified in code (marker-guarded idempotence, PATH-preserving additivity, the Windows/POSIX branch, the `EnvPersister` seam). The consent clause is the gap and it is real: `run_use_cmd` writes durable environment state at `mod.rs:310-312` with no confirmation and no printed diff. Detail at `##S5-MECHANICS-CONSENT-AND-HONESTY`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S5-MECHANICS-FIVE-RULES-NONE-OPTIONAL": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:213  ##env-rules-lead Rules: @spec/done",
+     "spec/common/PROP-019-version-manager.md:215  - ##RULE-IDEMPOTENT **idempotent** (a marker guards the edit; no duplicate lines/entries), @spec/done",
+     "spec/common/PROP-019-version-manager.md:216  - ##RULE-NEVER-CLOBBER **never clobber** (only our entry is added; the rest of `PATH` is",
+     "spec/common/PROP-019-version-manager.md:218  - ##RULE-OS-AWARE **OS/shell-aware** (Windows: `HKCU\\Environment` via PowerShell's",
+     "spec/common/PROP-019-version-manager.md:221  - ##RULE-CONSENT and **consent + honesty** (mutating edits need a confirm / `-y` /",
+     "spec/common/PROP-019-version-manager.md:224  - ##RULE-INJECTABLE-SEAM The durable writer is an injectable seam so tests exercise the POSIX rc",
+     "DRIFT on «none optional». The five rules match `PROP-019` §2.6's list one-for-one and in the same order (215, 216, 218, 221, 224), so the enumeration is exact. Rule 4 — consent and honesty, «mutating edits need a confirm / `-y` / `self doctor --fix`, print the diff» — is enforced on exactly ONE path, `self doctor --fix` (`doctor.rs:103`), and not on `self use`, which is the ordinary way a user changes the active version. A rule enforced on the rare path and skipped on the common one is optional in practice, which is the word this fact rules out."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S5-MECHANICS-IDEMPOTENT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:171  const BLOCK_BEGIN: &str = \"# >>> vibevm (VVM) — managed, do not edit by hand >>>\";",
+     "crates/vibe-cli/src/commands/vvm/env.rs:172  const BLOCK_END: &str = \"# <<< vibevm (VVM) <<<\";",
+     "crates/vibe-cli/src/commands/vvm/env.rs:190          let (pre, mut block, post) = split_block(&text);",
+     "crates/vibe-cli/src/commands/vvm/env.rs:344  fn set_or_add(block: &mut Vec<String>, prefix: &str, line: &str) -> bool {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:446          assert_eq!(p.set_vibevm_home(home_a).unwrap(), Persisted::Unchanged);",
+     "crates/vibe-cli/src/commands/vvm/env.rs:456          assert_eq!(text.matches(\"export VIBEVM_HOME=\").count(), 1);",
+     "confirmed: Implemented and tested. The marker pair is `BLOCK_BEGIN`/`BLOCK_END` (env.rs:171-172); `upsert` splits the file on them, calls `set_or_add`, and returns `Persisted::Unchanged` without writing when nothing differs (188-201, 344-355). The test `rc_persister_is_idempotent_and_repoints` asserts `Persisted::Unchanged` on re-application (446-450) and, after a switch, that `text.matches(\"export VIBEVM_HOME=\").count()` is 1 and `text.matches(BLOCK_BEGIN).count()` is 1 (455-459). The Windows PATH path is idempotent too — `path_with_prefix` returns `None` when the dir is already first (304-318, test at 466-485)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S5-MECHANICS-NEVER-CLOBBER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:312      parts.retain(|p| !p.eq_ignore_ascii_case(target));",
+     "crates/vibe-cli/src/commands/vvm/env.rs:316          format!(\"{target};{}\", parts.join(\";\"))",
+     "crates/vibe-cli/src/commands/vvm/env.rs:324  fn split_block(text: &str) -> (String, Vec<String>, String) {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:461          assert!(text.contains(\"export EDITOR=vim\"));",
+     "spec/common/PROP-019-version-manager.md:216  - ##RULE-NEVER-CLOBBER **never clobber** (only our entry is added; the rest of `PATH` is",
+     "confirmed: Both surfaces preserve what they did not write. PATH: `path_with_prefix` dedupes the target and re-joins every other component — `parts.retain(...)` then `format!(\"{target};{}\", parts.join(\";\"))` (env.rs:304-318); the test asserts the pre-existing `C:\\u\\.cargo\\bin` survives, merely demoted (466-479). Rc file: `split_block` returns the text before and after the managed block untouched and `rebuild` re-emits both (324-340, 357-381); the test writes a user line first and asserts 'The user's own lines survive' (436, 460-461). PROP-019 §2.6 `RULE-NEVER-CLOBBER` (216-217) is the spec."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S5-MECHANICS-OS-AND-SHELL-AWARE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/mod.rs:428      if cfg!(windows) {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:35      pub(crate) fn detect(shell_env: Option<&str>) -> Shell {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:78      pub(crate) fn rc_path(self, home: &Path) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:240  pub(crate) struct WindowsEnvPersister;",
+     "crates/vibe-cli/src/commands/vvm/env.rs:176  pub(crate) struct RcFilePersister {",
+     "spec/common/PROP-019-version-manager.md:218  - ##RULE-OS-AWARE **OS/shell-aware** (Windows: `HKCU\\Environment` via PowerShell's",
+     "confirmed: Exactly the two platforms and exactly the four shells. `make_persister` branches on `cfg!(windows)` to `WindowsEnvPersister` or `RcFilePersister` (mod.rs:427-437). `Shell::detect` recognises fish/zsh/bash from `$SHELL` and falls back to Pwsh on Windows, Posix elsewhere (env.rs:35-53); `rc_path` maps them to `.config/fish/config.fish`, `.zshrc`, `.bashrc` and `.profile` (78-87). The Windows side goes through PowerShell's `[Environment]` API rather than editing a file (240-262, 283-298). PROP-019 §2.6 `RULE-OS-AWARE` names `HKCU\\Environment` and the same four rc targets (218-220)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S5-MECHANICS-CONSENT-AND-HONESTY": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:103      if args.fix && confirm(ctx, args.yes, \"Write shims and put the shim dir on PATH?\")? {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:310      let persister = make_persister(env, shell)?;",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:311      persister.set_vibevm_home(&home)?;",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:312      persister.ensure_on_path(&store.shim_dir())?;",
+     "crates/vibe-cli/src/commands/vvm/env.rs:260          \"open a new terminal (the registry change reaches new processes)\".to_string()",
+     "spec/common/PROP-019-version-manager.md:221  - ##RULE-CONSENT and **consent + honesty** (mutating edits need a confirm / `-y` /",
+     "DRIFT at two of three clauses, on the ordinary path a user actually takes. HONESTY holds: both activation hints say the change reaches only new shells or processes («open a new terminal (the registry change reaches new processes)», `env.rs:260`; «source `{rc}` (or open a new shell) to apply now», 229-233), printed by `run_use_cmd` at `mod.rs:325-328`. CONSENT does not: `run_use_cmd` calls `persister.set_vibevm_home()` and `persister.ensure_on_path()` UNCONDITIONALLY at `mod.rs:310-312` — no confirm, no `--yes` — and the gate exists on exactly one other path, `self doctor --fix` (`doctor.rs:103`). PRINT THE DIFF is implemented nowhere at all: no code path anywhere prints the diff `PROP-019` §2.6 `RULE-CONSENT` requires. So the command that ordinarily changes a user's durable environment is the one without the gate."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S5-MECHANICS-INJECTABLE-SEAM": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:4  //! The durable writes sit behind the [`EnvPersister`] seam so tests drive",
+     "crates/vibe-cli/src/commands/vvm/env.rs:161  /// Persists durable user-environment settings (PROP-019 §2.6). A",
+     "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:434          let tmp = tempfile::tempdir().unwrap();",
+     "crates/vibe-cli/src/commands/vvm/env.rs:435          let rc = tmp.path().join(\".bashrc\");",
+     "spec/common/PROP-019-version-manager.md:224  - ##RULE-INJECTABLE-SEAM The durable writer is an injectable seam so tests exercise the POSIX rc",
+     "confirmed: Implemented as described. `EnvPersister` is a trait with three methods (env.rs:164-169), selected at the composition point by `make_persister` returning `Box<dyn EnvPersister>` (mod.rs:427-437). The test constructs `RcFilePersister::new(rc, Shell::Bash)` over a path inside `tempfile::tempdir()` (env.rs:433-437), so the whole rc-file path runs against a temp file. The Windows impl is deliberately left out of the gate — 'Not exercised by gate tests (it mutates the real user env); only a live `man use` takes this path' (238-239) — which is the honest cost of the seam and matches PROP-019 §2.6's wording (224-226)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s5-mechanics-managed-blocks-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "vibe.lock:52      \"flow:org.vibevm.world/managed-blocks@=0.1.0\",",
+     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:1",
+     "crates/vibe-cli/src/commands/vvm/env.rs:171  const BLOCK_BEGIN: &str = \"# >>> vibevm (VVM) — managed, do not edit by hand >>>\";",
+     "crates/vibe-cli/src/commands/vvm/env.rs:172  const BLOCK_END: &str = \"# <<< vibevm (VVM) <<<\";",
+     "CLAUDE.md:211  <vibevm>",
+     "CLAUDE.md:212  <!-- Generated by vibe — do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yo ...",
+     "confirmed: The referenced flow exists as a package, is installed (`vibedeps/flow-managed-blocks/`), and is listed in `vibe.lock:52`. The pointer is doubly justified in this repository, because the managed-block law is executed on two different file classes: VVM writes a `# >>> vibevm (VVM) — managed, do not edit by hand >>>` block into the user's rc (env.rs:171-172), and `vibe install` writes a `<vibevm>` block into CLAUDE.md / AGENTS.md / GEMINI.md — I re-ran the harvest's grep and got the same six lines (211/212/228 in each of the three files)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "s5-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:456          assert_eq!(text.matches(\"export VIBEVM_HOME=\").count(), 1);",
+     "crates/vibe-cli/src/commands/vvm/env.rs:461          assert!(text.contains(\"export EDITOR=vim\"));",
+     "crates/vibe-cli/src/commands/vvm/env.rs:238  /// processes (PROP-019 §2.6). Not exercised by gate tests (it mutates the",
+     "crates/vibe-cli/src/commands/vvm/env.rs:260          \"open a new terminal (the registry change reaches new processes)\".to_string()",
+     "confirmed: Three of the four symptoms have a dedicated guard, each with the assertion that would fail if the symptom returned: duplication → `matches(\"export VIBEVM_HOME=\").count() == 1` (env.rs:456); clobbering → 'The user's own lines survive' (461); author-machine-only tests → the seam plus the explicit note that the Windows path is not gate-tested (238-239). The fourth — users surprised the current shell did not update — is addressed by telling them up front rather than by a guard (activation hints at 229-233 and 260). No occurrence of any of the four is recorded in the repository."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s6-context-a-from-source-build-needs-a-host-stack": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:278  - ##TOOLS-LIST A from-source build needs **git**, a **Rust toolchain** (rustc + cargo,",
+     "spec/common/PROP-019-version-manager.md:280    **system linker / C toolchain** (Windows: VS Build Tools; macOS: Xcode CLT;",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:22  pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:44  pub(crate) fn linker_hint() -> (&'static str, &'static str) {",
+     "confirmed: PROP-019 §2.8 `TOOLS-LIST` names exactly that stack: git, a Rust toolchain (rustc + cargo, stable ≥ 1.93, edition 2024) and a system linker / C toolchain per OS (278-281). The code carries the same four: `REQUIRED_TOOLS` holds git ≥ 2.0.0, cargo ≥ 1.93.0, rustc ≥ 1.93.0 (tools.rs:22-41), and `linker_hint()` supplies the fourth per platform (44-61), separated because it is not version-checkable."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s6-context-a-prose-list-drifts": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:536  ## 7. Maintenance & evolution — updating the stack {#maintenance}",
+     "spec/common/PROP-019-version-manager.md:538  ##req-maintenance `req r1` @spec/done",
+     "spec/common/PROP-019-version-manager.md:541  ",
+     "spec/common/PROP-019-version-manager.md:542  - ##MAINT-TOOLS-TABLE the **required tools** are the `REQUIRED_TOOLS` table (§2.8, asserted by a",
+     "spec/common/PROP-019-version-manager.md:543    test); @spec/done",
+     "DRIFT, and the shape of it is worth reading twice: the lesson about prose drifting away from code is itself asserted in prose that has drifted away from the code it came from. `PROP-019` §7 lists four runnable sources of truth, and `MAINT-RUST-PIN` at line 543 claims «the **Rust pin** is `rust-toolchain.toml` (read, not hard-coded)». Nothing reads that file — one grep hit, a doc comment at `builder.rs:38` — the file pins `channel = \"stable\"` with no version, and 1.93 is hard-coded at `tools.rs:33`, `tools.rs:38` and `Cargo.toml:53`. The failure mode this context paragraph describes is present, unrepaired, in the anti-drift register the same document set up to prevent it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S6-LAW-REQUIRED-TOOLS-LIVE-IN-ONE-RUNNABLE-TABLE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/tools.rs:1  //! The required build toolchain as a single source of truth (PROP-019 §2.8),",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:22  pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[",
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:30      let tools = tools::check_all();",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:142      fn required_tools_table_is_well_formed() {",
+     "spec/common/PROP-019-version-manager.md:283  - ##TOOLS-TABLE-SSOT The list lives once as a `REQUIRED_TOOLS` table — `(name, min_version,",
+     "spec/common/PROP-019-version-manager.md:284    check_command, help_url)` — read by `self doctor` (§2.11) and asserted by a",
+     "confirmed: Fully implemented — the cleanest lesson-to-code match in the file. One table: `REQUIRED_TOOLS`, a single `const` slice (tools.rs:22-41), whose module doc says 'change [`REQUIRED_TOOLS`] and both `man doctor` and the docs follow' (1-3). Doctor reads it: `run_doctor_cmd` calls `tools::check_all()` and renders every row (doctor.rs:30, 61-70, plus the JSON branch at 48-51). Test asserts it: `required_tools_table_is_well_formed` (tools.rs:140-157). PROP-019 §2.8 `TOOLS-TABLE-SSOT` (283-285) states the same."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S6-MECHANICS-ONE-TABLE-WITH-FOUR-COLUMNS": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/tools.rs:11      pub name: &'static str,",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:13      pub check: &'static [&'static str],",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:14      pub min_version: &'static str,",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:15      pub help_url: &'static str,",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:23      ToolSpec {",
+     "spec/common/PROP-019-version-manager.md:283  - ##TOOLS-TABLE-SSOT The list lives once as a `REQUIRED_TOOLS` table — `(name, min_version,",
+     "confirmed: `ToolSpec` has exactly four fields and they are exactly the four named: `name`, `check` ('The command that prints a version, e.g. `[\"git\", \"--version\"]`'), `min_version`, `help_url` (tools.rs:10-16). Three rows populate it (23-40). PROP-019 §2.8 gives the same tuple in the same order — '`(name, min_version, check_command, help_url)`' (283-284)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S6-MECHANICS-THE-DOCTOR-ITERATES-THE-TABLE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:30      let tools = tools::check_all();",
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:61      for t in &tools {",
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:65                  \"MISS {} {} (need >= {}) — {}\",",
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:68              None => ctx.step(&format!(\"MISS {} not found — {}\", t.name, t.help_url)),",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:73  pub(crate) fn check_all() -> Vec<ToolStatus> {",
+     "spec/common/PROP-019-version-manager.md:332  - ##DOCTOR-VERIFIES `self doctor` verifies end to end: the shim dir is on `PATH`; the",
+     "confirmed: `check_all()` maps over every row and probes it (tools.rs:73-90); `run_doctor_cmd` prints one line per tool, and a miss carries both the shortfall and the remediation URL — 'MISS {name} {version} (need >= {min}) — {help_url}' and 'MISS {name} not found — {help_url}' (doctor.rs:61-69). The linker, which cannot be version-probed, is reported separately with its own URL (71-72). PROP-019 §2.11 `DOCTOR-VERIFIES` (332) describes the end-to-end check."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S6-MECHANICS-A-TEST-ASSERTS-THE-TABLE-IS-WELL-FORMED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/tools.rs:141      #[verifies(\"spec://vibevm/common/PROP-019#tools\", r = 1)]",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:142      fn required_tools_table_is_well_formed() {",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:143          assert!(!REQUIRED_TOOLS.is_empty());",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:145              assert!(!t.check.is_empty(), \"{} has a check command\", t.name);",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:147                  semver::Version::parse(t.min_version).is_ok(),",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:152                  t.help_url.starts_with(\"https://\"),",
+     "confirmed: `required_tools_table_is_well_formed` (tools.rs:140-157) asserts the table is non-empty and, for every row, that the check command is non-empty, `min_version` parses as semver, and `help_url` starts with `https://`. It carries `#[verifies(\"spec://vibevm/common/PROP-019#tools\", r = 1)]`, so the traceability engine links it back to the requirement. Two further tests cover the probing logic — `extract_semver_tolerates_vendor_suffixes` (159-175) and `version_ok_compares_semver` (177-185)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S6-MECHANICS-RELATED-KNOWLEDGE-FOLLOWS-THE-SAME-RULE": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/model.rs:129  pub const DEFAULT_PROFILE: Profile = Profile::Debug;",
+     "crates/vibe-cli/src/commands/vvm/model.rs:325          assert_eq!(DEFAULT_PROFILE, Profile::Debug);",
+     "spec/common/PROP-019-version-manager.md:542  - ##MAINT-TOOLS-TABLE the **required tools** are the `REQUIRED_TOOLS` table (§2.8, asserted by a",
+     "spec/common/PROP-019-version-manager.md:543    test); @spec/done",
+     "rust-toolchain.toml:2  channel = \"stable\"",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:33          help_url: \"https://rustup.rs\",",
+     "DRIFT on the second clause, and it is the sharpest self-referential failure in the package. FIRST CLAUSE holds cleanly: `DEFAULT_PROFILE` is one `pub const` (`model.rs:129`), asserted by a test (`assert_eq!(DEFAULT_PROFILE, Profile::Debug)` at 325), with `resolve_profile` its only consumer (`mod.rs:269-277`). SECOND CLAUSE is false: NOTHING reads `rust-toolchain.toml`. `grep -rn 'rust-toolchain\\|toolchain.toml' crates/ xtask/ --include='*.rs'` returns exactly one hit and it is a doc comment at `builder.rs:38`; the file itself pins no version (`channel = \"stable\"`); and 1.93 is hard-coded in three places — `tools.rs:33`, `tools.rs:38` and `Cargo.toml:53`. So the single-source-of-truth rule holds for the profile and fails for the language pin, in the same crate."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S6-MECHANICS-THE-DOCTOR-AND-THE-TEST-MOVE-FOR-FREE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/tools.rs:2  //! which doubles as the runnable form of \"how to update the stack\" (§7):",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:3  //! change [`REQUIRED_TOOLS`] and both `man doctor` and the docs follow.",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:74      REQUIRED_TOOLS.iter().map(check_one).collect()",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:144          for t in REQUIRED_TOOLS {",
+     "spec/common/PROP-019-version-manager.md:538  ##req-maintenance `req r1` @spec/done",
+     "confirmed: Structurally true, and checkable without editing anything: both consumers iterate the table rather than naming its rows. `check_all` is `REQUIRED_TOOLS.iter().map(check_one).collect()` (tools.rs:73-75) and the test is `for t in REQUIRED_TOOLS { … }` (144-156), so adding or removing a `ToolSpec` changes both behaviours with no other edit. The doctor's rendering is likewise row-generic (`for t in &tools`, doctor.rs:61). The module doc states the intent: 'change [`REQUIRED_TOOLS`] and both `man doctor` and the docs follow' (2-3)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S6-MECHANICS-A-SECRET-IS-NEVER-IN-THIS-SET": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/tools.rs:22  pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[",
+     "spec/common/PROP-019-version-manager.md:286  - ##TOKEN-NOT-TOOL The publish token is **never** in this set (§2.13). @spec/done",
+     "spec/common/PROP-019-version-manager.md:563    diff` per §2.14; the publish token never appears. @spec/done",
+     "crates/vibe-cli/src/commands/registry/publish.rs:180      let token = load_token_for_host(&host).context(\"loading publish token\")?;",
+     "crates/vibe-workspace/src/hooks.rs:356  /// token is deliberately never placed here.",
+     "confirmed: Checked by inspection and by search. `REQUIRED_TOOLS` holds three entries — git, cargo, rustc — and no credential (tools.rs:22-41). The publish token lives on a separate path entirely: `load_token_for_host(&host)` in `crates/vibe-cli/src/commands/registry/publish.rs:180`, logged as 'Loaded publish token from {} (value redacted)' (185). PROP-019 §2.8 `TOKEN-NOT-TOOL` states the rule (286) and §8 `ACC-VARS` requires 'the publish token never appears' (563). The same separation is enforced for hooks: 'The publish token is deliberately never placed here' (crates/vibe-workspace/src/hooks.rs:355-356). `grep -rn 'token' crates/vibe-cli/src/commands/vvm/` returns nothing."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s6-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:68              None => ctx.step(&format!(\"MISS {} not found — {}\", t.name, t.help_url)),",
+     "spec/common/PROP-019-version-manager.md:538  ##req-maintenance `req r1` @spec/done",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:33          help_url: \"https://rustup.rs\",",
+     "Cargo.toml:53  rust-version = \"1.93\"",
+     "spec/common/PROP-019-version-manager.md:543    test); @spec/done",
+     "confirmed BY the failure it classifies, per §judged — and the third symptom is present right now, in miniature. The first two are guarded: the doctor names a missing tool with its remediation before a build can fail deep (`doctor.rs:61-72`), and the table-plus-test arrangement keeps the checker and the setup list from diverging. The THIRD — a version bump requiring edits in several places — is live: bumping Rust today means `tools.rs:33`, `tools.rs:38` and `Cargo.toml:53`, at least three. A symptom list that correctly predicts a symptom its own repository exhibits is confirmed by that symptom; the defect is carried as drift at `##s6-context-a-prose-list-drifts` and `##S6-MECHANICS-RELATED-KNOWLEDGE-FOLLOWS-THE-SAME-RULE`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s7-context-an-eager-remove-deletes-what-you-are-running": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:292  ##REMOVE-SAFE `self remove` never silently wipes everything: @spec/done",
+     "spec/common/PROP-019-version-manager.md:299  - ##RM-PROTECTED The **active** version and the **running** instance are protected:",
+     "spec/common/PROP-019-version-manager.md:325  - ##GC-SCOPE `self gc` operates **only** inside the install root and **never** touches",
+     "spec/common/PROP-019-version-manager.md:326    the shared `~/.cargo` caches. @spec/done",
+     "confirmed: PROP-019 §2.9 opens with the same premise — '`self remove` never silently wipes everything' (292) — and both hazards are named: the active and running instance are 'protected' (299-302), and `self gc` 'operates **only** inside the install root and **never** touches the shared `~/.cargo` caches' (325-326). The shared-cache hazard is concrete here because VVM's own build cache is a cargo `--target-dir` (store.rs:106-110), which sits next to but is not `~/.cargo`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s7-context-destructive-by-default-loses-trust": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:292  ##REMOVE-SAFE `self remove` never silently wipes everything: @spec/done",
+     "spec/common/PROP-019-version-manager.md:296  - ##RM-PICKER `self remove` with no selector — an **interactive picker**; a non-",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:458  /// remove / gc pickers): an unattended or non-TTY run errors with `msg` —",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:141  /// Interactively pick version ids to remove. A non-TTY / unattended run with",
+     "confirmed: The design acts on the claim in the strongest available way — by making the no-argument case an error rather than a wipe. `pick_ids` is documented 'A non-TTY / unattended run with no selector is an error, not a wipe' (remove.rs:141-142) and calls `require_tty` with a message naming the explicit flags (149-152); `require_tty`'s own doc explains the reasoning (mod.rs:458-462). PROP-019 §2.9 `RM-PICKER` says the same: 'a non-interactive context errors with a hint, never a wipe' (296-297). The trust claim itself is a judgement with no measurement here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S7-LAW-REMOVAL-PROTECTS-THE-ACTIVE-AND-RUNNING-INSTANCE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/remove.rs:127              .unwrap_or(false)",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:128              && !args.force",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:131                  \"skipped active {id} — use --force to remove the active version\"",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:102          if !confirm(",
+     "spec/common/PROP-019-version-manager.md:299  - ##RM-PROTECTED The **active** version and the **running** instance are protected:",
+     "spec/common/PROP-019-version-manager.md:325  - ##GC-SCOPE `self gc` operates **only** inside the install root and **never** touches",
+     "confirmed: Three clauses, three implementations. Active protected: the loop skips a target equal to the active id unless `args.force`, printing 'skipped active {id} — use --force to remove the active version' (remove.rs:124-134). Running protected: `remove_id` catches the failure and reports 'skipped {dir} (in use?)' rather than forcing (62-69). Wipe gated: `--all` goes through `confirm` with the count (96-110). Shared caches untouched: every path the module deletes is derived from `store` — `instance_dir`, `src_dir`, `build_dir` — all under the VVM root; `grep -rn 'cargo' crates/vibe-cli/src/commands/vvm/remove.rs` returns nothing."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S7-MECHANICS-REMOVING-THE-ACTIVE-VERSION-REQUIRES-A-FORCE-FLAG": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/remove.rs:124          if active",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:128              && !args.force",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:131                  \"skipped active {id} — use --force to remove the active version\"",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:50  /// skipped (PROP-019 §2.9).",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:67                      Err(e) => ctx.summary(&format!(\"skipped {} (in use?): {e}\", dir.display())),",
+     "spec/common/PROP-019-version-manager.md:317  - ##GC-BEST-EFFORT Instances are pruned **best-effort**: a dir still locked by a running",
+     "confirmed: Force flag: `if active … == id && !args.force { … continue; }` (remove.rs:124-134). Best-effort on the running instance: `remove_id` is documented 'Best-effort: a locked instance dir is skipped' (50) and its `match fs::remove_dir_all(&dir)` reports the error as a skip instead of propagating (62-69). Collected later: PROP-019 §2.10 `GC-BEST-EFFORT` says a locked dir 'is skipped and collected on a later run (on POSIX the unlink succeeds and the inode lives until the process exits)' (317-319) — the parenthetical the lesson repeats. Note the protection is de facto (the OS refuses the delete) rather than an explicit is-this-me check."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S7-MECHANICS-GC-ONLY-INSIDE-THE-TOOLS-OWN-INSTALL-ROOT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/remove.rs:181              let dir = store.build_dir();",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:220                  let dir = store.instance_dir(&r.version_id(), r.instance);",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:226              let dir = store.build_dir();",
+     "crates/vibe-cli/src/commands/vvm/store.rs:106      /// `<root>/vibevm/build` — the shared cargo `--target-dir` (PROP-019",
+     "spec/common/PROP-019-version-manager.md:325  - ##GC-SCOPE `self gc` operates **only** inside the install root and **never** touches",
+     "spec/common/PROP-019-version-manager.md:326    the shared `~/.cargo` caches. @spec/done",
+     "confirmed: Verified by enumerating every delete in the gc path. `run_gc_cmd` removes exactly two kinds of path: `store.build_dir()` — `<root>/vibevm/build`, VVM's own shared `--target-dir` (remove.rs:181, 226; store.rs:106-110) — and `store.instance_dir(...)` for non-active instances (220-224). Both are computed from the store root, so neither can escape it. Independent check: `grep -rn 'cargo\\|\\.cargo' crates/vibe-cli/src/commands/vvm/remove.rs` returns nothing, so `~/.cargo` is not referenced at all — which is what PROP-019 §2.10 `GC-SCOPE` (325-326) and §8 `ACC-REMOVE-GC-SAFE` (564-565) require."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S7-MECHANICS-REMOVE-EVERYTHING-NEEDS-A-FLAG-AND-A-RECONFIRM": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/remove.rs:96      let targets: Vec<VersionId> = if args.all {",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:102          if !confirm(",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:105              &format!(\"Remove ALL {} version(s)?\", ids.len()),",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:208              if !confirm(",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:212                      \"Remove {} instance(s) except the active? This cannot be undone.\",",
+     "spec/common/PROP-019-version-manager.md:298  - ##RM-ALL `self remove --all` — every version, behind the flag **and** a re-confirm. @spec/done",
+     "confirmed: Both gates present on both wholesale paths. `self remove --all`: the flag selects the branch (remove.rs:96) and `confirm(ctx, args.yes, \"Remove ALL {n} version(s)?\")` must return true or it aborts (102-109). `self gc --prune-others`: the flag selects the action (170-176) and `confirm` asks 'Remove {n} instance(s) except the active? This cannot be undone.' (208-218). A bare invocation of either reaches `require_tty` and errors with the flags to pass (149-152, 240-243). PROP-019 §2.9 `RM-ALL` (298) and §2.10 `GC-PRUNE-OTHERS` (314-315) require exactly this. One nuance: `confirm` returns true immediately for `--yes` or an unattended context (mod.rs:441-444), so 'flag AND reconfirm' collapses to one flag under `--yes` — which is the documented escape."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S7-MECHANICS-A-USERS-OWN-SOURCE-TREE-IS-NEVER-REMOVED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/remove.rs:48  /// clone (Src/Both). Never removes an external committer tree (it lives at",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:49  /// `source_path`, not under `src/`). Best-effort: a locked instance dir is",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:74          let src = store.src_dir(id);",
+     "crates/vibe-cli/src/commands/vvm/store.rs:203      pub fn forget_id(&self, id: &VersionId) -> Result<(), StoreError> {",
+     "crates/vibe-cli/src/commands/vvm/model.rs:187      Managed,",
+     "spec/common/PROP-019-version-manager.md:303  ##EXTERNAL-NEVER-REMOVED External sources (committer trees) are **never** removed — VVM only forgets",
+     "confirmed: Structural, not merely intended: the only source path `remove_id` can delete is `store.src_dir(id)` = `<root>/vibevm/src/<kind>/<id>` (remove.rs:73-80, store.rs:112-115), which is by construction inside the VVM root. An external checkout is recorded in `source_path` on the install record, never under `src/`, and the doc comment says so — 'Never removes an external committer tree (it lives at `source_path`, not under `src/`)' (48-50). Forgetting is separate and file-free: `forget_id` 'Does not touch files' (store.rs:201-211). PROP-019 §2.9 `EXTERNAL-NEVER-REMOVED` (303-304) states the same."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "S7-MECHANICS-HARDLINKED-FILES-ARE-REFCOUNT-SAFE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/placer.rs:252              Some(prev_file) => fs::hard_link(prev_file, &dest).is_ok(),",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:62                  match fs::remove_dir_all(&dir) {",
+     "spec/common/PROP-019-version-manager.md:320  - ##GC-REFCOUNT-SAFE Hardlinked files are refcount-safe — removing one instance never corrupts",
+     "spec/common/PROP-019-version-manager.md:321    another that shares inodes (§2.15). @spec/done",
+     "spec/common/PROP-019-version-manager.md:406  - ##GC-SAFE-IMMUTABLE gc is refcount-safe (§2.10); instances are immutable after publish. @spec/done",
+     "confirmed on the mechanism, with the test gap recorded. Instances really do share inodes via `fs::hard_link` (`placer.rs:251-254`), and removal is a plain `fs::remove_dir_all` (`remove.rs:62`, `:222`), which unlinks rather than truncates — so the refcount property follows from the filesystem rather than from tool code, which is the strongest form of the guarantee. `PROP-019` §2.10 `GC-REFCOUNT-SAFE` asserts it (320-321). RECORDED: no test creates two hardlinked instances and removes one to assert the other survives, so the property is inherited rather than pinned."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "s7-symptoms": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-019-version-manager.md:299  - ##RM-PROTECTED The **active** version and the **running** instance are protected:",
+     "spec/common/PROP-019-version-manager.md:325  - ##GC-SCOPE `self gc` operates **only** inside the install root and **never** touches",
+     "spec/common/PROP-019-version-manager.md:303  ##EXTERNAL-NEVER-REMOVED External sources (committer trees) are **never** removed — VVM only forgets",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:67                      Err(e) => ctx.summary(&format!(\"skipped {} (in use?): {e}\", dir.display())),",
+     "confirmed: All three symptoms have a matching guard whose absence would produce exactly them, and PROP-019 §8 `ACC-REMOVE-GC-SAFE` (564-565) is the acceptance criterion that covers all three in one line: '`self remove` never wipes without `--all` + reconfirm; `self gc` never touches `~/.cargo`; external sources are never modified or removed.' No instance of any of them is recorded — `git log --oneline --all --grep='deleted\\|wiped' -i` surfaces nothing in the VVM path, and `BACKLOG.md` carries no entry."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-S1-LIVE-POINTER": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/store.rs:130      pub fn current_path(&self) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/selfloc.rs:22  pub fn derive_self(exe: Option<&Path>) -> Option<SelfLocation> {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:48  /// Env var advertising the active version's prefix — advisory only; the",
+     "spec/common/PROP-019-version-manager.md:185  2. ##LAYER-CURRENT-FILE **`current` file → the live active instance.** The shim reads",
+     "confirmed: Restates the S1 law; all three clauses verified in code on the S1-LAW row — `current_path()` at store.rs:128-132, `derive_self` at selfloc.rs:22-40, and the advisory annotation at mod.rs:48-51 — with tests `shims_read_the_current_pointer` and `active_follows_the_current_pointer`."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-S2-IMMUTABLE-INSTANCES": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/store.rs:97      pub fn instance_dir(&self, id: &VersionId, instance: u64) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:286      rename_into_place(&staging, &final_dir).map_err(|source| PlaceError::Layout {",
+     "crates/vibe-cli/src/commands/vvm/install.rs:122          store.write_current(&inst_dir)?;",
+     "spec/common/PROP-019-version-manager.md:612  - ##WHOLE-DIR-UNIT So the unit of install and switch became the **whole immutable instance",
+     "confirmed: Restates the S2 law; the directory unit, the staged rename and the pointer flip are all verified on the S2 rows. The 'overwrite nothing in use' clause holds for the running instance; the narrower 'no file locks' phrasing inside the lesson body does not, and is recorded there (placer.rs:167-213 exists precisely because locks occur on the NEW instance's files)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-S3-CHEAP-IDENTITY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/store.rs:175          let n = state.next_instance.max(1);",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:71  const SMALL_FILE_MAX: u64 = 16 * 1024 * 1024;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:147          _ => new.size == prev.size && new.mtime_nanos == prev.mtime_nanos,",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:252              Some(prev_file) => fs::hard_link(prev_file, &dest).is_ok(),",
+     "confirmed: Restates the S3 law and mechanics; each of the four clauses is verified on its own row — `alloc_instance` (store.rs:172-179, test asserting 1/2/3), `SMALL_FILE_MAX` at 16 MiB (placer.rs:71), the `(size, mtime)` fallback (144-149), and `fs::hard_link` with a copy fallback (251-261)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-S4-SOURCES-BY-REFERENCE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/model.rs:187      Managed,",
+     "crates/vibe-cli/src/commands/vvm/builder.rs:55          cmd.current_dir(source_root)",
+     "crates/vibe-cli/src/commands/vvm/source.rs:260      if dir.join(\".git\").is_dir() {",
+     "spec/common/PROP-019-version-manager.md:639  - ##MANAGED-INCREMENTAL So managed sources are git clones VVM updates incrementally, and external",
+     "confirmed: Restates the S4 law; the two origins and their handling are verified on the S4 rows — external checkouts built in place with read-only git (builder.rs:54-56, source.rs:81-88), managed clones fetched not re-cloned (source.rs:259-276). The summary omits the 'stash first if dirty' clause that the mechanics row records as unimplemented."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-S5-DURABLE-ENV-EDITS": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/env.rs:171  const BLOCK_BEGIN: &str = \"# >>> vibevm (VVM) — managed, do not edit by hand >>>\";",
+     "crates/vibe-cli/src/commands/vvm/env.rs:312      parts.retain(|p| !p.eq_ignore_ascii_case(target));",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:428      if cfg!(windows) {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:310      let persister = make_persister(env, shell)?;",
+     "DRIFT, carrying the body rows per W1's summary-restatement precedent: four of the five restated properties are verified in code and «consented» is not. `self use` writes durable environment state at `mod.rs:310-312` with no confirmation and no printed diff, so the summary overstates what the implementation guarantees on its most-used path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-S6-RUNNABLE-KNOWLEDGE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/tools.rs:22  pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[",
+     "crates/vibe-cli/src/commands/vvm/doctor.rs:30      let tools = tools::check_all();",
+     "crates/vibe-cli/src/commands/vvm/tools.rs:142      fn required_tools_table_is_well_formed() {",
+     "spec/common/PROP-019-version-manager.md:283  - ##TOOLS-TABLE-SSOT The list lives once as a `REQUIRED_TOOLS` table — `(name, min_version,",
+     "confirmed: Restates the S6 law, which is fully implemented: one `const REQUIRED_TOOLS` table, `run_doctor_cmd` iterating it, and `required_tools_table_is_well_formed` asserting its shape. The summary omits the 'related knowledge' clause, which is where the unimplemented read-the-toolchain-file half sits."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-S7-SAFE-REMOVAL": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/remove.rs:128              && !args.force",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:67                      Err(e) => ctx.summary(&format!(\"skipped {} (in use?): {e}\", dir.display())),",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:102          if !confirm(",
+     "crates/vibe-cli/src/commands/vvm/remove.rs:149      require_tty(",
+     "spec/common/PROP-019-version-manager.md:564  - ##ACC-REMOVE-GC-SAFE `self remove` never wipes without `--all` + reconfirm; `self gc` never",
+     "confirmed: Restates the S7 law; all clauses verified on the S7 rows — the `--force` gate on the active id, the skip-if-locked on the running instance, `confirm` on `--all` and `--prune-others`, and `require_tty` turning a bare invocation into an error with the flags named rather than a wipe."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}

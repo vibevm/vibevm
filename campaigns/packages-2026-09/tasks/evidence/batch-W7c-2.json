@@ -1,0 +1,204 @@
+{
+ "batch": "W7",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md": {
+   "PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/mod.rs:1  //! `vibe self` — the VibeVM Version Manager (VVM): build, install, switch,",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:2  //! and remove vibevm's own versions on this machine (PROP-019). A",
+     "crates/vibe-cli/src/cli.rs:199      /// Manage vibevm's own versions on this machine — the VibeVM Version",
+     "crates/vibe-cli/src/cli.rs:200      /// Manager (VVM, PROP-019). `vibe self install <selector>` builds and",
+     "crates/vibe-cli/src/cli.rs:204      #[command(name = \"self\")]",
+     "spec/common/PROP-019-version-manager.md:1  # PROP-019 — VibeVM Version Manager (VVM) {#root}",
+     "confirmed: True of this host on all four counts, and the code is where I checked. Version manager + self-updating CLI: `crates/vibe-cli/src/commands/vvm/` is 3824 lines across 17 files implementing `vibe self install/use/ls/current/which/doctor/remove/gc/env/relocate` (mod.rs:81-95 dispatch), specified by PROP-019. Installer: `crates/vibe-install/` (7 modules: apply, error, events, fetched, lib, plan, record). Package system: `crates/vibe-registry`, `crates/vibe-resolver`, `crates/vibe-index`, `crates/vibe-publish`, `vibe.lock` with 36 locked packages (`grep -cE '^\\s*name = \"' vibe.lock` = 36). This is the extraction direction the harvest warns about: the snippet's addressee IS this repository."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-LESSONS-CATALOG-IS-INSTALLED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1271  <!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->",
+     "spec/boot/STATIC.md:1571  - `tool-design-lessons` — paid-for lessons for self-updating tools",
+     "vibe.lock:402  name = \"tool-design-lessons\"",
+     "vibe.lock:406  content_hash = \"sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004\"",
+     "vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:1",
+     "confirmed: Installed is settled three ways: the slot exists on disk with all 7 files, `vibe.lock` records the package at 400-408, and the host's generated `spec/boot/STATIC.md` carries the snippet under a provenance marker at line 1271 plus a one-line catalogue entry at 1571. I re-computed the identity to be sure the slot is the recorded package: a python re-implementation of `compute_content_hash` (sorted walk, `rel||0x00||bytes||0x00`, denylist `.git .vibe target node_modules .vibeignore`) over `vibedeps/flow-tool-design-lessons/0.1.0` returns `sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004`, exactly the `content_hash` at vibe.lock:406. The 'paid for by shipping' half is the same claim as the README's scar sentence and is qualified there (PROP-019 v1 was reversed 2h34m after it was written, unreleased)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "READ-THE-GOVERNING-LESSON-FIRST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1271  <!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->",
+     "spec/boot/STATIC.md:1286  rationale is why it is not negotiable.",
+     "spec/common/PROP-019-version-manager.md:574  ##rationale-lead The decisions above were reached by working through several sharp questions;",
+     "confirmed on delivery, which is what an instruction can claim — and RECORDED with a zero that a reader should see. Delivered: the instruction is compiled into `spec/boot/STATIC.md` at 1271-1295, which `CLAUDE.md`'s generated boot block orders read first and in full, so every session in this repository meets it. Never cited: `grep -rn 'tool-design-lessons' spec/ CLAUDE.md AGENTS.md GEMINI.md BACKLOG.md TASKS.md` returns hits only inside `spec/boot/STATIC.md` itself — the compiled snippet — and no PROP, design document or campaign file anywhere names a lesson id (S1-S7, P1-P7) as the reason for a decision. So in the whole tree the governing lessons have been delivered to every session and quoted by none. Delivery is not compliance, per the ruling established at `dev-runtime-docs`; the sentence claims the former."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-law-is-one-line-the-rationale-is-why": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:28  ##S1-LAW-ACTIVATION-TRUTH-IS-A-LIVE-POINTER **The law.** *The active version is a live pointer file read on every",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:29  launch, plus the running binary's own path; the environment is",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:30  advisory, never the truth.* @impl/done",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:28  ##P1-LAW-A-PACKAGE-IS-A-PROJECT **The law.** *A package is a project — the distributable unit is",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:38  | ##ROW-LESSON-S1 S1 @impl/done | The active version is a live pointer file read per launc ...",
+     "confirmed: Measured. `grep -cE '\\*\\*The law\\.\\*\\*'` returns 7 in self-updating-tools.md and 7 in packaging-lessons.md — fourteen laws for fourteen lessons. Each is one italicised sentence immediately after the bold marker (S1 at 28-30, P1 at 28-30, and so on), and the index table's middle column restates each as a single line (14 `##ROW-LESSON` rows). The 'rationale' half is the `**Context.**` paragraph that precedes every law: `grep -cE '\\*\\*Context\\.\\*\\*'` also returns 7 and 7, so no lesson carries a law without a stated cause. src [1] — this is a property of the package's own text and needs no external witness."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "POINTER-SELF-UPDATING-TOOLS": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:24    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md). @impl/done",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:16  ## S1 — activation truth is a live pointer, not the environment {#live-pointer}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:244  ## S7 — removal and garbage collection that protect {#safe-removal}",
+     "spec/boot/STATIC.md:1290    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md).",
+     "DRIFT, W1's dangling family — sixth package in a row, and this snippet carries three. The content half is exact: the target covers all five subjects named, at S1 line 16 (activation), S2 54 (instances), S3 93 (identity), S4 131 (sources), S5 163 (environment edits) and S7 244 (removal). The path half fails where it is read: `ls -d spec/flows` reports ABSENT, so once the snippet is compiled into `spec/boot/STATIC.md` its `../flows/tool-design-lessons/…` links resolve nowhere in the consuming project. Inside the package the same links resolve, which is why the defect survives every check that runs against the package tree."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "POINTER-PACKAGING-LESSONS": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:26    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md). @impl/done",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:1",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:53  ## P2 — ship the runtime, not a description of it {#ship-runtime}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:85  ## P3 — identity is the source, excluded by denylist {#identity-is-source}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:152  ## P5 — vendor and commit the bootstrap toolchain {#vendor-bootstrap}",
+     "spec/boot/STATIC.md:1292    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md).",
+     "DRIFT, second of this snippet's three. The target covers the three subjects named — what ships (P2, line 53), what identity is (P3, 85), the bootstrap (P5, 152) — and the `../flows/…` path has no target from `spec/boot/`, where the host has no `spec/flows/` directory. Same mechanism, same lane, same package."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "index-and-maxims-pointer": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:29  [`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md). @impl/done",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:34  ## Index {#index}",
+     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:53  ## Cross-cutting maxims {#maxims}",
+     "spec/boot/STATIC.md:1295  [`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md).",
+     "DRIFT, third of three. The target carries `## Index {#index}` at line 34 (a 14-row table at 36-51) and `## Cross-cutting maxims {#maxims}` at 53 with three subsections, so the content is exactly as promised; all 14 index rows and all 14 `{#…}` link targets were resolved by hand. The pointer itself dangles from the compiled lane like its two siblings."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/mod.rs:48  /// Env var advertising the active version's prefix — advisory only; the",
+     "crates/vibe-cli/src/commands/vvm/mod.rs:51  pub const VIBEVM_HOME_ENV: &str = \"VIBEVM_HOME\";",
+     "crates/vibe-cli/src/commands/vvm/store.rs:128      /// `<root>/vibevm/current` — the live pointer to the active instance dir",
+     "crates/vibe-cli/src/commands/vvm/store.rs:130      pub fn current_path(&self) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/env.rs:95      // Read the live `current` pointer (instant switch, no reload); fall back",
+     "crates/vibe-cli/src/commands/vvm/env.rs:101           home=\\\"$(cat \\\"$self/../vibevm/current\\\" 2>/dev/null)\\\"\\n\\",
+     "crates/vibe-cli/src/main.rs:62              \"vibe: note: $VIBEVM_HOME is stale (env={env_home}); the running version is {} \\",
+     "spec/common/PROP-019-version-manager.md:579  - ##V1-ENV-TRUTH v1 made `$VIBEVM_HOME` the single source of truth for the active version.",
+     "spec/common/PROP-019-version-manager.md:589  - ##V1-REVERSED This reverses v1's decision deliberately; env-as-truth was the cause of the",
+     "confirmed: Implemented, not merely restated. The truth is a file: `VersionStore::current_path()` is `<root>/vibevm/current` (store.rs:128-132), written atomically by `write_current` (tmp + rename, store.rs:238-256) and read by `read_current` (227-235). The shim reads it on every launch — `posix_shim()` at env.rs:94-109 does `home=\"$(cat \"$self/../vibevm/current\")\"` and only then falls back to `$VIBEVM_HOME`; `cmd_shim()` at 111-124 does the same with `set /p`. The env var is explicitly demoted in code: mod.rs:48-51 documents `VIBEVM_HOME` as 'advisory only; the truth is the `current` file + `current_exe`'. `crates/vibe-cli/src/main.rs:56-66` emits a stale-env note when the two disagree. Two tests gate it: `shims_read_the_current_pointer` (env.rs:414-429) and `active_follows_the_current_pointer` (store.rs:330-343). PROP-019 §9.1 records the reversal from v1's env-as-truth, and commit d6b10398 is where it happened."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/placer.rs:1  //! Placing a built distribution into a new immutable instance by diff-copy",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:2  //! (PROP-019 §2.15): hardlink unchanged files from the previous instance,",
+     "crates/vibe-cli/src/commands/vvm/store.rs:96      /// distribution instance (PROP-019 §2.4, §2.15).",
+     "crates/vibe-cli/src/commands/vvm/store.rs:97      pub fn instance_dir(&self, id: &VersionId, instance: u64) -> PathBuf {",
+     "crates/vibe-cli/src/commands/vvm/install.rs:105          let instance = store.alloc_instance()?;",
+     "crates/vibe-cli/src/commands/vvm/install.rs:122          store.write_current(&inst_dir)?;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:175  fn is_transient_lock(e: &io::Error) -> bool {",
+     "spec/common/PROP-019-version-manager.md:612  - ##WHOLE-DIR-UNIT So the unit of install and switch became the **whole immutable instance",
+     "confirmed: Implemented: `alloc_instance` hands out a fresh number (store.rs:173-179), `placer::place` stages into `<version-id-dir>/.staging` and renames it into `<…>/<instance>` (placer.rs:226-290), and `store.write_current(&inst_dir)` flips the pointer (install.rs:122). The test `install_makes_instance_skips_unchanged_and_forces_rebuild` (install.rs:191-259) asserts instance 1 then instance 2 with `current` advancing. One honest qualification for the reviewer: the code does still meet in-use files in practice — `is_transient_lock` (placer.rs:175-177) and the bounded backoff `retry` (197-213) exist because a Windows scanner holds a handle on a freshly written `.exe`, so the rename/remove is retried for ~5s. The law prevents overwriting the RUNNING instance; it does not make the filesystem lock-free."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/vvm/placer.rs:69  /// larger files are compared by `(size, mtime)` only — never read in bulk",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:71  const SMALL_FILE_MAX: u64 = 16 * 1024 * 1024;",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:120      let hash = if size <= SMALL_FILE_MAX {",
+     "crates/vibe-cli/src/commands/vvm/placer.rs:147          _ => new.size == prev.size && new.mtime_nanos == prev.mtime_nanos,",
+     "crates/vibe-cli/src/commands/vvm/store.rs:172      /// Allocate the next monotonic instance number (PROP-019 §9.4).",
+     "crates/vibe-cli/src/commands/vvm/store.rs:175          let n = state.next_instance.max(1);",
+     "spec/common/PROP-019-version-manager.md:596  - ##HASH-DOESNT-SCALE It does not scale: a distribution may grow to gigabytes and ship as",
+     "spec/common/PROP-019-version-manager.md:620  - ##COUNTER-KEY With content-hash rejected (§9.2), the instance key is a monotonic counter:",
+     "confirmed: Implemented exactly as stated. The instance key is a counter: `alloc_instance` reads `state.next_instance`, bumps it, saves (store.rs:172-179), and `alloc_instance_is_monotonic_from_one` (store.rs:319-326) asserts 1, 2, 3. Change detection is size-tiered: `SMALL_FILE_MAX = 16 * 1024 * 1024` (placer.rs:71), `entry_for` hashes only when `size <= SMALL_FILE_MAX` and otherwise leaves `hash: None` (114-131), and `unchanged` falls back to `(size, mtime_nanos)` when either side lacks a hash (144-149). So a file over 16 MB is stat'd, never read. Do NOT conflate this with `content_hash` in `vibe.lock`, which DOES hash a package's whole shippable tree — that is package identity (crates/vibe-registry/src/shippable.rs:77), a different subject on a different payload; the VVM instance key never reads the distribution."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-024-code-bearing-packages.md:51  - ##install-gets-description Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *des ...",
+     "spec/common/PROP-024-code-bearing-packages.md:54  - ##not-distributable The discipline is therefore **not distributable**: its strong-author artifacts",
+     "vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml:1",
+     "vibedeps/flow-core-ai-native/0.8.0/Cargo.toml:1",
+     "vibedeps/stack-typescript-ai-native-lang/0.6.0/Cargo.toml:1",
+     "spec/common/PROP-024-code-bearing-packages.md:5  ##status-line **Status: IMPLEMENTED** (proposed 2026-06-27, owner-directed; verified against",
+     "confirmed: Measured against `vibedeps/` as the harvest asks. Of the 36 installed slots (`ls -d vibedeps/*/*/ | wc -l` = 36), 5 ship runnable code — I tested each slot for `Cargo.toml`, `crates/` or `tools/`: flow-core-ai-native/0.8.0 (Cargo.toml + crates/), mcp-rust-ai-native-mcp/0.7.0, mcp-typescript-ai-native-mcp/0.6.0 (+ tools/), stack-rust-ai-native-lang/0.7.0, stack-typescript-ai-native-lang/0.6.0 (+ tools/). The other 31 are prompt-only flows that describe no tooling. PROP-024 §1.1 lines 51-55 record the failure this law names in the host's own words — 'Install `stack:…/rust-ai-native-lang` today and you get a *description* of checkers you do not have' — and §0 line 5 records it as since IMPLEMENTED. I found no counter-example: the world corpus ships no code at all (tested all 27 `packages/org.vibevm.world/*/` for Cargo.toml / crates/ / tools/ — none has any), and none of its flows promises an executable; this package in particular contains no `.sh`, `.py`, `.ps1`, `cargo run` or `npm run` string (`grep -rn` over its 7 files returns nothing)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "crates/vibe-registry/src/shippable.rs:18  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+     "crates/vibe-index/src/content_hash.rs:148      fn build_output_is_excluded_from_the_hash() {",
+     "crates/vibe-index/src/content_hash.rs:164              \"build output must not affect the content hash\"",
+     "vibe.lock:406  content_hash = \"sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004\"",
+     "spec/common/PROP-024-code-bearing-packages.md:116  ##SHIPPABLE-TREE-DEF **Decision.** A package's **shippable tree** is its directory minus a",
+     "confirmed: Implemented and measured. The denylist is a constant in two places — `SHIPPABLE_EXCLUDES = [\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"]` at content_hash.rs:28 and shippable.rs:18 — applied through `WalkDir::filter_entry(is_shippable)` so an excluded directory is never descended. I ran the experiment rather than trusting the test: a python re-implementation of the algorithm over `vibedeps/flow-tool-design-lessons/0.1.0` returns `sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004`, byte-equal to `vibe.lock:406`; copying that tree, adding `target/debug/x.bin` (8 KB) and `node_modules/junk.js`, then re-hashing returns the SAME digest. The in-tree test `build_output_is_excluded_from_the_hash` (content_hash.rs:147-166) asserts the same property. One gap worth naming: `vibedeps` itself is NOT on the denylist, so a package that carries its own `vibedeps/` folds it into its identity and ships it — `packages/org.vibevm.fractality/delegation-rules/v0.1.0/vibedeps/` duly materialises as `vibedeps/flow-delegation-rules/0.1.0/vibedeps/flow-tool-design-lessons/0.1.0/`. That is vendored source, not build output, so it does not falsify the law — but it is what the denylist admits."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
