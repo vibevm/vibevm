@@ -1777,6 +1777,81 @@ command that would have tested it.
   `git-attribution-policy`, renamed by the same commit, already used
   `spec/boot/` — the family was split against itself.
 
+- **2026-07-28 · PHASE C OPENED — C0: the harvest exists, and the phase is
+  smaller than its own kick-off said.** Batch plan ratified with three decisions
+  ([`PHASE-C-BATCH-PLAN.md`](../../campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md),
+  `0acc448f`); fifteen units of work — C0, then C1…C7 over ai-native, then W1…W7
+  over world.
+
+  **The size correction first, because it is the same slip B16 named.** The
+  kick-off's «~11 900 markers carry no verdict» is `12 797 − 921`, and 921 is the
+  length of `baseline.json`'s `units` dict while 12 797 counts markers. Measured
+  in the unit a verdict is written in — a fact that is marked **and** anchored,
+  which is what `progress_core::seal::addressable` admits — the corpus holds
+  **11 288 addressable anchors**, the host already carried **4 440 of its 4 441**,
+  and the phase owes **6 848**. That is **1.54× wave 1's 4 455**, not the 2.6× the
+  kick-off advertised.
+
+  **C0's harvest is thirty-one captured runs (`874070ff`), and the result is
+  one-sided.** Every slot's floor exits 1. The portable steps pass wherever their
+  toolchain is present — `cargo fmt`/`test`/`clippy` green in both Rust slots and
+  in `core-ai-native`'s hand-run floor — and **every discipline-specific step
+  fails or is skipped in all six slots**, because no package under
+  `packages/org.vibevm.ai-native/` carries a `conform.toml` or a
+  `discipline/registry/`. Three defects are not that absence in disguise: the Go
+  floor reports `gofmt: unformatted` and five conform findings against
+  `tools/go-extract/test/fixtures/dirty/`, **a fixture tree whose whole purpose is
+  to be dirty**; the Go engine's own error names the *Rust* binary («run
+  `rust-ai-native-specmap` … first»); and the TypeScript stack cannot parse at all
+  — the structural gate parses through the project's own `typescript` install and
+  the package ships no `package.json`, so node walks out of the package and
+  reaches the user's home directory looking for one. `core-ai-native` was captured
+  differently on purpose: it ships **library crates only**, so no `floor`
+  subcommand exists for it and the three portable steps were run by hand.
+
+  **The mechanism was proved on ground where the answer was already known.** The
+  five stale host files were re-derived, four verdicts written by load-and-merge
+  (one minted, three evidence-extended), and the *tool* sealed them — 5 sealed, 0
+  refused. The control: the 53 campaign maps the batch did not touch came through
+  **byte-identical**, and a subsequent full `check` and `scan` left the verdict
+  count at 4 499. Host is now **4 441 / 4 441 with zero stale files**.
+
+  *The re-derivation surface was four facts, not the thirty-nine a first pass
+  reported — and the first pass was the instrument lying.* Grouping anchors by
+  blank-line block makes a bulleted list one unit, so a two-line rename inside one
+  bullet marked all thirteen bullets changed. Re-cut at the right grain — from
+  `##ID` to the next `##ID` — PROP-003's change is exactly `SHORTFALL-MONOLITH`
+  and `OPEN-WORKSPACE-MONOREPO`, both the same package rename inside a `@spec`
+  claim the rename does not touch. **A rule approximated instead of read, for the
+  fifth time in this campaign, and this time in a tool I wrote to check the tools.**
+
+- **2026-07-28 · F-117 — the phase's own kick-off documents a cache field that was
+  deleted.** [`PHASE-C-KICKOFF.md`](../../campaigns/packages-2026-09/PHASE-C-KICKOFF.md)
+  states the per-file campaign map as
+  `{verify_batch, verified_at, processed_hash, verdicts{anchor → {v, ev[]}}, summary}`,
+  and the paste-ready prompt inside it repeats the shape. **`summary` does not
+  exist**: DRIFT-033 removed it on the owner's F-077 ruling, `FileRecord` has no
+  such field, the tally is computed on read by `FileRecord::verdict_summary`, and
+  all 58 campaign maps on disk carry exactly four keys. A session that followed the
+  kick-off literally would write a stored tally back into the corpus —
+  **reinstating precisely the defect the ruling removed**, in the file the ruling
+  is recorded in. The kick-off was written six days after DRIFT-033 landed.
+
+- **2026-07-28 · F-118 — wave 2 ran sixteen batches with no journal.**
+  §4 binds this campaign to wave 1's crash-safety protocol — «step = unit of
+  atomicity, journal `step-start` before and `step-done` after, `RESUME.md`
+  regenerated, maximum loss on any crash is one step». `campaigns/packages-2026-09/run/`
+  contained **no `journal.jsonl` and no `RESUME.md`** at the Phase C opening, so
+  none of that ran for the whole of Phase B: there was no step to recover to, and
+  `vibe progress resume` — «the first read of every campaign session» — had
+  nothing to generate from. The visible symptom was ignored for a month:
+  `campaign.json` reported **phase «A»** from the zone's creation through B's
+  close, because the phase is derived from the journal's last `phase` event and
+  there was none, so the compiled-in opening phase stood. **No command writes a
+  phase event** — wave 1 hand-appended all five — which is why nothing failed
+  loudly. The journal was opened at C rather than back-filled; B's steps are not
+  reconstructed, because a record is not invented after the fact.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

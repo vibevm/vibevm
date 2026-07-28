@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-28T03:25:41Z",
+  "updated_at": "2026-07-28T06:03:55Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -3432,7 +3432,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "78d18746e702bfbb3fe8a1ae98e39f4c5289d7d6104b017e99e9bfec6d3a312f",
+        "processed_hash": "27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511",
         "summary": {
           "confirmed": 33
         },
@@ -3639,7 +3639,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-26T10:23:56Z",
+        "verified_at": "2026-07-28T06:03:18Z",
         "verify_batch": "c0-boot + d2g"
       }
     },
@@ -12244,7 +12244,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "8edba8cfa8e1ed5a9f7337b0f874a9ed893dac145ea6cc667d8261af26a9f487",
+        "processed_hash": "2388051c281032c1174d668a76ad19cf66e7794fceee8554b9bf03bd4d632add",
         "summary": {
           "confirmed": 23
         },
@@ -12389,7 +12389,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T12:50:16Z",
+        "verified_at": "2026-07-28T06:03:18Z",
         "verify_batch": "c1-manual-tests + d2e"
       }
     },
@@ -16922,7 +16922,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 46,
         "marker_count": 47,
-        "processed_hash": "a377614449431b183a0b964819de4ba5e94e3accd45da81f5cf9f2349f353894",
+        "processed_hash": "a2efd8745749be8707ad93362bc3ff557ffbebff33f939b2dc85ccfb9b642abb",
         "summary": {
           "confirmed": 47
         },
@@ -16930,7 +16930,8 @@
           "status-line": {
             "v": "confirmed",
             "ev": [
-              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis",
+              "re-derived 2026-07-28 (C0): f6c17f92 rewrote this anchor to claim the standalone `vibe-tcg` crate was deleted whole and the grammar stays normative under PROP-027. `ls crates/ | grep -i tcg` returns nothing and the root Cargo.toml names no tcg member; 36461ba8 `refactor(mcp)!: retire the tcg adapters and delete vibe-tcg` is the deletion. The new clause holds, so the verdict carries over rather than being carried blind"
             ]
           },
           "related": {
@@ -17210,7 +17211,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:55:40Z",
+        "verified_at": "2026-07-28T06:03:18Z",
         "verify_batch": "c4f2-mcp-settings"
       }
     },
@@ -18000,9 +18001,9 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "a8e78ad435d4d2a71aa75160539a9109a092c00632516226be0347fe4ee91583",
+        "processed_hash": "fb4291462f199c9e144e521ad7d8652d9c7d95eedaebeca418209dd15fd2e685",
         "summary": {
-          "confirmed": 151
+          "confirmed": 152
         },
         "verdicts": {
           "self-uri": {
@@ -18918,9 +18919,18 @@
             "ev": [
               "DRIFT-028 sync-from-code 2026-07-26. State::Void ships in crates/progress-core/src/model.rs (ALL 4->5, as_str, parse) and rollup_key short-circuits on it. PINNED BY A PROPERTY TEST over Stage::ALL x State::ALL x Stage::ALL (245 assertions), asserting both halves: no non-void pair reaches a void key, and void's key is identical at every stage - which is what makes 'regardless of stage' true rather than merely likely. The three worked examples were also driven through the REAL pipeline on scratch files: {spec/void, impl/plan} -> impl/plan, {done, void} -> done, all-void -> void. Both syntaxes come free because element.rs:158 (state=\"...\") and :237 (@stage/state) share State::parse. Serde verified both directions."
             ]
+          },
+          "CACHE-TALLY-COMPUTED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/cache.rs:38-53 — `FileRecord` carries content_hash, rollup, marker_count, unit_count, issue_count and the campaign map, and no `summary`: the stored tally DRIFT-033 removed is absent from the type, not merely unwritten",
+              "crates/progress-core/src/cache.rs:56-87 — `FileRecord::verdict_summary` builds {verdict → count} over the record's own map on read, returning None for a record no campaign judged",
+              "run/cache.json 2026-07-28 — all 58 campaign maps carry exactly {processed_hash, verdicts, verified_at, verify_batch}; no `summary` survives on disk either",
+              "added by 5ad0aaf2 (DRIFT-033 / F-077) after this file's verdicts were formed, which is why it was the corpus's one unjudged anchor at the Phase C opening"
+            ]
           }
         },
-        "verified_at": "2026-07-26T10:35:08Z",
+        "verified_at": "2026-07-28T06:03:18Z",
         "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
@@ -24028,7 +24038,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (22 cells); document <status> judged as _elements",
         "fact_count": 313,
         "marker_count": 314,
-        "processed_hash": "26cd5ca4c0ae6a73c874c7bc45f41c570d4325ad96f132d4a2c62c36830b2778",
+        "processed_hash": "f115c8843cea8e511beaa503059941de29bb20baab1f055e882f7ff88baada0c",
         "summary": {
           "confirmed": 292
         },
@@ -24163,7 +24173,8 @@
           "SHORTFALL-MONOLITH": {
             "v": "confirmed",
             "ev": [
-              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future"
+              "problem statement historical-accurate: naive's first-pick trap is real (sat.rs exists BECAUSE of it — its doc cites the backtracking need); shortfalls were addressed by the shipped features/subskills/i18n; LLM activation honestly future",
+              "re-derived 2026-07-28 (C0): the only change since the verdict is 7b0ec6aa renaming `flow:atomic-commits` to `flow:git-atomic-commits` inside this fact's own example. The @spec/done claim — that all-or-nothing packages do not compose — is untouched by which package the example names"
             ]
           },
           "SHORTFALL-LANGUAGE-LOCK": {
@@ -25691,7 +25702,8 @@
           "OPEN-WORKSPACE-MONOREPO": {
             "v": "confirmed",
             "ev": [
-              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed"
+              "open questions genuinely open (cross-package exclusion, translation provenance — its 'v4' aside aged since PROP-007 took v4, iface namespacing, emission rate-limit, workspace — note PROP-007 shipped workspaces later making this row historical, describes coverage, conflict threshold, env features, llm denylist); subskill-versioning honestly closed",
+              "re-derived 2026-07-28 (C0): same rename, same reasoning — 7b0ec6aa touched the collection example's package name and not the @spec/work claim about workspace support"
             ]
           },
           "OPEN-DESCRIBES-COVERAGE": {
@@ -25797,7 +25809,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:22:25Z",
+        "verified_at": "2026-07-28T06:03:18Z",
         "verify_batch": "c4c-resolver + d2c"
       }
     },
