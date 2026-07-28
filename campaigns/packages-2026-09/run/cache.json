@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T21:59:51Z",
+  "updated_at": "2026-07-28T22:01:09Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -50656,7 +50656,246 @@
       },
       "marker_count": 17,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "14baaf6cbd3f48ba5423cfd7733187bcb5817a7e76caabf136e598c8c7c497a3",
+        "verdicts": {
+          "THE-PROJECT-KEEPS-A-SECOND-TEST-TIER": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:5  ##THE-PROJECT-KEEPS-A-SECOND-TEST-TIER This project keeps a **second test tier**: human-run markdown",
+              "spec/boot/STATIC.md:896  This project keeps a **second test tier**: human-run markdown",
+              "manual-tests/README.md:3  This directory holds **human-runnable** smoke-tests for vibevm —",
+              "spec/common/PROP-000.md:187  - ##MT-LOCATION **Decision:** human-runnable smoke-tests live in [`manual-tests/`](../../manual-tests/) at the repo root, one Markdown file per scenario, named `<milestone>-<slug>.md` (e.g. `M1.1-git-registry-smoke.md`); the directory's own [`README.md`](../../manual-tests/README.md) carries the index. @spec/done",
+              "confirmed: The snippet's 'this project' is the consuming host, and the host has three such tiers, not one: manual-tests/ (8 tests), spec/manual-tests/ (3), packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/ (13, inside the specspace — I widened there and counted). The snippet reaches the host through the STATIC lane: spec/boot/STATIC.md:892 carries the vibe:static provenance marker and the body follows word-identical from 894."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:9  ##THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD The automated tier proves the logic; the manual tier",
+              "spec/boot/STATIC.md:898  cannot reach. The automated tier proves the logic; the manual tier",
+              "manual-tests/README.md:4  scripts a person reads top-to-bottom and executes on their own",
+              "confirmed: The exact aphorism appears in the installed lane at spec/boot/STATIC.md:898-899. On the host's own side the distinction is stated in different words: manual-tests/README.md:5-8 says the tier covers 'scenarios the automated `cargo test` harness cannot reach: anything that needs a real remote git registry, a real SSH identity, a real `~/.vibe/` tree on a real filesystem, or a human-judgement \"does this look right?\" check'. No host file uses the 'proves the world' phrasing — grep -rniE 'proves the world' over the perimeter hits only the package and STATIC.md."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:12  ##THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES It complements the automated suite — it never",
+              "spec/boot/STATIC.md:899  proves the world. It complements the automated suite — it never",
+              "manual-tests/README.md:10  These are not a substitute for `cargo test`. They are the *last mile*.",
+              "manual-tests/README.md:23  `cargo test` stays the fast feedback loop for refactors; these",
+              "confirmed: Same fact as the README anchor of the same name; checked independently against the host. The host says it twice in manual-tests/README.md — line 10 as a negation ('not a substitute for `cargo test`') and line 23-24 as the positive division of labour. No host file anywhere in the perimeter argues the manual tier replaces `cargo test`; grep -rniE 'instead of cargo test|replaces cargo test' over manual-tests/ spec/ returns nothing."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "propose-a-manual-test-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:17  ##propose-a-manual-test-lead Propose a manual test — do not wait to be asked — whenever: @impl/done",
+              "spec/boot/STATIC.md:904  Propose a manual test — do not wait to be asked — whenever:",
+              "manual-tests/README.md:12  ## When do you run these?",
+              "confirmed as a prescription about agent behaviour that leaves no repository artefact. The host's counterpart section is headed «When do you run these?» — a RUNNING trigger rather than a proposing one — and carries no «do not wait to be asked» obligation. A search for the proactive half across the manual-test homes, spec/, campaigns/ and the agent contracts returns hits only in the installed copy of this very snippet. Proposing is a chat act; its absence from the tree is not evidence either way."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:19  - ##TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS **A new integration surface lands.** Real authentication, the",
+              "manual-tests/README.md:16  - **After touching an integration surface** (git backend, CLI arg",
+              "spec/common/PROP-000.md:199  - ##MT-WHEN-CHANGES after changes to the git backend, CLI arg parsing, or lockfile format even when `cargo test` stays green; @spec/done",
+              "spec/boot/STATIC.md:906  - **A new integration surface lands.** Real authentication, the",
+              "confirmed: The host states the same trigger in two durable places, in its own vocabulary: manual-tests/README.md:16-19 (git backend, CLI arg parsing, lockfile format, registry layout) and PROP-000 `##MT-WHEN-CHANGES`. The brief flagged that this README states the triggers 'in the same order, in the host's words' — measured: host order is milestone / integration surface / user reproducer, snippet order is integration surface / milestone / user reproducer. The three triggers match one-for-one but the ORDER differs between the boot snippet and the host README; it is the PROTOCOL's #when table (rows at MANUAL-TESTS-PROTOCOL.md:78-80) and PROP-000 §14 that share the host README's order."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "TRIGGER-A-MILESTONE-APPROACHES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:23  - ##TRIGGER-A-MILESTONE-APPROACHES **A milestone approaches.** Before tagging, every run the index",
+              "manual-tests/README.md:14  - **Before tagging a milestone.** Walk the tests for every feature",
+              "spec/common/PROP-000.md:198  - ##MT-WHEN-TAGGING before tagging any milestone; @spec/done",
+              "manual-tests/README.md:56  2. **Preflight.** Tools / credentials / network access required.",
+              "confirmed as a trigger the host adopted, with the clause it turns on having no precondition here. The trigger itself is verbatim in spirit at `manual-tests/README.md:14-15` — «Before tagging a milestone. Walk the tests for every feature the milestone claims to ship.» The clause «every run the index marks required» cannot bind: no index marks any run required. **Correcting my own harvest, which reported one occurrence of «required» as if it were the marking** — `grep -ciE 'required' manual-tests/README.md` returns 1 and that occurrence is line 56, «Preflight. Tools / credentials / network access required», a sentence about a Preflight section's contents."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:25  - ##TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG **A user reports an integration bug.** Its reproduction steps",
+              "manual-tests/README.md:20  - **When a user reports a reproducer.** Add their steps here so the",
+              "spec/common/PROP-000.md:200  - ##MT-WHEN-REPRO and as reproducers whenever a user files an integration bug. @spec/done",
+              "confirmed: The host restates this trigger near-verbatim including the rationale clause: manual-tests/README.md:20-21 'Add their steps here so the next session can replay them' against the snippet's 'so the next session can replay them exactly'. PROP-000 `##MT-WHEN-REPRO` carries it a second time. Whether any host test was actually born this way is a separate question — see the COMPOSES-DECISION-RECORDS row; I found no host manual test citing an incident as its origin."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:29  [`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md). @impl/done",
+              "spec/boot/STATIC.md:916  [`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md).",
+              "vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md:23  [`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md).",
+              "confirmed: This is the one `../flows/…` pointer in this snippet (`grep -noE '\\.\\./flows/[^)]*'` returns exactly one hit, at line 29 in the package and line 23 in the installed copy — matching the harvest's per-file count of 1 for manual-tests). Inside the package the pointer resolves: spec/boot/../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md exists. In the consuming host it does not: `ls -d spec/flows` returns nothing and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms — so from spec/boot/STATIC.md:916 the link resolves to a spec/flows/ that does not exist. This is the pointer form the brief distinguished: it is a `../flows/manual-tests/…` pointer, NOT a claim about spec/manual-tests/, so the host's existing spec/manual-tests/ does not rescue it. Source-3 note measured while resolving these refs: the installed payload under vibedeps/flow-manual-tests/0.1.0/ is ANCHOR-STRIPPED — `grep -c '##[A-Za-z]'` returns 0 for all five installed files (README.md, the boot snippet and the three flow documents) against 123 anchors in the package source, and the @impl/done markers are gone too. What a consumer receives is the prose without the fact anchors, so a source-3 citation can only ever land on the rendered sentence, never on the anchor id."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-whole-point-is-human-eyes-on-real-output": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:33  ##the-whole-point-is-human-eyes-on-real-output The whole point of the tier is human eyes on real output. @spec/done",
+              "manual-tests/README.md:7  SSH identity, a real `~/.vibe/` tree on a real filesystem, or a",
+              "spec/manual-tests/MT-02-vibe-tree-tui.md:11  the card wraps, the modals cascade at depth 2. That is what a human signs off",
+              "spec/manual-tests/MT-03-vibe-prefs-tui.md:10  warnings land inline. That is what a human signs off here. @impl/done",
+              "confirmed: The host states the rationale in its own words in three durable places: manual-tests/README.md:7-8 ends the tier's scope with 'a human-judgement \"does this look right?\" check'; MT-02 and MT-03 each close their Purpose paragraph with 'That is what a human signs off here', and both are explicit that the automated suite (241 and 347 vibe-cli tests respectively, self-check green) 'cannot drive a real terminal and confirm the TUI looks and reads right'. Those two files are the clearest host instance of the tier existing solely for human eyes."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "AN-AGENT-MAY-PRE-RUN-AND-FLAG-DIVERGENCES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:35  ##AN-AGENT-MAY-PRE-RUN-AND-FLAG-DIVERGENCES An agent",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:70  ## Recorded run",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:75  ### Pre-run 2026-07-10 — GREEN on firing #2; findings folded back",
+              "spec/common/PROP-000.md:188  - ##MT-FLOW-POINTER The tier itself — why a project keeps a second, human-run test layer alongside the automated suite, what a manual test is and is not, when to run one, and who signs it off (a human, over an agent's pre-run) — is the `manual-tests` flow: `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root`, with the four authoring rules in its `authoring-rules` document and the copy-ready skeleton in `test-template`. @spec/done",
+              "confirmed: The brief asked whether an agent pre-run is recorded anywhere AS a pre-run rather than as a pass. It is, and I had to widen outside the nominal homes to find it: packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md carries a '## Recorded run' section at line 70 whose preamble reads '(Agent pre-run output is appended below on each execution; the pass is signed by a human — the pre-run only flags divergence.)' and whose entry is headed '### Pre-run 2026-07-10'. The divergence-flagging half is instantiated at MT-05:82-88, where firing #1 is recorded as failing on a Windows MAX_PATH overflow (F19) before any worker ran. Neither manual-tests/ nor spec/manual-tests/ contains any recorded pre-run; grep -rniE 'pre-run|prerun' over those two homes returns one hit, manual-tests/M1.1-git-registry-smoke.md:278, and that is about the machine's pre-run *state*, a different sense."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-SIGN-OFF-IS-A-HUMANS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:40  ##THE-SIGN-OFF-IS-A-HUMANS But the sign-off is a human's: only a person can look at the",
+              "spec/manual-tests/MT-02-vibe-tree-tui.md:90  - ##SIGNOFF-OWNER [ ] Owner visual sign-off (date / initials): ______ @impl/work",
+              "spec/manual-tests/MT-03-vibe-prefs-tui.md:74  - ##SIGNOFF-OWNER [ ] Owner visual sign-off (date / initials): ______ @impl/work",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:77  **PASS — signed off by the owner, 2026-07-10** (firing #2 + the",
+              "confirmed: The host implements a literal human signature line. MT-02 has a '## Sign-off' section (line 88) with three unticked checkbox rows carrying @impl/work — owner visual sign-off, Tier 3 checked, degradation tier checked; MT-03 has one at line 72. Both are still unticked (`______`), which is the durable side of the fact that those two runs await owner sign-off — I cite the test files themselves rather than any checkpoint, per the brief. The completed shape is MT-05 in the fractality specspace, where the pass is written over a dated owner signature at line 77."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:43  ##REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS Report the",
+              "spec/boot/STATIC.md:925  pre-run; never record the pass.",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:75  ### Pre-run 2026-07-10 — GREEN on firing #2; findings folded back",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:77  **PASS — signed off by the owner, 2026-07-10** (firing #2 + the",
+              "confirmed: MT-05 keeps the two records structurally separate on the page: the pre-run is a heading of its own at line 75, and the PASS beneath it at line 77 is explicitly attributed to the owner with a date — the pre-run did not record the pass, the human did. The section preamble states the rule in the host's own words ('the pass is signed by a human — the pre-run only flags divergence'). In spec/manual-tests/ the same rule holds by omission: MT-02 and MT-03 carry unticked sign-off boxes and no recorded pass at all."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:48  - ##NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE **Never let a manual test touch real user state.** Every run",
+              "spec/manual-tests/MT-02-vibe-tree-tui.md:14  ##settings-mutation-note Unlike MT-01, this TUI **writes user settings** (`~/.vibe/` via the vibe-settings",
+              "spec/manual-tests/MT-03-vibe-prefs-tui.md:12  ##settings-mutation-note This TUI writes user settings (`~/.vibe/`, the vibe-settings system) — palette/",
+              "spec/manual-tests/MT-02-vibe-tree-tui.md:71     # edit directly, or pick it in the F4 settings menu    ~/.vibe/settings.toml",
+              "manual-tests/M1.1-git-registry-smoke.md:61  export VIBE_REGISTRY_CACHE=\"$SCRATCH/registries\"",
+              "manual-tests/M1.1-git-registry-smoke.md:273  ls ~/.vibe/registries 2>/dev/null || echo \"no ~/.vibe/registries — good\"",
+              "DRIFT on the flow's hardest never, and the tests declare the violation themselves in a marked, `@impl/done` fact. `spec/manual-tests/MT-02-vibe-tree-tui.md:14` carries `##settings-mutation-note`: «Unlike MT-01, this TUI **writes user settings** (`~/.vibe/` via the vibe-settings system, Шаг 2) — palette/tier/mode/sort/shape choices persist … back them up or accept the delta.» MT-03:12 carries the same note, and MT-02's step 9 instructs the reader to edit `~/.vibe/settings.toml` directly. Neither file has a Setup or Teardown section — their headings are Preconditions / Steps / Pass / Sign-off. I read both notes directly. THE HOST ALSO CONTRADICTS ITSELF HERE: `spec/common/PROP-000.md` `##MT-ISOLATION` claims «Every test isolates state … the user's real `~/.vibe/` is never touched by a run», which is broader than the artefacts support. The root home is the opposite and shows the rule is achievable — 6 of 8 tests export a cache redirect and M1.1 asserts the real directory stayed absent."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:52  - ##NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH **Never write a step without an \"Expected\" paragraph.** A command",
+              "manual-tests/README.md:62     and an \"Expected\" subsection describing the observable outcome.",
+              "spec/manual-tests/MT-01-vibe-tree.md:43  **Expected.**",
+              "manual-tests/M2.10-index-smoke.md:38     Pass when: `repomd.json` carries 3 packages; `verify` reports",
+              "spec/manual-tests/MT-02-vibe-tree-tui.md:82  ## Pass",
+              "DRIFT on 3 of the 11 tests across the two nominal homes, and the worker corrected my harvest to find it. My harvest reported `grep -rn 'Expected' spec/manual-tests/*.md | wc -l` = 10 as if spread across the home; **all ten are in MT-01**. MT-02 has ten numbered steps and MT-03 eight, and neither uses the word Expected anywhere — both substitute a single `## Pass` section stating aggregate criteria for the whole walkthrough. In the root home M2.10 does the same with `Pass when:`. A step with no stated outcome cannot pass or fail, which is the rule's own reason. Per-file counts: MT-01 10, MT-02 0, MT-03 0; M1.1 10, M1.5-gate 10, M1.5-gate-v2 9, M1.6 8, M1.16 8, M1.17 7, M1.15 5, M2.10 0."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:54  - ##NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED **Never tag a milestone with the index's required runs",
+              "manual-tests/README.md:56  2. **Preflight.** Tools / credentials / network access required.",
+              "manual-tests/README.md:89  Add a row to this table when you add a test. Keep the table sorted by",
+              "spec/manual-tests/MT-02-vibe-tree-tui.md:90  - ##SIGNOFF-OWNER [ ] Owner visual sign-off (date / initials): ______ @impl/work",
+              "confirmed as a prohibition whose precondition is absent, so it cannot have been broken. No index marks any run required: the root README's index has a Milestone column and no required/optional marking, `spec/manual-tests/` has no index file at all (three MT-NN files only), and the fractality home has none either. Unexecuted runs DO exist — MT-02 and MT-03 sit with unticked sign-off boxes — but with nothing marking them required there is no violation to observe. The absent marking is itself the thing worth naming, and it is named at the trigger row above."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:57  - ##NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN **Never delete a failing manual test to make the panel green.** A",
+              "spec/boot/STATIC.md:938  - **Never delete a failing manual test to make the panel green.** A",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md:81  Firing #1 failed before any worker ran: `git worktree add` of the host",
+              "confirmed: The brief asked whether a failing manual test was ever deleted to make a panel green. Read-only history: `git log --diff-filter=D --name-only --oneline -- manual-tests/ spec/manual-tests/` returns exactly one commit, `7e46d841 chore(extract): drop the moved terminal/launcher sources`, deleting spec/manual-tests/MT-04-vibeterm-tui-dev.md and spec/manual-tests/MT-05-aiui-visual-testing.md. The commit body (2026-07-22) states the reason: 'The terminal products (vibeterm, vibeframe) and the GUI launchers (vibe-launcher) moved to vibevm-term in Phase 1. Drop the now-redundant host copies: ... the MT-04/MT-05 manual tests ...' and 'The normative contracts now live in vibevm-term'. That is a subject-relocation, and no other deletion exists in either home. The opposite behaviour is on record: MT-05 in the fractality specspace keeps its failing firing #1 written into the file (line 82) and files the cause as F19 rather than removing the run."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T22:01:09Z",
+        "verify_batch": "W5"
+      }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md": {
       "content_hash": "5414aab581d54282c5e4cab2a20f9fe8fcf08c19663443053539e54fab34ca98",
