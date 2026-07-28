@@ -1,0 +1,285 @@
+{
+ "batch": "W5",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md": {
+   "PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:3  This project runs a **periodic health audit**: a recurring,",
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:5  recorded as an append-only trend in `AUDIT.md`.",
+     "spec/boot/STATIC.md:749  This project runs a **periodic health audit**: a recurring,",
+     "AUDIT.md:1  # AUDIT.md — project health inventory",
+     "AUDIT.md:3  The recurring defect / rot / drift inventory defined by",
+     "AUDIT.md:5  run appends a dated section; findings carry forward until they are",
+     "confirmed: The snippet asserts the practice in the first person plural about the consuming project, so the host is the direct test. AUDIT.md exists at the root and calls itself 'project health inventory'; `grep -nE '^## ' AUDIT.md` returns three dated run sections. 'Recurring' is the weak leg — three runs total, the last 2026-06-12, 1546 commits ago (`git log --oneline --since=2026-06-12 | wc -l`). The snippet reaches boot: STATIC.md:749 carries this exact sentence."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:9  **The gate is the floor; the audit is what the gate cannot see.**",
+     "spec/boot/STATIC.md:755  **The gate is the floor; the audit is what the gate cannot see.**",
+     "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+     "spec/common/PROP-013-periodic-health-audit.md:13  - ##GATE-DEF vibevm's per-commit gate is `tools/self-check.sh` (`cargo fmt --check`, `cargo test --workspace`, `cargo clippy -D warnings`, `vibe check`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "confirmed: Same law as the README anchor of the same name; here it reaches the host's boot lane verbatim (STATIC.md:755). tools/self-check.sh:2 independently calls itself the floor. PROP-013 ##GATE-DEF names exactly what the floor is and ##GATE-BLIND-SPOTS points at this flow's #blind-spots anchor for what it cannot see, so the host has adopted both halves of the sentence."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:10  Where the gate answers *\"did this commit regress covered code?\"*, the",
+     "spec/boot/STATIC.md:756  Where the gate answers *\"did this commit regress covered code?\"*, the",
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "AUDIT.md:219  **`cargo xtask specmap --check` was red on a clean checkout of `main` —",
+     "confirmed: The host's clearest instance of a finding no commit would ever flag is 2026-06-12-01: 352 committed content_hash fields were empty, gate #1 was red on an untouched tree, and the drift detector was structurally blind. That is precisely 'wrong, rotting or drifting that no commit will flag'. The sentence reaches boot verbatim at STATIC.md:756-758."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "neither-replaces-the-other": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:12  will ever flag?\"*. Neither replaces the other.",
+     "spec/common/PROP-013-periodic-health-audit.md:6  **Related:** [PROP-000](PROP-000.md) (the per-commit gate this audit complements), … `vibe check` (the automated *subset* of what this audit does by hand), … [`AUDIT.md`](../../AUDIT.md) (the inventory this process writes). @spec/done",
+     "confirmed: PROP-013's Related line states the host's version of the same relation — PROP-000 is 'the per-commit gate this audit complements' and `vibe check` is 'the automated *subset* of what this audit does by hand'. Both artefacts are live and separate: tools/self-check.sh runs per commit; AUDIT.md accumulates across runs. The installed snippet carries the sentence at vibedeps line 12."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:16  The audit is **owner-triggered**, with a floor of **at least once per",
+     "spec/boot/STATIC.md:762  The audit is **owner-triggered**, with a floor of **at least once per",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+     "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
+     "DRIFT on the floor, confirmed on the trigger. Owner-triggered holds: `AUDIT.md:193` records the 2026-06-12 run as «Owner-requested» with the instruction quoted, and the absence of an audit trigger phrase in the agent contracts (`grep -ni 'audit' CLAUDE.md` → zero) is consistent with an owner-narrated trigger rather than an automated one. The FLOOR does not: the 2026-06-10 run was a milestone close-out and met it, but since 2026-06-12 the two most recent ROADMAP ship lines — M1.26 and M1.24, both SHIPPED (2026-07-07) — carry no audit section between them and the last run, across 1 546 commits. «At least once per milestone» is the flow's own word for a minimum, and it has been missed twice."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:18  milestone is never declared done on an un-audited base. The owner",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+     "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
+     "DRIFT, the same measurement as this fact's twin in the package README and ruled identically. Last audit 2026-06-12; M1.26 and M1.24 both SHIPPED (2026-07-07) with no audit section between; 1 546 commits in the gap. Two milestones declared done on an un-audited base, in the file this flow itself specifies."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:19  re-runs it at will between milestones; no calendar cron is fixed.",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+     "confirmed: The three run dates are 2026-05-23, 2026-06-10, 2026-06-12 — gaps of 18 days and 2 days, which is not a calendar cadence. I searched for any scheduled trigger: `grep -rn -i 'audit' .github/ 2>/dev/null` found no workflow directory in the perimeter; `grep -ni 'audit' CLAUDE.md AGENTS.md GEMINI.md` returns nothing; tools/self-check.sh contains no audit step. PROP-013 §4's first open question — whether to add an АУДИТ / RUN AUDIT command at all — is still open and unruled ('B1 2026-07-24: three questions still open, no owner ruling yet')."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ONE-DATED-SECTION-PER-RUN-EACH-FINDING-CARRYING-FIVE-FIELDS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:23  One dated section in `AUDIT.md` per run, each finding carrying an ID,",
+     "spec/boot/STATIC.md:769  One dated section in `AUDIT.md` per run, each finding carrying an ID,",
+     "AUDIT.md:20  ## Audit run — 2026-05-23 (seed)",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+     "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+     "AUDIT.md:34  **Production git-registry + naming path is under-tested.** The install",
+     "AUDIT.md:182  | id | cat | sev | finding | disposition |",
+     "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+     "confirmed: Checked every finding in the artefact. Three dated sections, one per run. 25 findings use heading form '### <id> · <cat> · <sev> · <disp>' with the locator as the bolded lead sentence of the body; 4 more (the 2026-06-10 run) are table rows with columns id/cat/sev/finding/disposition. All 29 carry all five fields. `grep -oE '^### 20[0-9-]+ · [^·]+ · P[123] · [a-z]+' AUDIT.md | grep -oE '[a-z]+$' | sort | uniq -c` = 10 open, 9 filed, 4 fixed, 2 accepted — zero words outside the four-word vocabulary. Severity is P1/P2/P3 throughout, no other token. One deviation on the ID field: the 2026-06-10 run numbers its findings AUD-0014..AUD-0017 rather than `<run-date>-NN`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AUDIT-MD-IS-COMMITTED-AND-ITS-HISTORY-IS-THE-HEALTH-TREND": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:25  disposition (fixed/filed/accepted/open). `AUDIT.md` is committed to",
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:26  git — its history *is* the project's health trend. Unresolved findings",
+     "AUDIT.md:6  dispositioned. This file is committed to git — its history is the",
+     "AUDIT.md:7  project's health trend.",
+     "BACKLOG.md:20  | ##REL-AUDIT `AUDIT.md` | the periodic health sweep; an append-only **trend** | re-judged at the next audit |",
+     "confirmed: `git log --format='%h %ad %s' --date=short -- AUDIT.md` returns 5 commits: b98227ce 2026-05-23 docs(audit): 2026-05-23 seed inventory; 9283132f 2026-06-10 docs(terraform): Phase 6 close-out — reconciliation, audit, REPORT; 21d47694 2026-06-12 docs(audit): 2026-06-12 run - the discipline-depth inventory; f11ed38a 2026-06-12 docs(audit): same-day dispositions - the depth program closed its P2s; 3656f362 2026-06-12 docs(audit): AUD-0016 dispositioned fixed - the posture is live. So it is committed, and 5 commits over 3 runs is the trend record. AUDIT.md's own header restates the rule, and BACKLOG.md:20 independently classifies AUDIT.md's genre as 'an append-only **trend**'."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "UNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:27  carry forward to the next run and get re-judged.",
+     "AUDIT.md:30  1 accepted, 9 open. **10 carry forward** to the next run.",
+     "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
+     "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
+     "AUDIT.md:369  unverified this run. Re-judged P2 → P3, open.",
+     "AUDIT.md:370  - **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`",
+     "AUDIT.md:377  - **-13** (NaiveDepSolver the only solver) — **superseded in",
+     "confirmed and exercised in the strong form. The 2026-06-12 run carries a dedicated «### Carry-forward (2026-05-23 series + 2026-06-10), re-judged» section listing every prior open or filed finding by its ORIGINAL id, so ids are stable across the carry, and the re-judging is visible per finding — «Re-judged P2 → P3, open», «superseded in substance … Re-pointed, P3», «filed, owner decision → **fixed**». RECORDED, two things the reviewer should weigh: the 2026-06-10 run has NO carry-forward section and declares itself not a breadth sweep, and one re-judgement reads «P2 → P3» where the original heading is P1, so the recorded transition skips a step."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:31  Use the **`health-audit`** skill: it reads the category checklist,",
+     "spec/boot/STATIC.md:777  Use the **`health-audit`** skill: it reads the category checklist,",
+     "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:20  name = \"health-audit\"",
+     "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:21  path = \"spec/skills/health-audit\"",
+     "DRIFT of the genre F-097 named — an instruction that fails when followed. The skill ships and installs: `packages/…/spec/skills/health-audit/SKILL.md` and `vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md` both exist. It reaches no harness the host runs. The worker widened past the harvest, which checked only `.claude/skills/`, and found **three** skill homes — `.claude/skills/` (5 skills), `.agents/skills/` (4), `.opencode/skills/` (4) — with `health-audit` in none; `find . -maxdepth 4 -path '*skills/health-audit*'` returns nothing outside the package and vibedeps, and `grep -rn 'health-audit' .claude/` returns nothing. A session that reads this instruction in the compiled boot lane and tries to follow it cannot. `vibe skill install` is the projection step and the lockfile records no skill projection for this package."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "flow-document-pointers": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:34  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:36  [`../flows/health-audit/audit-checklist.md`](../flows/health-audit/audit-checklist.md);",
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:38  [`../flows/health-audit/running-an-audit.md`](../flows/health-audit/running-an-audit.md).",
+     "spec/boot/STATIC.md:780  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
+     "DRIFT: the fact's subject is three `../flows/health-audit/…` pointers and the host has no `spec/flows/` directory, so all three resolve nowhere from `spec/boot/STATIC.md` where the snippet is read. The documents themselves ship and say what the snippet says they say, in the package and in the installed slot. W1's 69-dangling family, ninth package."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:42  - Never declare a milestone done on an un-audited base — the audit is",
+     "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+     "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+     "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
+     "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+     "DRIFT — the `#never` restatement of the rule two rows above, carrying its verdict per W1's summary-restatement precedent, and sharpened by its own added clause: «the audit is part of the close-out, not an optional extra». Two milestone close-outs since 2026-06-12 shipped without one. Three facts in this package assert the same rule and all three fail on the same two ship lines."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-LET-A-FINDING-VANISH-WITHOUT-A-DISPOSITION": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:44  - Never let a finding vanish without a disposition. Every finding is",
+     "AUDIT.md:11  **Disposition** — `fixed` (resolved in-run, with the commit hash) ·",
+     "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
+     "AUDIT.md:13  (deliberate no-action, with the reason) · `open` (carries to the next",
+     "discipline/DEBT.md:7  ## open (12)",
+     "discipline/DEBT.md:22  ## accepted (2)",
+     "discipline/DEBT.md:27  ## filed (1)",
+     "discipline/DEBT.md:31  ## fixed (7)",
+     "confirmed: Zero silent findings in the artefact. All 25 heading-form findings end in one of the four words (`grep -oE '^### 20[0-9-]+ · [^·]+ · P[123] · [a-z]+' AUDIT.md | grep -oE '[a-z]+$' | sort | uniq -c` -> open 10, filed 9, fixed 4, accepted 2); the 4 table rows of the 2026-06-10 run carry 'open'/'filed' in their disposition column. AUDIT.md's own header defines the same four words. The strongest confirmation is outside AUDIT.md: discipline/DEBT.md is a machine-rendered registry whose four section headings ARE the four dispositions — open (12) / accepted (2) / filed (1) / fixed (7), 22 entries — and `discipline/registry/debt.json` carries `disposition` as a typed field on every entry with exactly those four values."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:46  - Never keep findings only in the volatile checkpoint file (the WAL /",
+     "spec/common/PROP-013-periodic-health-audit.md:64  - ##RECONCILE-WAL Each run reconciles the WAL \"Known issues\" against `AUDIT.md` before it closes. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+     "AUDIT.md:27  WAL's standing Known-issues list.",
+     "discipline/DEBT.md:1  <!-- GENERATED by `rust-ai-native ledger render` from discipline/registry/debt.json — do not edit;",
+     "discipline/DEBT.md:2       edit the registry and re-render. `ledger render --check` gates drift. -->",
+     "confirmed: the prohibition is obeyed and the host states the reconciliation direction in its own contract (PROP-013's `##INVENTORY-AUDIT-MD` and `##RECONCILE-WAL`). RECORDED because it is the batch's most interesting host fact: the live findings inventory is no longer only AUDIT.md. `discipline/registry/debt.json` (schema 1, 22 typed entries) carries findings as records — 11 naming an `AUDIT 2026-05-23-NN` run in `source`, 12 carrying an `AUDIT.md#<id>` evidence anchor, and 11 more from processes that never wrote an AUDIT.md section at all — renders to `discipline/DEBT.md`, and `ledger render --check` gates the drift between them. A third home, durable and machine-checked, that this flow's two-way split does not name."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-LET-THE-CHECKLIST-FOSSILIZE": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:49  - Never let the checklist fossilize. A new defect class a run",
+     "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+     "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
+     "AUDIT.md:16  (added 2026-06-12).",
+     "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
+     "AUDIT.md:195  category **E (discipline depth)** this run adds to PROP-013 §2.2.",
+     "confirmed by the law being exercised once and recorded in both places, which is the strongest form available. The 2026-06-12 run states it is «run under the new category **E (discipline depth)** this run adds to PROP-013 §2.2»; AUDIT.md's header now enumerates five categories with «**E** discipline depth (added 2026-06-12)»; and PROP-013 §2 carries CAT-E with four sub-rows while §5 records it as «Permanent per the living-checklist law». The addition is visible in the diff — `git show 21d47694 -- AUDIT.md` deletes exactly one line, the old four-category header."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:52  - Never mistake a green gate for a healthy project. The gate is blind",
+     "spec/common/PROP-013-periodic-health-audit.md:14  - ##GATE-BLIND-SPOTS It is a regression detector, blind by construction to uncovered code, out-of-gate trees, drift, and slow debt (the four blind spots: `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#blind-spots`). @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:18  - ##M119-INIT-DEFECT The M1.19 session shipped a milestone — eight phases, ~800 hermetic tests green, the gate passing on every commit — in which `vibe init` scaffolded **broken projects**: it wrote `naming = \"kind-name\"`, so a freshly-initialised project could not install any package at all. @spec/done",
+     "spec/common/PROP-013-periodic-health-audit.md:21  - ##VIBE-INDEX-ROT Earlier, the `vibe-index` crate — then a separate Cargo workspace, outside `cargo test --workspace` — rotted unnoticed until a state review found its suite red. @spec/done",
+     "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+     "AUDIT.md:219  **`cargo xtask specmap --check` was red on a clean checkout of `main` —",
+     "tools/self-check.sh:42  # packages were gated for months and \"all green\" was true the whole time",
+     "tools/self-check.sh:43  # (F-086); a count with no denominator cannot be wrong. The sync gate's",
+     "confirmed: Three independent host instances, all recorded. (a) M1.19: eight phases and ~800 hermetic tests green while `vibe init` scaffolded broken projects (PROP-013:18). (b) vibe-index rotted red while outside `cargo test --workspace` (PROP-013:21) — the out-of-gate-tree blind spot, literally. (c) F-086, written into the gate script itself: 'Four of seven packages were gated for months and \"all green\" was true the whole time' — and the response was to add a denominator assertion as step 0b, which is the mechanisable-category-migrates-into-the-gate law operating. tools/self-check.sh:52 records a fourth ('three findings in a row were caught by accident rather than by a gate', the user-home tripwire)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
