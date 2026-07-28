@@ -1,0 +1,45 @@
+{
+  "batch": "C45-cross-language",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md": {
+      "LAYER-1-SYNTACTIC": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:58  - ##LAYER-1-SYNTACTIC **Layer 1 — syntactic:** a Go grammar mask (Go's grammar is famously small; mature CFG tooling, permissively licensed). @spec/done",
+          "**restated confirmed ← drift.** It was judged «no grammar tooling is vendored anywhere — so layer 1 as described has no implementation», and the document it sits in declares at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:4-10 that it is a «vision / component brief — DELIBERATELY HELD AT STUB DEPTH» and «dispositioned VERY-FAR-FUTURE by the owner (2026-07-17)». Absence is what the brief predicts, not a contradiction of it.",
+          "the Rust twin of this exact fact is confirmed — packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#LAYER-1-SYNTACTIC, in a brief with the same status line and the same absent masker. One claim, two languages, and it was reading two ways.",
+          "the statements it does make are true: Go's grammar is small and permissively-licensed CFG tooling exists; the fact claims no vendoring"
+        ]
+      },
+      "LICENSING-CFG-GRAMMAR-TOOLING": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:91  - ##LICENSING-CFG-GRAMMAR-TOOLING CFG/grammar tooling: permissive options exist; avoid GPL grammar tooling. @spec/done",
+          "**restated confirmed ← drift.** It was judged «the licensing survey is of tooling this repository does not vendor», and a licensing survey inside a VERY-FAR-FUTURE brief is guidance for a future adoption — it never claims a dependency exists. Its guidance also matches this repository's standing posture: permissive-only dependencies, copyleft refused by default.",
+          "same restatement reason as this file's LAYER-1-SYNTACTIC, and the Rust twin's licensing row is confirmed"
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
+      "ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT": {
+        "v": "drift",
+        "ev": [
+          "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:39  ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT … type-constrained decoding cutting compile errors ~74.8% — was measured *on TypeScript* (Mündler et al., PLDI'25; the only language with a real implementation, R2C-005 / DR1-014). @spec/done",
+          "**the verdict stands and its REASON was wrong, which matters more.** It read «that figure appears in the live tree only under `.vibe/cache/**`, in an older CONTRADICTION-MAP». It does not: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28 titles C-4 with «Type-constrained decoding cuts errors 74.8%» and :31 repeats it in the resolution — the LIVE v0.8.0 slot, inside this campaign's own corpus.",
+          "so the defect is bigger than a stale quote: **two appendices of one package publish different numbers for one result.** packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106 records «75.3% (synthesis) and 70.2% (translation)» for the same Mündler et al. PLDI'25 measurement. Every consumer quotes whichever appendix it happened to read, and four documents across three stacks quote the CONTRADICTION-MAP's figure.",
+          "and the fact carries a second break the first pass did not name: **`DR1-014` resolves nowhere** — no `##FINDING-DR1-014` exists in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md, and the id survives only here and in the Rust tcg brief"
+        ]
+      },
+      "TOOLING-ASYMMETRY-STATED-HONESTLY": {
+        "v": "drift",
+        "ev": [
+          "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:258  ##TOOLING-ASYMMETRY-STATED-HONESTLY … (~74.8% compile-error reduction; ~94% of TS compile errors are type-level) … @spec/done",
+          "**the verdict stands and its REASON was wrong.** The «~74.8 %» is not a cache artefact: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31 publishes it in the live v0.8.0 slot, and packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106 records 75.3 % / 70.2 % for the same result. The package contradicts itself across its own two appendices; this document is faithful to one of them.",
+          "the other half of the fact is exactly right and resolves: ATLAS:105-106 states «Only 3.5% of functional errors and 6% of compile errors are syntactic; on average 94% of compilation errors result from failing type checks» — the ~94 % is the corpus's own number, quoted correctly",
+          "the clean-room posture the anchor is named for holds unchanged (spec/boot/90-user.md's CLEAN-ROOM-RULE)"
+        ]
+      }
+    }
+  }
+}
