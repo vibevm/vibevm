@@ -2768,6 +2768,54 @@ command that would have tested it.
   moved from a quote that is nowhere, and refuses to choose when a quote occurs in
   several places.
 
+- **2026-07-28 · W2's evidence is complete and unjudged — 692 anchors, four tables,
+  2 404 refs, 3 unresolvable and none a fiction.** The session that closed the
+  reviewing debt and W1 ran out of context here, and the honest stop was to persist
+  the delegated work rather than judge half of it — the same shortcut that created
+  the 138-row debt this phase opened with.
+
+  **What the four tables establish before a single verdict is written:**
+
+  | | |
+  |---|---|
+  | the sync grammar | `docs(spec): sync <section> with code` — **0 uses in 2 041 commits** |
+  | …and yet the path is the practice | recorded three independent ways: a task template, an owner guide, and a 212-row wave whose diffs were drafted, surfaced and applied only on approval |
+  | of three mandatory draft parts | value and reason land; the **revisit trigger never does** |
+  | the morning ritual | **none exists in the host at all** — 23 hits for the word, not one an operating instruction |
+  | the `_Updated:` line | a bare date where the protocol requires ISO 8601 UTC, so the flow's own 24-hour test cannot be evaluated to the hour and its skill has no hours to report |
+  | the wind-down report | flow asks four items, host asks four items, **none of them the same** |
+  | the cold-resume contents | **10 of 10 match** |
+  | the specspaces snippet | placed by two host files at «slot 11 of `spec/boot/INDEX.md`»; `grep -c` on that file returns **0** — the same shape as F-128 |
+  | the installed payloads | stale by 92-176 changed lines per file; 10 and 0 fact anchors against the package's 39 |
+
+  **And three counter-instances that are this repository's own, one of them written
+  by the session that found it.** `6a026de1` rewrote the WAL's In-progress and Next
+  in a single hunk and touched `_Updated:` **zero times**, which is precisely what
+  `NEVER-LEAVE-THE-UPDATED-LINE-UNTOUCHED` forbids. Over 2026-06-01 → now, 37 days
+  carry commits and 28 carry a WAL commit — nine active days ended without one. And
+  the read order is reversed *and* self-contradictory: `CLAUDE.md:205` reads the WAL
+  then `CONTINUE.md`, while `CONTINUE.md`'s own resume prompt lists itself first, «in
+  this order».
+
+  **The WORDS-DIFFER finding was corrected in place, and the correction is the
+  entry's other lesson.** The boot-lane join reported `two-process-model` as the
+  corpus's first words-differ case and the harvest first recorded three missing
+  *rule* words. They are the `{#…}` suffixes on three headings; every rule's prose is
+  word-identical, and what the host loses is the ability to cite three of the four
+  sections of its own copy — which bites the rule that prices a correction at twenty
+  tokens *because* the exact section can be cited. Cause traced with dates: the
+  anchors landed 2026-07-27, the slot was written 2026-07-14, the lane regenerated
+  2026-07-26. The compiler-strips-anchors alternative was checked and rejected.
+  **Third time in one session that a reason in the record needed fixing rather than a
+  verdict.**
+
+  *On delegation.* Nine `opus5` workers across W1 and W2, 4 049 refs, and after the
+  checker's fourth narrowing **five unresolvable, none a fiction**. **Three of the
+  four W2 workers reported the boss moving a file under them mid-run** — the harvest,
+  `CONTINUE.md`, and `spec/WAL.md` twice — and each re-anchored its citations and
+  said so. The rule is now in both checkpoints: do not edit a file a running worker
+  cites, and do not read a table while its worker may still be writing.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
