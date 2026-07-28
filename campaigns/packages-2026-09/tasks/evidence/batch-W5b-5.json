@@ -1,0 +1,249 @@
+{
+ "batch": "W5",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:5  ##scope-of-this-document **Scope of this document.** The copy-ready skeleton of a manual test,",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:13  ## The skeleton {#skeleton}",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:82  ## Clause by clause {#clauses}",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:108  ## Worked example {#example}",
+     "confirmed: All three promised pieces have a section: #skeleton (13, fenced block 21-80), #clauses (82, seven anchored clause bullets 84-106), #example (108, fenced example 117-175). Source 1 only — this is a self-description of the document's contents, with no host or installed artefact that bears on whether the description matches."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:9  ##sibling-document-pointers The reasoning behind the tier lives in",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:16  ## Rule 1 — Clean slate is mandatory {#clean-slate}",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:94  - ##CLAUSE-SETUP-CLEAN-SLATE **Setup — clean slate.** The two mechanisms of Rule 1: a `mktemp -d`",
+     "vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md:1  # Manual-Tests Protocol {#root}",
+     "confirmed: Both are same-directory relative links; both targets exist in the package and in the installed payload. The 'bakes in' claim is verifiable and holds — the clause list cites the rules by number at :94 (Rule 1), :98-101 (Rules 2 and 3) and :102-103 (Rule 4), and the skeleton's Setup block (38-44) is character-identical to authoring-rules.md's Rule 1 fragment (30-35) apart from one trailing comment. Source-3 note measured while resolving these refs: the installed payload under vibedeps/flow-manual-tests/0.1.0/ is ANCHOR-STRIPPED — `grep -c '##[A-Za-z]'` returns 0 for all five installed files (README.md, the boot snippet and the three flow documents) against 123 anchors in the package source, and the @impl/done markers are gone too. What a consumer receives is the prose without the fact anchors, so a source-3 citation can only ever land on the rendered sentence, never on the anchor id."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "COPY-THE-SKELETON-AND-FILL-EACH-PLACEHOLDER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:15  ##COPY-THE-SKELETON-AND-FILL-EACH-PLACEHOLDER Copy this into `manual-tests/<milestone>-<slug>.md` and fill each",
+     "manual-tests/README.md:47  Each test is a single Markdown file named",
+     "manual-tests/M1.1-git-registry-smoke.md:1  # M1.1 — git-registry smoke test",
+     "spec/common/PROP-000.md:187  - ##MT-LOCATION **Decision:** human-runnable smoke-tests live in [`manual-tests/`](../../manual-tests/) at the repo root, one Markdown file per scenario, named `<milestone>-<slug>.md` (e.g. `M1.1-git-registry-smoke.md`); the directory's own [`README.md`](../../manual-tests/README.md) carries the index. @spec/done",
+     "confirmed: The target path and naming pattern are the host's exactly — PROP-000 `##MT-LOCATION` writes `<milestone>-<slug>.md` with the same angle-bracket notation and the same example file. All eight root-home filenames follow it. The pattern does not describe the other two homes, which use MT-NN (spec/manual-tests/: MT-01-vibe-tree.md, MT-02-vibe-tree-tui.md, MT-03-vibe-prefs-tui.md; the fractality home: MT-01..MT-05, MT-C2-01..05, MT-C3-01..03), so the skeleton's stated destination covers one of the host's three homes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-SECTION-ORDER-IS-FIXED": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:18  ##THE-SECTION-ORDER-IS-FIXED The section order is fixed — a reader learns it once and",
+     "manual-tests/README.md:52  A test file carries these sections in this order:",
+     "manual-tests/M1.5-gate-v2-per-package-smoke.md:55  ## Token-secrecy reminder",
+     "manual-tests/M1.5-gate-v2-per-package-smoke.md:330  ## Notes on running this against the legacy registry",
+     "manual-tests/M2.10-index-smoke.md:11  ## Scenario A — bootstrap + serve + consume",
+     "confirmed: The host states the fixed-order rule at README:52 and lists six sections. Measured across the root home, the order is held with two named substitutions (Preflight for Preconditions, Cleanup for Teardown) but the section SET varies: M1.5-gate-v2 inserts '## Token-secrecy reminder' at :55 between Purpose and Preflight and appends '## Notes on running this against the legacy registry' at :330 after the What-to-file section; M1.6 also carries a '## Token-secrecy reminder' at :27. M2.10 departs entirely — its only headings are the title and Scenario A/B/C (11, 106, 122), with no Purpose, Preflight, Setup, Cleanup or What-to-file section. In spec/manual-tests/, MT-01 follows the flow's order under the flow's own names; MT-02 and MT-03 run Preconditions → Steps → Pass → Sign-off, dropping Setup and Teardown and adding two sections the template does not define."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLAUSE-TITLE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:84  - ##CLAUSE-TITLE **Title.** `# <Feature> — <scenario>`. The same words as the",
+     "manual-tests/M1.1-git-registry-smoke.md:1  # M1.1 — git-registry smoke test",
+     "manual-tests/M1.6-mirror-vendor-smoke.md:1  # M1.6 — Multi-registry, mirror, and vendor smoke test",
+     "manual-tests/README.md:81  | [`M1.1-git-registry-smoke.md`](M1.1-git-registry-smoke.md) | M1.1 | Install from the real GitVerse registry (legacy monorepo shape), `vibe registry sync`, lockfile `source_uri` shape. |",
+     "confirmed: All eight root-home titles use the em-dash form: M1.1 'git-registry smoke test', M1.15 'git-source dependency smoke', M1.16 'registry redirect smoke', M1.17 'workspace publish smoke', M1.5-gate 'multi-package registry smoke test', M1.5-gate v2 'per-package registry smoke test (GitHub `vibespecs`)', M1.6 'Multi-registry, mirror, and vendor smoke test', M2.10 'vibe-index smoke'. The slug-agreement half holds for seven — M1.5-gate-v2's file is `M1.5-gate-v2-per-package-smoke.md` while its title reads 'M1.5-gate v2' with a space, and the index row at README:83 assigns it milestone 'M1.1-revision', a third label. The MT-NN homes use a different form: the title names the feature ('# vibe tree — the interactive spec-tree browser') and carries no MT number, so title and filename do not share words."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLAUSE-PURPOSE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:87  - ##CLAUSE-PURPOSE **Purpose.** Says *why a human*, not just *what*. If the scenario",
+     "manual-tests/README.md:54  1. **Purpose.** One-paragraph description: what feature, what",
+     "spec/manual-tests/MT-03-vibe-prefs-tui.md:6  driven by `vibe.prefs` actions. The automated suite (347 vibe-cli tests,",
+     "spec/manual-tests/MT-02-vibe-tree-tui.md:7  persistence, and a copy system. The automated suite (241 vibe-cli tests,",
+     "spec/manual-tests/MT-01-vibe-tree.md:3  ##purpose **Purpose.** `vibe tree` (PROP-036) is an interactive terminal UI: it renders",
+     "confirmed: The host README:54-55 asks for the same three things including 'why this needs a human'. The MT-NN files perform the justification most explicitly: MT-02:7-12 and MT-03:6-10 each cite the passing automated count (241 and 347 vibe-cli tests, self-check green), say what it proves ('the model + the rendering fns'), and state what it cannot ('cannot drive a real terminal and confirm the TUI looks and reads right') — the tier-justification the clause asks for. All three MT files use the template's bold-paragraph form `**Purpose.**` rather than a heading. In the root home all seven conforming tests have a `## Purpose` heading; M2.10 has none (`grep -cE '^#{1,3} Purpose'` → 0)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLAUSE-PRECONDITIONS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:90  - ##CLAUSE-PRECONDITIONS **Preconditions.** Everything that must hold before step 1, so a",
+     "manual-tests/README.md:56  2. **Preflight.** Tools / credentials / network access required.",
+     "manual-tests/README.md:33     access, credentials) — verify them first.",
+     "spec/manual-tests/MT-01-vibe-tree.md:17  - ##PRE-TTY A real interactive terminal (a tty) — this is the whole point; the TUI does",
+     "manual-tests/M1.1-git-registry-smoke.md:20  ## Preflight",
+     "confirmed: The host's counterpart section is named Preflight and its definition names the same three contents — 'Tools / credentials / network access required' (README:56), and README:32-33 tells the reader to 'verify them first', the readiness-up-front property the clause states. Present in 7 of 8 root-home files (M2.10 has none) and in all three MT files under the flow's own name, Preconditions. MT-01's `##PRE-TTY` is the clearest instance of a precondition that is also the tier justification: 'A real interactive terminal (a tty) — this is the whole point; the TUI does not launch when stdout is piped or redirected'."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLAUSE-SETUP-CLEAN-SLATE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:94  - ##CLAUSE-SETUP-CLEAN-SLATE **Setup — clean slate.** The two mechanisms of Rule 1: a `mktemp -d`",
+     "manual-tests/M1.1-git-registry-smoke.md:53  ## Setup — clean slate",
+     "manual-tests/M1.1-git-registry-smoke.md:60  SCRATCH=\"$(mktemp -d -t vibevm-smoke.XXXXXX)\"",
+     "manual-tests/M1.1-git-registry-smoke.md:61  export VIBE_REGISTRY_CACHE=\"$SCRATCH/registries\"",
+     "manual-tests/README.md:57  3. **Setup — clean slate.** Exactly how to isolate the run. Always",
+     "confirmed: The host uses the clause's exact section name, 'Setup — clean slate', at README:57 and as a heading in M1.1:53 and the other root-home tests. Both mechanisms appear together in M1.1:60-61 in the order the clause gives. Divergences measured: M1.17 and M2.10 create a scratch but export no per-user redirect (0 hits for VIBE_REGISTRY_CACHE/VIBE_HOME/XDG_/HOME=); MT-01 states a reasoned exemption at :31 ('No scratch/state redirect is needed'); MT-02 and MT-03 have no Setup section and write real per-user state (:14 and :12)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLAUSE-STEPS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:98  - ##CLAUSE-STEPS **Steps.** Numbered, each a command block plus an **Expected**",
+     "manual-tests/README.md:61  4. **Steps.** Numbered. Each step has a command in a fenced block",
+     "spec/manual-tests/MT-01-vibe-tree.md:43  **Expected.**",
+     "manual-tests/M1.1-git-registry-smoke.md:213  form works in Git Bash on Windows and on Linux; the `stat -f %m`",
+     "spec/manual-tests/MT-02-vibe-tree-tui.md:82  ## Pass",
+     "confirmed: The host's item 4 (README:61-62) matches the clause on numbering and the command-plus-outcome pairing. Numbering holds everywhere I looked — even MT-02 and MT-03 use numbered steps (1-10 and 1-8). The Expected requirement holds in 8 of 11 tests; M2.10 substitutes 'Pass when:' and MT-02/MT-03 substitute a single '## Pass' section. The Rule 3 clause is exercised in M1.1:204-213 and M1.6:102-106."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLAUSE-TEARDOWN": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:102  - ##CLAUSE-TEARDOWN **Teardown.** One `rm -rf \"$SCRATCH\"`. Because all state lives under",
+     "manual-tests/M1.1-git-registry-smoke.md:266  rm -rf \"$SCRATCH\"",
+     "manual-tests/README.md:63  5. **Cleanup.** One copy-pasteable block that tears down the scratch",
+     "spec/manual-tests/MT-01-vibe-tree.md:139  ##teardown-none None — `vibe tree` wrote nothing. (If a crash ever leaves the terminal in raw",
+     "confirmed: Seven root-home tests carry the exact command the clause names — `rm -rf \"$SCRATCH\"` at M1.1:266, M1.5-gate:230, M1.5-gate-v2:305, M1.6:263, M1.15:186, M1.16:275, M1.17:261 — under a section the host calls Cleanup rather than Teardown. MT-01 uses the flow's name for the heading (:137) and records 'None' as the content, justified by the tool writing nothing. The three tests without one are M2.10, MT-02 and MT-03; for the latter two the clause's premise fails, since their state does not live under a scratch."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLAUSE-WHAT-TO-FILE-IF-IT-FAILS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:104  - ##CLAUSE-WHAT-TO-FILE-IF-IT-FAILS **What to file if it fails.** The evidence list, gathered *before*",
+     "manual-tests/README.md:65  6. **What to file if it fails.** What artifacts to collect",
+     "manual-tests/README.md:66     (`VIBE_LOG=debug` output, lockfile contents, cache tree) so a",
+     "spec/manual-tests/MT-01-vibe-tree.md:144  - ##FAIL-STEP-NUMBER The failing step number; what you saw beside its **Expected**. @impl/done",
+     "manual-tests/M1.1-git-registry-smoke.md:282  ## What to file if it fails",
+     "confirmed: The host adopts the clause's exact heading text and names the same artifact classes (README:65-67: debug output, lockfile contents, cache tree). MT-01's list at 144-150 maps onto the flow's four items including 'the model the TUI renders' as the verbatim artifact. On the 'gathered before teardown' half: in every host file this section is placed AFTER the Cleanup/Teardown section (M1.1 263 then 282; MT-01 137 then 142), and neither the host README's item list nor any test carries the warning to collect first — so the ordering the clause depends on is not signposted anywhere on the host."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-first-run-smoke-test-for-an-invented-cli": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:110  ##a-first-run-smoke-test-for-an-invented-cli A first-run smoke test for an invented CLI named `acme`. @impl/done",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:118  # acme — first-run smoke test",
+     "confirmed: The example follows at 117-175 and is titled '# acme — first-run smoke test' with an invented binary `acme`. Checked the host for any real `acme` to be sure the example is not a live tool leaking into the package: grep -rn 'acme' over manual-tests/, spec/, crates/ and vibe.lock returns nothing, so the CLI is invented as stated. Source 1 only — the claim is about this document's own example and no host or installed artefact bears on it."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "what-the-worked-example-proves": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:112  ##what-the-worked-example-proves It proves the",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:120  **Purpose.** Proves that a clean install of `acme` initialises a",
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:150  `$TOOL_HOME/config.toml` and names `demo` as the active project.",
+     "confirmed: The example's own Purpose paragraph (120-124) states the same thing the anchor claims — 'The automated suite fakes the config store; this walks the real on-disk path and confirms the success message reads correctly to a human' — and its steps verify both halves: step 1's Expected checks the config file exists at `$TOOL_HOME/config.toml` (:148-150) and step 2's checks the message reads back (:158-160). One internal tension worth noting for a reviewer: the anchor says 'the real per-user directory layout', while the example writes to `$TOOL_HOME` under the scratch (:134), which is the redirect Rule 1 requires — so what the example proves is the layout shape under a redirected home, not the real per-user location. Source 1 only; the example is invented and has no host counterpart."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "SUM-FIXED-SECTION-ORDER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:179  - ##SUM-FIXED-SECTION-ORDER Fixed section order: Title, Purpose, Preconditions, Setup, Steps,",
+     "manual-tests/README.md:52  A test file carries these sections in this order:",
+     "manual-tests/README.md:56  2. **Preflight.** Tools / credentials / network access required.",
+     "manual-tests/README.md:63  5. **Cleanup.** One copy-pasteable block that tears down the scratch",
+     "spec/manual-tests/MT-01-vibe-tree.md:137  ## Teardown",
+     "confirmed: The host's list at README:52-67 is the same seven positions in the same order, with two sections renamed: Preflight for Preconditions (item 2) and Cleanup for Teardown (item 5). MT-01 in the other home uses the flow's names exactly — Preconditions (15), Setup (24), Steps (34), Teardown (137), What to file if it fails (142) — so both vocabularies are live in this repository, split by home. Departures from the order itself: M1.5-gate-v2 inserts a Token-secrecy reminder at :55 and appends a Notes section at :330; M2.10 has none of the seven sections but its title and three Scenario headings; MT-02/MT-03 drop Setup and Teardown and append Pass and Sign-off."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-WHAT-EACH-SECTION-DOES": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:181  - ##SUM-WHAT-EACH-SECTION-DOES Purpose justifies the tier; Preconditions gate the run; Setup",
+     "spec/manual-tests/MT-02-vibe-tree-tui.md:7  persistence, and a copy system. The automated suite (241 vibe-cli tests,",
+     "manual-tests/M1.1-git-registry-smoke.md:61  export VIBE_REGISTRY_CACHE=\"$SCRATCH/registries\"",
+     "manual-tests/README.md:33     access, credentials) — verify them first.",
+     "spec/manual-tests/MT-03-vibe-prefs-tui.md:65  ## Pass",
+     "DRIFT on the fourth of its four functions, carrying the verdict of the Expected family. Three hold on the host: Purpose justifies the tier most explicitly in MT-02 and MT-03, which name the passing automated counts and what they cannot reach; Preconditions gate the run per the README's «verify them first»; Setup isolates via M1.1 and the six other redirected tests. «Every Step carries an Expected» does not — 0 Expected paragraphs in MT-02 (10 steps), MT-03 (8 steps) and M2.10, where the pass judgement moves out of the steps into an aggregate section or into `Pass when:` lines. A summary that lists four section functions and gets three is drift on the list."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-TEARDOWN-AND-THE-FAILURE-LIST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:183  - ##SUM-TEARDOWN-AND-THE-FAILURE-LIST Teardown is one `rm -rf \"$SCRATCH\"`; the failure list is collected",
+     "manual-tests/M1.1-git-registry-smoke.md:266  rm -rf \"$SCRATCH\"",
+     "manual-tests/M1.1-git-registry-smoke.md:282  ## What to file if it fails",
+     "manual-tests/README.md:63  5. **Cleanup.** One copy-pasteable block that tears down the scratch",
+     "confirmed: First half holds in all seven root-home tests with a Cleanup section — each removes `\"$SCRATCH\"` and nothing else. Second half is contradicted by document order everywhere on the host: the What-to-file section sits after the Cleanup section in every file that has both (M1.1 266 then 282; M1.5-gate-v2 302 then 310; MT-01 137 then 142), and the host README numbers them 5 then 6. A reader following top to bottom runs teardown before reaching the list, and no host file carries a warning to read ahead."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-FILL-THE-SKELETON-DO-NOT-REINVENT-IT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:185  - ##SUM-FILL-THE-SKELETON-DO-NOT-REINVENT-IT Fill the skeleton, do not reinvent it — a reader who knows one test",
+     "manual-tests/README.md:45  ## Conventions for new tests",
+     "manual-tests/README.md:42  Do not skip steps, do not improvise. The point of a manual test is",
+     "spec/manual-tests/MT-02-vibe-tree-tui.md:82  ## Pass",
+     "manual-tests/M2.10-index-smoke.md:11  ## Scenario A — bootstrap + serve + consume",
+     "confirmed: The host has a 'Conventions for new tests' section (README:45-75) prescribing exactly this — the same six sections in the same order for every file — and states the anti-improvisation rule at :42-43. Measured, the tier is not uniform: 6 of 11 tests match the prescribed section set exactly (M1.1, M1.5-gate, M1.15, M1.16, M1.17, M1.6, with M1.6 and M1.5-gate-v2 adding a Token-secrecy reminder and M1.5-gate-v2 a trailing Notes section), MT-01 matches under the flow's names, and 3 depart substantially — M2.10 (Scenario-only structure, no Purpose/Preflight/Setup/Cleanup/What-to-file) and MT-02/MT-03 (Preconditions → Steps → Pass → Sign-off, the last two sections defined by neither the flow nor the host README). So a reader who knows M1.1 does not know M2.10 or MT-02 by its shape."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
