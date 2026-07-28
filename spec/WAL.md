@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-28 (**Phase C — the reviewing debt and `world` batch W1 are CLOSED
-at 407 of 407; W2's evidence is in flight, two of four tables returned**)_
+_Updated: 2026-07-28 (**Phase C — `flow:wal` is CLOSED at 260 of 260; W2 is half
+judged, W2c and W2d remain**)_
 
 ## Current phase
 
@@ -9,36 +9,42 @@ at 407 of 407; W2's evidence is in flight, two of four tables returned**)_
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**3 104 verdicts written, sealed and committed — 45.3 % of the phase.** The
-`ai-native` cluster now measures **2 470 confirmed / 207 drift / 20 unverifiable —
-91.6 %**, restated from 92.4 % by the reviewing pass below; `world` has its first
-**407 verdicts — 368 / 32 / 7, 90.4 %, with 26 self-referential (6.4 %)**. One
-command prints all of it: `python campaigns/packages-2026-09/tasks/summary.py`.
+**3 364 verdicts written, sealed and committed — 49.1 % of the phase.** The
+`ai-native` cluster measures **2 470 / 207 / 20 — 91.6 %**; `world` now has **667
+verdicts — 593 / 59 / 15, 88.9 %, with 30 self-referential (4.5 %)**. One command
+prints all of it: `python campaigns/packages-2026-09/tasks/summary.py`.
 
-**W1 is CLOSED and the phase's falsifiable prediction is in trouble.** §5-C predicted
-`world` would measure HIGHER than `ai-native`; the first world batch reads **90.4 %
-against 91.6 %**, and the reason inverts the prediction's logic — these flows make
-claims about the consuming project, and this consumer is measurable. Thirteen of
-W1's thirty-two drifts are one law broken by its own consumer (attribution's
-single-place rule, restated in eight further host locations, 88 lines across 50
-files), and a second family runs through every package: **69 relative `../flows/…`
-pointers in the host's compiled boot lane, all 69 dangling**, because the host has
-no `spec/flows/` at all.
+**`flow:wal` is CLOSED at 260 of 260 — 225 / 27 / 8, 86.5 %** (W2a's four files
+81.1 %, W2b's three 90.6 %), and it is the lowest-scoring package in `world` so
+far for a structural reason: **this flow's facts describe `spec/WAL.md`, and
+`spec/WAL.md` is on disk and measurable line by line.** Six of W2a's sixteen
+drifts are the required-sections contract, each measured over the **fourteen most
+recent revisions** of the host's WAL — `_Updated:` a bare date in 14 of 14 where
+ISO 8601 UTC is required «always and without exception»; Current phase 25-50 lines
+against «one or two»; Next 4-5 items against «the single next action», no default
+marked; Constraints citing a spec anchor in **4 of 26** entries, with `spec://`
+occurring **0 times** in the file in every revision; Session context 41-65 lines of
+retrospective against «one-paragraph orientation».
 
-**The 138-row reviewing debt is PAID.** Sixty `partial` rows had been sorted by
-filename and seventy-eight by one two-branch rule; read individually they come to
-**101 confirmed / 36 drift / 3 unverifiable**. Eleven rows left `unverifiable`
-correctly and eight moved out of it because their subject was structural, not
-behavioural. **The standard that judges a verdict is now written down** — see
-§Constraints and the campaign LOG — after four claims turned out to have been judged
-two ways across three languages.
+**W1 is CLOSED and the phase's falsifiable prediction is in deeper trouble.** §5-C
+predicted `world` would measure HIGHER than `ai-native`; the cluster now reads
+**88.9 % against 91.6 %** and is still falling. The reason inverts the prediction's
+logic — these flows make claims about the consuming project, and this consumer is
+measurable. Two families carry it: thirteen of W1's drifts are attribution's
+single-place law broken by its own consumer (88 lines across 50 files), and **69
+relative `../flows/…` pointers in the host's compiled boot lane, all 69 dangling**,
+because the host has no `spec/flows/` at all.
 
-**`world` is 16 of 121 files: 3 743 anchors remain, batches W2…W7.** W1's five
-delegated tables live in `tasks/evidence/ev-W1{a,b,c,d,e}.json` and its five verdict
-batches beside them; all three §3.1 sources for it are captured in
-`harvest/world-w1-git-family.md`. The worker contract that produced them —
-`tasks/WORLD-WORKER-BRIEF.md` — now carries the ref grammar in full, after W1
-returned 43 unresolvable refs of which **not one was a fiction**.
+**F-129 is the batch's own finding, and it is internal to the package.**
+`session-end-hook.md` orders «the full hook, steps 1-6»; `cold-resume.md`
+§wind-down orders **five** in a different sequence, with no stopping-state step and
+no collapse step; and a third fact asserts the two are the same procedure. The host
+implements `cold-resume.md`'s five exactly, in order.
+
+**`world` is 23 of 121 files: 3 483 anchors remain — W2c, W2d, then W3…W7.** W1's
+and W2's nine delegated tables live in `tasks/evidence/ev-W{1,2}*.json` with their
+verdict batches beside them; the three §3.1 sources per batch are captured in
+`harvest/world-w{1,2}-*.md`.
 
 **Exit-gate clause (iii) is satisfied** — 39 captured runs under `harvest/`, each
 `command → real output`, plus W1's three-source capture. **Clauses (ii) and (iv)
@@ -108,6 +114,13 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
   floor snapshots the real `~/.vibe` and a concurrent write turns it red.
 - **Never `git add -A` (or `git add .`) while a worker is running.** Stage explicit
   paths; read `git status --short` before every commit while a batch is out.
+- **A wind-down invalidates any sealed evidence table that cites `CONTINUE.md` or
+  `spec/WAL.md`.** Proved 2026-07-28: W2's four tables verified at 3 unresolvable
+  when sealed and at **65** one session later, because the wind-down overwrote both
+  files. None was a fiction. **Always re-run `verify-evidence.py` before reading a
+  table, even one a previous session already verified**, and run
+  `repair-refs.py --apply` — it re-points a moved coordinate and refuses to guess
+  when the quote occurs twice.
 - **`grep -v '\.vibe'` deletes this repository's own packages** — the org namespace is
   literally `org.vibevm`. Anchor such filters on a path segment. Related: PowerShell
   `-match` is case-INSENSITIVE.
@@ -161,30 +174,33 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
 ## In progress
 
-**W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for
-the 20 files / 692 anchors of `two-process-model`, `wal`, `wal-specspaces` and
-`sync-from-code`, writing to `tasks/evidence/ev-W2{a,b,c,d}.json`. **No W2 verdict
-has been written.** Its three §3.1 sources are captured in
-`harvest/world-w2-wal-family.md`, and two findings already fall out of that capture
-alone: the host's `two-process-model` boot snippet is missing three `{#…}` heading
-anchors the package added on 2026-07-27, so three of its four sections cannot be
-cited — a stale install rather than a changed rule, pinned in the harvest — and the
-`wal-status` skill the wal package ships is **not installed**. `CONTINUE.md` §w2-in-flight carries
-the table list and the two rules that protect a running delegation.
+**W2 is half judged.** `ev-W2a` (111) and `ev-W2b` (149) are read row by row,
+merged, sealed and committed. **`ev-W2c` (179, `two-process-model`, all five files)
+and `ev-W2d` (253, `sync-from-code` 5 files + `wal-specspaces` 3) are on disk,
+verified and UNJUDGED** — 432 anchors. Nothing needs re-commissioning; start by
+reading. Their three §3.1 sources are in `harvest/world-w2-wal-family.md`.
+
+**Two findings from the harvest capture alone are still open on those two files:**
+the host's `two-process-model` boot snippet is missing three `{#…}` heading anchors
+the package added on 2026-07-27, so three of its four sections cannot be cited (a
+stale install, not a changed rule); and both `CLAUDE.md:141` and `SPECSPACES.md:8`
+place the specspaces snippet at «slot 11 of `spec/boot/INDEX.md`» where `grep -c`
+on that file returns **0** — the same shape as F-128.
 
 ## Next
 
-1. **W2 — check for the four tables first**, then `verify-evidence.py` each one
-   BEFORE reading it, `repair-refs.py` if anything moved under the workers, then
-   `show-rows.py --brief` row by row and judge. The harvest and the brief are on
-   disk; `CONTINUE.md` §recipe is the loop and §w2-in-flight the file list.
+1. **Judge `ev-W2c` (179), then `ev-W2d` (253).** Both already pass
+   `verify-evidence.py`; re-run it first anyway, because this session proved a
+   wind-down can invalidate a sealed table. Then `show-rows.py --brief` row by row.
+   `CONTINUE.md` §recipe is the loop, §standard the verdict standard, and
+   §w2-judged what W2a/W2b already settled — including the non-adoption line.
    **Re-measure the per-anchor cost when W2 closes** — W5 is provisional at ~697 and
    splits if the cost is higher than C1's.
 2. **Every `world` verdict must carry `src`** (a non-empty subset of `[1,2,3]`,
    amendment A2); `merge-verdicts.py` refuses a batch without it, and `src == [1]`
    counts separately as self-referential — `summary.py --batch <id>` prints both.
-   W1's own share is 26 of 407, 6.4 %.
-3. **Then W3…W7.** 3 743 anchors remain in `world`.
+   `world`'s share so far is 30 of 667, 4.5 %.
+3. **Then W3…W7.** 3 483 anchors remain in `world`.
 3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential
    count (both from `summary.py`), and `baseline.json` (amendment A6).
 4. **Phases T and G are designed and unrun. Neither starts without an explicit
@@ -192,6 +208,16 @@ the table list and the two rules that protect a running delegation.
 
 ## Known issues
 
+- **Opened 2026-07-28 by W2b, on the owner, not blocking: F-129** — the `wal`
+  package ships **two contradictory wind-downs**. `session-end-hook.md` orders «the
+  full hook, steps 1-6» (stopping state, rewrite WAL, collapse, overwrite CONTINUE,
+  propose commit, report); `cold-resume.md` §wind-down orders **five** in a
+  different sequence (overwrite CONTINUE **first**, rewrite WAL, commit, push, chat
+  TL;DR) with no stopping-state and no collapse step; and
+  `WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK` asserts they are the same procedure.
+  All three `@impl/done`, all three in one package. The host implements
+  `cold-resume.md`'s five exactly. Closing it edits a published slot → F-122's
+  territory.
 - **Opened 2026-07-28 by the reviewing pass, all on the owner, none blocking:**
   **F-124** (three evidence ids — `H4`, `DR1-014`, `DL1-015` — cited across all
   three stacks and resolving in no register; the `H`-series is in daily use inside
@@ -234,66 +260,37 @@ the table list and the two rules that protect a running delegation.
 
 ## Session context
 
-**The debt's own result is one sentence: no row moved because a worker's evidence
-was wrong.** Every drift the reviewing pass found was already visible in the
-`searched` field the worker returned; what was missing was someone reading it. A
-delegated table that records what it searched converts a reviewer's disagreement
-into one lookup — and converts a reviewer's absence into 138 unexamined rows.
+**Open `campaigns/packages-2026-09/tasks/evidence/ev-W2c.json` first** (179 rows,
+`two-process-model`), then `ev-W2d.json` (253). Run
+`python campaigns/packages-2026-09/tasks/verify-evidence.py <table>` before reading
+a word of either, then `repair-refs.py --apply`, then `show-rows.py --brief` row by
+row. Avoid touching `CONTINUE.md` or `spec/WAL.md` while judging — those two files
+are what the tables cite.
 
-**Comparing the twins is what earned the rest.** Four claims appear in two or three
-language projections and had been judged differently in each — `vibe codemod
-rename-seam`, the product seam's lockfile dispatch, the `complete` latency target,
-and the Layer-1 grammar mask. Each is now judged once, and **two of the corrections
-run upward**: a document that declares itself «held at stub depth» and
-VERY-FAR-FUTURE is not contradicted by being unbuilt.
+**The line this batch drew, and the rest of `world` will be judged on it.** A flow's
+prescription that the host simply never adopted is **not** drift: a human's morning
+read leaves no repository artefact, and the flow never claims the host performs one.
+Drift is where the host's own **written contract contradicts the flow** — the
+cold-start read order, the `_Updated:` format, the Next section's shape. Judged the
+other way, one unadopted document would have produced forty-two drifts and buried
+the two that matter.
 
-**The standard had been in use for 690 rows and had never been stated**, which is
-exactly how one claim gets two verdicts. It is now in §Constraints, in `CONTINUE.md`
-§standard, and in the campaign LOG.
+**Two rule pairs were judged differently on purpose, because their own words
+differ.** `NEVER-APPEND-TO-THE-WAL` prohibits appending only, and the host never
+appends — confirmed. `REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND` names patching too,
+and `CLAUDE.md`'s step 2 says «Update … bump … refresh» — drift. Each fact is judged
+on its own sentence, never on the family it belongs to.
 
-**And one of my own reasons was wrong in a way worth keeping.** C3a recorded the
-TypeScript guide's «~74.8 %» as drift because the figure «appears only in
-`.vibe/cache/**`». It does not — the live v0.8.0 CONTRADICTION-MAP publishes it in
-C-4's own title, one `grep` away, while the ATLAS records 75.3 % / 70.2 % for the
-same measurement. The verdict stood; the reason did not, and the real defect is
-larger than the one recorded.
+**The instruments failed in a new way and it is now a constraint.** W2's tables were
+verified clean and sealed; a wind-down then overwrote `CONTINUE.md` and the WAL's
+`_Updated:` line, and the same tables re-verified at 65 unresolvable. Every one was
+a real quote whose coordinate the boss moved. `repair-refs.py` recovered 51; the
+other 14 are named in the batch commit. Its first real `--apply` also reformatted
+every table — fixed to measure the file's own indent, because 51 changes buried in
+4 481 is not a diff anyone reads.
 
-**The `ai-native` cluster's result is unchanged and still one sentence: the
-discipline gates everything except itself.** Three portable floor steps pass wherever their toolchain is present; every
-discipline-specific step fails or is skipped in all six slots, because no package
-carries the policy its own gate demands. `core-ai-native` ships library crates only
-and has no floor at all.
-
-**F-121 turned out to be a family.** Four mechanism documents — ENGINE-CONFORM,
-LEDGER-INTENT, BROWNFIELD and PROP-014 — each close with a rule that unexercised
-mechanisms are removed rather than carried as aspiration, each mark it `@impl/done`,
-each are contradicted by their own contents, and none is enforced by anything. *The
-rule whose job is to keep a document honest is the rule nobody gave a checker.*
-
-**The perimeter was wrong five times and never in a worker's work.** The delegated
-`not-found` was accurate every time; the brief that produced it was not. Registries
-in the language stack's CLI, PROP-014's deployment in the host, its adoption through
-PROP-031's five citations, and the `research/*-demo` consumers — each was invisible
-from where the search was pointed. The law is now written into the batch plan with a
-literal path list.
-
-**Two of my own errors were caught by the corpus, through batches looking elsewhere.**
-A tooling count that included `node_modules` and a dependency cache was read as the
-demo's own practice — ten verdicts restated to drift. And fifteen Go verdicts were
-recorded `unverifiable` on an absence asserted without checking; `research/go-demo`
-exists, carries `go.mod` and 15 production files in the prescribed cell layout, and
-twelve of those fifteen became confirmed on it.
-
-**The instruments kept being the thing that was wrong, and each failure was loud.**
-Three wrong comparisons preceded the right boot-lane join — a byte compare that was
-really the compiler stripping markup, a path derivation off by one component, and a
-report diffing raw text where the decision was taken on stripped text. The evidence
-checker narrowed its rule three times after reporting honest quotes as fictions,
-ending at one general form: *segments between ellipses must appear in order inside
-the block*. Across nine delegated tables that is **3 947 refs, 12 unresolvable —
-0.3 %**.
-
-**And the phase measured its own repository twice, uncomfortably.** F-122: 173 files
-carry different content under a `name@version` a consumer already resolved. F-123:
-82 of the last 400 commit subjects break a hard limit this repository ships as a
-package — six of them written by this phase while it wrote the measurement.
+**And the phase measured itself again.** The host's WAL breaks six clauses of the
+protocol it ships, `spec://` appears zero times in a file whose flow requires spec
+anchors, and the instruction «read the WAL before doing anything else» is compiled
+at line 1382 of a 1585-line lane the host reads first. None of it was fixed — Phase
+C files findings; it does not repair the subject it is measuring.
