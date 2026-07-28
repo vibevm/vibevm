@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T19:14:14Z",
+  "updated_at": "2026-07-28T19:20:24Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -34532,7 +34532,519 @@
       },
       "marker_count": 59,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "435b720e8b356b069eca43b2f38947b0f19aa715b51a90e843638a78b4814f3b",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:15  ## Documentation is the wrong word {#wrong-word}",
+              "spec/boot/STATIC.md:1343     survives it. Whatever must survive goes into the repository. Specs",
+              "spec/boot/STATIC.md:1344     are not documentation — they are the inter-process channel; see",
+              "confirmed: The reframe is the file's own §wrong-word (15-54), and the one-line version of it is in the host's loaded boot lane, contributed by this same package's snippet ('Specs are not documentation — they are the inter-process channel', STATIC.md:1343-1344). The three named artifacts all exist in this host: `spec/` (7 entries), `spec/WAL.md`, `spec/boot/`."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "planes-budgets-and-requirements-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:56  ## The three planes {#planes}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:70  ## The four requirements {#requirements}",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:80  | Requirement | What it demands | Delivered by |",
+              "confirmed: All three promises resolve: planes table at 58-62 with the budget carried in its fourth column, requirements table at 80-85 with an explicit 'Delivered by' column naming a sibling flow per row. Verified the five named siblings are real packages and installed in this host (addressable-specs, git-atomic-commits, conflict-protocol, sync-from-code, wal — all with `vibe:static` contributions in spec/boot/STATIC.md)."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "traditional-documentation-is-optional": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:17  ##traditional-documentation-is-optional Documentation, traditionally, is text written by people for people:",
+              "confirmed: A characterisation of industry practice outside this repository. Widened to the whole perimeter looking for any place the host treats its own docs as optional: the opposite holds — `vibe check` runs a spec linter as gate 4 of `tools/self-check.sh`, `cargo xtask conform check` is gate 5, and `crates/vibe-check/src/checks/review_aging.rs` ages REVIEW markers. That is the host's practice, not evidence about 'traditional' documentation, so I record it here rather than as evidence. Nothing on the perimeter bears on the claim itself."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "human-teams-survive-bad-docs-on-side-channels": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+              "confirmed: The premise is shared across the collection and reaches this host through decision-records' installed snippet (STATIC.md:284), but only in its negative form — what the agent cannot do. The positive claim about human teams is not checkable here: vibevm has one author (`git log --format='%an' -400 | sort -u` returns a single name), so there is no second human and no side channel to observe."
+            ],
+            "src": [
+              3
+            ]
+          },
+          "BETWEEN-THE-HUMAN-AND-THE-AI-THERE-IS-NO-AIR": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, …",
+              "confirmed: The host acts as if this is true and closes the one channel that would falsify it: harness auto-memory is explicitly ruled out as a place for project facts (CLAUDE.md:146-165), so the only carrier left is the repository. Searched for any out-of-band channel the host relies on — no chat archive, no issue tracker, no wiki in the tree; the `.vibe/` cache is gitignored and regenerated."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "no-hallway-no-archive-no-remembering": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+              "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+              "confirmed: The host's wind-down contract exists because there is no archive to read: it demands 'everything a cold reader would need' be written into repository state (CLAUDE.md:169) and enumerates it (178-188). Checked for a session archive the next session is told to read: nothing in `spec/boot/`, `CLAUDE.md` or `.gitignore` points at conversation logs; `.vibe/` is gitignored per §4.2."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "THERE-ARE-ONLY-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1342  2. **Files are the only shared memory.** Nothing said in a session",
+              "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+              "CLAUDE.md:148  Facts about *this project* — its design, conventions, decisions, milestones, open questions, owner preferences that govern technology choices — live **inside this repository**. The canonical homes are:",
+              "confirmed: Three host locations state the closure and one of them enumerates the files it closes over (CLAUDE.md:148-158). The host's addressing scheme assumes it too: `spec://` URIs resolve to files under `spec/` (00-core.md:42), and 6,528 `spec://` occurrences exist across the tree excluding vibedeps/, .vibe/cache/, packages/ and legacy-spec/."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "an-unwritten-reason-invites-a-third-handler": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:286  constraint — so it re-litigates: \"600 s looks arbitrary, propose",
+              "spec/boot/STATIC.md:287  300 s for performance.\" A recorded decision is immunity from",
+              "spec/boot/STATIC.md:31  Each fact has exactly one authoritative anchor. Never copy a",
+              "confirmed: The failure mode has an installed name in this host — re-litigation (STATIC.md:284-289) — and a measured instance of its twin: `spec/WAL.md:21-24` records one law restated in eight further host locations across 88 lines and 50 files, i.e. a fact given several homes, which is the duplication half of this claim. The single-source rule at STATIC.md:29-34 is the standing guard, and `##CAUSE-A-FACT-HAS-TWO-HOMES` later in this same document names it as a repair cause."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "THE-SPEC-TREE-IS-NOT-DOCUMENTATION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1343     survives it. Whatever must survive goes into the repository. Specs",
+              "spec/boot/STATIC.md:1344     are not documentation — they are the inter-process channel; see",
+              "spec/boot/00-core.md:5  **Source of truth:** [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) (project root). This is the entire implementation specification. @impl/done",
+              "confirmed: The host says the same sentence in its loaded lane (STATIC.md:1343-1344) and treats the spec as the binding artifact rather than a description: `VIBEVM-SPEC.md` is 'the entire implementation specification' and the source of truth (00-core.md:5), the conflict hierarchy puts Spec above Tests and Code (STATIC.md:188), and `vibe check` lints the spec as gate 4 of the shippability script. A tree that gates the build is not documentation."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "THE-SPEC-TREE-IS-IPC": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow … — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow … — propose a spec update, do not rewrite code back. @impl/done",
+              "spec/boot/STATIC.md:1529    coprocessors; the human owns coherence; files are the IPC.",
+              "confirmed: The host models its spec tree as a directed channel with a defined flow direction and a sanctioned reverse path (00-core.md:38-45) — that is the structure of a protocol, not a description. The redbook's members table uses the word directly: 'files are the IPC' (STATIC.md:1529). The 'single channel' clause is the one to watch: it holds in this host only because CLAUDE.md:161 forbids the alternative."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "A-BROKEN-CHANNEL-MAKES-THE-SYSTEM-STOP": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+              "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+              "spec/boot/STATIC.md:1385     hours, ask the user to confirm state before acting on anything the",
+              "confirmed: The host's response to a stale checkpoint is a halt-and-ask, in two independent places (00-core.md:15 and the installed wal snippet, STATIC.md:1384-1387) — which is 'stop' rather than 'degrade', matching the claim's shape. The dead-anchor half runs the other way here: the host is currently running with 69 dangling `../flows/…` pointers in its compiled boot lane (`spec/WAL.md:24-26`) and has not stopped — the campaign catalogued them and kept working. So one of the three named breakages produces a halt and one demonstrably does not."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "A-SPEC-IS-A-BOUNDARY-OBJECT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:80    _benchmark · high · known:Star-Griesemer-boundary-objects_ — SWE-agent (Yang et al., NeurIPS 2024): a purpose-built agent-computer interface … @spec/done",
+              "spec/boot/STATIC.md:20  anchor: \"you are violating `spec://…#verification.timeout` — the",
+              "spec/boot/STATIC.md:21  spec says 600 s, you wrote 300 s\". Resolve the URI, read the unit,",
+              "confirmed: The citation is a real frame registered elsewhere in the corpus: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:80` carries the tag `known:Star-Griesemer-boundary-objects`, so the sibling cluster treats it as a known-concept anchor rather than a coinage. The two-readings mechanic is demonstrated in the host's own loaded lane with the same 600-second example read as intent by the human and as a value by the agent (STATIC.md:18-23). The 1989 paper itself is outside the repository and I did not verify the quotation against it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-PLANE-CONTROL": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/00-core.md:10  1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6. @impl/done",
+              "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+              "spec/boot/00-core.md:12  3. ##BOOT-STEP-PROPS Read the relevant PROP/FEAT under `spec/common/` and `spec/modules/` for the task at hand. @impl/done",
+              "DRIFT on all three budgets, measured at ~4 chars/token. Boot <= ~500 tokens: spec/boot/STATIC.md alone is 1 584 lines / ~17 700 tokens, and the whole lane the host reads (STATIC.md + 00-core.md + 90-user.md + INDEX.md) is ~22 300 — 45x over. Checkpoint <= ~3 000: spec/WAL.md is ~4 959. One module spec <= ~5 000: spec/modules/vibe-resolver/PROP-003-dep-evolution.md is ~21 171, PROP-002 ~20 650, PROP-005 ~17 121 — three at 3-4x, and the row's own remedy, «split when over», has not been applied to any of them. The plane's membership and direction are exactly right (00-core.md:9-13); it is the numbers the consumer breaks, and the snippet stating «every token is a recurring tax» is itself inside the 22 300."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-PLANE-DATA": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+              "spec/boot/STATIC.md:192  - Code must conform to the spec, never the other way around.",
+              "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+              "confirmed: The strongest single match in this file: `spec/boot/00-core.md:43` reproduces the row's loss semantics almost word for word — 'Losing them is inconvenient; losing the spec is a catastrophe' against the row's 'losing code is an inconvenience, losing a spec is a catastrophe' — and scopes 'artefacts' to `crates/` including tests, exactly the row's membership. The direction and verifiability are the conflict hierarchy (STATIC.md:192) and the sync-from-code approval gate (STATIC.md:1252). The one thing not verified: whether the code is in fact regenerable from the spec — no host mechanism regenerat"
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-PLANE-SIGNALS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "crates/progress-core/src/rollup.rs:162          // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+              "CHANGELOG.md:9  ## [Unreleased]",
+              "confirmed: Four of the five named signals are live in this host and one is checked by a linter. REVIEW markers: 58 occurrences under campaigns/ and crates/ (excluding vibedeps/, .vibe/cache/, packages/, legacy-spec/, refs/), in the house in-code form at `crates/progress-core/src/rollup.rs:162`, and `crates/vibe-check/src/checks/review_aging.rs` is a dedicated check that ages them. git diff: the delegated review path reads the diff rather than the tree (CLAUDE.md:118-120). Changelog: `CHANGELOG.md` with an `[Unreleased]` section (line 9). End-of-session report: 00-core.md:60 and CLAUDE.md:192. The 'minima"
+            ],
+            "src": [
+              2
+            ]
+          },
+          "the-report-is-not-a-status-memo": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. …",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: The host's report carries decisions the owner must act on, not courtesies: it must state which commits were made, push status, and 'what the next session should pick up first' (CLAUDE.md:192), and it is the designated destination for any REVIEW marker the session raised (00-core.md:60). CLAUDE.md:197 states the intent in the host's own words — the wind-down is 'a hard contract, not a courtesy'."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "READ-THE-END-OF-SESSION-REPORT-EVERY-TIME": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+              "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. …",
+              "confirmed: The host makes the human read explicit and blocking: the RESUME contract ends with 'The owner reads the report and decides what the session does' (CLAUDE.md:207), and the END SESSION report is sized for that reading — one screen, with enough detail 'that the user can verify nothing was missed without opening the files' (CLAUDE.md:192). Structured input for the next decision cycle is precisely what CLAUDE.md:209 says the resume boundary exists for."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "any-ipc-mechanism-solves-the-same-four-problems": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:72  ##any-ipc-mechanism-solves-the-same-four-problems Any IPC mechanism — pipes, sockets, shared memory — has to solve the",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:80  | Requirement | What it demands | Delivered by |",
+              "confirmed: A general claim about operating-system IPC, made without citation. Nothing in this repository is a source for it. Checked whether the corpus registers it as a known frame the way it does Star & Griesemer — `grep -rn 'known:' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md | grep -i 'ipc'` returns nothing. Outside the perimeter; the four requirements it introduces are checked individually below."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "THE-FILE-CHANNEL-IS-NO-EXCEPTION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:5  <!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->",
+              "spec/boot/STATIC.md:174  <!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->",
+              "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+              "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->",
+              "confirmed: The bridging claim is verifiable by the fact that the host runs all four solutions: addressability, atomicity, conflict protocol and visibility each have an installed flow contributing to this repository's boot lane at the lines cited. Whether the four are the RIGHT four is the untestable half (see the row above); that this channel needed and got all four is observable."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "each-requirement-has-its-own-flow": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:80  | Requirement | What it demands | Delivered by |",
+              "vibe.lock:42      \"flow:org.vibevm.world/addressable-specs@=0.1.0\",",
+              "vibe.lock:45      \"flow:org.vibevm.world/conflict-protocol@=0.1.0\",",
+              "vibe.lock:59      \"flow:org.vibevm.world/sync-from-code@=0.1.0\",",
+              "confirmed: Four of the five named deliverers are resolved dependencies of the redbook in this host's lockfile (addressable-specs :42, conflict-protocol :45, sync-from-code :59, wal :62). The fifth, `flow:git-atomic-commits`, is NOT in that list — the redbook depends on `flow:org.vibevm.world/git-practices@=0.1.0` (vibe.lock:49) instead, and git-atomic-commits reaches the host through that family (its contribution appears twice in the boot lane, at STATIC.md:363 and again at :557 under the git-practices marker at :551). So the one-flow-per-requirement mapping holds by name and not by dependency edge for a"
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-REQ-ADDRESSABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:20  anchor: \"you are violating `spec://…#verification.timeout` — the",
+              "spec/boot/STATIC.md:22  compare, fix. Twenty tokens, exact hit — no guessing what",
+              "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+              "confirmed: The named flow is installed, its own boot text uses the same figure — 'Twenty tokens, exact hit' (STATIC.md:22) — and the host runs the scheme: `spec://` addressing is declared in 00-core.md:42 and occurs 6,528 times across the tree excluding vibedeps/, .vibe/cache/, packages/ and legacy-spec/. The 'every statement' half is what this campaign is measuring: the mirror at `campaigns/packages-2026-09/run/mirror/` carries 179 marked, id-bearing facts for this package alone, one anchor each."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-REQ-ATOMICITY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:367  This project uses the **atomic commits** discipline as its Git",
+              "spec/boot/STATIC.md:368  contract. One commit carries exactly one idea, and the commit message",
+              "spec/boot/00-core.md:23  3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** — one logical unit per commit, split mixed working trees. @impl/done",
+              "confirmed: The flow is installed twice over (STATIC.md:363 standalone and :557 within the git-practices family) and the host restates it as its own Rule 3 (00-core.md:23), with the same 'one logical unit' phrasing. Observable in the log: the last 400 commits carry a Conventional-Commits scope on essentially every subject (`docs(campaign)` 122, `docs(spec)` 82, `chore(campaign)` 40, `docs(wal)` 28, …), and the wind-down contract requires splitting a mixed session into topic-grouped commits (CLAUDE.md:190)."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-REQ-CONFLICT-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:178  This project runs **two writers over one file set** — a human and a",
+              "spec/boot/STATIC.md:181  error. What is forbidden is resolving a contradiction silently.",
+              "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow … — propose a spec update, do not rewrite code back. @impl/done",
+              "confirmed: Every element of the row resolves in the host: two writers over one file set named as such (STATIC.md:178-181), explicit priorities as a total order (STATIC.md:188), the loud escalation path as the REVIEW marker plus the report (00-core.md:60), and the sanctioned reverse flow installed and referenced by the host's own boot file (00-core.md:45). The reverse flow's own protocol keeps it from being a race — draft, surface, do not apply, commit on approval (STATIC.md:1248-1253)."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "ROW-REQ-VISIBILITY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+              "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+              "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
+              "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+              "confirmed: Two of the three mechanisms are live. Session-start-read-as-invalidation: the wal flow is installed and its first instruction is to read the WAL before anything else, with a freshness check on `_Updated:` (STATIC.md:1382-1387); the host's WAL carries that line, dated today. Diff-as-notification: CLAUDE.md:118-120. The 'morning routine' has no host counterpart — `grep -rni 'morning routine\\|daily sync' CLAUDE.md spec/ campaigns/` returns nothing, and the fast form the wal snippet offers for the session-start read, the `wal-status` skill, is shipped by the package and NOT installed here (`ls .cl"
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "NOT-EVERYTHING-BELONGS-ON-THE-CHANNEL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:28  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+              "confirmed: The host does fence material off the channel, but by a different mechanism than this document prescribes and for a different reason: `refs/` is gitignored (`.gitignore` line 37, `/refs/`, commented 'Reference sources and author's book chapters — cloned/placed externally') and `00-core.md:28` marks `refs/book/` do-not-touch. Both are read-only reference exclusions, not a private human buffer — the agent is told to read `refs/book/` in the uncertainty protocol (00-core.md:58). The prescribed form is checked in the next row and is absent."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "PRIVATE-NOTES-LIVE-IN-A-DIRECTORY-EXCLUDED-FROM-THE-AGENTS-VIEW": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:28  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+              "a coherent prescription whose mechanism the host has not adopted: `ls -a` at the repository root shows no `.human/` or equivalent and there is no agent ignore file of any flavour. Non-adoption, not contradiction — the same line W2b drew for morning-routine.md: the flow does not claim the host keeps such a buffer. The host does fence material off the channel by another route (`refs/` is gitignored), which is the requirement met differently rather than broken."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "physical-invisibility-beats-a-logical-prohibition": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:28  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
+              "spec/boot/90-user.md:24  ##TOKEN-DISCIPLINE **Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. …",
+              "confirmed: The host runs the logical form the claim argues against, twice, and one of them says why it had to: `00-core.md:28` is a written do-not-touch rule, and the token-discipline rule (`spec/boot/90-user.md`) is an elaborate prohibition — never print, never quote, never diff, 'edited only directly through an editor, not through `cat` / `Read` / `echo` tools'. The physical alternative is available and taken for the secret itself: the token lives OUTSIDE the repository at `~/.vibe/github.publish.token`, which is invisibility rather than prohibition. So the host demonstrates both sides of the claim in "
+            ],
+            "src": [
+              2
+            ]
+          },
+          "the-symptoms-of-a-degraded-channel-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:105  - ##SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED the AI re-asks what was settled last week; @spec/done",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:106  - ##SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES \"fixes\" undo deliberate choices; @spec/done",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:107  - ##SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES the human starts re-reading whole files instead of diffs. @spec/done",
+              "confirmed: A lead announcing three items; all three follow immediately (105-107). The 'always the same' universal is not checkable — no host record classifies an incident as a channel degradation. Searched `spec/WAL.md`, `BACKLOG.md`, `AUDIT.md` and `campaigns/packages-2026-09/harvest/` for a symptom triage of this kind: none exists, though individual instances of two of the three symptoms are recorded (see the symptom rows)."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:286  constraint — so it re-litigates: \"600 s looks arbitrary, propose",
+              "spec/boot/STATIC.md:287  300 s for performance.\" A recorded decision is immunity from",
+              "spec/boot/STATIC.md:295  - Never re-litigate a recorded decision without naming its trigger",
+              "confirmed: The symptom has a name in the host's loaded boot lane — re-litigation — and a countermeasure with a rule attached (STATIC.md:284-289, 295-296). That the host installed a Never rule against it is evidence the behaviour occurs; no dated instance is recorded, and I searched `spec/WAL.md` and `BACKLOG.md` for one without result."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. …",
+              "spec/boot/00-core.md:33  - ##VOID-TEXT-STILL-READS The trap, and the only reason this rule is needed: the prose is unchanged. A tombstone still reads like the requirement it used to be, because it was one. The marker is the only thing saying otherwise, so read it before acting on the paragraph. @impl/done",
+              "confirmed: The host carries a rule written specifically to stop a fix from undoing a deliberate choice, and it names the trap in its own words: a `void` unit's prose still reads like a live requirement, so an agent that acts on the paragraph rather than the marker re-implements something that was deliberately cancelled (00-core.md:30-34). `##VOID-TEXT-STILL-READS` states the rule exists because of that failure. `spec/boot/STATIC.md:1358` (never optimize locally at the cost of global consistency) is the generic form."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:106    `diff` / `grep` is the real gate — acceptance is advisory until the diff is read.",
+              "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:138  by filename in the last cluster and every one of them had to be read again.** A",
+              "confirmed: The host has one dated instance of exactly this escalation, in this campaign: 138 delegated rows classified rather than searched had to be read individually, one by one, instead of trusted at the diff level (`WORLD-WORKER-BRIEF.md:137-139`, `spec/WAL.md:28-31`). The healthy state is named alongside it — the diff is the gate (CLAUDE.md:106) — so both the norm and its breach are recorded."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "TREAT-ANY-OF-THESE-AS-A-CHANNEL-OUTAGE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/WAL.md:28  **The 138-row reviewing debt is PAID.** Sixty `partial` rows had been sorted by",
+              "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+              "confirmed: The host did exactly this once, and the WAL records it as a stop: the 138-row debt was paid before the next batch opened — `spec/WAL.md:3-4` reports 'the reviewing debt is CLOSED and `world` batch W1 is CLOSED' as the gating condition for W2. That is repair-before-advance on a channel defect. The generic halt rule is 00-core.md:15. The host did NOT stop for the 69 dangling pointers (WAL:24-26), so the rule is applied selectively."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "the-repair-is-never-mysterious-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:114  - ##CAUSE-A-PLANE-IS-OVER-BUDGET some plane is over budget, @spec/done",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:115  - ##CAUSE-A-FACT-HAS-TWO-HOMES some fact has two homes, @spec/done",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md:116  - ##CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE or some change was never made visible. @spec/done",
+              "confirmed: A lead announcing three causes; all three follow at 114-116 and are checked individually below. The 'never mysterious' universal is not checkable — no host record attributes an incident to one of the three by name. Note that two of the three ARE live in this host (over-budget control plane; a fact with two homes), which is checked in those rows."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "CAUSE-A-PLANE-IS-OVER-BUDGET": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:10  1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). …",
+              "spec/boot/STATIC.md:3  <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+              "a diagnosis, and this host is its standing example rather than its counter-example: the control plane is over on all three of its own limits (see ROW-PLANE-CONTROL). A cause that fires is a cause confirmed."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "CAUSE-A-FACT-HAS-TWO-HOMES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/WAL.md:22  W1's thirty-two drifts are one law broken by its own consumer (attribution's",
+              "spec/WAL.md:23  single-place rule, restated in eight further host locations, 88 lines across 50",
+              "spec/boot/STATIC.md:31  Each fact has exactly one authoritative anchor. Never copy a",
+              "confirmed: Measured and recorded in this host: the attribution flow's single-place rule is restated in eight further host locations, 88 lines across 50 files, and that one duplication accounts for thirteen of W1's thirty-two drifts (`spec/WAL.md:21-24`). The guard against it is installed and states the mechanism — 'Two copies *will* diverge, and a later session cannot tell which one binds' (STATIC.md:31-34). Also visible structurally: CLAUDE.md / AGENTS.md / GEMINI.md are three homes for one text, by design (CLAUDE.md:150)."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1321  ## The architecture",
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md:15  ## The architecture {#architecture}",
+              "spec/boot/STATIC.md:1365  Full model: [`TWO-PROCESS-MODEL.md`](../flows/two-process-model/TWO-PROCESS-MODEL.md).",
+              "confirmed: This package supplies its own example twice over. First, the WORDS-DIFFER case: three heading anchors were added to the package by `54499a6c` on 2026-07-27, the installed slot was last written on 2026-07-14 and the boot lane regenerated on 2026-07-26, so a change to a loaded rule document was never propagated to the copy the host reads — invisible until `source23-boot-join.py` counted the words. Second, the 69 dangling `../flows/…` pointers (`spec/WAL.md:24-26`), which have been in the compiled lane through every regeneration. Both are 'a change that was never made visible', found by instrumen"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-SPEC-FILES-ARE-THE-ONLY-CHANNEL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:1343     survives it. Whatever must survive goes into the repository. Specs",
+              "spec/boot/STATIC.md:1344     are not documentation — they are the inter-process channel; see",
+              "spec/boot/00-core.md:5  **Source of truth:** [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) (project root). This is the entire implementation specification. @impl/done",
+              "confirmed: All three clauses hold in this host. Not documentation and the only channel: STATIC.md:1343-1344 plus CLAUDE.md:161. Not optional: the spec is the declared source of truth (00-core.md:5), it outranks tests and code in the conflict hierarchy (STATIC.md:188, 192), and it is gated — `vibe check` is step 4 and `cargo xtask conform check` step 5 of `tools/self-check.sh`."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "SUM-THREE-PLANES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+              "spec/boot/00-core.md:10  1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). …",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "all three planes are identifiable in the host — control is the boot-lane read (00-core.md:10-12), data is the crates/ artefact layer carrying the row's exact loss semantics (00-core.md:43), signals are the REVIEW markers, diffs and the end-of-session report. The summary names the control plane as «budgeted», which is true of the flow; it does not restate the numeric limits, so the overage measured on ROW-PLANE-CONTROL is filed there and not doubled here."
+            ],
+            "src": [
+              2
+            ]
+          },
+          "SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:5  <!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->",
+              "spec/boot/STATIC.md:174  <!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->",
+              "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+              "spec/boot/STATIC.md:1369  <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->",
+              "confirmed: All four requirements have an installed sibling flow contributing to this host's boot lane, and the redbook's own members list groups them as 'The book's core — the four IPC requirements and the memory model' (STATIC.md:1526), using the same count and the same framing. The one wrinkle is the atomicity flow's dependency route through git-practices rather than a direct edge (see each-requirement-has-its-own-flow)."
+            ],
+            "src": [
+              2,
+              3
+            ]
+          },
+          "SUM-KEEP-A-PRIVATE-HUMAN-BUFFER": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/90-user.md:24  ##TOKEN-DISCIPLINE **Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. …",
+              "restates the prescription above and is judged the same way: no `.human/` and no agent ignore file in this host, and non-adoption of an optional buffer is not the host contradicting the flow."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-SUSPECT-THE-CHANNEL-BEFORE-THE-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:49  the last cluster, and not one of them was a worker's error: each brief pointed the",
+              "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:50  search at the wrong place. So the default perimeter is all of this:",
+              "CLAUDE.md:114    `state=failed exit=1` **though the work may be complete** — never discard on",
+              "confirmed: The host has adopted this diagnostic order explicitly and twice attributes a failure to the channel rather than the model: five wrong absences where 'not one of them was a worker's error: each brief pointed the search at the wrong place' (WORLD-WORKER-BRIEF.md:47-51), and the delegated-run rule 'never discard on \"failed\"; review the worktree first' (CLAUDE.md:112-115), which is suspecting the reporting channel before the worker. The campaign's checker rationale makes the same move — a checker that cries wolf gets skipped (`campaigns/packages-2026-09/tasks/verify-evidence.py:25-27`)."
+            ],
+            "src": [
+              2
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T19:20:24Z",
+        "verify_batch": "W2c"
+      }
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/README.md": {
       "content_hash": "28440e90f03214ba37d6ddf475086e13b58eb6346f1b7393385be772e8c2ab9c",
