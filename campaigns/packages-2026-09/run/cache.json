@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T14:04:49Z",
+  "updated_at": "2026-07-28T14:08:06Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -25693,7 +25693,243 @@
       },
       "marker_count": 17,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "5ea1bbb263504601faa59b025716b2aefb30ae01a0e96ace5403d8b7acacb1e7",
+        "verdicts": {
+          "PACKAGE-INSTALLS-THE-ATOMIC-COMMITS-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:4  kind = \"flow\"",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:15  [boot_snippet]",
+              "vibe.lock:246  name = \"git-atomic-commits\"",
+              "vibe.lock:251  files_written = []",
+              "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+              "vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md:1  # Flow: Atomic Commits {#root}",
+              "the package is `kind = flow`, present in the lockfile, and materialised as a six-file vibedeps slot; `files_written = []`, so what reaches the host is the compiled snippet plus the slot"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ONE-COMMIT-ONE-LOGICAL-CHANGE-EXPLAINED-BY-ITS-MESSAGE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:13  ##ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE **One commit = one logical change**, not one file changed. @impl/done",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`; @spec/done",
+              "spec/boot/STATIC.md:368  contract. One commit carries exactly one idea, and the commit message",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "the rule is in the package's own two carriers and in the host's authoritative record; the observed half rests on 399/400 bodies and 397/400 headers, and the why-versus-what half is explicitly not claimed from a body count"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "in-a-pure-human-team-atomic-commits-are-quality-of-life": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:32  ##in-a-pure-human-team-they-are-a-quality-of-life-feature In a pure-human team, atomic commits are a quality-of-life feature: @spec/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:34  - ##QOL-EASIER-REVIEW easier review, @spec/done",
+              "a claim about pure-human teams, which this single-author repository cannot observe and which the source book never makes — it argues atomicity from AI behaviour throughout. Confirmed on the package's own coherence and recorded as self-referential"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "in-a-human-ai-team-they-are-load-bearing": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:41  ##in-a-human-ai-team-they-are-load-bearing In a human-AI team they are **load-bearing**. Three reasons: @spec/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  Каждое из этих изменений может быть правильным. Но вместе они создают diff, который *невозможно верифицировать эффективно*. Человек смотрит diff и видит: четыре файла изменены, 87 строк.",
+              "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  (same text, installed copy)",
+              "traced to its origin in the source book's chapter 2, and the installed redbook slot carries the same text; the book's illustration is four files where the flow says eight, both illustrative"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:8  description = \"Atomic commits discipline: one commit = one logical idea … (the message FORMAT is the separate conventional-commits flow)\"",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md",
+              "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @spec/done",
+              "spec/boot/STATIC.md:546  Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "the sibling package exists at the cited path, and the host's authoritative record lists the two as distinct members of the family"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONTENT-THE-FULL-PROTOCOL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:1  # Atomic Commits Protocol {#root}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:10  ## What an atomic commit is {#what}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+              "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
+              "vibe.lock:251  files_written = []",
+              "all five promised topics are real sections. Recorded: the manifest declares no `[writes]` table and the lockfile records `files_written = []`, so the protocol ships inside the slot and is never written into a consumer's `spec/flows/`"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-SPLITTING-PROCEDURE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:1  # Splitting a large working tree into atomic commits {#root}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:91  ##USE-GIT-ADD-P-TO-STAGE-EXACTLY-THE-HUNKS-THAT-BELONG For each planned commit, use `git add -p` (patch mode) to stage",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:167  ## Delegating to the agent {#delegate}",
+              "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+              "all three sub-claims check out — the mechanical procedure, the `git add -p` steps and the delegation section are each present, in the package and in the slot"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:16  source = \"spec/boot/30-flow-atomic-commits.md\"",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:56  ##full-protocol-pointer Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md). @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:58  ## Never {#never}",
+              "vibedeps/flow-git-atomic-commits/0.1.0/vibe.toml:16  source = \"boot/30-flow-atomic-commits.md\"",
+              "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
+              "the file carries both a protocol pointer and a Never list. Recorded: the installed copy still sits at the pre-DRIFT-039 `boot/` path, which is why the boot-lane join reports NO-SOURCE for this flow"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/uninstall.rs:120  vibedeps::remove_in_place_slot(&workspace.root, kind, &pkgref.name)",
+              "crates/vibe-cli/src/commands/uninstall.rs:144  regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
+              "crates/vibe-cli/src/commands/uninstall.rs:5  //! declaration, and regenerates every node's boot artifacts so the",
+              "crates/vibe-cli/src/commands/uninstall.rs:155  anyhow!(\"package reference `{pkgref}` is not group-qualified — write `<group>/<name>`\")",
+              "vibe.lock:251  files_written = []",
+              "the uninstall path was READ rather than assumed: it removes the slot, drops the lockfile entry and the `[requires]` declaration, and regenerates the boot artifacts — which is what removes the compiled snippet. It never enumerates `files_written`, so the claim holds here only because this package writes none",
+              "a separate defect the reading surfaced and which is filed rather than charged: the README's own Uninstall example is an unqualified `vibe uninstall flow:git-atomic-commits`, and `require_group` in the uninstall command rejects a pkgref with no group"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/install/bootgen.rs:214  /// user-owned `00-core.md` / `90-user.md` are `Foundation` / `UserOverride`",
+              "crates/vibe-cli/src/commands/tree/build.rs:33  const HOST_BOOT_FILES: &[&str] = &[\"00-core.md\", \"90-user.md\"];",
+              "crates/vibe-cli/src/commands/show/effective.rs:213  if filename == \"00-core.md\" || filename == \"90-user.md\" {",
+              "crates/vibe-cli/tests/cli_init.rs:125  assert_eq!(after, user_marker, \"00-core.md must be preserved\");",
+              "crates/vibe-cli/tests/cli_registry_mgmt.rs:233  // 00-core and 90-user boot files. spec/WAL.md is NOT created by",
+              "the two boot files are protected by name in the generator and a regression test asserts one of them survives a re-init. **`WAL.md` is the gap**: it is untouched by fact — no package declares it and it lives outside `spec/boot/` — rather than by an enforced rule, which is weaker than the sentence's wording"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-WAL-AND-SYNC-FROM-CODE-BY-DISTINCT-PREFIXES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:16  source = \"spec/boot/10-flow-wal.md\"",
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:16  source = \"spec/boot/30-flow-atomic-commits.md\"",
+              "vibedeps/flow-wal/0.2.0",
+              "vibedeps/flow-sync-from-code/0.1.0",
+              "all three prefixes are distinct as claimed and all three slots are installed side by side; the wal flow is at v0.2.0 rather than the v0.1.0 the README's era implies"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:41  4. ##STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT On approval, apply + commit (`docs(spec): sync <section> with code`).",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
+              "**this flow does not pin any message format, and says so.** The sibling's step 4 is verbatim `docs(spec): sync <section> with code` and the host writes 82 such commits in 400 — the first half holds. The second half attributes the pinning to this flow, and this package's own boot snippet delegates message FORMAT to `git-conventional-commits`; nothing in any of its files pins a format. The fact claims a role its own package hands to a sibling"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:93  3. ##STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS **Commit in topic-grouped commits.** The snapshot and the WAL",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:94  update are checkpoint commits; a code or config change landed by",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:95  the same session is a separate commit. @impl/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — … **atomicity** … — is the `git-practices` family",
+              "the sibling's session-end step is written in this flow's vocabulary, and the host lands the WAL update and the cold-resume snapshot as separate topic commits — 30 and 10 in 400 — which is the shaping the claim describes"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "extracted-from-the-books-second-chapter": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:96  ### Атомарность",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  Атомарность — это правило: **один коммит = одна мысль**. Одно изменение в одной спеке плюс связанные изменения в коде и тестах. Не больше.",
+              "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  (same text, installed copy)",
+              "chapter title, subsection name and rule text all match the citation exactly; the Conventional Commits half is the external specification and is cited by URL"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "short-version-delegate-the-split-and-keep-the-log-as-an-archive": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  Но программисты-люди ненавидят делать атомарные коммиты. … Когнитивная нагрузка чудовищная. У AI этой проблемы нет. AI *счастлив* делать маленькие, чистые коммиты с подробными описаниями.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:190  team is strictly faster than either participant alone — **delegate",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:84  ##ATOMIC-COMMITS-MAKE-THE-LOG-USABLE-AS-A-DECISION-ARCHIVE Atomic commits make the log usable as a decision archive. @impl/done",
+              "each of the three sub-claims traces to a source — two to the book, one to the protocol's own section"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "license-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/LICENSE:3  The Universal Permissive License (UPL), Version 1.0",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/LICENSE:1  Copyright (c) 2026 Oleg Chirukhin",
+              "vibedeps/flow-git-atomic-commits/0.1.0/LICENSE",
+              "LICENSE present at the package root with the UPL-1.0 header, the manifest SPDX field agrees, and the installed slot carries it"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T14:08:06Z",
+        "verify_batch": "W1a"
+      }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md": {
       "content_hash": "e8331e0fc0a544a066a84a2604e25af9e31c7a6ca2d79e454ec5b188171318cd",
@@ -25716,7 +25952,333 @@
       },
       "marker_count": 22,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "e8331e0fc0a544a066a84a2604e25af9e31c7a6ca2d79e454ec5b188171318cd",
+        "verdicts": {
+          "THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:367  This project uses the **atomic commits** discipline as its Git",
+              "spec/boot/STATIC.md:561  This project uses the **atomic commits** discipline as its Git",
+              "spec/common/PROP-000.md:159  ##GIT-PRACTICES-FAMILY The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text: @spec/done",
+              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** …, **Conventional Commits**, **atomicity**, and commit **autonomy** … — is the `git-practices` family",
+              "vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md:3  This project uses the **atomic commits** discipline as its Git",
+              "the snippet is compiled into the host's static lane TWICE, directly and through the umbrella — F-078 — and the three contract files and the authoritative record all point at the family"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:368  contract. One commit carries exactly one idea, and the commit message",
+              "spec/boot/STATIC.md:369  explains *why*.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  Атомарность — это правило: **один коммит = одна мысль**.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:120  Коммит описывает *что* и *зачем* (через ссылку на спеку). Diff показывает *как*.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "traced to its origin in the source book's chapter 2, and the installed redbook slot carries the same text. The body count is offered for presence only; whether those bodies explain why rather than what is not measured, and the flow's own Never list says the distinction matters"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:373  **One commit = one logical change**, not one file changed.",
+              "spec/boot/STATIC.md:567  **One commit = one logical change**, not one file changed.",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`; @spec/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:146  n=400  mean=5.29  median=3  max=130",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "verbatim in both compiled copies and in the authoritative record; the file-per-commit distribution is offered as shape and explicitly not as conformance"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-MIXED-SESSION-IS-THREE-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:375  A session that produces (a) a typo fix, (b) a refactor, and (c) a",
+              "spec/boot/STATIC.md:376  schema update is **three** commits, not one.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:27  ##A-BUNDLED-COMMIT-IS-THREE-COMMITS-NOT-ONE A commit that bundles \"fix typo in README\" + \"refactor planner\" + \"update schema\" is three commits, not one. @impl/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:100  Это звучит очевидно, но на практике, AI *обожает* делать несколько несвязанных изменений за один проход.",
+              "the three-way example is consistent across snippet, protocol and both compiled copies, and the type histogram shows the kinds separated in practice; nothing records a session that produced all three"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:376  A feature that touches",
+              "spec/boot/STATIC.md:377  fifteen files for one coherent reason is **one** commit, not fifteen.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:108  - ##CASE-CROSS-MODULE-CHANGE **Cross-module change touching ten files for one reason.** That is still one atomic commit. Do not over-split along file boundaries — the atomic unit is the idea, not the file. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "the host exercises the do-not-over-split half: the four largest commits in the window are single-reason sweeps at 130, 80, 52 and 50 files"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md",
+              "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @spec/done",
+              "spec/boot/STATIC.md:575  Commit messages follow the **conventional-commits** flow — a sibling package:",
+              "spec/boot/STATIC.md:576  `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`.",
+              "vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md:17  Commit messages follow the **conventional-commits** flow — a sibling package:",
+              "the cited URI resolves to a file at exactly that path and the authoritative record cites the same URI. Recorded: the installed snippet and both compiled copies say the pre-rename `conventional-commits`"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:383  Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). The",
+              "spec/boot/STATIC.md:546  Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+              "spec/boot/STATIC.md:548  Commits *and* a violation of the atomic rule. Atomicity is the separate `atomic-commits` flow;",
+              "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format …",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea …",
+              "the split is asserted from both sides — this flow's snippet and the sibling's own note — and the authoritative record lists them separately"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:384  two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional",
+              "spec/boot/STATIC.md:385  Commits and a violation of the atomic rule.",
+              "spec/boot/STATIC.md:547  (one commit = one logical idea). A `feat: add foo, bar, and baz` message is valid Conventional",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "the illustration appears four times in the host's boot lane, both flows using it. No measurement exists of how many well-formed headers bundle several ideas; the closest observable is the three multi-scope subjects, and they are three rather than zero"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "before-closing-a-session-lead": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:583  Before closing a session:",
+              "spec/boot/STATIC.md:585  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:93  3. ##STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS **Commit in topic-grouped commits.**",
+              "CLAUDE.md:5  … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`.",
+              "the lead and its four steps survive compilation intact, and the host reaches the same place by its own session-end contract. Recorded: CLAUDE.md:5 says the family loads from `spec/boot/INLINE.md` and that file does not exist — F-128"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:585  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:197  1. Run `git status` and `git diff HEAD`.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:198  2. Name every change by intent.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:29  git status",
+              "the step is the delegation prompt's first two lines compressed, installed verbatim; a `git status` invocation leaves no trace, so execution is unobservable"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:586  2. Group changes into atomic commits — one commit per intent, not per",
+              "spec/boot/STATIC.md:587     file.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:199  3. Group intents into atomic commits.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "snippet and protocol agree; the host's shape is consistent with grouping by intent, and the harvest's own caveat that a file count is not an idea count is respected rather than ignored"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:588  3. Stage and commit each group separately with a well-formed message.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:125  ##USE-EXPLICIT-FILE-NAMES-OR-GIT-ADD-P Use explicit file names or `git add -p`. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** Three of",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:112  **82 of 400 break the hard limit of 72 — 20.5 %, longest at 89.** And **297 of 400",
+              "«separately» is unobservable after the fact — staged-together and staged-separately commits look identical. The well-formed-message half is measured and belongs to the format flow's own facts"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:589  4. Do not amend or force-push commits that are already pushed; create a",
+              "spec/boot/STATIC.md:590     new commit instead, unless the human explicitly approves history",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @spec/done",
+              "CLAUDE.md:5  … and commit **autonomy** (routine proceeds; non-routine stops and asks) …",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
+              "the host has adopted the rule three times over — the snippet, the authoritative record and rule 4. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "splitting-procedure-pointer": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:1  # Splitting a large working tree into atomic commits {#root}",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+              "spec/boot/STATIC.md:594  [`spec/flows/atomic-commits/splitting-large-changes.md`](../flows/atomic-commits/splitting-large-changes.md).",
+              "vibe.lock:251  files_written = []",
+              "**the pointer a booting session reads lands on nothing.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host. `files_written = []` means this package will never create it either"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "WHY-DIFF-AS-VERIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:598  - **Diff as verification.** Humans verify code by reading diffs. A",
+              "spec/boot/STATIC.md:599    diff that mixes three concerns is not verifiable in one pass.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:45  ##the-humans-primary-verification-mechanism-is-reading-the-diff The human's primary verification mechanism is reading the diff. @spec/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  … они создают diff, который *невозможно верифицировать эффективно*.",
+              "traced to its origin in the source book's chapter 2, and the installed redbook slot carries the same text; the doctrine is present and consistent across all three artifacts, and no measurement of reviewer behaviour exists here"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "WHY-ROLLBACK-PRECISION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:600  - **Rollback precision.** `git revert <sha>` must undo the wrong",
+              "spec/boot/STATIC.md:601    thing without also undoing two correct things.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:63  ##REVERT-MUST-UNDO-THE-WRONG-THING-AND-NOTHING-ELSE When that happens, `git revert <sha>` must undo the wrong thing without also undoing three correct things that happened to ride in the same commit. @impl/done",
+              "snippet and protocol agree apart from the illustrative count. With 0 reverts in 400 commits the rollback path has never been exercised in this consumer, so the benefit is doctrine here rather than observation"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "WHY-COMMIT-LOG-AS-DECISION-RECORD": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:602  - **Commit log as decision record.** The message is the only place",
+              "spec/boot/STATIC.md:603    where *why* survives after the WAL and spec prose decay.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:73  ##THE-MESSAGE-IS-THE-ONLY-PLACE-THE-WHY-IS-RECORDED-DURABLY The commit message is the only place where the *why* of a change is recorded at a granularity that survives spec prose decay and WAL overwrites. @impl/done",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:221  fallback resume path is `git log` plus a fresh look at the tree: commit",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "corroborated from the other side: the wal flow's own protocol names `git log` as the fallback resume path when the WAL is gone, so two installed flows agree on the division of labour"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "full-protocol-pointer": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:1  # Atomic Commits Protocol {#root}",
+              "spec/boot/STATIC.md:605  Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md).",
+              "spec/common/PROP-000.md:163  … `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`;",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+              "**same failure as the splitting pointer, in the same snippet.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host. `files_written = []` means this package will never create it either",
+              "the document does exist and the authoritative record cites it independently — what is missing is any target the compiled link can reach"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:609  - Never mix refactor + feature + docs + bugfix in one commit.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:99  - ##CASE-REFACTOR-PLUS-FEATURE **Refactor + feature.** Always separate. The refactor commit leaves behaviour unchanged; the feature commit leaves structure unchanged. One of each. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "verbatim in both compiled copies and elaborated by the protocol's common cases; detecting a mixed diff needs a 400-diff read, which was not done and is not claimed"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:610  - Never write a subject that summarises *what* changed — the diff does",
+              "spec/boot/STATIC.md:611    that. Write *why*.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:120  Коммит описывает *что* и *зачем* (через ссылку на спеку). Diff показывает *как*.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:112  **82 of 400 break the hard limit of 72 — 20.5 %, longest at 89.** And **297 of 400",
+              "the rule is in both compiled copies. Its origin differs slightly and the worker said so: the book has the commit describe what AND why while the flow forbids the subject to describe what. Host subject style is visibly why-oriented"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:612  - Never `git commit --amend` on a pushed commit without explicit human",
+              "spec/boot/STATIC.md:613    approval. Same for `git push --force`.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:159  - ##FROZEN-NEVER-AMEND **Never** `git commit --amend`. @impl/done",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, …) stop and ask",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
+              "three independent statements of the rule in the host. The protocol's long form adds `--force-with-lease`, which the snippet omits. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T14:08:06Z",
+        "verify_batch": "W1a"
+      }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md": {
       "content_hash": "5bf6a45c7a14fe1850b19548c89f7fd1ceda0b8518273b2158f1440452f6b49c",
@@ -25739,7 +26301,851 @@
       },
       "marker_count": 65,
       "unit_count": 12,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "5bf6a45c7a14fe1850b19548c89f7fd1ceda0b8518273b2158f1440452f6b49c",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:10  ## What an atomic commit is {#what}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:30  ## Why atomic commits matter more here {#why}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:87  ## When to split {#splitting}",
+              "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
+              "all four promised topics have a section, and the document carries two the scope line does not mention"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "AN-ATOMIC-COMMIT-CARRIES-EXACTLY-ONE-IDEA": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:368  contract. One commit carries exactly one idea, and the commit message",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea …",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  Атомарность — это правило: **один коммит = одна мысль**.",
+              "the definitional sentence, traced to the book and forward to the authoritative record and both compiled copies — three wordings that do not conflict"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-DIFF-SHOWS-EVERY-CHANGE-AND-NOTHING-ELSE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:98  Второе требование. Когда AI обновляет файл — будь то спека, код или WAL — изменение должно быть одним логическим шагом, видимым в diff.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:56  ##ONE-CONCERN-PER-COMMIT-MAKES-THE-DIFF-VERIFIABLE-IN-ONE-PASS One concern per commit makes the diff directly verifiable in one pass. @impl/done",
+              "the «and nothing else» half is the book's own argument. Recorded: no checker for diff purity exists anywhere in this tree"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "three-equivalent-framings-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:19  - ##FRAMING-ONE-LOGICAL-UNIT **One logical unit.**",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.**",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:23  - ##FRAMING-ONE-THING-TO-VERIFY **One thing to verify.**",
+              "a structural lead-in; exactly three framings follow, each named"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "FRAMING-ONE-LOGICAL-UNIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:123  ##NONE-OF-THE-THREE-MAKES-SENSE-ALONE None of the three makes sense alone; splitting them produces two intermediate commits where the tree does not compile. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:13  ##THE-TREE-MUST-BUILD-AND-IDEALLY-PASS-TESTS-BEFORE-STARTING Before starting, the working tree must build and (ideally) pass",
+              "the «consistent state» half is load-bearing elsewhere in the package and consistent with it. No per-commit build record exists here, so the clause is not checkable commit by commit"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "FRAMING-ONE-INTENT-PER-MESSAGE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:91  ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is mechanical: can the commit body be written without using the word \"also\"? @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:213  - ##SUM-THE-NO-ALSO-TEST The \"no 'also' in the body\" test catches violations mechanically. @impl/done",
+              "**the one rule in the flow with a mechanical test, and it was run**: 43 of 400 bodies contain the word «also», 10.8 %. The count is an upper bound and is offered as such — the rule forbids «also» introducing a second intent, and a body may use the word in prose"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "FRAMING-ONE-THING-TO-VERIFY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:47  ##a-mixed-commit-forces-the-human-to-partition-it-first If one commit mixes three concerns across eight files and ninety lines, the human has to mentally partition the diff before assessing any single piece. @spec/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  Человек смотрит diff и видит: четыре файла изменены, 87 строк. Что из этого — таймауты (которые он просил), а что — самодеятельность AI?",
+              "traced to its origin in the source book's chapter 2, and the installed redbook slot carries the same text; the book's four files and 87 lines are the protocol's eight and ninety, both illustrative"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "A-BUNDLED-COMMIT-IS-THREE-COMMITS-NOT-ONE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:375  A session that produces (a) a typo fix, (b) a refactor, and (c) a",
+              "spec/boot/STATIC.md:376  schema update is **three** commits, not one.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the example survives into the snippet and both compiled copies with the wording changed from a bundled commit to a mixed session; identifying a bundled commit needs diff reading, which is not claimed"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "in-a-pure-human-team-they-are-a-quality-of-life-feature": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:12  ##in-a-pure-human-team-atomic-commits-are-quality-of-life In a pure-human team, atomic commits are a quality-of-life feature",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:41  ##in-a-human-ai-team-they-are-load-bearing In a human-AI team they are **load-bearing**. Three reasons: @spec/done",
+              "a claim about pure-human teams with no source outside the package's own two documents, and no pure-human team here to observe"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "QOL-EASIER-REVIEW": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:45  ##the-humans-primary-verification-mechanism-is-reading-the-diff The human's primary verification mechanism is reading the diff. @spec/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  … они создают diff, который *невозможно верифицировать эффективно*.",
+              "the underlying diff-verifiability argument has support; as a claim about pure-human teams it does not, and this repository keeps no review record to measure effort against"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "QOL-CLEANER-BISECTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:35  - ##QOL-CLEANER-BISECTS cleaner bisects, @spec/done",
+              "cleaner bisects follow from how `git bisect` works, which is a fact about git. The word occurs nowhere in the living tree outside this package, and this repository has never bisected — so the benefit is real by construction and unexercised here"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "QOL-VIABLE-CHERRY-PICKS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:36  - ##QOL-VIABLE-CHERRY-PICKS viable cherry-picks. @spec/done",
+              "viable cherry-picks follow from how `git cherry-pick` works. The repository is effectively single-branch and its delegated-work path applies a worktree diff rather than cherry-picking, so the benefit is unexercised here"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "teams-that-skip-the-discipline-ship-anyway": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:41  ##in-a-human-ai-team-they-are-load-bearing In a human-AI team they are **load-bearing**. Three reasons: @spec/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  Но программисты-люди ненавидят делать атомарные коммиты. … Когнитивная нагрузка чудовищная.",
+              "a claim about outcomes in teams outside this repository, with no source anywhere — the book stops at «humans hate it» and never asserts that skipping teams still ship"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "in-a-human-ai-team-they-are-load-bearing": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:43  ### Diff as verification channel {#why-diff}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:59  ### Rollback precision {#why-rollback}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:71  ### Commit log as decision history {#why-log}",
+              "spec/boot/STATIC.md:596  ## Why this matters in a human-AI team",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:100  … AI *обожает* делать несколько несвязанных изменений за один проход.",
+              "exactly three reasons follow, each reproduced as one bullet in the compiled snippet; the premise is the book's"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-humans-primary-verification-mechanism-is-reading-the-diff": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  Человек смотрит diff и видит: четыре файла изменены, 87 строк.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:120  Коммит описывает *что* и *зачем* … Diff показывает *как*. Человек верифицирует за минуту.",
+              "spec/boot/STATIC.md:598  - **Diff as verification.** Humans verify code by reading diffs. A",
+              "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+              "stated twice in the book and compiled into the host lane. Corroborated independently by host practice: the delegated-work review loop reads a worker's `git diff` as a PR, so the diff is literally this repository's verification channel for AI-produced work"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "a-mixed-commit-forces-the-human-to-partition-it-first": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  Каждое из этих изменений может быть правильным. Но вместе они создают diff, который *невозможно верифицировать эффективно*. … Нужно вчитываться в каждую строку, вместо того чтобы пробежать глазами",
+              "spec/boot/STATIC.md:599    diff that mixes three concerns is not verifiable in one pass.",
+              "traced to its origin in the source book's chapter 2, and the installed redbook slot carries the same text down to the mechanism; the numbers differ and both are illustrative"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "the-partition-step-is-where-mistakes-slip-through": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:47  ##a-mixed-commit-forces-the-human-to-partition-it-first If one commit mixes three concerns across eight files and ninety lines, the human has to mentally partition the diff before assessing any single piece. @spec/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:102  Что из этого — таймауты (которые он просил), а что — самодеятельность AI?",
+              "the premise is sourced; the consequence — that mistakes slip through at the partition step — has no support anywhere, and no incident record attributes a missed defect to review of a mixed commit"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "ONE-CONCERN-PER-COMMIT-MAKES-THE-DIFF-VERIFIABLE-IN-ONE-PASS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:598  - **Diff as verification.** Humans verify code by reading diffs. A",
+              "spec/boot/STATIC.md:599    diff that mixes three concerns is not verifiable in one pass.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:120  Человек верифицирует за минуту.",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea …",
+              "the positive form of the snippet's bullet and the book's payoff. Recorded: no check enforces one-concern-per-commit anywhere in this tree"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "some-ai-authored-changes-will-turn-out-to-be-wrong": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:100  … И попутно переименовывает переменную `msg_hash` в `message_digest` (потому что «так лучше») …",
+              "CLAUDE.md:124    map-guided migration faithfully (0 stale values); the only boss fixes were",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the book's observation one step earlier, and the operating-facts ledger records a real delegated run where the boss fixed two behavioural edge cases. Recorded: this repository's attribution posture means AI-authored changes are not a partitionable set here"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "REVERT-MUST-UNDO-THE-WRONG-THING-AND-NOTHING-ELSE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:600  - **Rollback precision.** `git revert <sha>` must undo the wrong",
+              "spec/boot/STATIC.md:601    thing without also undoing two correct things.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:164  ##A-MISTAKE-IN-A-PUSHED-COMMIT-IS-FIXED-BY-A-NEW-COMMIT A mistake in a pushed commit is fixed by a new commit (type `fix` or `revert`), not by rewriting history. @impl/done",
+              "consistent with the snippet and with the section that routes mistakes to `fix` or `revert`. With 0 reverts in 400 the precision the rule buys is untested in this consumer"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THAT-IS-ONLY-POSSIBLE-IF-THEY-WERE-THREE-COMMITS-TO-BEGIN-WITH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:63  ##REVERT-MUST-UNDO-THE-WRONG-THING-AND-NOTHING-ELSE When that happens, `git revert <sha>` must undo the wrong thing without also undoing three correct things that happened to ride in the same commit. @impl/done",
+              "spec/boot/STATIC.md:406  - **Rollback precision.** `git revert <sha>` must undo the wrong",
+              "an immediate consequence of how `git revert` works — granularity at revert time is granularity at commit time"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "THE-MESSAGE-IS-THE-ONLY-PLACE-THE-WHY-IS-RECORDED-DURABLY": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:602  - **Commit log as decision record.** The message is the only place",
+              "spec/boot/STATIC.md:603    where *why* survives after the WAL and spec prose decay.",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:221  fallback resume path is `git log` plus a fresh look at the tree: commit",
+              "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "**«the only place» is false of this repository, and the contradiction comes from a flow installed beside it.** The premises hold — the wal flow names `git log` as the fallback when the WAL is gone, the host's cold-resume file is overwritten wholesale, and 399 of 400 commits carry a body.",
+              "but this repository records *why* durably in at least four other places: the `spec/common/PROP-*` decision records, the campaign LOGs, AUDIT.md, and the `decision-records` flow this same corpus ships — whose entire purpose is that a decision's reason is recorded at its governing anchor. Two installed flows claim the same exclusive role for different artifacts"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "three-rationales-in-one-message-each-get-watered-down": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:80  ##six-months-later-the-log-reads-refactored-stuff Six months later the log reads \"refactored stuff\" instead of \"replaced SHA-256 with blake3 because the vendor library dropped SHA-256 support in 0.9\". @spec/done",
+              "the watering-down mechanism has no source anywhere and no measurement of rationale density exists"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "six-months-later-the-log-reads-refactored-stuff": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:118  ```",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:120  Коммит описывает *что* и *зачем* (через ссылку на спеку). Diff показывает *как*. Человек верифицирует за минуту.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
+              "an illustrative hypothetical about a future log. The failure mode it names does not appear here — 0 vague refactor or chore subjects in 400"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ATOMIC-COMMITS-MAKE-THE-LOG-USABLE-AS-A-DECISION-ARCHIVE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:70  verify the plan, and use the commit log as the project's decision",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:221  fallback resume path is `git log` plus a fresh look at the tree: commit",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:55  8. ##BODY-RECENT-COMMIT-CHAIN The recent commit chain (last ~25, oneline format), so the cold",
+              "CLAUDE.md:186     - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.",
+              "corroborated by two independent consumers of the log-as-archive idea: the wal flow requires the last ~25 commits in every cold-resume snapshot, and this host's own session-end contract requires the same"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-WORKING-TREE-WITH-MIXED-CONCERNS-MUST-BE-SPLIT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:586  2. Group changes into atomic commits — one commit per intent, not per",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:8  ##this-document-is-the-splitting-procedure This document is the procedure for turning that mess into a sequence of atomic commits without losing or reordering work. @impl/done",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea …",
+              "the rule appears as an imperative here, as session-end step 2 in both compiled copies, and as the reason the sibling document exists; a split leaves only its commits behind"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-TEST-IS-MECHANICAL-THE-WORD-ALSO": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:213  - ##SUM-THE-NO-ALSO-TEST The \"no 'also' in the body\" test catches violations mechanically. @impl/done",
+              "**the document refutes its own «mechanical» in the same section.** The test is stated three times, and the third statement concedes that separating «also» introducing a second intent from «also» in prose needs a reader.",
+              "the mechanical form was run and returns 43 of 400 bodies, 10.8 % — a number that cannot be turned into a violation count without exactly the judgement the word «mechanical» denies. No commit-message check of any kind exists in this repository, and the boot snippet does not carry the test at all, so a session reading only the boot lane never sees it"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "IF-NO-SPLIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:91  ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is mechanical: can the commit body be written without using the word \"also\"? @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:1  # Splitting a large working tree into atomic commits {#root}",
+              "a two-word conditional whose action is the sibling document's entire subject, and that document exists in the package and in the slot"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "common-cases-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:99  - ##CASE-REFACTOR-PLUS-FEATURE **Refactor + feature.**",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:102  - ##CASE-TESTS-PLUS-IMPLEMENTATION **Tests + implementation they verify.**",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:105  - ##CASE-FORMAT-PLUS-SUBSTANCE **Format + substance.**",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:108  - ##CASE-CROSS-MODULE-CHANGE **Cross-module change touching ten files for one reason.**",
+              "a lead-in; exactly four cases follow"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "CASE-REFACTOR-PLUS-FEATURE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:609  - Never mix refactor + feature + docs + bugfix in one commit.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:214  - ##SUM-WHAT-SEPARATES-AND-WHAT-COMBINES Refactor vs feature: always separate. …",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "stated three times in the package; both types are in live use and no subject carries both. Whether a feat diff also contains a pure refactor needs diff reading, which is not claimed"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CASE-TESTS-PLUS-IMPLEMENTATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:214  - ##SUM-WHAT-SEPARATES-AND-WHAT-COMBINES Refactor vs feature: always separate. Tests with their impl:",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  Одно изменение в одной спеке плюс связанные изменения в коде и тестах. Не больше.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the «usually together» half is the book's own definition of the atomic unit, and the exception has a matching type in the allowed table and 7 uses in the window"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CASE-FORMAT-PLUS-SUBSTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:215    usually together. Format vs substance: always separate. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:88        2 tools · 2 style · 1 spec · 1 build",
+              "CLAUDE.md:121    pushes. **Workers don't `cargo fmt`** → run `cargo fmt --all` after applying",
+              "the `style` type exists and is used twice in the window. Recorded: the host's own delegated-work loop creates the opposite pressure — the boss runs `cargo fmt --all` after applying a worker's diff, which lands formatting in the same tree as the substance unless split"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CASE-CROSS-MODULE-CHANGE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:376  A feature that touches",
+              "spec/boot/STATIC.md:377  fifteen files for one coherent reason is **one** commit, not fifteen.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:146  n=400  mean=5.29  median=3  max=130",
+              "the same rule with two illustrations, and the host exercises the do-not-over-split half rather than violating it"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "sibling-document-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:1  # Splitting a large working tree into atomic commits {#root}",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:23    broken: 0",
+              "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+              "a same-directory relative link, so it resolves wherever the pair travels — and both files are present in the package and in the slot"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "SOMETIMES-THREE-COUPLED-CHANGES-FORM-ONE-IDEA": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  Одно изменение в одной спеке плюс связанные изменения в коде и тестах. Не больше.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:130  ##THE-RULE-IS-ONE-IDEA-NOT-ONE-HUNK The rule is: atomic means *one idea*, not *one hunk*. @impl/done",
+              "the book's own definition of the atomic unit is itself three-part, so the batching case is the origin's shape rather than an exception invented here"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "example-a-new-type-its-first-user-and-its-test": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:123  ##NONE-OF-THE-THREE-MAKES-SENSE-ALONE None of the three makes sense alone; splitting them produces two intermediate commits where the tree does not compile. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:102  - ##CASE-TESTS-PLUS-IMPLEMENTATION **Tests + implementation they verify.** Usually one commit — both halves of one idea.",
+              "an illustration, internally consistent with the splitting case it pairs with; no commit records whether it introduced a type plus its first user plus its test"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "NONE-OF-THE-THREE-MAKES-SENSE-ALONE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:19  - ##FRAMING-ONE-LOGICAL-UNIT **One logical unit.** The smallest set of edits that, together, express a complete thought and leave the tree in a consistent state. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:16  ##STABILISE-TO-GREEN-BEFORE-SPLITTING-A-BROKEN-TREE If the tree is broken end to end, do not try to split yet —",
+              "the non-compiling-intermediate argument is coherent across three files of the package. No per-commit build record exists here"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "THE-ONE-IDEA-IS-ONE-ATOMIC-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:136  tests Y\", the phrasing is wrong; if it naturally reads \"introduces",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  Одно изменение в одной спеке плюс связанные изменения в коде и тестах. Не больше.",
+              "restated verbatim as the positive half of the «also» test and matching the book's definition"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "THE-RULE-IS-ONE-IDEA-NOT-ONE-HUNK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:373  **One commit = one logical change**, not one file changed.",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea …",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:212  - ##SUM-ONE-COMMIT-ONE-IDEA One commit, one idea. Not one file. @impl/done",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:150  A file count is not an idea count, and the atomic rule is explicitly *one idea, not",
+              "the same rule with three different negations across the package, adopted by the authoritative record, and quoted in exactly this form by the harvest when explaining why its own numbers do not measure conformance"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "USE-JUDGEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test …",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:130  names, not capitalised words. *The check that would enforce this rule has to know",
+              "a two-word instruction whose operative content is supplied by the next fact. Recorded: no atomicity check exists anywhere, so judgement is in fact where this lands"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-WORD-ALSO-IS-STILL-THE-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:91  ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is mechanical: can the commit body be written without using the word \"also\"? @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:213  - ##SUM-THE-NO-ALSO-TEST The \"no 'also' in the body\" test catches violations mechanically. @impl/done",
+              "the third and most careful statement of the test, and the only one that distinguishes a real second intent from prose — which is why the mechanical claim two facts earlier is the one charged"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "A-SEQUENCE-OF-ATOMIC-COMMITS-CAN-FORM-A-MILESTONE": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:123       42 Phase",
+              "TASKS.md:56  - [x] `feat(packages-live)`: migrate three v0.1.0 flows to per-package repos in the `vibespecs` organization on **GitHub** …",
+              "CLAUDE.md:152  - `TASKS.md` at repo root — the current work-slice's checklist, each item a",
+              "host practice matches the shape: TASKS.md is a checklist where each item is one commit waiting to be made, and the word `Phase` opens 42 of 400 subjects — this repository's milestone vocabulary appearing across sequences rather than inside one commit"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-MILESTONE-FRAMING-LIVES-ABOVE-THE-COMMIT-LEVEL": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "CLAUDE.md:152  - `TASKS.md` at repo root — the current work-slice's checklist, each item a",
+              "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did",
+              "the substance holds — the host does keep milestone framing above the commit level, in TASKS.md, the campaign LOGs and the WAL. **None of the three vehicles the sentence names is in use here**: one tag with no per-milestone practice, 0 `chore(release)` commits, and no PR descriptions. The list is illustrative and the host uses a fourth carrier"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "DO-NOT-RETRO-FIT-A-MILESTONE-INTO-ONE-GIANT-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:146  n=400  mean=5.29  median=3  max=130",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:147  commits touching exactly 1 file: 102        commits touching >10 files: 38",
+              "spec/boot/STATIC.md:609  - Never mix refactor + feature + docs + bugfix in one commit.",
+              "the largest commits in the window are mechanical single-reason sweeps rather than milestone narratives, which is the distinction the rule draws; telling a coherent sweep from a bundled milestone needs a diff read and is not claimed"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-ATOMIC-COMMITS-ARE-THE-SOURCE-OF-TRUTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:84  ##ATOMIC-COMMITS-MAKE-THE-LOG-USABLE-AS-A-DECISION-ARCHIVE Atomic commits make the log usable as a decision archive. @impl/done",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:221  fallback resume path is `git log` plus a fresh look at the tree: commit",
+              "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+              "corroborated outside the package by the wal flow, which treats `git log` as the fallback source of truth, and by the host's own subordination of its cold-resume snapshot to living state"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "once-a-commit-has-been-pushed-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:159  - ##FROZEN-NEVER-AMEND **Never** `git commit --amend`. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:160  - ##FROZEN-NEVER-REBASE-THE-PUSHED-RANGE **Never** `git rebase -i` the pushed range. @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:161  - ##FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL **Never** `git push --force` or `--force-with-lease` without explicit human approval. @impl/done",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, …) stop and ask",
+              "a lead-in; exactly three prohibitions follow, under the same pushed trigger the host's autonomy record uses"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "FROZEN-NEVER-AMEND": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:612  - Never `git commit --amend` on a pushed commit without explicit human",
+              "spec/boot/STATIC.md:613    approval. Same for `git push --force`.",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, …) stop and ask",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
+              "**the package states this rule three ways and the strictest version is the one no other carrier repeats.** This bullet is unconditional — «**Never** `git commit --amend`» — while the boot snippet, the document's own summary, the host's authoritative record and rule 4 all permit it with explicit human approval.",
+              "the divergence is not cosmetic: a reader following the protocol literally would refuse an owner-approved amend, which is the one case every other carrier of the rule allows. Its sibling bullet on force-push carries the approval clause, so the inconsistency is inside a single three-item list. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "FROZEN-NEVER-REBASE-THE-PUSHED-RANGE": {
+            "v": "drift",
+            "ev": [
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask",
+              "CLAUDE.md:5  … and commit **autonomy** (routine proceeds; non-routine stops and asks) …",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
+              "**unconditional here and absent everywhere else.** «Never `git rebase -i` the pushed range» carries no approval clause, unlike the third bullet beside it — and `rebase` appears nowhere in the host's own contract files, while the boot snippet's Never list omits it entirely, carrying only amend and force-push.",
+              "so this specific prohibition reaches a session through no carrier a session actually reads, and where it is stated it is stricter than the rule the host adopted. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:613    approval. Same for `git push --force`.",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
+              "the strongest-adopted of the three prohibitions — in the snippet, in the authoritative record, and extended to bind delegated work before it is handed off. Recorded: `--force-with-lease` appears only in the package, so the host adopts the coarser form. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-MISTAKE-IN-A-PUSHED-COMMIT-IS-FIXED-BY-A-NEW-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:589  4. Do not amend or force-push commits that are already pushed; create a",
+              "spec/boot/STATIC.md:590     new commit instead, unless the human explicitly approves history",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:99  feat · fix · chore · docs · build · test · refactor · perf · style · ci · revert.",
+              "the remedy is in the snippet as session-end step 4 and both types it names are in the allowed table; the fix-forward path is in live use at 20 of 400 and the revert path is not"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "non-negotiable-because-others-may-already-have-pulled": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:161  - ##FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL **Never** `git push --force` or `--force-with-lease` without explicit human approval. @impl/done",
+              "spec/common/PROP-000.md:164  … the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask",
+              "the rationale is stated once in the package and nowhere else; the host adopts the rule without the reasoning, and the multi-puller premise is not observable in a single-author repository"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "humans-hate-splitting-commits": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  Но программисты-люди ненавидят делать атомарные коммиты.",
+              "vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  (same text, installed copy)",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:68  ##short-version-delegate-the-split-and-keep-the-log-as-an-archive Short version: humans",
+              "a direct translation of the book's line, confirmed identical in the installed slot; as a claim about programmers generally it is not checkable here"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "slicing-a-messy-tree-is-cognitively-expensive": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  Это больно: ты провёл неделю в прототипировании, всё перемешалось, а теперь нужно разбить это на тридцать аккуратных коммитов. Когнитивная нагрузка чудовищная.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:5  ##a-long-session-leaves-the-tree-looking-like-a-weather-map A long prototyping session often leaves the working tree looking like a weather map: changes everywhere, some connected, some not. @spec/done",
+              "both halves trace to the book verbatim, and the sibling document opens with the same picture — three artifacts, one source, no divergence"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "most-humans-under-deadline-pressure-skip-the-discipline": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  Но программисты-люди ненавидят делать атомарные коммиты. … Когнитивная нагрузка чудовищная.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:38  ##teams-that-skip-the-discipline-ship-anyway Teams that skip the discipline ship anyway. @spec/done",
+              "the book supports the antecedent and never states the «most humans, under deadline pressure» generalisation; the quantifier and the deadline mechanism have no source on the widened perimeter"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "ai-does-not-get-tired": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  У AI этой проблемы нет. AI *счастлив* делать маленькие, чистые коммиты с подробными описаниями.",
+              "the book says the AI does not have the cognitive-load problem, which is adjacent to «does not get tired» and not the same assertion — the fatigue framing is the package's own gloss, and the surrounding facts are sourced where this one is not"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "ai-is-genuinely-happy-to-decompose-a-messy-tree": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  У AI этой проблемы нет. AI *счастлив* делать маленькие, чистые коммиты с подробными описаниями.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:196  I have a dirty working tree. Before committing:",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:167  ## Delegating to the agent {#delegate}",
+              "the operational half is exactly the delegation prompt this document prints and the sibling's own section, so the claim describes a procedure the package actually ships rather than only an attitude"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "the-human-ai-team-is-strictly-faster-here": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  Это одно из мест, где процесс «AI» объективно лучше — используйте это.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:208  ##THE-HUMAN-VERIFIES-THE-PLAN-NOT-EACH-COMMIT The human verifies the split *plan*, not each commit individually. @impl/done",
+              "CLAUDE.md:9  ## Delegation-first — spend Claude on judgment, run execution on fractality",
+              "the first clause is the book's closing sentence almost word for word; the host's delegation-first directive is this argument generalised, with the verify-the-plan-not-the-work split recorded as a live operating fact"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "a-working-prompt-for-delegation-lead": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:196  I have a dirty working tree. Before committing:",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:202  5. Do NOT run any git commands after the proposal until I approve.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:167  ## Delegating to the agent {#delegate}",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:29    atomic commits using `git add -p`, including a prompt for",
+              "a fenced five-step prompt follows. Recorded: the package ships TWO delegation prompts — this one and the sibling document's — where the README advertises one"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "THE-HUMAN-VERIFIES-THE-PLAN-NOT-EACH-COMMIT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:200  4. Show me the proposed split as: commit number, subject line,",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:202  5. Do NOT run any git commands after the proposal until I approve.",
+              "CLAUDE.md:124    map-guided migration faithfully (0 stale values); the only boss fixes were",
+              "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+              "the prompt's own steps implement the claim inside the package. The host's closest analogue inverts it: a worker cannot run git at all, so the boss reviews the whole diff as a PR and commits it himself — verify-the-work rather than verify-the-plan"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-ONE-COMMIT-ONE-IDEA": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:373  **One commit = one logical change**, not one file changed.",
+              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea …",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:104  Атомарность — это правило: **один коммит = одна мысль**.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:146  n=400  mean=5.29  median=3  max=130",
+              "the document's summary of its core rule, agreeing with the book, both compiled copies and the authoritative record"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-THE-NO-ALSO-TEST": {
+            "v": "drift",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:91  ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is mechanical: can the commit body be written without using the word \"also\"? @impl/done",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test …",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:130  names, not capitalised words. *The check that would enforce this rule has to know",
+              "**«mechanically» is the word under test and the document's own §batching denies it**, conceding that the test needs judgement to tell a second intent from prose. The mechanical form returns 43 of 400 bodies and no checker exists: there is no commit-message check anywhere in this repository and no git hook.",
+              "the same shape the harvest recorded for the capitalisation rule — a rule whose checker would have to make a judgement is a rule with no checker"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-WHAT-SEPARATES-AND-WHAT-COMBINES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:99  - ##CASE-REFACTOR-PLUS-FEATURE **Refactor + feature.** Always separate.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:102  - ##CASE-TESTS-PLUS-IMPLEMENTATION **Tests + implementation they verify.** Usually one commit",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:105  - ##CASE-FORMAT-PLUS-SUBSTANCE **Format + substance.** Always separate.",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+              "the summary compresses three of the four splitting cases without loss, deliberately dropping the fourth; all the relevant types are in live use as distinct commit types here"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "SUM-PUSHED-HISTORY-IS-FROZEN": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:612  - Never `git commit --amend` on a pushed commit without explicit human",
+              "spec/boot/STATIC.md:613    approval. Same for `git push --force`.",
+              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, …) stop and ask",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** … non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated",
+              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
+              "**the summary is the version that matches the host's adoption** — it permits amend and force-push with human approval where the section it summarises is unconditional. That softening is charged on the two section bullets rather than here, because this line states the rule the host actually runs. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-DELEGATE-THE-SPLIT-AND-VERIFY-THE-PLAN": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:190  team is strictly faster than either participant alone — **delegate",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:167  ## Delegating to the agent {#delegate}",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:108  AI *счастлив* делать маленькие, чистые коммиты с подробными описаниями.",
+              "CLAUDE.md:9  ## Delegation-first — spend Claude on judgment, run execution on fractality",
+              "compresses the section and the sibling's own delegation material, both of which ship a concrete prompt. The host holds the disposition — a delegation-first directive as standing posture — while its recorded delegations are of code work rather than commit splits"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T14:08:06Z",
+        "verify_batch": "W1a"
+      }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md": {
       "content_hash": "01fae6ce386a718cf4f0955ae2ea354767c1110923a0bf34e20c666f628a37e7",
