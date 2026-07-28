@@ -2926,6 +2926,95 @@ command that would have tested it.
   too, and `CLAUDE.md`'s step 2 says «Update … bump … refresh» — drift. Same for
   `NEVER-APPEND-TO-CONTINUE` against `CONTINUE-IS-OVERWRITTEN-WHOLESALE`.
 
+- **2026-07-28 · W2 CLOSED at 692, W3 CLOSED at 615 — the cluster is 51 of 121
+  files and the per-file slice is now the working unit.** `world` reads **1 557 /
+  140 / 17 — 90.8 %**, still below `ai-native`'s 91.6 %, and the phase crosses
+  **61.7 %**. W3 returned **zero unverifiable** — the first batch in the phase
+  where every fact could be settled against the tree.
+
+  **The unit changed, and that answers the split question §4 left open.** The plan
+  said to re-measure the per-anchor cost after the first world batch and split W5
+  if it ran higher than C1's. The measurement is moot because the batch stopped
+  being the unit of work: seventeen slices closed here, one file each, from 17
+  rows to 149, every one merged and sealed on its own. `merge-verdicts.py` accepts
+  a subset of a batch's files under the same batch id, so a slice that lands
+  cannot become a debt — which is the property the 138-row debt was missing. **W5
+  does not need splitting; it needs twenty-one slices.**
+
+  **What the two batches measured, by family rather than by file:**
+
+  | family | measurement |
+  |---|---|
+  | the size budgets | boot lane **~16 100 tokens against 500** (32×), WAL ~4 000 against 3 000, **9 of 47** module specs over 5 000 — and «split when over» has fired **zero** times |
+  | the four-field record | **4 of 153** sections carrying a Decision label have all four fields; **127** have the Decision line alone; 142 carry no revisit condition |
+  | the revisit trigger | 11 exist in `spec/`; **1** has metric + threshold; **none** has all three parts |
+  | the sync grammar | `docs(spec): sync …` typed **0 times in 2 041 commits**, against 183 `docs(spec)` commits; neither recorded sync cites a `spec://` URI |
+  | anchor coverage | 857 of 982 headings anchored — and the 125 without are **all 23 in `spec/boot/` and all 8 in `spec/WAL.md`** |
+  | anchor uniqueness | **59 `duplicate-anchor` warnings**, all in the generated boot lane, where `{#root}` means 27 things |
+  | the changelog line | exercised **once** across 42 PROP documents |
+  | the `Test:` line | **zero** in `spec/`; all 223 `verifies` edges come from code |
+  | tombstones | **2 of 2** document moves left the old address bare |
+
+  **Three internal contradictions, each inside one package or one lane.** The
+  `wal` package ships two wind-downs — six steps in `session-end-hook.md`, five in
+  a different order in `cold-resume.md`, and a third fact calling them the same
+  procedure; the host implements the five (F-129). `record-template.md` says an
+  event trigger fires «without anyone having to remember to wonder» while
+  `revisit-triggers.md` says triggers do not fire themselves — and the host's one
+  event trigger sat unfired for six weeks. And `cognitive-load-split.md` says text
+  that works for the AI works for the other two «for free» while the wal package
+  says the report and the WAL «serve different readers» and the host writes both.
+
+  **And one collision of principle, recorded on the host side in the prescribed
+  form.** `uncertainty-protocol.md` tells a session to prefer adding no
+  dependency, «because a dependency is a permanent tax». `spec/common/PROP-000.md`
+  §15 decides the opposite at the governing anchor, with a why that answers that
+  reason directly. Not non-adoption — a weighed, written, opposite ruling.
+
+- **2026-07-28 · The verdict line that made these two batches consistent, and it
+  is now the cluster's rule.** A flow's prescription the host simply never adopted
+  is **not drift** — a human's morning read leaves no repository artefact, and no
+  flow claims the host performs one. **Drift is where the host's own written
+  contract contradicts the flow**, or where a measurable rule is broken over a
+  double-digit share of its window. `morning-routine.md` is unadopted end to end
+  and scores 39 of 42 confirmed; its two drifts are both the cold-start read
+  order, which `CLAUDE.md:205` reverses in writing. Judged the other way, one
+  unadopted document would have produced forty-two drifts and buried the two that
+  matter.
+
+  Two corollaries the batches needed. **Each fact is judged on its own sentence,
+  never on its family** — `NEVER-APPEND-TO-THE-WAL` prohibits appending only and
+  the host never appends (confirmed), while `REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND`
+  names patching too and `CLAUDE.md` step 2 says «Update … bump … refresh»
+  (drift). And **a definition that classifies correctly is confirmed by the
+  failure it classifies**: «a decision without a revisit condition becomes a
+  sacred cow» is confirmed by 142 sections having none, not refuted by them.
+
+- **2026-07-28 · The delegation lesson W3 paid for, and it was a two-sentence
+  change.** Three `opus5` workers returned 615 anchors over 1 805 refs with **zero
+  unresolvable on the first pass** — the first batch in the phase to verify clean
+  without a repair run. The change: the briefs told them to prefer structural
+  citations and to reach for `CLAUDE.md`, `spec/boot/**`, `spec/common/**` and the
+  crates rather than `CONTINUE.md` and `spec/WAL.md`. One worker reported «Zero
+  refs point at CONTINUE.md or spec/WAL.md».
+
+  **This was learned the expensive way, twice in one session.** W2's four tables
+  verified at 3 unresolvable when sealed and at **65** when re-read, because a
+  wind-down had overwritten both files underneath them; and then this session's
+  own checkpoint did it again to W2c and W2d. Not one of the 71 broken refs was a
+  fiction — `git show 100617b3:spec/WAL.md` still carries every quote verbatim.
+
+  **Two workers also corrected the harvest that commissioned them**, which is what
+  a delegated search is for. The REVIEW-marker contract is not unexercised: a
+  three-file grep found one hit, the widened search found five live markers plus a
+  shipped `review_aging` check, a standing audit category and a task stop rule
+  that has fired twice — and the gap that matters, which is that `review_aging`
+  scans `spec/` only and cannot see four of the five. **And one worker's own
+  absence was asserted rather than checked** — «no host rule discouraging new
+  dependencies exists» against a `PROP-000` §15 that exists and says the opposite.
+  The campaign's named trap, caught by re-reading, in the session that wrote the
+  trap down.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
