@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-28T12:01:01Z",
+  "updated_at": "2026-07-28T13:16:07Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -7990,8 +7990,7 @@
       "campaign": {
         "processed_hash": "ea3dd504db114a93dba96108dc37ce915b37054db09ea63c52bea7109ed6d8df",
         "summary": {
-          "confirmed": 12,
-          "drift": 1
+          "confirmed": 13
         },
         "verdicts": {
           "status-line": {
@@ -8015,7 +8014,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:11  ##INTENT Intent: Where an artifact is mechanically derivable from a smaller spec, ship a program that EMITS it (exter...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:242  - ##SCAFFOLD-A-GENERATORS **A — Generators / codegen** (`scaffold-a-generators`). **`go:generate` is the culture's ow...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a prescription, not a description: the card's registry row reads `specified` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:16), so the Go consumer carrying no generator does not falsify it; every referent resolves — `go:generate`, `stringer`, `text/template`, `go/format` are Go toolchain surfaces"
             ]
           },
           "ALSO-KNOWN-AS": {
@@ -8030,7 +8029,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — boilerplate repeats across cells; an artifact (...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a detector SEED plus applicability conditions; the checker it seeds (`derivable-not-hand-maintained`) is declared not-yet-built by the package's own registry — packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:16 reads `specified`, and INDEX.md:101 defines that as «checker is defined but not yet implemented»"
             ]
           },
           "MOTIVATION": {
@@ -8043,10 +8042,12 @@
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Spec/manifest* (the small input — a table, a schema file) · *...",
-              "`go:generate` occurs **zero** times in the Go consumer and nowhere in the stack, so the generator, its directive and its committed output are all absent from the only Go project in the tree"
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Spec/manifest* … *Generator* … *`//go:generate` directive* … *Committed output* … *Determinism check*",
+              "**restated confirmed ← drift.** It was judged as a description of this tree («`go:generate` occurs zero times in the Go consumer») and it is a participants list — the same class as five sibling STRUCTURE-AND-PARTICIPANTS rows this review confirmed in scaffold-b/c/e/h/i, and the same class the phase confirmed 690 times across the Rust and TypeScript halves of C4+C5.",
+              "every referent resolves as a Go toolchain surface: `//go:generate` is a compiler directive, `stringer` a golang.org/x/tools command, `text/template` and `go/format` are stdlib, and the `// Code generated … DO NOT EDIT.` header is the toolchain-recognized marker — carried in this repository at crates/vendor/core-ai-native-specmap/src/generated/mod.rs:1",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:16  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |  — the package's own registry declares the checker unbuilt, so the consumer carrying no generator is the declared state, not a contradiction"
             ]
           },
           "COLLABORATIONS": {
@@ -8069,7 +8070,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:27  ##CONSEQUENCES Consequences: (+) edit surface collapses to the spec; (+) consistency is structural, not vigilance-bas...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "the `// Code generated … DO NOT EDIT.` header IS machine-recognized by the Go toolchain, and the host carries an instance of the convention at crates/vendor/core-ai-native-specmap/src/generated/mod.rs:1; the remaining clauses are tradeoffs, not repository claims"
             ]
           },
           "ALTERNATIVES": {
@@ -8094,12 +8095,12 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable generators transformative, benchma...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy do...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:193  - ##FINDING-R2C-003 **R2C-003 *** — Agentic metaprogramming: strong tool-equipped agents partly recover OOD via inter...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "all four citations resolve: R2C-008 and R2C-003 are ATLAS records (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197 and :193) and A2/A3 are the manifesto's axioms (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:52-53) — A2 is literally «anything mechanically derivable … is generated, not hand-maintained», this card's justification. The worker's «A2/A3 are not ATLAS rows» is true and is not a broken citation"
             ]
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -8160,7 +8161,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a seam has a usage protocol (required fields, v...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "applicability conditions plus a detector seed; the seeded checker `seam-protocol-typed` is declared not-yet-built by the package's own registry (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:17 reads `specified`)"
             ]
           },
           "MOTIVATION": {
@@ -8178,7 +8179,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Defined type* (primitive + meaning, nominal by language rule)...",
               "research/go-demo/internal/cells/naiveplanner/planner.go:18  func New() *NaivePlanner { return &NaivePlanner{} }",
               "research/go-demo/internal/cells/naiveplanner/planner.go:15  var _ seams.Planner = (*NaivePlanner)(nil) // silent conformance made loud",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "the participants are the pattern's parts, and the two the pilot exercises are present — `New()` at research/go-demo/internal/cells/naiveplanner/planner.go:18 and the loud conformance assertion at :15; functional options and the staged builder are prescribed («rare»), not claimed present"
             ]
           },
           "COLLABORATIONS": {
@@ -8233,7 +8234,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -8279,7 +8280,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md:11  ##INTENT Intent: Express pre/post-conditions and invariants as EXECUTING checks attached to the unit and restated at...",
               "research/go-demo/internal/sim/world.go:41  panic(fmt.Sprintf(",
               "research/go-demo/internal/cells/naiveplanner/planner_test.go:124  if err := quick.Check(property, nil); err != nil {",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "the two claims about Go are true — Go has neither `debug_assert!` nor `asserts`-narrowing — and the prescribed backing exists in the pilot: a panicking invariant at research/go-demo/internal/sim/world.go:41 and a property test at research/go-demo/internal/cells/naiveplanner/planner_test.go:124"
             ]
           },
           "ALSO-KNOWN-AS": {
@@ -8295,7 +8296,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a function has a non-obvious precondition; a cr...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a detector seed for `invariant-witnessed`, whose card registry row (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:18) reads `specified` — the checker is declared unbuilt by the package itself"
             ]
           },
           "MOTIVATION": {
@@ -8303,7 +8304,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md:19  ##MOTIVATION Motivation: A weak agent edits a planner relying on \"actions are sorted by resource id\" stated only in a...",
               "research/go-demo/internal/cells/naiveplanner/planner.go:49  sort.Slice(actions, func(i, j int) bool { return actions[i].ID < actions[j].ID })",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a worked narrative whose subject is real in the pilot: the sorted-actions invariant it describes is research/go-demo/internal/cells/naiveplanner/planner.go:49"
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
@@ -8312,7 +8313,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Invariant helper* (a two-line `func invariant(cond bool, msg...",
               "research/go-demo/internal/cells/naiveplanner/planner_test.go:97  func TestPlanIsTotalProperty(t *testing.T) {",
               "research/go-demo/internal/cells/naiveplanner/planner.go:30  if desired == nil || actual == nil {",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a participants list; the property test and boundary validator are present in the pilot (research/go-demo/internal/cells/naiveplanner/planner_test.go:97 and planner.go:30), the invariant helper is prescribed and unbuilt, which the registry's `specified` already says"
             ]
           },
           "COLLABORATIONS": {
@@ -8328,7 +8329,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md:25  ##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make load-bearing invariants machine-checked at the point of relian...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "goals and non-goals; the `//go:build debug` tier it names as legal is a real Go build-constraint form, and nothing in the tree contradicts the scoping rule"
             ]
           },
           "CONSEQUENCES": {
@@ -8365,7 +8366,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -8386,8 +8387,7 @@
       "campaign": {
         "processed_hash": "dabd1d40db070028c345e4d580df3810916ad3150a34f1d0d8e59b071207aa15",
         "summary": {
-          "confirmed": 51,
-          "drift": 1
+          "confirmed": 52
         },
         "verdicts": {
           "status-line": {
@@ -8446,7 +8446,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:27  ##ALSO-KNOWN-AS **Also Known As:** golden test; characterization test (Feathers); approval test; back-to-back test; d...",
               "research/go-demo/internal/cells/batchplanner/planner_test.go:27  func FuzzPlannersAgree(f *testing.F) {",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a synonym list; `FuzzXxx` and the `testdata/` corpus are Go's own native-fuzzing vocabulary, and the pilot carries the FuzzXxx form at research/go-demo/internal/cells/batchplanner/planner_test.go:27"
             ]
           },
           "applicability-recognition-lead": {
@@ -8470,7 +8470,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:33  - ##SIGNAL-LEGACY-BEHAVIOR-IS-UNDERSTOOD-BY-NOBODY legacy behavior exists that nobody fully understands but must be p...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "an applicability signal — a condition under which the card applies, not a claim that the condition holds here"
             ]
           },
           "SIGNAL-REFACTOR-SPANS-MULTIPLE-FILES": {
@@ -8494,7 +8494,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:38  ##DETECTOR-SEED *Detector seed:* a diff that modifies the body of an item carrying `//spec:implements …` without a co...",
               "research/go-demo/internal/cells/naiveplanner/planner.go:24  //spec:implements spec://go-demo/PROP-001#req-plan-total r=1",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a detector seed; its subject `//spec:implements` is live in the pilot (research/go-demo/internal/cells/naiveplanner/planner.go:24), and the checker it seeds is declared `specified` by the card itself (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:132)"
             ]
           },
           "MOTIVATION": {
@@ -8537,7 +8537,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:58  - ##PARTICIPANT-INPUT-SOURCE *Input source* — a `FuzzXxx` target's generated inputs + the committed `testdata/` seed...",
               "research/go-demo/internal/cells/batchplanner/planner_test.go:28  f.Add([]byte{}, []byte{}) f.Add([]byte{1, 1}, []byte{}) f.Add([]byte{}, []byte{2, 9}) f.Add([]byte{1, 1, 2, 2, 3, 3},...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "`testdata/` IS Go's native fuzz corpus store, and the participant is prescribed rather than claimed present; the pilot's inline `f.Add` seeds satisfy the same clause the fact makes — «runs deterministically in plain `go test`»"
             ]
           },
           "PARTICIPANT-COMPARATOR": {
@@ -8553,7 +8553,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:62  - ##PARTICIPANT-ORACLE-HARNESS *Oracle harness* — the fuzz/differential test in the cell's `_test.go`, run with `-rac...",
               "research/go-demo/internal/cells/batchplanner/planner_test.go:27  func FuzzPlannersAgree(f *testing.F) {",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "the harness is where the fact says it is — the fuzz differential lives in the cell's `_test.go` (research/go-demo/internal/cells/batchplanner/planner_test.go:27); `-race` is prescribed for the run, and the shipped fast-loop's omission of it is a tool gap recorded as a finding, not a false statement here"
             ]
           },
           "COLLABORATIONS": {
@@ -8586,7 +8586,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:74  - ##NON-GOALS *Non-Goals:* NOT a correctness proof (new-vs-old agreement inherits the old bugs); NOT a substitute for...",
               "research/go-demo/internal/cells/batchplanner/planner_test.go:23  // demanded. The seed corpus below covers the hard shapes; `go test` // runs seeds deterministically, `-fuzz` explore...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "non-goals; the CI-runs-committed-seeds clause is Go's documented fuzzing behaviour and the pilot's own comment states it (research/go-demo/internal/cells/batchplanner/planner_test.go:23)"
             ]
           },
           "consequences-lead": {
@@ -8623,10 +8623,11 @@
             ]
           },
           "CONSEQUENCE-GOLDENS-ENSHRINE-CURRENT-BEHAVIOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:85  - ##CONSEQUENCE-GOLDENS-ENSHRINE-CURRENT-BEHAVIOR (−) Characterization goldens enshrine current behavior including bu...",
-              "no goldens and no `-update` flag exist: `testdata`, `golden` and `UPDATE_GOLDEN` return nothing across the stack and the demo consumer"
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:85  - ##CONSEQUENCE-GOLDENS-ENSHRINE-CURRENT-BEHAVIOR (−) Characterization goldens enshrine current behavior including bugs — … goldens must fail loudly, never auto-update (the `-update` flag never runs in CI). @spec/done",
+              "**restated confirmed ← drift.** It was judged on «no goldens and no `-update` flag exist», and the fact never claims they do: it is a tradeoff plus a prescription — IF goldens are used, they must fail loudly and `-update` must not run in CI. Marked @spec/done, which is the stage it is at.",
+              "the `-update`-flag convention it constrains is real Go test practice, and the card's own registry row reads `specified (pilot: research/go-demo fuzz differential)` — the pilot uses the differential arm, not the golden arm (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:19)"
             ]
           },
           "alternatives-lead": {
@@ -8641,7 +8642,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:90  - ##ALTERNATIVE-FORMAL-PROOF *Formal proof:* Go has no mainstream Kani/Creusot analogue — the differential/property o...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a true statement about the Go ecosystem: no mainstream Kani/Creusot analogue exists, and none is referenced or wired anywhere in the stack"
             ]
           },
           "ALTERNATIVE-MANUAL-REVIEW": {
@@ -8706,7 +8707,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:106  ##EVIDENCE-AND-TRANSFER-STRENGTH **Evidence & Transfer-strength:** R-040 (replacement protocol, production), R2C-008...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy do...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "all three citations resolve: R-040 is a rule id carried by the conform engine itself (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:151 and :179) and titles §7 of the legacy projections; R2C-008 is ATLAS:197; Feathers characterization is the named production practice"
             ]
           },
           "TRIGGER": {
@@ -8758,7 +8759,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:123  3. ##ROUTINE-WRITE-THE-DIFFERENTIAL-TARGET Write/extend a `FuzzXxx` differential target decoding fuzz bytes into repr...",
               "research/go-demo/internal/cells/batchplanner/planner_test.go:27  func FuzzPlannersAgree(f *testing.F) {",
               "research/go-demo/internal/cells/batchplanner/planner_test.go:31  f.Add([]byte{1, 1, 2, 2, 3, 3}, []byte{1, 9, 3, 3, 4, 4})",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a routine step; the artefact it tells the reader to write exists in the pilot at research/go-demo/internal/cells/batchplanner/planner_test.go:27-31"
             ]
           },
           "ROUTINE-BIND-OLD-VS-NEW": {
@@ -8774,7 +8775,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:126  5. ##ROUTINE-RUN-SEEDS-IN-THE-LOOP Run seeds in the per-package loop (`go test -race`); on a counterexample, fix `new...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:87  cmd.args([\"test\", &format!(\"./{cells_dir}/{cell}/...\"), \"-json\"]);",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a routine step addressed to the reader, not a description of the shipped loop; the fast-loop tool's missing `-race` is filed as a finding of its own"
             ]
           },
           "ROUTINE-REMOVE-OLD-ONCE-GREEN": {
@@ -8799,7 +8800,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:132  ##CHECKER **Checker:** conform rule `replacement-has-oracle` — flags a modified `//spec:implements` item whose cell l...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:19  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | specified (pilot: `research/go-demo` fuzz diff...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "the fact states its own status and the status is right: «(Status: specified; pilot task.)» — the rule `replacement-has-oracle` does not exist, exactly as declared (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:132)"
             ]
           },
           "RAID-ROLE": {
@@ -8820,7 +8821,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -8866,7 +8867,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md:11  ##INTENT Intent: Guarantee every cell is independently buildable and testable in seconds (`go test ./internal/cells/<...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:1  //! `go-ai-native fast-loop` — the Class-E `cell-fast-loop-present` //! checker, Go shape (scaffold-e-fast-loop): eve...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:87  cmd.args([\"test\", &format!(\"./{cells_dir}/{cell}/...\"), \"-json\"]);",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "an intent naming the command a reader types; the per-package loop it guarantees is implemented (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:87), and the claims about Go's substrate — per-package testing without project references — are true"
             ]
           },
           "ALSO-KNOWN-AS": {
@@ -8900,7 +8901,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Cell isolation* (a package with injected capabilities — no am...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:115  if !is_disabled(\"vet\") { header(opts, \"go vet ./...\"); let mut cmd = crate::tools::go_command(root);",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:75  let budget = budget_secs as f64; let mut over_budget: Vec<(String, f64)> = Vec::new();",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "participants; `go vet` is a real floor step (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:115) and the budget guard is implemented (fast_loop.rs:75)"
             ]
           },
           "COLLABORATIONS": {
@@ -8925,7 +8926,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md:27  ##CONSEQUENCES Consequences: (+) every other scaffold becomes loop-usable; (+) `-race` rides along at per-package cos...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:80  if !has_tests(&dir) { eprintln!(\"  fast-loop: {cell}: NO TESTS — the cell has no fast loop\"); failed.push(cell.clone(...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a consequence of the pattern as prescribed — the card's own routine runs `go test ./<cell>/ -race`, and under that command `-race` does ride along; that the shipped `fast-loop` never passes `-race` is a gap between tool and card, filed as a finding"
             ]
           },
           "ALTERNATIVES": {
@@ -8955,7 +8956,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -9115,7 +9116,8 @@
       "campaign": {
         "processed_hash": "9f83982e17e8a42c8d49c985f76a6e8f0d394048108ee6d01139787d21c65c9c",
         "summary": {
-          "confirmed": 13
+          "confirmed": 12,
+          "drift": 1
         },
         "verdicts": {
           "status-line": {
@@ -9175,7 +9177,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *`ExampleXxx` function* (in `example_test.go`, package `foo_te...",
               "research/go-demo/internal/cells/naiveplanner/planner_test.go:1  package naiveplanner",
               "research/go-demo/internal/cells/naiveplanner/planner_test.go:139  func ExampleNew() {",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "`example_test.go` + the external `foo_test` package IS the Go convention for Examples; the pilot's in-package placement is a consumer choice, and the fact prescribes rather than reports (its own Example exists at research/go-demo/internal/cells/naiveplanner/planner_test.go:139)"
             ]
           },
           "COLLABORATIONS": {
@@ -9192,7 +9194,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:25  ##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* every public seam item carries ≥1 Example of canonical construction...",
               "research/go-demo/discipline/health/latest-go.json:15  \"export_examples\": { \"exports\": 39, \"with_examples\": 3 },",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a GOAL, and the counting mechanism it depends on is built: the health collector records export coverage at research/go-demo/discipline/health/latest-go.json:15 («exports»: 39, «with_examples»: 3). The card registry declares the gate itself `specified` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:22)"
             ]
           },
           "CONSEQUENCES": {
@@ -9208,7 +9210,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:29  ##ALTERNATIVES Alternatives: godoc prose snippets (drift silently); separate example programs under `examples/` (fine...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "alternatives, each true of Go: godoc prose does drift silently, and `examples/` programs are built by the toolchain; neither clause claims an `examples/` directory exists here"
             ]
           },
           "RISKS-AND-ASSUMPTIONS": {
@@ -9220,17 +9222,17 @@
             ]
           },
           "EVIDENCE-AND-TRANSFER-STRENGTH": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable reference material transformative,...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy do...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be m...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**H4 resolves nowhere.** The fact cites three evidence ids; R2C-008 and R3-006 are ATLAS records (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197 and :37) and **H4 is in no register in this repository** — the ATLAS's 87 records are BLD-/DR1-/DR2-/R2C-/R3-, and no H-series roster exists anywhere. H1, H5 and H6 are used the same way in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:13-16,46 and are likewise undefined. Cited by two language stacks (this line and packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md:33)"
             ]
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -9276,7 +9278,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md:11  ##INTENT Intent: Ship a small runnable model of a subsystem's behavior the reader can EXECUTE to understand or predic...",
               "research/go-demo/internal/sim/doc.go:1  // Package sim is the reconciler's steppable reference model // (scaffold H): an in-memory world a reader can EXECUTE...",
               "research/go-demo/internal/sim/world.go:61  func (w *World) Step(",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "`httptest` IS a Go stdlib simulator (`net/http/httptest`), and the pattern's own subject is live in the pilot — a steppable model at research/go-demo/internal/sim/doc.go:1 with `Step()` at world.go:61"
             ]
           },
           "ALSO-KNOWN-AS": {
@@ -9292,7 +9294,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a subsystem has non-obvious dynamics (a reconci...",
               "research/go-demo/internal/sim/doc.go:1  // Package sim is the reconciler's steppable reference model // (scaffold H): an in-memory world a reader can EXECUTE...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a detector seed whose checker the registry declares `specified` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:23); its cited evidence DR2-019 resolves in the ATLAS"
             ]
           },
           "MOTIVATION": {
@@ -9310,7 +9312,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Reference model* (runnable, small, steppable — `Step()`/`Stat...",
               "research/go-demo/internal/sim/world.go:17  var _ seams.Store = (*World)(nil) // silent conformance made loud",
               "research/go-demo/internal/sim/world.go:89  var _ seams.Clock = (*FixedClock)(nil)",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "participants; the reference model and its loud conformance assertions are present (research/go-demo/internal/sim/world.go:17 and :89), and `httptest` is prescribed for HTTP boundaries the pilot does not have"
             ]
           },
           "COLLABORATIONS": {
@@ -9352,7 +9354,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the subsystem's behavior is modelable simply; a model that drift...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "a risk and its mitigation, both prescriptive: «a model that drifts from production misleads — conformance-test it» tells the reader what to do, it does not report that a conformance test exists"
             ]
           },
           "EVIDENCE-AND-TRANSFER-STRENGTH": {
@@ -9366,7 +9368,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -9387,7 +9389,8 @@
       "campaign": {
         "processed_hash": "de4cc5d4efe00563d131b8efecb9846494c8b6c4fb9491dcc5e12ea23c442f09",
         "summary": {
-          "confirmed": 13
+          "confirmed": 12,
+          "drift": 1
         },
         "verdicts": {
           "status-line": {
@@ -9411,7 +9414,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:11  ##INTENT Intent: Offer a capability-demanding multi-file change as ONE parameterized, checked operation — converting...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:1  //! `go-ai-native codemod add-cell` — the scaffold-I frame: one //! parameterized, checked, atomic operation. Creates...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "three true statements about Go's toolchain — `gofmt -r` ships pattern rewrites, `go/ast`+`go/format` are stdlib, `golang.org/x/tools/go/analysis` is the framework tier — plus the pattern's intent; the shipped codemod exists at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:1"
             ]
           },
           "ALSO-KNOWN-AS": {
@@ -9431,12 +9434,12 @@
             ]
           },
           "MOTIVATION": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:19  ##MOTIVATION Motivation: A weak agent asked to \"add a planner variant\" must create the cell package, the conformance...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/main.rs:153  AddCell {",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:108  let created = || -> Result<()> { write(\"doc.go\", doc_source(cell, spec_uri))?; write(&format!(\"{cell}.go\"), cell_sour...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**the CLI signature the fact prints does not exist.** It names `go-ai-native codemod add-cell <pkg> <cell> <seam> <variant> <spec-uri>` performing a FIVE-file change from FIVE parameters. The shipped verb takes TWO parameters — cell and spec_uri (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/main.rs:153-158) — and writes THREE files: doc.go, <cell>.go, <cell>_test.go (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:109-114). No registry arm and no Example stub is written. A reader typing the documented command gets an argument error"
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
@@ -9445,7 +9448,7 @@
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`gofmt -r` for pattern rewrites; a `go/ast`+`go/for...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:117  if let Err(e) = created() { let _ = std::fs::remove_dir_all(&dir); return Err(e); }",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:124  let mut cmd = crate::tools::go_command(root); cmd.args([\"test\", &format!(\"./{cells_dir}/{cell}/...\")]); let out = cmd...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "participants; atomic application is implemented (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:117 removes the directory on any failure), and the `go build` + `go test` post-check is prescribed for the pattern — the shipped verb's test-only post-check (codemod.rs:124) is a narrower instance, and in Go `go test` compiles the package it runs"
             ]
           },
           "COLLABORATIONS": {
@@ -9470,7 +9473,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:27  ##CONSEQUENCES Consequences: (+) the weakest tier can perform edits otherwise beyond it; (+) atomicity kills desync a...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:117  if let Err(e) = created() { let _ = std::fs::remove_dir_all(&dir); return Err(e); }",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "tradeoffs plus two true statements about the Go toolchain: `gofmt -r` is toolchain-native and `go/format` output is canonical; the [E-hyp] risk is explicitly unvalidated"
             ]
           },
           "ALTERNATIVES": {
@@ -9500,7 +9503,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -10797,9 +10800,9 @@
       "campaign": {
         "processed_hash": "f5ebd784c40a0d36957e3e48b216f5adb49e896ff1cec80b05897a27be2d5743",
         "summary": {
-          "confirmed": 55,
-          "drift": 2,
-          "unverifiable": 14
+          "confirmed": 58,
+          "drift": 10,
+          "unverifiable": 3
         },
         "verdicts": {
           "status-line": {
@@ -10828,11 +10831,11 @@
             ]
           },
           "QUANTITIES-ARE-CAMPAIGN-MEASURED": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:17  ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust mechanism cites measured spike facts, this one names the sa...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1  //! `go-ai-native-tcg bench` — the differential/latency harness //! (ORACLE-GO §5, §8): every corpus case runs throug...",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "**the quantities are recorded nowhere.** The fact says the Phase-7 live chain and the bench harness record them. The harness exists (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1) and there is **no Go corpus, no Go bench report and no ledger entry**: research/tcg-bench/reports/ carries bench-2026-07-07-baseline.json (TypeScript) and bench-rust-2026-07-07-baseline.json only. This is checkable without gopls, which is why it is drift rather than unverifiable"
             ]
           },
           "kind-line-resolution": {
@@ -10862,20 +10865,20 @@
             ]
           },
           "RESOLUTION-GOPLS-ON-PATH": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:34  1. ##RESOLUTION-GOPLS-ON-PATH `gopls` on PATH; @impl/done",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:155  // PATH: probe the bare name. let probe = std::process::Command::new(\"gopls\")",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "**PATH is not the first probe.** The fact is step 1 of §1's ordered resolution list, and the shipped resolver tries the `GO_AI_NATIVE_GOPLS` env override BEFORE PATH — and hard-fails on it when the override is not a file, without ever probing PATH (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:149-157). The implementation's own doc comment names the real order — «the env override, then PATH, then $GOBIN…» (lib.rs:141-143) — so the code documents a step the mechanism spec does not list"
             ]
           },
           "RESOLUTION-GOBIN": {
-            "v": "unverifiable",
+            "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:35  2. ##RESOLUTION-GOBIN `$GOBIN/gopls`, then `$(go env GOBIN)/gopls`; @impl/done",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:170  for var in [\"GOBIN\", \"GOPATH\"] { let out = std::process::Command::new(&go)",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:182  let candidate = if var == \"GOBIN\" { PathBuf::from(&value).join(exe(\"gopls\"))",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "the two probes the fact names collapse into one call that covers both: `go env GOBIN` reports the process `$GOBIN` when it is set, and the resolver joins `gopls` onto it (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:170-186). Same resolution, one probe"
             ]
           },
           "RESOLUTION-GOPATH-BIN": {
@@ -10906,11 +10909,11 @@
             ]
           },
           "INIT-RESULT-CARRIES-PATH-AND-VERSION": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:46  ##INIT-RESULT-CARRIES-PATH-AND-VERSION The resolved path and the server's reported version land in the `init` result....",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74  fn init_result(oracle: &GoOracle<ChildTransport>) -> serde_json::Value { serde_json::json!({ \"gopls_version\": oracle....",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "**the resolved path never lands in the init result.** `init_result` returns gopls_version, position_encoding, pull_diagnostics and ready — and no path (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74-84). Half the fact holds (the version is there), the other half is absent from the shipped shape"
             ]
           },
           "kind-line-session": {
@@ -10922,12 +10925,12 @@
             ]
           },
           "BRIDGE-SPEAKS-LSP-3-17-OVER-STDIO": {
-            "v": "unverifiable",
+            "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:53  ##BRIDGE-SPEAKS-LSP-3-17-OVER-STDIO The bridge speaks LSP 3.17 over the child's stdio (Content-Length framing). @impl...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/frame.rs:1  //! The LSP base-protocol framing cell: `Content-Length` headers, one //! JSON body per frame, both directions (TCG-P...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/frame.rs:27  write!(out, \"Content-Length: {}\\r\\n\\r\\n{body}\", body.len())",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "both halves hold. Content-Length framing is the framing cell (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/frame.rs:27), and the session is LSP 3.17 by the feature it declares: `general.positionEncodings` was introduced in 3.17 and the client sends it (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:255). LSP carries no version field, so a grep for «3.17» settles nothing either way"
             ]
           },
           "initialize-declares-lead": {
@@ -10984,20 +10987,20 @@
             ]
           },
           "BRIDGE-ANSWERS-THE-SERVERS-REQUESTS": {
-            "v": "unverifiable",
+            "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:69  ##BRIDGE-ANSWERS-THE-SERVERS-REQUESTS The bridge answers the server's own requests: `workspace/configuration` (with §...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:193  (true, Some(m)) => { let id = msg[\"id\"].clone(); let result = match m { \"workspace/configuration\" => { let n = msg .p...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:63  fn server_configuration_request_is_answered_per_item_mid_request() { let script = Script::new(vec![",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "the behaviour the fact describes is delivered: `workspace/configuration` is answered by name with a per-item config object, and every other server request — `window/workDoneProgress/create` and `client/registerCapability` included — receives a null result through the generic arm (packages/org.vibevm.ai-native/go-ai-native-tcg-bridge is at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:193-203). Dispatching generically rather than by name yields exactly the results the fact promises"
             ]
           },
           "DIAGNOSTICS-CHANNEL-HISTORY": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:74  ##DIAGNOSTICS-CHANNEL-HISTORY **Diagnostics channel, stated honestly.** gopls has historically PUSHED diagnostics (`t...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:33  pub position_encoding: PositionEncoding, pub pull_diagnostics: bool, pub server_version: String, }",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "the historical half is true; the second half is not. The fact says which channel the shipped gopls grants «is pinned by the Phase-7 live chain and **recorded in the differential corpus**» — and **no Go corpus file exists anywhere**: research/tcg-bench/ carries a TypeScript corpus and a Rust one. The capability is negotiated at runtime (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:33 carries `pull_diagnostics`), but nothing records it"
             ]
           },
           "BRIDGE-SUPPORTS-BOTH-DIAGNOSTIC-CHANNELS": {
@@ -11119,12 +11122,12 @@
             ]
           },
           "OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:123  - ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter per d...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:143  Some(doc) => { doc.version += 1; doc.text = text.clone();",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle/tests.rs:30  fn overlay_versions_are_monotonic_and_close_resets() {",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "**the counter does reset within a session.** `update {content: null}` removes the document from the overlay map (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:183-193), so a reopened file starts again at version 1. The bridge's own test says so in its name: `overlay_versions_are_monotonic_and_close_resets` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle/tests.rs:30). The implementation and its test agree with each other and disagree with the spec line"
             ]
           },
           "VALIDATE-WITHOUT-CONTENT-READS-DISK": {
@@ -11225,7 +11228,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:161  - ##KNOWN-ASYMMETRIES-ARE-DOCUMENTED-GAP-CASES Known asymmetries are DOCUMENTED-GAP corpus cases, not omissions — the...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:41  /// The documented-gap posture: the oracle stays SILENT (no /// error-grade diagnostic) while the build speaks — asse...",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "the mechanism that would carry a documented gap is built — the `known_gap` posture is asserted in the bench harness (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:41-46) — and **no asymmetry has been observed here**, because gopls is not installed on this machine and no Go corpus run exists. A claim about what happens when a gap is found cannot be checked before one is found"
             ]
           },
           "kind-line-degradation": {
@@ -11315,12 +11318,12 @@
             ]
           },
           "GRACEFUL-EXIT-IS-THE-LSP-DANCE": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:201  ##GRACEFUL-EXIT-IS-THE-LSP-DANCE Graceful exit is the LSP dance — `shutdown` request, `exit` notification — with kill...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360  pub fn shutdown(mut self) -> Result<(), TcgBridgeError> { let _ = self .client .request(\"shutdown\", serde_json::Value...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:357  impl Drop for ChildTransport { fn drop(&mut self) { let _ = self.child.kill(); let _ = self.child.wait(); }",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "**the no-zombie property is not test-asserted.** The dance is implemented — `shutdown` at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360, kill-on-drop at client.rs:357 — but the only occurrence of «zombie» in the whole stack is a doc comment in packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/tests/live_oracle.rs:3. The test body asserts `oracle.shutdown()` succeeded and checks no process table. Reading the test settles this without running it"
             ]
           },
           "PATHS-BECOME-URIS-AFTER-VERBATIM-PREFIX-STRIPPING": {
@@ -11370,7 +11373,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:224  - ##TARGET-WARM-VALIDATE warm `validate` p50 < 500 ms, @impl/done",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:56  warm_ms: Vec<u128>,",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "a performance target on a relay that cannot run here: gopls is not installed on this machine, and §0 of this very document says the Go quantities are campaign-measured rather than spike-measured (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:17). The harness records `warm_ms` per case (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:56) and no run exists to compare against"
             ]
           },
           "TARGET-COMPLETE": {
@@ -11385,29 +11388,29 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:227  - ##TARGET-COLD-INIT cold init-to-ready < 15 s. @impl/done",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/lib.rs:30  /// How long the relay waits for gopls readiness at boot; a pass /// degrades answers, it never fails the session (OR...",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "a performance target, unmeasurable here for want of gopls. The 45 s readiness budget (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/lib.rs:30-32) is how long the relay WAITS, not a target it claims to meet, so it neither confirms nor falsifies a 15 s figure"
             ]
           },
           "BENCH-HARNESS-RECORDS-DISTRIBUTIONS": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:229  ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench harness (`go-ai-native-tcg bench`) records distributions per run; the...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:106  pub fn run_bench(root: &Path, corpus_rel: &str, report_rel: &str) -> Result<()> {",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:77  Bench {",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "**the ledger entry does not exist.** The harness half holds — `run_bench` records a per-case distribution (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:56,106). The fact then states that «the Phase-7 ledger entry carries the first measured set on research/go-demo»: research/tcg-bench/reports/ holds bench-2026-07-07-baseline.json and bench-rust-2026-07-07-baseline.json and **no Go run**"
             ]
           },
           "LARGE-WORKSPACE-COLD-INIT-WARNING": {
-            "v": "unverifiable",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:234  ##LARGE-WORKSPACE-COLD-INIT-WARNING Large-workspace consumers are warned about the product's 60 s first-request ceili...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:232  // The relay owns the session: boot gopls up front so the host's // FIRST frame can be validate/scope/… (client init...",
-              "the oracle EXISTS and cannot be exercised here: `go-ai-native-tcg.exe` is built and its help lists serve / validate / scope / complete / type / bench, with nine `gopls` references in its sources — and **gopls is not installed on this machine**, so no behavioural claim about the relay can be observed. Recorded unverifiable rather than confirmed on the code's existence or drifted on a toolchain absence: the mechanism is present and untested here"
+              "**no consumer is warned of anything.** The eager-init half holds (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:232). The first half says large-workspace consumers ARE warned about a 60 s first-request ceiling, and no 60 s constant and no warning string exists in the shipped code or in spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md"
             ]
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -11428,8 +11431,8 @@
       "campaign": {
         "processed_hash": "d8e6ba429937c0280e459c648bcacb104288645d0fa08da8bc83d94cf878fbe5",
         "summary": {
-          "confirmed": 40,
-          "drift": 1
+          "confirmed": 38,
+          "drift": 3
         },
         "verdicts": {
           "status-line": {
@@ -11562,12 +11565,12 @@
             ]
           },
           "OP-INIT": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294  if op == \"init\" { // Re-init: a fresh gopls session (overlays cleared). match GoOracle::spawn(&root, READINESS_BUDGET) {",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74  fn init_result(oracle: &GoOracle<ChildTransport>) -> serde_json::Value { serde_json::json!({ \"gopls_version\": oracle....",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**three of five keys and the one parameter are absent.** The protocol prints `init {root}` → `{gopls_version, gopls_path, go_version, root_files, ready}`. The shipped op takes no params — the root is the process root (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294) — and returns gopls_version, position_encoding, pull_diagnostics, ready (serve.rs:74-84). `gopls_path`, `go_version` and `root_files` are never produced; `position_encoding` and `pull_diagnostics` are produced and undocumented"
             ]
           },
           "OP-UPDATE": {
@@ -11773,12 +11776,12 @@
             ]
           },
           "REPLAY-GOLDENS-PIN-BOTH-HOPS": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158  ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer shape in this package's tests; recorded LSP trans...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14  pub(crate) struct Script { pub sent: Vec<serde_json::Value>,",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:300  r#\"{\"protocol\":1,\"file\":\"internal/cells/plan/plan.go\",\"in_test\":false,\"degraded\":false,\"#,",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**the outer hop has no replay goldens.** The inner hop is real: recorded LSP transcripts drive a scripted transport (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14). Nothing drives `run_serve` over recorded frames — the outer-hop tests are unit tests of helper functions plus a finding-parity test (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/tests/finding_parity.rs). «Both hops» is one hop"
             ]
           },
           "MARKERS-FIELD-IS-FILLED-HERE": {
@@ -11792,7 +11795,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -11813,8 +11816,8 @@
       "campaign": {
         "processed_hash": "ec144d917d989ae9bfb31f06511d8788cfb6cd4bd4cd7e054b12b96b356ab4d3",
         "summary": {
-          "confirmed": 28,
-          "drift": 1
+          "confirmed": 26,
+          "drift": 3
         },
         "verdicts": {
           "status-line": {
@@ -11896,12 +11899,12 @@
             ]
           },
           "RULE-SEAM-ERROR-CONTRACT": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:41  - ##RULE-SEAM-ERROR-CONTRACT the seam-error contract (`seam-error-cites-req` — a seam's closed error set carries its...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/go.rs:145  \"seam_error_missing_req\" if !in_test => ( GO_GUIDE_ERRORS, \"a seam error type without a Spec field cannot cite its RE...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:534  ex.unsafeAt(\"seam_error_missing_req\", ex.line(s.Pos()))",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**`seam-error-cites-req` is not a rule.** The contract ships as a census KIND, `seam_error_missing_req`, inside go-unsafe-in-domain (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/go.rs:145-149, emitted by packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:534). The rule id the fact names has zero occurrences in any Rust source. Same family as the `gated_packages` / `gated_crates` slip"
             ]
           },
           "RULE-DEVIATION-ESCAPE-HATCH": {
@@ -12027,12 +12030,12 @@
             ]
           },
           "CONFORM-TOML-GAINS-A-GO-SECTION": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:107  ##CONFORM-TOML-GAINS-A-GO-SECTION `conform.toml` gains a `[go]` section, written by `go-ai-native init` from the modu...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/config.rs:106  pub struct GoConfig { /// Go source roots (flat walk; `<dir>/*` scans subdirs). pub roots: Vec<String>, /// A `.go` f...",
               "research/go-demo/conform.toml:12  [go] roots = [\".\"] exclude_substrings = [\"/testdata/\", \"/vendor/\"] cells_dir = \"internal/cells\" seams_pkg = \"internal...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**two of the documented keys would fail to parse.** `GoConfig` is `deny_unknown_fields` and declares roots, exclude_substrings, cells_dir, seams_pkg, registry_pkg, floor_disable (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/config.rs:106-131). The fact documents `gated_packages`, `[[exempt]]` and a file budget under `[go]`: `gated_packages` has zero code hits repo-wide, and a consumer who writes the section as documented gets a hard config error. The real pilot section carries only the declared keys (research/go-demo/conform.toml:12)"
             ]
           },
           "EVERY-PACKAGE-GATED-OR-EXEMPT": {
@@ -12070,7 +12073,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -12091,8 +12094,7 @@
       "campaign": {
         "processed_hash": "5855f5128468cb5c93ea12d4ebf9728fa3adae50f8fc490abfd5d629f4010572",
         "summary": {
-          "confirmed": 23,
-          "drift": 2
+          "confirmed": 25
         },
         "verdicts": {
           "status-line": {
@@ -12186,10 +12188,12 @@
             ]
           },
           "LAYER-1-SYNTACTIC": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:58  - ##LAYER-1-SYNTACTIC **Layer 1 — syntactic:** a Go grammar mask (Go's grammar is famously small; mature CFG tooling,...",
-              "no grammar tooling is vendored anywhere — no CFG, no grammar mask — so layer 1 as described has no implementation"
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:58  - ##LAYER-1-SYNTACTIC **Layer 1 — syntactic:** a Go grammar mask (Go's grammar is famously small; mature CFG tooling, permissively licensed). @spec/done",
+              "**restated confirmed ← drift.** It was judged «no grammar tooling is vendored anywhere — so layer 1 as described has no implementation», and the document it sits in declares at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:4-10 that it is a «vision / component brief — DELIBERATELY HELD AT STUB DEPTH» and «dispositioned VERY-FAR-FUTURE by the owner (2026-07-17)». Absence is what the brief predicts, not a contradiction of it.",
+              "the Rust twin of this exact fact is confirmed — packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#LAYER-1-SYNTACTIC, in a brief with the same status line and the same absent masker. One claim, two languages, and it was reading two ways.",
+              "the statements it does make are true: Go's grammar is small and permissively-licensed CFG tooling exists; the fact claims no vendoring"
             ]
           },
           "LAYER-2-SEMANTIC": {
@@ -12260,10 +12264,11 @@
             ]
           },
           "LICENSING-CFG-GRAMMAR-TOOLING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:91  - ##LICENSING-CFG-GRAMMAR-TOOLING CFG/grammar tooling: permissive options exist; avoid GPL grammar tooling. @spec/done",
-              "the licensing survey is of tooling this repository does not vendor: no CFG or grammar package is a dependency of any crate here"
+              "**restated confirmed ← drift.** It was judged «the licensing survey is of tooling this repository does not vendor», and a licensing survey inside a VERY-FAR-FUTURE brief is guidance for a future adoption — it never claims a dependency exists. Its guidance also matches this repository's standing posture: permissive-only dependencies, copyleft refused by default.",
+              "same restatement reason as this file's LAYER-1-SYNTACTIC, and the Rust twin's licensing row is confirmed"
             ]
           },
           "LICENSING-NO-THIRD-PARTY-RESEARCH-CODE": {
@@ -12301,7 +12306,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-cross-language"
       }
     },
     {
@@ -12322,7 +12327,8 @@
       "campaign": {
         "processed_hash": "5d86dcf52da27cb1861b2625ac7183ff7ebea9b052270bb79cbfec6f556f01ad",
         "summary": {
-          "confirmed": 37
+          "confirmed": 34,
+          "drift": 3
         },
         "verdicts": {
           "status-line": {
@@ -12393,11 +12399,11 @@
             ]
           },
           "FLOOR-REMAINS-THE-TRUTH": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:48  ##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` → gofmt/vet/build/test) remains the truth, verbatim. @impl/...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:28  const STEPS: &[&str] = &[ \"gofmt\", \"vet\", \"tests\", \"staticcheck\", \"conform\", \"specmap\", \"test-gate\", ];",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**the floor named is not the floor shipped.** The fact glosses it as gofmt/vet/build/test. The shipped step list is seven long — gofmt, vet, tests, staticcheck, conform, specmap, test-gate (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:28-36) — and carries **no `build` step** at all; the compile rides inside `go test ./...` (floor.rs:127-128). A reader told the floor is four steps will not look for the three discipline steps that decide its verdict"
             ]
           },
           "STANCE-STAND-ON-THE-CONSUMERS-GOPLS": {
@@ -12481,12 +12487,12 @@
             ]
           },
           "COMPONENT-THE-PRODUCT-SEAM": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:127  - ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the SAME four `tcg_*` tools; `language: \"go\"`...",
               "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/lib.rs:60  \"tcg_complete\", \"tcg_scope\", \"tcg_type\", \"tcg_validate\",",
               "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_discipline.rs:19  pub(crate) fn language_mismatch(args: &Value) -> Option<ToolOutput> { let asked = args.get(\"language\").and_then(Value...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**the host does not dispatch `go`.** The fact says the same four `tcg_*` tools take `language: \"go\"` and dispatch through the lockfile to this slot. The host's PROP-026 accepts `\"typescript\"` and `\"rust\"` and names **`\"go\"` as the example of an unsupported value** (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:71-73 and :169-171). The Go tools ship in their own MCP package, where `language` is a compat parameter that must equal `go` (packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_tcg.rs:268). «The enum-value promise, cashed a second time» has not been cashed"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -12499,11 +12505,11 @@
             ]
           },
           "STAGE-A-CONSULTATION-ORACLE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:137  - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope / complete / typ...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:30  Serve, /// Validate one file (optionally hypothetical content) and print /// the enriched answer. Exit 1 = an error-g...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "**the proof named does not exist.** Stage A claims mechanics «proven by the differential corpus and the bench baseline on research/go-demo». research/tcg-bench/ carries a TypeScript corpus and a Rust one, its reports directory carries a TypeScript baseline and a Rust one, and there is no Go corpus and no Go baseline. The ops themselves ship (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:30)"
             ]
           },
           "STAGE-B-RICHER-DISCIPLINE-ADVICE": {
@@ -12518,7 +12524,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:144  - ##STAGE-C-DELIVERY-EXPERIMENTS **Stage C — delivery experiments** (cross-language, with the TS and Rust twins, when...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "explicitly future work, gated on the owner in its own words — «when the owner commissions the delivery line» — and marked @spec/done, which is the stage it is at"
             ]
           },
           "STAGE-D-X-TOOLS-EMBEDDING": {
@@ -12586,7 +12592,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:170  - ##RISK-GOPLS-IS-GO-TYPES-NOT-THE-COMPILER **gopls is go/types, not the compiler — the defining nuance, owned in the...",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:144  - ##FIDELITY-GOPLS-STANDS-ON-GO-TYPES **gopls stands on `go/types` — the reference library implementation of the Go s...",
-              "the Go consumer is `research/go-demo/` — go.mod, 15 production files in the prescribed cell layout, conform.toml with cells_dir, specmap.json and discipline/registry/ — and the practice this fact states holds there"
+              "the risk analysis is true and the package is honest about its unbuilt mitigations: the bench harness itself records that the code-level mapping table waits for live evidence (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:4-7). A specified mitigation declared pending is not a false statement"
             ]
           },
           "RISK-NO-GUARANTEE-BY-CONSTRUCTION": {
@@ -12643,7 +12649,7 @@
           }
         },
         "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-go-review"
       }
     },
     {
@@ -14114,7 +14120,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:15  ##APPLICABILITY-RECOGNITION ... *Detector seed:* near-duplicate code blocks differing only in a key, OR a hand-maint ...",
               "xtask/src/codegen.rs:2  //! under each owning crate's `src/generated/` from the JTD schemas under",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a detector seed; the checker it seeds (`derivable-not-hand-maintained`) is declared unbuilt by the package's own registry — packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:10 reads `specified`. The host does carry a generator of exactly the shape the card describes, at xtask/src/codegen.rs:2"
             ]
           },
           "MOTIVATION": {
@@ -14139,7 +14145,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:1  //! `cargo fast-loop` — the Class-E `cell-fast-loop-present`",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:93          // Doctests ride the same loop (card scaffold-g-doctests):",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a collaborations clause, prescriptive: the Class-E loop that checks generated output is shipped (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:1) and doctests do ride that same loop (fast_loop.rs:93). That the host's own generator emits no doctests is an instance gap, not a false statement about the pattern"
             ]
           },
           "GOALS-AND-NON-GOALS": {
@@ -14180,12 +14186,12 @@
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy d ...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:193  - ##FINDING-R2C-003 **R2C-003 *** — Agentic metaprogramming: strong tool-equipped agents partly recover OOD via inte ...",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "all citations resolve: R2C-008 at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197, R2C-003 at :193, and A2/A3 as the manifesto's axioms at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:52-53 — not ATLAS rows, and not broken references"
             ]
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -14241,7 +14247,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:13  ##ALSO-KNOWN-AS Also Known As: typestate; phantom types; type-state builder; sealed trait; newtype wrapper; ...",
               "crates/vibe-resolver/src/activation.rs:43  pub struct CapabilityTag(String);",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a synonym list; typestate, phantom types, sealed traits and newtype wrappers are all real Rust idioms, and the newtype form is practised in the host (crates/vibe-resolver/src/activation.rs:43). Nomenclature is not an existence claim"
             ]
           },
           "APPLICABILITY-RECOGNITION": {
@@ -14249,7 +14255,7 @@
             "ev": [
               "crates/vibe-resolver/tests/ui/bare_string_tag.rs:9      ctx.add_present(\"rust\");",
               "crates/vibe-resolver/tests/ui/bare_string_tag.stderr:5    |         ----------- ^^^^^^ expected `CapabilityTag`, found `&str`",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a detector seed whose checker `seam-protocol-typed` the registry declares `specified` (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:11); the recognition it describes is demonstrated by a committed compile-fail asset — crates/vibe-resolver/tests/ui/bare_string_tag.stderr:5 shows the bare `&str` refused at a typed seam"
             ]
           },
           "MOTIVATION": {
@@ -14265,7 +14271,7 @@
             "ev": [
               "crates/vibe-resolver/src/activation.rs:43  pub struct CapabilityTag(String);",
               "research/rust-demo/crates/rust-demo/src/cells/greeting.rs:26  pub struct GuestName(String);",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a participants list; the newtype participant is live in both the host (crates/vibe-resolver/src/activation.rs:43) and the demo (research/rust-demo/crates/rust-demo/src/cells/greeting.rs:26), and the typestate/sealed-trait participants are prescribed for protocols this tree does not have"
             ]
           },
           "COLLABORATIONS": {
@@ -14319,7 +14325,7 @@
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -14375,7 +14381,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:13  ##ALSO-KNOWN-AS Also Known As: design by contract; debug_assert; refinement; require/ensure; invariant check; Kani c ...",
               "crates/vibe-cli/src/commands/tree/build.rs:101      debug_assert!(",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a synonym list; `debug_assert` is practised in the host (crates/vibe-cli/src/commands/tree/build.rs:101) and Kani is a real Rust verifier named as a synonym, not as a dependency"
             ]
           },
           "APPLICABILITY-RECOGNITION": {
@@ -14383,7 +14389,7 @@
             "ev": [
               "crates/vibe-cli/src/commands/tree/build.rs:94      // Contract (PROP-036 §2.4, scaffold-c): a well-formed lockfile is",
               "crates/vibe-resolver/src/fixpoint_model.rs:180          // exists (PROP-003 §2.6; card scaffold-c witness, not prose).",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a detector seed for `invariant-witnessed`, declared `specified` by the registry (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:12); the practice it seeds is live — crates/vibe-resolver/src/fixpoint_model.rs:180 carries a use-site witness citing the card by name"
             ]
           },
           "MOTIVATION": {
@@ -14401,7 +14407,7 @@
               "crates/vibe-cli/src/commands/tree/build.rs:101      debug_assert!(",
               "crates/vibe-resolver/src/fixpoint_model.rs:182          debug_assert!(",
               "crates/vibe-resolver/tests/solver_properties.rs:1  //! Property-based characterization of the solver core (card",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a participants list; pre/postcondition and use-site witness are live (crates/vibe-cli/src/commands/tree/build.rs:101, crates/vibe-resolver/src/fixpoint_model.rs:182) and a property test is committed (crates/vibe-resolver/tests/solver_properties.rs:1). The Kani participant is prescribed, and Kani is absent from the toolchain by design"
             ]
           },
           "COLLABORATIONS": {
@@ -14455,7 +14461,7 @@
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -14476,7 +14482,8 @@
       "campaign": {
         "processed_hash": "4fc8272e5822f7f60c82a682a3a62d1e2d71163901f9325b5aa437aef0316f42",
         "summary": {
-          "confirmed": 51
+          "confirmed": 50,
+          "drift": 1
         },
         "verdicts": {
           "reference-instance-note": {
@@ -14497,12 +14504,12 @@
             ]
           },
           "card-is-beta": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:78  ##CHECKER **Checker:** conform T-sem rule `replacement-has-oracle` ... *(Status: specified, NOT yet implemented in p ...",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | shipped: oracle-presence (`cell-has-oracle`, ...",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:175          \"cell-has-oracle\"",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "**the card and its own registry disagree.** The fact says «this card is itself BETA (its checker is specified but the conform rule is not yet implemented in the pilot)». The registry row for the same card reads «**shipped**: oracle-presence (`cell-has-oracle`, rust-ai-native-conform); the oracle itself stays authored» (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13), and that rule is registered in the shipped gate (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:77, defined at crates/vendor/core-ai-native-conform/src/rules/structure.rs:148-175). A conform rule for this card IS implemented; the unimplemented one is `replacement-has-oracle`, and the CHECKER row says so correctly while this one does not"
             ]
           },
           "CLASSIFICATION": {
@@ -14579,7 +14586,7 @@
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:148  /// Class D — `cell-has-oracle`: every `#[cell]`-manifested type",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:218                  \"discipline://rust-ai-native-lang/cards/scaffold-d-differential-oracle#ops\",",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:77      out.push(Box::new(rules::CellHasOracle));",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a detector seed. Its shipped relative `cell-has-oracle` is static rather than diff-driven (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:148), which is what a seed's own CHECKER row already records as the unbuilt part"
             ]
           },
           "MOTIVATION": {
@@ -14604,7 +14611,7 @@
             "ev": [
               "crates/vibe-resolver/tests/solver_properties.rs:12  //!    two `DepSolver` cells over the same world and demands identical",
               "crates/vibe-resolver/tests/solver_properties.rs:13  //!    normalized graphs. Today it smoke-tests naive-vs-naive (proving",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a participant of the pattern — «kept temporarily, or captured as goldens» — prescriptive; the host's differential arm is a standing property test (crates/vibe-resolver/tests/solver_properties.rs:12-13) and keeps no `old_*` because nothing was replaced"
             ]
           },
           "PARTICIPANT-SUBJECT-NEW": {
@@ -14722,7 +14729,7 @@
             "v": "confirmed",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:51  ##ALTERNATIVE-FORMAL-PROOF *Full formal proof* (Kani/Creusot): stronger, but far costlier and not always tractable; ...",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a true statement about the Rust ecosystem: Kani and Creusot exist, are costlier, and are absent from this toolchain — which the alternative says is the normal case"
             ]
           },
           "ALTERNATIVE-MANUAL-REVIEW": {
@@ -14786,7 +14793,7 @@
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy d ...",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:178          \"no replacement of a non-trivial cell merges without a differential ...",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | shipped: oracle-presence (`cell-has-oracle`, ...",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "all three resolve: R-040 is a rule id the engine itself carries (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:178), R2C-008 is ATLAS:197, and Feathers characterization is the named production practice"
             ]
           },
           "TRIGGER": {
@@ -14794,7 +14801,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:148  /// Class D — `cell-has-oracle`: every `#[cell]`-manifested type",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:218                  \"discipline://rust-ai-native-lang/cards/scaffold-d-differential-oracle#ops\",",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a Band-3 trigger — the condition under which a reader applies the card. That the shipped rule fires on presence at scan time rather than on a diff is the CHECKER row's business, and it declares that rule unimplemented"
             ]
           },
           "MODE": {
@@ -14825,7 +14832,7 @@
             "v": "confirmed",
             "ev": [
               "crates/vibe-resolver/tests/solver_properties.rs:12  //!    two `DepSolver` cells over the same world and demands identical",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a routine step addressed to the reader"
             ]
           },
           "ROUTINE-WRITE-THE-STRATEGY": {
@@ -14857,7 +14864,7 @@
             "ev": [
               "crates/vibe-resolver/tests/solver_properties.rs:1  //! Property-based characterization of the solver core (card",
               "crates/vibe-check/tests/check_cells_oracle.rs:1  //! The check-cell oracle (conform `cell-has-oracle`, card scaffold-d):",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a routine step addressed to the reader; the host's oracles are standing test files precisely because nothing has been replaced yet (crates/vibe-check/tests/check_cells_oracle.rs:1)"
             ]
           },
           "ROUTINE-CITE-THE-ORACLE": {
@@ -14874,7 +14881,7 @@
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:175          \"cell-has-oracle\"",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:148  /// Class D — `cell-has-oracle`: every `#[cell]`-manifested type",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | shipped: oracle-presence (`cell-has-oracle`, ...",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "the fact declares its own status and the status is right: `replacement-has-oracle` occurs nowhere outside the card, and the row says «(Status: specified, NOT yet implemented in pilot → this card is BETA.)» (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:78). The rule that DOES ship is a different one, `cell-has-oracle`, which this row does not claim"
             ]
           },
           "RAID-ROLE": {
@@ -14891,12 +14898,12 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:104          #[arg(long, default_value_t = 60)]",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:1  //! `cargo fast-loop` — the Class-E `cell-fast-loop-present`",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a budget statement; the sub-minute first signal it posts is the shipped fast-loop's own default (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:104, `default_value_t = 60`)"
             ]
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -14961,7 +14968,7 @@
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:65          let out = Command::new(\"cargo\")",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:109  - ##FINDING-R3-007 **R3-007** — Verification locality beats model capability: per-cell sub-minute checks (the swarm bet)",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:107          // build failure — isolation is broken, report it as red.",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a detector seed; the loop it seeds ships and reports a broken isolation as red (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:107), and R3-007 resolves at ATLAS:109"
             ]
           },
           "MOTIVATION": {
@@ -14970,7 +14977,7 @@
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:97      /// The Class-E fast-loop checker: every cell builds and tests in",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:100          /// Check a single cell (workspace member name) instead of all.",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:109  - ##FINDING-R3-007 **R3-007** — Verification locality beats model capability: per-cell sub-minute checks (the swarm bet)",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a motivation narrative; `rust-ai-native fast-loop --cell` ships (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:97-100) and `cargo test -p <cell>` is a real Rust invocation. The implementation preferring `cargo nextest run -p` is a faster instance of the same per-cell run, not a contradiction"
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
@@ -15035,7 +15042,7 @@
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -15160,7 +15167,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs:66      let known_scheme = [\"spec://\", \"discipline://\", \"misra://\"]",
               "schemas/specmap.jtd.json:3  \"description\": \"Wire format for the canonical `specmap.json` index — the derived, deterministic, committed ... artef ...",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "the stable REQ namespace the risk assumes does exist and is committed: specmap.json at the repository root with its schema at schemas/specmap.jtd.json:3, and the grammar acceptor knows the schemes (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs:66). The assumption is satisfied; no rule needs to check it for the assumption to hold"
             ]
           },
           "EVIDENCE-AND-TRANSFER-STRENGTH": {
@@ -15174,7 +15181,7 @@
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -15195,7 +15202,8 @@
       "campaign": {
         "processed_hash": "d1f483b15abb5acff9035d6c1cc17318154ad866fae67e6c2fc454ccb148a9d5",
         "summary": {
-          "confirmed": 13
+          "confirmed": 12,
+          "drift": 1
         },
         "verdicts": {
           "status-line": {
@@ -15255,7 +15263,7 @@
             "ev": [
               "research/rust-demo/crates/rust-demo/src/cells/greeting.rs:19  /// ```",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs:13  /// Class G — `seam-has-doctest`: a public item declared at the",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a participants list; the doctest participant is live in the demo (research/rust-demo/crates/rust-demo/src/cells/greeting.rs:19) and gated by a shipped rule (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs:13). The `examples/` cell is a prescribed alternative carrier"
             ]
           },
           "COLLABORATIONS": {
@@ -15301,17 +15309,17 @@
             ]
           },
           "EVIDENCE-AND-TRANSFER-STRENGTH": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy d ...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be ...",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:16  | `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | shipped (`seam-has-doctest` + `pub-doctest`, rust-a ...",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "**H4 resolves nowhere** — the same broken citation as the Go twin at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:33. R2C-008 and R3-006 resolve (ATLAS:197 and :37); H4 is in no register in this repository. The ATLAS's 87 records are BLD-/DR1-/DR2-/R2C-/R3-, and no H-series roster exists — H1, H5 and H6 are used the same way in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:13-16,46 and are likewise undefined"
             ]
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -15377,7 +15385,7 @@
               "crates/vibe-resolver/src/fixpoint_model.rs:1  //! A runnable reference model of the conditional-dependency fixpoint",
               "crates/vibe-resolver/src/fixpoint_model.rs:5  //! Execution-prediction is where weak readers are weakest: nobody",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:139  - ##FINDING-DR2-019 **DR2-019** — Code reasoning (execution prediction) is weak even on tiny functions",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a detector seed; the subject it recognises is live in the host — a runnable reference model at crates/vibe-resolver/src/fixpoint_model.rs:1 whose own header states the execution-prediction rationale — and DR2-019 resolves at ATLAS:139"
             ]
           },
           "MOTIVATION": {
@@ -15450,7 +15458,7 @@
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -15471,7 +15479,8 @@
       "campaign": {
         "processed_hash": "eb77613d3842a5571c1f6ab3a4b4d21999b3bcd0a9311d7006b060b76d374be1",
         "summary": {
-          "confirmed": 13
+          "confirmed": 11,
+          "drift": 2
         },
         "verdicts": {
           "status-line": {
@@ -15514,16 +15523,16 @@
               "xtask/src/main.rs:238      /// Fixed-parameter example (the weakest-tier invocation shape):",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:181      AddCell {",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:143  - ##FINDING-R2C-006 **R2C-006** — Rust benchmark contradiction resolved: difficulty mix, not Rust-unfriendliness",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a detector seed; the card itself calls the rule advisory/WISH, and R2C-006 resolves at ATLAS:143"
             ]
           },
           "MOTIVATION": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:181      AddCell {",
               "xtask/src/main.rs:238      /// Fixed-parameter example (the weakest-tier invocation shape):",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "**the command does not exist.** The fact prints `vibe codemod rename-seam --from X --to Y` performing the change «atomically and verifiably». There is no `rename-seam` anywhere and no `vibe codemod` subcommand: the shipped codemod enum carries one variant, `add-cell` (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:181). **The TypeScript twin of this exact fact was recorded drift in this same batch** — packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md#MOTIVATION, «`vibe codemod rename-seam` has no implementation anywhere» — and the Rust one was confirmed. One claim, two languages, two verdicts"
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
@@ -15532,7 +15541,7 @@
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:184      // All content is computed; now write atomically-by-rollback.",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:210          let _ = std::fs::remove_file(&module_path);",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:137  /// lib.rs, seeds the smoke test, then runs `cargo check -p <crate>`;",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "a participants list with an explicit alternative that IS satisfied: «*Codemod* (`syn`-based AST rewrite **or cargo-integrated operation**)» — the shipped `add-cell` is the cargo-integrated branch, applying atomically by rollback (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:184,210) and post-checking with `cargo check -p` (codemod.rs:137)"
             ]
           },
           "COLLABORATIONS": {
@@ -15579,17 +15588,17 @@
             ]
           },
           "EVIDENCE-AND-TRANSFER-STRENGTH": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:203  - ##FINDING-R3-013 **R3-013** — Swarm contention: ownership aligns with file boundaries; deterministic toolchain kil ...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:143  - ##FINDING-R2C-006 **R2C-006** — Rust benchmark contradiction resolved: difficulty mix, not Rust-unfriendliness",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
-              "the consumer is `research/rust-demo/` — conform.toml, specmap.toml, specmap.json and discipline/registry/ — and the host itself dogfoods this stack with 120 `#[spec(implements=…)]` files and 402 `specmark::scope!` sites"
+              "**`DL1-015` resolves nowhere.** R3-013 and R2C-006 are ATLAS records (:203 and :143); the third id is written `DL1-015` and the ATLAS carries `DR1-015` (:181). The typo survives in this card and its TypeScript twin and nowhere else, so nothing has ever resolved it. Second member of the unresolvable-evidence-id family, with H4"
             ]
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -16416,7 +16425,8 @@
       "campaign": {
         "processed_hash": "9bdac518e930e35f74eb07d15e910e3bdc56c21d72570ef02af27e9292c99d6e",
         "summary": {
-          "confirmed": 71
+          "confirmed": 66,
+          "drift": 5
         },
         "verdicts": {
           "status-line": {
@@ -16450,7 +16460,7 @@
             "ev": [
               "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:3  _Recorded 2026-07-07 on this box: rust-analyzer 1.93.1 (the stable",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs:47      \"1.93.1 grants pull diagnostics\"",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the spike facts and their subject both check out: research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:3 records the date and rust-analyzer 1.93.1, and the live test asserts that same version's behaviour (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs:47). rust-analyzer is installed on this machine, so the subject is exercisable"
             ]
           },
           "kind-line-resolution": {
@@ -16513,11 +16523,11 @@
             ]
           },
           "RESOLVED-PATH-AND-VERSION-LAND-IN-INIT": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76  fn init_result(oracle: &RustOracle<ChildTransport>) -> serde_json::Value {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:78          \"ra_version\": oracle.capabilities().server_version,",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the resolved path never lands in the init result.** The version does: `init_result` emits ra_version, position_encoding, pull_diagnostics and quiescent (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76-78). `ra_path` occurs zero times in the package. Half the fact holds and the half it is named for does not — the same shape as the Go twin's INIT-RESULT-CARRIES-PATH-AND-VERSION"
             ]
           },
           "kind-line-session": {
@@ -16617,7 +16627,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:100  /// nearly blind (the Phase-0 spike's central finding). Passed as",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md:72    `workspace/configuration` answers. A null-config oracle is nearly",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a recorded spike finding, marked @spec/done and corroborated inside the shipped code: the bridge's own comment calls a null-config oracle «nearly blind (the Phase-0 spike's central finding)» (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:100). The spike driver being throwaway is why the finding is prose rather than a committed run"
             ]
           },
           "BRIDGE-SHIPS-ONE-CONFIG-OBJECT": {
@@ -16877,12 +16887,12 @@
             ]
           },
           "GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:356      pub fn shutdown(mut self) -> Result<(), TcgBridgeError> {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:348          let _ = self.child.kill();",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs:116      oracle.shutdown().expect(\"shutdown\");",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the no-zombie property is not test-asserted.** The dance is implemented — shutdown at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:356, kill-on-drop at client.rs:348 — and the live test asserts only that `shutdown()` returned (tests/live_oracle.rs:116). No process-table or surviving-pid check exists anywhere in the package. Reading the test settles this without running it, and the Go twin fails the same way"
             ]
           },
           "PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING": {
@@ -16895,11 +16905,11 @@
             ]
           },
           "STDOUT-CARRIES-LSP-FRAMES-ONLY": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303              .stderr(std::process::Stdio::null())",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs:53  pub fn read_frame(reader: &mut impl BufRead) -> Result<Option<serde_json::Value>, TcgBridgeError> {",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**stderr is dropped at the pipe, not drained by a reader.** The fact says rust-analyzer's stderr chatter «is drained and discarded by the reader (surfaced only in bridge debug logging)». The child is spawned with `.stderr(std::process::Stdio::null())` (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303), so nothing reads it and no debug logging can surface it. The conclusion — stdout carries frames only — holds; the mechanism described does not exist"
             ]
           },
           "kind-line-latency": {
@@ -16985,10 +16995,10 @@
             ]
           },
           "TARGET-WARM-COMPLETE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:719     `complete` p50 < 300 ms. Falsified → the §13 R1 ladder, targets",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**no instrument measures it.** §8 posts three targets; the committed bench measures two of them — cold init → quiescent and warm `validate` p50/p95 (research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:49-53) — and records **no `complete` row at all**, because the harness times `validate` only. rust-analyzer is installed here, so this is a missing instrument rather than an unexercisable claim. The TypeScript twin was already recorded drift for exactly this — packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md#TARGET-WARM-VALIDATE-AND-COMPLETE — and so was the Go one"
             ]
           },
           "TARGET-COLD-INIT-TO-QUIESCENT": {
@@ -17010,16 +17020,16 @@
             ]
           },
           "LARGE-WORKSPACE-CONSUMERS-ARE-WARNED": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884  reason. The product's 60 s first-request cap is the hard ceiling —",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220      // The relay owns the session: boot the analyzer up front so the",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**no consumer is warned.** The eager-init half holds (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220). The 60 s first-request ceiling lives only in plan prose at legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884, and the product registry that would have enforced and surfaced it was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). Nothing warns anybody, and legacy-spec/ is an archive no living contract may rest on"
             ]
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -17040,7 +17050,8 @@
       "campaign": {
         "processed_hash": "f2c338a2590478bb4430fa05c4eb0c4c0d2f0d4b074787dd76c74df90235387a",
         "summary": {
-          "confirmed": 42
+          "confirmed": 38,
+          "drift": 4
         },
         "verdicts": {
           "status-line": {
@@ -17081,7 +17092,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md:1  # TCG-PROTOCOL v0.1 — the oracle wire protocol, both hops {#root}",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:26  pub const ORACLE_PROTOCOL: u64 = 1;",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the parity the lead claims is real on the wire: the TypeScript protocol's §1 opens «NDJSON duplex: one JSON object per line, UTF-8, `\\n`-terminated, both» (packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md:20,24) and the Rust lead's own list restates exactly that, with the version constant pinned at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:26. No automated diff enforces it — that gap belongs to the replay-goldens row, which this review marks drift"
             ]
           },
           "PARITY-NDJSON-DUPLEX": {
@@ -17136,12 +17147,12 @@
             ]
           },
           "ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42  - ##TCG-CRATE-DELETED `vibe-tcg` and the vibe-mcp `tcg_*` adapters are DELETED. @impl/done",
               "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:33  - ##TOOLS-NEW-HOME The tools now ship in the per-language",
               "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/tools_tcg.rs:2  //! harness, over ONE persistent rust-analyzer session shared by all",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the client named was deleted.** The fact says one `vibe-tcg` OracleRegistry client drives both relays, pinned by goldens. `vibe-tcg` and the vibe-mcp `tcg_*` adapters are DELETED by the corpus's own record (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42), the tools now ship per-family (:33), and `OracleRegistry` occurs zero times in crates/. The Go sibling ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS is already recorded drift for the same reason"
             ]
           },
           "RESTATES-RATHER-THAN-INCLUDES-THE-TS-TEXT": {
@@ -17149,7 +17160,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md:1  # TCG-PROTOCOL v0.1 — the oracle wire protocol, both hops {#root}",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md:39  ##RESTATES-RATHER-THAN-INCLUDES-THE-TS-TEXT This document restates rather than includes the TS text ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "true by reading the document: it is standalone prose that restates the TypeScript protocol rather than including it, and no cross-package include mechanism exists to have done otherwise (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md:39)"
             ]
           },
           "kind-line-ops": {
@@ -17179,12 +17190,12 @@
             ]
           },
           "OP-INIT": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76  fn init_result(oracle: &RustOracle<ChildTransport>) -> serde_json::Value {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:282          if op == \"init\" {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:284              match RustOracle::spawn(&root, QUIESCENCE_BUDGET) {",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**three of five keys never exist.** The op is printed as `init {root}` → `{ra_version, ra_path, toolchain, root_files, quiescent}`; the shipped `init_result` emits ra_version, position_encoding, pull_diagnostics, quiescent (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76-84). `ra_path`, `toolchain` and `root_files` occur zero times in the Rust crates, and two shipped keys are undocumented. Identical shape to the Go twin's OP-INIT"
             ]
           },
           "OP-UPDATE": {
@@ -17273,7 +17284,7 @@
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:99  pub fn derive_crate_module(roots: &[String], file_rel: &str) -> (String, String) {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs:22  fn relay_enrichment_matches_the_gate_scan_fingerprint_for_fingerprint() {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs:77          \"one engine, one truth — the relay and the gate must agree verbatim\"",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "both halves ship: the relay-local mapping (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:99) and a parity test that diffs relay enrichment against the gate's own scan and fails on any difference (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs:22,77). That the test builds its own fixture rather than using a demo file changes the corpus, not the claim"
             ]
           },
           "ENRICHMENT-FIELDS-EXIST-ONLY-ON-THIS-HOP": {
@@ -17348,11 +17359,11 @@
             ]
           },
           "PRODUCT-LINK-LAYER-SPECIAL-CASES-ONLY-ORACLE-CRASHED": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208              let crashed = matches!(e, TcgBridgeError::OracleCrashed { .. });",
               "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:125  3. ##REG-RESPAWN a dead child (`oracle-crashed`) → ONE transparent respawn attempt,",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the layer described no longer exists.** «The product's link layer special-cases only `oracle-crashed` … verified against the shipped `vibe-tcg`» — and `vibe-tcg` was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). What survives is a server-local special-case inside the per-family MCP crate (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208). The behaviour outlived the layer; the sentence names the layer"
             ]
           },
           "kind-line-compat": {
@@ -17388,11 +17399,11 @@
             ]
           },
           "REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1  //! Replay tests: the whole client layer against scripted transports —",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:1  //! Oracle-layer replay tests: op semantics over scripted transports —",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**one hop, not both.** The inner hop is real — the client and oracle layers replay against scripted transports (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1 and src/oracle/tests.rs:1). No test drives `run_serve` over recorded outer frames: rust-ai-native-tcg has no tests/ file exercising the serve loop, only finding_parity.rs. The Go twin fails identically"
             ]
           },
           "MARKERS-RESERVATION-MAY-BE-FILLED-IN-A-FUTURE-MINOR": {
@@ -17400,12 +17411,12 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:247          markers: Vec::new(),",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs:98          \"markers reserved-empty in v0.1\"",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a forward statement — the reservation MAY be filled — and the reservation itself is real and asserted (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:247 and src/lib/tests.rs:98, «markers reserved-empty in v0.1»). A statement about a future minor is not falsified by that minor not having happened"
             ]
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -17426,7 +17437,8 @@
       "campaign": {
         "processed_hash": "358e0775e5641255c530543e2252547c9857ee339ea1ed870756005a70c9967f",
         "summary": {
-          "confirmed": 36
+          "confirmed": 32,
+          "drift": 4
         },
         "verdicts": {
           "status-line": {
@@ -17434,7 +17446,7 @@
             "ev": [
               "ROADMAP.md:700  (shipped line) and `rust-ai-native-tcg.md` (token-level, VERY-FAR-FUTURE);",
               "ROADMAP.md:725  M1.23 below keeps the Rust token-level line as was.",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the fact is the document's own status line and it is accurate: this is a vision brief and not an implementation plan, which is why no decode-loop code exists to find. ROADMAP.md:700 carries it as the token-level line, VERY-FAR-FUTURE"
             ]
           },
           "VERY-FAR-FUTURE-DISPOSITION": {
@@ -17443,25 +17455,25 @@
               "ROADMAP.md:700  (shipped line) and `rust-ai-native-tcg.md` (token-level, VERY-FAR-FUTURE);",
               "crates/vibe-llm/Cargo.toml:2  name = \"vibe-llm\"",
               "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:1  # Tool Spec (high-level): `typescript-ai-native-tcg` — Token-Level Type-Constrained Generation for TypeScript {#root}",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the disposition is the owner's, dated and recorded in the document itself (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:7), and its two preconditions hold: crates/vibe-llm is a host stub with no inference substrate, and the TypeScript token-level sibling is in the same state"
             ]
           },
           "RENAMED-FROM-VIBE-TCG": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "spec/common/PROP-028-package-families.md:136  - ##D13-SUPERSEDED **Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —",
               "spec/common/PROP-028-package-families.md:141  - ##D13-LANGUAGE-LEADS `conform-rust` becomes `rust-ai-native-conform`, not a suffixed",
               "spec/common/PROP-028-package-families.md:148  - ##D13-NEUTRAL-OUTSIDE Language-NEUTRAL artifacts stay outside any family stem: vibevm's own generic",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the crate the name is reserved for was deleted.** The fact says «the bare name `vibe-tcg` belongs solely to vibevm's language-generic product crate». That crate no longer exists: spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42 records `vibe-tcg` and the vibe-mcp `tcg_*` adapters DELETED, and `vibe-tcg` occurs zero times in crates/. A name reserved for nothing. The rename policy it cites — D13 superseded by PROP-028 §2.4 — does resolve (spec/common/PROP-028-package-families.md:136-148)"
             ]
           },
           "DERIVED-FROM-THE-EVIDENCE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:184    _manifesto · med · refines:H3_ — ... using guided decoding (XGrammar, Outlines), strict schemas, and validator-fir ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**`DR1-014` resolves nowhere.** R2C-005 (ATLAS:107) and DR2-012 (ATLAS:105) resolve; `DR1-014` has no `##FINDING-` anchor in the ATLAS and survives only in this brief and the TypeScript guide. Third member of the unresolvable-evidence-id family, with H4 and DL1-015 — three different ids, three documents, none of them checked by anything"
             ]
           },
           "AGENTIC-SIBLING-SHIPPED": {
@@ -17486,7 +17498,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:184    _manifesto · med · refines:H3_ — ... using guided decoding (XGrammar, Outlines), strict schemas, and validator-fir ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the split the fact rests on is the corpus's own measurement, quoted correctly: DR2-012 records «Only 3.5% of functional errors and 6% of compile errors are syntactic; on average 94% of compilation errors result from failing type checks» (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106). SynCode and XGrammar-2 are named as external engines, not as ATLAS records"
             ]
           },
           "NO-TYPE-AWARE-TOOL-EXISTS-FOR-RUST": {
@@ -17498,11 +17510,11 @@
             ]
           },
           "RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:45  name = \"rust-ai-native-tcg\"",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:1  //! bin `rust-ai-native-tcg` — the agentic type oracle's CLI face",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the name is taken, by a shipped binary that does something else.** The fact says `rust-ai-native-tcg` «is that missing tool» — the token-level constrained generator. A binary of exactly that name ships and is the CONSULTATION oracle: packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:45 declares it and packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:1 calls itself «the agentic type oracle's CLI face», with a serve/validate/scope/complete/type/bench surface and no masking anywhere. One name, two tools, one of them shipped — the same collision class as the TypeScript card's `vibe-tcg-ts`, already recorded drift in this batch"
             ]
           },
           "STRATEGIC-PLACEMENT-IN-THE-CATALOG": {
@@ -17518,7 +17530,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:2  //! checker (discipline card scaffold-e-fast-loop, Band 3): every cell",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:39  ##LOOP-CATCHES-AFTER-TCG-PREVENTS-DURING The loop catches errors AFTER a full generation; ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a design proposition contrasting the shipped Class-E loop with the unbuilt generation-time complement; the loop half is real (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs:2) and the other half is what the brief exists to propose"
             ]
           },
           "BOTH-ARE-WANTED-TCG-IS-THE-HIGHER-LEVERAGE-BET": {
@@ -17526,7 +17538,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:14  | `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | shipped (`rust-ai-native fast-loop`) |",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "both halves are accurate about this tree: the loop is shipped and the registry says so (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:14), and the tcg bet is unstarted by the owner's disposition. DR1-015 resolves at ATLAS:181"
             ]
           },
           "DO-NOT-REIMPLEMENT-RUSTCS-TYPE-SYSTEM": {
@@ -17551,7 +17563,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:47  ##TWO-LAYER-CONSTRAINT **Two-layer constraint, matching the literature's split:** @spec/done",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a design stance in a brief that declares itself unbuilt; the literature's syntactic/semantic split it matches is recorded at ATLAS:105-106"
             ]
           },
           "LAYER-1-SYNTACTIC": {
@@ -17566,7 +17578,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:269      pub fn complete(",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:344  pub fn finalise_completions(",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a design stance; the completion QUERY it would stand on is shipped (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:269 and crates/rust-ai-native-tcg/src/lib.rs:344), and the masking it proposes is the unbuilt part the brief is about"
             ]
           },
           "SPECULATIVE-PLUS-BACKTRACKING-PER-ITERGEN": {
@@ -17582,7 +17594,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:1  //! bin `rust-ai-native-tcg` — the agentic type oracle's CLI face",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:215  pub fn run_serve(root: &Path) -> Result<i32> {",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a proposed component surface in a vision brief; that the shipped binary is a consultation relay rather than an inference-time service is the gap the brief exists to name"
             ]
           },
           "CONSTRAINT-PROFILES-TIE-TO-THE-DISCIPLINE": {
@@ -17590,7 +17602,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:356              let banned = !in_test && (e.name == \"unwrap\" || e.name == \"expect\");",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:365                      \"would land a §6-banned form in domain code \\",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a design proposition. Its nearest shipped relative already computes the judgement the profile would mask on — a §6-banned completion is flagged with its reason (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:356,365) — and turning that flag into a mask is the unbuilt step"
             ]
           },
           "COMPONENT-OUTPUT": {
@@ -17598,7 +17610,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:365                      \"would land a §6-banned form in domain code \\",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:115  - ##FINDING-R3-011 **R3-011** — Tool output is agent food: structured, requirement-citing diagnostics",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a proposed output shape; the per-entry reason string exists as its consultation-time ancestor (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:365) and R3-011 resolves at ATLAS:115"
             ]
           },
           "DETERMINISM-NOTE": {
@@ -17606,7 +17618,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md:136  ##COMPONENT-DETERMINISM-AND-AUDITABILITY **Determinism and auditability:** given (project state, overlay set, ...)",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/bench.rs:306              let codes_ok = mapped == expect_cargo && cargo == expect_cargo;",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a determinism property of the proposed masker, stated conditionally on inputs that do not exist yet; its consultation-time analogue is already the shipped posture (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md:136)"
             ]
           },
           "STAGE-1-SYNTACTIC-PROFILE-ONLY": {
@@ -17621,7 +17633,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:269      pub fn complete(",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:344  pub fn finalise_completions(",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a named future stage; the in-scope-name query it would mask on is shipped (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:269), and the masking and arity filter are the stage's work"
             ]
           },
           "STAGE-3-TYPE-VALID-CONTINUATIONS": {
@@ -17637,7 +17649,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:356              let banned = !in_test && (e.name == \"unwrap\" || e.name == \"expect\");",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:1  # AI-Native Rust — The Guide {#root}",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a named future stage; the ban it would compile into a mask is currently expressed as an advisory flag (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:356), which is exactly the difference between the shipped oracle and the proposed masker"
             ]
           },
           "MAXIMUM-PERFECTION-HARD-PATH": {
@@ -17652,7 +17664,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:146  pub fn resolve_rust_analyzer(root: &Path) -> Result<PathBuf, TcgBridgeError> {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:299          let mut child = std::process::Command::new(program)",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "rust-analyzer is MIT/Apache-2.0 and permissive; nothing is vendored, so no licence artifact belongs in this repository, and the spawn-never-link posture is what the code does (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:146)"
             ]
           },
           "LICENSING-CFG-ENGINES": {
@@ -17679,11 +17691,11 @@
             ]
           },
           "RISK-TRANSFER-UNPROVEN": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:108    _benchmark · high · refines:H2_ — Decisive scope boundary (Mündler et al. PLDI 2025, eth-sri repo) ... 'has to be ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the figure the corpus records is not 74.8 %.** The family's own findings register measures the PLDI'25 result at «75.3% (synthesis) and 70.2% (translation)» (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106). The TypeScript guide's two uses of «~74.8 %» were recorded drift earlier in this phase for the same reason, and this brief carries it twice more (here and at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:65). The figure is not a cache artefact: the live CONTRADICTION-MAP publishes it in C-4's own title (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31), so the two appendices of one package disagree and every consumer quotes whichever it read"
             ]
           },
           "RISK-RUST-ANALYZER-BUILT-FOR-IDES": {
@@ -17691,7 +17703,7 @@
             "ev": [
               "research/tcg-bench/reports/bench-rust-2026-07-07-baseline.json:4    \"validate_p95_ms\": 65,",
               "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:53  | warm `validate` p50 | < 500 ms | **< 1 ms** (27 samples) |",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a risk about decode-loop query cost, unmeasured by the fact's own admission and correctly separated from the consultation latency that IS measured (research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:53)"
             ]
           },
           "RISK-OVER-CONSTRAINT-HURTS-STRONG-MODELS": {
@@ -17699,7 +17711,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md:92  ##STANCE-CAPABILITY-ROUTING-IS-FREE **Capability routing is free here.** A tool you may ignore does not",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the citation resolves exactly, numbers included: DR1-015 records «Qwen2.5-Coder-7B went from 0% to 75% accuracy under constraints, while Hermes-4-405B dropped 92.5%->35.0% (over-constraint)» (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181). The capability routing it demands is the brief's own proposal, not a claim about shipped code"
             ]
           },
           "RISK-DOES-NOT-FIX-SEMANTICS": {
@@ -17716,12 +17728,12 @@
             "ev": [
               "ROADMAP.md:700  (shipped line) and `rust-ai-native-tcg.md` (token-level, VERY-FAR-FUTURE);",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:84  ##ONE-LINE-SUMMARY `rust-ai-native-tcg` makes a weak agent generate well-typed ... *by construction* ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the one-line summary of a brief that declares itself a vision and not an implementation plan; the by-construction property is the thing proposed, and its absence is what the document's own status line predicts"
             ]
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -17742,7 +17754,8 @@
       "campaign": {
         "processed_hash": "23d40984aa2d23c9c6545319471b33913c1fadc962d055bc41446a61104f5879",
         "summary": {
-          "confirmed": 40
+          "confirmed": 38,
+          "drift": 2
         },
         "verdicts": {
           "status-line": {
@@ -17777,7 +17790,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
               "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:52  | cold init → quiescent | < 15 s | **2 535 ms** |",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a statement about how Rust agents learn of type errors, corroborated by the corpus's own finding that no Rust type-constrained implementation exists (ATLAS:107, R2C-005). No repository artifact is claimed"
             ]
           },
           "MOST-OF-THE-MASKS-VALUE-IS-DELIVERABLE-WITHOUT-IT": {
@@ -17785,7 +17798,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:1  # Tool Spec: `vibe-agentic-tcg-ts` — the Agentic Type Oracle for TypeScript {#root}",
               "research/tcg-bench/reports/REPORT-2026-07-07-with-tools.md:1  # tcg-bench — the WITH-TOOLS arm vs the control baseline",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the TypeScript campaign it cites is committed: research/tcg-bench/reports/REPORT-2026-07-07-with-tools.md:1 is the with-tools arm against a control baseline. The claim is about that campaign's result, not about a Rust arm"
             ]
           },
           "GUARANTEE-STAYS-WITH-THE-FLOOR": {
@@ -17872,7 +17885,7 @@
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/bench.rs:24  pub const CODE_MAP: &[(&str, &str)] = &[",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/bench.rs:28      (\"E0559\", \"E0609\"), // unknown field: r-a E0559, rustc E0609",
               "research/tcg-bench/corpus-rust/cases/06-newtype-privacy.json:5    \"expect\": { \"cargo_codes\": [\"E0423\"], \"conform_rules\": [], \"known_gap\": true }",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the mapping table is committed and the corpus curates inside competence: `CODE_MAP` at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/bench.rs:24-28 pins r-a codes to rustc codes, and research/tcg-bench/corpus-rust/cases/06-newtype-privacy.json:5 carries a `known_gap` case. The privacy case pinning E0423 where the brief names E0603 is the same defect class, recorded as such in the report"
             ]
           },
           "STANCE-DUAL-TRANSPORT": {
@@ -17890,7 +17903,7 @@
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
               "legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:32  the prompt is a tool a weak model never spontaneously calls. Stage B",
               "research/tcg-bench/reports/REPORT-2026-07-07-control.md:1  # tcg-bench — the CONTROL-arm baseline (pre-oracle)",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the routing the stance calls free is what ships: the tools are offered and ignorable, and DR1-015 (ATLAS:181) is the finding the stance rests on. The Stage-A null it cites is a TypeScript-arm result and the fact attributes it to the TypeScript arm"
             ]
           },
           "three-processes-lead": {
@@ -17921,12 +17934,12 @@
             ]
           },
           "COMPONENT-THE-PRODUCT-SEAM": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs:60      \"tcg_complete\",",
               "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/tools_discipline.rs:22      if asked == \"rust\" {",
               "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:39  - ##LANGUAGE-COMPAT-PARAM `language` survives as a validated",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**the dispatch named was deleted.** «`language: \"rust\"` dispatches through the lockfile to this package's slot artifact» — the vibe-tcg crate and the vibe-mcp `tcg_*` adapters are DELETED (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42), the tools ship in the per-family server (:33), and `language` survives only as a validated compat parameter (:39). The TypeScript twin was recorded drift for the same reason in this same batch, and so was the Go one. «The enum-value promise, cashed» describes a mechanism that was retired"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -17952,7 +17965,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:278  pub fn detect_newtypes(text: &str, seam_file: &str) -> Vec<BrandedNewtype> {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:304  pub struct ScopeAnswer {",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a named future stage, @spec/done; the protocol fields it will use are already carried (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs:278,304), which is what the fact says"
             ]
           },
           "STAGE-C-DELIVERY-EXPERIMENTS": {
@@ -17961,7 +17974,7 @@
               "legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:173  | with-mcp (Stage B) | first-class MCP tools | prompt block + skill posture | opt-in, low-friction |",
               "legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:174  | with-hook (Stage B) | write-path gate | the refusal text itself | forced |",
               "research/tcg-bench/tasks/01-farewell-variant.md:1  You are working in a small TypeScript project that follows a strict typing discipline ...",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a named future stage, gated in its own words on the owner commissioning the delivery line"
             ]
           },
           "STAGE-D-RA-AP-EMBEDDING": {
@@ -17978,7 +17991,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:7  ##VERY-FAR-FUTURE-DISPOSITION *VERY-FAR-FUTURE per the owner's standing disposition (2026-07-07) ...*",
               "crates/vibe-llm/Cargo.toml:2  name = \"vibe-llm\"",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a named future stage, VERY-FAR-FUTURE by the owner's standing disposition recorded at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:7; crates/vibe-llm exists as the host stub the stage waits on"
             ]
           },
           "LICENSING-RUST-ANALYZER": {
@@ -17986,7 +17999,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:146  pub fn resolve_rust_analyzer(root: &Path) -> Result<PathBuf, TcgBridgeError> {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:299          let mut child = std::process::Command::new(program)",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "rust-analyzer is MIT/Apache-2.0, and the posture the fact describes is the one implemented: the consumer's own binary is resolved and spawned, never vendored or linked (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:146, client.rs:299). Nothing vendored is exactly why no licence artifact is here"
             ]
           },
           "LICENSING-LSP": {
@@ -18036,7 +18049,7 @@
             "ev": [
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
               "legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:32  the prompt is a tool a weak model never spontaneously calls. Stage B",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a risk statement resting on DR1-015 (ATLAS:181) and on the TypeScript arm's Stage-A null, both of which it attributes correctly"
             ]
           },
           "RISK-COLD-INIT-ON-LARGE-WORKSPACES": {
@@ -18045,7 +18058,7 @@
               "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:57  margin or more. (Cache-cold sysroot indexing measured 14.7 s in the",
               "research/tcg-bench/reports/bench-rust-2026-07-07-baseline.json:2    \"cold_init_ms\": 2535,",
               "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884  reason. The product's 60 s first-request cap is the hard ceiling —",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "the measurement it cites is committed: research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:57 records the 14.7 s cache-cold sysroot indexing, and the report's own honest-limits section says large-workspace latency is unmeasured. A risk that says «may exceed» is not falsified by the ceiling's enforcer having been retired"
             ]
           },
           "RISK-RA-VERSION-CAPABILITY-VARIANCE": {
@@ -18062,16 +18075,16 @@
             "ev": [
               "research/rust-demo/Cargo.toml:1  # rust-demo — the committed Rust consumer testbed (AGENTIC-TCG-RUST-PLAN",
               "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:62  - n = 9 curated cases on a dependency-free demo tree; borrow-check",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "a risk the fact itself scopes out of v0.1 — «v0.1 does not chase it» — so an unmeasured proc-macro-heavy consumer is the stated position, not a gap"
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:129  pub fn verbatim_free(path: &Path) -> PathBuf {",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:348          let _ = self.child.kill();",
               "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:99          \"verbatim leaked into a URI: {uri}\"",
-              "the Rust oracle is the one that can actually be exercised here — the binary is built and rust-analyzer is installed — so a behavioural claim about the relay rests on a mechanism that is present AND runnable, unlike its Go twin. Its bench records `cold_init_ms`, `cold_ms` and `warm_ms`"
+              "**one of the four named properties is not asserted anywhere.** Verbatim-free URIs are real and tested (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:129, asserted at src/oracle/tests.rs:99), kill-on-drop is real (client.rs:348), the shutdown/exit dance is real. «No-zombie assertions» are not: zero occurrences of any process-table or surviving-pid check in the package. The house lesson set is applied three-quarters of the way, and the fact says four"
             ]
           },
           "RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY": {
@@ -18094,7 +18107,7 @@
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
     {
@@ -21461,10 +21474,10 @@
           "ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106  ... Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilation errors by 75.3% (synthesis) and 70.2% (translation)",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
-              ".vibe/cache/org.vibevm/core-ai-native/v0.7.0/spec/appendix/CONTRADICTION-MAP.md:21  ## C-4 — \"Type-constrained decoding cuts errors 74.8%\" vs \"no Rust implementation exists\"",
-              "the cited figure is not in the live tree: «~74.8 %» appears only in `.vibe/cache/**` copies of an older CONTRADICTION-MAP, while this package family's own ledger records **75.3 % synthesis / 70.2 % translation** at ATLAS.md:106. A measurement quoted from a superseded copy of the corpus's own appendix"
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:39  ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT … type-constrained decoding cutting compile errors ~74.8% — was measured *on TypeScript* (Mündler et al., PLDI'25; the only language with a real implementation, R2C-005 / DR1-014). @spec/done",
+              "**the verdict stands and its REASON was wrong, which matters more.** It read «that figure appears in the live tree only under `.vibe/cache/**`, in an older CONTRADICTION-MAP». It does not: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28 titles C-4 with «Type-constrained decoding cuts errors 74.8%» and :31 repeats it in the resolution — the LIVE v0.8.0 slot, inside this campaign's own corpus.",
+              "so the defect is bigger than a stale quote: **two appendices of one package publish different numbers for one result.** packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106 records «75.3% (synthesis) and 70.2% (translation)» for the same Mündler et al. PLDI'25 measurement. Every consumer quotes whichever appendix it happened to read, and four documents across three stacks quote the CONTRADICTION-MAP's figure.",
+              "and the fact carries a second break the first pass did not name: **`DR1-014` resolves nowhere** — no `##FINDING-DR1-014` exists in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md, and the id survives only here and in the Rust tcg brief"
             ]
           },
           "RUST-ORACLE-IS-A-MULTI-YEAR-FUTURE-BET": {
@@ -22381,10 +22394,10 @@
           "TOOLING-ASYMMETRY-STATED-HONESTLY": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:45  ##CLEAN-ROOM-RULE **Clean-room rule (owner directive, boot-resident in the dev tree):**",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md:47  generation`) is inspiration-only — its code is NEVER copied, adapted,",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:108  ... ~94% of TS compile errors are type-level (only ~6% syntactic) ...",
-              "carries the same «~74.8 %» as the fact above, and the ATLAS records 75.3 % / 70.2 %. The honesty the anchor is named for is real — the clean-room posture on the PLDI'25 repository holds — and the number beside it is stale"
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:258  ##TOOLING-ASYMMETRY-STATED-HONESTLY … (~74.8% compile-error reduction; ~94% of TS compile errors are type-level) … @spec/done",
+              "**the verdict stands and its REASON was wrong.** The «~74.8 %» is not a cache artefact: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31 publishes it in the live v0.8.0 slot, and packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106 records 75.3 % / 70.2 % for the same result. The package contradicts itself across its own two appendices; this document is faithful to one of them.",
+              "the other half of the fact is exactly right and resolves: ATLAS:105-106 states «Only 3.5% of functional errors and 6% of compile errors are syntactic; on average 94% of compilation errors result from failing type checks» — the ~94 % is the corpus's own number, quoted correctly",
+              "the clean-room posture the anchor is named for holds unchanged (spec/boot/90-user.md's CLEAN-ROOM-RULE)"
             ]
           },
           "TYPESCRIPT-EXPOSES-ITS-CHECKER-PROGRAMMATICALLY": {
@@ -22589,7 +22602,7 @@
           }
         },
         "verified_at": "2026-07-28T11:00:01Z",
-        "verify_batch": "C3"
+        "verify_batch": "C3 + C45-cross-language"
       }
     },
     {
