@@ -2463,6 +2463,40 @@ command that would have tested it.
   declared absent. **The corpus corrected the reviewer**, twice, through a batch that
   was looking at something else.
 
+- **2026-07-28 · C4+C5, two languages of three — 696 verdicts, and TypeScript
+  reads highest in the phase.** TypeScript **333 confirmed / 4 drift — 98.8 %**; Go
+  **337 / 8 drift / 14 unverifiable — 93.9 %**.
+
+  **TypeScript's four drifts are each a name that outlived its referent.** The
+  scaffold-d sunset names `vibe-tcg-ts`, which survives only in `.vibe/cache/` copies
+  of the superseded v0.2.0 and v0.3.0 slots — the shipped binary is
+  `typescript-ai-native-tcg`. `vibe codemod rename-seam` has no implementation
+  anywhere. The oracle's warm target cannot be measured by its own harness: `bench.rs`
+  records `cold_init_ms`, `validate_p50_ms` and `validate_p95_ms` and **no complete
+  latency and no thresholds**. And the product seam names the `vibe-tcg` crate, which
+  **the corpus itself records as deleted** at PROP-026:11.
+
+  **Go's fourteen unverifiable are a distinction worth keeping.** The oracle *exists*
+  — `go-ai-native-tcg.exe` is built, its help lists serve / validate / scope /
+  complete / type / bench, and its sources carry nine `gopls` references — and
+  **gopls is not installed on this machine**, so no behavioural claim about the relay
+  can be observed. Recording those confirmed on the code's existence would report an
+  unexercised mechanism as a working one; recording them drift would blame a
+  toolchain absence on the document. The mechanism is present and untested here, and
+  that is what the verdict says.
+
+  Its eight drifts are concrete: `go:generate` occurs **zero** times in the Go
+  consumer, no goldens and no `-update` flag exist, `research/tcg-bench/` carries a
+  TypeScript corpus and a Rust one and **no Go corpus**, the bench records `warm_ms`
+  alone against a «complete p50 under 300 ms» target, no grammar tooling is vendored,
+  and the gated-or-exempt invariant is stated over **`gated_packages`** where the
+  shipped field is `gated_crates` — the same wrong name C6 found in the Go sweep's
+  census, now in a second document.
+
+  *On the instruments:* the TypeScript table returned 606 refs with **zero**
+  unresolvable; the Go table 873 with **ten**, which is the checker earning its place
+  at 1.1 % rather than crying wolf.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
