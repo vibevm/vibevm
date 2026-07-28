@@ -77,7 +77,7 @@
     "marker": "impl/done",
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:22  language's own prescriptions (gofmt, one idiom culture, errors as",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:24  values) are taken whole. Strictness lives in the envelope: closed"
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:23  values) are taken whole. Strictness lives in the envelope: closed"
     ],
     "found": "located"
   },
@@ -125,7 +125,7 @@
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:339  var markerTags = map[string]bool{",
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:350  rest, ok := strings.CutPrefix(text, \"//spec:\")",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-specmap-scan/src/lib.rs:2  //! The scanner seam's Go implementation: the §8 `//spec:` directive"
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-specmap-scan/src/lib.rs:1  //! The scanner seam's Go implementation: the §8 `//spec:` directive"
     ],
     "found": "located"
   },
@@ -209,7 +209,7 @@
     "marker": "spec/done",
     "evidence": [
       "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:5  ... Python *trusts*; C++ *demands a subset to survive*; **Go prescribes**.",
-      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md:1  # GUIDE — C++ under the Discipline: MISRA C++:2008 profile, v0.1"
+      "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md:1  # GUIDE — C++ (MISRA C++:2008 profile) under the Discipline, v0.1"
     ],
     "found": "located"
   },
@@ -317,7 +317,7 @@
     "marker": "impl/done",
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:66  ##ADVANTAGE-1-HALF-THE-ENVELOPE-IS-FREE **Advantage 1 — half the envelope is free.**",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:83  ##HAZARD-EXPRESSIVENESS-IS-THE-LOWEST **The hazard — prescriptions stop one step short of contract ...**"
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:83  ##HAZARD-EXPRESSIVENESS-IS-THE-LOWEST **The hazard — prescriptions stop one step short of contract, and expressiveness is the"
     ],
     "found": "located"
   },
@@ -350,7 +350,7 @@
     "marker": "spec/done",
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:7  //! Go hands this scaffold the strongest substrate of the three stacks:",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:9  //! per-package `go test ./<cell>/...` needs no project references and",
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:8  //! per-package `go test ./<cell>/...` needs no project references and",
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md:11  ##INTENT Intent: Guarantee every cell is independently buildable and testable in seconds"
     ],
     "found": "located"
@@ -496,8 +496,8 @@
     "claim": "Added strictness lives in the envelope, never in exotic surface.",
     "marker": "impl/done",
     "evidence": [
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:24  values) are taken whole. Strictness lives in the envelope: closed",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:25  error sets at seams, loud interface conformance, owned goroutines,"
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:23  values) are taken whole. Strictness lives in the envelope: closed",
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:24  error sets at seams, loud interface conformance, owned goroutines,"
     ],
     "found": "located"
   },
@@ -638,7 +638,7 @@
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/go.rs:166  /// `go-cell-isolation` — R-002 over Go import paths: a file inside one",
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/config.rs:116  /// `seams_pkg` and the registry is the only cell importer",
-      "research/go-demo/internal/registry/registry.go:2  // Package registry is the composition root's selector: the ONLY"
+      "research/go-demo/internal/registry/registry.go:1  // Package registry is the composition root's selector: the ONLY"
     ],
     "found": "located"
   },
@@ -816,7 +816,7 @@
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md:11  The Go twist: **defined types are nominal for free** (`type AccountID string` does not interchange with `string` ...)",
       "research/go-demo/internal/seams/seams.go:8  type ResourceID string",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:479  // primitiveUnderlying renders a defined type's underlying primitive"
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:476  // primitiveUnderlying renders a defined type's underlying primitive"
     ],
     "found": "located"
   },
@@ -835,7 +835,7 @@
   {
     "file": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md",
     "anchor": "SCAFFOLD-D-DIFFERENTIAL-ORACLES",
-    "claim": "Scaffold D: native fuzzing drives old and new cells; seeds in testdata/; -update never in CI.",
+    "claim": "Scaffold D: native fuzzing drives old and new cells; seeds in testdata/.",
     "marker": "impl/done",
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:1  # CARD: scaffold-d-differential-oracle — Differential / Characterization Oracle (Go) {#root}",
@@ -1181,7 +1181,7 @@
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:545  \"http\": {",
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:546  \"DefaultClient\": true, \"DefaultServeMux\": true, \"DefaultTransport\": true,",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:29  mutable state are banned in cells; capabilities (clock, env, net,"
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:30  mutable state are banned in cells; capabilities (clock, env, net,"
     ],
     "found": "partial",
     "searched": "terms 'package-level var', 'mutable state', 'ValueSpec' + var kind in packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go — genItems (extract.go:442-474) records `var` as an ITEM fact only, never as a go_unsafe kind; only the ambient http.DefaultClient-class selector is censused"
@@ -1225,7 +1225,7 @@
   {
     "file": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md",
     "anchor": "BAN-WITHOUT-A-HATCH-IS-A-DISCIPLINE-BUG",
-    "claim": "A ban with no escape hatch is a discipline bug; a reasonless deviation a code bug.",
+    "claim": "A ban with no hatch is a discipline bug; a reasonless deviation a code bug.",
     "marker": "impl/done",
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/go.rs:93  // A reasoned deviation covering the site is testimony,",
@@ -1531,7 +1531,7 @@
     "marker": "impl/done",
     "evidence": [
       "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md:1  # Tool Spec: `vibe-agentic-tcg-rust` — the Agentic Type Oracle for Rust {#root}",
-      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:1  # Tool Spec (high-level): `rust-ai-native-tcg` — Token-Level Type-Constrained Generation"
+      "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:1  # Tool Spec (high-level): `rust-ai-native-tcg` — Type-Aware Constrained Generation for Rust {#root}"
     ],
     "found": "located"
   },
@@ -1566,7 +1566,7 @@
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:5  ##status-line *Status: vision / component brief — **DELIBERATELY HELD AT STUB DEPTH**, and",
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:6  **dispositioned VERY-FAR-FUTURE by the owner (2026-07-17, the GO-AI-NATIVE",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:24  > staged ambition — the same stub depth as the TS token-level brief."
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md:22  > staged ambition — the same stub depth as the TS token-level brief. The"
     ],
     "found": "located"
   },
@@ -1619,11 +1619,11 @@
   {
     "file": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md",
     "anchor": "WIRING-MACHINE-PREREQUISITES",
-    "claim": "Move 3: go ≥ 1.24 and gopls; an absent tool is a recipe-carrying failure, never a skip.",
+    "claim": "Move 3: go ≥ 1.24 and gopls; an absent tool fails with a recipe.",
     "marker": "impl/done",
     "evidence": [
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/init.rs:224  \\x20 1. machine prerequisites — go >= 1.24, gopls (`go install\\n\\",
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/tools.rs:7  //! order: the documented env overrides (`GO_AI_NATIVE_GO` for the go",
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/tools.rs:7  //! derived as its sibling), then PATH. An absent tool is the caller's",
       "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:24  floor: the step's tool did not spawn (program not found) — go install honnef.co/go/tools/cmd/staticcheck@latest"
     ],
     "found": "located"
@@ -1646,7 +1646,7 @@
     "claim": "Move 5: validate hypothetical content via tcg validate --content-from - or MCP tools.",
     "marker": "impl/done",
     "evidence": [
-      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:38  /// Read the hypothetical content from this path (`-` = stdin).",
+      "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:37  /// Read the hypothetical content from this path (`-` = stdin).",
       "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:107  let code = go_ai_native_tcg::validate_exit_code(&enriched);",
       "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/lib.rs:63  \"tcg_validate\","
     ],

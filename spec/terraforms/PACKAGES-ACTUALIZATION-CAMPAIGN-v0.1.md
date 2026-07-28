@@ -2366,6 +2366,47 @@ command that would have tested it.
   became drift on wider search while the third stayed. **A worker that reports what
   it searched converts a reviewer's disagreement into one lookup.**
 
+- **2026-07-28 · C3 CLOSED — 390 verdicts, and the three guides measure
+  differently for a reason that is about the tree rather than about the guides.**
+  **350 confirmed / 24 drift / 16 unverifiable — 89.7 %.**
+
+  | guide | conf | drift | unver | |
+  |---|---:|---:|---:|---:|
+  | TypeScript | 143 | 9 | 1 | 93.5 % |
+  | Rust | 79 | 9 | 0 | 89.8 % |
+  | Go | 128 | 6 | 15 | 85.9 % |
+
+  **Rust reads high because the host dogfoods it** — 120 files carrying
+  `#[spec(implements=…)]`, 402 carrying `specmark::scope!`, a committed 3.1 MB
+  specmap and a floor whose three portable steps are green. Its nine drifts are named
+  sub-mechanisms with no checker and no instance **on the wider perimeter as well**:
+  `#[track_caller]` zero repo-wide, sealed traits and `PhantomData` zero, custom
+  clippy lints zero, `#[spec(documents)]` edges zero against 120 `implements` ones,
+  and two rules — **R-021 and R-060** — cited by name whose cards are unauthored.
+  R-021's absence is now recorded by three documents in this phase.
+
+  **The perimeter check ran the other way here and that is worth recording.**
+  Re-searching every Rust gap against `research/rust-demo/` — the same widening that
+  inverted forty TypeScript facts — found **none of them**. Widening the perimeter is
+  not a way of confirming things; it either finds the artifact or it does not, and
+  here it did not.
+
+  **Go's fifteen unverifiable are the honest measurement, not a shortfall.** There is
+  no consumer to observe: the only production Go in the repository is
+  `tools/go-extract/extract.go`, everything else under `.go` is that tool's fixtures
+  or its own generated output, there is **no `research/go-demo`** beside the rust and
+  ts demos, and the stack is **not installed at all** — `vibedeps/` carries no
+  `stack-go-ai-native-lang`. A discipline addressed to a consuming Go project has
+  nothing here to hold or break it. Its ban list still confirms, on absence over that
+  one file plus a registered `GoUnsafeInDomain` rule; its drift is where a named tool
+  is missing — `-race` absent from a test step that fails anyway, and the
+  `exhaustive` linter **not installed**, its floor step failing rather than skipping.
+
+  **Both non-Rust gates register exactly three rules.** TypeScript mounts
+  `TsUnsafeInDomain`, `TsCellIsolation`, `FileLength`; Go mounts the same three in its
+  own projection. The `FlagSites` rule exists in the vendored engine and is mounted on
+  neither, which is why both guides' flag families cite an R-001 that cannot fire.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
