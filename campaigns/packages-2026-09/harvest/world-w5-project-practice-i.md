@@ -227,8 +227,26 @@ themselves), never the checkpoint.
 
 ### secrets-hygiene — the fourth law has machinery {#s2-secrets}
 
+> **CORRECTED by W5d's worker, 2026-07-29 — and this is the worst defect in any
+> harvest I have written, because it would have sent the search to the wrong
+> files.** The block below originally printed TEN paths and concluded «ten source
+> files». The command returns **nineteen**, and my paste was truncated:
+> ```console
+> $ grep -rln 'redact\|Redact' crates/ --include='*.rs' | wc -l
+> 19
+> ```
+> The truncation dropped **`crates/vibe-publish/src/token.rs`** — the one file
+> that matters, where the `Token` wrapper, both hand-written `Debug`/`Display`
+> impls and both Law-4 tests actually live. It also dropped `git_publish.rs` (the
+> `redact_credentials` scrubber), `git_publish/tests.rs` (six tests of it),
+> `lib.rs`, `orchestrator.rs`, `repo_creator_oracle.rs` and three `vibe-registry`
+> files. A worker following the truncated list would have checked Law 4 against
+> files that only *mention* redaction and concluded it unimplemented. **The
+> function count of 11 was right; the file count and the list were not.** Run the
+> command; do not read the list below as complete.
+
 ```console
-$ grep -rln 'redact\|Redact' crates/ --include='*.rs'
+$ grep -rln 'redact\|Redact' crates/ --include='*.rs'    # 19 files — first ten only
 crates/vibe-cli/src/commands/registry/publish.rs
 crates/vibe-cli/src/commands/registry/redirect/create.rs
 crates/vibe-cli/src/commands/registry/redirect/update.rs
@@ -239,11 +257,13 @@ crates/vibe-index/src/scanner/from_github.rs
 crates/vibe-publish/src/creator.rs
 crates/vibe-publish/src/direct_git.rs
 crates/vibe-publish/src/github.rs
+   … plus vibe-publish/src/token.rs, git_publish.rs, git_publish/tests.rs,
+     lib.rs, orchestrator.rs, repo_creator_oracle.rs and three vibe-registry files
 $ grep -rn 'fn .*redact' crates/ --include='*.rs' | wc -l
 11
 ```
 
-**Ten source files and eleven redaction functions/tests**, including a test file.
+**Nineteen source files and eleven redaction functions/tests.**
 The flow's law 4 — «a wrapper type that redacts the value on display is backed by
 a unit test asserting the value never appears» — is the one law in `world` with a
 compiled checker behind it, and it is in this batch. Verify the assertion shape
