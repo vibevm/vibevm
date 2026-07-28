@@ -2514,6 +2514,141 @@ command that would have tested it.
   TypeScript consumer exists and is complete; the Go consumer exists and its
   toolchain does not.
 
+- **2026-07-28 · THE REVIEWING DEBT IS CLOSED — 138 rows read, and the standard
+  that judges them is finally written down.** Sixty `partial` rows in the Go table
+  had been sorted by FILE and seventy-eight in the Rust table by one two-branch
+  rule. Read individually they come to **101 confirmed / 36 drift / 3 unverifiable**,
+  against 138 confirmed and unverifiable before. The cluster moves **92.4 % →
+  91.6 %**: 2 470 confirmed / 207 drift / 20 unverifiable.
+
+  **The standard, stated because it had not been.** A fact that PRESCRIBES what the
+  discipline requires — an intent, a participants list, a detector seed, a goal, a
+  tradeoff, an alternative, a risk, a routine step — is confirmed when it is
+  coherent and every referent it names resolves, **including a referent the package
+  itself declares as future work**: a card registry's `specified` column and a
+  brief's «vision, NOT an implementation plan» status line are that declaration. A
+  fact that DESCRIBES what this repository already ships is checked against the
+  tree, and a description that does not match is drift. *This was already the
+  phase's operative standard — it produced 690 confirmations across the Rust and
+  TypeScript halves of C4+C5. Naming it is what made the Go half comparable to
+  them, and what exposed four claims judged two ways.*
+
+  **Where the drift is: documents describing shipped software.** A codemod
+  documented with five parameters that takes two and writes three files; `init`
+  results missing three of their five keys in both the Go and Rust protocols; a
+  floor glossed as four steps that ships seven and has no `build` step;
+  `language: "go"` said to dispatch through a host that names `"go"` as its example
+  of an unsupported value; an overlay counter said never to reset that resets on
+  `didClose`, in a bridge whose own test is named
+  `overlay_versions_are_monotonic_and_close_resets`; stderr said to be drained by a
+  reader when it is dropped at the pipe; a no-zombie property said to be
+  test-asserted in two stacks, asserted in neither; replay goldens claimed for both
+  hops and present for one; and three latency targets whose harness never times the
+  operation they govern.
+
+  **Eleven of the fourteen `TCG-ORACLE-GO` rows left `unverifiable` for the right
+  reason.** They had been called unverifiable by file, on «gopls is not installed».
+  Eight of them turn out to be structural — a missing bench report, a resolution
+  order, a returned key set, a test that does not assert what a document says it
+  asserts — and are readable with no gopls at all. Three genuinely need a live
+  server and say so in their own words.
+
+  **Four claims had been judged two ways across languages, and comparing twins is
+  what found them.** `vibe codemod rename-seam` (drift in TypeScript, confirmed in
+  Rust); the product seam's lockfile dispatch (drift in TypeScript, confirmed in
+  Rust and Go); the `complete` latency target (drift in TypeScript, confirmed in
+  Rust); and the Layer-1 grammar mask (drift in Go, confirmed in Rust). Each is now
+  judged once, and two of the corrections run **upward**: `go-ai-native-tcg.md`'s
+  two rows return to confirmed, because a document that declares itself «held at
+  stub depth» and VERY-FAR-FUTURE is not contradicted by being unbuilt. Two Go card
+  rows return to confirmed for the same reason — a participants list and a
+  goldens tradeoff were read as descriptions of this tree when they are
+  prescriptions, while five sibling participant lists were confirmed.
+
+  **The one thing the bulk pass got structurally right is worth saying too.** No
+  row moved because the worker's evidence was wrong. Every drift found here was
+  already visible in the `searched` field the worker returned; what was missing was
+  someone reading it. *A delegated table that records what it searched converts a
+  reviewer's disagreement into one lookup — and converts a reviewer's absence into
+  138 unexamined rows.*
+
+- **2026-07-28 · F-124 — three evidence ids that resolve nowhere, cited by all
+  three stacks.** The pattern cards close with an «Evidence & Transfer-strength»
+  line naming the findings a card rests on, and three of those names are not in any
+  register this repository carries:
+
+  | id | cited by | what exists instead |
+  |---|---|---|
+  | **`H4`** | `scaffold-g-doctests.md` in Go and Rust, `GUIDE-AI-NATIVE-GO.md` ×2, `GUIDE-AI-NATIVE-RUST.md` ×2, both `cards/INDEX.md` | nothing — the ATLAS's 87 records are `BLD-` / `DR1-` / `DR2-` / `R2C-` / `R3-` |
+  | **`DR1-014`** | `rust-ai-native-tcg.md`, `GUIDE-AI-NATIVE-TYPESCRIPT.md` | `DR1-013` and `DR1-015` exist; `DR1-014` has no anchor |
+  | **`DL1-015`** | `scaffold-i-codemods.md` in Rust and TypeScript | `DR1-015` — one letter away, and the typo has never been resolved by anything |
+
+  **The `H`-series is the interesting one, because it is not a typo.** `H1`, `H5`
+  and `H6` are used the same way inside `core-ai-native`'s own appendices —
+  `CONTRADICTION-MAP.md:13-16` frames C-1 as «H1 vs H5» and `:46` names
+  «H6 uniformity», and `ATLAS.md` carries `refines:H2`, `refines:H3`, `H5/H6` in its
+  record bodies. **A hypothesis vocabulary is in daily use across the family and its
+  roster is written down nowhere.** So `H4` cannot be confirmed, cannot be
+  corrected, and cannot even be shown to be wrong — the same shape as F-120's
+  kind-line notation, defined by one example and cited to a document that is not
+  here. Filed, not fixed: which of the two — publish the roster, or drop the H
+  citations — is the owner's call, and it touches published slots.
+
+- **2026-07-28 · F-125 — one package, two appendices, two numbers for one
+  measurement.** `core-ai-native` v0.8.0 publishes the PLDI'25 type-constrained-
+  decoding result twice and differently: the **ATLAS** records «reduces compilation
+  errors by **75.3 % (synthesis) and 70.2 % (translation)**» (`ATLAS.md:105-106`,
+  DR2-012), while the **CONTRADICTION-MAP** titles C-4 «Type-constrained decoding
+  cuts errors **74.8 %**» and repeats it in the resolution
+  (`CONTRADICTION-MAP.md:28,31`). Both are in the live slot, both are generated
+  appendices of the same package, and **four documents across three stacks quote
+  whichever one they read** — the TypeScript guide twice, the Rust token-level brief
+  twice, the Go token-level brief once.
+
+  *This one corrected a verdict of mine from earlier in the phase, and the
+  correction is the finding.* C3a recorded the TypeScript guide's «~74.8 %» as
+  drift on the reason «that figure appears in the live tree **only** under
+  `.vibe/cache/**`, in an older CONTRADICTION-MAP». It does not — it is in the
+  v0.8.0 appendix, inside this campaign's own corpus, one `grep` away. The verdict
+  stands, restated on the true reason; **a wrong reason in the record is worse than
+  a wrong verdict, because the next reader acts on it and the verdict at least
+  pointed at a real defect.** The perimeter law was written after three misreadings
+  of where to look; this is the fourth, and the first where the miss made a real
+  contradiction look like a stale quote.
+
+- **2026-07-28 · F-126 — `rust-ai-native-tcg` names two different tools, one of
+  them shipped.** `spec/rust/tools/rust-ai-native-tcg.md` is the token-level brief:
+  a logit-masking constrained generator, VERY-FAR-FUTURE, explicitly unbuilt, whose
+  one-line summary promises well-typed Rust «by construction». A **binary of exactly
+  that name ships**: `vibe.toml:45` declares `rust-ai-native-tcg` and
+  `crates/rust-ai-native-tcg/src/main.rs:1` calls itself «the agentic type oracle's
+  CLI face», with a serve / validate / scope / complete / type / bench surface and
+  no masking anywhere. A reader resolving the name gets the consultation oracle and
+  the brief for something else.
+
+  `qualified-naming` states the law this brushes: *never reuse a coordinate for
+  different content — a coordinate that meant one artifact must never mean another.*
+  The same collision already has a recorded instance one document over — the
+  TypeScript card's sunset names `vibe-tcg-ts` where the shipped binary is
+  `typescript-ai-native-tcg` — and a third: `vibe-tcg`, the name the Rust brief
+  reserves «solely for vibevm's language-generic product crate», belongs to a crate
+  PROP-026 records as deleted whole. **Three names in one tool family, none of them
+  pointing where its document says.**
+
+- **2026-07-28 · F-127 — the Go stack prescribes `-race` fifteen times and never
+  passes it.** `go test -race` is the Go projection's whole concurrency-discipline
+  story: the boot snippet, the card registry, `scaffold-d`'s routine step 5,
+  `scaffold-e`'s intent, participants and consequences, and the guide's baseline all
+  name it — **15 mentions across 5 documents**. The shipped `go-ai-native fast-loop`
+  runs `go test ./<cells_dir>/<cell>/... -json` and passes no `-race`
+  (`crates/go-ai-native-cli/src/fast_loop.rs:87`); the floor's test step does not
+  either; `-race` occurs **zero** times in the stack's Rust sources and zero times
+  in `research/go-demo`. So `scaffold-e`'s «`-race` rides along at per-package cost,
+  so the concurrency discipline (§5) is checked in the same loop» is true of the
+  command a human types and false of the tool the card names as its own checker.
+  The guide's `BASELINE-RACE-DETECTOR-GATES-TESTS` is already drift for the floor
+  half; this is the loop half, and it is one flag.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
