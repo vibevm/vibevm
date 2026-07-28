@@ -134,7 +134,7 @@ the repository where this topic is discussed.
 
 - ##SLIP-UNPUSHED **Unpushed:** amend or rebase the local commit; the surface never
   shipped, so no history concern exists. @impl/done
-- ##SLIP-PUSHED **Pushed:** pushed history is frozen (see `flow:atomic-commits`).
+- ##SLIP-PUSHED **Pushed:** pushed history is frozen (see `flow:git-atomic-commits`).
   Removing a trailer from a pushed commit means rewriting published
   history — an owner-level decision with real costs to everyone
   downstream. Default: leave the slipped mark in history, fix the

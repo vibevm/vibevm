@@ -184,7 +184,7 @@ carries the new value, the reason, and the revisit trigger.
 | ##ROW-ANTI-HUGE-REFACTOR `feat(core): huge refactor` @impl/done | Behaviour change rolled into refactor. @impl/done | Two commits: refactor first, feature second. @impl/done |
 | ##ROW-ANTI-CAPITALISED-VAGUE `Fix: handle edge case` @impl/done | Capitalised, vague, no scope. @impl/done | `fix(verify): handle empty sender_id` @impl/done |
 
-## Interaction with the atomic-commits rule {#atomicity}
+## Interaction with the git-atomic-commits rule {#atomicity}
 
 ##CONVENTIONAL-COMMITS-DOES-NOT-ENFORCE-ATOMICITY Conventional Commits does not by itself enforce atomicity. @impl/done
 

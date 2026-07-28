@@ -11,9 +11,9 @@ dependency closure, each member contributing its own boot snippet. @impl/done
 
 ##deliberately-separate-packages-lead They are deliberately **separate packages** because they are different things: @impl/done
 
-- ##AGG-MEMBER-CONVENTIONAL-COMMITS **`conventional-commits`** — the message *format*: `type(scope): subject`, a why-not-what body,
+- ##AGG-MEMBER-CONVENTIONAL-COMMITS **`git-conventional-commits`** — the message *format*: `type(scope): subject`, a why-not-what body,
   the allowed-type set, scope convention, worked examples, anti-patterns. @impl/done
-- ##AGG-MEMBER-ATOMIC-COMMITS **`atomic-commits`** — the *atomicity* discipline: one commit = one logical idea; when to split
+- ##AGG-MEMBER-ATOMIC-COMMITS **`git-atomic-commits`** — the *atomicity* discipline: one commit = one logical idea; when to split
   a mixed working tree, when to batch, why it matters more in a human-AI team. @impl/done
 
 ##EACH-IS-ADOPTABLE-ON-ITS-OWN A message can be valid Conventional Commits and non-atomic (`feat: add foo, bar, baz`), or atomic

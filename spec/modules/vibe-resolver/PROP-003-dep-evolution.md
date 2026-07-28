@@ -42,7 +42,7 @@ the production default is **resolvo**, never the `sat` this document planned. Co
 ##shortfalls-lead Three concrete shortfalls block real-world graphs: @spec/done
 
 - ##SHORTFALL-DISJUNCTION **Disjunction without backtracking is a footgun.** `NaiveDepSolver` picks the first `one_of` alternative that resolves; if a later constraint contradicts that pick, the solver fails out instead of trying alternative #2. For a graph with two disjunctions intersecting through a shared capability, it produces a "no solution exists" diagnostic on graphs where a solution does exist. This is the same class of bug Cargo had before pubgrub-driven backtracking — observable, embarrassing, blocks adoption. @spec/done
-- ##SHORTFALL-MONOLITH **All-or-nothing packages don't compose.** A `flow:wal` package today brings *every* file it ships, every time, regardless of which project consumes it. Real-world specs are almost never one-shape-fits-all: the WAL flow has a `stack/rust`-specific section that should not materialise in a Python project, an "atomic commits only" subset that's useful when paired with `flow:atomic-commits` but redundant otherwise, an LLM-coordinator-specific addendum that only matters when the project is targeting Claude Code. Without optional components, the package author must ship the union (bloat) or fragment into multiple registry entries (combinatorial explosion + bad cohesion). @spec/done
+- ##SHORTFALL-MONOLITH **All-or-nothing packages don't compose.** A `flow:wal` package today brings *every* file it ships, every time, regardless of which project consumes it. Real-world specs are almost never one-shape-fits-all: the WAL flow has a `stack/rust`-specific section that should not materialise in a Python project, an "atomic commits only" subset that's useful when paired with `flow:git-atomic-commits` but redundant otherwise, an LLM-coordinator-specific addendum that only matters when the project is targeting Claude Code. Without optional components, the package author must ship the union (bloat) or fragment into multiple registry entries (combinatorial explosion + bad cohesion). @spec/done
 - ##SHORTFALL-LANGUAGE-LOCK **Specs are language-locked at file level.** Today every `*.md` file in a package is canonical English. A Russian-speaking team that wants `vibe install flow:wal` to land Russian-localised protocol files has no escape hatch except forking the package — which loses upstream. This is the dimension `cargo` doesn't need to think about (code has one canonical syntax) but vibevm fundamentally does (specs are *prose* and prose translates). @spec/done
 
 ##fourth-dimension-lead PROP-003 addresses all three, plus a fourth-dimension addition unique to vibevm: @spec/done
@@ -600,7 +600,7 @@ one_of = [
 ]
 
 [recommends]
-flow:atomic-commits = "^0.1"
+flow:git-atomic-commits = "^0.1"
 
 [suggests]
 flow:sync-from-code = "^0.1"
@@ -656,8 +656,8 @@ schema_version = 3
 solver = "sat"
 language = "ru"
 language_fallback = ["en"]
-active_features = ["flow:wal/wal-protocol", "flow:wal/rust-stack", "flow:atomic-commits/atomic-commits-section"]
-root_dependencies = ["flow:wal", "flow:atomic-commits"]
+active_features = ["flow:wal/wal-protocol", "flow:wal/rust-stack", "flow:git-atomic-commits/atomic-commits-section"]
+root_dependencies = ["flow:wal", "flow:git-atomic-commits"]
 
 [[package]]
 kind = "flow"
@@ -865,7 +865,7 @@ files_written = [
 - ##OPEN-TRANSLATION-PROVENANCE **Translation provenance.** Should the lockfile record *which version of a translation* was materialised (translations may evolve faster than canonical)? Open — likely yes, requires schema extension to v4 if pursued. @spec/work
 - ##OPEN-IFACE-NAMESPACING **Interface-tag namespacing in the registry.** Today interface tags are global (`interface:build-system` matches across all registries). For multi-tenant federations we may need scoping; defer until multi-registry adoption surfaces real conflicts. @spec/work
 - ##OPEN-EMISSION-RATE-LIMIT **Virtual-capability emission rate-limiting.** §2.5.3 leaves the LLM emission unconstrained. In the worst case the LLM could emit hundreds of virtual capabilities per resolution and inflate the activation graph. Open: should the schema cap emissions at N (configurable) and ask the LLM to prioritise? Lean toward `[llm].emission.max = 50` default with override at `vibe build --llm-emission-max=N`. @spec/work
-- ##OPEN-WORKSPACE-MONOREPO **Workspace / monorepo support.** Cargo's `[workspace]` shape lets a repo carry many crates with shared lockfile. vibevm today is one-package-one-repo. With subskills + features, this constraint is workable; without them, monorepos for multi-package collections (`vibespecs/flow-collection` carrying `flow:wal` + `flow:atomic-commits`) become attractive. Defer to adoption. @spec/work
+- ##OPEN-WORKSPACE-MONOREPO **Workspace / monorepo support.** Cargo's `[workspace]` shape lets a repo carry many crates with shared lockfile. vibevm today is one-package-one-repo. With subskills + features, this constraint is workable; without them, monorepos for multi-package collections (`vibespecs/flow-collection` carrying `flow:wal` + `flow:git-atomic-commits`) become attractive. Defer to adoption. @spec/work
 - ##OPEN-DESCRIBES-COVERAGE **`describes` PURL coverage.** Should `vibe check` warn when a `describes` PURL points at a package version that doesn't exist on the upstream registry (npm, pypi, crates.io)? Requires a probe layer that's opinionated about upstream-host APIs. Park as M2-territory. @spec/work
 - ##OPEN-CONFLICT-THRESHOLD **Activation-conflict detection threshold.** §2.10's check uses 75% keyword-overlap as the threshold for "descriptions materially overlap." Is that the right number? Tessl doesn't publish theirs. Open — instrument and adjust based on real-world false-positive rate once we have a corpus. @spec/work
 - ##OPEN-ENV-FEATURES **Feature flags from environment variables.** `VIBE_FEATURES=foo,bar` — useful for CI/automation? Probably yes, mirrors `--features`. Cheap addition to Phase B if pulled. @spec/work

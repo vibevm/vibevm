@@ -1,4 +1,4 @@
-# `flow:attribution-policy` — choose your authorship surface deliberately {#root}
+# `flow:git-attribution-policy` — choose your authorship surface deliberately {#root}
 
 <status stage="doc" state="done" audience="user"/>
 
@@ -48,13 +48,13 @@ choice where law, employer, or upstream projects require disclosure. @spec/done
 ## Install {#install}
 
 ```bash
-vibe install flow:attribution-policy
+vibe install flow:git-attribution-policy
 ```
 
 ## Uninstall {#uninstall}
 
 ```bash
-vibe uninstall flow:attribution-policy
+vibe uninstall flow:git-attribution-policy
 ```
 
 ##UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the
@@ -64,7 +64,7 @@ boot snippet. @impl/done
 
 ## Composition {#composition}
 
-- ##COMPOSES-ATOMIC-COMMITS `flow:atomic-commits` (`30-…`) pins the commit-message format this
+- ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` (`30-…`) pins the commit-message format this
   policy scans, and its frozen-history rule governs the
   pushed-slip drill: no history rewrite without owner approval. @impl/done
 - ##COMPOSES-DECISION-RECORDS `flow:decision-records` (`25-…`): the posture choice is a recorded

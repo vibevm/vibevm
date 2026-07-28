@@ -86,7 +86,7 @@ false. @spec/done
 3. ##SWITCH-HISTORY-IS-NEVER-REWRITTEN **Existing history is never rewritten to match** — in either
    direction. Scrubbing old trailers or back-filling missing ones
    both mean rewriting published history; the frozen-history rule
-   (`flow:atomic-commits`) wins. The dated decision record is what
+   (`flow:git-atomic-commits`) wins. The dated decision record is what
    tells a future reader where the boundary lies. @impl/done
 
 ## Summary {#summary}

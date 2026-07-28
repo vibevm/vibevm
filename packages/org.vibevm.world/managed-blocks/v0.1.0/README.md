@@ -66,7 +66,7 @@ whole point of the practice. @impl/done
 - ##COMPOSES-TOOL-DESIGN-LESSONS `flow:tool-design-lessons` — the sibling package for tool authors;
   managed blocks is one deep-dive lesson from it, extracted so it can
   be installed on its own. @impl/done
-- ##COMPOSES-ATTRIBUTION-POLICY-AND-WAL `flow:attribution-policy` and `flow:wal` — their instruction files
+- ##COMPOSES-ATTRIBUTION-POLICY-AND-WAL `flow:git-attribution-policy` and `flow:wal` — their instruction files
   are exactly the kind of shared, hand-authored file this protocol
   protects. A tool that writes an attribution snippet or a WAL redirect
   into `CLAUDE.md` must do it as a block, not an overwrite. @impl/done

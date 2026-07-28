@@ -62,7 +62,7 @@ snippet. @impl/done
 
 ## Composition {#composition}
 
-- ##COMPOSES-ATTRIBUTION-POLICY `flow:attribution-policy` (`55-…`) is the sibling policy package:
+- ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` (`55-…`) is the sibling policy package:
   both are one-place policies enforced by mechanical scans — one keeps
   authorship marks off every surface, this one keeps secret values off
   every surface. @impl/done

@@ -80,7 +80,7 @@ requirement is delivered by its own flow in this collection: @impl/done
 | Requirement | What it demands | Delivered by |
 |---|---|---|
 | ##ROW-REQ-ADDRESSABILITY **Addressability** @impl/done | every statement in every file is precisely citable, so a correction costs twenty tokens, not a re-derivation @impl/done | flow:addressable-specs @impl/done |
-| ##ROW-REQ-ATOMICITY **Atomicity** @impl/done | every update to the shared state is one logical step, visible and verifiable in one diff @impl/done | flow:atomic-commits @impl/done |
+| ##ROW-REQ-ATOMICITY **Atomicity** @impl/done | every update to the shared state is one logical step, visible and verifiable in one diff @impl/done | flow:git-atomic-commits @impl/done |
 | ##ROW-REQ-CONFLICT-PROTOCOL **Conflict protocol** @impl/done | two writers *will* contradict each other; explicit priorities and a loud escalation path resolve it without a race @impl/done | flow:conflict-protocol (and flow:sync-from-code for the sanctioned reverse flow) @impl/done |
 | ##ROW-REQ-VISIBILITY **Visibility** @impl/done | a change one process made must be *seen* by the other: session-start reads are cache invalidation, the morning routine re-syncs the human, the diff is the notification @impl/done | flow:wal @impl/done |
 

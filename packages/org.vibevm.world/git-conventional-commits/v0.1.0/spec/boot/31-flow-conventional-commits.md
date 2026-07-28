@@ -40,5 +40,5 @@ allowed-type table, scope rules, body structure, worked examples, and anti-patte
 ##A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE A `feat: add foo, bar, and baz` message is valid Conventional
 Commits *and* a violation of the atomic rule. @impl/done
 
-##ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `atomic-commits` flow;
+##ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `git-atomic-commits` flow;
 the two run together. @impl/done

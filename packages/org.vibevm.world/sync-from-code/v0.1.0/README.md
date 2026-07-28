@@ -58,12 +58,12 @@ never touched. @impl/done
 
 ## Composition {#composition}
 
-- ##COMPOSES-WAL-AND-ATOMIC-COMMITS-BY-DISTINCT-PREFIXES Works with `flow:wal` (`10-…`) and `flow:atomic-commits` (`30-…`):
+- ##COMPOSES-WAL-AND-ATOMIC-COMMITS-BY-DISTINCT-PREFIXES Works with `flow:wal` (`10-…`) and `flow:git-atomic-commits` (`30-…`):
   numeric boot-snippet prefixes are distinct by design. @impl/done
 - ##COMPOSES-WAL-FOR-THE-SESSION-END-UPDATE A successful sync *may* trigger a WAL update; that update goes
   through `flow:wal`'s session-end hook, not this flow. @impl/done
 - ##COMPOSES-ATOMIC-COMMITS-FOR-THE-COMMIT-MESSAGE A sync ends in a `docs(spec)` commit; message formatting is pinned
-  by `flow:atomic-commits`. @impl/done
+  by `flow:git-atomic-commits`. @impl/done
 
 ## Philosophical background {#background}
 

@@ -79,7 +79,7 @@ snippet. @impl/done
 - ##COMPOSES-WAL `flow:wal` — WAL Constraints entries cite recorded decisions
   ("timeout is 600 s, not 300 → §verification.timeout") instead of
   restating the reasoning. @impl/done
-- ##COMPOSES-ATOMIC-COMMITS `flow:atomic-commits` — commit bodies cite the record, never
+- ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — commit bodies cite the record, never
   replace it: the spec carries the why, the commit points at the
   anchor. @impl/done
 

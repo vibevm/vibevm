@@ -63,7 +63,7 @@ boot snippet. @impl/done
 are its consequences: @spec/done
 
 - ##COMPOSES-THE-FOUR-IPC-REQUIREMENTS The four IPC requirements map to `flow:addressable-specs`
-  (addressability), `flow:atomic-commits` (atomicity),
+  (addressability), `flow:git-atomic-commits` (atomicity),
   `flow:conflict-protocol` (conflict rules), and `flow:wal` plus
   `flow:sync-from-code` (visibility). @impl/done
 - ##COMPOSES-THE-MEMORY-ASYMMETRY The memory asymmetry is operationalized by

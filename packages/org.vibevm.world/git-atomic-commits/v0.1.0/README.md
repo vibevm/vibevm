@@ -1,4 +1,4 @@
-# `flow:atomic-commits` — one commit, one idea {#root}
+# `flow:git-atomic-commits` — one commit, one idea {#root}
 
 <status stage="doc" state="done" audience="user"/>
 
@@ -18,7 +18,7 @@ is reading the diff, and a commit that mixes three concerns across
 eight files is not verifiable in one pass. @spec/done
 
 ##package-contents-lead This package ships the **atomicity** discipline (the message **format** is the separate
-`flow:conventional-commits` package): @impl/done
+`flow:git-conventional-commits` package): @impl/done
 
 - ##CONTENT-THE-FULL-PROTOCOL `spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md` — full
   protocol: what an atomic commit is, why it matters more in a
@@ -35,13 +35,13 @@ eight files is not verifiable in one pass. @spec/done
 ## Install {#install}
 
 ```bash
-vibe install flow:atomic-commits
+vibe install flow:git-atomic-commits
 ```
 
 ## Uninstall {#uninstall}
 
 ```bash
-vibe uninstall flow:atomic-commits
+vibe uninstall flow:git-atomic-commits
 ```
 
 ##UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot
@@ -57,7 +57,7 @@ never touched. @impl/done
 - ##COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE `flow:sync-from-code`'s final step is a `docs(spec)` commit; the
   format of that commit message is pinned by this flow. @impl/done
 - ##COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT End-of-session WAL rewrite (from `flow:wal`) ends in a commit;
-  atomic-commits is how that commit is shaped. @impl/done
+  git-atomic-commits is how that commit is shaped. @impl/done
 
 ## Philosophical background {#background}
 

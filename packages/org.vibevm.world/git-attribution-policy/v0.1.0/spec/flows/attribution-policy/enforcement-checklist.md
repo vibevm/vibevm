@@ -84,7 +84,7 @@ checklist (if you run `flow:health-audit` or similar): @impl/done
 1. ##DRILL-CAUGHT-BEFORE-PUSH **Caught before push:** amend or rebase locally. No further
    action; this is what the scan exists for. @impl/done
 2. ##DRILL-CAUGHT-AFTER-PUSH **Caught after push:** do **not** rewrite published history on
-   reflex — the frozen-history rule (`flow:atomic-commits` §pushed)
+   reflex — the frozen-history rule (`flow:git-atomic-commits` §pushed)
    wins by default. Record the slip, fix the *source* (the tool or
    template that produced it), and surface to the owner: rewriting
    one commit's metadata out of published history is the owner's

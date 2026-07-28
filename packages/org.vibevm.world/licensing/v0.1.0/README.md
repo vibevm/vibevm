@@ -79,7 +79,7 @@ origin project's placeholder named as its intended destination. @impl/done
 - ##COMPOSES-HEALTH-AUDIT `flow:health-audit` — a periodic audit line re-runs the dependency
   licence listing, catching a dependency that relicensed between
   versions. @impl/done
-- ##COMPOSES-ATTRIBUTION-POLICY `flow:attribution-policy` — the two together define how the
+- ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` — the two together define how the
   repository presents itself: who authored it, and under what terms
   it may be used. @spec/done
 

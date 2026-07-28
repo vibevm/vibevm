@@ -65,7 +65,7 @@ document that defers to this package from its next release. @spec/done
 - ##COMPOSES-WAL `flow:wal` — a campaign checkpoint updates the WAL's standing line
   at every phase boundary; the plan file, not the WAL, carries the
   campaign detail. @impl/done
-- ##COMPOSES-ATOMIC-COMMITS `flow:atomic-commits` — each phase's commit set follows it:
+- ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — each phase's commit set follows it:
   subjects are spelled in the plan, one idea per commit, and the
   ledger binds hashes to the planned subjects. @impl/done
 - ##COMPOSES-DECISION-RECORDS `flow:decision-records` — the plan's D-sections are decision

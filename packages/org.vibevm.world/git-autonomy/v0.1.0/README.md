@@ -1,4 +1,4 @@
-# `flow:autonomy` — routine proceeds, red lines stop and ask {#root}
+# `flow:git-autonomy` — routine proceeds, red lines stop and ask {#root}
 
 <status stage="doc" state="done" audience="user"/>
 
@@ -20,7 +20,7 @@ with routine work?" handshake, never the "may I cross an irreversible threshold?
 ## Install {#install}
 
 ```bash
-vibe install flow:autonomy
+vibe install flow:git-autonomy
 ```
 
 ## Composition {#composition}

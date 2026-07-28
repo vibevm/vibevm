@@ -43,13 +43,13 @@ edition is a new umbrella version with refreshed pins. @impl/done
 | ##ROW-TWO-PROCESS-MODEL `two-process-model` @0.1.0 @impl/done | Human and AI as coprocessors; the human owns coherence; files are the only shared memory. @impl/done |
 | ##ROW-WAL `wal` @0.2.0 @impl/done | The checkpoint file (WAL) and cold-resume snapshot; session wind-down and resume rituals; the `wal-status` skill. @impl/done |
 | ##ROW-SYNC-FROM-CODE `sync-from-code` @0.1.0 @impl/done | The sanctioned reverse path: reconcile the spec when code changed first, with human approval. @impl/done |
-| ##ROW-ATOMIC-COMMITS `atomic-commits` @0.1.0 @impl/done | One commit, one idea; Conventional Commits; pushed history is frozen. @impl/done |
+| ##ROW-ATOMIC-COMMITS `git-atomic-commits` @0.1.0 @impl/done | One commit, one idea; Conventional Commits; pushed history is frozen. @impl/done |
 | ##ROW-ADDRESSABLE-SPECS `addressable-specs` @0.1.0 @impl/done | `spec://` URIs, stable anchors, size budgets, and the spec tree layout. @impl/done |
 | ##ROW-DECISION-RECORDS `decision-records` @0.1.0 @impl/done | Decisions, not facts: reason + rejected alternatives + revisit trigger, at the governing anchor. @impl/done |
 | ##ROW-CONFLICT-PROTOCOL `conflict-protocol` @0.1.0 @impl/done | Human > Spec > Tests > Code; REVIEW markers; the conservative-default path when the spec is silent. @impl/done |
 | ##ROW-CAMPAIGN-PLANS `campaign-plans` @0.1.0 @impl/done | Cold-executable campaign plans: phase gates, falsifiable predictions, execution and deferral ledgers. @impl/done |
 | ##ROW-DISCOVERY-PROMPT `discovery-prompt` @0.1.0 @impl/done | The DISCOVERY collaborative-research prompt, packaged verbatim with a usage guide. @impl/done |
-| ##ROW-ATTRIBUTION-POLICY `attribution-policy` @0.1.0 @impl/done | A deliberate authorship posture: human-authored surface by default, disclosure documented as the alternative. @impl/done |
+| ##ROW-ATTRIBUTION-POLICY `git-attribution-policy` @0.1.0 @impl/done | A deliberate authorship posture: human-authored surface by default, disclosure documented as the alternative. @impl/done |
 
 ##project-practice-table-lead The project-practice wave: @impl/done
 

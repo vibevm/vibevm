@@ -73,7 +73,7 @@ snippet and the skill, but NEVER touches `spec/WAL.md` or `CONTINUE.md`
 
 ## Composition {#composition}
 
-- ##COMPOSES-SYNC-FROM-CODE-AND-ATOMIC-COMMITS `flow:sync-from-code` (`20-…`) and `flow:atomic-commits` (`30-…`):
+- ##COMPOSES-SYNC-FROM-CODE-AND-ATOMIC-COMMITS `flow:sync-from-code` (`20-…`) and `flow:git-atomic-commits` (`30-…`):
   numeric boot-snippet prefixes are distinct by design. A sync may
   trigger a WAL update; checkpoint commits follow the project's
   commit discipline. @impl/done

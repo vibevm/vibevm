@@ -58,10 +58,10 @@ snippet. @impl/done
 - ##COMPOSES-CONFLICT-PROTOCOL `flow:conflict-protocol` — a mode never overrides the
   uncertainty protocol; genuine ambiguity still takes the
   conservative default and a REVIEW marker, even at full speed. @impl/done
-- ##COMPOSES-ATOMIC-COMMITS `flow:atomic-commits` — an accelerated mode still commits one
+- ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — an accelerated mode still commits one
   logical unit at a time; its frozen-history rule is one of the red
   lines every mode preserves. @impl/done
-- ##COMPOSES-SECRETS-HYGIENE-AND-ATTRIBUTION-POLICY `flow:secrets-hygiene` and `flow:attribution-policy` — standing
+- ##COMPOSES-SECRETS-HYGIENE-AND-ATTRIBUTION-POLICY `flow:secrets-hygiene` and `flow:git-attribution-policy` — standing
   invariants that are red lines for mode purposes: no posture relaxes
   them. @impl/done
 - ##COMPOSES-CAMPAIGN-PLANS `flow:campaign-plans` — a campaign is often run under an

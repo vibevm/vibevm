@@ -43,7 +43,7 @@ session needs. @impl/done
   wind-down and resume rituals. @impl/done
 - ##MEMBER-SYNC-FROM-CODE `sync-from-code` — the sanctioned reverse path when code changed
   before the spec. @impl/done
-- ##MEMBER-ATOMIC-COMMITS `atomic-commits` — one commit, one idea; Conventional Commits;
+- ##MEMBER-ATOMIC-COMMITS `git-atomic-commits` — one commit, one idea; Conventional Commits;
   pushed history is frozen. @impl/done
 - ##MEMBER-ADDRESSABLE-SPECS `addressable-specs` — `spec://` URIs and stable anchors; correct
   the agent in twenty tokens. @impl/done
@@ -55,7 +55,7 @@ session needs. @impl/done
   falsifiable predictions, and an execution ledger. @impl/done
 - ##MEMBER-DISCOVERY-PROMPT `discovery-prompt` — the structured collaborative-research prompt
   for open-ended sessions. @impl/done
-- ##MEMBER-ATTRIBUTION-POLICY `attribution-policy` — the deliberate authorship posture
+- ##MEMBER-ATTRIBUTION-POLICY `git-attribution-policy` — the deliberate authorship posture
   (human-authored surface by default). @impl/done
 
 ##project-practice-list-lead The project-practice wave — running a project over the long haul: @impl/done

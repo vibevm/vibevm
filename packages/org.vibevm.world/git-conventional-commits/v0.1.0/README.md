@@ -1,4 +1,4 @@
-# `flow:conventional-commits` — the commit message format {#root}
+# `flow:git-conventional-commits` — the commit message format {#root}
 
 <status stage="doc" state="done" audience="user"/>
 
@@ -9,7 +9,7 @@ was made, not *what* the diff already shows. @impl/done
 ##THIS-IS-THE-MESSAGE-FORMAT-ONLY This is the message **format** only. @impl/done
 
 ##ATOMICITY-IS-THE-SEPARATE-ATOMIC-COMMITS-PACKAGE The complementary discipline — **atomicity**, one commit =
-one logical idea — is the separate `flow:atomic-commits` package. @impl/done
+one logical idea — is the separate `flow:git-atomic-commits` package. @impl/done
 
 ##EACH-DISCIPLINE-IS-ADOPTABLE-ON-ITS-OWN You can follow this format and
 still write a non-atomic commit (`feat: add foo, bar, and baz`), and you can be atomic without
@@ -24,12 +24,12 @@ this format; the two run together, and each is its own package so a project can 
 ## Install {#install}
 
 ```bash
-vibe install flow:conventional-commits
+vibe install flow:git-conventional-commits
 ```
 
 ## Composition {#composition}
 
-- ##COMPOSES-ATOMIC-COMMITS Pairs with `flow:atomic-commits` (atomicity) — together they are the commit-message half of a
+- ##COMPOSES-ATOMIC-COMMITS Pairs with `flow:git-atomic-commits` (atomicity) — together they are the commit-message half of a
   `git-practices` posture. @impl/done
 
 ## License {#license}

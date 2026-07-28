@@ -93,7 +93,7 @@ exactly the hunks that belong to it. @impl/done
 
 ##THEN-COMMIT-WITH-THE-APPROPRIATE-CONVENTIONAL-COMMITS-MESSAGE Then commit with the
 appropriate Conventional Commits message (the format is the
-`conventional-commits` flow: `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`). @impl/done
+`git-conventional-commits` flow: `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`). @impl/done
 
 ```
 git add -p                # stage retry-feature hunks

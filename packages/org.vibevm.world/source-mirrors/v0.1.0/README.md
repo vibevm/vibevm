@@ -68,7 +68,7 @@ inbox item the maintainer integrates, not a direct write. @impl/done
 
 ## Composition {#composition}
 
-- ##COMPOSES-ATOMIC-COMMITS `flow:atomic-commits` — pushed history is frozen; a fast-forward-only
+- ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — pushed history is frozen; a fast-forward-only
   fan-out is that rule's multi-host corollary (a replica only ever
   advances, never rewrites). @impl/done
 - ##COMPOSES-WAL `flow:wal` — the fan-out is a natural session wind-down step; the WAL

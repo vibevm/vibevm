@@ -67,7 +67,7 @@ deletes, or overwrites it as part of install or uninstall. @impl/done
   home. @impl/done
 - ##COMPOSES-DECISION-RECORDS `flow:decision-records` — an `accepted` disposition is a decision
   record: it carries a why and a revisit trigger, not just a shrug. @impl/done
-- ##COMPOSES-ATTRIBUTION-POLICY `flow:attribution-policy` — its periodic-audit line item is exactly
+- ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` — its periodic-audit line item is exactly
   one row on this checklist: grep the attribution pattern set over
   surfaces added since the last audit. @impl/done
 
