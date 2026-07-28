@@ -1,0 +1,1900 @@
+{
+ "batch": "W2b",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:31  ## The CONTINUE.md contract {#contract}",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:74  ## The wind-down command {#wind-down}",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:110  ## The resume command {#resume}",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:148  ## Precedence {#precedence}",
+     "confirmed: Read the document's own heading list against the four things the scope sentence promises; all four are present as {#contract}, {#wind-down}, {#resume}, {#precedence}. Then diffed the package copy against the installed copy vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md: they differ only by the stripped ##anchor tokens and the <status> tag, so the consumer receives the same scope sentence at installed line 3."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "WAL-IS-WRITTEN-FOR-THE-SAME-PROJECT-RHYTHM": {
+    "v": "drift",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:11  The WAL is written for the next session on the *same* project rhythm:",
+     "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
+     "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+     "DRIFT on 'one page', the same measurement as W2a's BUDGET-TARGET and SUM-SIZE-AND-CONSTRAINTS: spec/WAL.md is 299 lines / 2 914 words / 18 972 bytes, above 3 000 tokens on either conversion. Terse and current hold; the size does not, and this fact restates the budget as a property of the file."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-COLD-READER-DOES-NOT-KNOW-THE-TERRAIN": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:12  …A cold",
+     "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+     "confirmed: Looked for the host's own enumeration of cold-reader situations. CLAUDE.md's wind-down preamble names three of the flow's four verbatim in the same order — different machine, new session, post-compaction — and uses the term 'cold reader' in the same sentence. The fourth ('a teammate cloning the repository') is not in CLAUDE.md's list; grep for 'teammate' in CLAUDE.md finds it instead in the memory-discipline section ('A teammate who clones the repo will never see global user-memory'), which is the same situation stated for a different purpose. AGENTS.md and GEMINI.md carry line 169 identically"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-COLD-READER-NEEDS-THE-TOUR": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:15  …The cold reader needs the tour — where",
+     "CLAUDE.md:169  …The job is to capture *everything a cold reader would need* into durable repository state.",
+     "CONTINUE.md:278  ## Repository map {#map}",
+     "CONTINUE.md:292  ## Quick start {#quick-start}",
+     "confirmed: Checked whether the host's CONTINUE.md actually carries the three tour elements the claim names. 'Where things are' is §map (a fenced top-level directory listing), 'what commands run' is §quick-start (four commands), 'what was decided and why' is §decisions (eight bullets, each with its authority in parentheses). All three exist as first-class sections in the file rewritten today."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CONTINUE-IS-THAT-TOUR": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+     "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
+     "CONTINUE.md:278  ## Repository map {#map}",
+     "confirmed: Confirmed the file exists at the host root and describes itself as the cold-resume checkpoint on line 1; the installed boot snippet compiled into spec/boot/STATIC.md (slot `org.vibevm.world/wal`, marker at line 1369) names it as the cold-resume snapshot for the consumer. Its section list — map, quick start, decisions, traps, commit chain — is the tour."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-PAIR-PASSES-THE-ACCEPTANCE-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:19  `CONTINUE.md` is that tour. The pair together passes the discipline's",
+     "CONTINUE.md:348  ## The resume prompt {#prompt}",
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "confirmed: Searched the host for the acceptance test as a stated criterion: grep -rniI 'stranger' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md and spec/boot/ returned zero hits, so the host never states the test it is supposed to pass. What the host does carry instead is stronger than the test in one direction and weaker in another: CONTINUE.md §prompt is a 56-line ready-to-paste resume prompt naming the exact five documents to read and the first action — i.e. the host does not rely on a stranger reconstructing the tour, it hands them a script. Whether that pair passes the stated test i"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CONTINUE-LIVES-AT-THE-REPOSITORY-ROOT": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
+     "confirmed: `ls` at the repository root shows CONTINUE.md present; the host's own wind-down step 1 says 'at repo root' in the same words, and the installed boot snippet repeats '(repo root)'. Also checked SPECSPACES.md's registered specspace: packages/org.vibevm.fractality/ carries its own CONTINUE.md at its own root, which is the same rule applied one level down rather than a counter-example."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "CONTINUE-IS-OVERWRITTEN-WHOLESALE": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:26  first. It is **overwritten wholesale** every time it is written — never",
+     "DRIFT on 'never patched', measured. Every one of the seven wind-down writes IS wholesale — 22836168 (312+143 of 367), a45bb31e (162+168 of 198), 625e40e2, 93b5a182, cb51fa77, 56cccca8, e7851a0e — so the rule's core holds. But the snapshot is also patched between wind-downs in 7 of the 14 most recent commits touching it (48025285, 8406eb2a, 100617b3, 6a026de1, c64fe993, 95937de5, 8368e53f), a 50 % share against a rule whose own words are 'never patched'. Note the contrast with the WAL's NEVER-APPEND-TO-THE-WAL, which prohibits appending only and which the host does keep."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "body-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:27  appended to, never patched; staleness compounds otherwise. The body",
+     "confirmed: The host's CLAUDE.md line 178 ends with the identical lead-in 'The body must include, at minimum:' and is followed by exactly ten sub-bullets at lines 179-188, matching the flow's ten numbered items one for one and in the same order. Counted both lists; both are ten. AGENTS.md and GEMINI.md carry the same ten at the same line numbers."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-TLDR-SUMMARY": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:179     - A short TL;DR / executive summary at the top.",
+     "CONTINUE.md:7  ## TL;DR",
+     "CONTINUE.md:9  **The 138-row reviewing debt is paid.** Every one was read individually and judged",
+     "confirmed: The host's required-contents bullet is word-for-word identical to the flow's item 1. Checked the artefact: CONTINUE.md's first heading after the title and the precedence line is `## TL;DR` at line 7, and it is the topmost section. 'Short' is the one loose word — the section runs lines 7-32, four bold paragraphs, about 380 words."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-WHERE-WORK-STANDS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:180     - Where work currently stands (branch, ahead/behind origin, working tree status).",
+     "CONTINUE.md:31  Nothing is blocked. Tree clean, in sync with `origin/main`, mirrored to both hosts.",
+     "CONTINUE.md:43  | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |",
+     "confirmed: The host's own bullet demands all three sub-facts (branch, ahead/behind origin, working tree status) in the same words as the flow. The artefact carries two of the three: working-tree status ('clean') and remote sync ('in sync with `origin/main`'), stated twice — in the TL;DR and in the §numbers table. The third is absent: grep -n 'branch' CONTINUE.md returns ZERO hits in the whole 387-line file, so the local branch is never named and no ahead/behind count is given; 'in sync with origin/main' implies both but states neither. This is the one item of the ten where the host's file falls short of "
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-ACTIVE-BLOCKER": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:181     - The active blocker (if any) and the exact human action that unblocks it.",
+     "CONTINUE.md:31  Nothing is blocked. Tree clean, in sync with `origin/main`, mirrored to both hosts.",
+     "spec/WAL.md:175  ## Next",
+     "confirmed: Host bullet is identical modulo punctuation. The artefact discharges the 'if any' branch explicitly rather than by omission — 'Nothing is blocked.' is the first sentence of the paragraph closing the TL;DR, and spec/WAL.md's In-progress/Next sections agree that nothing is blocked (the WAL's In progress records a delegation in flight, not a blocker). Since there is no active blocker, the 'exact human action' half is vacuous here and cannot be exercised; the row is settled on the branch that applies."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-NEXT-STEPS-RECIPE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:182     - Exact next-steps recipe (commands, file paths, line numbers) for whoever picks up cold.",
+     "CONTINUE.md:99  ## The recipe that closed W1, to run again on W2 {#recipe}",
+     "CONTINUE.md:113  3. **`verify-evidence.py` BEFORE reading a word**, then `repair-refs.py` if a file",
+     "CONTINUE.md:145  `CLAUDE.md:5`, `AGENTS.md:5`, `GEMINI.md:5`, `spec/boot/00-core.md:21`, and",
+     "confirmed: Host bullet matches the flow's three-part requirement verbatim. Checked each part in the artefact: commands — §recipe steps 1-4 name verify-evidence.py, repair-refs.py, show-rows.py, merge-verdicts.py, progress seal, summary.py, and §quick-start carries four runnable command lines; file paths — harvest/world-w1-git-family.md, tasks/WORLD-WORKER-BRIEF.md, run/mirror/ appear in §recipe; line numbers — present but not inside §recipe: the path:line form appears in §w1-reading at lines 123-126 (`CLAUDE.md:5`, `spec/boot/00-core.md:21`, `spec/common/PROP-000.md:161`) and in §findings. So all three s"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-NON-OBVIOUS-FINDINGS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:183     - Any non-obvious findings discovered this session (API quirks, config gotchas, vendor-specific surprises).",
+     "CONTINUE.md:192  ## The findings this session opened {#findings}",
+     "CONTINUE.md:301  ## Standing traps {#traps}",
+     "CONTINUE.md:315  9. **Set `PYTHONIOENCODING=utf-8`** before any Python that prints this corpus;",
+     "confirmed: Host bullet identical to the flow's item 5. The artefact splits the item across two sections rather than one: §findings (line 170) is the session's five opened findings F-124…F-128 with an owner column, and §traps (line 279) is nine numbered operational gotchas of exactly the genre the item names — the PYTHONIOENCODING/PowerShell-5.1 UTF-8 round-trip item at 293-294 is a vendor-specific surprise, the CRLF-vs-LF `str.replace` item at 287-288 is a config gotcha. Both sections were written by the wind-down that produced this file."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-REPOSITORY-MAP": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:184     - A repository map (top-level layout + what each crate / directory holds).",
+     "CONTINUE.md:278  ## Repository map {#map}",
+     "CONTINUE.md:281  crates/           the vibe workspace — cli, resolver, registry, progress-core, check, mcp, wire, llm",
+     "confirmed: Host bullet says 'what each crate / directory holds' where the flow says 'what each directory or component holds' — the same requirement with the host naming its own component kind. The artefact's §map is a fenced block, lines 258-268, one line per top-level directory with its contents: crates/, xtask/, spec/, packages/, vibedeps/, campaigns/, research/, discipline/, plus a catch-all line for docs/ legacy-spec/ refs/ neworder2/ fixtures/ schemas/ apps/."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-DECISIONS-IN-FORCE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:185     - The list of important architectural / policy decisions still in force, in long form.",
+     "CONTINUE.md:259  ## Decisions still in force {#decisions}",
+     "CONTINUE.md:261  - **Delegation goes to the harness's built-in `opus5` subagents, not fractality**",
+     "confirmed: Host bullet matches, including the 'in long form' qualifier. The artefact's §decisions runs lines 237-254: eight bullets, each two to four lines, each naming its authority (owner ruling 2026-07-28; batch plan §2.2; §2.3; §2.1 / A2; §3.3; batch plan §4.5; §5-D). 'Long form' holds — none is a one-liner."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-RECENT-COMMIT-CHAIN": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:186     - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.",
+     "CONTINUE.md:318  ## The recent commit chain {#commits}",
+     "CONTINUE.md:321  dbd20c74 chore(campaign): the derived corpus projection catches up",
+     "confirmed: Host bullet drops the flow's two words 'and direction' and otherwise matches. Counted the artefact: §commits is a fenced block, lines 299-323, exactly 25 entries in `<short-sha> <subject>` oneline form. Checked freshness against the live log — the block is headed by dbd20c74 while HEAD is now 6726f160, i.e. the chain is as of the last wind-down and six commits have landed since, which is what a snapshot is."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-QUICK-START-COMMANDS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:187     - Quick-start commands for the workspace.",
+     "CONTINUE.md:292  ## Quick start {#quick-start}",
+     "CONTINUE.md:274  cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09",
+     "confirmed: Host bullet is word-for-word identical to the flow's item 9. The artefact's §quick-start is a fenced bash block, lines 272-277, with four commands: the exhaustive progress gate, summary.py, tools/self-check.sh with an EXIT echo, and `cargo xtask mirror --check`."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "BODY-PRECEDENCE-POINTER": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+     "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
+     "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "confirmed: Host bullet matches the flow's item 10 including the word 'supersedes'. The artefact carries the pointer twice — in the italic dateline at lines 4-5 and as the closing two lines of the file at 385-386 — so it is both the first and the last thing a cold reader sees. Checked the reciprocal direction too: spec/WAL.md does not point back at CONTINUE.md as canonical, which is the correct asymmetry."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "what-the-item-groups-answer": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:49  Items 1–4 answer \"what do I do right now\"; items 5–9 answer \"what must",
+     "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+     "confirmed: This is the flow's gloss on its own list, and the host does not restate it: CLAUDE.md lines 179-188 reproduce all ten items with no grouping sentence after them, and grep for 'what do I do right now' / 'trust myself' across CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md and spec/boot/ returns nothing. The one testable sub-claim — that item 10 ranks the file — does hold in the artefact, where the pointer sits in the dateline and again as the file's last words. The grouping itself is unverifiable from the host, so partial."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "WRITE-AT-EVERY-EXPLICIT-WIND-DOWN": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "spec/boot/STATIC.md:1413     session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per",
+     "confirmed: The host makes it step 1 of the required behaviour, i.e. mandatory and first, and the installed boot snippet states the same coupling ('A wind-down invokes the full session-end hook *plus* a wholesale overwrite of `CONTINUE.md`'). Checked the practice over the log: of the commits whose subject scope is (continue) or (wal,continue) in the last 400, every one touches CONTINUE.md — `git show --name-only` on a45bb31e, 22836168, 95937de5, 6a026de1 confirms."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "WRITE-BEFORE-A-MACHINE-SWITCH": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:56  - **Before a machine switch** — the other machine gets the tour.",
+     "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+     "CONTINUE.md:43  | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |",
+     "confirmed: The host names the machine switch as a REASON the wind-down exists (CLAUDE.md:169, 'different machine') but never as an independent TRIGGER to write the snapshot: CLAUDE.md's section fires only on the listed phrases, and its 'When to write it' equivalent does not exist — there are no non-phrase triggers anywhere in the section. Widened to spec/boot/ (STATIC.md's wal snippet, lines 1400-1418) — it too ties the CONTINUE.md overwrite to the wind-down phrase only. Widened to spec/boot/90-user.md, which is where this repository's multi-machine facts live: it records the multi-homed mirror setup, no"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "WRITE-BEFORE-A-LONG-GAP": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:57  - **Before a long gap** — a vacation, weeks on another project; future",
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "confirmed: Searched the host for a long-gap trigger: grep -rniI 'long gap|vacation|weeks on another' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md, spec/boot/ and spec/common/ returns nothing. Widened to the whole perimeter's operating documents (README.md, DEV-GUIDE.md, RUNTIME-GUIDE.md, SPECSPACES.md, TASKS.md, BACKLOG.md, AUDIT.md) — still nothing. The host's CONTINUE.md is written only on the wind-down phrase; CLAUDE.md line 176 gates the whole required behaviour on a trigger phrase firing. Nothing on the widened perimeter bears on a long-gap trigger, so not-found rather than drift."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "any-session-end-is-a-fine-time": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:60  Any session end is a fine time; the wind-down makes it non-optional.",
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "confirmed: Both halves check. Non-optional under the wind-down: CLAUDE.md gates the behaviour on the phrase and makes the overwrite step 1. Optional otherwise: measured with git log over 2026-06-01…now — 37 distinct days carry commits, 26 of them touch CONTINUE.md, so on 11 active days the session ended without writing the snapshot. That is exactly the 'fine time but not required' shape the claim describes."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md:22  - ##HOOK-FIRES-EXPLICITLY **Explicitly.** The user issues a wind-down phrase. Ship defaults:",
+     "spec/boot/STATIC.md:1412     intent, not the exact wording). A wind-down invokes the full",
+     "spec/boot/STATIC.md:1413     session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per",
+     "confirmed: Checked the companion document this claim points at: session-end-hook.md's {#when} section has exactly two ways in, and the second is headed '**Explicitly.** The user issues a wind-down phrase', so the two documents agree. The installed boot snippet states the same relation in the consumer's own words at STATIC.md:1412-1414, adding the CONTINUE.md overwrite as the delta between the implicit and explicit forms."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SHIP-TRIGGER-PHRASES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1410  7. Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,",
+     "spec/boot/STATIC.md:1411     `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the",
+     "CLAUDE.md:174  - English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.",
+     "confirmed: The three ship defaults reach the consumer verbatim in the compiled boot lane (STATIC.md 1410-1411). Checked the host's own list against them: CLAUDE.md:174 carries all three — END SESSION, WRAP UP, CHECKPOINT AND CLOSE — and adds three more English phrases (WRAP UP SESSION, FINISH SESSION, CLOSING SESSION) plus seven Russian ones at line 173. The host's list is a strict superset of the ship defaults."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "RECOGNISE-THE-INTENT-NOT-THE-EXACT-WORDING": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:171  **Trigger phrases** (case-insensitive; exact wording not required, recognise the intent):",
+     "CLAUDE.md:198  When the user issues a resume trigger phrase, the job is to **restore context and report — nothing else**. Recognise the intent, not the exact wording:",
+     "spec/boot/STATIC.md:1411     `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the",
+     "confirmed: The host states the rule twice, once per command — at line 171 for the wind-down ('exact wording not required, recognise the intent') and at line 198 for the resume, phrased identically to the flow. The installed snippet repeats it at STATIC.md:1411-1412. The specspace layer applies it too: CLAUDE.md:143 treats a bare phrase versus a named one as a target-resolution question rather than a wording question."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "A-PROJECT-MAY-ADD-NATIVE-LANGUAGE-TWINS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+     "CLAUDE.md:173  - Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.",
+     "CLAUDE.md:174  - English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.",
+     "CLAUDE.md:200  - Russian: `ВОССТАНОВИ СЕССИЮ`, `ВОССТАНОВИ КОНТЕКСТ`, `ПРОДОЛЖАЕМ С ТОГО ЖЕ МЕСТА`.",
+     "confirmed: This repository is the origin project the claim names — it is where org.vibevm.world/wal is authored — so the claim is directly checkable here. Both commands carry a bilingual set in the agent instructions: seven Russian and six English wind-down phrases (173/174), three Russian and three English resume phrases (200/201), and both section headings are themselves bilingual. The installed snippet's permission clause 'and any project-defined twins' (STATIC.md:1411) is what the host exercises. AGENTS.md and GEMINI.md carry the identical sets at the same lines, so the twins reach all three harnesse"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "required-behaviour-lead": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:70  Required behaviour, in order:",
+     "confirmed: The host's lead-in is the same phrase ('**Required behaviour** when a trigger phrase fires:') and is followed by exactly five numbered steps at lines 178, 189, 190, 191, 192 — the same count as the flow's five. Counted both. The per-step comparison is in the five rows that follow; step 2 is where the two lists say different things."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STEP-OVERWRITE-CONTINUE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:72  1. **Overwrite `CONTINUE.md`** wholesale, per the contract above.",
+     "confirmed: Same ordinal, same verb, same qualifier: the host's step 1 is 'Overwrite `CONTINUE.md` at repo root … replace it wholesale (do not append …)' and the flow's step 1 is 'Overwrite `CONTINUE.md` wholesale, per the contract above'. The host inlines the contract as ten sub-bullets where the flow cross-references it; the contents match item for item (see the ten BODY-* rows)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STEP-REWRITE-THE-WAL": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:73  2. **Rewrite `spec/WAL.md`** per",
+     "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
+     "spec/WAL.md:56  ## Constraints — do not violate",
+     "DRIFT: the host's step 2 says 'Update … bump the date line, refresh the Current phase / Next / Known issues sections' where the flow says Rewrite, and the flow's own session-end-hook.md:51 is emphatic that patching is wrong. Its section list is also a different four: CONSTRAINTS — the section WAL-PROTOCOL §sections calls the most valuable content in the WAL — is absent from the host's refresh list, and Known issues is added."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:76  3. **Commit in topic-grouped commits.** The snapshot and the WAL",
+     "confirmed: Host step 3 restates the rule and adds the two canonical subjects. Checked the practice with `git log --name-only` over the checkpoint commits of the last 400: docs(wal) commits touch spec/WAL.md alone (6b17e649, 1824fac9, 053f1671, a0983bcc), docs(continue) commits touch CONTINUE.md alone (22836168, a45bb31e, 625e40e2, 93b5a182). Two deviations found and both are inside the checkpoint topic rather than mixing code in: three commits in 400 use a combined scope docs(wal,continue) — 6a026de1, 95937de5, cb51fa77 — each touching exactly those two files; and 17b1415b 'docs(wal): the two drifts land"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STEP-PUSH-ONLY-IF-AUTONOMY-SANCTIONS-IT": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:79  4. **Push only if the project's autonomy rules sanction it.** No",
+     "CONTINUE.md:43  | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |",
+     "confirmed: The claim has a conditional and a default, and the host exercises the conditional's true branch. Sanction: CLAUDE.md's step 4 pushes unconditionally and cites Rule 4 ('routine per Rule 4, since the user invoked the wind-down explicitly'), i.e. the project's autonomy rules do sanction it — which is what the flow's first sentence permits. The flow's second sentence, 'No standing autonomy — stop at drafts or at local commits', is the ship default and is the opposite of what the host does; the host also keeps the escape hatch the flow implies (stop and ask on a non-fast-forward). Practice: CONTINU"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STEP-EMIT-A-CHAT-TLDR": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:82  5. **Emit a chat TL;DR** of what the wind-down did: files written,",
+     "confirmed: This is the closest match of the five steps: the host's step 5 reproduces all four content items in the same order (files written/updated, commits created, push status, what the next session picks up first) and both halves of the length rule (one screen; enough detail to verify without opening the files), adding only the parenthetical '(file paths, commit subjects, blockers)'. The artefact itself is a chat message and leaves no file trace, so only the instruction is checkable in the tree."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "the-point-of-the-command": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy.",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:86  The point of the command is to make session-boundary loss-of-context",
+     "confirmed: Near-verbatim in the host: the only differences between CLAUDE.md:194 and the flow's sentence are 'this command' for 'the command', the active-to-passive shift 'can be ended', and '+ `spec/WAL.md`' for 'plus the WAL'. Every content word — session-boundary, loss-of-context, cheap, at any time, no degradation — is present."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "TREAT-IT-AS-A-HARD-CONTRACT-NOT-A-COURTESY": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:194  …Treat it as a hard contract, not a courtesy.",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md:33  ##RUN-THE-FULL-HOOK-AS-A-HARD-CONTRACT Run the full hook, steps 1–6, and treat it as a hard",
+     "confirmed: The host closes its wind-down section with the identical clause, word for word, as the final sentence of CLAUDE.md:194. The sibling document session-end-hook.md carries the same formula at its line 33, so the package is internally consistent on it as well. AGENTS.md and GEMINI.md carry line 194 identically."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RESUME-TRIGGER-PHRASES": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:201  - English: `RESUME SESSION`, `RESTORE SESSION`, `RESTORE CONTEXT`.",
+     "CLAUDE.md:200  - Russian: `ВОССТАНОВИ СЕССИЮ`, `ВОССТАНОВИ КОНТЕКСТ`, `ПРОДОЛЖАЕМ С ТОГО ЖЕ МЕСТА`.",
+     "spec/boot/STATIC.md:1415  8. Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE",
+     "spec/boot/STATIC.md:1416     CONTEXT`. Restore context, verify the repository state empirically,",
+     "confirmed: Both ship phrases reach the consumer verbatim in the compiled boot lane (STATIC.md:1415-1416) and both are in the host's own list, which adds RESTORE SESSION plus three Russian twins — the 'and twins' clause exercised. Also checked CONTINUE.md §prompt: its first line is the Russian twin ВОССТАНОВИ СЕССИЮ, i.e. the host's own resume script uses a twin rather than a ship default."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-JOB-IS-TO-RESTORE-CONTEXT-AND-REPORT": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:198  When the user issues a resume trigger phrase, the job is to **restore context and report — nothing else**. Recognise the intent, not the exact wording:",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:94  recognise the intent). The job is to **restore context and report —",
+     "confirmed: Verbatim match including the emphasis: the host's phrase 'the job is to **restore context and report — nothing else**' is character-for-character the flow's, in the same bolded span. The host then enumerates three steps to the flow's four (see the four RESUME-STEP-* rows)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "RESUME-STEP-RUN-THE-BOOT-SEQUENCE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:97  1. Run the project's boot sequence (whatever its agent instructions",
+     "confirmed: The host names its concrete boot sequence where the flow says 'whatever its agent instructions define' — CLAUDE.md → spec/boot/INDEX.md and its files → spec/WAL.md — and reads both required files. Verified the sequence is real: spec/boot/INDEX.md exists, is a TOML manifest with schema = 1, and names seven [[entry]] paths plus static = \"spec/boot/STATIC.md\". Note the host folds the flow's step 2 (empirical verification) into its step 1, which is why its list has three items and the flow's has four."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "spec/boot/STATIC.md:1416     CONTEXT`. Restore context, verify the repository state empirically,",
+     "confirmed: All four sub-facts the flow lists are in the host's parenthetical in the same order — branch, sync with origin, working tree, recent commits — and the word 'empirically' is the host's own. The installed boot snippet carries the requirement independently at STATIC.md:1416. The 'never take the snapshot's word' clause is not restated in CLAUDE.md, but the host's precedence rule at CONTINUE.md:385-386 covers the same failure from the other side."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "RESUME-STEP-EMIT-A-STATUS-REPORT": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:206  2. **Emit a status report in the chat**: where work stands, gate-panel state as last recorded, active blockers, and the candidate next steps (typically the plan pointer from the WAL / `CONTINUE.md`).",
+     "spec/boot/STATIC.md:1417     emit a status report — then **stop and wait for direction**. A",
+     "confirmed: The host reproduces all three required contents verbatim — 'where work stands', 'active blockers', 'and the candidate next steps' — and inserts a fourth of its own between the first and second, 'gate-panel state as last recorded', which has no counterpart in the flow. The installed snippet at STATIC.md:1417 requires the report without enumerating its contents."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "RESUME-STEP-STOP-AND-WAIT-FOR-DIRECTION": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.",
+     "spec/boot/STATIC.md:1417     emit a status report — then **stop and wait for direction**. A",
+     "confirmed: Verbatim on the heading clause ('**Stop and wait for direction.**') and on all three prohibitions, with one addition on the host side: 'no plan-phase execution', which names the specific misfire this repository suffered. The installed boot snippet carries the same stop at STATIC.md:1417. The host's own resume section is what a session in this repository actually reads first, so the rule is live."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "A-RECORDED-POINTER-IS-A-CANDIDATE-NOT-AUTHORISATION": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.",
+     "spec/boot/STATIC.md:1418     recorded \"next step\" is a candidate, not authorisation.",
+     "CONTINUE.md:348  ## The resume prompt {#prompt}",
+     "confirmed: The host's sentence is verbatim the flow's, quotation marks and italics included — 'Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.' The installed snippet states the short form at STATIC.md:1418. Checked the artefact for the situation the rule guards: CONTINUE.md §prompt does carry a ПЕРВОЕ ДЕЙСТВИЕ (first action) block at lines 345-351, i.e. exactly the kind of recorded pointer the rule declassifies to a candidate."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "why-the-resume-boundary-exists": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:209  Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:111  start it. The resume boundary exists so the owner can inspect the",
+     "confirmed: Verbatim: CLAUDE.md's rationale sentence and the flow's differ only in an em-dash for a comma. The host labels it 'Rationale:' and dates it. Confirmed against history — `git log -S \"after exactly that misfire\" -- CLAUDE.md` returns a single commit, 9fa6d545 (2026-06-12) 'docs(boot): the resume command restores state and stops', whose body states the same rationale as the owner's."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "booting-into-execution-takes-the-decision-away": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:209  Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:113  next step. A session that boots straight into execution takes that",
+     "confirmed: Same sentence in the host, shortened only by dropping 'from the owner' (the owner is the subject of the preceding clause). Checked the originating commit body for the concrete instance behind the abstraction: 9fa6d545 records 'the session that booted straight into SHRINK-PLAN Phase 0 executed the right work at the wrong moment, and the owner had no window to redirect it.'"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "the-misfire-that-produced-the-rule": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:209  Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).",
+     "confirmed: The host records the same event and dates it: '(rule recorded 2026-06-12 after exactly that misfire)'. Corroborated in history rather than in a file — `git log -S \"after exactly that misfire\" --pretty=\"%h %ad %s\" --date=short -- CLAUDE.md` returns exactly one commit, 9fa6d545 dated 2026-06-12, subject 'docs(boot): the resume command restores state and stops'; the same search for 'Session-resume command' returns the same single commit, so the section and the rationale were introduced together. Its body names the specific misfire: a session 'booted straight into SHRINK-PLAN Phase 0'. Git output "
+    ],
+    "src": [
+     2
+    ]
+   },
+   "boundary-explicit-ever-since": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:196  ## Session-resume command — `ВОССТАНОВИ СЕССИЮ` / `RESUME SESSION`",
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.",
+     "spec/boot/STATIC.md:1418     recorded \"next step\" is a candidate, not authorisation.",
+     "confirmed: 'Ever since' means from 2026-06-12 to now, so I checked both ends. Now: the boundary is a standing section of CLAUDE.md (196-209) and is also compiled into the boot lane the session reads first, at STATIC.md:1415-1418. Since: `git log -S` shows the section entered at 9fa6d545 (2026-06-12) and no commit removes it — the text is present at HEAD 6726f160 with a clean working tree. The host also carries the rule twice over, in its own instructions and in the installed snippet."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "WAL-IS-CANONICAL-CONTINUE-IS-A-SNAPSHOT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+     "spec/boot/STATIC.md:1377  - `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL",
+     "CONTINUE.md:3  _Written 2026-07-28 (**Phase C: the reviewing debt is CLOSED and `world` batch W1",
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "confirmed: The installed boot snippet states both halves in the consumer's lane (1376-1378), the host's own snapshot states them twice (dateline 3-5 and closing 385-386), and the snapshot even carries the moment it was written — '_Written 2026-07-28' — which is the 'snapshot of the moment' half made literal. Checked the divergence is live rather than theoretical: CONTINUE.md's §commits block is headed by dbd20c74 while HEAD is 6726f160, so the snapshot is already six commits behind the WAL's world."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "ON-DISAGREEMENT-TRUST-THE-WAL-AND-FLAG-IT": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "CONTINUE.md:422  the WAL wins.",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:20  3. ##FLAG-A-CONTINUE-DIVERGENCE-AND-TREAT-THE-WAL-AS-CANONICAL If `CONTINUE.md` exists at the repository root and disagrees with",
+     "confirmed: The 'trust the WAL' half is settled: the host states it at CONTINUE.md:385-386 and again in the dateline, and STATIC.md:1377-1378 carries it in the boot lane. The 'flag the divergence in your report' half is not in the host's operating surface — grep -rniI 'divergence' over CLAUDE.md, CONTINUE.md, spec/WAL.md and spec/boot/ returns only STATIC.md:1156 (a git-flow rule about diverged branches) and CONTINUE.md:235 (a tool name, coordinate-divergence.py); neither the wind-down nor the resume section asks for a divergence flag. The only place the obligation exists is the package's own wal-status S"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-SAME-RULE-COVERS-ANY-OTHER-SNAPSHOT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:108  3. Refresh the plan's status line (\"Phase N landed, floor green,",
+     "CONTINUE.md:176  > plan» status line).",
+     "confirmed: Searched the host for a precedence rule generalised beyond the WAL/CONTINUE pair: grep -rniI 'status line|\"current state\"|canonical living|supersedes this snapshot' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md, spec/boot/, spec/common/ and README.md returns only the WAL-specific pointer (CLAUDE.md/AGENTS.md/GEMINI.md:188, CONTINUE.md:4-5, 385) plus two related-but-different hits: the campaign-plans boot snippet requires refreshing a plan's status line at every phase boundary (STATIC.md:108) — an update obligation, not a precedence rule — and CONTINUE.md:154 quotes a plan stat"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-LIVING-CHECKPOINT-BEATS-A-FROZEN-SNAPSHOT": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "CONTINUE.md:422  the WAL wins.",
+     "spec/boot/STATIC.md:1376  - `spec/WAL.md` — the living checkpoint. **Canonical.**",
+     "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+     "confirmed: The word 'living' is the host's too, in all three places: the installed snippet calls the WAL 'the living checkpoint. **Canonical.**', CLAUDE.md's required-contents bullet says 'the canonical *living* state', and the artefact's closing line says 'the WAL wins'. The absolute form ('always') is not qualified anywhere in the host — no exception clause found in CLAUDE.md, CONTINUE.md, spec/WAL.md or the boot lane."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-APPEND-TO-CONTINUE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "spec/boot/STATIC.md:1413     session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per",
+     "confirmed: The prohibition is stated inline in the host's step 1 ('do not append') and the installed snippet says 'a wholesale overwrite'. Checked the practice: the two most recent CONTINUE.md commits before this session are a45bb31e and 22836168, both wholesale replacements. The nuance found is edits, not appends — c64fe993 'fix(continue): the TL;DR and the resume prompt catch up to W1' and 6a026de1 both patch sections of an existing snapshot rather than growing it, so nothing in the log is an append."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-WRITE-THE-SNAPSHOT-FROM-MEMORY-ALONE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "CONTINUE.md:45  **Never decrement these; re-measure.** One command now prints all of it:",
+     "CONTINUE.md:48  python campaigns/packages-2026-09/tasks/summary.py",
+     "confirmed: The empirical-verification requirement exists in the host, but attached to the RESUME command (CLAUDE.md:205), not to the wind-down: the five required-behaviour steps at 178-192 contain no instruction to verify branch, tree or commits before writing CONTINUE.md. The host does carry a same-shaped rule for its numbers — CONTINUE.md:45 'Never decrement these; re-measure' with the command that produces them — and the §numbers table names its gate as command output, so in practice the snapshot's figures are measured. But the specific prohibition the flow states is absent from the host's wind-down; "
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-START-EXECUTING-AFTER-A-RESUME-COMMAND": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.",
+     "CLAUDE.md:198  When the user issues a resume trigger phrase, the job is to **restore context and report — nothing else**. Recognise the intent, not the exact wording:",
+     "spec/boot/STATIC.md:1417     emit a status report — then **stop and wait for direction**. A",
+     "confirmed: The host states the prohibition three ways: as the scope of the command ('nothing else', 198), as the final step with an itemised list of what must not happen (207), and in the installed boot snippet (STATIC.md:1417). The host's list is one item longer than the flow's — it adds 'no plan-phase execution' — which is the specific form the 2026-06-12 misfire took."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-TREAT-CONTINUE-AS-OVERRIDING-THE-WAL": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "CONTINUE.md:422  the WAL wins.",
+     "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
+     "spec/boot/STATIC.md:1378    supersedes it wherever they diverge.",
+     "confirmed: The host encodes the prohibition positively rather than as a 'never', and does so in the snapshot itself — the file that would benefit from the override declares it loses, at both ends of the file. The installed boot snippet states it independently at STATIC.md:1377-1378. No counter-statement found: grep over CLAUDE.md, spec/WAL.md and the boot lane finds nothing that grants CONTINUE.md precedence over the WAL in any circumstance."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-SKIP-THE-CHAT-TLDR-ON-A-WIND-DOWN": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+     "confirmed: The host makes it a required step rather than a 'never', and carries the flow's exact rationale in the same clause — 'that the user can verify nothing was missed without opening the files'. The step is inside the required-behaviour list gated by CLAUDE.md:176, so skipping it breaks the host's own contract. The artefact is a chat message and leaves no file trace, so conformance in practice is not checkable from the tree; only the instruction is, and it is unambiguous."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "SUM-CONTINUE-IS-THE-COLD-READERS-TOUR": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:7  ## TL;DR",
+     "CONTINUE.md:99  ## The recipe that closed W1, to run again on W2 {#recipe}",
+     "CONTINUE.md:192  ## The findings this session opened {#findings}",
+     "CONTINUE.md:278  ## Repository map {#map}",
+     "confirmed: Walked the summary's nine-element list against the host artefact's section list. Present as named sections: TL;DR (7), recipe (77), findings (170), map (256), decisions (237), commits (296), quick-start (270). Present but not as sections: state and blocker, both discharged in one line of prose at CONTINUE.md:31 ('Nothing is blocked. Tree clean, in sync with `origin/main`…') and in the §numbers table row at 43. The 'overwritten wholesale, never appended' half matches CLAUDE.md:178. Seven of nine as sections, nine of nine as content."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-WHEN-TO-WRITE-IT": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "confirmed: One of the three triggers is in the host and two are not — the same split the three WRITE-* rows found individually. At every wind-down: yes, step 1 of a phrase-gated required behaviour. Before machine switches: the host names the machine switch only as a reason the wind-down exists (CLAUDE.md:169), never as an independent trigger. Before gaps: absent entirely — grep -rniI 'long gap|vacation' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md, spec/boot/, README.md and DEV-GUIDE.md returns nothing. Since the summary asserts all three, the host settles only the first: partial."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-WIND-DOWN-SHAPE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.",
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "confirmed: All five elements are present in the host's list, in the same order, one per step. Two differ in wording rather than presence: element 2 is 'Update … bump … refresh' where the summary says 'WAL rewrite' (see STEP-REWRITE-THE-WAL), and element 4 is an unconditional push where the summary says 'sanctioned push' — sanctioned is exactly what CLAUDE.md:191 asserts it is ('routine per Rule 4'). The five-for-five ordering match is the finding."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-RESUME-SHAPE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "CLAUDE.md:206  2. **Emit a status report in the chat**: where work stands, gate-panel state as last recorded, active blockers, and the candidate next steps (typically the plan pointer from the WAL / `CONTINUE.md`).",
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. …",
+     "confirmed: All five beats are in the host's three steps: boot and read both files and verify empirically are folded into step 1, report is step 2, stop is step 3. The difference is packaging, not content — the host has three numbered steps to the flow's four because it merges boot and verify. Confirmed the boot sequence it names is real: spec/boot/INDEX.md exists with schema = 1 and seven [[entry]] paths."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-A-RECORDED-NEXT-STEP-IS-A-CANDIDATE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:207  3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any \"resume work at …\" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.",
+     "spec/boot/STATIC.md:1418     recorded \"next step\" is a candidate, not authorisation.",
+     "confirmed: The installed boot snippet at STATIC.md:1418 is the summary's sentence almost word for word, and CLAUDE.md:207 states the long form. Checked that the host actually has such recorded pointers for the rule to bite on: spec/WAL.md's '## Next' section (line 174) and CONTINUE.md §prompt's ПЕРВОЕ ДЕЙСТВИЕ block both name a next step, and both are declassified to candidates by CLAUDE.md:207."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-THE-WAL-SUPERSEDES-THE-SNAPSHOT": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:4  is CLOSED at 407 of 407**). `spec/WAL.md` is the canonical living state and",
+     "CONTINUE.md:5  supersedes this snapshot wherever they diverge._",
+     "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
+     "spec/boot/STATIC.md:1378    supersedes it wherever they diverge.",
+     "confirmed: The host's dateline at CONTINUE.md:4-5 is the summary sentence verbatim including the word 'wherever', and the installed boot snippet uses the same wording at STATIC.md:1378. CLAUDE.md:188 requires the pointer be present, so the rule and its enforcement are both in the host. Three independent statements of the same precedence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  },
+  "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:3  **Scope of this document.** The five-minute human ritual at the start",
+     "spec/boot/STATIC.md:1380  ## At the start of every session {#session-start}",
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "confirmed: THE HOST HAS NO MORNING RITUAL — stating it plainly, because this is the batch's question. grep -rniI 'morning' over the whole tree excluding packages/, vibedeps/, legacy-spec/, refs/, node_modules/ and .vibe/ returns 23 hits and not one is an operating instruction: campaign prose (MARKUP-B14.md:105, DRIFT-015.md:32, CONTINUE.md:63 naming this very evidence file, spec/terraforms/*:1139, 2193, 519, spec/WAL.md:155 'on the morning of 07-27'), the golden fixture copy of this same flow under crates/vibe-index/fixtures/, install transcripts, PROP-003 tree diagrams, and VIBEVM-SPEC.md:111 ('does thi"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WAL-IS-A-TWO-SIDED-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "confirmed: One side of the protocol is in the host and the other is not. Agent writes at session end: yes — CLAUDE.md:189 makes the WAL update step 2 of the wind-down, the installed snippet makes rewriting it step 6 of every session, and the log bears it out (28 of the 37 days with commits since 2026-06-01 carry a commit touching spec/WAL.md). Human reads at the start of each day: no host instrument — the reader in CLAUDE.md:3 and STATIC.md:1382 is the agent, at session start, not the human at day start. So the protocol as run here is one-sided-plus-agent-read; the human side is undocumented. See the sco"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "WITHOUT-THE-MORNING-READ-THE-WAL-ROTS": {
+    "v": "unverifiable",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:7  start of each day. Without the morning read, the WAL rots: the agent's",
+     "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+     "UNVERIFIABLE: a counterfactual about not doing the morning read. The host has no morning ritual to omit — 23 hits for the word across the tree, not one an operating instruction — so the rot the fact predicts has nothing here to be measured against. Same class as W2a's WITHOUT-THE-DISCIPLINE-CONTEXT-IS-RE-DERIVED-EVERY-SESSION."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "before-coding-lead": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "confirmed: The 'before any code' gate exists in the host, but as an agent-boot gate, not a human pre-session one: CLAUDE.md:3 ends 'Only after that, start work.' and the installed snippet says 'before doing anything else'. Neither addresses the human, and neither is bound to a day boundary. The three steps that follow this lead (open the WAL, read it end to end, compare against memory) are individually rowed below; the third has no host counterpart at all."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STEP-OPEN-THE-WAL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:1  # WAL — Project Continuation State",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "confirmed: The file the step names exists at the path it names — spec/WAL.md, 299 lines, headed '# WAL — Project Continuation State' — and both the host's boot contract and the installed snippet order it opened at session start. The reader is the agent rather than the human, but the step itself (open this file) is discharged."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STEP-READ-IT-END-TO-END": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:15  1. ##READ-THE-WAL-END-TO-END Read `spec/WAL.md` end to end. If the file does not exist, say so,",
+     "confirmed: 'End to end' appears in the package (the wal-status skill's procedure step 1) but not in the host: the installed boot snippet says 'Read `spec/WAL.md` **before** doing anything else' without the end-to-end qualifier, and CLAUDE.md:3 lists it in a reading order without one. The skill that carries the phrase is not installed — per the harvest, .claude/skills/ holds rust-ai-native-sweep, rust-ai-native-terraform, typescript-ai-native-sweep, typescript-ai-native-terraform and vibevm, and no wal-status. Confirmed by `ls .claude/skills/`. Read: yes; end-to-end: unstated here."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "STEP-COMPARE-AGAINST-WHAT-YOU-REMEMBER": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:17  3. Compare what it says against what you remember.",
+     "confirmed: This is the step that makes the ritual human, and nothing in the host asks for it. Searched CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md, spec/boot/00-core.md, spec/boot/90-user.md and spec/boot/STATIC.md for a memory-reconciliation instruction under the terms 'remember', 'memory', 'head wins', 'reconcile'. The only 'memory' hits are CLAUDE.md's 'Memory discipline' section (146-165), which is about WHERE project facts are stored — repo versus the harness's global per-user auto-memory — not about checking the WAL against a human's recollection. Widened to MEMORY.md, which is a poin"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "HEAD-WINS-EDIT-THE-WAL-TO-MATCH-MEMORY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:21  If the WAL and your memory disagree, **head wins** — edit the WAL to",
+     "confirmed: The ordering the rule rests on IS installed: the conflict-protocol boot snippet compiled into spec/boot/STATIC.md puts Human first and WAL last (line 188, inside the {#hierarchy} block at 183-200), and its gloss says 'The volatile state file (WAL or equivalent) is a record, dead last: when it disagrees with anything above it, it is stale.' What is absent is the procedure this claim adds on top — grep -rniI 'head wins' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md and spec/boot/ returns exactly one hit, STATIC.md:1540, and that is a one-line index entry describing the conflict-"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "why-head-wins": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+     "confirmed: The premise is stated by the host from the opposite direction and reaches the same place: CLAUDE.md's memory-discipline section exists precisely because a channel the agent holds privately is not shared, so project facts must be written into the repo. The rank the rationale justifies is installed at STATIC.md:188 with Human at the top. Checked whether the host contradicts the premise anywhere — grep over the boot lane for a rule placing any artefact above Human found none; STATIC.md:190 says 'The human may change the spec; nobody else may — silently.'"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "a-flaky-test-example": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:25  channel the agent cannot reach directly. If the WAL says \"all tests",
+     "spec/WAL.md:193  ## Known issues",
+     "confirmed: Looked for the situation the example describes in the host's own WAL. grep -rniI 'flaky' over CLAUDE.md, CONTINUE.md, spec/WAL.md and spec/boot/ returns nothing, so there is no recorded flaky-test divergence to check. The host's WAL does carry the section where such a fact would live — '## Known issues' at line 192, whose current entries are the five findings opened 2026-07-28 — and its gate claims are stated as command output (CONTINUE.md:42, 'progress check --exhaustive clean, 259 files, 0 warnings') rather than as remembered assertions, which is the failure mode the example warns about, avo"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "top-of-the-conflict-hierarchy": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "spec/boot/STATIC.md:1540  - `conflict-protocol` — Human > Spec > Tests > Code; REVIEW markers;",
+     "confirmed: The five-term hierarchy is installed verbatim in the compiled boot lane, inside the conflict-protocol snippet (vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md, marker at STATIC.md:174) with the code block at 187-189 and its per-term gloss at 190-200. So this flow's cross-reference resolves in the consumer's installed reality, not merely in the package. One inconsistency worth recording: the index line at STATIC.md:1540 summarises the same hierarchy as four terms, 'Human > Spec > Tests > Code', dropping WAL — the term this flow's claim depends on."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "the-daily-read-has-a-fast-form": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "spec/boot/STATIC.md:1383     skill, where installed, is the fast form of this read.",
+     "confirmed: The 'fast form' exists as a promise in the consumer's boot lane — STATIC.md:1383 names it in those exact words — but it is a conditional promise ('where installed') and the condition is false here. Per the harvest, the package ships packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md and .claude/skills/ carries five skills, none of them wal-status; re-ran `ls .claude/skills/` and confirmed: rust-ai-native-sweep, rust-ai-native-terraform, typescript-ai-native-sweep, typescript-ai-native-terraform, vibevm. There is also no daily read for it to be the fast form OF (see scope-of-t"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "FLOW-SHIPS-A-WAL-STATUS-SKILL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:2  name: wal-status",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:3  description: Read the project WAL end to end and emit a ten-line orientation — current phase, attention items, next step — warning first when the WAL is stale. Use at session start or whenever the user asks where things stand.",
+     "spec/boot/STATIC.md:1423    `wal-status` skill, and this boot snippet.",
+     "confirmed: Ships: yes — the skill is in the package at spec/skills/wal-status/SKILL.md and is delivered to the consumer at vibedeps/flow-wal/0.2.0/spec/skills/wal-status/SKILL.md; the flow's own scope statement claims ownership of it at STATIC.md:1423. Installed into the agent: NO — this is the harvest's measured finding for W2 and I re-confirmed it, `ls .claude/skills/` shows five skills and wal-status is not among them. Its own description recommends 'Use at session start', so the claim's imperative half is the part the host has not done. The claim asserts shipping and instructs installing; shipping is"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SKILL-ANSWERS-IN-AT-MOST-TEN-LINES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:24  ## Output — at most ten lines {#output}",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:26  - ##OUTPUT-ONE-LINE-CURRENT-PHASE One line: current phase and its status. @impl/done",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:27  - ##OUTPUT-UP-TO-THREE-ATTENTION-BULLETS Up to three bullets: what needs attention (blockers, risks, pending",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:29  - ##OUTPUT-ONE-LINE-NEXT-PRIORITY-STEP One line: the next priority step. @impl/done",
+     "confirmed: Checked the skill this claim describes, item by item, against the skill's own text. Ten-line cap: SKILL.md's output heading says 'at most ten lines'. Three components in the stated order: one line of phase (26), up to three attention bullets (27-28), one line of next step (29). Warning first: SKILL.md:17-19 makes the >24h warning 'your FIRST output line' with the literal template. The 24-hour threshold also reaches the consumer independently through the wal boot snippet at STATIC.md:1384-1386. Every element of the claim is in the artefact it describes; the skill is not installed here, which be"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "equivalent-prompt-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:39  For an agent without skill support, paste the equivalent prompt into",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:43  ## /wal-status",
+     "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+     "confirmed: The fallback is offered and the host has not taken it. Searched the host's agent instructions for the pasted prompt: grep -n 'wal-status' over CLAUDE.md, AGENTS.md, GEMINI.md and .claude/ returns zero hits (the only tree hits are STATIC.md:1382/1423 in the installed snippet, and CONTINUE.md:62/72 and spec/WAL.md:170 describing this campaign's finding). grep for '/wal-status' as a command heading returns nothing outside the package and vibedeps. The host does use exactly this pattern for other commands — CLAUDE.md carries two hand-written command sections, ЗАВЕРШИ СЕССИЮ at 167 and ВОССТАНОВИ С"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-summary-is-a-quick-daily-read": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:51  The ten-line summary is a quick daily read. It does not replace the",
+     "spec/boot/STATIC.md:1383     skill, where installed, is the fast form of this read.",
+     "confirmed: The ten-line summary is not produced anywhere in this repository: the skill that would produce it is not installed (`ls .claude/skills/` — five skills, none wal-status), the equivalent prompt is not pasted into CLAUDE.md/AGENTS.md/GEMINI.md (grep 'wal-status' returns no hits in those files), and there is no daily read for it to be part of (see scope-of-this-document's grep). The consumer's boot lane carries the promise at STATIC.md:1383 under the condition 'where installed'. Nothing in the host settles whether the summary is a quick daily read, because the host produces no such summary: partia"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-SKIM-DOES-NOT-REPLACE-THE-WEEKLY-RE-READ": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:51  The ten-line summary is a quick daily read. It does not replace the",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:63  ## Weekly re-read {#weekly}",
+     "confirmed: Neither side of this claim exists in the host. The skim: not installed and not pasted (see the-daily-read-has-a-fast-form). The weekly re-read: grep -rniI 'weekly re-read|weekly|end-of-week|once a week' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md, spec/boot/, spec/common/ and README.md finds no scheduled re-read ritual; the only recurring instruments the host defines are the DISCIPLINE-SWEEP health collector and the campaign gates, neither of which is a weekly spec re-read. Widened to spec/common/PROP-013-periodic-health-audit.md, the closest candidate by name — it is a cate"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "cold-start-situations": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+     "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+     "confirmed: All three situations are named in the host, though spread across two sections rather than listed together. Machine switch: CLAUDE.md:169 'different machine'. Long gap: not named as a gap but as 'a fresh context … new session, post-compaction', which is the same discontinuity by a different cause; the flow's own vocabulary for it appears nowhere in the host (grep 'long gap|vacation' returns nothing). Arriving at a repository that is not yours: CLAUDE.md:161 'A teammate who clones the repo', and the memory-discipline rule exists to serve exactly that reader."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "READ-CONTINUE-FIRST-THEN-THE-WAL": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "CONTINUE.md:338    1. CONTINUE.md — целиком, особенно §in-flight, §w1-reading и §standard",
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "DRIFT: the order is reversed in the host's own written contract, and the host contradicts itself about it. The flow says CONTINUE.md first, then the WAL. CLAUDE.md:3 omits CONTINUE.md from the boot order entirely; CLAUDE.md:205 (the resume command) runs the boot sequence ending in spec/WAL.md and reads CONTINUE.md second. Meanwhile CONTINUE.md's own resume prompt lists itself first, 'in this order'. This is not a human habit outside the tree — it is two host documents disagreeing with the flow and with each other, in writing."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "cold-resume-contract-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:1  # Cold resume — `CONTINUE.md` and the session commands {#root}",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:31  ## The CONTINUE.md contract {#contract}",
+     "spec/boot/STATIC.md:1414     [`spec/flows/wal/cold-resume.md`](../flows/wal/cold-resume.md).",
+     "confirmed: The relative citation resolves: cold-resume.md is a sibling in the same directory, exists in both the package and the installed copy, and its {#contract} section is the contract the pointer promises. This is one of the 23 relative .md citations the harvest measured for W2 with 0 broken (harvest/world-w2-wal-family.md §source-1), so the mechanical check is already on record. One qualification found while resolving the consumer-side pointer: STATIC.md:1414 reaches the same document by the path `spec/flows/wal/cold-resume.md` with a relative href `../flows/wal/cold-resume.md`, which from spec/boo"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:65  Once a week, re-read the key spec documents end-to-end. Watch for:",
+     "confirmed: No weekly ritual in the host. grep -rniI 'weekly re-read|once a week|end-of-week' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md, spec/boot/, spec/common/ and README.md returns nothing. Widened to the recurring instruments the host does define: spec/common/PROP-013-periodic-health-audit.md (a category audit with an aid column, not a document re-read), the DISCIPLINE-SWEEP standing guardian recorded in the log at c3d2ad28/98793211, and the rust-/typescript-ai-native-sweep skills in .claude/skills/ (per-project discipline sweeps, described in their own listings as daily-or-severa"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "WATCH-FOR-INTERNAL-CONTRADICTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:67  - Internal contradictions (§2 says one thing, §5 says another).",
+     "confirmed: The ritual this watch-item belongs to does not exist in the host (see RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY). Widened to whether the host detects internal contradictions by any other means: `vibe progress check --exhaustive` (CONTINUE.md:273) is a markup/coverage gate over 259 files, and the campaign's verdict standard (CONTINUE.md §standard, line 144) does test a fact for coherence — 'confirmed when it is coherent and every referent it names resolves' (also spec/WAL.md:58-70) — but that is a one-off campaign instrument driven by anchors, not a weekly human re-read of key documents. Nothing on the"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "WATCH-FOR-STALE-REVIEW-MARKERS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:207  <!-- REVIEW: <what you would change> because <reason> -->",
+     "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+     "confirmed: The marker convention is installed and used by the host — the conflict-protocol snippet defines the exact syntax at STATIC.md:207 and the host's own boot core makes writing one a step of the uncertainty ladder (00-core.md:60) — but the age threshold the claim depends on does not exist: grep -rniI 'threshold' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md and spec/boot/ finds no configured REVIEW-marker age. Also counted the population the watch would run over: grep -rn '<!-- REVIEW:' over spec/ , CLAUDE.md and CONTINUE.md returns five hits and all five are definitions or templa"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WATCH-FOR-ORPHAN-ANCHORS": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:69  - Orphan anchors (`{#something}` that nothing references).",
+     "confirmed: The anchor form the claim names is this repository's own — `{#root}`, `{#contract}`, `{#numbers}` appear throughout spec/ and in CONTINUE.md's own headings — so the object of the watch exists in quantity. The watch itself does not: no weekly ritual (see RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY) and no orphan-anchor detector wired into the host's gates — grep -rniI 'orphan' over CLAUDE.md, CONTINUE.md, spec/WAL.md, spec/boot/, spec/common/ and conform.toml returns nothing. The nearest instrument is the campaign's own machinery, which resolves anchors as citations rather than hunting unreferenced ones:"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "these-drift-silently": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:75  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
+     "CONTINUE.md:301  ## Standing traps {#traps}",
+     "confirmed: The general proposition — that these defects are not self-announcing — is prescriptive and has no direct host test. Looked for host evidence of silent drift of the same genus and found it in the campaign record rather than in a ritual: spec/WAL.md's constraints carry 'A wrong REASON in the record is worse than a wrong verdict — the next reader acts on it', and CONTINUE.md §traps 4 and §standard record the same failure shape ('An absence you assert is not an absence you checked'). None of these is one of the three species the claim names, and the host has no detector for any of the three (see t"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-SCHEDULED-RE-READ-IS-THE-GARBAGE-COLLECTOR": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:71  These drift silently. A scheduled re-read is the garbage collector for",
+     "CONTINUE.md:274  cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09",
+     "confirmed: No scheduled re-read exists here to be the collector (see RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY). What the host runs over its spec corpus instead is mechanical and on-demand rather than scheduled and human: `progress check --exhaustive` over 259 files (CONTINUE.md:273, result recorded at CONTINUE.md:42 as 'clean, 259 files, 0 warnings'), `cargo xtask mirror --check`, and tools/self-check.sh. These are gates, not re-reads — they check markup and coverage, not whether a document still says a coherent thing. The metaphor's premise is unexercised in the host: partial."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-STALE-DATE-LINE-MEANS-THE-LAST-SESSION-DID-NOT-CLOSE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
+     "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+     "spec/boot/STATIC.md:1385     hours, ask the user to confirm state before acting on anything the",
+     "confirmed: The inference the claim licenses is the one the host's installed boot lane already draws, at a tighter threshold: STATIC.md:1384-1386 treats an `_Updated:` line older than 24 hours as grounds to stop and ask the user to confirm state before acting or doing destructive work — a week is well past that. The host's own line is current (2026-07-28, today) so the antecedent is not live right now. Measured how often the host would trip it: over 2026-06-01…now, 37 days carry commits and 28 carry a spec/WAL.md commit, so 9 active days ended without touching the WAL — 2026-06-18, 06-19, 06-20, 06-26, 07"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STALE-STEP-DO-NOT-START-A-SESSION-YET": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+     "spec/boot/STATIC.md:1385     hours, ask the user to confirm state before acting on anything the",
+     "spec/boot/STATIC.md:1386     WAL claims — and before any destructive work.",
+     "confirmed: The host has a stop, but a softer one and pointed at a different actor. The flow tells the HUMAN not to start the session; the installed snippet tells the AGENT, already in session, to 'ask the user to confirm state before acting on anything the WAL claims — and before any destructive work'. That is a mid-session gate on acting, not a pre-session gate on starting, and it is conditional on the claims rather than absolute. No host instruction anywhere forbids starting a session on a stale WAL — grep over CLAUDE.md, AGENTS.md, GEMINI.md and spec/boot/00-core.md for a start-gate found only CLAUDE."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STALE-STEP-RECONSTRUCT-FROM-GIT": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+     "CONTINUE.md:318  ## The recent commit chain {#commits}",
+     "confirmed: Reconstruction from git is a host habit, but attached to other moments than a stale WAL. The resume command requires empirical verification including 'recent commits' (CLAUDE.md:205); the installed atomic-commits snippet opens its session-end procedure with `git status` and `git diff HEAD` (STATIC.md:391); and CONTINUE.md §commits persists 25 oneline entries precisely so a cold reader can see what happened. What is absent is the trigger: no host text says that when the WAL is stale you reconstruct the interval from git before doing anything else. grep for 'reconstruct' over CLAUDE.md, CONTINUE"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "STALE-STEP-REWRITE-THE-WAL-BY-HAND": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
+     "confirmed: The permission the step relies on is installed — the human outranks the WAL (STATIC.md:188) and the WAL is explicitly the file to rewrite rather than patch (STATIC.md:1402-1406) — but the host assigns the rewrite to the agent at session end, never to the human on a stale file. Searched the host for a human-authored WAL repair: grep over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md and spec/boot/ for 'yourself|by hand|manual' in a WAL context returns nothing. Checked the history for the practice instead: every commit touching spec/WAL.md in the last 400 carries a docs(wal…) or docs(spec) subjec"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "STALE-STEP-THEN-START-THE-NEXT-SESSION": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "confirmed: The step is the release of a gate the host does not set (see STALE-STEP-DO-NOT-START-A-SESSION-YET), so there is nothing here to release. The host's own ordering statement is the nearest analogue — CLAUDE.md:3 gates starting work on completing the boot read — but its precondition is a reading order, not a WAL repair. No host text sequences a session start after a WAL reconstruction: grep over CLAUDE.md, AGENTS.md, GEMINI.md and spec/boot/ for any conditional on WAL freshness before starting returns only STATIC.md:1384-1386, which conditions acting rather than starting. Partial."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-HUMAN-IS-THE-BACKUP-FOR-THE-WAL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "spec/boot/STATIC.md:191  - The human may change the spec; nobody else may — silently.",
+     "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context.",
+     "confirmed: The ranking that makes the human the fallback authority is installed and unambiguous: Human first, WAL last, with the gloss 'The volatile state file (WAL or equivalent) is a record, dead last: when it disagrees with anything above it, it is stale' (STATIC.md:194-197). The host also acts on the premise in the memory-discipline section, whose whole point is that the human's private channel is unreliable as a store and must be written into the repo — the same asymmetry read from the other end. The claim is about rank rather than about a ritual, and the rank is settled here."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "where-the-human-is-irreplaceable": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "spec/boot/STATIC.md:191  - The human may change the spec; nobody else may — silently.",
+     "confirmed: The irreplaceability half is installed as a rank (STATIC.md:188-197) and as an exclusive right (190). The quantified half — ten minutes of manual reconciliation against hours of agent confusion — has no host measurement: grep -rniI 'ten minutes|reconciliation' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md and spec/boot/ returns nothing, and the host records no timing for any session ritual (the same absence found for THE-HOOK-TAKES-UNDER-TWO-MINUTES). The reconciliation the sentence prices does not happen here at all, since the morning routine does not exist. Rank settled, cos"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "NEVER-START-ON-A-WAL-YOU-HAVE-NOT-READ-TODAY": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "confirmed: The host enforces a stronger read requirement on a different axis and omits the one the claim states. Stronger: every session must read spec/WAL.md before starting work (CLAUDE.md:3; STATIC.md:1382 'before doing anything else'), so no session here starts on an unread WAL. Omitted: 'today' — the requirement is per session, not per day, and the reader is the agent, not the human whose memory the daily read is meant to refresh. Searched for a day-scoped read anywhere in the host: the grep behind scope-of-this-document found no start-of-day instrument at all. Per-session read settled, daily human "
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-FIX-A-STALE-WAL-FROM-MEMORY-ALONE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "CONTINUE.md:308  4. **An absence you assert is not an absence you checked.**",
+     "CONTINUE.md:45  **Never decrement these; re-measure.** One command now prints all of it:",
+     "confirmed: The epistemic rule behind the claim is one the host states forcefully in its own idiom — 'An absence you assert is not an absence you checked' (CONTINUE.md:286, repeated as a WAL constraint at spec/WAL.md:88-90 with the fifteen Go verdicts it cost) and 'Never decrement these; re-measure' (CONTINUE.md:45) — and empirical verification is required on resume (CLAUDE.md:205). What is absent is the specific application: no host text forbids repairing a stale WAL from memory, because the host has no stale-WAL repair procedure at all (see STALE-STEP-RECONSTRUCT-FROM-GIT). grep for 'from memory' over C"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-LET-THE-SKIM-REPLACE-THE-WEEKLY-RE-READ": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md:96  - Never let the skim replace the weekly full re-read.",
+     "confirmed: Both terms of the prohibition are missing from the host, so the prohibition has nothing to bind. The skim: the wal-status skill is shipped and not installed (`ls .claude/skills/` — rust-ai-native-sweep, rust-ai-native-terraform, typescript-ai-native-sweep, typescript-ai-native-terraform, vibevm), and the equivalent prompt is not pasted into CLAUDE.md/AGENTS.md/GEMINI.md (grep 'wal-status' — zero hits in those three files). The weekly re-read: no such ritual (grep 'weekly|once a week|end-of-week' over the host's operating documents and spec/common/ returns nothing; PROP-013 and the ai-native sw"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "NEVER-LEAVE-A-KNOWN-DIVERGENCE-FOR-LATER": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:75  - **A wrong REASON in the record is worse than a wrong verdict** — the next reader",
+     "spec/WAL.md:76    acts on it, and the verdict at least pointed at a real defect. When restating,",
+     "spec/WAL.md:77    restate the reason too, and say which way the correction runs.",
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "confirmed: The host states the same reasoning about a different record: its WAL constraint says a wrong reason left in the record is worse than a wrong verdict precisely because 'the next reader acts on it' — the flow's own justification, applied to campaign verdicts rather than to a WAL/memory divergence. What the host does not carry is the instruction itself for the WAL: grep -rniI 'divergence' over CLAUDE.md, CONTINUE.md, spec/WAL.md and spec/boot/ returns only STATIC.md:1156 (a git branch rule) and CONTINUE.md:235 (a tool name); neither the wind-down nor the resume section requires closing or flaggin"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-READ-THE-WAL-EVERY-MORNING": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "confirmed: Of the summary's three qualifiers the host satisfies one and a half. 'Before any session': satisfied and then some — the WAL is third in the host's boot order and the installed snippet makes it step 1 'before doing anything else'. 'Every morning': not satisfied — the cadence is per session, not per day, and the host defines no start-of-day ritual (the grep behind scope-of-this-document turned up 23 'morning' hits, none of them an instruction). 'End to end': not stated in the host; only the uninstalled wal-status skill carries that phrase (SKILL.md:15). Partial, with the per-session substitute "
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SUM-HEAD-WINS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+     "spec/boot/STATIC.md:191  - The human may change the spec; nobody else may — silently.",
+     "confirmed: The direction of correction is installed as rank — Human above WAL, with the WAL 'dead last: when it disagrees with anything above it, it is stale' (STATIC.md:194-197) — so the 'never the other way around' half holds in the consumer's boot lane. The named rule does not: grep -rniI 'head wins' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md and spec/boot/ returns one hit, STATIC.md:1540, and it is an index line describing the conflict-protocol flow rather than the rule in force. No host text instructs a human to correct the WAL from memory. Rank settled, rule unnamed and unexerci"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SUM-SKIM-AND-WEEKLY-RE-READ": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1383     skill, where installed, is the fast form of this read.",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md:2  name: wal-status",
+     "confirmed: Neither clause holds in this consumer. The skim: the boot lane names wal-status as the fast form only 'where installed', and it is not — the harvest measured it and I re-confirmed with `ls .claude/skills/`, which lists rust-ai-native-sweep, rust-ai-native-terraform, typescript-ai-native-sweep, typescript-ai-native-terraform and vibevm. The weekly full re-read: does not happen — no ritual is defined anywhere in the host's operating documents (grep 'weekly|once a week|end-of-week' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md, spec/boot/, spec/common/, README.md returns nothing)"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-COLD-START-ORDER": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "CONTINUE.md:366  Перед началом прочитай, в этом порядке:",
+     "CONTINUE.md:338    1. CONTINUE.md — целиком, особенно §in-flight, §w1-reading и §standard",
+     "CONTINUE.md:421  **The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,",
+     "DRIFT: the summary restates READ-CONTINUE-FIRST-THEN-THE-WAL, whose first clause the host's written boot and resume contracts reverse. 'The WAL for the truth' holds and is stated three times host-side; 'CONTINUE.md first' is contradicted by CLAUDE.md:3 and :205."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-STALE-WAL-PROCEDURE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+     "spec/boot/STATIC.md:1385     hours, ask the user to confirm state before acting on anything the",
+     "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+     "confirmed: The host detects the condition and prescribes a different response. Detect: the installed snippet's 24-hour check (STATIC.md:1384-1386). Respond: 'ask the user to confirm state before acting' — a confirmation, not a git reconstruction and not a hand rewrite. Neither of the flow's first two steps has a host counterpart (greps for 'reconstruct', 'by hand', 'from memory' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md and spec/boot/ return nothing), and the third has nothing to gate. The raw material for a reconstruction is present — the resume command already requires reading recent commits em"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   }
+  },
+  "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md:3  **Scope of this document.** The procedure every session ends with:",
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
+     "confirmed: Compared the four named beats against the host's ЗАВЕРШИ СЕССИЮ section (CLAUDE.md:167-194), which is the host's whole wind-down. Present: rewrite the WAL (step 2, as 'Update'), overwrite CONTINUE.md (step 1), report (step 5). ABSENT: 'confirm a good stopping state' — the host's five steps contain no check that tests still pass, that generated files exist, or that no half-applied refactor is left in the tree. Widened to the boot lane before calling it absent: the wal snippet's session-end (STATIC.md:1400-1406) is a WAL rewrite only, and the atomic-commits snippet's session end (STATIC.md:387-3"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "also-defines-the-trigger-phrases": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md:16  - **Explicitly.** The user issues a wind-down phrase. Ship defaults:",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md:17    `END SESSION`, `WRAP UP`, `CHECKPOINT AND CLOSE`. Recognise the",
+     "spec/boot/STATIC.md:1410  7. Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,",
+     "confirmed: The document does define them, in {#when}'s explicit branch, and the definition reaches the consumer twice over — once through this document's installed copy and once through the boot snippet that restates the same three defaults at STATIC.md:1410-1411. Checked for a conflicting definition inside the package: cold-resume.md:78-79 lists the same three phrases, so the two documents agree rather than compete."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "THE-HOOK-TAKES-UNDER-TWO-MINUTES": {
+    "v": "unverifiable",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md:6  the full wind-down explicitly. For a well-scoped session the whole hook",
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md:7  takes under two minutes; if it takes longer, the session did too much.",
+     "UNVERIFIABLE: a duration claim about a ritual nobody times. grep for 'two minutes' across the tree's markdown, TOML and JSON returns zero hits outside the package, and no host artefact records how long a wind-down took."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "two-ways-in-lead": {
+    "v": "confirmed",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md:11  Two ways in:",
+     "spec/boot/STATIC.md:1400  ## At the end of every session {#session-end}",
+     "spec/boot/STATIC.md:1410  7. Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,",
+     "confirmed: Both doors exist in the consumer's installed boot lane and they are separately headed: '## At the end of every session' (1400) carries the implicit obligation to rewrite the WAL, and '## Session commands' (1408) carries the explicit phrase recognition that additionally overwrites CONTINUE.md. The host's own CLAUDE.md documents only the explicit door — its section is gated on 'when a trigger phrase fires' (176) — so the implicit door reaches this repository through the installed snippet rather than through its own instructions."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "HOOK-FIRES-IMPLICITLY": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1400  ## At the end of every session {#session-end}",
+     "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "DRIFT, measured. The implicit obligation reaches the host only through the installed snippet (STATIC.md:1400-1406, 'At the end of every session'); CLAUDE.md gates its entire wind-down on a trigger phrase (176) and states no implicit form. Practice matches the gap: over 2026-06-01 → now, 37 days carry commits and 28 carry a WAL commit — nine active days, 24 %, ended without one."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "HOOK-FIRES-EXPLICITLY": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:171  **Trigger phrases** (case-insensitive; exact wording not required, recognise the intent):",
+     "CLAUDE.md:173  - Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.",
+     "CLAUDE.md:174  - English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.",
+     "spec/boot/STATIC.md:1411     `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the",
+     "confirmed: This is the tightest match in the batch, and it is checkable clause by clause because this repository IS the origin project the claim names. Three ship defaults: all three in CLAUDE.md:174. The two phrases the claim says 'must fire too': FINISH SESSION and WRAP UP SESSION are both in CLAUDE.md:174 by name, so the host does not rely on intent-recognition for them. Recognise the intent: CLAUDE.md:171 states it as a property of the whole list. Native-language twins: seven Russian phrases at 173, and the section heading itself is bilingual (167). Bilingual Russian/English set: exactly what 173+174"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "AN-EXPLICIT-WIND-DOWN-MEANS-A-FRESH-CONTEXT-FOLLOWS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:169  When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.",
+     "confirmed: The host's sentence is the flow's, nearly word for word: 'the user is about to close the conversation and may continue from a fresh context' is identical, and the parenthetical differs only in its third item — the host says 'post-compaction' where the flow says 'a different agent'. Both are cases of the same discontinuity. The host has grounds for both readings: it maintains CLAUDE.md, AGENTS.md and GEMINI.md as identical copies precisely so a different agent can pick up (CLAUDE.md:150)."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "RUN-THE-FULL-HOOK-AS-A-HARD-CONTRACT": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:194  The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy.",
+     "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+     "DRIFT, and the contradiction is inside the package before it reaches any consumer. This fact orders 'the full hook, steps 1-6'; the sibling cold-resume.md §wind-down specifies FIVE steps in a different order — overwrite CONTINUE first, rewrite the WAL second, commit, push, chat TL;DR — with no stopping-state step and no collapse step, while WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK asserts the two are the same procedure. The host implements cold-resume.md's five exactly, in order, so what looks like the consumer dropping two steps is the consumer obeying the other half of the package."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STOPPING-STATE-TESTS-STILL-PASS": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:297  bash tools/self-check.sh ; echo \"EXIT=$?\"",
+     "CONTINUE.md:42  | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |",
+     "confirmed: The host has the instrument and not the obligation. Instrument: tools/self-check.sh is the repository's real gate and is one of the four commands in CONTINUE.md §quick-start (275), and the checkpoint records a gate result as command output (42). Obligation: absent — the host's five wind-down steps (CLAUDE.md:178-192) contain no test check, and neither installed session-end snippet supplies one (STATIC.md:1400-1406 is the WAL rewrite; STATIC.md:387-397 is `git status`/`git diff HEAD` plus commit grouping). grep -rniI 'tests.*pass|still passing' over CLAUDE.md, AGENTS.md, GEMINI.md and spec/boot"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STOPPING-STATE-GENERATED-FILES-EXIST": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:298  cargo xtask mirror --check",
+     "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. -->",
+     "confirmed: Same shape as the tests check: the host generates a lot (spec/boot/INDEX.md and spec/boot/STATIC.md are both marked generated-by-vibe on line 1, and xtask drives codegen, specmap, sync-engines and mirror per CONTINUE.md:260) and it has checkers for them in §quick-start, but no wind-down step requires confirming their existence. Checked the host's five steps and both installed session-end snippets for a generated-artefact check — none. Note one live counter-instance found while checking: F-128, recorded at CONTINUE.md:178, is exactly a missing file the boot contract claims to load (spec/boot/IN"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "STOPPING-STATE-NO-HALF-APPLIED-REFACTORS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+     "spec/boot/STATIC.md:392  2. Group changes into atomic commits — one commit per intent, not per",
+     "CONTINUE.md:31  Nothing is blocked. Tree clean, in sync with `origin/main`, mirrored to both hosts.",
+     "confirmed: The host inspects the working tree at session end, but to inventory and commit it rather than to judge it: the installed atomic-commits snippet's session-end procedure opens with `git status` and `git diff HEAD` and then groups everything into atomic commits (STATIC.md:389-394), which disposes of a half-applied refactor by committing it, not by flagging it. The checkpoint does record tree cleanliness (CONTINUE.md:31 and the §numbers 'tree' row at 43), so the outcome is reported even though the check is not required. No host text names half-applied refactors or a mid-flight pause: grep -rniI 'h"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SAY-SO-RATHER-THAN-PAPER-OVER-A-BROKEN-STATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:193  ## Known issues",
+     "spec/boot/STATIC.md:226  - Never resolve a spec-vs-code disagreement by assuming the code is",
+     "CONTINUE.md:42  | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |",
+     "confirmed: The host has the honesty norm and the place to put the confession, but not this instruction. Place: the WAL's '## Known issues' section (192) is where an unresolved problem goes, and the host uses it — its current entries are the five findings opened 2026-07-28. Norm: the installed conflict-protocol snippet forbids silent resolution generally (STATIC.md:223-232, 'Never silently modify a normative spec value', 'Never resolve a spec-vs-code disagreement by assuming the code is newer'). Instruction: absent — with no stopping-state check in the host's wind-down (see the three STOPPING-STATE-* rows"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WAL-IS-A-CHECKPOINT-NOT-AN-APPEND-ONLY-LOG": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
+     "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
+     "spec/boot/STATIC.md:1406     messages; the WAL is a checkpoint, not a journal.",
+     "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+     "confirmed: The consumer's boot lane states the claim in almost the same words ('the WAL is a checkpoint, not a journal') with the reason attached, and the host's own WAL enacts it: its Done section is headed '(collapsed — see `git log`)', i.e. it delegates history to git exactly as the snippet says. Measured the file's behaviour over its last rewrites: `git show --numstat` gives 175 insertions / 274 deletions for 1824fac9 — a net shrink of about a hundred lines, which an append-only log cannot do."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1402  6. Rewrite `spec/WAL.md` per the protocol in",
+     "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "DRIFT: the host's own verb is 'Update'. CLAUDE.md's step 2 reads 'Update spec/WAL.md … bump the date line, refresh the … sections', which is a patch instruction, where the installed snippet the same host boots on says 'Rewrite, not append'. Practice agrees with the host's word: 8 of the 20 most recent docs(wal) commits change under 15 % of the file."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "an-append-only-wal-rots": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
+     "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
+     "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+     "spec/WAL.md:160  - Earlier: M1.17 / M1.18 / M1.19.",
+     "confirmed: The rationale reaches the consumer verbatim in substance — 'the WAL must reflect the **current** state, not the history. History lives in `git log`' — and the host's file shows the mechanism working: its Done section holds five bullets covering the whole project history, the oldest of which has decayed to the single line 'Earlier: M1.17 / M1.18 / M1.19.' (160). That is a rewritten file describing now, with the archive delegated elsewhere. Nothing in the host argues the other way; grep for any instruction to append to the WAL returns nothing."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "structure-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:1  # WAL — Project Continuation State",
+     "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
+     "spec/WAL.md:6  ## Current phase",
+     "spec/WAL.md:56  ## Constraints — do not violate",
+     "confirmed: Walked the template against the host's live WAL line by line. Title: exact match, '# WAL — Project Continuation State'. All eight sections present, in the template's order, with no extras and none missing. Three wording differences: the host's Constraints heading is '— do not violate' where the template says '(do not violate without discussion)'; the Done heading carries a suffix '(collapsed — see `git log`)'; and the `_Updated:` value is a bare date plus a parenthetical phase note, not the template's '<ISO 8601 UTC — right now>' — no time and no zone. Body-shape differences: Done uses '- **…*"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COLLAPSE-DONE-TO-ONE-LINE-EACH": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+     "spec/WAL.md:144  - **Phase C, the reviewing debt — closed 2026-07-28, 5 commits.** 138 rows read",
+     "spec/WAL.md:160  - Earlier: M1.17 / M1.18 / M1.19.",
+     "confirmed: The host adopted the principle and named it in the heading — '(collapsed — see `git log`)' is the claim's second half made into a section title, and the pointer to commits is exactly where the claim says details belong. The letter of 'a single line' is not met: the section runs lines 142-160 and its five bullets are 6, 4, 3, 3 and 1 lines respectively, so four of five exceed one line and the largest carries implementation detail (tool names, counts, finding ids). No host instruction requires the collapse — CLAUDE.md's step 2 mentions Current phase, Next and Known issues but never Done, and the"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MOVE-BALLOONED-MATERIAL-INTO-A-SPEC": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:84    until the perimeter has been checked.** Full path list: batch plan §4.5.",
+     "spec/WAL.md:237  **The debt's own result is one sentence: no row moved because a worker's evidence",
+     "CONTINUE.md:259  ## Decisions still in force {#decisions}",
+     "confirmed: The move-and-point pattern is visible in the host's WAL: the perimeter-law constraint states the rule in five lines and then delegates the detail — 'Full path list: batch plan §4.5' (84) — and several constraints cite the campaign plan by section rather than restating it. The destination in this repository is a campaign plan and CONTINUE.md §decisions rather than a spec document, which is the same manoeuvre against a different target. No host instruction requires it: the host has no step 3, and grep for 'ballooned|move it out' over CLAUDE.md, AGENTS.md, GEMINI.md and spec/boot/ returns nothing"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "OVERWRITE-CONTINUE-WHOLESALE-ON-A-WIND-DOWN": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "spec/boot/STATIC.md:1413     session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per",
+     "confirmed: The wind-down clause is fully matched: the host makes the wholesale overwrite step 1 of the required behaviour, in the same words ('at repo root', 'wholesale'), and the installed snippet couples it to the wind-down phrase at STATIC.md:1413. The two additional occasions the claim names are not host triggers — the machine switch appears only as a reason the wind-down exists (CLAUDE.md:169) and the long gap appears nowhere (grep 'long gap|vacation' over the host's operating documents returns nothing), the same finding as the WRITE-BEFORE-* rows in cold-resume.md. One of three occasions settled: p"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-APPEND-STALENESS-COMPOUNDS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "confirmed: The host carries both the prohibition and its two-word rationale inside the same parenthetical — '(do not append — staleness compounds otherwise)' — which is the flow's sentence compressed. Checked the practice: the CONTINUE.md commits in the recent log (a45bb31e, 22836168, 625e40e2, 93b5a182) are replacements, and the two partial ones (c64fe993, 6a026de1) edit sections in place; `git show --numstat` shows deletions in every one of them, so none is an append."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "required-contents-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:31  ## The CONTINUE.md contract {#contract}",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md:42  1. ##BODY-TLDR-SUMMARY A short TL;DR / executive summary at the top. @impl/done",
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "confirmed: The pointer resolves — cold-resume.md has the {#contract} anchor at line 31 and its numbered list at 42-59 — and the nine items named inline here match items 1-9 of that list in order (the pointer omits item 10, the precedence pointer, which is the one item cold-resume.md adds). This citation is inside the 23 relative .md citations the harvest resolved with 0 broken for W2. The host inlines the same contract rather than citing it: CLAUDE.md:179-188 reproduces all ten items, so a host session gets the contents without following the pointer."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SURFACE-THE-CONTENT-AS-DRAFTS": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.",
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. …",
+     "confirmed: The host does not do this, and the flow's own next sentence is why: DO-NOT-COMMIT-AUTOMATICALLY exempts projects whose standing instructions grant autonomy. The host's wind-down goes straight from writing the files to committing (step 3) and pushing (step 4), with no draft-surfacing step anywhere in 176-192; what the user receives instead is the after-the-fact TL;DR of step 5, which reports 'which files were written / updated, which commits were created, push status'. grep -rniI 'draft' over CLAUDE.md, AGENTS.md, GEMINI.md and CONTINUE.md finds no draft-approval step for checkpoint content. Th"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "DO-NOT-COMMIT-AUTOMATICALLY": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, no",
+     "confirmed: The exception clause is exactly what this host exercises, and it names it: CLAUDE.md:5 declares commit autonomy as a standing rule ('routine proceeds; non-routine stops and asks'), and the wind-down's step 3 commits without asking, citing 'Rule 3'. The claim's phrase 'which many projects do for routine checkpoint commits' describes this project literally — the two commit subjects it prescribes, docs(continue) and docs(wal), are the routine checkpoint pair, and the log shows them run unattended (31 docs(wal) and 10 docs(continue) subjects in the last 400 commits). Recorded while checking: CLAUD"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "where-autonomy-is-granted-lead": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, no",
+     "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.",
+     "confirmed: The antecedent holds here — this project grants commit autonomy for routine work (CLAUDE.md:5) — so the two conditional rules are live rather than hypothetical, and both are individually rowed below. Confirmed the grant is standing and not per-session: it is stated in line 5 of the boot-critical trio (CLAUDE.md, AGENTS.md, GEMINI.md all carry it identically) and referenced as 'Rule 3' and 'Rule 4' by the wind-down steps."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "GROUP-COMMITS-BY-TOPIC": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.",
+     "spec/boot/STATIC.md:392  2. Group changes into atomic commits — one commit per intent, not per",
+     "confirmed: The rule is stated twice in the host — as wind-down step 3 with the two canonical checkpoint subjects, and in the installed atomic-commits snippet as 'one commit per intent, not per file' (STATIC.md:392). Verified against the log with `git show --name-only`: docs(wal) commits carry spec/WAL.md alone (6b17e649, 1824fac9, 053f1671, a0983bcc) and docs(continue) commits carry CONTINUE.md alone (22836168, a45bb31e, 625e40e2, 93b5a182), and no checkpoint commit in the sample carries source code. Two qualifications: three of the last 400 use a merged scope docs(wal,continue) — 6a026de1, 95937de5, cb5"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "PUSH-ONLY-UNDER-SANCTION": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, no",
+     "confirmed: Both halves are matched. Sanction: CLAUDE.md:5 grants push autonomy for routine work and step 4 invokes it explicitly ('routine per Rule 4, since the user invoked the wind-down explicitly'). When in doubt, stop and say so: the host encodes the same escape hatch in the same step — 'If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch' — which is the claim's second clause with a named trigger. The push path in practice is `cargo xtask mirror` to two remotes (CONTINUE.md:43, §quick-start:276)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "end-of-session-report-lead": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+     "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+     "the four items are the document's own list and the document does carry them. Worth recording precisely, because the harvest's first framing was wrong: the host's chat report is NOT a mismatched four — it is this flow's own EXTEND-THE-REPORT-INTO-A-WIND-DOWN-TLDR list, reproduced verbatim. What the host lacks is the BASE report; two of its four items land elsewhere (REVIEW markers at spec/boot/00-core.md:60, discovered issues in the WAL's Known issues via step 2)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "REPORT-WHAT-CHANGED": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. …",
+     "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+     "confirmed: The host's report asks for 'which files were written / updated' and 'which commits were created', which covers what changed for the checkpoint files but is scoped to what the wind-down command did rather than to the session's specs, code and tests. The change inventory itself is required elsewhere and for a different purpose — the installed atomic-commits snippet's session-end step 1 runs `git status` and `git diff HEAD` and requires naming every change by intent, but that feeds commit grouping, not the chat report. No host text asks the report to cover spec/code/test changes as such. Partial."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "REPORT-DECISIONS-AND-WHY": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:259  ## Decisions still in force {#decisions}",
+     "CONTINUE.md:261  - **Delegation goes to the harness's built-in `opus5` subagents, not fractality**",
+     "spec/boot/STATIC.md:408  - **Commit log as decision record.** The message is the only place",
+     "a coherent report item. The host's chat report has no decisions line; the obligation is discharged in two durable places instead — CONTINUE.md §decisions persists the standing set with each decision's authority, and the commit-message flow makes the body answer why."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "REPORT-OPEN-REVIEW-MARKERS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+     "spec/boot/STATIC.md:207  <!-- REVIEW: <what you would change> because <reason> -->",
+     "spec/boot/STATIC.md:210  — and surface it in the end-of-session report. The human decides in",
+     "confirmed: This one IS in the host, just not in CLAUDE.md's five steps: the host's own boot core requires 'flag in the end-of-session report' as step 4 of the uncertainty ladder (00-core.md:60), and the installed conflict-protocol snippet requires the same — 'surface it in the end-of-session report. The human decides in the next cycle' (STATIC.md:211-212). So the obligation reaches a session here from two directions, one host-authored and one installed. Counted the population it would report on: grep -rn '<!-- REVIEW:' over spec/, CLAUDE.md and CONTINUE.md returns five hits, all definitions or templates "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "REPORT-KNOWN-ISSUES-DISCOVERED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/WAL.md:193  ## Known issues",
+     "spec/WAL.md:195  - **Opened 2026-07-28 by the reviewing pass, all on the owner, none blocking:**",
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "confirmed: The host routes discovered issues into the WAL rather than into the chat report: CLAUDE.md's step 2 explicitly names the 'Known issues' section as one of three to refresh and asks the session to 'record any new findings', and the section is live (spec/WAL.md:192-233, headed by the five findings opened 2026-07-28). The chat report's four items (CLAUDE.md:192) do not include known issues; the closest is the parenthetical 'blockers' in the detail list. The host also has a third destination for the same genus, BACKLOG.md, described in CLAUDE.md:155-158 as severity-triaged findings deliberately not"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "EXTEND-THE-REPORT-INTO-A-WIND-DOWN-TLDR": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+     "confirmed: The strongest single match in the batch: all four items appear in the host in the flow's order and near-identical wording — 'which files were written / updated, which commits were created, push status, what the next session should pick up first' against 'which files were written or updated, which commits were created, push status, and what the next session should pick up first'. The host makes it step 5 of the required behaviour rather than an extension, which is the structural consequence of its report having no base list (see end-of-session-report-lead)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "one-screen-but-verifiable": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+     "confirmed: Both halves are verbatim in the host's step 5, including the exact phrases 'short enough to scan in one screen' and 'verify nothing was missed without opening the files'. The host adds a specification of what 'enough detail' means — '(file paths, commit subjects, blockers)' — which the flow leaves open. The artefact is a chat message and leaves no file trace, so only the instruction is checkable."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-REPORT-IS-FOR-THE-HUMAN": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+     "spec/boot/STATIC.md:404  - **Diff as verification.** Humans verify code by reading diffs. A",
+     "confirmed: The host names both the audience and the mode: the report goes 'in the chat response', its reader is 'the user', and its purpose is to 'scan in one screen' and verify — the quick scan the claim names. The installed atomic-commits snippet states the same premise about the human as verifier one layer down ('Humans verify code by reading diffs', STATIC.md:404-405). No competing audience is named for the report anywhere in CLAUDE.md, AGENTS.md or GEMINI.md."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "THE-WAL-IS-FOR-THE-NEXT-SESSIONS-AGENT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+     "spec/WAL.md:235  ## Session context",
+     "confirmed: The host's WAL is read by the agent at every session start — it is third in CLAUDE.md's boot order and step 1 of the installed wal snippet — and it is written for that reader: its last section is '## Session context' (234), which spec/WAL.md's own protocol defines as 'what file to open first, what to run, what to avoid'. Note the tension this creates with the morning-routine flow in the same package, which assigns the WAL a human daily reader; in this host only the agent-side reading is instrumented (see that file's rows)."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "they-serve-different-readers": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "spec/boot/STATIC.md:1382  1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`",
+     "confirmed: The host keeps them as separate steps with separate destinations and separate readers: step 2 writes a file the next agent reads at boot, step 5 writes a chat message the user scans. Their content lists differ too — the WAL update names Current phase / Next / Known issues, the report names files, commits, push status, next pick-up — so the separation is not merely nominal. Confirmed no host text merges them or lets one substitute for the other."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-APPEND-TO-THE-WAL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
+     "spec/boot/STATIC.md:1405     not the history. History lives in `git log` and in milestone commit",
+     "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+     "confirmed: The prohibition and its exact justification reach the consumer in the installed wal snippet — 'Rewrite, not append' plus 'History lives in `git log`' — and the host's WAL points at git in its own Done heading. Verified no append in practice: `git show --numstat -- spec/WAL.md` on the three most recent WAL commits gives 175/274, 109/35 and 15/8, i.e. every one deletes lines as well as adding them; 1824fac9 is a net shrink. The host's own CLAUDE.md step 2 says 'Update … refresh' rather than 'Rewrite' (see REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND), but nothing in it authorises appending."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-PAPER-OVER-A-BROKEN-STOPPING-STATE": {
+    "v": "confirmed",
+    "ev": [
+     "CONTINUE.md:42  | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |",
+     "CONTINUE.md:45  **Never decrement these; re-measure.** One command now prints all of it:",
+     "spec/WAL.md:193  ## Known issues",
+     "confirmed: The host has no stopping-state check to paper over (see the three STOPPING-STATE-* rows and scope-of-this-document), so the prohibition has no step to attach to. What the host does carry is the same anti-fabrication norm applied to its measurements: gate results are recorded as command output with the command printed beside them (CONTINUE.md:42, 45-48), 'Never decrement these; re-measure' is a standing rule, and the WAL's Known issues section is where an unresolved problem is recorded rather than hidden. grep -rniI 'paper over' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md, spec/WAL.md and"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-LEAVE-THE-UPDATED-LINE-UNTOUCHED": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1",
+     "spec/boot/STATIC.md:1384  2. Verify the `_Updated:` line is current. If it is older than 24",
+     "DRIFT, and it is the majority case. Of the 18 most recent commits touching spec/WAL.md, 17 edited the body; 10 of those 17 — 58 % — left the `_Updated:` line byte-identical, including 6a026de1 and 100617b3 from the session that gathered this table. The bare-date format (W2a's SECTION-UPDATED-LINE) is what makes it unfollowable within a day: there is nothing to bump."
+    ],
+    "src": [
+     2
+    ]
+   },
+   "NEVER-PUSH-ON-A-WIND-DOWN-WITHOUT-SANCTION": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, no",
+     "confirmed: The host pushes on a wind-down and has the sanction the rule requires, stated in the same breath: step 4 pushes and cites 'Rule 4', and CLAUDE.md:5 declares push autonomy for routine work as a standing rule of the repository. The prohibition therefore does not bite here, and the host also keeps a carve-out for the non-routine case ('stop and ask first per Rule 4's escape hatch'), which is the same shape as the rule's exception. Also checked the specific never in the installed lane: STATIC.md:396 and 418-419 forbid amending or force-pushing pushed commits without explicit human approval, a stri"
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "NEVER-SKIP-THE-CONTINUE-OVERWRITE": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "spec/boot/STATIC.md:1413     session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per",
+     "confirmed: The host makes the overwrite the FIRST step of the wind-down, which is the strongest available guarantee against skipping it, and the installed snippet states the same coupling with 'plus' as the operative word. Checked the practice: every wind-down-shaped commit pair in the recent log carries a CONTINUE.md write — 95937de5 and 6a026de1 (docs(wal,continue), both files in one commit), 22836168 and a45bb31e (docs(continue) alone, paired with 6b17e649 and 1824fac9 docs(wal)). No wind-down in the sample updated the WAL and skipped the snapshot."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SUM-WHEN-THE-HOOK-RUNS": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1400  ## At the end of every session {#session-end}",
+     "spec/boot/STATIC.md:1410  7. Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,",
+     "CLAUDE.md:174  - English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.",
+     "CLAUDE.md:173  - Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.",
+     "DRIFT on the first clause, for the same measurement as HOOK-FIRES-IMPLICITLY: nine of thirty-seven active days since 2026-06-01 ended with commits and no WAL commit. The phrase half is fully matched — all three ship phrases plus seven Russian and three further English twins."
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SUM-THE-STEPS-IN-ORDER": {
+    "v": "drift",
+    "ev": [
+     "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+     "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+     "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. …",
+     "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+     "DRIFT: two of the five beats have no counterpart anywhere in the host — confirm the stopping state, and collapse history out of the WAL — and a third, 'rewrite the WAL', is 'Update … bump … refresh' in the host's own words. The order also differs: the host overwrites CONTINUE.md first. All three divergences trace to the package's own cold-resume.md §wind-down, which specifies the five-step shape the host actually implements."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-PROPOSE-DRAFTS-BY-DEFAULT": {
+    "v": "confirmed",
+    "ev": [
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, no",
+     "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.",
+     "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+     "confirmed: The summary's default and its exception are both testable here and the host sits squarely on the exception. Standing autonomy: declared at CLAUDE.md:5 ('routine proceeds; non-routine stops and asks'). Commit and push under it: steps 3 and 4, both unconditional for the wind-down. Topic-grouped: step 3 states it and the log bears it out (docs(wal) touches spec/WAL.md alone, docs(continue) touches CONTINUE.md alone, across the sampled commits). Drafts by default: not exercised — no draft-surfacing step exists in the host's wind-down (grep 'draft' over CLAUDE.md, AGENTS.md, GEMINI.md, CONTINUE.md "
+    ],
+    "src": [
+     2,
+     3
+    ]
+   },
+   "SUM-UNDER-TWO-MINUTES": {
+    "v": "unverifiable",
+    "ev": [
+     "vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md:143  - Under two minutes for a well-scoped session.",
+     "UNVERIFIABLE: same absence as THE-HOOK-TAKES-UNDER-TWO-MINUTES — no duration is recorded anywhere in this repository."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
