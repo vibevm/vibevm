@@ -86,6 +86,13 @@ pointer, not about the rule the pointer sits under.
 > through to «no block» on a duplicated or reversed pair, where the primary
 > implementation returns `Malformed` and refuses to write; and its do-not-edit
 > notice sits in the marker rather than on the first line inside.
+>
+> **The other two sections were re-derived rather than assumed to share the
+> defect, and they hold exactly.** §s2-naming: `grep -coE` over `vibe.lock` for
+> qualified strings returns 38 and `grep -cE '^\s*name = "'` returns 36, both as
+> printed. §s2-lessons: `ls crates/` returns 18 and every one is listed, and
+> `ls crates/vibe-install/src/` matches its listing file for file. So the
+> truncation is confined to §s2-blocks; the rest of this harvest can be read.
 
 ```console
 $ grep -n '<vibevm>\|</vibevm>' CLAUDE.md AGENTS.md GEMINI.md
