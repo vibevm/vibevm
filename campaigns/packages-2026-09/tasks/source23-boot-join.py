@@ -44,6 +44,7 @@ MARKER = re.compile(r"^<!--\s*vibe:static\s+(\S+)\s+[—-]+\s+(\S+)\s*-->\s*$", 
 STATUS_EL = re.compile(r"^<status[^>]*/>[ \t]*\r?\n?", re.M)
 ANCHOR = re.compile(r"##[A-Za-z][A-Za-z0-9_-]*[ \t]+")
 MARK = re.compile(r"[ \t]*@[a-z]+/[a-z]+(?=\s|$)")
+HEAD_ANCHOR = re.compile(r"[ \t]*\{#[A-Za-z0-9_.:-]+\}")
 BLANKS = re.compile(r"(\r?\n){3,}")
 
 

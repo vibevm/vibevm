@@ -2278,6 +2278,32 @@ command that would have tested it.
   and answered C7 in a second; the remaining evidence was four greps and one test.
   A batch whose files are near-identical copies is cheaper to diff than to delegate.
 
+- **2026-07-28 · F-122 — one `name@version` coordinate, two contents, 173 times.**
+  `qualified-naming` states the law this breaks: *never reuse a `name@version`
+  coordinate for different content — a coordinate that meant one artifact must never
+  mean another.* Measured across both trees: **425 markdown files sit at the same
+  (package, version) pair in `packages/` and `vibedeps/`; 252 are byte-identical and
+  173 are not, across 33 packages.**
+
+  The cause is this campaign. Phase B marked 201 package files **inside already
+  published version slots** — `core-ai-native@0.8.0`'s installed copy carries **zero**
+  fact anchors against fourteen in the package of the same version — so every marked
+  package now ships different bytes under a coordinate a consumer already resolved.
+  Most of the difference is markup the boot compiler strips anyway, and **not all of
+  it is**: the boot-lane join found `campaign-plans` differing by six real words and
+  `comparative-research` by three.
+
+  Filed rather than fixed, per the phase's own rule. Closing it is a **release
+  event** — §5-D's «a finding that spans a package boundary is closed by a published
+  version, not by an edit» — and this one spans thirty-three. It belongs beside F-114
+  as an owner decision about versioning rather than an edit anybody can make.
+
+  *The first measurement of this was wrong and looked exactly like a finding.* It
+  globbed `packages/*/*/v<ver>/<tail>` and matched every package sitting at the same
+  version number — `go-ai-native@0.1.0` against `addressable-specs@0.1.0` — producing
+  a count of 177 that meant nothing. Matching on package identity gives 173. **Two
+  numbers three apart, one of which was arithmetic over a category error.**
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
