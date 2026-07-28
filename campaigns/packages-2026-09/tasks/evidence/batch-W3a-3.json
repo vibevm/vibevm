@@ -1,0 +1,852 @@
+{
+ "batch": "W3",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:15  ## The unit of meaning {#unit}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:38  ## Normativity is marked, not implied {#normativity}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:60  ## Norm and rationale live apart {#norm-rationale}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:105  ## Deviations are first-class {#deviations}",
+     "confirmed: Eight topics named, eight sections present: `{#unit}` (15), `{#normativity}` (38), `{#norm-rationale}` (60), `{#deviations}` (105), `{#budgets}` (126), `{#splitting}` (145), `{#changelog}` (160), `{#anchor-stability}` (177). `src: [1]` deliberately — a scope line describes the file it heads, and nothing outside the package bears on whether that description is accurate."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "protocol-document-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:72  ## The URI scheme {#uri-scheme}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:1  # Addressable Specs Protocol {#root}",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:11  ##protocol-document-pointer The addressing scheme itself is defined in [`ADDRESSABLE-SPECS-PROTOCOL.md`](ADDRESSABLE-SPECS-PROTOCOL.md). @impl/done",
+     "confirmed: Same-directory relative link; the target exists in the package and in `vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/`, and it does define the scheme at `## The URI scheme {#uri-scheme}` (72). Counted among the campaign's source-1 join of 24 relative citations across W3's three packages with 0 broken. Unlike the boot snippet's `../flows/…` pointers, this one does not leave its directory and so survives compilation."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "A-SPEC-UNIT-IS-A-HEADING-SPAN": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-spec/src/doctree.rs:439  /// Split a `{#anchor}` out of heading text, returning the text before it, the /// anchor, and any trailing text after the closing `}` (e.g. a `:add` / /// `:replace` merge marker). The anchor need not sit at the end of the line. fn split_anchor(text: &str) -> (String, Option<String>, String) {",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:80  - ##IR-ADDRESS-DEPTH **Addressing depth.** A `spec://…#a.b.c` fragment is a **path down the tree** (`a` → `b` → `c`), which already matches addressable-specs' dotted anchors (`#verification.timeout`). Sections at any…",
+     "confirmed: The host implements the heading-span notion — `doctree.rs` builds a document IR from `{#anchor}` headings and PROP-035:80 addresses 'sections at any depth' by descending it — but it does NOT stop there: the host's unit of marking is the FACT, one `##ID` per sentence-or-paragraph, and specmap.json counts 5266 spec units against 519 distinct heading anchors, i.e. roughly ten marked units per anchored heading. Applying the fact's definition to the host tree gives 857 anchored heading spans, of which 24 (excluding whole-document `{#root}` units) exceed the flow's own 120-line ceiling. What is miss"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ONE-UNIT-CARRIES-ONE-DECISION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:14  ## 1. Language: Rust {#language}  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:27  ## 2. Build system: Cargo workspace {#build}",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "confirmed: PROP-000 is the host's clearest instance: `## 1. Language: Rust {#language}` holds a Decision, a Why and a When-to-revisit for exactly one choice, and `## 2. Build system: Cargo workspace {#build}` begins the next. 25 `**Decision:**` blocks across the tree, all in PROP-000 (17) and PROP-001 (8), each under its own anchored heading. The counter-case is measurable: 24 sub-root units exceed 120 lines, and the four largest are `{#decisions}` sections in PROP-002 (611 lines), PROP-003 (665), PROP-005 (526) and PROP-019 (413) — plural in the heading, and each carrying many decisions under one anchor"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AND-ALSO-MEANS-TWO-UNITS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:23  ##AND-ALSO-MEANS-TWO-UNITS If a unit needs \"and also\", it is two units. @impl/done",
+     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test — if the commit body would need to say \"introduces type X, also adds function Y using it, also",
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite…",
+     "confirmed: The same test exists in the host's commit discipline, transposed: `git-atomic-commits`' `##THE-WORD-ALSO-IS-STILL-THE-TEST` — 'The word \"also\" is still the test — if the commit body would need it, the change is two commits'. Applied to specs, PROP-029's changelog line 50 records the split actually being performed: the addressing principle was pulled out of PROP-029 into a separate unit and PROP-029 rewritten to cite it. Widened for the failure form: `grep -rn 'and also' spec/common spec/modules` returns 3 hits, none inside a normative sentence."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-UNIT-MUST-MAKE-SENSE-ALONE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:118  - ##DIRECTIVE-SHAPE Common shape: `#<directive> [options] <specpath>`, where `specpath` is a `spec://` address (§6) — a section, or a whole file. @impl/done",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:166  - ##AT-SPEC-MANDATORY **`@spec://…`** (an `@` before `spec`) is an **in-place use**: the agent MUST read it (mandatory), exactly as if a `#use` had been declared at the top of the file. @impl/done",
+     "specmap.json:1  { \"code_items\": [ {",
+     "confirmed: The host has made this operational rather than aspirational: PROP-035's `#use` / `#embed` directives splice a single addressed section into another document (`##DIRECTIVE-SHAPE`, 118) and `@spec://…` marks an in-place use the agent MUST read (166) — machinery that only works if a unit is self-contained when lifted. specmap.json's 5266 units are each addressed and extracted individually by the same assumption. Widened for a check on the property: nothing measures whether a lifted unit is comprehensible, so the design assumes it and no gate enforces it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "a-context-dependent-unit-is-not-addressable": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:29  ##a-context-dependent-unit-is-not-addressable A unit that only works when the reader has just read the three sections above it is not addressable — its anchor points at a fragment, not a thought. @impl/done",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:54  ## 2. Decisions {#decisions}",
+     "confirmed: The property is not measurable by grep, so I looked for the shape it warns about: units so large that their internal parts must be read in order. 24 sub-root units exceed 120 lines and the largest four are `{#decisions}` blocks — `spec/modules/vibe-resolver/PROP-003-dep-evolution.md:54  ## 2. Decisions {#decisions}` runs 665 lines under one anchor, so a citation to `#decisions` names a container, not a thought. Against that, the host's `##ID` fact grain gives each statement its own address inside those containers, which is a different answer to the same problem. What is missing to settle it: j"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SOFT-CEILING-ONE-PAGE-PER-UNIT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:33  ##SOFT-CEILING-ONE-PAGE-PER-UNIT Soft ceiling: a unit fits on a page, roughly 120 lines. @impl/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:54  ## 2. Decisions {#decisions}",
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:36  ## 2. Decisions {#decisions}",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
+     "confirmed: Measured directly. Computing every anchored heading span (heading to the next heading of the same or higher level, fenced blocks excluded) over spec/**/*.md gives 857 units, 808 below document level; 24 of the 808 exceed 120 lines. The five worst: `{#log}` in PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md at 2 485 lines, `{#log}` in SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md at 952, `{#decisions}` in PROP-003 at 665, PROP-002 at 611, PROP-005 at 526. So 97 % of host units are inside the ceiling and the overruns are concentrated in two genres — campaign logs and multi-decision `{#decisions}` blocks. No host "
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "longer-units-page-badly": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:35  ##longer-units-page-badly Longer units page badly and churn on every edit. @spec/done",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
+     "confirmed: The 'churn on every edit' half is checkable in git and the answer is mixed. `git log --oneline -- spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md | wc -l` shows the file with the 2 485-line `{#log}` unit is among the most-touched documents in the tree, which is consistent — but it is an append-only log, so its churn is by design rather than by unit size. `git log --oneline -- spec/modules/vibe-registry/PROP-002-decentralized-registry.md | wc -l` for the 611-line `{#decisions}` unit shows far fewer touches. What is missing to settle it: churn would have to be normalised per unit, and no"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-READER-MUST-NEVER-GUESS-WHETHER-A-SENTENCE-BINDS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:3  <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"impl\" comment=\"contract ratified 2026-07-24; the §5 tool ships (all seven subcommands); the campaign it governs is in Phase D — the open tail is the §6 evidence…",
+     "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no…",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "confirmed: The host solved this problem and solved it on a different axis than the flow proposes. Instead of marking normativity, it marks MATURITY at fact grain: every statement carries `@stage/state` (or a `<status>` element), and `spec/boot/00-core.md:32` makes the consequence explicit — a `void` unit 'asserts nothing and is not work' even though 'the prose is unchanged'. That is precisely the never-guess property, obtained by requiring a marker on every fact rather than an RFC-2119 verb in every contract. Coverage is total in the corpus this campaign mirrors: `unmarked_facts` is 0 for all five files "
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CONTRACT-STATEMENTS-USE-RFC-2119-VERBS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:9  ##ADDR-LAW A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project: @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:36  - ##REFACTOR-LAW Address refactors — rename a package, move a group, rename a cited anchor — MUST be expressible as deterministic substitutions over fully-qualified strings, verified by grep-zero of the old coordinate. @spec/done",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "the rule's GOAL — a reader never guesses whether a sentence binds — is met here by a different and stronger instrument, and the flow's own next fact admits marking «where ambiguity is possible» rather than everywhere. The host marks EVERY sentence: `##FACT-ID … @impl/done` on 12 797 markers plus a `<status stage= state=>` per document. RFC-2119 verbs are used where a hard obligation needs naming — 32 occurrences across spec/common and spec/modules, MUST 25 of them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-KIND-DECISION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`, `serde`, `toml`, `reqwest`,…",
+     "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+     "confirmed: PROP-000 files decisions in exactly this shape, three fields at three separate fact ids: `##LANG-RUST **Decision:**` (16), `##LANG-WHY **Why:**` (18), `##LANG-REVISIT **When to revisit:**` (23). Because each field is its own marked fact, the binding half and the rationale half are separately addressable and separately markable, which is a stronger form of the row's claim than prose separation. 25 `**Decision:**` blocks exist across the tree, 17 in PROP-000 and 8 in PROP-001. Widened for the kind being LABELLED as `decision`: no host document uses the word as a marker — `grep -rn '^\\*\\*Kind:' s"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-KIND-CONTRACT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:9  ##ADDR-LAW A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project: @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:36  - ##REFACTOR-LAW Address refactors — rename a package, move a group, rename a cited anchor — MUST be expressible as deterministic substitutions over fully-qualified strings, verified by grep-zero of the old coordinate. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:12  - ##ADDR-SHORT-NAMES Short or bare names survive only as a one-time human CLI input, resolved to the qualified form at the boundary (PROP-008 §2.6). @spec/done",
+     "confirmed: Contracts in the RFC-2119 sense exist — 32 verb occurrences across spec/common + spec/modules, the clearest being PROP-029 §ADDR-LAW and §REFACTOR-LAW — but they are never labelled `contract`, and the vast majority of binding host statements carry no verb at all (`spec/boot/00-core.md`'s four non-negotiable rules, `##NOTOUCH-REFS-BOOK`, the `void` rule). So the category is exercised and the labelling is not. What is missing to settle it: the row describes a taxonomy the host does not use, and nothing records a decision to drop it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-KIND-DESIGN": {
+    "v": "confirmed",
+    "ev": [
+     "spec/design/action-system.md:1  # The vibevm Action System — design & architecture {#root}",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to…",
+     "confirmed: The host has a design GENRE — the whole `spec/design/` directory, whose documents carry `@doc/done` markers rather than `@spec/done` — which is the same separation reached by directory and marker instead of by an in-unit label. Measured: `spec/design` holds 64 headings of which only 25 carry anchors, the lowest ratio in the tree, consistent with material that is not meant to be cited. What is missing to settle it: nothing states that `spec/design/` is non-binding, and the `stage` axis (`doc`) is about maturity, not about whether a statement binds — so the non-binding property is conventional h"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-KIND-GUIDE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-progress/OWNER-GUIDE.md:1  # Progress Control — руководство владельца {#root}",
+     "spec/modules/README.md:1  # Module-level specs",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "confirmed: The genre exists by filename rather than by label: `spec/modules/vibe-progress/OWNER-GUIDE.md` and `spec/modules/README.md` are usage documents sitting inside the spec tree. Widened to see whether they are excluded from binding force: they are scanned by the same mdspec pass as the PROPs (specmap.toml `spec_roots = [\"spec\"]`), so their units enter the same address space, and nothing marks them non-binding. What is missing to settle it: no host statement distinguishes a guide from a contract; the reader infers it from the filename."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MARK-THE-KIND-WHERE-AMBIGUITY-IS-POSSIBLE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:3  <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"impl\" comment=\"contract ratified 2026-07-24; the §5 tool ships (all seven subcommands); the campaign it governs is in Phase D — the…",
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the…",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "confirmed: The host marks something under every heading, but the axis is maturity, not kind. `<status stage=… state=…>` elements appear 73 times across spec/ (impl 36, spec 23, doc 10, freeze 2, test 2), always as a one-line element directly under the heading — the placement the fact prescribes, carrying different information. PROP-029:5's `##status-line` is the richest example, combining status, ratification date and what it builds on. Searched for a kind note in the flow's sense: `grep -rn 'Kind:\\|normativity' spec/` returns nothing. So the slot is used and the content is different."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-CHEAPEST-FORM-IS-A-CONTRACT-ONLY-UNIT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:157  ## 12. Commit and push discipline {#commits}",
+     "spec/common/PROP-029-fully-qualified-addresses.md:28  ## 2. Why — mechanical refactoring {#rationale}",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:1  # PROP-008: Qualified package naming — groups, short aliases, collision detection {#root}",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "confirmed: Host anchor names follow the prescribed style: 519 distinct anchors, all kebab, and they name subjects rather than musings — `{#commits}`, `{#language}`, `{#build}`, `{#registry}`, `{#rationale}`, `{#mechanical}`, `{#anchor-stability}`. `grep -rnoE '\\{#[a-z-]*(thought|note|misc|stuff|various)[a-z-]*\\}' spec/` returns 0, so the anti-pattern the fact names has no instance. The host goes one grain finer: the `##ID` fact ids are themselves subject-named (`##ADDR-LAW`, `##REFACTOR-LAW`), so a contract has its own address even inside a mixed section."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-must-changes-rarely-the-why-does-not": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`,…",
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only vibevm's concrete carriers, the mechanical-refactoring foundation, and the scope rules. @spec/done",
+     "confirmed: The host separates the two into different fact ids so their edit histories can diverge — `##LANG-RUST` (the decision) and `##LANG-WHY` (the rationale) are separately addressable and separately marked. PROP-029's changelog shows the predicted asymmetry: two entries in three months, both about where the rationale lives ('Created — ratified alongside the … group restructure' and 'The addressing principle … was extracted to the `addressable-specs` flow'), neither changing the §1 MUST. Widened for a counter-case: `git log --oneline -S 'MUST carry its full coordinate' -- spec/` returns the single co"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "mixing-them-makes-every-edit-look-like-a-contract-change": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:64  ##mixing-them-makes-every-edit-look-like-a-contract-change When both live in one paragraph, every rationale edit looks like a contract change, and every reader must re-verify code against a unit that did not actually move. @spec/done",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "confirmed: The host has built the exact instrument this failure calls for, at a finer grain than the fact proposes: because every sentence carries its own `##ID` and its own `@stage/state`, a diff shows which fact moved, and `progress check` can tell a rationale edit from a contract edit without re-reading the section. PROP-000's Decision / Why / When-to-revisit triples are the shape in use. Widened for the failure occurring: `git log -p --oneline -- spec/common/PROP-000.md | head -200` shows edits landing on individual `##ID` lines rather than rewriting whole sections."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "KEEP-THE-CONTRACT-SENTENCE-TIGHT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:9  ##ADDR-LAW A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project: @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:15  ##joiner-why Why the full coordinate is a self-contained global symbol, and why the group↔name joiner is a character in **neither** the group nor the name (so an algorithm splits the boundary deterministically — a dotted…",
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`,…",
+     "confirmed: PROP-029 does exactly this and does it by citation: §ADDR-LAW (9) is one sentence stating the MUST; §joiner-why (15) is a separate fact that carries the reasoning and defers it further, to this flow's `#modules` unit, rather than restating it. PROP-000 uses the paragraph form of the same split. So both variants the fact allows — its own paragraph, its own unit — have host instances."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-SPEC-STATES-WHAT-AND-WHY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`,…",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3)…",
+     "confirmed: The host's decision template is literally `**Decision:**` + `**Why:**` (+ `**When to revisit:**`), 25 instances. The complementary half — that *how* lives elsewhere — is enforced by direction of flow at `00-core.md:45`: 'Information flows top-down. If code changes first, reconcile up via the sync-from-code flow … propose a spec update, do not rewrite code back'. Measured on the other side too: `spec/` holds no source code and the mdspec pass treats fenced blocks as illustrations."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "IMPLEMENTATION-DETAIL-BELONGS-NEXT-TO-THE-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-spec/src/address.rs:1  //! The `spec://` address grammar (PROP-035 §6). //! //! Canonical form:",
+     "crates/vibe-spec/src/resolver.rs:1  //! The file resolver — `spec://` authority + doc-path → a file on disk //! (PROP-035 §6, the `doc_path → file` half). //!",
+     "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+     "confirmed: The host does this at scale and ties the two together by URI. `crates/vibe-spec/src/address.rs` opens with a 27-line module doc giving the full grammar, its rationale and its edge cases, immediately above the parser — detail that is nowhere in PROP-035 beyond the one-line form at 97. The same file carries `specmark::scope!(\"spec://…\")` so the doc comment and the spec unit are joined by an edge rather than by a copy. 470 crate files carry `spec://` markers and specmap mints 912 edges from them."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-SPEC-THAT-MIRRORS-CODE-IS-SHADOW-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3)…",
+     "specmap.json:61201  \"code\": \"dangling-edge\", \"file\": \"crates/progress-core/src/report.rs\", \"line\": 4, \"message\": \"edge `progress_core::report` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#report`: no spec unit carries this anchor\"",
+     "crates/vibe-spec/src/address.rs:1  //! The `spec://` address grammar (PROP-035 §6). //! //! Canonical form:",
+     "confirmed: The host's guard against this is structural — the spec states contracts and the code carries the mechanism, joined by `spec://` edges rather than by restatement — and its drift detector reports the residue: 5 `dangling-edge` warnings where code names a unit that does not exist, i.e. the code moved and the spec did not follow. What I could not settle is the converse: measuring whether any host PROP restates a *how* would require reading all 47 documents against their crates, which is the review, not a search. `grep -rn 'fn \\|struct \\|impl ' spec/common spec/modules --include=*.md | wc -l` retur"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-REFACTOR-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor;…",
+     "spec/common/PROP-029-fully-qualified-addresses.md:34  ## 3. The mechanical-refactoring foundation {#mechanical}",
+     "spec/common/PROP-029-fully-qualified-addresses.md:36  - ##REFACTOR-LAW Address refactors — rename a package, move a group, rename a cited anchor — MUST be expressible as deterministic substitutions over fully-qualified strings, verified by grep-zero of the old coordinate. @spec/done",
+     "confirmed: The host has the inverse test written down and mechanised. PROP-029 §3 requires address refactors to be 'deterministic substitutions over fully-qualified strings, verified by grep-zero of the old coordinate' — i.e. a rename SHOULD rewrite the spec, mechanically and without judgment. PROP-031 §ANT-STABLE-IDENTITY supplies the reason it is safe: 'Renaming preserves the anchor; retiring tombstones it. Identity is what an operation targets.' So the host's answer to the refactor test is to make the spec's coupling to code purely nominal (addresses) rather than behavioural, which passes the test the"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "step-back-to-the-contract": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:88  ##step-back-to-the-contract Step back to the contract. @impl/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:9  ##ADDR-LAW A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project: @spec/done",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow…",
+     "confirmed: The instruction's host equivalent is the sync-from-code path: `00-core.md:45` — when code changes first, 'propose a spec update, do not rewrite code back'. That is stepping back to the contract, written as a routing rule. PROP-029 §1 shows the result — a one-sentence contract with the mechanism pushed into §3 and the carriers into a table."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-CONTRACT-UNIT-IMPLIES-ITS-OWN-VERIFICATION": {
+    "v": "confirmed",
+    "ev": [
+     "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
+     "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
+     "specmap.json:1  { \"code_items\": [ {",
+     "confirmed: Mechanised in the host as a gate rather than left as advice: `progress-core/src/evidence.rs:61-62` fails a unit 'marked test/done but no verifying evidence (0 `verifies` edges)', so a unit claiming verification must point at a test that points back. 223 `verifies` edges exist today, minted from `#[verifies(\"spec://…#anchor\")]` attributes like `flag_tests.rs:98`. So the implication runs the direction the fact asks and is checked."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "UNNAMEABLE-TEST-MEANS-DESIGN-NOT-CONTRACT": {
+    "v": "confirmed",
+    "ev": [
+     "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
+     "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "confirmed: The host implements the demotion the fact prescribes, as a stage ladder rather than a binary: a unit may sit at `@spec/done` without a test and only `@test/done` demands verifying evidence — `evidence.rs:61` refuses the claim when the edge count is zero. That is 'sharpen it or demote it' as an enforced state machine. Measured: 223 verify edges against 5266 units, so the great majority of host units stand at a stage that does not claim a test, which is the demoted arm being used, not skipped."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RECORD-THE-TEST-NAME-IN-THE-UNIT": {
+    "v": "drift",
+    "ev": [
+     "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
+     "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:8  ##related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner),…",
+     "DRIFT: `grep -rn '^Test:' spec/` returns 0. The line the fact prescribes — half of the bidirectional graph the protocol describes — is written nowhere in the host's spec tree. The edge exists anyway: 223 `verifies` edges in specmap.json, all sourced from code annotations rather than from the spec side."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-DEVIATION-IS-RECORDED-WHERE-IT-HAPPENS": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-resolver/src/activation.rs:260  #[spec( deviates = \"spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules\", reason = \"ambient-env: the `if_command` activation channel (PROP-003 §2.5.2) resolves \\",
+     "crates/vibe-resolver/src/activation.rs:263  a command against PATH — reading `PATH` is the predicate's definition, \\ inherent-env domain, not config a composition root could thread in ahead of \\ the user's `[activation]` rule\" )]",
+     "spec/common/PROP-029-fully-qualified-addresses.md:11  - ##ADDR-SURFACES The occurrences it binds: manifests, lockfiles, `spec://` citations, `scope!` markers, `DEVIATES` lines, code comments, and docs. @spec/done",
+     "specmap.json:1  { \"code_items\": [ {",
+     "confirmed: Implemented literally, in a machine-readable form. `crates/vibe-resolver/src/activation.rs:260-266` is `#[spec(deviates = \"spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules\", reason = \"ambient-env: …\")]` sitting immediately above the deviating function — point of occurrence, violated anchor, and reason, all three. 12 such markers exist across crates/ and xtask/, and specmap mints them as 12 `deviates` edges. PROP-029 §ADDR-SURFACES names `DEVIATES` lines among the surfaces its address law binds, so the host treats deviations as first-class addresses."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-RECORDED-DEVIATION-AWAITS-REVIEW": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-resolver/src/activation.rs:260  #[spec( deviates = \"spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules\",",
+     "specmap.toml:53  dispositioned = []",
+     "conform.toml:106  [[exempt]] crate = \"vibe-graph\" reason = \"M0 stub, no code yet — the task-graph runner per VIBEVM-SPEC §5 is unbuilt; nothing to gate until it lands\"",
+     "confirmed: The host treats a recorded deviation as an open item with an owner rather than as a closed excuse: each `deviates` marker carries a `reason` that names the rule it suspends and the condition under which it applies, `conform.toml` keeps an `[[exempt]]` list with a written justification per entry, and `specmap.toml:53` keeps `dispositioned = []` — an explicitly empty debt register, which only makes sense if the register is reviewed. 12 deviations are live and each is enumerable by `grep -rn 'deviates = ' crates/ xtask/ --include=*.rs`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "AN-UNDOCUMENTED-DEVIATION-IS-A-DEFECT": {
+    "v": "confirmed",
+    "ev": [
+     "specmap.json:61201  \"code\": \"dangling-edge\", \"file\": \"crates/progress-core/src/report.rs\", \"line\": 4, \"message\": \"edge `progress_core::report` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#report`: no spec unit carries this anchor\"",
+     "specmap.toml:28  # Crates exempt from the orphan ratchet (PLAYBOOK #phase2, flipped 2026-06-10). # A crate NOT listed is gated: its pub items must carry an own edge or a # scope!-inherited module edge. Each exemption and why:",
+     "specmap.toml:53  dispositioned = []",
+     "confirmed: The host has turned this into a gate. specmap.toml's orphan ratchet ('A crate NOT listed is gated: its pub items must carry an own edge or a scope!-inherited module edge', flipped 2026-06-10) makes an unmarked public item a failure, and `dispositioned = []` records that nothing currently stands undeclared. The residual defects are the ones the fact describes and they are visible: 5 `dangling-edge` warnings where code cites a unit that no longer exists — the channel saying something untrue about itself."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "honest-deviations-keep-the-spec-authoritative": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-resolver/src/activation.rs:263  a command against PATH — reading `PATH` is the predicate's definition, \\ inherent-env domain, not config a composition root could thread in ahead of \\ the user's `[activation]` rule\" )]",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3)…",
+     "specmap.toml:53  dispositioned = []",
+     "confirmed: The reasoning is adopted operationally. The host's 12 `deviates` markers each state why the spec's rule is suspended at that point rather than amending the rule, and `00-core.md:45` routes the general case the same way — code that moves first proposes a spec update instead of silently overriding. Between them, the spec stays the authority and reality is allowed to be ahead of it in named places. Widened for the alternative — deviations recorded by weakening the spec: PROP-029's changelog shows two edits in three months, neither weakening §1."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "control-plane-tokens-are-a-per-session-tax": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. --> <!-- The static boot lane (PROP-009 §2.3): the highest-priority --> <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+     "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at…",
+     "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit. # The computed boot sequence (PROP-009 §2.3). Read every file the # `[[entry]]` list names, in order. #",
+     "confirmed: The premise is exactly true of this host and measurable. CLAUDE.md:3 makes the whole of `spec/boot/` plus `spec/WAL.md` an unconditional read on every session; STATIC.md declares itself 'the highest-priority contributions … Read this first, in full'. Sizes: STATIC.md 1 584 lines / 9 860 words, 00-core.md 827 words, 90-user.md 1 282, INDEX.md 133 — roughly 12 100 words, ~16 100 tokens by the flow's own 375-words-per-500-tokens conversion, paid on every session. The sibling flow states the same in its control-plane row (files-as-ipc.md:60)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-BUDGET-BOOT-FILE": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. --> <!-- The static boot lane (PROP-009 §2.3): the highest-priority --> <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+     "spec/boot/00-core.md:1  # vibevm — boot snippet: project foundation",
+     "spec/boot/90-user.md:1  # User overrides",
+     "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
+     "DRIFT, and the largest overrun the phase has measured. Measured with the flow's OWN conversion (`##rule-of-thumb-500-tokens-is-a-page`: 500 tokens ≈ 375 English words): the boot lane the host loads unconditionally is ~16 100 tokens against a 500-token budget — 32x over; `spec/WAL.md` is ~4 000 against 3 000; and 9 of 47 module spec documents exceed 5 000. The numbers appear nowhere in the host except `VIBEVM-SPEC.md:1373`, which sets its own WAL budget at the same two figures."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-BUDGET-WAL": {
+    "v": "drift",
+    "ev": [
+     "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
+     "spec/WAL.md:1  # WAL — Project Continuation State",
+     "spec/WAL.md:162  ## Done (collapsed — see `git log`)",
+     "DRIFT. Measured with the flow's OWN conversion (`##rule-of-thumb-500-tokens-is-a-page`: 500 tokens ≈ 375 English words): the boot lane the host loads unconditionally is ~16 100 tokens against a 500-token budget — 32x over; `spec/WAL.md` is ~4 000 against 3 000; and 9 of 47 module spec documents exceed 5 000. The numbers appear nowhere in the host except `VIBEVM-SPEC.md:1373`, which sets its own WAL budget at the same two figures. Same measurement as W2a's BUDGET-TARGET, reached from the other package."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-BUDGET-MODULE-SPEC": {
+    "v": "drift",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:1  # PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver {#root}",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:1  # PROP-003 — Dependency-model evolution: SAT solver, features, subskills, context activation, i18n",
+     "spec/modules/vibe-index/PROP-005-package-index.md:1  # PROP-005: Optional package index — per-org metadata + standalone index server {#root}",
+     "DRIFT at 9 of 47 — a 19 % share, double-digit and therefore systematic by this campaign's own test. Measured with the flow's OWN conversion (`##rule-of-thumb-500-tokens-is-a-page`: 500 tokens ≈ 375 English words): the boot lane the host loads unconditionally is ~16 100 tokens against a 500-token budget — 32x over; `spec/WAL.md` is ~4 000 against 3 000; and 9 of 47 module spec documents exceed 5 000. The numbers appear nowhere in the host except `VIBEVM-SPEC.md:1373`, which sets its own WAL budget at the same two figures."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "rule-of-thumb-500-tokens-is-a-page": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:179  > Грубое правило: для английского текста 1 токен ≈ ¾ слова, то есть 500 токенов — это примерно 375 слов, или около одной страницы обычного текста. Для русского текста токены «дороже», потому что кириллица кодируется менее эффективно — один русский токен в…",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:137  ##rule-of-thumb-500-tokens-is-a-page Rule of thumb: 500 tokens is roughly 375 English words — one page. @impl/done",
+     "confirmed: The conversion traces to the book chapter, which states it more carefully than the flow does: line 179 gives '1 токен ≈ ¾ слова, то есть 500 токенов — это примерно 375 слов, или около одной страницы' and then qualifies it for Russian (200-250 words), for tokenizer variation, and for content type. The flow keeps the English figure and drops the qualifications. I used this conversion for every budget measurement in this table rather than inventing one, so the numbers are the flow's own arithmetic applied to the host."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-NUMBERS-ARE-BUDGETS-NOT-PHYSICS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:179  > Грубое правило: для английского текста 1 токен ≈ ¾ слова, то есть 500 токенов — это примерно 375 слов, или около одной страницы обычного текста. Для русского текста токены «дороже», потому что кириллица кодируется менее эффективно — один русский токен в среднем покрывает…",
+     "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
+     "spec/WAL.md:162  ## Done (collapsed — see `git log`)",
+     "confirmed: The book states the same hedge at greater length — 'Конкретная цифра «500» здесь и далее — это просто числовой аналог «страницы текста»' and, remarkably, 'обычно он имеет тенденцию разрастаться и рекомендация никогда не выполняется' — the source predicts its own budget being missed. The host behaves as the fact describes: it kept the direction (a `## Done (collapsed — see git log)` section, a summary-and-cite boot file) and set its own numbers (VIBEVM-SPEC.md:1373's target/hard-limit pair for the WAL) rather than the flow's."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "A-SPEC-PAST-ITS-BUDGET-IS-TWO-SPECS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:36  ## 2. Decisions {#decisions}",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:54  ## 2. Decisions {#decisions}",
+     "spec/modules/vibe-index/PROP-005-package-index.md:37  ## 2. Decisions {#decisions}",
+     "confirmed: The three worst overruns have exactly the shape the fact predicts, and the heading says so: each is a single `## 2. Decisions {#decisions}` unit — 611 lines in PROP-002, 665 in PROP-003, 526 in PROP-005 — holding many decisions under one anchor, in a file 2-3x over budget. Plural heading, plural content, one address. Whether to split them is the review's call; what is measurable is that the fact's diagnosis matches the tree, and that no split has been performed (`git log --diff-filter=R -- 'spec/*/PROP-*'` returns one rename and no splits)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "split-triggers-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:147  ##split-triggers-lead Split when any of these fires: @impl/done",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:149  - ##SPLIT-WHEN-OVER-BUDGET the document is over its size budget (§[budgets](#budgets)); @impl/done - ##SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO a unit needs \"and also\" — that is two units, and often two homes; @impl/done - ##SPLIT-WHEN-TWO-AUDIENCES-EMERGE two audiences have emerged (contract readers vs tutorial readers); @impl/done - ##SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE one section is cited from outside far more than the rest — promote",
+     "confirmed: A lead-in to the four-item list that follows at 149-154, checked by reading it: four bullets, each its own marked fact. `src: [1]` — the claim is that a list follows, and only the file itself bears on that."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "SPLIT-WHEN-OVER-BUDGET": {
+    "v": "drift",
+    "ev": [
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:1  # PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver {#root}",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:1  # PROP-003 — Dependency-model evolution: SAT solver, features, subskills, context activation, i18n",
+     "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
+     "DRIFT: the trigger has nine qualifying documents and has fired zero times. The host's only split on record fired on a different trigger — SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE, when PROP-029's addressing principle was extracted — and the three worst overruns still sit in one file each."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
+     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test — if the commit body would need to say \"introduces type X, also adds function Y using it, also",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:54  ## 2. Decisions {#decisions}",
+     "confirmed: The 'two homes' half has a dated host instance: PROP-029's changelog line 50 records the addressing principle leaving PROP-029 for the addressable-specs flow on 2026-07-14, with §1-2 rewritten to cite it — a unit that needed 'and also' resolved by relocation, exactly as the trigger prescribes. The 'and also' test itself is the host's commit rule (ATOMIC-COMMITS-PROTOCOL.md:134). The counter-case is the 665-line `{#decisions}` unit in PROP-003, which is many units in one and has not been split."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SPLIT-WHEN-TWO-AUDIENCES-EMERGE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-progress/OWNER-GUIDE.md:1  # Progress Control — руководство владельца {#root}",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:1  # PROP-043 — Progress Control: inline status markup and the `vibe progress` tool {#root}",
+     "spec/design/action-system.md:1  # The vibevm Action System — design & architecture {#root}",
+     "confirmed: The host has performed this split by genre. `spec/modules/vibe-progress/` holds PROP-043 (the contract, 4 906 words) and OWNER-GUIDE.md (the tutorial) side by side, plus a `templates/` directory for the copy-paste audience — three audiences, three files, one module. `spec/design/` is a fourth genre separated the same way. Widened to whether the separation is declared: `spec/modules/README.md` describes the module map, but no document states an audience rule, so the split is observable and unstated."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the `group` field) and the **addressable-specs**…",
+     "spec/common/PROP-000.md:157  ## 12. Commit and push discipline {#commits}",
+     "confirmed: The one host split on record is precisely this trigger. PROP-029's `##CHANGELOG-EXTRACTED` (50) records the addressing principle being promoted out into the flow's `#modules` unit because it was being cited from outside, leaving PROP-029 with 'only vibevm's concrete carriers'; PROP-029:5 then cites the promoted unit by URI. Measured the citation pressure the trigger describes: `#commits` in PROP-000 is cited from CLAUDE.md, AGENTS.md, GEMINI.md and spec/boot/00-core.md — the most-cited single anchor in the host — and it has NOT been promoted, so the trigger has one instance acted on and at lea"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SPLITTING-IS-CHEAP-IF-ANCHORS-SURVIVE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the `group` field) and the **addressable-specs**…",
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor;…",
+     "crates/vibe-cli/src/commands/trace.rs:9  specmark::scope!(\"spec://core-ai-native/mechanisms/PROP-014#index\");",
+     "confirmed: The host's one relocation shows both halves. Cheap: PROP-014 moved from `spec/discipline/` into the core-ai-native package and every citing site was rewritten mechanically — `crates/vibe-cli/src/commands/trace.rs:9` now reads `spec://core-ai-native/mechanisms/PROP-014#index`, anchor intact. Not free: the old address left no tombstone (`ls spec/discipline spec/neworder` both return 'No such file or directory'), so the move was cheap for the author and lossy for anyone holding the old URI. PROP-031 §ANT-STABLE-IDENTITY states the rule the move relied on — 'Renaming preserves the anchor; retiring"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:47  ## Changelog {#changelog}",
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
+     "DRIFT: exercised ONCE across 42 PROP documents. `grep -rn '## Changelog' spec/` returns a single hit, PROP-029:47, and it is in exactly the prescribed format — one dated line, the section, the change, the reason. Every other semantic change in the tree went unrecorded in its own document, leaving the reader the fact predicts — the one who last saw the file a week ago — with nothing but a diff."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-CHANGELOG-IS-A-SIGNAL-NOT-HISTORY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm…",
+     "spec/WAL.md:162  ## Done (collapsed — see `git log`)",
+     "confirmed: PROP-029's changelog is two lines for a document with a longer git history, which is the signal/history split in practice. The host applies the same principle to its checkpoint file: `spec/WAL.md:162  ## Done (collapsed — see `git log`)` defers history to git by name, in a heading. Widened for a changelog used as history: none — the only changelog in the tree has two entries."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "who-the-changelog-is-for": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:173  ##who-the-changelog-is-for The changelog exists for the reader who last saw this file a week ago and needs the delta in five seconds, without running a diff. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
+     "CONTINUE.md:1  # CONTINUE — cold-resume checkpoint",
+     "confirmed: The host serves this reader through a different instrument and says so: `CONTINUE.md` is a whole-repository cold-resume snapshot rewritten at each session end, and CLAUDE.md §167-194 makes writing it a hard contract precisely so 'any session can be ended at any time and resumed … with no degradation'. That is the same audience — the returning reader who must not run a diff — served per-repository instead of per-document. PROP-029's two changelog lines serve it per-document in the one place a changelog exists. Cited CONTINUE.md by its title line only, since its body is rewritten every session."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ANCHORS-ARE-IMMUTABLE-ONCE-CITED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…",
+     "spec/modules/vibe-progress/templates/spec-task.md:32  - ##RULE-ANCHORS-IMMUTABLE **Anchors are immutable:** a relocated unit leaves a tombstone (`<!-- RETIRED: superseded by #new-anchor -->`); never rename or reuse. @spec/done",
+     "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no…",
+     "confirmed: Adopted as a named principle in the host: PROP-031 §ANT-STABLE-IDENTITY — 'Spec units keep immutable `{#anchor}`s … Renaming preserves the anchor; retiring tombstones it (PROP-014 §2.1). Identity is what an operation targets' — makes anchor immutability the precondition for the whole algorithmic-refactoring programme, not a style rule. The host's own task template restates it (`##RULE-ANCHORS-IMMUTABLE`, spec-task.md:32). Measured for violations: `git log --diff-filter=R -- 'spec/*/PROP-*'` shows one file rename with the number preserved, and specmap reports 5 dangling edges — all from anchors"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-CITED-ANCHOR-IS-A-PUBLIC-SYMBOL": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:11  - ##ADDR-SURFACES The occurrences it binds: manifests, lockfiles, `spec://` citations, `scope!` markers, `DEVIATES` lines, code comments, and docs. @spec/done",
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…",
+     "specmap.json:61201  \"code\": \"dangling-edge\", \"file\": \"crates/progress-core/src/report.rs\", \"line\": 4, \"message\": \"edge `progress_core::report` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#report`: no spec unit carries this anchor\"",
+     "confirmed: The host treats it as a public symbol in the strongest sense — PROP-029 §ADDR-SURFACES enumerates the surfaces an address binds ('manifests, lockfiles, `spec://` citations, `scope!` markers, `DEVIATES` lines, code comments, and docs'), which is the fact's list plus two. The predicted breakage has occurred here at the authority level: commit a906a236 records a package rename leaving 33 references across 21 files pointing at names that no longer resolve, six of them `vibe install` command lines. At the fragment level, specmap's 5 dangling edges are the same failure detected. Measured the exposur"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-RENAME-A-CITED-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…",
+     "spec/modules/vibe-progress/templates/spec-task.md:32  - ##RULE-ANCHORS-IMMUTABLE **Anchors are immutable:** a relocated unit leaves a tombstone (`<!-- RETIRED: superseded by #new-anchor -->`); never rename or reuse. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:36  - ##REFACTOR-LAW Address refactors — rename a package, move a group, rename a cited anchor — MUST be expressible as deterministic substitutions over fully-qualified strings, verified by grep-zero of the old coordinate. @spec/done",
+     "confirmed: The rule is adopted verbatim in the host's task template ('never rename or reuse') and generalised in PROP-031. It is also given an escape the flow does not mention: PROP-029 §REFACTOR-LAW permits renaming an anchor when it is done as a deterministic substitution over every occurrence 'verified by grep-zero of the old coordinate', i.e. rename is allowed if nothing is left dangling. Searched for an actual rename: `git log --oneline -S '{#' -- spec/ | wc -l` is dominated by additions, and I found no commit whose diff renames an existing `{#id}` while keeping the heading. The one relocation on re"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING": {
+    "v": "drift",
+    "ev": [
+     "specmap.json:62437  \"code\": \"duplicate-anchor\", \"file\": \"spec/boot/STATIC.md\", \"line\": 67, \"message\": \"anchor `{#root}` already used earlier in this file — spec://…#root is ambiguous\"",
+     "crates/vibe-spec/src/doctree.rs:244  pub fn duplicate_anchors(&self) -> &[String] { &self.duplicate_anchors",
+     "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no replacement; its text…",
+     "DRIFT, reported by the host's own detector: 59 `duplicate-anchor` warnings, every one in the generated `spec/boot/STATIC.md`, where `{#root}` and `{#never}` each mean twenty-seven different things — one address, many meanings, which is the exact failure this never names. That the reuse is produced by the boot compiler rather than typed by hand makes it systematic, not accidental."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/modules/vibe-progress/templates/spec-task.md:32  - ##RULE-ANCHORS-IMMUTABLE **Anchors are immutable:** a relocated unit leaves a tombstone (`<!-- RETIRED: superseded by #new-anchor -->`); never rename or reuse. @spec/done",
+     "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no replacement; its text…",
+     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:44  - ##RETIRED-SECTIONS-KEPT §3–§5 below describe the retired topology and stay as the",
+     "a coherent prescription that has not been exercised: nothing in the host has been RETIRED, and its own retirement mechanism (`@spec/void`, spec/boot/00-core.md:32) also has no live instance. The `<!-- RETIRED` string appears once in the tree, inside the template that teaches it. Unexercised, not broken — the MOVE case, which has fired twice, is filed on A-MOVED-UNIT-LEAVES-A-TOMBSTONE."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "A-MOVED-UNIT-LEAVES-A-TOMBSTONE": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
+     "crates/vibe-cli/src/commands/trace.rs:9  specmark::scope!(\"spec://core-ai-native/mechanisms/PROP-014#index\");",
+     "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json.",
+     "DRIFT at 2 of 2. Both host moves left the old address bare: PROP-014 moved from `spec/discipline/` into the core-ai-native package and PROP-029's addressing principle moved out of its former home, and neither old location carries a `<!-- RETIRED` line. Continuity came from rewriting every citer by hand instead — which works once and does not scale, and is what the tombstone exists to replace."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "delegate-the-audit-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:197  ##delegate-the-audit-lead Delegate the audit — it is mechanical and the agent is good at it: @impl/done",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:199  ``` Audit this repository for addressability: 1. List every spec heading that states a decision, constraint, or contract but carries no {#anchor}.",
+     "campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md:1  # The `world` evidence brief — what a delegated search returns, and what it must not",
+     "confirmed: The prompt at 199-208 asks for three tables — unanchored decision headings, values duplicated across files, `spec://` citations that no longer resolve — and ends 'Do not edit anything yet'. The host runs all three checks, but mechanically rather than by delegation: unanchored headings are countable (125 of 982), duplicated values surface as 59 `duplicate-anchor` warnings, and unresolvable citations surface as 5 `dangling-edge` warnings. The delegation half is also in use — `campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md` is a report-only worker contract with the same do-not-edit clause"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-ONE-UNIT-ONE-DECISION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:14  ## 1. Language: Rust {#language}  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:54  ## 2. Decisions {#decisions}",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:118  - ##DIRECTIVE-SHAPE Common shape: `#<directive> [options] <specpath>`, where `specpath` is a `spec://` address (§6) — a section, or a whole file. @impl/done",
+     "confirmed: Re-measured rather than inherited. One decision per unit: PROP-000's numbered sections hold one Decision / Why / Revisit triple each (25 blocks tree-wide); against that, four `{#decisions}` units hold many. Makes sense alone: assumed by the host's `#use` / `#embed` machinery and never checked. On one page: 24 of 808 sub-root units exceed 120 lines, so 97 % conform. Two of three clauses hold at scale, one has concentrated exceptions, and nothing in the perimeter tests the middle clause."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-NORMATIVITY-IS-MARKED": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:9  ##ADDR-LAW A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project: @spec/done",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:105  | ##ROW-ATTR-STAGE `stage` @impl/done | yes @impl/done | `idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown` @impl/done |",
+     "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to…",
+     "confirmed: The goal is met and the means are different, measured again here rather than carried over. RFC-2119 verbs: 32 occurrences across 47 host documents (MUST 25, MUST NOT 3, MAY 3, SHOULD 1), and the term 'RFC-2119' appears nowhere in the host. Nobody-guesses: achieved by requiring a `@stage/state` marker on every fact, with `void` explicitly meaning 'asserts nothing' even when the prose reads like a requirement. So the host reaches the summary's stated outcome by a mechanism the summary does not describe, and the mechanism it does describe is used sparsely."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`,…",
+     "spec/common/PROP-029-fully-qualified-addresses.md:15  ##joiner-why Why the full coordinate is a self-contained global symbol, and why the group↔name joiner is a character in **neither** the group nor the name (so an algorithm splits the boundary deterministically — a dotted…",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow…",
+     "confirmed: Separation is structural in the host: PROP-000 splits Decision from Why into two separately-addressed facts, and PROP-029 §joiner-why goes further by not restating the rationale at all, citing the flow's `#modules` unit instead. The never-restate-how half is routed by `00-core.md:45` (code that moves first proposes a spec update rather than the spec being rewritten to match), and the implementation detail lives in module docs beside the code (`crates/vibe-spec/src/address.rs` opens with 27 lines of grammar documentation that appears in no spec)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-EVERY-CONTRACT-IMPLIES-A-TEST": {
+    "v": "drift",
+    "ev": [
+     "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
+     "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
+     "specmap.json:1  { \"code_items\": [ {",
+     "DRIFT on the second clause. «Every contract implies a test» is ENFORCED here — `progress-core/src/evidence.rs` fails a unit marked done without evidence. «The unit names it» is not: zero `Test:` lines in `spec/`."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-resolver/src/activation.rs:260  #[spec( deviates = \"spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules\", reason = \"ambient-env: the `if_command` activation channel (PROP-003 §2.5.2) resolves \\",
+     "crates/vibe-resolver/src/activation.rs:263  a command against PATH — reading `PATH` is the predicate's definition, \\ inherent-env domain, not config a composition root could thread in ahead of \\ the user's `[activation]` rule\" )]",
+     "specmap.toml:53  dispositioned = []",
+     "confirmed: Both halves hold in the host. Recorded where they happen with reasons: 12 `#[spec(deviates = \"spec://…\", reason = \"…\")]` markers sitting directly above the deviating item, minted into specmap as 12 `deviates` edges. The undocumented one is the defect: the orphan ratchet gates unmarked public items and `dispositioned = []` records that nothing stands undeclared, while the 5 `dangling-edge` warnings are exactly the undocumented-drift class the summary names."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-THE-SIZE-BUDGETS": {
+    "v": "drift",
+    "ev": [
+     "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
+     "spec/boot/STATIC.md:1  <!-- spec/boot/STATIC.md — generated by vibe, do not edit. --> <!-- The static boot lane (PROP-009 §2.3): the highest-priority --> <!-- contributions, compiled in verbatim. Read this first, in full. -->",
+     "spec/WAL.md:1  # WAL — Project Continuation State",
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:1  # PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver {#root}",
+     "DRIFT on all three figures at once, and on the remedy the same line names: «split when over» has never fired. Measured with the flow's OWN conversion (`##rule-of-thumb-500-tokens-is-a-page`: 500 tokens ≈ 375 English words): the boot lane the host loads unconditionally is ~16 100 tokens against a 500-token budget — 32x over; `spec/WAL.md` is ~4 000 against 3 000; and 9 of 47 module spec documents exceed 5 000. The numbers appear nowhere in the host except `VIBEVM-SPEC.md:1373`, which sets its own WAL budget at the same two figures."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-THE-CHANGELOG-LINE": {
+    "v": "drift",
+    "ev": [
+     "spec/common/PROP-029-fully-qualified-addresses.md:47  ## Changelog {#changelog}",
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
+     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite…",
+     "DRIFT for the same count as EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE: one changelog in 42 PROPs. The one that exists is a model of the form, which is what makes the other 41 a measurement rather than a style difference."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-ANCHORS-ARE-IMMUTABLE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…",
+     "spec/modules/vibe-progress/templates/spec-task.md:32  - ##RULE-ANCHORS-IMMUTABLE **Anchors are immutable:** a relocated unit leaves a tombstone (`<!-- RETIRED: superseded by #new-anchor -->`); never rename or reuse. @spec/done",
+     "specmap.json:61201  \"code\": \"dangling-edge\", \"file\": \"crates/progress-core/src/report.rs\", \"line\": 4, \"message\": \"edge `progress_core::report` --implements--> `spec://vibevm/modules/vibe-progress/PROP-043#report`: no spec unit carries this anchor\"",
+     "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json.",
+     "confirmed: Immutability is adopted as a named principle (PROP-031 §ANT-STABLE-IDENTITY, the host's task template) and no anchor rename is on record. Retirement-as-tombstone is not: `grep -rn '<!-- RETIRED' spec/ crates/ campaigns/` returns 1 hit inside the template that teaches it, `grep -rn 'state=\"void\"' spec/` returns 2 descriptions and no live instance, and the one relocation that happened (PROP-014 out of `spec/discipline/`) left no marker at the old address — continuity was preserved by rewriting every citer and registering an `[[external_specs]]` resolver root instead. Meanwhile 5 dangling edges s"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
