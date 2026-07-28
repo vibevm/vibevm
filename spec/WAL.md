@@ -1,7 +1,15 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-28 (**Phase C — W2 and W3 both CLOSED; the cluster is 51 of
-121 files and the phase is past 64 %**)_
+_Updated: 2026-07-29 (**Phase C — W1-W3 closed, W4 at 12 of 15 files, W5's
+evidence gathered; the phase is past 70 %**)_
+
+**Every number below is reproduced by two commands; run them rather than quoting
+this file.**
+
+```bash
+python campaigns/packages-2026-09/tasks/batch-progress.py   # owed vs judged, per batch
+python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts said
+```
 
 ## Current phase
 
@@ -181,15 +189,31 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
 ## In progress
 
-**W4 is the next batch and nothing is in flight.** No worker is running; no table
-is half-read. W1, W2 and W3 are closed and sealed, and every slice of them is
-committed and mirrored.
+**Nothing is in flight — no worker is running and no table is half-read.**
 
-**W4 — `campaign-plans`, `discovery-prompt`, `comparative-research`, `redbook` —
-is 15 files / 564 anchors, unstarted.** Its evidence has not been gathered: the
-recipe's step 1 (capture the three §3.1 sources into `harvest/`) and step 2
-(commission one `opus5` worker per package) both remain. W3's harvest is the
-model — `harvest/world-w3-ipc-core-ii.md`.
+**W4 is 12 of 15 files, 417 anchors.** Closed inside it: `discovery-prompt`
+83/83 at 92.8 %, `redbook` 83/83 at 96.4 %, `campaign-plans` 218/218 at **72.5 %
+— the lowest package in the phase**. The three files left are all
+`comparative-research`: the protocol (60), from-research-to-roadmap (61), the
+template (26).
+
+**W5's evidence is GATHERED and unjudged** — 697 rows across `ev-W5a…d`, all
+four verified to zero unresolvable. Do not re-gather; judge. **W6 and W7 have
+their harvests written** (`world-w6-project-practice-ii.md`,
+`world-w7-authoring-for-tools.md`) and no workers commissioned, so the recipe's
+step 1 is complete for the entire remaining cluster.
+
+**Eight evidence tables, eight clean first passes, 4 643 refs, zero
+unresolvable, and none citing `CONTINUE.md` or `spec/WAL.md`.** The
+two-sentence durable-citation rule in the brief is now paid for eight times over.
+
+**Two tools were added this session and both are committed.**
+`tasks/batch-progress.py` joins owed-against-judged per batch and names the
+unopened files of an open batch — the phase had counts but no way to see what was
+left. `tasks/make-slice.py` builds a slice from an evidence table plus a rulings
+map, with six refusals tested against W3's closed tables before first use; the
+one that matters refuses any slice whose file has an addressable anchor the
+table does not cover, which is the property the 138-row debt was missing.
 
 ## Next
 

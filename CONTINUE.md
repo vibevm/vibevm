@@ -1,8 +1,17 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written 2026-07-28 (**Phase C: W1, W2 and W3 are CLOSED — 1 714 anchors judged
-row by row; the phase is past 64 %**). `spec/WAL.md` is the canonical living
-state and supersedes this snapshot wherever they diverge._
+_Written 2026-07-28, refreshed **mid-flight 2026-07-29** (**Phase C: W1-W3 closed
+and W4 at 12 of 15 files; the phase is past 70 %**). `spec/WAL.md` is the
+canonical living state and supersedes this snapshot wherever they diverge._
+
+> **MID-FLIGHT CHECKPOINT, not a wind-down.** W4 is open and W5's evidence is
+> gathered. **Do not re-derive any number in this file — run the two commands:**
+> ```bash
+> python campaigns/packages-2026-09/tasks/batch-progress.py   # owed vs judged, per batch
+> python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts said
+> ```
+> `batch-progress.py` is new this session and names the unopened files of any
+> open batch, so the next slice is chosen from its output rather than by hand.
 
 ## TL;DR
 
@@ -30,10 +39,16 @@ and its evidence has not been gathered.
 |---|---|
 | host | 58 / 58 files, 4 499 verdicts — 99.9 % |
 | **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, 2 470 / 207 / 20, **91.6 %** |
-| **world** | **51 / 121 files** — 1 714 verdicts, **1 557 / 140 / 17, 90.8 %**, 138 self-referential (8.1 %); **2 436 anchors owed** |
-| phase | **4 411 of 6 847 — 64.4 %** |
+| **world** | **63 / 121 files** — 2 131 verdicts, **1 909 / 204 / 18, 89.6 %**, 159 self-referential (7.5 %); **2 019 anchors owed** |
+| phase | **4 828 of 6 847 — 70.5 %** |
 | gate | `progress check --exhaustive` clean, 259 files |
 | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |
+
+**§5-C's prediction moved AGAIN and the same way.** `world` was 90.8 % when W3
+closed; W4 has pulled it to **89.6 %** against `ai-native`'s 91.6 %, so the gap
+widened from 0.8 to 2.0 points. The reason is the one W3 recorded: these flows
+make claims about the consuming project, and `campaign-plans` in particular
+describes a practice this repository has left.
 
 **Never decrement these; re-measure.** One command prints all of it:
 
@@ -47,16 +62,33 @@ Per package, closed: `two-process-model` 96.6 % · `wal-specspaces` 93.5 % ·
 
 ## What remains {#remains}
 
-| batch | packages | files | anchors |
-|---|---|---:|---:|
-| **W4** | campaign-plans, discovery-prompt, comparative-research, redbook | 15 | 564 |
-| **W5** | operating-modes, health-audit, manual-tests, secrets-hygiene | 21 | 697 |
-| **W6** | licensing, source-mirrors, spec-genres, dev-runtime-docs | 19 | 572 |
-| **W7** | managed-blocks, qualified-naming, tool-design-lessons | 15 | 603 |
+| batch | packages | files | anchors | state |
+|---|---|---:|---:|---|
+| **W4** | campaign-plans, discovery-prompt, comparative-research, redbook | 15 | 564 | **12/15 judged, 417 anchors** |
+| **W5** | operating-modes, health-audit, manual-tests, secrets-hygiene | 21 | 697 | **evidence gathered, 0 judged** |
+| **W6** | licensing, source-mirrors, spec-genres, dev-runtime-docs | 19 | 572 | harvest written, no workers yet |
+| **W7** | managed-blocks, qualified-naming, tool-design-lessons | 15 | 603 | harvest written, no workers yet |
 
-**W4 is unstarted and nothing has been gathered for it.** Both recipe steps
-remain: capture its three §3.1 sources into `harvest/world-w4-plans-and-inquiry.md`,
-then commission four `opus5` workers, one per package.
+**All four world harvests exist and are committed** —
+`harvest/world-w4-plans-and-inquiry.md`, `-w5-project-practice-i.md`,
+`-w6-project-practice-ii.md`, `-w7-authoring-for-tools.md`. So the recipe's step 1
+is done for the whole remaining cluster; only step 2 (commission workers) is
+outstanding for W6 and W7.
+
+**Eight evidence tables are in and all eight verify to ZERO unresolvable** —
+`ev-W4a…d` (872 + 606 + 306 + 420 refs) and `ev-W5a…d` (869 + 487 + 560 + 523).
+None cites `CONTINUE.md` or `spec/WAL.md`, so this checkpoint cannot break them.
+
+**W4's three remaining files are all `comparative-research`:**
+
+```
+  60  …/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md
+  61  …/spec/flows/comparative-research/from-research-to-roadmap.md
+  26  …/spec/flows/comparative-research/research-template.md
+```
+
+**W5 needs 21 slices and its evidence is already on disk.** Judge, do not
+re-gather.
 
 **W4's file list with per-file anchor counts, measured from `run/mirror/` — hand
 these to the workers verbatim so nobody re-derives them:**
@@ -130,6 +162,25 @@ question to ask of it — `F-119` already records that the book's chapter 1 cite
 - **A fact whose subject IS a `../flows/…` pointer is drift** — the 69-dangling
   family, found in seven packages so far. A rule fact that merely contains such a
   link is judged on the rule.
+- **THE MEASURED WINDOW, settled in W4 and stated in its reasons so it can be
+  re-judged.** When a flow's rule has archived host instances and no live ones,
+  the window is **the two live campaigns / the current tree**, and the archive is
+  cited as evidence the practice was ONCE ADOPTED — which is exactly what makes
+  the absence drift rather than non-adoption. A rule the host never followed is
+  confirmed; a rule it followed in twenty-five archived plans and stopped
+  following in the two it runs now is not. `campaign-plans` closed at 72.5 % on
+  this line, the lowest package in the phase.
+- **W4's own reusable measurements:** the fifteen-section plan skeleton is
+  instantiated **once**, in the archive · Phase 0 exists in 5 archived plans and
+  **0 live** ones, and two of those five committed from it · quick-start 7/0,
+  whole-campaign acceptance 8/0, risks 16/0, non-goals 9/0, execution ledger 8/0,
+  commit maps 3/0 (archived/live) · `EXECUTING` occurs **0 times** in the whole
+  repository · 17 unique commit hashes cited in wave 2's plan against 189 commits
+  in its zone (wave 1: 20 against 125) · «the origin project» is an unresolved
+  house phrase in **twelve** redbook-family READMEs · redbook's rosters read
+  22 pins / 21 README rows / 23 snippet names (F-113), and all 23 ARE reachable by
+  an exact pin once `git-practices`' own four pins are counted · `campaign-plans`
+  occurs **0 times** in the entire `core-ai-native` tree, both slots and installed.
 - **Measurements already in hand, reusable:** boot lane **~16 100 tokens against
   a 500-token budget** (32×) · `spec/WAL.md` ~4 000 against 3 000 · **9 of 47**
   module specs over 5 000 · **4 of 153** decision sections carry four fields, 127
@@ -300,28 +351,45 @@ a43159b9 chore(campaign): the wal flow measured against the WAL it specifies
 ВОССТАНОВИ СЕССИЮ
 
 Затем продолжи Phase C кампании PROP-043 волны 2 (campaigns/packages-2026-09).
-ЗАКРЫТЫ W1 (407), W2 (692) и W3 (615) — 1 714 якорей, поштучно. Кластер world =
-1 557 / 140 / 17, 90.8 % на 51 файле из 121. Фаза C — 64.4 %, осталось 2 436 якорей. Ничего не в полёте:
-воркеров нет, недочитанных таблиц нет.
 
-СЛЕДУЮЩЕЕ — БАТЧ W4 (campaign-plans, discovery-prompt, comparative-research,
-redbook; 15 файлов, 564 якоря). Он НЕ НАЧАТ и доказательства НЕ СОБРАНЫ.
+ПЕРВОЕ ДЕЙСТВИЕ — ДВЕ КОМАНДЫ, и все числа берутся из них, а не из этого файла:
+  python campaigns/packages-2026-09/tasks/batch-progress.py
+  python campaigns/packages-2026-09/tasks/summary.py
+
+batch-progress.py показывает, сколько батч ДОЛЖЕН против сколько НАПИСАНО, и
+называет неоткрытые файлы открытого батча поимённо — следующий срез берётся
+оттуда.
+
+СОСТОЯНИЕ НА 2026-07-29: фаза 70.5 %, осталось 2 019 якорей. W1-W3 закрыты.
+W4 — 12 файлов из 15 (417 якорей); закрыты discovery-prompt 92.8 %,
+redbook 96.4 %, campaign-plans 72.5 %. Осталось три файла comparative-research.
+W5 — ДОКАЗАТЕЛЬСТВА УЖЕ СОБРАНЫ (697 строк в ev-W5a…d, все верифицированы в
+ноль), НЕ СОБИРАЙ ЗАНОВО, суди. W6 и W7 — харвесты написаны, воркеры не
+комиссованы.
+
+ВСЕ ЧЕТЫРЕ ХАРВЕСТА WORLD СУЩЕСТВУЮТ. Шаг 1 рецепта сделан для всего остатка.
 
 Перед началом прочитай, в этом порядке:
-  1. CONTINUE.md — целиком: §remains, §recipe, §judged (что уже решено — там
-     ЛИНИЯ ПРО НЕПРИНЯТИЕ и готовые измерения), §standard, §traps
-  2. campaigns/packages-2026-09/harvest/world-w3-ipc-core-ii.md — образец харвеста
+  1. CONTINUE.md — целиком. §judged: там ЛИНИЯ ПРО НЕПРИНЯТИЕ, ОКНО ИЗМЕРЕНИЯ
+     и готовые измерения, которые не надо выводить заново
+  2. campaigns/packages-2026-09/harvest/world-w5-project-practice-i.md — харвест
+     батча, который судится следующим (плюс -w6-, -w7- для последующих)
   3. campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md — контракт делегата
   4. campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md — §2.1 (src), §4.5 (периметр)
   5. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md §3.1, §3.2, §5
-     и §7 LOG с конца — там записи W2 и W3
 
-ПЕРВОЕ ДЕЙСТВИЕ: собери харвест W4 (три источника §3.1, каждый как
-`команда → реальный вывод`), закоммить его, и только потом комиссуй четырёх
-воркеров opus5 — по пакету на воркера. В брифе ОБЯЗАТЕЛЬНО: цитировать durable
-файлы (CLAUDE.md, spec/boot/**, spec/common/**, crates/), НЕ цитировать
-CONTINUE.md и spec/WAL.md. Эти две фразы дали W3 1 805 ссылок и НОЛЬ
-неразрешённых с первого прогона.
+ДЛЯ W6 и W7: собери воркеров по образцу — бриф + харвест + список файлов с
+числами якорей + ОБЯЗАТЕЛЬНАЯ пара фраз «цитировать durable файлы (CLAUDE.md,
+spec/boot/**, spec/common/**, crates/), НЕ цитировать CONTINUE.md и spec/WAL.md».
+Восемь батчей подряд дали ноль неразрешённых ссылок с первого прогона.
+
+СРЕЗ СТРОИТСЯ ИНСТРУМЕНТОМ, НЕ РУКАМИ:
+  python tasks/make-slice.py tasks/evidence/ev-<X>.json --file <substr> \
+      --batch <W?> --out tasks/evidence/batch-<X>-<n>.json --rulings <r.json>
+Файл rulings — единственное, что пишет рука: анкор → {v, why, src}. Всё
+остальное по умолчанию confirmed с полем searched воркера как причиной.
+ОСТОРОЖНО: пиши rulings через Write, не через heredoc — heredoc съедает слой
+экранирования и ломает JSON на регексах.
 
 ЕДИНИЦА РАБОТЫ — ОДИН ФАЙЛ, НЕ БАТЧ. Прочитай файл-субъект целиком, потом
 show-rows.py --brief --file <имя> построчно, потом батч только этого файла,
