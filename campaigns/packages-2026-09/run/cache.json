@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T20:04:56Z",
+  "updated_at": "2026-07-28T20:07:01Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -25371,7 +25371,863 @@
       },
       "marker_count": 70,
       "unit_count": 11,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "951dd530a7ed50d38c49ca51662ed3d06215fdc4e86d677ef4b646c831d3ee81",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:53  ## The hierarchy {#hierarchy}",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:102  ## The REVIEW-marker protocol {#review-protocol}",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:156  ## What one silent change costs {#silent-change}",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:189  ## Marker lifecycle {#lifecycle}",
+              "confirmed: A scope statement checked against the document's own section headings: all four promised parts are present in the order announced (53, 102, 156, 189), plus §12 Two writers, §84 Tests, §219 Re-derive and §242 Summary. Byte-identical in the installed slot (`diff` against `vibedeps/flow-conflict-protocol/0.1.0/…/CONFLICT-PROTOCOL.md` is empty). No source-2 check applies — this is a claim about the file's own contents."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "A-PROJECT-HAS-EXACTLY-ONE-SHARED-MEMORY-THE-FILES": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+              "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:174  должна делать. Аналог shared memory, в которую пишут оба процесса, но с приоритетом человека.",
+              "confirmed: The host runs on exactly this premise and enforces it as a written rule: CLAUDE.md's memory-discipline section makes the repository the only legitimate home for project facts and names the failure mode of any second channel — a teammate who clones sees nothing else (CLAUDE.md:161). The host's boot core frames the pair as «two processes sharing one repository» (00-core.md:38). Source in redbook chapter 1 line 174, «Аналог shared memory, в которую пишут оба процесса»."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-human-edits-them": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1208  F-035's single row in `spec/boot/00-core.md`, a user-owned file the",
+              "confirmed: Searched for evidence that the human is an actual writer in this repository rather than only a reviewer. Two findings. (a) The boot tree carries files designated user-owned and off-limits to the agent — `spec/boot/00-core.md` and `spec/boot/90-user.md`; `docs/commands/uninstall.md:5` names them as authored content that tooling never touches. (b) The spec campaign stopped a mechanical fix at one of those files precisely because editing it is the human's act (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1208). `git log` shows a single committer identity for the tree, so authorship cannot be separated fro"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-agent-edits-them": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-progress/templates/impl-task.md:79  - ##STOP-RULE If the spec is silent or ambiguous on a point you need: STOP, mark",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:57  | Coder | **Opus** | IMPL tasks (DRIFT-NNN) exactly as written; stop-rule on ambiguity |",
+              "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:148  // <!-- REVIEW: DRIFT-029 asked for this write to be suppressed, so a",
+              "confirmed: Searched separately from the human-edits fact rather than treating the pair as one. The host formalises agent writers as a role with a named model and a written contract: the executor table at SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:55-58 assigns IMPL tasks to a coder tier and spec-edit tasks to a budget-dependent tier, and `templates/impl-task.md` is the standing task format they work to. The result is observable in the tree — `hybrid_emit.rs:148` is an agent-placed marker citing the task number that produced it. Note the host's Rule 1 forbids attributing any artefact to a machine, so agent autho"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THERE-IS-NO-THIRD-CHANNEL": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:161  Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.",
+              "CLAUDE.md:165  **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context.",
+              "confirmed: This is the fact with the sharpest host counterpart in the whole document, and it is a scar rather than a principle: CLAUDE.md's memory-discipline section exists because a third channel WAS used and cost something — «the reverse has already silently cost a teammate context» (CLAUDE.md:165). The rule closing that channel is the default at :165 plus the prohibition at :161. Source: redbook chapter 2's «Между тобой и AI нет соединения по воздуху. Нет Slack-канала, нет кофемашины» — same argument, cited in searched rather than evidence because the redbook chapter-2 copy differs from `refs/book/` i"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "TWO-WRITERS-WILL-PRODUCE-CONTRADICTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:180  *will* write contradictory things; that is normal cooperation, not an",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — waves d1 + d2 landed 2026-07-25 (302 of 311 drift rows closed; the tree measures 99.7 % confirmed; 42 of 55 findings resolved) · next: the two escalations (F-046 wire-or-demote, F-035 user-owned boot file), then Phase E · vibevm-specific · first consumer of PROP-043 (Progress Control)**",
+              "confirmed: The host has measured its own contradiction rate, which is the strongest form this claim can take here. The spec-actualization campaign judged 4 944 markers across the host spec tree and found 93.0 % confirmed at the Phase C close — i.e. roughly 7 % of the tree's own claims disagreed with reality, opening 311 drift rows (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5). That is the predicted contradiction, counted."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONTRADICTION-A-VALUE-CHANGED-IN-CODE-NOT-IN-THE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back. @impl/done",
+              "confirmed: Searched for a recorded instance of this exact contradiction class rather than the general rule. Found one, in the history: `4ea09ad0 docs(spec): PROP-042 §4 gains the four verbs the code already shipped` records four CLI verbs that «have been shipping and citing \"PROP-042 §4\" in their own `--help` while §4 listed five verbs and none of them» — code moved, spec did not, exactly the class named. Its sibling `04d7e4ae docs(spec): the token loader's first source was never in the list` is a second. The host anticipates the class in its boot core (00-core.md:45) with a named reconciliation flow. Gi"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "CONTRADICTION-A-TEST-ASSERTING-YESTERDAYS-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:21  - ##VIBE-INDEX-ROT Earlier, the `vibe-index` crate — then a separate Cargo workspace, outside `cargo test --workspace` — rotted unnoticed until a state review found its suite red. @spec/done",
+              "confirmed: Searched the host for a recorded stale-test instance. The closest is PROP-013's category A (test integrity) and its recorded precedent at :21, where a crate's suite rotted outside the workspace gate until a review caught it — that is a test drifting from reality, but by exclusion from the gate rather than by asserting a superseded rule. The spec campaign's manual-test findings are nearer in kind: `MT-01's EXP-2/6/7/8/9 describe the pre-revision TUI keymap` (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:737-740) is a written test procedure asserting yesterday's keymap — but it is a manual test document, "
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "CONTRADICTION-A-STATE-FILE-DESCRIBING-REVERTED-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+              "docs/commands/check.md:33  | `wal_freshness` | warning | `spec/WAL.md` modification time is within `--wal-max-age-hours`. Older → warning. Future-dated mtime (clock skew) → info. |",
+              "confirmed: The host treats this class as certain enough to mechanise a defence against it — a 24-hour distrust gate written into the boot contract (00-core.md:15) and a shipped `wal_freshness` warning in `vibe check` (docs/commands/check.md:32, flag at :20). What I could not find is an instance: I searched `spec/WAL.md` and `AUDIT.md` for a recorded case of the WAL describing reverted work, and `git log --grep='WAL'` for a correction commit of that shape, and found none. The WAL is rewritten wholesale each session (00-core.md:64), which erases such evidence by design. Partial: the defence is real and in "
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "CONTRADICTION-IS-NORMAL-COOPERATION-NOT-AN-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:180  *will* write contradictory things; that is normal cooperation, not an",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:205  **Протокол конфликтов.** Два писателя могут и будут писать в исходнике противоречивые вещи. Это нормальная часть совместной работы, рассматривать это как ошибку - вредно и контрпродуктивно. Нужны явные правила разрешения конфликтов:",
+              "confirmed: Third instance of this sentence in the package (README:9, boot snippet:8, here:33) and searched on its own rather than carried over. Installed at STATIC.md:180. Host behaviour matches the framing: the spec campaign recorded 311 drift rows as ordinary work to be scheduled and drained, not as incidents — 302 closed in two waves (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5) — and `BACKLOG.md` exists at repo root precisely to hold surfaced-and-not-acted-on findings without treating them as failures (CLAUDE.md:155-159)."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "treating-contradiction-as-shameful-hides-it": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did",
+              "confirmed: This is a causal claim about incentives, and no command evaluates it. I looked for the nearest checkable host analogue — a channel that makes surfacing cheap and blameless — and found `BACKLOG.md`, introduced by owner directive 2026-07-26 to hold «findings the work surfaced and deliberately did not act on» so that «the decision to start can be taken deliberately» (CLAUDE.md:157-159). Also searched `spec/`, `CLAUDE.md` and `AUDIT.md` for any rule penalising a surfaced contradiction and found none; AUDIT.md's disposition vocabulary includes `accepted` («deliberate no-action, with the reason», AU"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-FAILURE-MODE-IS-THE-UNRESOLVED-CONFLICT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+              "docs/commands/check.md:22  | `--review-max-age-days` | `<!-- REVIEW: YYYY-MM-DD -->` marker age threshold. | `14` |",
+              "confirmed: The host agrees with this diagnosis strongly enough to have built a clock against it. Unresolved disagreement is a named audit category — PROP-013 §2.2's D2, «Aging markers», sweeping `<!-- REVIEW … -->` by `grep -rn` (PROP-013:49) — and the shipped linter ages them at a 14-day default threshold (docs/commands/check.md:22; the check row at :38; the implementation at `crates/vibe-check/src/checks/review_aging.rs:1-3`). So «found weeks later» is the exact interval the host tools for."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "concurrent-programming-met-this-problem-long-ago": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:219  Технологически, это *memory fence* из concurrent programming. Без явных правил приоритета два процесса неизбежно создадут race condition, и результат будет непредсказуем. Мы решаем это классическими методами, только в некой лайтовой адаптации на нейросетевую специфику.",
+              "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
+              "confirmed: The framing traces verbatim to redbook chapter 1 line 219, which names the race condition and the absence of explicit priority rules as its cause. Host-side, the same analogy is carried into `spec/boot/00-core.md:38` in the reduced form «two processes sharing one repository», though the host does not repeat the race-condition argument itself. `grep -rn -i 'race condition' spec/ CLAUDE.md crates/` finds no host restatement, so the claim rests on the package plus its cited source."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "the-fix-there-is-a-memory-fence": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:219  Технологически, это *memory fence* из concurrent programming. Без явных правил приоритета два процесса неизбежно создадут race condition, и результат будет непредсказуем. Мы решаем это классическими методами, только в некой лайтовой адаптации на нейросетевую специфику.",
+              "confirmed: A statement about concurrent programming, not about this repository, so only source 1 and its cited origin apply. The term and the framing are the book's, at chapter 1 line 219, where the memory fence is named as the classical fix for two processes without priority rules. I widened anyway: `grep -rn -i 'memory fence' spec/ crates/ CLAUDE.md campaigns/` returns nothing host-side, so the metaphor is not carried into the consuming project's own vocabulary. `src` is [1] alone — I did not consult the installed lane for this one because the boot snippet omits the framing entirely."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "THE-FIX-HERE-IS-THE-SAME-FENCE-ADAPTED-FOR-PROSE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:185  Every disagreement between layers is settled by fixed priority:",
+              "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:219  Технологически, это *memory fence* из concurrent programming. Без явных правил приоритета два процесса неизбежно создадут race condition, и результат будет непредсказуем. Мы решаем это классическими методами, только в некой лайтовой адаптации на нейросетевую специфику.",
+              "confirmed: The adaptation is what actually ships: the fence takes the form of an explicit total order in the boot lane every session reads (STATIC.md:185-188), which is the prose analogue the sentence claims. The book states the same move as «в некой лайтовой адаптации на нейросетевую специфику» (chapter 1:219). The consuming host also runs a fence, its own — 00-core.md:38-45 — though ordered differently; that divergence is reported on the ordering facts, not here, because this fact asserts only that a fence exists."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-HUMAN-BEATS-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:191  - The human may change the spec; nobody else may — silently.",
+              "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+              "CLAUDE.md:11  **The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; the cheap worker slots sit idle, already paid for, so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) — is the `delegation-first` flow, a static dependency of this project.",
+              "confirmed: The relation is installed (STATIC.md:191) and restated host-side (00-core.md:40, «Human wins conflicts with the spec»). The interesting half — that a human instruction is a spec change waiting to be written down — is visible in this repository's practice: CLAUDE.md is full of owner directives converted into standing text with the date they were spoken, e.g. «**The directive is now installed.**» at :20, the operating-facts ledger «Owner grant (2026-07-12)» at :64-70, and «owner directive 2026-07-26» at :159. The spec campaign records the owner's words verbatim before acting on them (SPEC-ACTUAL"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-SPEC-BEATS-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:192  - Code must conform to the spec, never the other way around.",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:154  question here, set status `returned`. Do not invent semantics and do not",
+              "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:148  // <!-- REVIEW: DRIFT-029 asked for this write to be suppressed, so a",
+              "confirmed: The three-way choice the row describes — conform, or dispute with a marker, never edit the spec — is exactly what one host task did, in writing. DRIFT-029's stop rule spells out the prohibition («Do not invent semantics and do not edit the spec», :154-155); the executor found PROP-038 §2.1 deciding against the requested fix and left a marker instead of either, recording it at `hybrid_emit.rs:148-160` and reporting it at DRIFT-029.md:266. DRIFT-030 is a second instance of the same shape. So this relation is not merely installed here — it has been the operative rule in a live disagreement twice."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-TESTS-ARE-THE-SPEC-EXECUTABLE": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:193  - Tests are the spec in executable form: a test that contradicts the",
+              "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
+              "DRIFT: the host's model has no Tests rung to be equal to. Installed at STATIC.md:193 and sourced verbatim in redbook chapter 1:210, but the consuming project's own reading layers name four — Head, WAL, Spec, Code — and fold tests into the last. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-CODE-BEATS-WAL": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:195  - The volatile state file (WAL or equivalent) is a record, dead last:",
+              "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
+              "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
+              "DRIFT on the ordering, confirmed on the remedy. «Correct the record, not the truth» is host practice and mechanised — the WAL is rewritten wholesale at session end (00-core.md:64). But the relation itself is inverted: this row makes the WAL the lowest rung, beneath Code, and the host places it SECOND of four, above both Spec and Code, reading it at boot step 2 as the description of current state. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-ORDER-IS-TOTAL-AND-ACYCLIC": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:213  Камень, ножницы, бумага — камень, ящерица, Спок.",
+              "confirmed: Two checks. Formally: the installed line is a chain of four `>` relations over five distinct terms with no relation stated in the reverse direction anywhere in the package — I grepped the three flow documents and the snippet for any `WAL >`, `Code >` or `Tests >` and found none — so the order as written is total and acyclic. Provenance: the rock-paper-scissors-lizard-Spock allusion is lifted from redbook chapter 1 line 213, where it appears in Russian directly under the hierarchy list. The host's own four-layer order (00-core.md:40-43) is likewise a chain, though a different one."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "predictability-is-the-entire-point": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:185  Every disagreement between layers is settled by fixed priority:",
+              "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+              "confirmed: The premise is installed and reachable (STATIC.md:185-196; the host's own version at 00-core.md:38-43). The consequence — that no mid-write negotiation happens and readers resolve instantly — is a behavioural prediction with no host measurement I could find. I looked for the closest observable: how the host actually resolved its 311 drift rows. The answer runs against instant resolution — nine rows survived two full waves and had to be handed to the owner as escalations (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1204-1209), i.e. the table did not settle them. Partial: the table exists, the frictionl"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "newer-appears-nowhere-in-the-table": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+              "spec/boot/STATIC.md:227    newer. Recency is not authority; the hierarchy is.",
+              "confirmed: Checked mechanically rather than by reading. `grep -n 'newer' packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md` returns lines 74, 76-77, 80-81 and 168 — every one of them is either this sentence, its follow-up, the forbidden-move warning, or the worked example's narration of an agent reasoning by recency. None is a row of the table at 59-64, and the table's four rows contain no time-based term. So the claim about the table's contents holds literally. Same result in the installed copy."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "RECENCY-IS-EVIDENCE-OF-WHEN-NOT-OF-AUTHORITY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:227    newer. Recency is not authority; the hierarchy is.",
+              "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+              "confirmed: Installed at STATIC.md:226-227 in the imperative form. The host uses timestamps in exactly the way the claim permits and no further: age triggers a check with a human, never a decision — the 24-hour WAL gate says «verify the state with the user» (00-core.md:15), and `vibe check`'s `wal_freshness` and `review_aging` both emit warnings only, never errors (docs/commands/check.md:32, :38; exit-code rule at :44). So in this repository recency raises a question and a human answers it, which is the distinction the sentence draws."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-MOST-DAMAGING-MOVE-IS-SYNCING-THE-SPEC-TO-NEWER-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:226  - Never resolve a spec-vs-code disagreement by assuming the code is",
+              "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back. @impl/done",
+              "confirmed: This is the fact the brief flagged for a history search, and the history answers it precisely. The host does sync the spec to shipped code — 183 `docs(spec):` commits — but never on the ground the claim forbids. `4ea09ad0` states the ground explicitly: «Sync-from-code, applied on the owner's approval … The code was right; the contract caught up. Zero code changes», and records the owner being consulted on a follow-up question and declining. The authority is the human ruling plus the named flow, not the code's age. The host also blocks the unauthorised form structurally: `spec/boot/00-core.md` "
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "TESTS-SIT-BESIDE-THE-SPEC-NOT-BELOW-IT": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+              "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+              "DRIFT, and it is the sharpest single instance of the divergence. The flow: «Tests sit beside the spec, not below it». The host: `spec/boot/00-core.md:43` reads «**Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts», which places tests BELOW the spec and inside the artefact layer — the exact arrangement this fact exists to forbid. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-corollary-is-a-sharp-diagnostic-rule": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:193  - Tests are the spec in executable form: a test that contradicts the",
+              "spec/boot/STATIC.md:194    spec is a bug in exactly one of the two, never both.",
+              "confirmed: A structural claim about the document — that the next sentence is a diagnostic rule derived from the previous one — checked by reading lines 86-96 in order: premise at 86-87, the announcement at 89, the blockquoted rule at 91-92, the two branches at 94-96. The rule does follow as stated. The installed boot snippet compresses premise and corollary into one bullet (STATIC.md:193-194), preserving the derivation. No source-2 check applies to a claim about this file's own rhetorical structure."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "A-TEST-CONTRADICTING-THE-SPEC-IS-A-BUG-IN-EXACTLY-ONE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:193  - Tests are the spec in executable form: a test that contradicts the",
+              "spec/boot/STATIC.md:194    spec is a bug in exactly one of the two, never both.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:211  противоречит спеке, это баг в тесте или в спеке, но не в обоих)",
+              "confirmed: Installed verbatim (STATIC.md:193-194) and sourced verbatim — redbook chapter 1 lines 210-211 say «это баг в тесте или в спеке, но не в обоих», the same exclusive-or. Unlike the beside-not-below claim, this one survives the host's different layering: it needs only that a contradiction has exactly one wrong side, not that tests rank equal to spec. I looked for a host instance of the diagnosis being applied and found the campaign's manual-test findings — MT-01's expectations describing a superseded keymap were re-authored as F-037 rather than the shipped keymap being changed (SPEC-ACTUALIZATION-"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "EITHER-THE-TEST-IS-STALE-OR-THE-SPEC-PROSE-HAS-DECAYED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:738  TUI keymap (shipped: F1…F6 menus, Shift+arrows tabs, Esc+confirm",
+              "spec/boot/STATIC.md:207  <!-- REVIEW: <what you would change> because <reason> -->",
+              "confirmed: Both branches are observable in this host, so I checked them separately. Branch one (test stale, fix the test): the campaign found MT-01's expectations describing the pre-revision TUI keymap while the shipped keymap was F1…F6 menus, and dispositioned it as an F-037 re-author of the test document (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:737-741). Branch two (spec decayed, dispute with a marker and let the human rule): `model.rs:30-33` and `rollup.rs:162-164` are two live markers doing exactly that, and DRIFT-029/030 record two more. The same paragraph also records the third case the flow does not c"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-FORBIDDEN-THIRD-PATH-IS-WEAKENING-THE-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:21  - ##VIBE-INDEX-ROT Earlier, the `vibe-index` crate — then a separate Cargo workspace, outside `cargo test --workspace` — rotted unnoticed until a state review found its suite red. @spec/done",
+              "confirmed: Searched for host machinery against test-weakening. PROP-013 makes test integrity its own audit category (A) and records the precedent that motivated it — a crate outside the workspace gate whose suite rotted unnoticed (:21), which is the tripwire being lost by omission rather than by weakening. I widened to `AUDIT.md` for a finding of the weakening form, to `DEV-GUIDE.md` and `crates/**` for an `#[ignore]` / skip-count policy, and to the campaign task template for a prohibition on relaxing assertions: `templates/impl-task.md` §8 forbids inventing semantics but says nothing about tests. Partia"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-agent-will-sometimes-believe-the-spec-is-wrong": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:148  // <!-- REVIEW: DRIFT-029 asked for this write to be suppressed, so a",
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1213  owner resolved without widening anything. **F-046's `BASELINE-RECORD`**",
+              "confirmed: Both halves are recorded here. The agent believing the spec wrong: four live markers in the crates, each written as a disagreement addressed to the owner. The agent being wrong about it: the campaign's resolution log at SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1212-1214 records an escalation that dissolved on inspection — «**F-046's `BASELINE-RECORD`** turned out not to be a wire-or-demote question at all», i.e. the raised disagreement was not one. That is the second half of the sentence, observed."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "the-protocol-when-that-happens": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:109  1. ##REVIEW-STEP-IMPLEMENT-WHAT-THE-SPEC-SAYS **Implement what the spec says.** The spec wins the current cycle,",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:132  Конкретный протокол для AI, когда он считает, что спека ошибочна:",
+              "confirmed: A structural claim: the numbered list at 109-124 has exactly four items (109, 111, 120, 123). Traced to source — redbook chapter 2 line 132 announces «Конкретный протокол для AI, когда он считает, что спека ошибочна:» followed by four numbered steps at 134-137, in the same order. The package's four steps are the book's four steps, expanded."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "REVIEW-STEP-IMPLEMENT-WHAT-THE-SPEC-SAYS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:203  If you believe the spec is wrong: **implement the spec anyway**, add",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:155  edit the spec.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:134  1. Реализует то, что написано в спеке (спека побеждает).",
+              "confirmed: Installed at STATIC.md:203, sourced verbatim at redbook chapter 2 line 134 («спека побеждает»), and enforced host-side by task contract: DRIFT-029's stop rule ends «Do not invent semantics and do not edit the spec» (:154-155). What the two live DRIFT cases show is a variant the step does not name — the executor could not implement the spec's reading and the task's instruction at once, so it implemented NEITHER and returned. `hybrid_emit.rs:152-153` records it: «so the task stopped for an owner ruling rather than contradict the spec». The spec still won; the cycle produced no change instead of "
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "REVIEW-STEP-ADD-A-MARKER-WITH-A-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:207  <!-- REVIEW: <what you would change> because <reason> -->",
+              "crates/progress-core/src/rollup.rs:162  // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "packages/org.vibevm.fractality/CLAUDE.md:331  <!-- REVIEW: if ISO год-месяц-число was actually intended (the",
+              "confirmed: Widened past the brief's 1-hit narrow grep and the picture reverses: the marker is used in this repository, always with a reason, in five places. Four in code, at the disputed point: `hybrid_emit.rs:148`, `bootgen.rs:89`, `rollup.rs:162`, `model.rs:30`. One in Markdown: `packages/org.vibevm.fractality/CLAUDE.md:331`, disputing a date-order convention. Every one carries a because-clause — rollup.rs:162-164 gives the condition and the consequent action, model.rs:30-33 gives the silence and the conservative reading, fractality/CLAUDE.md:331-333 names the alternative and the cost of switching («fl"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "REVIEW-STEP-SURFACE-IT-IN-THE-END-OF-SESSION-REPORT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:267  `hybrid_emit.rs:148-160` (house form `// <!-- REVIEW: … -->`, per",
+              "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:136  3. Сообщает человеку в отчёте: «Я реализовал фиксированный таймаут, как в спеке, но предлагаю рассмотреть exponential backoff — см. REVIEW в PROP-001§5.3».",
+              "confirmed: The step, the channel, and two firings. The obligation is host-authored at 00-core.md:60 and installed at STATIC.md:210. The channel exists as a hard contract: CLAUDE.md's session-end command requires a written `CONTINUE.md` plus a chat summary naming file paths and blockers (:178-192). The firings are DRIFT-029.md:266-267 and DRIFT-030.md:280-282, each naming the marker's file and exact line range in the task's own report section — «at `hybrid_emit.rs:148-160`» and «(`crates/vibe-workspace/src/install/bootgen.rs:87-107`)». Source at redbook chapter 2 line 136."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "REVIEW-STEP-THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:210  — and surface it in the end-of-session report. The human decides in",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1213  owner resolved without widening anything. **F-046's `BASELINE-RECORD`**",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:137  4. Человек решает в следующем цикле.",
+              "confirmed: The rule is installed (STATIC.md:210-211) and sourced verbatim (redbook chapter 2 line 137). The host runs the deciding cycle for its ESCALATIONS — SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1212-1214 records both handed to the owner and resolved in the following wave. What I could not confirm is the same cycle for MARKERS: all four live REVIEW markers in the crates are still in place, the two oldest (`rollup.rs:162`, `model.rs:30`) predating the DRIFT-029/030 pair that cites `rollup.rs:162` as the established house form, so none has been through the accept-or-reject step. `git log --grep='REVIEW'` s"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "three-lines-of-text": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:211  the next cycle. Never silently override. Three lines of text; seconds",
+              "crates/progress-core/src/rollup.rs:162  // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:139  Три строки текста. Секунды на написание. Минута на чтение.",
+              "confirmed: Sourced verbatim (redbook chapter 2:139) and installed (STATIC.md:211). Measured against the host's own markers rather than assumed: `rollup.rs:162-164` is exactly three lines, and is the one the DRIFT tasks cite as the house form. The other three are longer — `model.rs:30-33` four, `packages/org.vibevm.fractality/CLAUDE.md:331-333` three, `bootgen.rs:89-107` nineteen, `hybrid_emit.rs:148-160` thirteen. Two of five meet the figure. Partial: the figure is achievable and achieved, but is not what the host's markers typically cost."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "seconds-to-write-a-minute-to-read": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:211  the next cycle. Never silently override. Three lines of text; seconds",
+              "spec/boot/STATIC.md:212  to write; a minute to read.",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:139  Три строки текста. Секунды на написание. Минута на чтение.",
+              "confirmed: Searched separately from the three-lines fact even though the two travel together. The write/read cost is a duration and nothing in this repository measures durations — no timing data in `AUDIT.md`, no cost field in the DRIFT task logs, and the `§9. Log` section of the task template records timestamps of claim and completion for a whole task, not for a marker (templates/impl-task.md:88). The line count is a proxy and is reported on the three-lines row. Partial: installed and sourced, the quantity itself unmeasurable on this perimeter."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "that-is-the-entire-price-of-no-silent-override": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:211  the next cycle. Never silently override. Three lines of text; seconds",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:269  flip. No behavioural change; §6 acceptance not run, since no fix was attempted.",
+              "the price the fact names is the MARKER protocol's overhead — three lines, seconds to write — and that is what the host's five markers cost. Recorded: resolving the underlying disputes cost more (DRIFT-029 spent two files and produced no fix), but that is the price of the disagreement, not of the fence."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "MARKER-GOES-IN-THE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.fractality/CLAUDE.md:331  <!-- REVIEW: if ISO год-месяц-число was actually intended (the",
+              "spec/boot/STATIC.md:207  <!-- REVIEW: <what you would change> because <reason> -->",
+              "confirmed: One instance found, and it is outside `spec/`. `packages/org.vibevm.fractality/CLAUDE.md:331-333` places an HTML-comment marker directly beneath the contested clause — a filename date-order convention — and disputes what the rule should be, which is exactly this placement rule. But the host's own `spec/**` tree contains no open marker: `grep -rn '<!-- REVIEW:' spec/` returns five hits and all five are definitions or templates (STATIC.md:207, 00-core.md:60, PROP-043:552, templates/impl-task.md:80, SPEC-ACTUALIZATION-CAMPAIGN:50), not disputes. Partial: the placement is used once, in a contract "
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "MARKER-GOES-IN-THE-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "crates/progress-core/src/rollup.rs:162  // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "crates/vibe-workspace/src/install/bootgen.rs:89  // <!-- REVIEW: DRIFT-030 §4 step 1 — this append is a SECOND write path",
+              "campaigns/packages-2026-09/tasks/DRIFT-030.md:282  `// <!-- REVIEW: … -->` per `crates/progress-core/src/rollup.rs:162`), and this",
+              "the placement rule is the host's dominant practice — four of five live markers sit in Rust source beside the disputed implementation. Recorded rather than counted: the host writes a house form, `// <!-- REVIEW: … -->`, which satisfies «the language's own comment syntax» while carrying the HTML form the fact reserves for Markdown. The primary rule is followed; its parenthetical exclusion is bent, self-citingly, so one grep finds both shapes."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "MARKER-ALWAYS-CARRIES-A-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:31  // silent on the state tiebreak within one stage. Conservative reading",
+              "crates/progress-core/src/rollup.rs:163  // from unanimous children is an error rather than information,",
+              "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:150  // `##UNIT-PER-PACKAGE` decides the opposite — \"Every package materialised",
+              "packages/org.vibevm.fractality/CLAUDE.md:332  spoken order says число before месяц), flipping this line is the",
+              "confirmed: Checked every live marker for a reason rather than assuming. All five carry one, stated in the marker body: `model.rs:30-33` gives the silence and the conservative reading chosen; `rollup.rs:162-164` gives the condition under which the class should change and the change to make; `hybrid_emit.rs:148-160` cites the spec anchor that decides the opposite and quotes it; `bootgen.rs:89-107` names the second write path and the measurement that found it; `packages/org.vibevm.fractality/CLAUDE.md:331-333` names the alternative reading and the edit cost. Zero bare markers found. The host's linter also d"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "on-first-contact-it-reads-as-bureaucracy": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:217  На первый взгляд это выглядит как бюрократия. Но заметьте, основная проблема бюрократии в Реальности — то, что это долго, дорого, и в конечном итоге не приводит ни к чему хорошему. Описанные выше процессы — быстрые, дешевые (явно дешевле в токенах, чем работа в режиме ризонинга с никак не описанным кодом), и приводят к фантастическому росту качества результата.",
+              "confirmed: A claim about a reader's first impression, so only its provenance is checkable. It is lifted from redbook chapter 1 line 217, «На первый взгляд это выглядит как бюрократия», which opens the same rebuttal. I widened to look for any host record of the protocol being received as overhead — `grep -rn -i 'bureaucra' spec/ CLAUDE.md campaigns/ AUDIT.md BACKLOG.md` returns nothing — so no consumer reaction is recorded either way. `src` is [1]: the boot snippet omits this passage, so it is not in the installed lane."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "the-protocol-is-the-opposite-on-all-three-axes": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:217  На первый взгляд это выглядит как бюрократия. Но заметьте, основная проблема бюрократии в Реальности — то, что это долго, дорого, и в конечном итоге не приводит ни к чему хорошему. Описанные выше процессы — быстрые, дешевые (явно дешевле в токенах, чем работа в режиме ризонинга с никак не описанным кодом), и приводят к фантастическому росту качества результата.",
+              "confirmed: The three-axis rebuttal is the book's, at chapter 1 line 217, including the token-cost comparison («явно дешевле в токенах, чем работа в режиме ризонинга с никак не описанным кодом»). None of the three axes is measured in this repository: no timing data, no token accounting for a marker versus a reasoning session, and the one-line-decision claim runs against the host's two escalations, which took a wave each to resolve (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1212-1214). Partial — sourced but unmeasured, with one counter-observation on the third axis."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "CHEAP-PROCESS-THAT-PREVENTS-EXPENSIVE-ARCHAEOLOGY-IS-A-FENCE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+              "docs/commands/check.md:22  | `--review-max-age-days` | `<!-- REVIEW: YYYY-MM-DD -->` marker age threshold. | `14` |",
+              "confirmed: The host has built the cheap side: a `grep -rn` audit category (PROP-013:49) and a linter check with a 14-day threshold that never fails a build (docs/commands/check.md:22, :44). What is not evidenced is the prevention — no archaeology dig is recorded as having been avoided, and none as having been needed. `grep -rn -i 'archaeolog' spec/ campaigns/ AUDIT.md CLAUDE.md` returns nothing outside this package, and the term does not appear in the redbook chapters either, so the framing is the flow's own rather than the book's. Partial."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "a-worked-example-needing-no-malice": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md:34  ##f1-nothing-physical-prevents-it **Why it happens.** Nothing physical prevents it: the spec is a file,",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:376  **Сбой 1: AI обновил спеку без уведомления.** Diff показывает: AI заменил «600 seconds» на «300 seconds with exponential backoff». Исправление: откати спеку (`git checkout`), оставь код. В начале следующей сессии: «Ты изменил спеку без REVIEW. Откатываю. Если считаешь, что exponential backoff лучше — добавь REVIEW, обсудим». И добавь в CLAUDE.md: «Never modify spec values without REVIEW marker».",
+              "confirmed: Read the example at 161-180 step by step against the claim: Day 0 is an agent's local optimisation, Day 7 a fresh session reasoning from recency, Day 14 the human's correction — no step requires bad faith. The package's own sibling document argues the same mechanism at failure-modes.md:34-40 («Nothing physical prevents it … the agent's local reasoning … feels to it like a favor, not a violation»). The example's opening move — 600 s silently replaced by 300 s with exponential backoff — is the book's Сбой 1 verbatim in its values (redbook chapter 2:376), so the scenario is the book's incident wi"
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "THIS-IS-A-DATA-RACE-AT-FILE-LEVEL": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:219  Технологически, это *memory fence* из concurrent programming. Без явных правил приоритета два процесса неизбежно создадут race condition, и результат будет непредсказуем. Мы решаем это классическими методами, только в некой лайтовой адаптации на нейросетевую специфику.",
+              "confirmed: The diagnosis matches the framing it is drawn from: redbook chapter 1 line 219 states the general form — no explicit priority rules, therefore a race condition with an unpredictable result — and the example at 161-180 instantiates it with a concrete value (600 s versus 300 s) that neither writer chose. I widened host-side for the vocabulary: `grep -rn -i 'data race\\|race condition' spec/ crates/ CLAUDE.md campaigns/` returns nothing, so the consuming project does not use this framing. `src` [1] — the passage is not in the boot snippet and so not in the installed lane."
+            ],
+            "src": [
+              1
+            ]
+          },
+          "WITH-THE-PROTOCOL-THE-CHAIN-NEVER-STARTS": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "crates/progress-core/src/model.rs:32  // implemented here: hold (parked) is the least advanced. Surface for owner",
+              "spec/boot/STATIC.md:203  If you believe the spec is wrong: **implement the spec anyway**, add",
+              "confirmed: The first two beats are observed in this repository and the third is not. `model.rs:30-33` is Day 0 run with the protocol: a genuine spec silence, the conservative reading implemented, a marker placed with its reason, and the text ends «Surface for owner confirmation». The chain did not start — no spec was edited, no value was changed behind anyone's back. But «the human rules on it next morning» has not happened: the marker is still open, as are the three others. Checked `git log --grep='REVIEW'` and the campaign logs for a ruling on any of the four and found none. Partial: prevention confirm"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-MARKER-IS-A-MESSAGE-IN-FLIGHT-NOT-A-PERMANENT-ANNOTATION": {
+            "v": "confirmed",
+            "ev": [
+              "docs/commands/check.md:22  | `--review-max-age-days` | `<!-- REVIEW: YYYY-MM-DD -->` marker age threshold. | `14` |",
+              "crates/vibe-check/src/checks/review_aging.rs:1  //! Check 9 — every `<!-- REVIEW: YYYY-MM-DD ... -->` marker in",
+              "crates/progress-core/src/rollup.rs:162  // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "confirmed: The host agrees in its tooling and disagrees in its tree. Tooling: a whole shipped check exists on the premise that a marker has a lifetime and going stale is a defect (`review_aging.rs:1-3`, threshold 14 days). Tree: the four live markers are all still in place, `rollup.rs:162` is old enough that two later tasks cite it as established precedent (DRIFT-030.md:282), and none carries a date, so none is in flight in any trackable sense. Partial: the intent is mechanised, the observed markers behave as permanent annotations."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "LIFECYCLE-PLACED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-workspace/src/install/bootgen.rs:89  // <!-- REVIEW: DRIFT-030 §4 step 1 — this append is a SECOND write path",
+              "campaigns/packages-2026-09/tasks/DRIFT-030.md:280  **Landed:** the `<!-- REVIEW: … -->` marker at the convergence point",
+              "spec/modules/vibe-progress/templates/impl-task.md:80  `<!-- REVIEW: <question> -->` at the code point, record the question in the",
+              "confirmed: All three conditions verified on the host's own instances. During work: `bootgen.rs:89` was placed by DRIFT-030 and names the task in its first line. With a reason: :89-107 gives the second write path, the code paths involved, and the measurement on a fixture. At the point of disagreement: DRIFT-030.md:280-281 says «at the convergence point (`crates/vibe-workspace/src/install/bootgen.rs:87-107`)». The host's task template makes the placement mandatory and locates it — «at the code point» (templates/impl-task.md:80)."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "LIFECYCLE-SURFACED": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:267  `hybrid_emit.rs:148-160` (house form `// <!-- REVIEW: … -->`, per",
+              "campaigns/packages-2026-09/tasks/DRIFT-030.md:281  (`crates/vibe-workspace/src/install/bootgen.rs:87-107`, house form",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: Two of four markers were surfaced exactly as prescribed, with file AND line range: DRIFT-029.md:266-267 and DRIFT-030.md:280-282. The other two — `rollup.rs:162` and `model.rs:30` — I could not find surfaced anywhere: grepped `campaigns/**`, `spec/WAL.md`, `AUDIT.md`, `BACKLOG.md` and `TASKS.md` for `rollup.rs` and `model.rs` alongside REVIEW, and the only mentions are the two later DRIFT tasks citing `rollup.rs:162` as a syntax precedent, not as an open question. Partial: the stage is real and executed, but half the population reached the tree without it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "LIFECYCLE-RESOLVED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1213  owner resolved without widening anything. **F-046's `BASELINE-RECORD`**",
+              "spec/boot/STATIC.md:210  — and surface it in the end-of-session report. The human decides in",
+              "confirmed: Both branches exist in the host for ESCALATIONS: `4ea09ad0`'s body records an accept-with-spec-change («the contract caught up») and an explicit reject with the reason recorded («The owner was asked whether §4 should also constrain `inspect` … and declined: the shipped rule … stands as the whole contract»), and the campaign log records both of Phase D's escalations resolved (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1212-1214). For MARKERS specifically the stage has never run: all four live markers are unresolved. Partial — the behaviour the stage describes is present in this repository under a diff"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "LIFECYCLE-REMOVED-IN-THE-RESOLVING-CHANGE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:368  Олег смотрит diff. Один файл, три теста, WAL обновлён. Видит REVIEW — reconnection нужно решить, но не сейчас. Добавляет в WAL: «Decisions Pending: reconnection strategy». Коммитит.",
+              "a coherent prescription that has never been exercised here. Widened twice before concluding: no commit in this repository has ever removed a REVIEW marker, and the shipped linter has no removal action. Nothing has been resolved, so nothing was left in place after resolution — the stage is unreached, not broken."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "AGING-MARKERS-ARE-AUDIT-INPUT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+              "docs/commands/check.md:38  | `review_aging` | warning | `<!-- REVIEW: YYYY-MM-DD ... -->` markers in `spec/**/*.md` whose date is older than `--review-max-age-days`. Markers with non-date prose (`<!-- REVIEW: ... -->`, `<!-- REVIEW: TODO -->`) are silently skipped — they're documentation, not work. |",
+              "crates/vibe-check/src/checks/review_aging.rs:28  let spec_dir = project_root.join(\"spec\");",
+              "confirmed: This is the strongest source-2 match in the package: the host has turned the sentence into a named audit category AND a shipped check. PROP-013 §2.2 lists «**D2 · Aging markers**» among the things a health audit inventories, naming `<!-- REVIEW … -->` first and the `grep -rn` that finds them (PROP-013:49); `vibe check` implements it as check 9 (`review_aging.rs:1-3`, `lib.rs:27`). Two limits worth recording because they bound what the audit actually sees: the scan root is `spec/` only (`review_aging.rs:28`), so all four of the host's live markers — every one in `crates/` — are outside it; and "
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "A-LONG-LIVED-MARKER-MEANS-SURFACING-FAILED": {
+            "v": "confirmed",
+            "ev": [
+              "docs/commands/check.md:22  | `--review-max-age-days` | `<!-- REVIEW: YYYY-MM-DD -->` marker age threshold. | `14` |",
+              "crates/progress-core/src/rollup.rs:162  // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "campaigns/packages-2026-09/tasks/DRIFT-030.md:282  `// <!-- REVIEW: … -->` per `crates/progress-core/src/rollup.rs:162`), and this",
+              "confirmed: The host quantifies «more than a few sessions» as 14 days (docs/commands/check.md:22). Two of its four markers exceed any reasonable reading of that: `rollup.rs:162` and `model.rs:30` were in place before the DRIFT-029/030 pair, which cite `rollup.rs:162` as established house form (DRIFT-030.md:282). What I cannot settle is the claim's diagnosis — whether the surfacing channel failed. For those two I found no surfacing at all (see LIFECYCLE-SURFACED), which is consistent with the claim; for the two that WERE surfaced with file and line, the reports exist and are legible, so if they are long-li"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SWEEP-FOR-REVIEW-MARKERS-PERIODICALLY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
+              "crates/vibe-check/src/checks/review_aging.rs:28  let spec_dir = project_root.join(\"spec\");",
+              "the sweep exists with a cadence the host set for itself: PROP-013 makes `grep -rn` over REVIEW/TODO/FIXME/HACK audit item D2 at a floor of once per milestone, and Check 9 `review_aging` ships with a 14-day default. Recorded: `review_aging.rs:28` scans `spec/` only and `:61` requires a date prefix, so all four of the host's live crate markers are invisible to its own aging check — the sweep runs, and it does not see most of what it is looking for."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "two-standing-prohibitions": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:214  - ##NEVER-REMOVE-ANOTHER-WRITERS-MARKER-WITHOUT-RESOLVING-IT never remove another writer's marker",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:216  - ##NEVER-RESOLVE-YOUR-OWN-MARKER-BY-ASSUMING-AGREEMENT and never",
+              "spec/boot/STATIC.md:228  - Never remove someone else's REVIEW marker without resolving it.",
+              "confirmed: A count, checked by reading: the list at 213-217 has exactly two items, at 214 and 216. Also checked how many survive into the installed boot lane — one: the never-remove prohibition is STATIC.md:228, while «never resolve your own marker by deciding the human would probably agree» has no line in the snippet's four-item Never list (STATIC.md:224-230). So a session booting here receives one of the two."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "NEVER-REMOVE-ANOTHER-WRITERS-MARKER-WITHOUT-RESOLVING-IT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:228  - Never remove someone else's REVIEW marker without resolving it.",
+              "spec/modules/vibe-progress/PROP-043-progress-markup.md:552  `<!-- REVIEW: … -->`) are opaque text to this scanner (§2). @impl/done",
+              "crates/progress-core/tests/fixtures/foreign-grammars.md:13  <!-- REVIEW: a conflict marker that must stay untouched -->",
+              "confirmed: Checked separately from the boot-snippet row of the same rule. Installed at STATIC.md:228. The host has mechanised the tool-side half: PROP-043's `##PARSE-FOREIGN-OPAQUE` declares `<!-- REVIEW: … -->` opaque to the progress-markup scanner (:551-552), and there is a characterisation fixture whose own text asserts the guarantee — «a conflict marker that must stay untouched» (`foreign-grammars.md:13`). The human-side rule is untested: no marker has been removed by anyone, so no violation and no compliance is on record. Partial."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-RESOLVE-YOUR-OWN-MARKER-BY-ASSUMING-AGREEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:32  // implemented here: hold (parked) is the least advanced. Surface for owner",
+              "crates/progress-core/src/rollup.rs:162  // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:152  // stopped for an owner ruling rather than contradict the spec. Two facts",
+              "confirmed: Not in the installed boot lane — the snippet's Never list omits it (STATIC.md:224-230) — so I checked the host's markers directly for self-resolution and found the opposite in every one. All four defer explicitly and by name: `model.rs:32-33` ends «Surface for owner confirmation»; `rollup.rs:162` is conditional on a ruling that has not happened («if the owner rules that…»); `hybrid_emit.rs:152-153` says the task «stopped for an owner ruling rather than contradict the spec» and then hands the ruler two facts to decide with; `bootgen.rs:89-107` closes with a measurement rather than a conclusion."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "this-document-states-the-practice-in-project-neutral-terms": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:64  | ##ROW-CODE-BEATS-WAL **Code > WAL** @impl/done | The volatile state file (WAL or equivalent) is a record of where work stands, not a source of truth about intended behaviour. When it disagrees with anything above it, it is stale — correct the record, not the truth. @impl/done |",
+              "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+              "confirmed: Checked mechanically: `grep -n 'vibevm\\|PROP-0\\|crates/\\|VIBEVM-SPEC' CONFLICT-PROTOCOL.md` returns nothing — no host identifier, path or document name appears anywhere in the file. Where a project-specific artefact would be named, the text generalises: «The volatile state file (WAL or equivalent)» at :64, «the nearest similar feature in this project» rather than a directory. Contrast with the host's own instance, which binds every term to a path (00-core.md:41-43). The neutrality is real and is what makes the §219 re-derivation step necessary."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ADAPT-IT-BY-HANDING-YOUR-AGENT-THE-TASK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
+              "spec/boot/00-core.md:56  ##uncertainty-lead When the spec is silent on a question: @impl/done",
+              "campaigns/packages-2026-09/tasks/DRIFT-030.md:282  `// <!-- REVIEW: … -->` per `crates/progress-core/src/rollup.rs:162`), and this",
+              "confirmed: The host has done the re-derivation, but not by this recipe and not to this address. Steps 2 and 5 are visibly done: the layers are restated in the host's own names at 00-core.md:38-45, and the hierarchy plus a ladder do live in the boot file (:56-60) — though in `spec/boot/00-core.md`, not the prescribed `spec/flows/conflict-protocol/local.md`, and this host has no `spec/flows/` directory at all. Step 3 (marker syntax per file type) happened informally and by precedent rather than by decision — the «house form» DRIFT-030.md:282 cites is a Rust-comment-wrapped HTML marker nobody wrote down. St"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-CONTRADICTION-IS-COOPERATION-ONLY-SILENCE-DAMAGES": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:180  *will* write contradictory things; that is normal cooperation, not an",
+              "spec/boot/STATIC.md:181  error. What is forbidden is resolving a contradiction silently.",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — waves d1 + d2 landed 2026-07-25 (302 of 311 drift rows closed; the tree measures 99.7 % confirmed; 42 of 55 findings resolved) · next: the two escalations (F-046 wire-or-demote, F-035 user-owned boot file), then Phase E · vibevm-specific · first consumer of PROP-043 (Progress Control)**",
+              "confirmed: A summary line, checked against the body it summarises (33, 40-41) and against the host separately from the earlier instances of the same assertion. The host's practice matches the second clause in a measurable way: 311 contradictions were surfaced by a deliberate audit and 302 closed as ordinary scheduled work, with the nine that could not be closed escalated rather than buried (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5). Nothing in that record treats a surfaced contradiction as damage."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-FIXED-PRIORITY-SETTLES-EVERYTHING": {
+            "v": "drift",
+            "ev": [
+              "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
+              "spec/boot/STATIC.md:227    newer. Recency is not authority; the hierarchy is.",
+              "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+              "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
+              "DRIFT on the ordering half, confirmed on the other. «Recency settles nothing» holds — the host's only spec-to-code reconciliations travel through an owner ruling and the sanctioned sync path, never through an assumption that the newer file wins. The stated order does not. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-THE-REVIEW-CYCLE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "spec/boot/STATIC.md:203  If you believe the spec is wrong: **implement the spec anyway**, add",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:266  **Landed:** the `<!-- REVIEW: … -->` marker §8 requires, at",
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "confirmed: Traced the four beats through the host one at a time. Implement anyway: prescribed at STATIC.md:203 and 00-core.md:60, though the two live DRIFT cases returned without implementing rather than implementing a disputed rule. Mark with a reason: done in all five host markers. Surface: done for two of four. Human rules next cycle: not done for any marker, though done for both campaign escalations. Partial — three of four beats observed, the closing one unobserved for this artefact class."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-A-TEST-CONTRADICTING-THE-SPEC-IS-A-BUG-IN-ONE-OF-THE-TWO": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:193  - Tests are the spec in executable form: a test that contradicts the",
+              "spec/boot/STATIC.md:194    spec is a bug in exactly one of the two, never both.",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:738  TUI keymap (shipped: F1…F6 menus, Shift+arrows tabs, Esc+confirm",
+              "confirmed: First clause confirmed and exercised: the campaign found MT-01's stated expectations contradicting the shipped keymap and ruled exactly one side wrong, re-authoring the test document as F-037 (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:737-741). Second clause — never fixed by weakening the test blind — I could not find any host rule or instance for; searched `DEV-GUIDE.md`, `templates/impl-task.md`, `AUDIT.md` and PROP-013's category A for a prohibition on relaxing assertions and found none, and no commit records a weakened assertion. Partial: half the summary is exercised, half is unaddressed on the"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-MARKERS-ARE-MESSAGES-IN-FLIGHT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+              "crates/vibe-check/src/checks/review_aging.rs:28  let spec_dir = project_root.join(\"spec\");",
+              "crates/progress-core/src/rollup.rs:162  // <!-- REVIEW: if the owner rules that a section marker diverging",
+              "confirmed: The four-stage summary measured stage by stage against this host: placed — all four live markers qualify; surfaced — two of four; resolved — none; removed — none, and no commit in the repository's history removes a marker. The aging premise is institutionalised (PROP-013:49) and mechanised (`review_aging.rs`), but the mechanism's scan root is `spec/` (`:28`) and its date requirement (`:61`) exclude all four of the markers that exist, so the tool would report a clean tree while four markers sit open in `crates/`. Partial: the first half of the lifecycle runs here, the second half has never run,"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T20:07:01Z",
+        "verify_batch": "W3"
+      }
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md": {
       "content_hash": "0945aed1ab5fc2af65a77baa904d04b7cad765011ac543d39c41382aeda0afe0",
