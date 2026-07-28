@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T20:07:01Z",
+  "updated_at": "2026-07-28T20:08:35Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -26273,7 +26273,615 @@
       },
       "marker_count": 65,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "7860349feb503892e50fa667f2fdcc4d197b44aa84130e237a46b199b5ac6dbf",
+        "verdicts": {
+          "scope-of-this-document": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md:40  ## The ladder {#ladder}",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md:65  ## What \"conservative\" means {#conservative}",
+              "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md:93  ## When to stop and ask instead {#stop-and-ask}",
+              "confirmed: All three promised parts present at the announced headings, plus §11 Silence-is-not-a-conflict and §121 Worked example. The ladder at 45-50 has exactly four rows. Byte-identical in the installed slot (`diff` against `vibedeps/flow-conflict-protocol/0.1.0/…/uncertainty-protocol.md` empty). No source-2 check applies to a claim about the file's own contents."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "THE-CONFLICT-PROTOCOL-HANDLES-DISAGREEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:185  Every disagreement between layers is settled by fixed priority:",
+              "spec/boot/STATIC.md:201  ## The REVIEW contract {#review}",
+              "spec/boot/STATIC.md:214  ## When the spec is silent {#uncertainty}",
+              "confirmed: The division of labour the sentence asserts is visible in the shape of the installed snippet itself: the hierarchy section (STATIC.md:183-196) handles two-answers, and a separate section starting at :214 handles no-answer. The host mirrors the split in its own boot file — reading layers at 00-core.md:36-45, a distinct «## Uncertainty protocol» heading at :54. Both texts treat them as different problems with different machinery."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "UNCERTAINTY-IS-THE-OTHER-CASE-NO-SOURCE-ANSWERS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:56  ##uncertainty-lead When the spec is silent on a question: @impl/done",
+              "spec/modules/vibe-progress/templates/impl-task.md:79  - ##STOP-RULE If the spec is silent or ambiguous on a point you need: STOP, mark",
+              "crates/progress-core/src/model.rs:31  // silent on the state tiebreak within one stage. Conservative reading",
+              "confirmed: The host names the case in the same terms three times, at three levels. Boot contract: «When the spec is silent on a question» (00-core.md:56). Task contract: «If the spec is silent or ambiguous on a point you need» (templates/impl-task.md:79). And an actual occurrence in the code, where a marker records a real instance — PROP-043 §3.10 «is silent on the state tiebreak within one stage» (`model.rs:30-31`). Silence as a distinct category from disagreement is established practice here."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "two-examples-of-silence": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "crates/progress-core/src/model.rs:31  // silent on the state tiebreak within one stage. Conservative reading",
+              "confirmed: The two examples are hypotheticals from an imaginary job system and nothing in this repository instantiates them — `grep -rn 'RUNNING' crates/ --include=*.rs` finds no job-state machine of that shape. What I found instead is the same SHAPE of silence in this host, recorded verbatim: «PROP-043 §3.10 fixes the stage order for worst-of rollup but is silent on the state tiebreak within one stage» (`model.rs:30-31`) — a spec that fixes an ordering but not the boundary case inside it, which is the second example's structure exactly. Located: the claim is illustrative and the host supplies a real ins"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "BOTH-CASES-TEMPT-THE-SAME-FAILURE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:220  silently invent semantic behavior. Full ladder:",
+              "spec/boot/STATIC.md:229  - Never invent semantics when the spec is silent — mark the choice",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: The common failure is prohibited twice in the installed snippet, once under uncertainty (STATIC.md:219-220) and once in the Never list (:229-230), which is the structural confirmation that both cases lead to it. The host's own ladder ends with the same sentence in a user-owned file (00-core.md:60), so the prohibition reaches a session here from both directions."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "invention-overrides-or-fabricates": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:211  the next cycle. Never silently override. Three lines of text; seconds",
+              "spec/boot/STATIC.md:229  - Never invent semantics when the spec is silent — mark the choice",
+              "confirmed: The two verbs the sentence distinguishes are the two verbs the installed snippet prohibits separately — «Never silently override» in the REVIEW contract (STATIC.md:211) and «Never invent semantics when the spec is silent» in the Never list (:229). Two prohibitions rather than one, matching the two failure shapes. Host-side both reach a session; the task template's version collapses them into «Do not invent semantics» (templates/impl-task.md:81), which is the silence half only."
+            ],
+            "src": [
+              1,
+              3
+            ]
+          },
+          "SILENT-INVENTION-IS-WORSE-BECAUSE-IT-IS-INVISIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:229  - Never invent semantics when the spec is silent — mark the choice",
+              "spec/modules/vibe-progress/templates/impl-task.md:81  task file under this section, set status `returned`. Do not invent semantics. @spec/done",
+              "confirmed: The ranking — invisible invention worse than a visible wrong answer — is a comparative judgment with no measurement on this perimeter. What the host does supply is agreement in its severity handling: the prohibition is absolute and unconditional in both places it appears (STATIC.md:229, templates/impl-task.md:81), with no threshold or exception, while wrong answers are routine and get scheduled (`BACKLOG.md`, 311 drift rows). I widened to `AUDIT.md` and PROP-013's categories for a defect class of undocumented behaviour and found none — the closest is category C, drift, which is documented-vers"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "NEVER-SILENTLY-INVENT-SEMANTIC-BEHAVIOR": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "spec/boot/STATIC.md:219  mark it with a REVIEW, proceed, and flag it in the report. Never",
+              "spec/boot/STATIC.md:220  silently invent semantic behavior. Full ladder:",
+              "confirmed: Checked separately from the boot-snippet anchor of the same name. This is the single strongest word-for-word source-2 match in the package: the host's own uncertainty ladder ends with the identical sentence, «Never silently invent semantic behavior» (00-core.md:60), in `spec/boot/00-core.md` — a user-owned file the campaign refuses to edit, so it is host-authored text rather than a compiled contribution. The installed snippet says the same at STATIC.md:219-220."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "the-ladder-is-how-to-progress-without-inventing": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:56  ##uncertainty-lead When the spec is silent on a question: @impl/done",
+              "spec/boot/STATIC.md:216  Re-read the relevant spec section → re-read the relevant reference",
+              "crates/progress-core/src/model.rs:32  // implemented here: hold (parked) is the least advanced. Surface for owner",
+              "confirmed: Both halves observed in one host instance. Progress: `model.rs` shipped a working `Ord` derive on the `State` enum despite the spec silence — the code exists and compiles (`:34-40`). Without inventing: the choice is marked, its reasoning stated, and handed up — «Conservative reading implemented here: hold (parked) is the least advanced. Surface for owner confirmation» (`:31-32`). The ladder producing forward motion under an unresolved question is exactly what that file records."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CLIMB-IN-ORDER-AND-STOP-AT-THE-FIRST-RUNG-THAT-ANSWERS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:56  ##uncertainty-lead When the spec is silent on a question: @impl/done",
+              "spec/boot/00-core.md:57  1. ##UNC-STEP-SPEC Re-read the relevant section of `VIBEVM-SPEC.md`. @impl/done",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "spec/boot/STATIC.md:216  Re-read the relevant spec section → re-read the relevant reference",
+              "confirmed: This is the fact the brief asked me to measure against the host's own ladder, and it matches on ordering and on the stop-at-first-answer semantics. The host's list is numbered 1-4 in the same sequence (00-core.md:57-60), and its rung 4 is explicitly conditional — «If still unclear» — which is the stop-at-the-first-rung-that-answers rule expressed as a guard rather than an instruction. The installed version uses arrows and the same conditional, «→ … → … → if still unclear» (STATIC.md:216-218). Per-rung differences are reported on the four ROW-LADDER rows."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:57  1. ##UNC-STEP-SPEC Re-read the relevant section of `VIBEVM-SPEC.md`. @impl/done",
+              "spec/boot/STATIC.md:216  Re-read the relevant spec section → re-read the relevant reference",
+              "confirmed: Rung 1 matches the host's rung 1 in position and action, with the host binding it to a named document — `VIBEVM-SPEC.md` (00-core.md:57) — where the flow says «the relevant spec section» generically. The «in full, not the one line you remember» qualifier is not in the host's wording; the nearest host expression of it is the campaign mandate's insistence on reading «каждую строчку» against the LLM's tendency to simplify (SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:20-22). The claim's second column — that most silence is a narrow first read — is a frequency claim nothing here measures, but it does not c"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:58  2. ##UNC-STEP-BOOK Re-read the relevant chapter in `refs/book/`. @impl/done",
+              "spec/boot/STATIC.md:216  Re-read the relevant spec section → re-read the relevant reference",
+              "spec/boot/STATIC.md:217  chapter → check the closest analog in the project → if still unclear,",
+              "confirmed: Rung 2 is the host's rung 2, and the host has picked one of the four material types the flow lists: «the relevant chapter in `refs/book/`» (00-core.md:58) — the book chapter, bound to a path. The `refs/book/` directory holds the three chapters and is on the host's do-not-touch list as read-only reference material (00-core.md:28 names `refs/book/` as the user's book). The intent-versus-decision rationale is not restated host-side, but the composition is: this package's README attributes its own practice to those chapters, and the host's rung 2 points at the same files."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:59  3. ##UNC-STEP-ANALOGS Look at the closest analog under `refs/src/` (cargo, uv, spec-kit). @impl/done",
+              "spec/boot/STATIC.md:217  chapter → check the closest analog in the project → if still unclear,",
+              "spec/modules/vibe-progress/templates/impl-task.md:75  ##analogies-format \"Do it like X\": `crates/<…>` — the closest existing shape to imitate. @spec/done",
+              "the host follows this rung's SECOND branch: `spec/boot/00-core.md:59` sends the reader to «the closest analog under `refs/src/` (cargo, uv, spec-kit)», which is precisely «the project's named reference implementations» this row admits. Recorded: the package's own two texts disagree about the rung — the boot snippet offers only the in-project half — and the host follows the wider protocol form rather than the narrower compiled one."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "crates/progress-core/src/model.rs:31  // silent on the state tiebreak within one stage. Conservative reading",
+              "crates/progress-core/src/model.rs:32  // implemented here: hold (parked) is the least advanced. Surface for owner",
+              "confirmed: Rung 4 is the host's rung 4 with all four actions present and in the same order — mark, choose conservatively, proceed, flag (00-core.md:60). And it has been executed: `model.rs:30-33` is a rung-4 outcome in the tree, naming the silence, the conservative reading, the choice implemented, and the surfacing. The only element I could not verify is the flagging having reached a report for that particular marker (see LIFECYCLE-SURFACED), but the instruction and three of its four actions are directly observable."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STEP-4-IN-FULL-THE-MARKER-CARRIES-THE-QUESTION-AND-THE-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-progress/templates/impl-task.md:80  `<!-- REVIEW: <question> -->` at the code point, record the question in the",
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "campaigns/packages-2026-09/tasks/DRIFT-037.md:155  `<!-- REVIEW: <question> -->` at the code point, record it here, set status",
+              "confirmed: The question half is host convention and written into the template: the prescribed form here is `<!-- REVIEW: <question> -->` (templates/impl-task.md:80, instantiated verbatim at DRIFT-037.md:155) — question only, no reason slot. The reason half is present in practice anyway: `model.rs:30-33` states both the silence and why the chosen reading was picked. So the host carries both, but through two instruments — the template mandates the question and the writers add the reason by habit. Partial: the compound form the flow specifies is not the form the host's template prescribes."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-REPORT-NAMES-THE-MARKER-AND-THE-HUMAN-RULES": {
+            "v": "confirmed",
+            "ev": [
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:266  **Landed:** the `<!-- REVIEW: … -->` marker §8 requires, at",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: First clause observed: two host reports name their marker with file and line (DRIFT-029.md:266-267, DRIFT-030.md:280-282). Second and third clauses not observed for markers: no ruling has been made on any of the four live markers and no spec has gained a sentence because of one. The host HAS gained spec sentences from ruled disagreements by another route — `4ea09ad0`'s «§4 gains the four verbs the code already shipped … applied on the owner's approval» — but that ran through sync-from-code and a direct question, not through a marker. Partial."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-LADDER-NEVER-ENDS-IN-SILENCE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "spec/modules/vibe-progress/templates/impl-task.md:81  task file under this section, set status `returned`. Do not invent semantics. @spec/done",
+              "confirmed: The host's ladder has the same terminal guarantee — rung 4 is unconditional once reached (00-core.md:60), so a session always exits with either an answer or a marked default. But the host has added a THIRD exit the flow's ladder does not have: the task-level stop rule ends in «set status `returned`» (templates/impl-task.md:79-81), i.e. the work stops and goes back rather than proceeding conservatively, and both live DRIFT cases took that exit — DRIFT-029.md:269, «No behavioural change … no fix was attempted». That is a marked stall, which this sentence says the ladder never produces. Partial: "
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONSERVATIVE-IS-NOT-SMALLEST-DIFF-OR-LEAST-EFFORT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:218  pick the conservative interpretation (the one cheapest to reverse),",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: The installed snippet carries the positive definition with its gloss — «the conservative interpretation (the one cheapest to reverse)» (STATIC.md:218) — which excludes the two wrong readings implicitly. The host's own rung 4 uses the bare phrase «the conservative interpretation» with NO gloss at all (00-core.md:60), so a session reading only the host's ladder gets the term undefined and could take either of the readings this sentence rules out. I widened for a host definition — grepped `spec/`, `CLAUDE.md`, `DEV-GUIDE.md` for `conservative` — and found no other. Partial: the disambiguation is "
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "CONSERVATIVE-IS-CHEAPEST-TO-REVERSE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:218  pick the conservative interpretation (the one cheapest to reverse),",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "confirmed: Installed with the definition intact (STATIC.md:218). The host uses the same metric — reversal cost — as the hinge of its fourth non-negotiable rule: routine work proceeds without asking, and what stops is «anything whose reversal costs work» (00-core.md:24). So cost-to-reverse is the criterion this project already sorts decisions by, at the level of a standing rule rather than only inside the uncertainty ladder. That is the same test applied to a wider class."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "THE-TEST-HOW-MUCH-WORK-IS-THROWN-AWAY-AND-WHOSE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "crates/progress-core/src/rollup.rs:159  // reports at **warning** severity and never fails a gate. It becomes",
+              "confirmed: The «how much work» half is host law (00-core.md:24). The «and whose» half — the cost falling on someone other than the chooser — is visible in a live host decision: `rollup.rs:155-164` chose warning severity over error precisely because the tool «cannot tell a lying fold from a deliberate explicit marker», so the wrong choice would cost every downstream user a failed gate; the marker at :162 hands the severity question to the owner. Choosing the option whose error is borne cheaply and by the fewest people is the test applied."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "PICK-THE-ANSWER-THAT-MINIMIZES-IT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/rollup.rs:158  // tell a lying fold from a deliberate explicit marker, so this",
+              "crates/progress-core/src/rollup.rs:159  // reports at **warning** severity and never fails a gate. It becomes",
+              "crates/progress-core/src/model.rs:32  // implemented here: hold (parked) is the least advanced. Surface for owner",
+              "confirmed: Two host decisions record the minimisation explicitly. `rollup.rs:157-161` picks warning over error and says why in cost terms — it «never fails a gate», and becomes fatal only «where the distinction exists», so a wrong call costs a log line rather than a blocked build. `model.rs:31-33` picks the reading whose reversal is a one-line spec amendment. Both are choices made by minimising the cost of being wrong, written down at the point of choice."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-PREFER-NO-NEW-PUBLIC-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-000.md:88  - ##NAME-VERSION-RULES `name` is kebab-case and `(group, name)` is globally unique ([PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md#identity) — uniqueness moved from *within kind* to *within group*). `version` is semver. @impl/done",
+              "a coherent conservative-default preference with no host counterpart stated as such. Non-adoption of a tie-breaker, not a rule the host contradicts — unlike its sibling row about dependencies, which the host explicitly decided against."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-PREFER-FAILING-LOUDLY": {
+            "v": "confirmed",
+            "ev": [
+              "docs/commands/check.md:42  - `0` — no errors. Warnings and info findings still print but don't fail the run.",
+              "crates/vibe-settings/src/resolver/merge.rs:196  (REVIEW: spec://vibevm/modules/vibe-settings/PROP-040#merge-algorithm)\"",
+              "confirmed: The host does fail loudly in one measurable way: an ambiguous settings merge does not pick a winner silently — it emits a diagnostic naming the conflict, the layer, both kinds, and the spec anchor to consult, and skips the override (`merge.rs:193-197`). That is the preference implemented at a real fork. But the host also has a countervailing default: `vibe check` reports most findings at warning severity and exits 0 (docs/commands/check.md:42), and `rollup.rs:157-161` deliberately chose warning over error to avoid false failures. Partial: exercised where the wrong guess would be invisible, del"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-PREFER-THE-NARROWER-BEHAVIOR": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-check/src/checks/review_aging.rs:61  if !looks_like_date(date_field) {",
+              "crates/vibe-check/src/checks/review_aging.rs:28  let spec_dir = project_root.join(\"spec\");",
+              "confirmed: Found the preference implemented, in the very check that governs this package's markers. `review_aging` narrows twice rather than broadening: it scans `spec/` only rather than the whole tree (`:28`), and it acts only on date-shaped markers, skipping every prose marker rather than guessing at one (`:61`, with the reasoning in the comment at :55-60 — «Documentation / prose mentions … are skipped silently — they aren't tracking work»). Both are widenable later without breaking a consumer. The consequence, recorded on AGING-MARKERS-ARE-AUDIT-INPUT, is that the narrow scope currently sees none of t"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-PREFER-EXISTING-PROJECT-CONVENTION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:51  - ##CONV-TERMINOLOGY **Terminology:** only five installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say \"lifecycle\", \"phase\", \"goal\", \"plugin\" (except that \"plugin\" == \"package\" in passing context). See `VIBEVM-SPEC.md` §4. @impl/done",
+              "campaigns/packages-2026-09/tasks/DRIFT-030.md:282  `// <!-- REVIEW: … -->` per `crates/progress-core/src/rollup.rs:162`), and this",
+              "confirmed: Both halves are host practice. Convention over fashion: the boot file carries a «Hard conventions» section (00-core.md:47-52) whose terminology rule bans four common industry words outright and whose register «grows only by owner amendment» (:51) — convention fixed, and change reserved to the human, exactly as the row's last clause says. Convention followed in a live uncertainty: when DRIFT-030 needed a marker syntax it copied the existing in-repository precedent rather than the flow's prescribed form, citing it — «house form `// <!-- REVIEW: … -->` per `crates/progress-core/src/rollup.rs:162`"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "ROW-PREFER-NO-NEW-DEPENDENCY": {
+            "v": "drift",
+            "ev": [
+              "docs/commands/uninstall.md:69  - Transitive packages installed only because this package required them are **not** auto-removed. That's a pruning policy for a later command.",
+              "DRIFT, and the host did not merely decline this preference — it recorded the opposite, deliberately, at the governing anchor, in the four-field form its sibling flow prescribes. `spec/common/PROP-000.md:206-212`, «## 15. Dependency weight is not a decision factor», decides that «Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries» and «Pick the strongest available library for the job», with a why that answers this row's reason directly: «Under-specifying a load-bearing component to save megabytes creates ongoing architectural debt that is much more expensive to repay than the weight it saves.» This row's stated reason is «a dependency is a permanent tax»; the consumer has weighed that tax and ruled against it in writing. NOTE FOR THE RECORD: the delegated table reports «no host rule discouraging new dependencies exists on the widened perimeter» from a phrase grep — an absence asserted, not checked, which is this campaign's own named trap. The section exists and says the opposite."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "REFUSE-TO-INVENT-PUBLIC-SURFACE-WHEN-IN-DOUBT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-progress/templates/impl-task.md:81  task file under this section, set status `returned`. Do not invent semantics. @spec/done",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:154  question here, set status `returned`. Do not invent semantics and do not",
+              "confirmed: Searched for a host rule at this emphasis level about public surface specifically and found none — the host's absolute prohibition is about SEMANTICS, not surface: «Do not invent semantics» in the template (:81) and strengthened per-task (DRIFT-029.md:154). Those overlap but are not the same set: a new exported function with well-specified semantics violates this row and not the host's rule. I widened to `DEV-GUIDE.md`, `RUNTIME-GUIDE.md` and `spec/common/PROP-000.md` for an API-addition policy and found only semver naming rules. Partial."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "internal-choices-are-corrections-public-ones-are-commitments": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:32  // implemented here: hold (parked) is the least advanced. Surface for owner",
+              "spec/common/PROP-000.md:88  - ##NAME-VERSION-RULES `name` is kebab-case and `(group, name)` is globally unique ([PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md#identity) — uniqueness moved from *within kind* to *within group*). `version` is semver. @impl/done",
+              "confirmed: The internal half is illustrated by the host's own markers, all four of which sit on internal choices held open for correction — `model.rs:30-33` states its reading as provisional and invites the correction. The public half has no host statement: nothing in `spec/common/PROP-000.md`, `DEV-GUIDE.md` or `RUNTIME-GUIDE.md` treats a published API as a commitment beyond the semver rule at PROP-000:88, and no deprecation policy exists on the perimeter. Partial: the asymmetry is asserted, half of it is observable here."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "THE-LADDER-IS-A-PROTOCOL-FOR-REVERSIBLE-UNCERTAINTY": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:218  pick the conservative interpretation (the one cheapest to reverse),",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "confirmed: The scoping is explicit in the installed text — the terminal rung is defined by reversibility (STATIC.md:218) — and the host draws the same boundary at the level of a standing rule: autonomy applies to routine work, and the exception is «anything whose reversal costs work» (00-core.md:24). Both documents make reversibility the line between proceeding and asking, which is precisely the scope this sentence claims for the ladder."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "some-questions-have-no-conservative-interpretation": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.",
+              "confirmed: The host maintains exactly such a class and calls it non-routine: a named list — history rewrites, force-push, large blobs, CI/signing changes — plus an open clause for anything whose reversal costs work (00-core.md:24). Membership of that list removes the option of proceeding conservatively; the only move is to ask. CLAUDE.md extends the same list across the delegation boundary (:31), so it binds a worker as well as a session. The existence of a no-conservative-option class is therefore host law, not just a flow assertion."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STOP-AND-ASK-THE-HUMAN-FOR-THESE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "spec/modules/vibe-progress/templates/impl-task.md:81  task file under this section, set status `returned`. Do not invent semantics. @spec/done",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:269  flip. No behavioural change; §6 acceptance not run, since no fix was attempted.",
+              "confirmed: Both branches exist here, and the second has fired. Ask mid-session: the host's rule 4 says «stop and ask» in so many words (00-core.md:24). Park and report: the task template's `returned` status IS the parking mechanism, and DRIFT-029 and DRIFT-030 both used it — marker placed, question recorded in the task file, status flipped, nothing changed (DRIFT-029.md:268-270). The flow's «park the task and say so in the report» is that procedure, and the host had already built it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STOP-FOR-IRREVERSIBLE-OPERATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.",
+              "confirmed: Near-exact overlap with the host's rule 4, item by item. Rewriting pushed history: «history rewrites, force-push» (00-core.md:24), the same two operations. Releasing or publishing artifacts: the host reserves registry publication and signing to the same ask-first list («CI/signing changes»), and CLAUDE.md repeats the list for delegated work (:31). Deleting or migrating data is the one item without a host counterpart term, though it falls under the open clause «anything whose reversal costs work». Confirmed as a class the host stops on."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STOP-FOR-SECURITY-BOUNDARIES": {
+            "v": "confirmed",
+            "ev": [
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "confirmed: Secrets and signing are on the host's ask-first list explicitly — «CI / signing / secrets» (CLAUDE.md:31; the boot summary at 00-core.md:24 says «CI/signing changes»). The host also installs a dedicated flow for the domain, `packages/org.vibevm.world/secrets-hygiene`, materialised at `vibedeps/flow-secrets-hygiene`, and CLAUDE.md's operating ledger handles a live credential by path only, «token by PATH `~/.vibe/zai.api.token` (never inline/echo it)» (:68). Authentication and authorization as such do not appear as named stop items, but the secrets and signing half is host law and is practised."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STOP-FOR-EXTERNAL-SIDE-EFFECTS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:72  grant (2026-07-13): fractality runs are NOT treated as paid — do not ask",
+              "confirmed: The general clause covers it («anything whose reversal costs work», 00-core.md:24) but none of the three named side effects is a listed stop item here. More interesting: the host has an externally-observable, metered API call — spawning a paid GLM worker against a third-party gateway — and it explicitly EXEMPTED it from asking, by owner grant: «fractality runs are NOT treated as paid — do not ask before spawning» (CLAUDE.md:71-74), while keeping Rule 4's red lines binding on the work the run performs (:74-78). So the host has considered this exact class and ruled the other way for one instance"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STOP-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-REAL-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.",
+              "confirmed: The closest word-for-word match between this package and the host's own rules anywhere in W3: the flow's catch-all is «Anything whose reversal costs real work», the host's rule 4 ends «and anything whose reversal costs work» (00-core.md:24), repeated verbatim in CLAUDE.md's delegation clause (:31). Both are open-ended catch-alls closing a list of named operations, and both resolve to the same instruction — ask. The «still takes a day to unwind» threshold is the flow's own; the host states no duration."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "MARKING-A-REVIEW-IS-FORWARD-MOTION-ON-A-REVERSIBLE-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "crates/progress-core/src/model.rs:33  // confirmation; амендировать §3.10 одной строкой при подтверждении.",
+              "confirmed: One host marker states the reversibility cost explicitly, which is as direct a confirmation as this claim can get: `model.rs:30-33` marks the choice, proceeds with the implementation, and records that reversing it costs one line of spec — «амендировать §3.10 одной строкой при подтверждении». Forward motion plus a priced, one-line reversal, written at the point of choice. The installed instruction it follows is STATIC.md:218-219."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "on-an-irreversible-path-it-is-just-speed": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:153  artifacts: **STOP.** Mark `<!-- REVIEW: … -->` at the code point, write the",
+              "confirmed: The host's task contracts are built on exactly this distinction and resolve it the flow's way: where a change might contradict a spec, the instruction is not mark-and-proceed but «**STOP.** Mark `<!-- REVIEW: … -->` … set status `returned`» (DRIFT-029.md:153-155) — the marker accompanies a halt, not forward motion. Rule 4 draws the same line for the repository at large (00-core.md:24). So in this host the marker changes meaning with the path's reversibility, which is what the sentence asserts."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "EXAMPLE-THE-PROJECT-MOVED-FORWARD-THE-SAME-DAY": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:32  // implemented here: hold (parked) is the least advanced. Surface for owner",
+              "campaigns/packages-2026-09/tasks/DRIFT-029.md:269  flip. No behavioural change; §6 acceptance not run, since no fix was attempted.",
+              "confirmed: The example's outcome is achievable here and has been achieved once: `model.rs` shipped a working implementation under an open question (`:31-33`, and the `Ord` derive at :34). It has also failed twice: both DRIFT tasks marked and returned WITHOUT moving forward — «No behavioural change … no fix was attempted» (DRIFT-029.md:269), the same at DRIFT-030.md:280-282. So one of three host uncertainties produced same-day progress; the other two produced a parked task by the host's own stop rule. Partial: the outcome is real but not the norm here, and the host's contract sometimes forbids it."
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "EXAMPLE-THE-DECISION-STAYED-VISIBLE-THE-WHOLE-TIME": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "spec/common/PROP-013-periodic-health-audit.md:49  - ##D2-AGING-MARKERS **D2 · Aging markers** — `<!-- REVIEW … -->`, `TODO`, `FIXME`, `HACK` (`grep -rn`; `vibe check` ages REVIEW markers). @spec/done",
+              "crates/vibe-check/src/checks/review_aging.rs:28  let spec_dir = project_root.join(\"spec\");",
+              "confirmed: Visible to a reader of the file: yes — the marker sits immediately above the type it governs (`model.rs:30-40`), so nobody can read the enum without reading the open question. Visible to the project's own sweep: no — the audit category exists (PROP-013:49) but the mechanised sweep scans `spec/` only (`review_aging.rs:28`) and requires a date prefix (`:61`), and this marker satisfies neither, so `vibe check` reports nothing. Partial: visible where it matters most and invisible to the instrument built to find it."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "EXAMPLE-THE-SPEC-ENDED-ONE-SENTENCE-MORE-COMPLETE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:33  // confirmation; амендировать §3.10 одной строкой при подтверждении.",
+              "confirmed: The mechanism is set up in this host and has not yet completed. `model.rs:33` prepares exactly this outcome, naming the amendment and its size — «амендировать §3.10 одной строкой при подтверждении», one line on confirmation — but the confirmation has not come and PROP-043 §3.10 is unchanged. The host HAS gained spec sentences from resolved questions by the other route: `4ea09ad0` records «§4 gains the four verbs the code already shipped», four new anchors added on an owner ruling. Partial: the outcome is achieved in this repository, never yet via a REVIEW marker. Git commits are not path:line "
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "that-is-the-ladder-working": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: A conjunction of the three preceding outcomes, so it inherits their weakest leg. Progress and visibility are observed in `model.rs:30-33`; the spec's completion is not — the amendment the marker names has not been made. The ladder that produced the marker is host-authored and identical in shape (00-core.md:56-60). Partial: two of three outcomes achieved on the one host instance where the full ladder ran."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-UNCERTAINTY-IS-NOT-CONFLICT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:214  ## When the spec is silent {#uncertainty}",
+              "spec/boot/STATIC.md:229  - Never invent semantics when the spec is silent — mark the choice",
+              "spec/boot/00-core.md:56  ##uncertainty-lead When the spec is silent on a question: @impl/done",
+              "confirmed: Checked as a summary rather than by inheriting the body rows. The separation is structural in both texts — the installed snippet gives silence its own section at STATIC.md:214, and the host gives it its own heading at 00-core.md:54 — and the shared prohibition is stated once per case (STATIC.md:220 under uncertainty, :229 in the Never list). Both halves of the summary are reachable by a session here."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-CLIMB-IN-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:57  1. ##UNC-STEP-SPEC Re-read the relevant section of `VIBEVM-SPEC.md`. @impl/done",
+              "spec/boot/00-core.md:58  2. ##UNC-STEP-BOOK Re-read the relevant chapter in `refs/book/`. @impl/done",
+              "spec/boot/00-core.md:59  3. ##UNC-STEP-ANALOGS Look at the closest analog under `refs/src/` (cargo, uv, spec-kit). @impl/done",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: This is the measurement the brief asked for, stated at its most compact. The host's own four-step ladder is the same four steps in the same order: spec section (bound to `VIBEVM-SPEC.md`), reference material (bound to `refs/book/`), closest analog (bound to `refs/src/` — cargo, uv, spec-kit), then conservative default + `<!-- REVIEW: … -->` + proceed + report (00-core.md:57-60). The single divergence is rung 3's target: the summary says the closest analog generally and the flow's table says «in this project, or the project's named reference implementations», while the host has kept only the ex"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-CONSERVATIVE-IS-CHEAPEST-TO-REVERSE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/STATIC.md:218  pick the conservative interpretation (the one cheapest to reverse),",
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "crates/vibe-settings/src/resolver/merge.rs:196  (REVIEW: spec://vibevm/modules/vibe-settings/PROP-040#merge-algorithm)\"",
+              "confirmed: Three clauses, three answers. Cheapest to reverse: confirmed, installed at STATIC.md:218 and used as rule 4's criterion (00-core.md:24). Fail loudly: exercised at `merge.rs:193-197`, where an ambiguous merge emits a diagnostic naming the conflict and the spec anchor rather than picking silently — with the countervailing warning-not-error default noted on the ROW-PREFER-FAILING-LOUDLY row. Refuse to invent public surface: no host rule found after widening to `spec/common/`, `DEV-GUIDE.md` and `RUNTIME-GUIDE.md`. Partial."
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-THE-LADDER-DOES-NOT-APPLY-TO-IRREVERSIBLE-QUESTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+              "CLAUDE.md:31  **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.",
+              "confirmed: The host's rule 4 is this summary in operational form: a named list of irreversible operations, security-adjacent items (CI / signing / secrets), and a reversal-cost catch-all, all resolving to «stop and ask» (00-core.md:24; CLAUDE.md:31 extends it across delegation). Two of the flow's three categories map onto it item for item; external side effects map only through the catch-all, and the host has ruled one instance of them exempt by owner grant (CLAUDE.md:71-78). The claim that asking IS the conservative choice there is the same reasoning the host uses to carve rule 4 out of its autonomy def"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          },
+          "SUM-THE-END-STATE-IS-ALWAYS-VISIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/model.rs:30  // REVIEW: PROP-043 §3.10 fixes the stage order for worst-of rollup but is",
+              "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:148  // <!-- REVIEW: DRIFT-029 asked for this write to be suppressed, so a",
+              "spec/boot/00-core.md:60  4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done",
+              "confirmed: Tested against this repository's actual end states rather than the rule. Every uncertainty I could find a record of ended visibly: `model.rs:30` a marked default awaiting a ruling, `rollup.rs:162` the same, `hybrid_emit.rs:148` and `bootgen.rs:89` marked and returned with the question written into the task file, `merge.rs:196` a runtime diagnostic citing the spec anchor. Searched for the opposite — a silent guess — across `git log -S'<!-- REVIEW'`, the DRIFT task logs and `AUDIT.md`: no undocumented semantic invention is recorded anywhere. The rule is host-authored at 00-core.md:60 and the tre"
+            ],
+            "src": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "verified_at": "2026-07-28T20:08:35Z",
+        "verify_batch": "W3"
+      }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/README.md": {
       "content_hash": "17f15c4e9a554da8fd56873b9d93c92bca377a981788619d5ab461190f9853a3",
