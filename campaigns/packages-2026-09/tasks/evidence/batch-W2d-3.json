@@ -1,0 +1,574 @@
+{
+ "batch": "W2d",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-THE-SYNC-FROM-CODE-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/vibe.toml:4  kind = \"flow\"",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/vibe.toml:15  [boot_snippet]",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/vibe.toml:16  source = \"spec/boot/20-flow-sync-from-code.md\"",
+     "vibe.lock:392  name = \"sync-from-code\"",
+     "confirmed: Read the manifest for `kind` and `[boot_snippet]`, then checked the host's installed reality. `grep -n -A9 -B2 'name = \"sync-from-code\"' vibe.lock` gives one entry at 390-398: version 0.1.0, `files_written = []`, `source_kind = \"local\"`. The package is absent from spec/boot/INDEX.md (`grep -n sync-from-code spec/boot/INDEX.md` returns nothing) because it is a static-lane package — its contribution is compiled into spec/boot/STATIC.md at 1221 under a provenance marker, body running to 1269. `find vibedeps -ipath '*sync-from-code*' -type f` returns the 7-file top-level slot PLUS a second nested "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SYNC-FROM-CODE-IS-THE-EXCEPTIONAL-PATH-OFF-TOP-DOWN-FLOW": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:10  ##INFORMATION-FLOWS-TOP-DOWN Information flows top-down: head → WAL → spec → code. @impl/done",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:26  ##SYNC-FROM-CODE-IS-THE-PROTOCOL-FOR-THE-INVERSE-CASE **Sync-from-Code is the protocol for the inverse case**: the code",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+     "spec/boot/STATIC.md:1230  Information flows top-down: head → WAL → spec → code. Sync-from-Code does",
+     "confirmed: The package states the chain three times (README:8, boot snippet:10, SYNC-PROTOCOL:14-21). For source 2 I looked for the host's own statement of the layer order rather than the compiled copy: spec/boot/00-core.md lines 40-43 name the four layers with this repository's real paths, and :45 states the same top-down rule plus the sync-from-code exception, citing the package by `spec://` URI. The redbook umbrella index in the compiled lane (STATIC.md:1532-1533) independently calls the flow «the sanctioned reverse path when code changed before the spec»."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "two-legitimate-situations-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:15  ##the-exceptional-path-for-two-legitimate-cases-lead It is the **exceptional path** for two legitimate",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:34  ##two-everyday-situations-lead Two everyday situations break the top-down flow: @impl/done",
+     "spec/boot/STATIC.md:1231  not flip that rule. It is the **exceptional path** for two legitimate",
+     "spec/boot/STATIC.md:1232  cases where the bottom layer moves before the layer above it:",
+     "confirmed: A lead-in, so what is checkable is the count and that the pair is stable. Counted the bullets that follow in each of the package's three statements: README 14/16, boot snippet 18/20, SYNC-PROTOCOL 36/40 — two each, same pair (direct edit, imperative chat command). STATIC.md:1231-1237 carries the same two into the host. `grep -rn 'two legitimate' spec/ CLAUDE.md` returns only the compiled STATIC.md copy, so the host does not restate the pair in its own hand."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SITUATION-THE-USER-EDITS-CODE-DIRECTLY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:36  - ##SITUATION-DIRECT-EDITING **Direct editing.** The human opens the file and edits. Usually because",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:18  - ##CASE-THE-USER-EDITED-CODE-DIRECTLY The user edited code directly because writing five lines in an editor",
+     "spec/boot/STATIC.md:1234  - The user edited code directly because writing five lines in an editor",
+     "refs/book/chapter-3-memory-individual.md:368  **Сценарий А: ты правишь код руками** — потому что быстрее написать пять строк",
+     "confirmed: Checked the claim against the package's three internal statements and against the source the README names. `grep -n 'Сценарий А' refs/book/chapter-3-memory-individual.md` puts Scenario A at line 368 with the same «пять строк» / five-lines framing, so the package is translating its cited source rather than asserting something new. The compiled host lane repeats it at STATIC.md:1234-1235. No source-2 evidence is offered because the claim is about who typed an edit, which no artefact in this tree records."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SITUATION-THE-USER-GIVES-AN-IMPERATIVE-CHAT-COMMAND": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:40  - ##SITUATION-IMPERATIVE-CHAT-COMMANDS **Imperative chat commands.** The human tells the agent \"change the",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:20  - ##CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND The user told the agent \"change the timeout to 600 s\" (or similar) in",
+     "spec/boot/STATIC.md:1236  - The user told the agent \"change the timeout to 600 s\" (or similar) in",
+     "refs/book/chapter-3-memory-individual.md:373  **Сценарий Б: ты даёшь команду в чате** — «измени таймаут на 600s», «добавь логирование",
+     "confirmed: The 600 s timeout example is stable across the package — boot snippet :20, SYNC-PROTOCOL :40, when-to-apply :25 — and traces to refs/book chapter 3 line 373, which carries «измени таймаут на 600s» verbatim. Compiled into the host at STATIC.md:1236-1237. Same reason as its sibling for offering no source 2: chat history is not a repository artefact."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "in-both-cases-the-spec-is-now-wrong-and-gets-fixed-back": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:47  ##the-next-session-corrects-the-code-back The next session",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:51  ##the-agent-is-technically-right-by-the-spec-wins-hierarchy The agent is technically right by",
+     "spec/boot/STATIC.md:1239  In both cases the spec is now stale. Without Sync-from-Code, the next",
+     "spec/boot/STATIC.md:1241  it back — correctly by the spec-wins rule, but wrong in outcome.",
+     "confirmed: The «spec-wins» rule the sentence leans on is a different flow, so I widened out of this package to find where the host pins it: `grep -rn 'Human > Spec' spec/ CLAUDE.md` returns spec/common/PROP-000.md:134 (Human > Spec > Tests > Code, the conflict-protocol flow) and spec/boot/STATIC.md:1540. That half is settled. The predicted OUTCOME — a session reverting code to match a stale spec — I could not find recorded: `git log --grep='fixed the code back' -i`, `--grep='corrected the code' -i` and `grep -rn 'fixed the code back' spec/ campaigns/` all return nothing. So the mechanism is confirmed and"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "THE-FLOW-IS-THE-SANCTIONED-WAY-TO-CLOSE-THAT-GAP": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:8  ##THE-ONLY-SANCTIONED-WAY-TO-CLOSE-A-BOTTOM-UP-GAP It is",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+     "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+     "spec/modules/vibe-progress/templates/spec-task.md:37    diff, surface for owner approval, never apply silently. @spec/done",
+     "confirmed: «Sanctioned» is a host-conformance word, so I searched for where this repository names the flow as the required route: `grep -rn -i 'sync-from-code' spec/ CLAUDE.md AUDIT.md TASKS.md BACKLOG.md CONTINUE.md` returns spec/boot/00-core.md:45 (a core boot rule), the spec-task template's ##RULE-REALITY-MISMATCH-FLOW at :36-37, and both terraform campaign specs (SPEC-ACTUALIZATION:232, PACKAGES-ACTUALIZATION:340), which make it the closing route for every `reality-mismatch` obligation. Four independent host documents, none of them the package."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "package-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/vibe.toml:15  [boot_snippet]",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:1  # Sync-from-Code Protocol {#root}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:1  # When to run Sync-from-Code {#root}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:1  # Sync-from-Code review workflow {#root}",
+     "confirmed: `find packages/org.vibevm.world/sync-from-code -type f | sort` returns exactly 7 files: LICENSE, README.md, vibe.toml, the boot snippet and the three flow documents. The count is right — three content files plus one boot snippet — and the four bullets that follow name exactly those four. The installed slot mirrors the same payload (`find vibedeps/flow-sync-from-code -type f` = 7). SOURCE-3 NOTE that holds for every file of this package: the installed slot is STALE against the package. `diff packages/org.vibevm.world/sync-from-code/v0.1.0/<f> vibedeps/flow-sync-from-code/0.1.0/<f>` differs on a"
+    ],
+    "src": [
+     1
+    ]
+   },
+   "CONTENT-THE-FULL-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:5  ##scope-of-this-document **Scope of this document.** This file defines *what* Sync-from-Code is,",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:59  ## When to run {#trigger}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:133  ##three-mandatory-parts-lead Three parts are mandatory in every sync: @impl/done",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:186  ## What Sync-from-Code does not do {#non-goals}",
+     "confirmed: Opened the named file and checked each promised part has a section of its own: scope at :5, «When to run» {#trigger} at :59, the three mandatory parts at :133-152, «What Sync-from-Code does not do» {#non-goals} at :186. All four present, in the order the README lists them. The file is present in the installed slot too, at 171 lines against the package's 203. SOURCE-3 NOTE that holds for every file of this package: the installed slot is STALE against the package. `diff packages/org.vibevm.world/sync-from-code/v0.1.0/<f> vibedeps/flow-sync-from-code/0.1.0/<f>` differs on all four payload files ("
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-DECISION-TABLE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:7  ##this-document-is-the-decision-table This document",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:50  ### The code change is temporary {#skip-temp}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:72  ### The change is mechanical {#skip-mech}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:81  ### You cannot name the reason {#skip-no-reason}",
+     "confirmed: The README names three do-not cases; the file carries four skip sections — {#skip-temp} :50, {#skip-mech} :72, {#skip-no-reason} :81, plus one the README does not mention, {#skip-bootstrap} at :99 («The spec section does not exist yet»). So the three named are all present and there is a fourth. The file also carries a literal decision flowchart at :118-137, which is what makes «decision table» accurate rather than loose. SOURCE-3 NOTE that holds for every file of this package: the installed slot is STALE against the package. `diff packages/org.vibevm.world/sync-from-code/v0.1.0/<f> vibedeps/fl"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-REVIEW-CHECKLIST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:30  ## The review checklist {#checklist}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:34  ### 1. Does the intent match reality? {#check-intent}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:98  ### 6. Is the scope of the code change what you expected? {#check-surprise}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:159  ##six-checks-is-not-bureaucracy Six checks is not bureaucracy; it is the reason this flow",
+     "confirmed: Counted the numbered checks: {#check-intent} :34, {#check-durability} :47, {#check-trigger} :61, {#check-scope} :76, {#check-anchor} :87, {#check-surprise} :98 — six, numbered 1 to 6, and the file's own closing line at :159 says «Six checks». The README's count matches the file exactly. SOURCE-3 NOTE that holds for every file of this package: the installed slot is STALE against the package. `diff packages/org.vibevm.world/sync-from-code/v0.1.0/<f> vibedeps/flow-sync-from-code/0.1.0/<f>` differs on all four payload files (README 92 changed lines, SYNC-PROTOCOL 176, review-workflow 155, when-to-"
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/vibe.toml:16  source = \"spec/boot/20-flow-sync-from-code.md\"",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:44  ##full-protocol-pointer Full protocol: [`spec/flows/sync-from-code/SYNC-PROTOCOL.md`](../flows/sync-from-code/SYNC-PROTOCOL.md). @impl/done",
+     "spec/boot/STATIC.md:1221  <!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md -->",
+     "spec/boot/STATIC.md:1256  Full protocol: [`spec/flows/sync-from-code/SYNC-PROTOCOL.md`](../flows/sync-from-code/SYNC-PROTOCOL.md).",
+     "the README describes its own package accurately: the snippet exists at `spec/boot/20-flow-sync-from-code.md` and the manifest declares it there. Recorded, because it is F-122's territory rather than this fact's: the INSTALLED copy of the same version declares `source = \"boot/20-…\"`, the pre-DRIFT-039 path — which is why the boot join reports this slot NO-SOURCE and cannot pair it with the package for a word comparison. One name@version, two layouts."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "vibe.lock:397  files_written = []",
+     "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
+     "crates/vibe-cli/src/commands/uninstall.rs:202          \"\\nUninstalled {group}/{name}@{version} — removed its vibedeps/ slot, regenerated boot.\"",
+     "confirmed: The lockfile records `files_written = []` for this package (vibe.lock:397), so in THIS host the package wrote no files into the project tree at all — the only things uninstall has to remove are the vibedeps/ slot and the compiled boot contribution. Read crates/vibe-cli/src/commands/uninstall.rs: it removes the slot (:120-124), drops the lockfile entry and the `[requires]` line (module doc :4) and regenerates boot (:202). What I did NOT find is any code path that walks a `files_written` list and deletes those paths — `grep -n 'files_written' crates/vibe-cli/src/commands/uninstall.rs` returns no"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "USER-OWNED-FILES-ARE-NEVER-TOUCHED": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/tree/build.rs:33  const HOST_BOOT_FILES: &[&str] = &[\"00-core.md\", \"90-user.md\"];",
+     "crates/vibe-cli/src/commands/show/effective.rs:213      if filename == \"00-core.md\" || filename == \"90-user.md\" {",
+     "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md:58  - ##WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE `spec/WAL.md` and `CONTINUE.md` are **project state**, not package",
+     "vibe.lock:397  files_written = []",
+     "confirmed: Widened out of this package because the guarantee, if enforced at all, is enforced by the vibe binary. `grep -rn '90-user\\|00-core\\|user_owned' crates/ --include='*.rs'` returns the two boot files as a named host-boot constant (tree/build.rs:33) and as an explicit exclusion for files claimed by no lockfile entry (show/effective.rs:213). The `WAL.md` half is stated normatively by the sibling wal flow at 10-flow-wal.md:58-60 and its README:54-57. What I did NOT find is an install/uninstall guard that refuses to write these three paths; the protection I could locate is that no package declares th"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-WAL-AND-ATOMIC-COMMITS-BY-DISTINCT-PREFIXES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/vibe.toml:16  source = \"spec/boot/20-flow-sync-from-code.md\"",
+     "packages/org.vibevm.world/wal/v0.2.0/vibe.toml:16  source = \"spec/boot/10-flow-wal.md\"",
+     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/vibe.toml:16  source = \"spec/boot/30-flow-atomic-commits.md\"",
+     "spec/boot/STATIC.md:1221  <!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md -->",
+     "confirmed: The three prefixes are as claimed — 10- (wal), 20- (this), 30- (atomic-commits), read from each package's vibe.toml:16 — and all three flows are installed here. What the evidence does NOT support is the implied consequence that the prefix sequences the compiled lane: `grep -n 'vibe:static' spec/boot/STATIC.md` places atomic-commits (30-) at line 363, this flow (20-) at 1221 and wal (10-) at 1369. STATIC.md is ordered alphabetically by package name, so in this host the prefixes are distinct but order nothing."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "COMPOSES-WAL-FOR-THE-SESSION-END-UPDATE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:190  - ##NON-GOAL-DOES-NOT-EDIT-THE-WAL **Does not edit the WAL.** A successful sync may later trigger a WAL",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:141  - ##BOUNDARY-FLOW-WAL **`flow:wal`** handles session continuity. A successful sync may",
+     "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+     "vibe.lock:422  name = \"wal\"",
+     "confirmed: The sibling flow is installed (vibe.lock:420-428, wal 0.2.0) and the host runs its session-end ritual under CLAUDE.md:167-195. The boundary is drawn consistently three times inside this package (README:63, SYNC-PROTOCOL:190, when-to-apply:141) and nothing in the flow's documents writes to spec/WAL.md. I looked for a counter-example — a commit that both syncs a spec and rewrites the WAL as one unit — by reading the two clearest sync-from-code applications (4ea09ad0, 04d7e4ae); both touch spec files and campaign ledgers and neither touches spec/WAL.md."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COMPOSES-ATOMIC-COMMITS-FOR-THE-COMMIT-MESSAGE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:167  ##THE-COMMIT-TYPE-IS-DOCS-SPEC The",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:144  - ##BOUNDARY-FLOW-ATOMIC-COMMITS **`flow:git-atomic-commits`** handles commit discipline. A sync commit",
+     "spec/boot/STATIC.md:1253  4. On approval, apply + commit (`docs(spec): sync <section> with code`).",
+     "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
+     "both halves hold. A sync does end in a `docs(spec)` commit — 4ea09ad0 and 04d7e4ae are the two on record and both carry that type — and message formatting is pinned repo-wide by the atomic-commits family at PROP-000.md:162-163. The grammar that fails is the SUBJECT, and that is filed on the boot snippet's step 4."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "extracted-from-the-books-third-chapter": {
+    "v": "confirmed",
+    "ev": [
+     "refs/book/chapter-3-memory-individual.md:1  # Глава третья.<br>Архитектура памяти",
+     "refs/book/chapter-3-memory-individual.md:363  #### Протокол Sync-from-Code: когда изменение идёт снизу вверх",
+     "refs/book/chapter-3-memory-individual.md:379  Посмотри git diff HEAD.",
+     "refs/book/chapter-3-memory-individual.md:382  Покажи черновик изменений — не применяй до подтверждения.",
+     "confirmed: `ls refs/book/` returns three chapter files; chapter-3-memory-individual.md's title line is «Глава третья. Архитектура памяти» and `grep -n 'Протокол Sync'` puts the named subsection at 363. Read 363-400: the book's four-line prompt (read the diff, understand what and why, update the spec, show the draft and do not apply before confirmation) is the same four steps the boot snippet lists, and its worked example uses the same PROP-003 §verification.timeout 300→600 diff the protocol reuses. The host cites the chapter itself at 00-core.md:45. Note that `refs/` is third-party material in this repos"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "short-version-spec-driven-projects-need-the-inverse-path": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:29  ##IT-IS-DELIBERATELY-THE-EXCEPTION It is deliberately the",
+     "refs/book/chapter-3-memory-individual.md:399  заранее. Sync-from-Code — это инструмент, который позволяет работать в этом режиме,",
+     "refs/book/chapter-3-memory-individual.md:400  не накапливая дрейф между кодом и спекой.",
+     "spec/modules/vibe-progress/templates/spec-task.md:36  - ##RULE-REALITY-MISMATCH-FLOW **`reality-mismatch` closes via the sync-from-code flow** — draft the spec",
+     "confirmed: Two of the three adjectives are checkable here. RARE: the campaign specs gate the flow to one obligation class (`reality-mismatch`) rather than to authoring generally — SPEC-ACTUALIZATION:232, PACKAGES-ACTUALIZATION:340. HUMAN-APPROVED: the same campaign records at :1119-1121 that a 212-row wave «ran through sync-from-code: the diffs were drafted, surfaced to the owner, and applied only on his approval». The book's closing lines (399-400) say the tool exists so drift does not accumulate between code and spec. The counterfactual — that without the path the spec stops being authoritative — is no"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/LICENSE:1  Copyright (c) 2026 Oleg Chirukhin",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/LICENSE:3  The Universal Permissive License (UPL), Version 1.0",
+     "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The",
+     "confirmed: The manifest declares UPL-1.0 and the file the README names exists at the package root: `LICENSE`, no extension, 36 lines, UPL text on line 3. Worth naming a naming asymmetry inside this very batch — this package ships `LICENSE` while its W2 sibling wal-specspaces ships `LICENSE.md`. The host's own ledger (CLAUDE.md:127-137) records the whole packages/org.vibevm.* surface as relicensed to UPL-1.0 by MT-05 firing #2."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  },
+  "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md": {
+   "THE-PROJECT-USES-SYNC-FROM-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1221  <!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md -->",
+     "spec/boot/STATIC.md:1225  This project uses the **Sync-from-Code** protocol to reconcile specs with",
+     "spec/boot/STATIC.md:1226  code when the code changed first.",
+     "spec/boot/00-core.md:45  ##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow …",
+     "confirmed: The snippet's opening assertion is about the host, so this is a source-2/3 check. The sentence reaches the host verbatim at STATIC.md:1225-1226 under the provenance marker at 1221. The host also restates the rule in its own hand at spec/boot/00-core.md:45, which is authored not generated — `git log -1 --format=%s 40b0da69` is «refactor(boot): cite two-process-model + sync-from-code from 00-core», the commit that deliberately put the citation there, whose body says both flows' boot snippets already load so 00-core cites them."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "INFORMATION-FLOWS-TOP-DOWN": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1230  Information flows top-down: head → WAL → spec → code. Sync-from-Code does",
+     "spec/boot/00-core.md:40  - ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done",
+     "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
+     "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+     "confirmed: The four-layer chain is stated by the host in its own core boot file, one anchor per layer, at 00-core.md:40-43, followed by the top-down rule at :45 — and the layers are instantiated with this repository's real paths (`spec/WAL.md`, `crates/`), not the flow's generic names. The compiled snippet repeats the abstract chain at STATIC.md:1230. The artefacts exist: the harvest's source-2 block records `test -f spec/WAL.md && test -f CONTINUE.md && test -f SPECSPACES.md` returning present."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1230  Information flows top-down: head → WAL → spec → code. Sync-from-Code does",
+     "spec/boot/STATIC.md:1231  not flip that rule. It is the **exceptional path** for two legitimate",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:29  ##IT-IS-DELIBERATELY-THE-EXCEPTION It is deliberately the",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:30  exception — the whole rest of the discipline pushes the other way. @impl/done",
+     "confirmed: Checked whether the host treats it as an exception or as a second normal route. 00-core.md:45 states top-down as the rule and sync-from-code as a conditional («If code changes first»), closing «propose a spec update, do not rewrite code back». `grep -rn -i 'sync-from-code' spec/` returns 12 hits and every one is conditional or campaign-scoped; I found no host document presenting it as a default authoring route."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "the-exceptional-path-for-two-legitimate-cases-lead": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1231  not flip that rule. It is the **exceptional path** for two legitimate",
+     "spec/boot/STATIC.md:1232  cases where the bottom layer moves before the layer above it:",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:34  ##two-everyday-situations-lead Two everyday situations break the top-down flow: @impl/done",
+     "confirmed: Lead-in; the checkable part is the count and the framing. Two bullets follow at :18 and :20, matching README:14/16 and SYNC-PROTOCOL:36/40. The compiled host lane carries the identical sentence at STATIC.md:1231-1232. No host-authored restatement of the pair exists outside that compiled copy."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CASE-THE-USER-EDITED-CODE-DIRECTLY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1234  - The user edited code directly because writing five lines in an editor",
+     "spec/boot/STATIC.md:1235    was faster than articulating the intent in a spec edit first.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:36  - ##SITUATION-DIRECT-EDITING **Direct editing.** The human opens the file and edits. Usually because",
+     "refs/book/chapter-3-memory-individual.md:368  **Сценарий А: ты правишь код руками** — потому что быстрее написать пять строк",
+     "confirmed: The same claim as the README's SITUATION-THE-USER-EDITS-CODE-DIRECTLY, in the snippet's wording. Traced to the cited source: refs/book chapter 3 line 368 carries «пять строк», so the five-lines figure is the book's. Reaches the host verbatim at STATIC.md:1234-1235. No source-2 evidence is possible — the tree cannot record who typed an edit."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1236  - The user told the agent \"change the timeout to 600 s\" (or similar) in",
+     "spec/boot/STATIC.md:1237    chat. The agent changed the code; nobody touched the spec.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:25  ##RUN-WHEN-AN-IMPERATIVE-CHAT-COMMAND-CHANGED-THE-CODE You told the agent \"change the timeout to 600 s\" or \"switch the hash",
+     "refs/book/chapter-3-memory-individual.md:373  **Сценарий Б: ты даёшь команду в чате** — «измени таймаут на 600s», «добавь логирование",
+     "confirmed: Verified the example is stable across the package (boot :20, SYNC-PROTOCOL :40, when-to-apply :25 all use the 600 s timeout) and traceable to refs/book chapter 3 line 373. Compiled into the host at STATIC.md:1236-1237. A claim about chat behaviour, so no source 2."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "in-both-cases-the-spec-is-now-stale": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1239  In both cases the spec is now stale. Without Sync-from-Code, the next",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:45  ##left-unreconciled-either-case-produces-spec-drift Left unreconciled, either case produces spec drift. @spec/done",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md:19  ##in-both-cases-the-spec-is-now-wrong-and-gets-fixed-back In both cases the spec is now wrong; left unreconciled, the next session",
+     "confirmed: A one-line consequence stated three times inside the package with the same content — boot :23 «stale», SYNC-PROTOCOL :45 «spec drift», README :19 «wrong». Compiled into the host at STATIC.md:1239. The host does have measured instances of exactly this shape (a spec that went stale because code moved first: F-063 on crates/vibe-publish/src/token.rs, F-017 on the four aiui verbs), but they are recorded in campaign findings rather than in the flow's own vocabulary; see the STEP-* rows for the detail."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "without-sync-from-code-the-next-session-fixes-the-code-back": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1239  In both cases the spec is now stale. Without Sync-from-Code, the next",
+     "spec/boot/STATIC.md:1240  session reads the stale spec, concludes the code is wrong, and \"fixes\"",
+     "spec/boot/STATIC.md:1241  it back — correctly by the spec-wins rule, but wrong in outcome.",
+     "spec/common/PROP-000.md:134  ##CONFLICT-ORDER vibevm's writer-conflict resolution — the **Human > Spec > Tests > Code** order (also pinned in [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) §2.2 and book chapter 1) — is the …",
+     "confirmed: The rule the sentence invokes is real and pinned by the host: PROP-000.md:134 fixes Human > Spec > Tests > Code as the conflict-protocol flow's order, echoed at STATIC.md:1540. The predicted FAILURE I could not find recorded anywhere: `git log --grep='fixed the code back' -i`, `--grep='corrected the code' -i`, `--grep='stale spec' -i` and `grep -rn 'fixed the code back' spec/ campaigns/` all return nothing. The nearest live analogue runs a different way — 04d7e4ae records a spec error that survived a verification pass because it was checked against another document instead of against code."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1245  Run the protocol exactly once, as the last step of the same session that",
+     "spec/boot/STATIC.md:1246  caused the drift. Do not postpone it to \"tomorrow\" — drift accumulates.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:61  ##RUN-THE-PROTOCOL-AT-THE-END-OF-THE-SAME-SESSION Run the protocol at the end of the **same session** that produced the",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:200  - ##SUM-RUNS-ONCE-IN-THE-SESSION-THAT-CAUSED-THE-DRIFT Runs once, immediately, in the session that caused the drift. @impl/done",
+     "confirmed: Stated consistently three times inside the package and compiled to the host at STATIC.md:1245-1246. The same-session half is not observable from the tree — commits carry no session boundary — and no host document restates the timing rule: `grep -rn -i 'same session' spec/ CLAUDE.md` returns hits about host-file WAL updates and campaign escalation, none about sync timing. The «exactly once» half sits awkwardly against host practice, where a single campaign wave ran many syncs (SPEC-ACTUALIZATION:1119, 212 rows), though each row was its own draft. Neither half is settled by what I found."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "DO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1246  caused the drift. Do not postpone it to \"tomorrow\" — drift accumulates.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:64  ##waiting-even-a-day-is-how-drift-accumulates Waiting even a day is how drift accumulates — by then",
+     "campaigns/packages-2026-09/PHASE-T-SPEC.md:373       the FACT is wrong  → sync-from-code, owner-approved, fact revision",
+     "a coherent rule, compiled into the host at STATIC.md:1246 and expanded at SYNC-PROTOCOL:64-66. One dated counter-instance is recorded and not treated as systematic — 812bfecc's own body describes drift that was «both inherited and fresh», which is the accumulation the rule predicts rather than a case of the rule being denied."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-READ-THE-DIFF-AND-RECONSTRUCT-INTENT": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1248  1. Read `git diff HEAD` and reconstruct the *intent* behind each change.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:100  git diff HEAD",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:106  ##THE-DIFF-IS-THE-ONLY-SOURCE-OF-TRUTH-FOR-WHAT-CHANGED The diff is the only source",
+     "refs/book/chapter-3-memory-individual.md:379  Посмотри git diff HEAD.",
+     "confirmed: Step 1 matches the protocol's {#step-collect} and {#step-intent} sections and the book's prompt at chapter-3:379 («Посмотри git diff HEAD.»). For host conformance I read the bodies of the two clearest applications: 04d7e4ae says the correction was made «against crates/vibe-publish/src/token.rs», naming code as the checked source and listing the exact functions and line offsets it walked; 4ea09ad0 says the four verbs «have been shipping and citing \"PROP-042 §4\" in their own --help». In both, intent was reconstructed from shipped code rather than from a `git diff HEAD` range — same direction of "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-DRAFT-A-DIFF-AGAINST-THE-SPEC-SECTION": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1249  2. Draft a diff against the relevant spec section. Include: new value,",
+     "spec/boot/STATIC.md:1250     reason, and the condition under which the decision should be",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:147  1. ##PART-THE-NEW-VALUE **The new value.** The primary change, matching the code. @impl/done",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:148  2. ##PART-THE-REASON **The reason.** Concrete, measurable where possible — no \"felt",
+     "DRIFT on the third of the three parts it requires, for the same measurement filed on PART-THE-REVISIT-TRIGGER: both syncs this repository ran (4ea09ad0, 04d7e4ae) carry zero occurrences of «revisit» in their spec diffs; «When to revisit» + «Revisit when» occur 13 times across the whole host spec tree against 153 sections carrying a bolded Decision label; and none of the 11 revisit lines in `spec/` carries metric + threshold + observation point together. New value and reason land; the revisit condition does not."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1252  3. Surface the spec-diff draft to the user. **Do not apply.**",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:158  ##PRINT-THE-PROPOSED-SPEC-DIFF Print the proposed spec diff. @impl/done",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:160  ##DO-NOT-APPLY Do not apply. @impl/done",
+     "spec/modules/vibe-progress/templates/spec-task.md:37    diff, surface for owner approval, never apply silently. @spec/done",
+     "confirmed: This is the step the batch note asked to settle, and the host records it in its own words three separate ways. NORMATIVE: the spec-task template's ##RULE-REALITY-MISMATCH-FLOW says «draft the spec diff, surface for owner approval, never apply silently» (spec-task.md:36-37). OWNER-FACING: OWNER-GUIDE.md:123 promises the owner «все правки спек по мотивам sync-from-code показываются вам ДО применения» — all sync-from-code spec edits are shown to you BEFORE applying. HISTORICAL: SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1119-1121 records a 212-row wave where «the diffs were drafted, surfaced to the owne"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:1253  4. On approval, apply + commit (`docs(spec): sync <section> with code`).",
+     "spec/boot/STATIC.md:1254     On reject, either revert the code or redraft the proposal.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:165  ##ON-APPROVAL-WRITE-THE-DIFF-AND-COMMIT On approval: write the diff, commit it using Conventional Commits. @impl/done",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:178  ##ON-REJECT-REVERT-THE-CODE-OR-REDRAFT-THE-PROPOSAL On reject: either revert the code (the code change itself was the",
+     "DRIFT on the commit grammar, and here it is the FACT'S OWN TEXT rather than an illustration: the step prescribes `docs(spec): sync <section> with code`, and `git log --format=%s | grep -c '^docs(spec): sync'` returns 0 against `git rev-list --count HEAD` = 2 041. The type is in heavy use — 183 `docs(spec)` commits, 74 of the last 400 — and the approval half is confirmed three ways host-side (spec-task.md:36-37, OWNER-GUIDE.md:123, and the owner's quoted «Правь и продолжай дальше» at SPEC-ACTUALIZATION:1119-1122). The subject grammar has never been typed."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "full-protocol-pointer": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:1  # Sync-from-Code Protocol {#root}",
+     "spec/boot/STATIC.md:1256  Full protocol: [`spec/flows/sync-from-code/SYNC-PROTOCOL.md`](../flows/sync-from-code/SYNC-PROTOCOL.md).",
+     "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:19    relative .md citations resolved: 23",
+     "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:20    broken: 0",
+     "DRIFT: the same 69-dangling family W1 opened. The target exists in the package and in the installed slot, but the compiled boot lane keeps the relative link `../flows/sync-from-code/SYNC-PROTOCOL.md`, which from `spec/boot/` means `spec/flows/sync-from-code/SYNC-PROTOCOL.md`, and this host has no `spec/flows/` at all. The same anchor name was judged drift in W1 and again in W2a and W2c."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1260  - Never silently update a spec to match the code. A silent update erases",
+     "spec/boot/STATIC.md:1261    the human's mental model of what the project intends.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:182  ##NEVER-SILENTLY-ACCEPT-A-REJECTED-SYNC Never silently accept a rejected sync. @impl/done",
+     "spec/modules/vibe-progress/templates/spec-task.md:37    diff, surface for owner approval, never apply silently. @spec/done",
+     "confirmed: The host restates this prohibition in its own hand twice, both host-authored rather than compiled from the package: the spec-task template's rule ends «never apply silently» (spec-task.md:37) and the owner guide promises the owner that every sync-from-code spec edit is shown before application (OWNER-GUIDE.md:123, in Russian). The compiled snippet carries the flow's own wording at STATIC.md:1260-1261."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-PAPER-OVER-A-TEMPORARY-HACK": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1262  - Never use Sync-from-Code to paper over a temporary hack. For",
+     "spec/boot/STATIC.md:1263    throwaway debug code, record in the WAL:",
+     "spec/boot/STATIC.md:1264    `<file>: temporary, do not sync to spec`.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:57  ##record-the-skip-in-the-wal-lead Record the skip",
+     "confirmed: The rule is stated and compiled into the host, and its mechanism has a real home here: `grep -n '^## ' spec/WAL.md` shows «## Constraints — do not violate» at line 56, matching the `## Constraints` heading the package's worked example uses. What is absent is any instance of the prescribed line: `grep -n -i 'do NOT sync' spec/WAL.md` returns nothing, and the same search across spec/ and CONTINUE.md returns nothing. The 40 lines of the WAL's Constraints section are campaign-method rules, not temporary-code records."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:1265  - Never batch two unrelated code changes into one spec edit. One intent",
+     "spec/boot/STATIC.md:1266    per sync run.",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:193  - ##NON-GOAL-DOES-NOT-BATCH **Does not batch.** One intent per run. Batching two unrelated code",
+     "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`; @spec/done",
+     "the rule composes with the host's atomicity rule (PROP-000.md:163), which binds every commit here. Practice is mixed at the grain below a commit and is stated rather than resolved: the two recorded syncs each moved one coherent contract area, which is one intent per run by the rule's own measure."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:1  # When to run Sync-from-Code {#root}",
+     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:1  # Sync-from-Code review workflow {#root}",
+     "spec/boot/STATIC.md:1268  Decision table for whether to run: [`spec/flows/sync-from-code/when-to-apply.md`](../flows/sync-from-code/when-to-apply.md).",
+     "spec/boot/STATIC.md:1269  Human review checklist: [`spec/flows/sync-from-code/review-workflow.md`](../flows/sync-from-code/review-workflow.md).",
+     "DRIFT: two pointers in one fact and both dangle for the host reader — `../flows/sync-from-code/when-to-apply.md` and `../flows/sync-from-code/review-workflow.md`, compiled verbatim into a lane whose `spec/flows/` does not exist. Both targets are real and are what the pointers call them; it is the address the consumer receives that fails."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
