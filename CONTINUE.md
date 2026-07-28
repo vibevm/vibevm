@@ -1,441 +1,298 @@
-# CONTINUE — cold-resume checkpoint
+# CONTINUE — cold resume
 
-_Written 2026-07-28, refreshed **mid-flight 2026-07-29** (**Phase C: W1-W4 CLOSED,
-W5 at 14 of 21 files; the phase is past 78 %**). `spec/WAL.md` is the canonical
-living state and supersedes this snapshot wherever they diverge._
+**Do not quote the numbers in this file. Measure them.** Two commands, both from
+the repository root, both fast:
 
-> **MID-FLIGHT CHECKPOINT, not a wind-down.** W4 is open and W5's evidence is
-> gathered. **Do not re-derive any number in this file — run the two commands:**
-> ```bash
-> python campaigns/packages-2026-09/tasks/batch-progress.py   # owed vs judged, per batch
-> python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts said
-> ```
-> `batch-progress.py` is new this session and names the unopened files of any
-> open batch, so the next slice is chosen from its output rather than by hand.
+```bash
+python campaigns/packages-2026-09/tasks/batch-progress.py
+```
+
+```bash
+python campaigns/packages-2026-09/tasks/summary.py
+```
+
+The first is the progress bar: owed against judged, per batch, and it *names the
+unopened files of an open batch* so the next slice is chosen from its output
+rather than by hand. The second is the verdict breakdown by zone. Everything
+below that looks like a measurement was true when written and is a hint about
+where to look, not a fact to repeat.
+
+---
 
 ## TL;DR
 
-**Three world batches are closed and six packages with them.** W1 407 (90.4 %),
-W2 692 (91.9 %), W3 615 (**89.9 %, and zero unverifiable** — the first batch in
-the phase where every fact could be settled against the tree). `world` reads
-**1 557 / 140 / 17 — 90.8 %** over 51 of its 121 files.
+**Phase C** of the PROP-043 wave-2 campaign in `campaigns/packages-2026-09` — the
+verification pass, where every anchor in every shipped package file gets a
+verdict of `confirmed | drift | unverifiable` backed by evidence that resolves to
+a real line in a real file.
 
-**§5-C's falsifiable prediction is settled and it inverted.** It said `world`
-would measure higher than `ai-native`; over 1 714 anchors it reads 90.8 %
-against 91.6 %. The reason is the opposite of the one predicted: these flows make
-claims about the consuming project, and this consumer is measurable to the line.
+At the last measurement: **6390 / 6847 anchors, 93.3 %, 457 remaining.**
+**W6 is CLOSED** (572/572, four packages, nineteen files). **W7 is open** at
+146/603 — `managed-blocks` judged except its fifth file, `qualified-naming` and
+`tool-design-lessons` not started.
 
-**The per-file slice replaced the batch as the unit of work**, and that answers
-the split question the plan left open. Seventeen slices landed here, one file
-each, 17 to 149 rows, each merged and sealed on its own. **W5 does not need
-splitting; it needs twenty-one slices.**
+Branch `main`, clean, pushed to both mirrors. The standing goal is **finish
+Phase C**. Nothing else.
 
-**Nothing is in flight.** No worker running, no table half-read. W4 is unstarted
-and its evidence has not been gathered.
+---
 
-## Where the numbers are {#numbers}
+## The one thing that makes this work
 
-| | |
-|---|---|
-| host | 58 / 58 files, 4 499 verdicts — 99.9 % |
-| **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, 2 470 / 207 / 20, **91.6 %** |
-| **world** | **63 / 121 files** — 2 131 verdicts, **1 909 / 204 / 18, 89.6 %**, 159 self-referential (7.5 %); **2 019 anchors owed** |
-| phase | **4 828 of 6 847 — 70.5 %** |
-| gate | `progress check --exhaustive` clean, 259 files |
-| tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |
+**The unit of work is ONE FILE, never a batch.** Read the subject file in full,
+then walk its rows with `show-rows.py`, then build a batch containing that file
+alone, merge it, seal it, commit it. Every attempt to classify rows in bulk has
+produced verdicts that did not survive being read back.
 
-**§5-C's prediction moved AGAIN and the same way.** `world` was 90.8 % when W3
-closed; W4 has pulled it to **89.6 %** against `ai-native`'s 91.6 %, so the gap
-widened from 0.8 to 2.0 points. The reason is the one W3 recorded: these flows
-make claims about the consuming project, and `campaign-plans` in particular
-describes a practice this repository has left.
+**Every number in a report comes from a command.** A previous session computed a
+phase percentage in its head and got it wrong; another wrote 89.1 % where
+`summary.py` said 89.3 %.
 
-**Never decrement these; re-measure.** One command prints all of it:
+---
 
-```bash
-python campaigns/packages-2026-09/tasks/summary.py
-```
+## Where the answers live, and how to restore them {#recovery}
 
-Per package, closed: `two-process-model` 96.6 % · `wal-specspaces` 93.5 % ·
-`sync-from-code` 93.7 % · `conflict-protocol` 93.6 % · `decision-records` 92.9 % ·
-`addressable-specs` 87.9 % · `flow:wal` 86.5 %.
-
-## What remains {#remains}
-
-| batch | packages | files | anchors | state |
-|---|---|---:|---:|---|
-| **W4** | campaign-plans, discovery-prompt, comparative-research, redbook | 15 | 564 | **CLOSED — 474 / 89 / 1, 84.0 %** |
-| **W5** | operating-modes, health-audit, manual-tests, secrets-hygiene | 21 | 697 | **14/21 judged, 417 anchors** |
-| **W6** | licensing, source-mirrors, spec-genres, dev-runtime-docs | 19 | 572 | **workers commissioned 2026-07-29** |
-| **W7** | managed-blocks, qualified-naming, tool-design-lessons | 15 | 603 | harvest written, no workers yet |
-
-**W5's closed packages:** `health-audit` 217/217 at 88.5 %, `manual-tests`
-123/123 at 91.1 %. **Left in W5:** operating-modes' PROTOCOL (52) and
-writing-a-codeword (37), then all five `secrets-hygiene` files (191).
-**W6's four `ev-W6a…d.json` were commissioned and may already be on disk — do
-not read a table before its completion notification arrives.**
-
-**All four world harvests exist and are committed** —
-`harvest/world-w4-plans-and-inquiry.md`, `-w5-project-practice-i.md`,
-`-w6-project-practice-ii.md`, `-w7-authoring-for-tools.md`. So the recipe's step 1
-is done for the whole remaining cluster; only step 2 (commission workers) is
-outstanding for W6 and W7.
-
-**Eight evidence tables are in and all eight verify to ZERO unresolvable** —
-`ev-W4a…d` (872 + 606 + 306 + 420 refs) and `ev-W5a…d` (869 + 487 + 560 + 523).
-None cites `CONTINUE.md` or `spec/WAL.md`, so this checkpoint cannot break them.
-
-**W4's three remaining files are all `comparative-research`:**
+Delegated evidence is **not** recovered from the agent's chat reply. The reply is
+a summary; the artefact is a file the worker writes directly into the repository:
 
 ```
-  60  …/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md
-  61  …/spec/flows/comparative-research/from-research-to-roadmap.md
-  26  …/spec/flows/comparative-research/research-template.md
+campaigns/packages-2026-09/tasks/evidence/ev-<batch><pkg>.json
 ```
 
-**W5 needs 21 slices and its evidence is already on disk.** Judge, do not
-re-gather.
+So the recovery rule is: **check the disk, not the transcript.** A worker whose
+final message was lost has still left its table at that path, and
+`git status --porcelain campaigns/packages-2026-09` shows it as untracked. Commit
+it as returned, unjudged, and judge it later.
 
-**W4's file list with per-file anchor counts, measured from `run/mirror/` — hand
-these to the workers verbatim so nobody re-derives them:**
+Two shapes seen so far: one file per package (`ev-W6a.json`), or one file per
+subject file (`ev-W7a-p1.json` … `-p4.json`). `make-slice.py --file` works on
+either, because it filters rows by their `file` field.
 
-```
-campaign-plans (218)
-  23  packages/org.vibevm.world/campaign-plans/v0.1.0/README.md
-  29  …/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md
-  64  …/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md
-  48  …/spec/flows/campaign-plans/execution-ledger.md
-  54  …/spec/flows/campaign-plans/phase-gates.md
-comparative-research (180)
-  21  packages/org.vibevm.world/comparative-research/v0.1.0/README.md
-  12  …/spec/boot/52-flow-comparative-research.md
-  60  …/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md
-  61  …/spec/flows/comparative-research/from-research-to-roadmap.md
-  26  …/spec/flows/comparative-research/research-template.md
-discovery-prompt (83)
-  19  packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md
-  10  …/spec/boot/50-flow-discovery-prompt.md
-  54  …/spec/flows/discovery-prompt/usage.md
-redbook (83)
-  44  packages/org.vibevm.world/redbook/v0.2.0/README.md
-  39  …/spec/boot/03-flow-redbook.md
-```
-
-**Two things about W4 worth knowing before the harvest.** `redbook` is the
-umbrella that pins the other twenty-two members and ships the book itself at
-`spec/book/ru/` — its facts are mostly about the collection's own composition, so
-source 1 and the lockfile carry more of the weight than usual. And
-`discovery-prompt` ships an artefact the boot lane explicitly tells sessions NOT
-to load outside a deployment request, so «is it in use here?» is the wrong
-question to ask of it — `F-119` already records that the book's chapter 1 cites a
-`safeharbor.md` that exists nowhere, in both redbook slots.
-
-## The recipe {#recipe}
-
-1. **Capture the batch's three §3.1 sources into `harvest/`**, each `command →
-   real output`. `harvest/world-w3-ipc-core-ii.md` is the model.
-2. **Commission one `opus5` worker per package**, pointing each at
-   `tasks/WORLD-WORKER-BRIEF.md` and the harvest, with the file list and per-file
-   anchor counts from `run/mirror/`. **Tell them to prefer durable citation
-   targets — `CLAUDE.md`, `spec/boot/**`, `spec/common/**`, the crates — and to
-   avoid `CONTINUE.md` and `spec/WAL.md`.** That two-sentence addition is what
-   gave W3 **1 805 refs and zero unresolvable on the first pass**.
-3. **`verify-evidence.py` BEFORE reading a word**, then `repair-refs.py --apply`.
-4. **One file per slice.** Read the subject document in full, then
-   `show-rows.py --brief --file <name>` row by row, then write that file's
-   verdicts alone, `merge-verdicts.py`, `progress seal`, `summary.py`, commit.
-   A slice that lands cannot become a debt.
-
-## What W1–W3 settled, so W4–W7 do not re-derive it {#judged}
-
-- **Non-adoption is not drift — the line the whole cluster runs on.** A flow's
-  prescription the host simply never adopted is **confirmed**: a human's morning
-  read leaves no repository artefact, and no flow claims the host performs one.
-  **Drift is where the host's own written contract contradicts the flow**, or
-  where a measurable rule is broken over a double-digit share of its window.
-  `morning-routine.md` is unadopted end to end and scores 39 of 42 confirmed; its
-  two drifts are both a cold-start read order that `CLAUDE.md:205` reverses in
-  writing.
-- **Each fact is judged on its own sentence, never on its family.**
-  `NEVER-APPEND-TO-THE-WAL` prohibits appending only and the host never appends —
-  confirmed. `REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND` names patching too, and
-  `CLAUDE.md`'s step 2 says «Update … bump … refresh» — drift.
-- **A definition that classifies a failure correctly is confirmed BY that
-  failure.** «A decision without a revisit condition becomes a sacred cow» is
-  confirmed by 142 sections having none, not refuted by them.
-- **A numeric target the host exceeds is drift**, and so is its summary
-  restatement (W1's `HEADER-TARGET-LENGTH-AND-HARD-LIMIT` precedent).
-- **A fact whose subject IS a `../flows/…` pointer is drift** — the 69-dangling
-  family, found in seven packages so far. A rule fact that merely contains such a
-  link is judged on the rule.
-- **THE MEASURED WINDOW, settled in W4 and stated in its reasons so it can be
-  re-judged.** When a flow's rule has archived host instances and no live ones,
-  the window is **the two live campaigns / the current tree**, and the archive is
-  cited as evidence the practice was ONCE ADOPTED — which is exactly what makes
-  the absence drift rather than non-adoption. A rule the host never followed is
-  confirmed; a rule it followed in twenty-five archived plans and stopped
-  following in the two it runs now is not. `campaign-plans` closed at 72.5 % on
-  this line, the lowest package in the phase.
-- **W4's own reusable measurements:** the fifteen-section plan skeleton is
-  instantiated **once**, in the archive · Phase 0 exists in 5 archived plans and
-  **0 live** ones, and two of those five committed from it · quick-start 7/0,
-  whole-campaign acceptance 8/0, risks 16/0, non-goals 9/0, execution ledger 8/0,
-  commit maps 3/0 (archived/live) · `EXECUTING` occurs **0 times** in the whole
-  repository · 17 unique commit hashes cited in wave 2's plan against 189 commits
-  in its zone (wave 1: 20 against 125) · «the origin project» is an unresolved
-  house phrase in **twelve** redbook-family READMEs · redbook's rosters read
-  22 pins / 21 README rows / 23 snippet names (F-113), and all 23 ARE reachable by
-  an exact pin once `git-practices`' own four pins are counted · `campaign-plans`
-  occurs **0 times** in the entire `core-ai-native` tree, both slots and installed.
-- **Measurements already in hand, reusable:** boot lane **~16 100 tokens against
-  a 500-token budget** (32×) · `spec/WAL.md` ~4 000 against 3 000 · **9 of 47**
-  module specs over 5 000 · **4 of 153** decision sections carry four fields, 127
-  carry one · **11** revisit triggers exist, **0** carry all three parts ·
-  `docs(spec): sync …` typed **0 times in 2 041 commits** against 183
-  `docs(spec)` · **857 of 982** headings anchored, the 125 without being **all 23
-  in `spec/boot/` and all 8 in `spec/WAL.md`** · **59 duplicate-anchor warnings**
-  in the generated boot lane · `Test:` lines in `spec/`: **0**.
-
-## The standard that judges a verdict {#standard}
-
-> **A fact that PRESCRIBES what the discipline requires is confirmed when it is
-> coherent and every referent it names resolves**, including a referent the
-> package itself declares as future work.
->
-> **A fact that DESCRIBES what this repository already ships or does is checked
-> against the tree, and a description that does not match is drift.**
->
-> **A fact whose subject cannot be exercised here** — a toolchain not installed,
-> a human's reading habit, a project that declined the convention — **is
-> unverifiable, and says so in its own words.**
-
-For `world` there is a fourth clause: **a flow's fact is also checked against the
-host's observed conformance.** A rule-fact drifts on **systematic**
-non-compliance — a double-digit share of the measured window — not on single
-exceptions the record names. And see §judged: non-adoption is not non-compliance.
-
-## Findings open {#findings}
-
-| id | what | who closes it |
+| state | how to tell | what to do |
 |---|---|---|
-| **F-129** | the `wal` package ships two contradictory wind-downs — six steps in `session-end-hook.md`, five in a different order in `cold-resume.md`, and a third fact calling them the same | **owner** (published slot → F-122) |
-| **F-124…F-128** | unresolvable evidence ids · one measurement published twice · one tool name on two tools · `-race` prescribed 15× and run 0× · `spec/boot/INLINE.md` does not exist | **owner** / an edit |
+| table landed, unjudged | `ev-*.json` exists, `batch-progress.py` lists the files as unopened | judge it, slice by slice |
+| table landed, judged | the batch's files stop appearing as `unopened` | nothing |
+| worker died before writing | no `ev-*.json` for that package | re-commission from the brief; nothing lost but tokens |
 
-Carried: **F-117 … F-123**, **F-114**, **F-087 / F-088**, **F-078**, **F-092**,
-**F-069**, the `specmap` ratchet's 37 gated orphans.
-
-**Not yet filed as findings but measured and in the verdicts' reasons:** three
-more internal contradictions (record-template vs revisit-triggers on whether a
-trigger fires unprompted; cognitive-load-split vs the wal package on whether one
-text serves three readers; addressable-specs vs wal on where invariants sit), and
-one collision of principle — `uncertainty-protocol` prefers no new dependency,
-`PROP-000` §15 decides the opposite at the governing anchor in the four-field
-form.
-
-## Mechanics — fixed, not re-invented {#mechanics}
-
-Verdicts live in the per-file `campaign` map inside `run/cache.json`, **never in
-markup** (PROP-043 §7.1/§7.5). Mutate by **load-and-merge only**.
+Before reading any table, **verify it**, and if the boss has edited a file the
+table cites, **repair it**:
 
 ```bash
-python campaigns/packages-2026-09/tasks/verify-evidence.py <ev-*.json>
-python campaigns/packages-2026-09/tasks/repair-refs.py <ev-*.json> --apply
-python campaigns/packages-2026-09/tasks/merge-verdicts.py <batch.json> [--force]
-cargo run -q -p vibe-cli --bin vibe -- progress seal --campaign campaigns/packages-2026-09 <paths…>
-python campaigns/packages-2026-09/tasks/summary.py [--batch W3] [--by-file]
+python campaigns/packages-2026-09/tasks/verify-evidence.py campaigns/packages-2026-09/tasks/evidence/ev-W7b.json
 ```
-
-`merge-verdicts.py` refuses: a non-addressable anchor, a verdict outside
-`{confirmed, drift, unverifiable}`, an empty or too-short `ev`, a missing `src`
-on `world`, and a silent overwrite. **It accepts a SUBSET of a batch's files
-under the same batch id** — that is what makes the per-file slice safe.
-
-**Never hand-write `verified_at` or `processed_hash`** — `seal` writes them.
-
-**Generate each batch file with a small script** holding an
-anchor → (verdict, src, reason) map, defaulting the rest to confirmed with the
-worker's own `searched` as the reason; no anchor is then transcribed by hand.
-Key by row INDEX only when anchors repeat inside one table. Seventeen such
-scripts are in the scratchpad path named in each slice's commit.
-
-## Decisions still in force {#decisions}
-
-- **Delegation goes to the harness's built-in `opus5` subagents, not fractality**
-  (owner ruling 2026-07-28). Verdicts are never delegated; neither is the review
-  of delegated output. Only evidence gathering is.
-- **The subject is not modified to make the measurement pass** (batch plan §2.2).
-- **`vibedeps/` stands in for §3.1's third source** (§2.3).
-- **A verdict records its source class in a field, not in prose** (§2.1 / A2).
-- **Superseded version slots are marked, never verified** (§3.3).
-- **The perimeter law** (batch plan §4.5): SPEC in `core-ai-native`, ENGINE in its
-  library crates, DRIVER in each language stack's CLI, DEPLOYMENT in a consuming
-  project. A `not-found` is a fact about the search perimeter until the perimeter
-  has been checked.
-- **A finding spanning a package boundary is a release event** (§5-D).
-
-## Repository map {#map}
-
-```
-crates/           the vibe workspace — cli, resolver, registry, progress-core, check, mcp, wire, llm
-xtask/            build-side drivers: codegen, specmap, sync-engines, mirror
-spec/             the contract tree — boot/, common/PROP-*, modules/, flows/, terraforms/
-packages/         the authored corpus: org.vibevm.world (27 flows), org.vibevm.ai-native (11), org.vibevm.fractality
-vibedeps/         the installed copies a consumer actually receives
-campaigns/        packages-2026-09 (live) · progress-2026-08 (archival)
-research/         rust-demo · ts-demo · go-demo — the three consuming projects; tcg-bench
-discipline/       the host's own conform / specmap / health artefacts
-docs/  legacy-spec/  refs/  neworder2/  fixtures/  schemas/  apps/
-```
-
-## Quick start {#quick-start}
 
 ```bash
-python campaigns/packages-2026-09/tasks/summary.py
-cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09
-bash tools/self-check.sh ; echo "EXIT=$?"
-cargo xtask mirror --check
+python campaigns/packages-2026-09/tasks/repair-refs.py campaigns/packages-2026-09/tasks/evidence/ev-W7b.json --apply
 ```
 
-## Standing traps {#traps}
+This has bitten three times. The instructive one: the durable-citation rule keeps
+workers off `CONTINUE.md` and `spec/WAL.md` because a wind-down rewrites them —
+but **the harvest and the campaign plan are durable files the BOSS edits**, and
+the briefs actively encourage citing the harvest. Editing the W4 harvest (+18
+lines) and the campaign plan (+88) broke 17 refs in a table that had verified
+clean. `repair-refs.py --apply` re-pointed all 17 by single-hit search and the
+shifts were exactly +18 and +88. **After editing any file an evidence table
+cites, re-verify and repair every table.**
 
-1. **A wind-down invalidates any sealed evidence table citing `CONTINUE.md` or
-   `spec/WAL.md`.** W2's tables went from 3 unresolvable to 65 that way, twice in
-   one session, and not one break was a fiction. Re-verify before reading,
-   always — and prevent it upstream by telling workers to cite durable files.
-2. **`run/cache.json` carries every verdict.** Load-and-merge only.
-3. **Every parsing `progress` subcommand writes the cache — `check` included.**
-   Always pass `--campaign`; never point one at `campaigns/progress-2026-08`.
-4. **A count including `node_modules`, `.vibe/cache/` or `vibedeps/` is a count
-   of somebody else's code** — except when `vibedeps/` is the subject.
-5. **An absence you assert is not an absence you checked.** A W3 worker wrote
-   «no host rule discouraging new dependencies exists» against a `PROP-000` §15
-   that exists and rules the opposite way.
-6. **Python reading git output must decode UTF-8 explicitly** — this box defaults
-   to cp1252 and `subprocess.run(text=True)` dies on the corpus's em-dashes. Use
-   `capture_output=True` + `.decode("utf-8", errors="replace")`.
-7. **`repair-refs.py` preserves each table's own indent** — it did not until this
-   session, and re-dumping at a fixed width buried 51 real repairs in 4 481
-   cosmetic ones.
-8. **Never `git add -A` while a worker is running.** Stage explicit paths.
-9. **Do not run a `vibe` command while `tools/self-check.sh` runs.**
-10. **Set `PYTHONIOENCODING=utf-8`** before any Python that prints this corpus;
-    edit through editor tools, never a PowerShell round-trip.
+---
 
-## The recent commit chain {#commits}
+## The prompt for the next session {#prompt}
 
+> Продолжай **фазу C** кампании PROP-043 wave-2 в `campaigns/packages-2026-09`.
+>
+> **Прочти сначала:** `CONTINUE.md` целиком (особенно §recovery, §standard и
+> §judged); `campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md`;
+> `PHASE-C-BATCH-PLAN.md` §2.1 и §4.5;
+> `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` §3.1, §3.2, §5 и §7
+> LOG с конца. Состояние меряй командами `batch-progress.py` и `summary.py`.
+>
+> **ПЕРВОЕ ДЕЙСТВИЕ:** `git status --porcelain campaigns/packages-2026-09` —
+> закоммить всё, что рабочие дописали, как есть, без вердикта. Потом суди.
+>
+> **ЕДИНИЦА РАБОТЫ — ОДИН ФАЙЛ, НЕ БАТЧ.** Читаешь файл целиком → `show-rows.py`
+> построчно → батч из одного файла → `merge-verdicts.py` → `vibe progress seal
+> --campaign campaigns/packages-2026-09 <пути>` → коммит.
+>
+> **Каждый world-вердикт ОБЯЗАН нести `src`** — непустое подмножество [1,2,3] по
+> §3.1: 1 = артефакты пакета, 2 = соответствие хоста, 3 = `vibedeps/`.
+>
+> **Стандарт вердикта** — §standard плюс §judged ниже. Непринятие хостом
+> предписания — НЕ дрейф. Дрейф там, где написанный контракт хоста противоречит
+> потоку, или где измеримое правило нарушено на двузначной доле своего окна.
+> Каждый факт судится по своему предложению, не по семье. Определение, которое
+> верно классифицирует провал, подтверждается ЭТИМ провалом.
+>
+> **Механика:** вердикт живёт в per-file карте `campaign` внутри `run/cache.json`
+> и НИКОГДА в разметке; менять только load-and-merge. Батчи — через
+> `make-slice.py` с картой anchor → (verdict, src, reason). **Рулинги пиши через
+> `Write`, НЕ через heredoc** — bash съедает бэктики; один раз это запустило
+> `tools/self-check.sh` целиком. Один рулинг-файл на ОДИН субъектный файл:
+> make-slice отклоняет якоря чужого файла.
+>
+> **КАЖДОЕ ЧИСЛО В ОТЧЁТЕ ПРИХОДИТ ИЗ КОМАНДЫ.**
+>
+> **ДЕЛЕГИРОВАНИЕ:** встроенные агенты `opus5` через Agent. Fractality НЕ
+> использовать. Делегируется только сбор доказательств. В брифе ОБЯЗАТЕЛЬНО:
+> цитировать durable файлы (`CLAUDE.md`, `spec/boot/**`, `spec/common/**`,
+> `crates/`), **НЕ цитировать `CONTINUE.md` и `spec/WAL.md`**.
+>
+> **АВТОНОМИЯ:** правки, скрипты, cargo, `git commit`, push через `cargo xtask
+> mirror` — сам. Останавливайся ТОЛЬКО на настоящем смысловом решении владельца.
+> Находка — не повод останавливаться: фаза C находки ФИКСИРУЕТ.
+>
+> **НЕ ОСТАНАВЛИВАЙСЯ НА ГРАНИЦАХ РАБОТЫ.** Закрытый срез, закрытый батч,
+> написанный отчёт, легший коммит — не точки передачи хода.
+>
+> **ТОКЕНЫ НЕ ЭКОНОМЬ, и НЕ ОБЪЯВЛЯЙ ПРЕДЕЛ КОНТЕКСТА, КОТОРЫЙ НЕ ИЗМЕРИЛ.**
+
+---
+
+## What is left
+
+**W7 — «authoring for tools»**, three packages of five files each:
+
+- `managed-blocks` — four files judged; **`rejected-designs.md` outstanding**.
+  Its worker wrote per-file partials `ev-W7a-p1..p4.json`; p5 was still pending.
+- `qualified-naming` — worker commissioned, no table on disk yet.
+- `tool-design-lessons` — worker commissioned, no table on disk yet.
+
+**When W7 closes**, Phase C is not done until:
+
+- the X/Y/Z summary lands in the plan's §7 LOG (exit-gate clause ii);
+- the self-referential count is reported (clause iv) — `summary.py` prints it;
+- `vibe progress baseline --campaign campaigns/packages-2026-09` writes
+  `baseline.json` (clause v / amendment A6).
+
+---
+
+## Findings this pass surfaced, filed and NOT repaired
+
+Phase C records; the next wave drains. Three are worth an owner's eye:
+
+1. **The root `README.md:164` still says vibevm is proprietary.** «vibevm itself
+   ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for
+   the moment» — over a file that has been UPL-1.0 since 2026-07-12, linking to
+   the file it contradicts. `CLAUDE.md:132-137` enumerates the deliberately-stale
+   `"EULA"` strings and `README.md` is on none of them, while `VIBEVM-SPEC.md:8`
+   IS. Three further `license = "EULA"` strings sit in
+   `docs/authoring-{flow,feat,stack}.md` as example manifests authors copy.
+2. **The mirrors do not carry the branches.** Both targets in `mirrors.toml`
+   declare `refs = ["main", "tags"]`, so `cultural-backup`, `cultural-refactor`,
+   `refactor/qualified-address-restructure` and the `fractality/*` branches exist
+   on no host. If this machine were lost they would go with it.
+3. **`CLAUDE.md:191` prescribes the push its own boot lane forbids.** END SESSION
+   step 4 says «Push to `origin/main`»; `90-user.md:13`, `:35` and `PROP-016:15`
+   all name that as *not* the rollout. The reflogs record 130 such pushes (69
+   origin, 61 github) against the `cargo xtask mirror` path.
+
+---
+
+## The verdict standard {#standard}
+
+**confirmed** — the host's behaviour or written contract agrees, or it is a
+definition and the thing it defines behaves as defined.
+
+**drift** — the host's own written contract contradicts it, or a measurable rule
+is broken over a double-digit share of its window. **Not adopting a package's
+prescription is not drift.**
+
+**unverifiable** — the evidence class needed to settle it does not exist here.
+Say what would have settled it.
+
+Each fact is judged **on its own sentence**, never on its family. A definition
+that correctly classifies a failure is **confirmed by that failure**.
+
+---
+
+## Rulings already made, reusable {#judged}
+
+- **A marked exception is not drift.** Where the host writes its exception down —
+  an `@spec/hold` marker, a recorded owner decision, a future-trigger note — the
+  rule is confirmed at N-of-M with the exception named. Where the same file
+  breaks a rule the host never marked, that one is drift. This split decided
+  four verdicts in `spec-genres` alone.
+- **The measured window.** When a flow's rule has archived host instances and no
+  live ones, the window is the current tree; the archive proves the practice was
+  once adopted, which makes absence *drift* rather than non-adoption. State the
+  window in the reason so it can be re-judged.
+- **The 69-dangling family.** The host has no `spec/flows/` directory. A fact
+  whose *subject* is a `../flows/…` pointer is drift; a rule that merely contains
+  one is judged on the rule. Every W6/W7 boot snippet so far carries 1–3 of them.
+  Root-relative `spec/flows/…` inside a re-derive prompt is the same defect and
+  the campaign's own `\.\./flows/` scan cannot see it.
+- **`UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE`** is confirmed everywhere:
+  uninstall removes the vibedeps slot, drops the lockfile entry and the
+  `[requires]` declaration, then regenerates boot. `files_written = []` for all
+  36 packages, which is why source 3 is `vibedeps/`.
+- **Delivery is not compliance.** A rule compiled into the boot lane *is*
+  delivered to every session and may still be kept in 3 of 36 commits. Judge the
+  sentence written; record the other half.
+- **Summary restatements carry their body rule's verdict** (W1 precedent).
+- **Do not rule drift on contested evidence.** Where two workers' searches
+  disagreed about revisit triggers, the verdict recorded the conflict and the
+  command that would settle it. A third worker later settled it.
+- **An absence must be checked, not asserted** — the campaign's named trap, which
+  has caught the harvest twice.
+
+---
+
+## Repository map
+
+- `crates/` — the Rust workspace. `vibe-core`, `vibe-cli`, `vibe-publish`,
+  `xtask` (`mirror`, `conform`, `sync-engines`).
+- `spec/` — `spec/boot/` is the compiled boot lane; `spec/common/` holds
+  PROP/FEAT; `spec/terraforms/` holds campaign plans; `spec/WAL.md` is the
+  living checkpoint.
+- `packages/org.vibevm.*/` — the shipped packages; `world/` is what Phase C
+  verifies.
+- `vibedeps/` — installed dependency copies. Source class 3.
+- `campaigns/packages-2026-09/` — `tasks/` the instruments, `harvest/` the
+  evidence gathering, `run/cache.json` the verdicts.
+
+## The instruments
+
+| script | what it does |
+|---|---|
+| `batch-progress.py` | owed vs judged per batch; names unopened files |
+| `summary.py` | verdict breakdown by zone + the self-referential count |
+| `show-rows.py` | reads a worker's table row by row |
+| `verify-evidence.py` | every ref resolves to a real line, or it is named |
+| `repair-refs.py` | re-points refs the boss moved, by single-hit search |
+| `make-slice.py` | builds one file's batch from a table plus a rulings map |
+| `merge-verdicts.py` | load-and-merge into `run/cache.json`; `--force` to restate |
+
+Both `make-slice.py` and `merge-verdicts.py` refuse rather than guess, and both
+refusals caught real mistakes this pass. Trust them over your reading.
+
+## Quick start
+
+```bash
+cargo build -p vibe-cli
 ```
-cf6c7927 docs(wal): the checkpoint catches up to three closed batches
-a77c4be5 docs(campaign): W2 and W3 in the ledger, and the unit that replaced the batch
-c75f4216 chore(campaign): W3 closes at 615, and the addressability flow is least addressable
-85fb6fa6 chore(campaign): the boot budget is 500 tokens and the host loads 16 100
-10ed70dd chore(campaign): the layout the host runs is not the layout the flow draws
-dbdd1091 chore(campaign): the addressability rule is broken by its own checker
-3facaed1 chore(campaign): the host decided the opposite, in the prescribed form
-b3d48327 chore(campaign): conflict-protocol closes, and the hierarchy is its whole debt
-9dd9aa46 chore(campaign): three hierarchies, and no two of them agree
-68dc5fb2 chore(campaign): decision-records closes, and its own never is the one broken
-8f7850b2 chore(campaign): the trigger document is confirmed by the host failing it
-67bce43a chore(campaign): four records of 153 carry the four fields the flow requires
-2e86018b chore(campaign): W3's evidence lands at 615 anchors and zero unresolvable refs
-582f603e chore(campaign): W2 closes at 692, and a milestone label became measurable
-784c5f02 chore(campaign): the grammar the boot snippet prescribes has never been typed
-e6e650fd chore(campaign): the sync protocol's third mandatory part never lands
-97b8014d chore(campaign): the registry's one-line status is 1 029 characters
-1927b4ee chore(campaign): two-process-model closes, and one text does not serve three readers
-261a46e2 chore(campaign): the boot budget is 500 tokens and the host loads 22 300
-c99b719e chore(campaign): the model document scores 100 %, and that is the finding
-689d23c3 chore(campaign): the model's own two files, and a rule its install undercuts
-3428fdbf chore(campaign): the checkpoint moved refs under the tables it had just described
-958dbcf5 chore(campaign): the wal package's two wind-downs disagree with each other
-a43159b9 chore(campaign): the wal flow measured against the WAL it specifies
-6e567dee chore(campaign): the session-end moved 65 refs under W2's finished workers
+
+```bash
+tools/self-check.sh
 ```
 
-## The resume prompt {#prompt}
-
-```text
-ВОССТАНОВИ СЕССИЮ
-
-Затем продолжи Phase C кампании PROP-043 волны 2 (campaigns/packages-2026-09).
-
-ПЕРВОЕ ДЕЙСТВИЕ — ДВЕ КОМАНДЫ, и все числа берутся из них, а не из этого файла:
-  python campaigns/packages-2026-09/tasks/batch-progress.py
-  python campaigns/packages-2026-09/tasks/summary.py
-
-batch-progress.py показывает, сколько батч ДОЛЖЕН против сколько НАПИСАНО, и
-называет неоткрытые файлы открытого батча поимённо — следующий срез берётся
-оттуда.
-
-СОСТОЯНИЕ НА 2026-07-29: фаза 70.5 %, осталось 2 019 якорей. W1-W3 закрыты.
-W4 — 12 файлов из 15 (417 якорей); закрыты discovery-prompt 92.8 %,
-redbook 96.4 %, campaign-plans 72.5 %. Осталось три файла comparative-research.
-W5 — ДОКАЗАТЕЛЬСТВА УЖЕ СОБРАНЫ (697 строк в ev-W5a…d, все верифицированы в
-ноль), НЕ СОБИРАЙ ЗАНОВО, суди. W6 и W7 — харвесты написаны, воркеры не
-комиссованы.
-
-ВСЕ ЧЕТЫРЕ ХАРВЕСТА WORLD СУЩЕСТВУЮТ. Шаг 1 рецепта сделан для всего остатка.
-
-Перед началом прочитай, в этом порядке:
-  1. CONTINUE.md — целиком. §judged: там ЛИНИЯ ПРО НЕПРИНЯТИЕ, ОКНО ИЗМЕРЕНИЯ
-     и готовые измерения, которые не надо выводить заново
-  2. campaigns/packages-2026-09/harvest/world-w5-project-practice-i.md — харвест
-     батча, который судится следующим (плюс -w6-, -w7- для последующих)
-  3. campaigns/packages-2026-09/tasks/WORLD-WORKER-BRIEF.md — контракт делегата
-  4. campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md — §2.1 (src), §4.5 (периметр)
-  5. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md §3.1, §3.2, §5
-
-ДЛЯ W6 и W7: собери воркеров по образцу — бриф + харвест + список файлов с
-числами якорей + ОБЯЗАТЕЛЬНАЯ пара фраз «цитировать durable файлы (CLAUDE.md,
-spec/boot/**, spec/common/**, crates/), НЕ цитировать CONTINUE.md и spec/WAL.md».
-Восемь батчей подряд дали ноль неразрешённых ссылок с первого прогона.
-
-СРЕЗ СТРОИТСЯ ИНСТРУМЕНТОМ, НЕ РУКАМИ:
-  python tasks/make-slice.py tasks/evidence/ev-<X>.json --file <substr> \
-      --batch <W?> --out tasks/evidence/batch-<X>-<n>.json --rulings <r.json>
-Файл rulings — единственное, что пишет рука: анкор → {v, why, src}. Всё
-остальное по умолчанию confirmed с полем searched воркера как причиной.
-ОСТОРОЖНО: пиши rulings через Write, не через heredoc — heredoc съедает слой
-экранирования и ломает JSON на регексах.
-
-ЕДИНИЦА РАБОТЫ — ОДИН ФАЙЛ, НЕ БАТЧ. Прочитай файл-субъект целиком, потом
-show-rows.py --brief --file <имя> построчно, потом батч только этого файла,
-merge-verdicts.py, progress seal, коммит. merge-verdicts.py спокойно принимает
-подмножество файлов батча под тем же id. Семнадцать таких срезов закрыли W2 и W3,
-и ни один не стал долгом. W5 (697 якорей) делить НЕ НАДО — ему нужен 21 срез.
-
-Каждый world-вердикт ОБЯЗАН нести src — непустое подмножество [1,2,3] по §3.1.
-
-СТАНДАРТ ВЕРДИКТА — CONTINUE.md §standard, и ключевое из §judged: непринятие
-хостом предписания — НЕ дрейф; дрейф — там, где СОБСТВЕННЫЙ ПИСЬМЕННЫЙ контракт
-хоста противоречит флоу, либо где измеримое правило нарушено на двузначной доле
-окна. Каждый факт судится по своему предложению, а не по семье. Определение,
-которое верно классифицирует провал, подтверждается ЭТИМ провалом.
-
-Механика: вердикт живёт в per-file карте campaign внутри run/cache.json и НИКОГДА
-в разметке; мутировать только load-and-merge; verified_at и processed_hash пишет
-только `vibe progress seal`. Батч-файл генерируй скриптом с картой
-якорь → (вердикт, src, причина), остальное по умолчанию confirmed с полем
-searched воркера как причиной. Каждое число в отчёте приходит из команды.
-
-ДЕЛЕГИРОВАНИЕ: во встроенные агенты opus5 через инструмент Agent. Fractality НЕ
-использовать. Вердикт не делегируется никогда — делегируется только сбор
-доказательств; ревью делегированного — тоже твоё.
-
-АВТОНОМИЯ: работай полностью автоматически. Все механические операции — сама:
-правки, скрипты, cargo, git commit, git push через `cargo xtask mirror`.
-Останавливайся ТОЛЬКО когда нужно настоящее смысловое решение владельца.
-Находка — не повод останавливаться: фаза C находки заводит, а не чинит.
-
-НЕ ОСТАНАВЛИВАЙСЯ НА ГРАНИЦАХ РАБОТЫ. Закрытый срез, закрытый батч, написанный
-отчёт, зафиксированный коммит — это не точки сдачи хода. Сводку пиши и СРАЗУ
-переходи к следующей единице работы в том же ходе.
-
-ТОКЕНЫ НЕ ЭКОНОМЬ, и НЕ ОБЪЯВЛЯЙ ПРЕДЕЛ КОНТЕКСТА, КОТОРЫЙ НЕ ИЗМЕРИЛ — это
-записанная ошибка прошлой сессии: контекст здесь суммаризуется, а не обрывается.
-Не классифицируй строки пачкой ради экономии. Если действительно упёрся:
-сохрани состояние (CONTINUE.md + spec/WAL.md + запись в LOG), напиши новый промт
-по образцу этого, зафиксируй и раскатай — и скажи прямо.
+```bash
+cargo xtask mirror
 ```
 
-**The WAL is the canonical living state.** If this file and `spec/WAL.md`
-disagree, the WAL wins.
+`mirror` is the sanctioned push — GitVerse and GitHub, fast-forward only, never
+`--force`.
+
+---
+
+## Decisions still in force
+
+- **This campaign delegates to built-in `opus5` subagents, not fractality** — an
+  owner override of the repo-wide default, recorded in the batch plan §6. The
+  verdict is never delegated.
+- **Verdicts live in `run/cache.json`, never in markup.** The package files are
+  the subject under test.
+- **Phase C files findings, it does not fix them.**
+- **Workers cite durable files only.** See §recovery for the corollary.
+
+---
+
+**`spec/WAL.md` is the canonical living state.** Where it and this file disagree,
+the WAL wins and this file is stale.
