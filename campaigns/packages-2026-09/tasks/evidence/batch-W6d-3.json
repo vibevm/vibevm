@@ -1,0 +1,213 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md": {
+   "SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:284  ## 19. Load-bearing setup documentation {#setup-docs}",
+     "spec/common/PROP-000.md:286  ##SETUP-DOCS **Decision:** Two files at the repo root are load-bearing for the project: @spec/done",
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "vibedeps/flow-dev-runtime-docs/0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:3  A project's **setup and runtime documentation** is load-bearing: it is the file a",
+     "confirmed: The protocol's opening premise, distinguished from the boot snippet's by naming BOTH readers ('a contributor or user'). The host adopts the term verbatim: PROP-000 §19's heading is 'Load-bearing setup documentation' and DEV-GUIDE.md:7 closes with 'the obligation is load-bearing'. Source 3: the installed copy carries the same sentence at line 3 (the shipped copy has it at line 5 because Phase B inserted the `<status/>` line and a blank). Widened to CLAUDE.md / AGENTS.md / GEMINI.md and to AUDIT.md — no hits for either guide filename in any of the four."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "when-the-doc-drifts-the-failure-happens-anyway": {
+    "v": "confirmed",
+    "ev": [
+     "DEV-GUIDE.md:330  It runs three invariants in order, exiting non-zero on the first failure (pass `--keep-going` to run all three regardless):",
+     "tools/self-check.sh:4  # trivial to wire into a CI matrix later. See `DEV-GUIDE.md` §6.",
+     "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+     "DEV-GUIDE.md:84  81 tests green on `main` as of the last checkpoint; clippy clean with `-D warnings`.",
+     "confirmed: This is a consequence claim, so the checkable form is: does the host carry drifted setup prose, and does it lack a signpost? Two instances, both live at HEAD. DEV-GUIDE.md:330 promises three invariants from tools/self-check.sh; the script documents ten (its header runs lines 6-36) and its very first step, `cargo fmt --all --check` (line 7), is not among the three the guide lists — so a contributor following §6 would not know the floor's first gate. The script points back at the stale section (line 4). DEV-GUIDE.md:84's '81 tests' stands against 2075 `#[test]` / `#[tokio::test]` attributes under crates/ and xtask/. Searched for a signpost: `grep -n 'DEV-GUIDE\\|RUNTIME-GUIDE'` over AUDIT.md, BACKLOG.md and TASKS.md returns one hit only — TASKS.md:19, the closed 2026-04 item that created the two files. No open item names either guide."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:12  ## The obligation {#obligation}",
+     "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "RUNTIME-GUIDE.md:5  **Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](spec/common/PROP-000.md).",
+     "DRIFT on the compliance the rule demands, measured over a stated window rather than asserted. Window `be5e0600..HEAD` — from the commit that created both guides to HEAD, 2 086 commits — with two selectors, both reproducible. **Selector A (paths):** commits touching `rust-toolchain.toml`, `tools/self-check.sh`, `crates/vibe-core/src/settings.rs` or `crates/vibe-publish/src/token.rs` — four files the guides document by name — 36 commits, 3 of which also touched a guide. **Selector B (content pickaxe):** `git log -S` on the three env vars RUNTIME-GUIDE tabulates — 34 commits, 1 also touched a guide. Both selectors OVER-count, so the true rate is bounded above by 3/36. The counter-example is an hour wide: on 2026-07-20 `f0e89db5` changed the settings home (+190 lines) and `8aec7cc9` introduced the `~/.vibe/registry.toml` that RUNTIME-GUIDE now tabulates, neither carrying a guide — and the matching guide edits landed 49 and 50 minutes later as SEPARATE commits, which is precisely what this rule forbids. `cb14fe5c` is a real instance of the rule kept, and it is the exception."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-DEFER-THE-DOC-UPDATE-TO-LATER": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:314  commit**. Never ship a setup change with the doc update deferred — deferral is",
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "campaigns/progress-2026-08/tasks/DRIFT-021.md:156  `DEV-GUIDE.md:43`, `RUNTIME-GUIDE.md:49`. Seven files touched against",
+     "campaigns/progress-2026-08/tasks/DRIFT-021.md:157  the ~5 budget signal; the four above are one-line corrections forced",
+     "DRIFT on the same evidence as its boot-snippet twin: the 2026-07-20 pair deferred the doc update by 49 and 50 minutes into separate commits, and `4dbe1987` changed the config home while updating VIBEVM-SPEC.md and a command doc but NEITHER guide."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "PIN-THE-OBLIGATION-IN-THE-FOUNDATIONAL-CONVENTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:284  ## 19. Load-bearing setup documentation {#setup-docs}",
+     "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
+     "spec/boot/STATIC.md:302  <!-- vibe:static org.vibevm.world/dev-runtime-docs — vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-flow-dev-runtime-docs.md -->",
+     "spec/boot/STATIC.md:312  Every change that touches the **toolchain, prerequisites, environment variables,",
+     "confirmed: `PROP-000` §19 exists and carries the obligation, which is exactly the pinning this fact prescribes. RECORDED for precision: `PROP-000.md` is NOT among `spec/boot/INDEX.md`'s eight entries, so what actually reaches a session at boot is this flow's own snippet through the compiled lane rather than the host's pin. The pin exists and is not the delivery path."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "every-contributor-meets-the-rule-before-touching-env-code": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:302  <!-- vibe:static org.vibevm.world/dev-runtime-docs — vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-flow-dev-runtime-docs.md -->",
+     "spec/boot/STATIC.md:312  Every change that touches the **toolchain, prerequisites, environment variables,",
+     "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
+     "confirmed on delivery, which is what it asserts: the rule is compiled into the boot lane that CLAUDE.md's generated block names as step 1, «read it first and in full», so every session does meet it before doing any work. RECORDED, and the distinction is the point: delivery is not compliance. The outcome half runs the other way — the rule is booted into every session and kept in at most 3 of 36 setup-surface commits over the measured window."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SETUP-DOCS-SERVE-TWO-DISTINCT-READERS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:286  ##SETUP-DOCS **Decision:** Two files at the repo root are load-bearing for the project: @spec/done",
+     "DEV-GUIDE.md:5  For end-user setup (how to *use* the shipped `vibe` CLI), see [`RUNTIME-GUIDE.md`](RUNTIME-GUIDE.md).",
+     "RUNTIME-GUIDE.md:3  What a user needs to install and configure on their machine to run the `vibe` CLI. For contributor / build setup, see [`DEV-GUIDE.md`](DEV-GUIDE.md).",
+     "confirmed: The host implements the two-reader split as two files that cross-reference each other in both directions (DEV-GUIDE.md:5 → RUNTIME-GUIDE, RUNTIME-GUIDE.md:3 → DEV-GUIDE), and PROP-000 §19 declares exactly two. The 'one or both, in the one commit' clause is directly observable in cb14fe5c, which touched BOTH guides (DEV-GUIDE.md 2 lines, RUNTIME-GUIDE.md 4 lines per `git show --stat`) alongside crates/vibe-core/src/settings.rs and crates/vibe-publish/src/token.rs — one reader each, one commit. The full history of the two files together is 18 commits (`git log --oneline -- DEV-GUIDE.md RUNTIME-GUIDE.md`)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AUDIENCE-CONTRIBUTOR-BUILD-DOCS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:288  - ##DOC-DEV-GUIDE [`DEV-GUIDE.md`](../../DEV-GUIDE.md) — contributor-facing: everything to install on a fresh machine to clone, build, test, contribute to, and (if authorized) publish from this repository. @spec/done",
+     "DEV-GUIDE.md:3  Contributor-facing setup: what to install on a fresh machine to clone the repo, build the CLI, run the tests, run manual smokes, and publish packages (if authorized).",
+     "DEV-GUIDE.md:20  Pinned in [`rust-toolchain.toml`](rust-toolchain.toml). Install rustup from <https://rustup.rs>, clone the repo, and the first `cargo` invocation picks up the pinned toolchain automatically.",
+     "DEV-GUIDE.md:327  bash tools/self-check.sh",
+     "confirmed: PROP-000.md:288 is almost a paraphrase of this anchor and DEV-GUIDE.md:3 is the file living up to it — clone / build / test / publish-if-authorized, in that order. The three named change classes all have a home in the file: build prerequisite (§2.2 git, §2.5 jtd-codegen), pinned toolchain (§2.1 at line 20, plus the toolchain note at line 293), bootstrap step (§6, the `bash tools/self-check.sh` entry point at line 327). Checked whether such changes actually land here — see the ##NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN row: the bootstrap-step class has drifted (§6 lists 3 of the script's 10 invariants), while the pinned-toolchain facts at line 293 still match Cargo.toml:52-53."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "AUDIENCE-RUNTIME-USER-DOCS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:289  - ##DOC-RUNTIME-GUIDE [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) — user-facing: everything to install and env-configure to run the shipped `vibe` CLI. @spec/done",
+     "RUNTIME-GUIDE.md:5  **Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](spec/common/PROP-000.md).",
+     "RUNTIME-GUIDE.md:45  | `$VIBE_SETTINGS` | override for the `~/.vibe` settings dir (used verbatim as the dir) | unset → `~/.vibe` |",
+     "RUNTIME-GUIDE.md:47  | `VIBEVM_PUBLISH_TOKEN` | publish token (wins over per-host and legacy files) | unset |",
+     "confirmed: RUNTIME-GUIDE.md:5 reproduces this anchor's four change classes verbatim (env var / path convention / prerequisite / auth flow), and §3 is the concrete table: 15 rows covering the ~/.vibe paths, the three env vars, and the project-local files. §2 is prerequisites (git, registry access), §2.4 in DEV-GUIDE plus RUNTIME-GUIDE §3 cover the auth flow. Whether such changes land here in the same commit is measured in the boot-snippet ##EVERY-SETUP-TOUCHING-CHANGE… row: the env-var pickaxe on exactly these three documented names returns 34 commits, of which 1 also touched a guide. Note RUNTIME-GUIDE.md:41 tabulates `VIBE_REGISTRY_CACHE` while the §3 header row calls the column 'Path / Var' — all three env vars are present."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-DOCS-ARE-ONLY-LOAD-BEARING-WHILE-THEY-ARE-TRUE": {
+    "v": "confirmed",
+    "ev": [
+     "DEV-GUIDE.md:330  It runs three invariants in order, exiting non-zero on the first failure (pass `--keep-going` to run all three regardless):",
+     "tools/self-check.sh:6  # Invariants checked, in order:",
+     "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+     "DEV-GUIDE.md:84  81 tests green on `main` as of the last checkpoint; clippy clean with `-D warnings`.",
+     "confirmed BY the failure it classifies, per §judged. The sentence says a setup doc carries weight only while it is true, and this host's own guide is untrue in two measured places — three invariants against ten, 81 tests against 2 075 — while `tools/self-check.sh:4` still sends its reader there. The definition is right; the failure it names is present and is carried by the abandoned-toolchain row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "two-habits-keep-them-so-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:49  - ##HABIT-SAME-COMMIT-UPDATES **Same-commit updates** (the obligation above) stop new drift at the source. @impl/done",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:50  - ##HABIT-A-PERIODIC-READ-THROUGH **A periodic read-through** against the actual toolchain catches the drift that slipped in",
+     "vibedeps/flow-dev-runtime-docs/0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:37  The docs are only load-bearing while they are true. Two habits keep them so:",
+     "confirmed: A structural lead-in; the two habits it announces are the next two anchors and both exist. Source 3 confirms the sentence is unchanged from the installed copy — in the pre-Phase-B text it sits on one line with the preceding sentence (installed line 33), which Phase B split into ##THE-DOCS-ARE-ONLY-LOAD-BEARING-WHILE-THEY-ARE-TRUE plus this lead. No host artefact corresponds to a lead-in, so no source 2 was consulted."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "HABIT-SAME-COMMIT-UPDATES": {
+    "v": "confirmed",
+    "ev": [
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "RUNTIME-GUIDE.md:5  **Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](spec/common/PROP-000.md).",
+     "campaigns/progress-2026-08/tasks/DRIFT-021.md:154  - Doc surfaces that would otherwise have become false:",
+     "confirmed: The habit is stated as an update policy in the front matter of both host guides, so a contributor opening either file meets it. Whether it 'stops new drift at the source' is measured over `be5e0600..HEAD` (2026-04-24 → HEAD cd376302, 2086 commits). Path selector — commits touching rust-toolchain.toml, tools/self-check.sh, crates/vibe-core/src/settings.rs or crates/vibe-publish/src/token.rs: 36 commits, 3 with a guide (2b815a47, 9be4c4fd, cb14fe5c), 33 without. Env-var pickaxe selector — `git log -S` on VIBE_SETTINGS / VIBE_REGISTRY_CACHE / VIBEVM_PUBLISH_TOKEN over crates xtask tools Cargo.toml rust-toolchain.toml: 34 commits, 1 with a guide (cb14fe5c), 33 without. Where the habit was kept (cb14fe5c), DRIFT-021.md:154-158 shows the drift being named and stopped before it landed; where it was not (de14b27e adding the fmt gate on 2026-05-22), DEV-GUIDE §6 carries the resulting drift to HEAD. Both selectors over-count — some hits are rustfmt or module-split commits that change no documented fact — so the true ratio is bounded above by 3/36."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "HABIT-A-PERIODIC-READ-THROUGH": {
+    "v": "confirmed",
+    "ev": [
+     "TASKS.md:19  - [x] `docs(guides)`: create `DEV-GUIDE.md` and `RUNTIME-GUIDE.md` scaffolds at repo root.",
+     "DEV-GUIDE.md:330  It runs three invariants in order, exiting non-zero on the first failure (pass `--keep-going` to run all three regardless):",
+     "tools/self-check.sh:36  #  10. the mcp package gates            — the three MCP servers, likewise.",
+     "confirmed as a habit the host has not scheduled; absence of a scheduled practice is not evidence it was never performed, and nothing in the perimeter records either way. The searches are worth keeping: `DEV-GUIDE|RUNTIME-GUIDE` returns nothing in AUDIT.md or BACKLOG.md, one closed 2026-04 scaffolding item in TASKS.md, and only the declarations in PROP-000; `tools/self-check.sh` gates seven things and none of them reads a guide. What the perimeter DOES show is the drift this habit exists to catch, unrepaired — carried as drift at the abandoned-toolchain row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NAME-YOUR-SETUP-DOCS-AND-CITE-THEM-FROM-YOUR-CONVENTIONS": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:288  - ##DOC-DEV-GUIDE [`DEV-GUIDE.md`](../../DEV-GUIDE.md) — contributor-facing: everything to install on a fresh machine to clone, build, test, contribute to, and (if authorized) publish from this repository. @spec/done",
+     "spec/common/PROP-000.md:289  - ##DOC-RUNTIME-GUIDE [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) — user-facing: everything to install and env-configure to run the shipped `vibe` CLI. @spec/done",
+     "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
+     "confirmed: The host executes all three steps of the recipe, and PROP-000 §19 is where each lands. Named: two docs, one per audience (lines 288-289), both existing at repo root with the relative links resolving. Obligation stated in the foundational conventions: the §19 heading at line 284 plus the SETUP-DOCS-FLOW paragraph at line 291. Cited from there: both `../../DEV-GUIDE.md` and `../../RUNTIME-GUIDE.md` links resolve, and §291 additionally cites this protocol's `#obligation` anchor, which resolves to line 12. The links run the other way too — DEV-GUIDE.md:7 and RUNTIME-GUIDE.md:5 both say 'Policy pinned in [PROP-000](spec/common/PROP-000.md)' — so the two-way link is complete. One gap against the anchor's phrase 'the material read early': PROP-000.md is not among spec/boot/INDEX.md's 8 entries; see the ##PIN-THE-OBLIGATION-IN-THE-FOUNDATIONAL-CONVENTIONS row."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-PATTERN-IS-FILENAME-AGNOSTIC": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:59  ##THE-PATTERN-IS-FILENAME-AGNOSTIC The pattern is filename-agnostic — what matters is that a setup change and",
+     "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
+     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:88  - ##MEMBER-DEV-RUNTIME-DOCS `dev-runtime-docs` — the running-notes discipline for a project's",
+     "confirmed: The protocol never names a filename in its normative text — the two audiences are described by role, and the re-derivation step says 'one for contributors, one for users, or a single file if the project is small'. The host supplies its own names in PROP-000.md:291 rather than inheriting them from the flow, which is the pattern working as stated. One observation from widening past the nominal package: the `redbook` umbrella that carries this flow into the host describes it wrongly — packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md:88-89 calls dev-runtime-docs 'the running-notes discipline for a project's development-runtime documents', which is not what any of the three files in this package say; the flow is the same-commit doc-update obligation. That description reaches the session: it is present in the installed copy at vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md:74 and in the compiled spec/boot/STATIC.md:1576, so a booting session reads the mis-description at line 1576 and the correct rule at lines 312-315 of the same file."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}

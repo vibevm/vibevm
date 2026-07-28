@@ -1,0 +1,134 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md": {
+   "PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:11  ##EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT Every change that touches the **toolchain, prerequisites, environment variables,",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/vibe.toml:8  description = \"Load-bearing setup + runtime docs: a change to toolchain / prerequisites / env / paths ships with the doc update in the same commit, never deferred\"",
+     "spec/boot/STATIC.md:312  Every change that touches the **toolchain, prerequisites, environment variables,",
+     "vibe.lock:11  \"flow:org.vibevm.world/dev-runtime-docs@^0.1.0\",",
+     "confirmed: Read all three shipped files of the package. The rule text the README summarises is present verbatim in both the boot snippet (58-…:11-13) and the protocol (DEV-RUNTIME-DOCS-PROTOCOL.md:14-15), and the package manifest's own description restates it. Source 3: the package is installed — `find vibedeps/flow-dev-runtime-docs -type f` returns 5 files, and the boot snippet's contributed text is present in the compiled `spec/boot/STATIC.md` under a provenance marker at line 302. The host declares it TWICE in vibe.lock: as a direct root dependency (line 11, `root_dependencies`) and again inside the `redbook` closure (line 47, `flow:org.vibevm.world/dev-runtime-docs@=0.1.0`), so it arrives by two routes. Note vibe.toml:25 in the host manifest says the flow 'now arrive[s] transitively through' redbook while the root-dependency entry is still present."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "setup-docs-are-the-file-someone-opens-when-things-break": {
+    "v": "confirmed",
+    "ev": [
+     "DEV-GUIDE.md:3  Contributor-facing setup: what to install on a fresh machine to clone the repo, build the CLI, run the tests, run manual smokes, and publish packages (if authorized).",
+     "RUNTIME-GUIDE.md:3  What a user needs to install and configure on their machine to run the `vibe` CLI. For contributor / build setup, see [`DEV-GUIDE.md`](DEV-GUIDE.md).",
+     "spec/common/PROP-000.md:286  ##SETUP-DOCS **Decision:** Two files at the repo root are load-bearing for the project: @spec/done",
+     "confirmed: This is the motivating premise, restated in the boot snippet (58-…:5-7) and the protocol (:5-7). Host side: both named documents exist at repo root and open with exactly that framing — DEV-GUIDE.md is 344 lines, RUNTIME-GUIDE.md is 70 lines (`wc -l`). PROP-000 §19 (heading at line 284) declares both 'load-bearing for the project'. Widened beyond the package to CLAUDE.md / AGENTS.md / GEMINI.md: `grep -n 'DEV-GUIDE\\|RUNTIME-GUIDE'` over the three returns ZERO hits — the two filenames are named in PROP-000 §19 and in the guides themselves, not in the three harness files."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-UPDATE-IS-NEVER-SEPARABLE-FROM-THE-CHANGE": {
+    "v": "confirmed",
+    "ev": [
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "RUNTIME-GUIDE.md:5  **Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](spec/common/PROP-000.md).",
+     "campaigns/progress-2026-08/tasks/DRIFT-021.md:154  - Doc surfaces that would otherwise have become false:",
+     "confirmed: Both guides carry the non-separability rule in their own front matter (DEV-GUIDE.md:7 states it in the negative — 'Never ship a dev-env change and a doc update separately'). The host's own planning document for the 2026-07-26 change reasons about it explicitly: DRIFT-021.md:154-157 lists 'Doc surfaces that would otherwise have become false' and names `DEV-GUIDE.md:43`, `RUNTIME-GUIDE.md:49` among them, calling them 'one-line corrections forced by the removal, not new scope' — i.e. the guides were carried in the same commit BECAUSE they would otherwise be false. That commit is cb14fe5c. See the ##EVERY-SETUP-TOUCHING-CHANGE… row for the measured window over which separability was and was not observed."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "package-contents-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/vibe.toml:15  [boot_snippet]",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/vibe.toml:16  source = \"spec/boot/58-flow-dev-runtime-docs.md\"",
+     "confirmed: `find packages/org.vibevm.world/dev-runtime-docs -type f` returns exactly 5 files: LICENSE, README.md, spec/boot/58-flow-dev-runtime-docs.md, spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md, vibe.toml. The two the README enumerates are both present. The manifest's `[boot_snippet] source` points at `spec/boot/…`, the post-DRIFT-039 layout. Source 3: `find vibedeps/flow-dev-runtime-docs -type f` returns 5 files too, but the installed boot snippet sits at `vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-flow-dev-runtime-docs.md` — `boot/`, not `spec/boot/` — while the installed protocol keeps `spec/flows/…`. So the installed slot predates the layout the shipped manifest declares."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-FULL-PROTOCOL": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:12  ## The obligation {#obligation}",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:22  ## Why pin it centrally {#why-central}",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:31  ## The two audiences {#audiences}",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:43  ## Keeping them honest {#honest}",
+     "confirmed: All four promised sections resolve to real headings, in the order the README lists them (`grep -n '{#'` over the protocol returns 6 headings: root, obligation, why-central, audiences, honest, re-derive). The file is present in the installed slot at the same relative path, `vibedeps/flow-dev-runtime-docs/0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`. A `diff -u` of installed vs shipped shows the installed copy is the pre-Phase-B text: the ONLY differences are the added `<status stage=\"spec\" state=\"done\"/>` line, the `##ANCHOR` prefixes, the `@impl/done` / `@spec/done` suffixes, and paragraph splits at the points where an anchor was introduced. No prose word differs."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:9  ## The rule {#rule}",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:20  ## Never {#never}",
+     "spec/boot/STATIC.md:302  <!-- vibe:static org.vibevm.world/dev-runtime-docs — vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-flow-dev-runtime-docs.md -->",
+     "spec/boot/STATIC.md:310  ## The rule",
+     "confirmed: The shipped snippet has both promised sections. It IS loaded at session start: the host's compiled `spec/boot/STATIC.md` carries the snippet's text under a provenance marker at line 302, and CLAUDE.md's generated boot block names STATIC.md as step 1 of the boot sequence. The path in that provenance marker is `vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-…` — the pre-DRIFT-039 `boot/` layout, not the `spec/boot/` the package now ships, which is why the source-3 boot-join reports NO-SOURCE (harvest §stale-path). This is NOT unique to this package: `grep -oE 'vibedeps/[^ ]+/(spec/)?boot/' spec/boot/STATIC.md` over the 31 provenance markers splits 8 at `boot/` and 23 at `spec/boot/`. `spec/boot/INDEX.md` names 8 entries and this package is not among them — its contribution reaches the session only through STATIC.md. The booted text is the pre-Phase-B copy: `diff -u` of installed vs shipped shows only the `<status/>` line, the `##ANCHOR` prefixes, the `@impl/done` suffixes, the heading anchors `{#rule}` / `{#never}`, and one paragraph split. No prose word differs."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
+    "v": "confirmed",
+    "ev": [
+     "crates/vibe-cli/src/commands/uninstall.rs:3  //! In the PROP-009 loading model, uninstalling a package removes its",
+     "crates/vibe-cli/src/commands/uninstall.rs:4  //! `vibedeps/` slot, drops its lockfile entry and its `[requires]`",
+     "crates/vibe-cli/src/commands/uninstall.rs:5  //! declaration, and regenerates every node's boot artifacts so the",
+     "crates/vibe-cli/src/commands/uninstall.rs:6  //! package no longer appears in the computed boot sequence.",
+     "confirmed, settled in the code as for the seven earlier twins this phase: uninstall removes the vibedeps slot, drops the lockfile entry and the `[requires]` declaration, then regenerates the boot artefacts so the snippet leaves the compiled lane. `files_written` is `[]` here as for all 36 packages. RECORDED: this package arrives TWICE — the host declares it as a direct root dependency and also receives it through the redbook closure, while `vibe.toml` says the flow now arrives transitively through redbook with the root entry still present."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "extracted-from-vibevms-own-foundational-conventions": {
+    "v": "confirmed",
+    "ev": [
+     "spec/common/PROP-000.md:284  ## 19. Load-bearing setup documentation {#setup-docs}",
+     "spec/common/PROP-000.md:286  ##SETUP-DOCS **Decision:** Two files at the repo root are load-bearing for the project: @spec/done",
+     "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
+     "vibe.toml:25  # dev-runtime-docs (§19), conflict-protocol (§9), and the git-practices family",
+     "confirmed: `grep -n '^#\\{1,4\\} ' spec/common/PROP-000.md` — §19 exists and is titled 'Load-bearing setup documentation {#setup-docs}'. The section names both guides and closes the loop back to this flow with a `spec://` URI whose `#obligation` fragment resolves to DEV-RUNTIME-DOCS-PROTOCOL.md:12 (`## The obligation {#obligation}`). The host manifest vibe.toml:25 independently identifies the flow with '§19'. The README's phrase 'pinned centrally so it is met during the boot-sequence read-order' is only partly observable: PROP-000.md is NOT one of the 8 `[[entry]]` files in spec/boot/INDEX.md, so §19 itself is not read at boot; what IS read at boot is the flow's own snippet, compiled into spec/boot/STATIC.md at line 302 onward."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "license-line": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/LICENSE:3  The Universal Permissive License (UPL), Version 1.0",
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/vibe.toml:7  license = \"UPL-1.0\"",
+     "CLAUDE.md:127  - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The",
+     "vibedeps/flow-dev-runtime-docs/0.1.0/LICENSE:3  The Universal Permissive License (UPL), Version 1.0",
+     "confirmed: The file the README names is `LICENSE` (no extension) and it exists with the UPL-1.0 text; the manifest's SPDX field agrees. The harvest flags that this package ships `LICENSE` where its siblings ship `LICENSE.md`. Measured across all 27 packages under packages/org.vibevm.world/: SIX ship `LICENSE` — dev-runtime-docs, git-atomic-commits, git-autonomy, git-conventional-commits, git-practices, sync-from-code — and 21 ship `LICENSE.md`. So the naming split is a six-member minority, not a lone exception. The installed slot carries the same `LICENSE` filename. Host-side posture recorded in CLAUDE.md's operating-facts ledger."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}

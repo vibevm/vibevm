@@ -1,0 +1,92 @@
+{
+ "batch": "W6",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md": {
+   "SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING": {
+    "v": "confirmed",
+    "ev": [
+     "spec/boot/STATIC.md:306  A project's setup and runtime documentation is **load-bearing** — it is the file",
+     "spec/common/PROP-000.md:284  ## 19. Load-bearing setup documentation {#setup-docs}",
+     "DEV-GUIDE.md:3  Contributor-facing setup: what to install on a fresh machine to clone the repo, build the CLI, run the tests, run manual smokes, and publish packages (if authorized).",
+     "RUNTIME-GUIDE.md:3  What a user needs to install and configure on their machine to run the `vibe` CLI. For contributor / build setup, see [`DEV-GUIDE.md`](DEV-GUIDE.md).",
+     "confirmed: The snippet's premise is present in the booted material at spec/boot/STATIC.md:306-308 (source 3), and the host adopts the exact phrase 'load-bearing' in its own foundational conventions heading PROP-000 §19 and again at DEV-GUIDE.md:7 ('the obligation is load-bearing'). Both named documents exist and are non-trivial: 344 and 70 lines. Widened to CLAUDE.md / AGENTS.md / GEMINI.md — zero hits for either filename, so the load-bearing designation lives in PROP-000 and in the guides, not in the harness files."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:312  Every change that touches the **toolchain, prerequisites, environment variables,",
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "RUNTIME-GUIDE.md:5  **Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](spec/common/PROP-000.md).",
+     "campaigns/progress-2026-08/tasks/DRIFT-021.md:154  - Doc surfaces that would otherwise have become false:",
+     "DRIFT on the compliance the rule demands, measured over a stated window rather than asserted. Window `be5e0600..HEAD` — from the commit that created both guides to HEAD, 2 086 commits — with two selectors, both reproducible. **Selector A (paths):** commits touching `rust-toolchain.toml`, `tools/self-check.sh`, `crates/vibe-core/src/settings.rs` or `crates/vibe-publish/src/token.rs` — four files the guides document by name — 36 commits, 3 of which also touched a guide. **Selector B (content pickaxe):** `git log -S` on the three env vars RUNTIME-GUIDE tabulates — 34 commits, 1 also touched a guide. Both selectors OVER-count, so the true rate is bounded above by 3/36. The counter-example is an hour wide: on 2026-07-20 `f0e89db5` changed the settings home (+190 lines) and `8aec7cc9` introduced the `~/.vibe/registry.toml` that RUNTIME-GUIDE now tabulates, neither carrying a guide — and the matching guide edits landed 49 and 50 minutes later as SEPARATE commits, which is precisely what this rule forbids. `cb14fe5c` is a real instance of the rule kept, and it is the exception."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:314  commit**. Never ship a setup change with the doc update deferred — deferral is",
+     "spec/boot/STATIC.md:315  exactly where the drift these files exist to prevent lives.",
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "DRIFT, and the host's clearest breach is a deferral by construction: on 2026-07-20 the settings-home change and the registry-file introduction landed with no guide, and the guide edits followed 49 and 50 minutes later as separate commits `14e11747` and `e19efec6`. That is the deferral this sentence names, performed twice in one hour. Over the measured window the rule holds in at most 3 of 36 setup-surface commits."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "sibling-document-pointers": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:18  ##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done",
+     "spec/boot/STATIC.md:317  Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md).",
+     "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
+     "DRIFT: the fact's subject is a `../flows/dev-runtime-docs/…` pointer, and the host has no `spec/flows/` directory, so it resolves nowhere from the compiled lane where the snippet is read. The protocol document itself ships, in the package and in the installed slot. W1's 69-dangling family."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:321  - Never ship a dev-env or runtime-setup change with its doc update in a later commit.",
+     "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+     "campaigns/progress-2026-08/tasks/DRIFT-021.md:156  `DEV-GUIDE.md:43`, `RUNTIME-GUIDE.md:49`. Seven files touched against",
+     "DRIFT on the same evidence as its boot-snippet twin: the 2026-07-20 pair deferred the doc update by 49 and 50 minutes into separate commits, and `4dbe1987` changed the config home while updating VIBEVM-SPEC.md and a command doc but NEITHER guide."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN": {
+    "v": "drift",
+    "ev": [
+     "spec/boot/STATIC.md:322  - Never let the setup docs describe a toolchain the project no longer uses.",
+     "DEV-GUIDE.md:330  It runs three invariants in order, exiting non-zero on the first failure (pass `--keep-going` to run all three regardless):",
+     "tools/self-check.sh:6  # Invariants checked, in order:",
+     "tools/self-check.sh:36  #  10. the mcp package gates            — the three MCP servers, likewise.",
+     "DEV-GUIDE.md:84  81 tests green on `main` as of the last checkpoint; clippy clean with `-D warnings`.",
+     "DRIFT, with two measured untruths in the guide the rule protects. `DEV-GUIDE.md:330` says `tools/self-check.sh` runs three invariants; the script's own header enumerates TEN and it calls `run_step` 37 times — and its missing first step, `cargo fmt --all --check`, was added by `de14b27e` on 2026-05-22 with no guide update. `DEV-GUIDE.md:84` claims 81 tests green against 2 075 `#[test]` / `#[tokio::test]` attributes. The script points back the other way at its line 4, «See DEV-GUIDE.md §6», so a reader is sent to a description of the gate that is a third of the gate."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   }
+  }
+ }
+}
