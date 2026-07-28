@@ -1,0 +1,826 @@
+{
+ "batch": "W3",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md": {
+   "scope-of-this-document": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:5  ##scope-of-this-document **Scope of this document.** This file defines the difference between",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:15  ## Facts versus decisions {#facts-vs-decisions}",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:69  ## The four-field record {#four-fields}",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:87  ## Where records live {#placement}",
+     "confirmed: Matched every promised topic to a heading in the same file; all seven are present, plus a §re-derive and §summary the scope line does not claim. Widened to the installed copy at vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md (present, same structure). A scope statement about its own file has no host referent to check."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "companion-document-pointers": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:12  ##companion-document-pointers Copy-ready template: [`record-template.md`](record-template.md);",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:13  trigger design: [`revisit-triggers.md`](revisit-triggers.md). @impl/done",
+     "confirmed: Both relative links resolve — the two files sit beside the protocol in spec/flows/decision-records/ and in the installed slot vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/. These are same-directory links, so unlike the boot snippet's `../flows/...` pointers they do not dangle when the package is read in place. Counted in the harvest's source-1 join: 24 relative citations resolved, 0 broken (campaigns/packages-2026-09/harvest/world-w3-ipc-core-ii.md:19)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "BLAKE3-LINE-IS-A-FACT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:17  ##BLAKE3-LINE-IS-A-FACT \"We hash with blake3\" is a **fact**. @spec/done",
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done",
+     "Cargo.toml:121  sha2 = \"0.10\"",
+     "confirmed: The blake3 line is a teaching example, not a host fact — this repository hashes with sha2/SHA-256 (Cargo.toml:121, crates/vibe-core/Cargo.toml:22 `sha2.workspace = true`), and grep for 'blake3' over Cargo.toml and the crate manifests returns nothing. What IS checkable is the fact-shape claim: the host's own hashing line at PROP-002:42 is labelled **Decision.** and carries the value with no why, no rejected alternatives and no trigger — the protocol's fact-form wearing a decision label. Widened to spec/common/PROP-000.md and the whole spec/modules/vibe-registry/ tree for a hash-choice record wi"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-fact-is-recovered-with-one-grep": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:19  ##a-fact-is-recovered-with-one-grep Any reader — human or agent —",
+     "Cargo.toml:121  sha2 = \"0.10\"",
+     "confirmed: Tested the claim against this repository: one grep does recover the host's hashing fact — `grep -rn 'sha2|Sha256' Cargo.toml crates/vibe-core/Cargo.toml` returns the dependency line immediately, and `grep -rn 'content_hash'` over spec/ returns the algorithm at PROP-002:42. Searched for a host fact that is NOT grep-recoverable to test the boundary: none surfaced in Cargo.toml, crates/ or spec/. The claim is about mechanics, not about this project."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "BLAKE3-WITH-ITS-REASON-IS-A-DECISION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:22  ##BLAKE3-WITH-ITS-REASON-IS-A-DECISION \"We hash with blake3 because SHA-256 drags in an OpenSSL dependency,",
+     "spec/common/PROP-000.md:208  - ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. @spec/done",
+     "confirmed: The example's stated reason — minimal binary size — is a constraint this host explicitly rejects: PROP-000 §15 records the opposite decision, that binary size and transitive dep weight are NOT decision factors here. That section is itself a two-field record (Decision at :208, Why at :211, no rejected alternatives, no trigger). So the protocol's illustrative decision does not describe this host, and the host's own dependency-selection decision is one of the 19 two-field stubs. Widened to spec/modules/vibe-registry/ for an OpenSSL constraint anywhere in the tree: none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "no-grep-recovers-a-decision": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:26  ##no-grep-recovers-a-decision No grep recovers it: the constraint lives outside",
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done",
+     "confirmed: Exercised the claim on this repository's own hash choice: `grep -rn 'sha256|content_hash'` over spec/ and crates/ recovers the algorithm and the byte layout but returns nothing on why sha256 rather than blake3 — PROP-002:42 states the scheme and never states the reason, and there is no Why field in that section. Widened to spec/design/ (5 files) and to AUDIT.md for a narrated hash-choice rationale: none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ASYMMETRY-IS-ABSOLUTE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:29  ##ASYMMETRY-IS-ABSOLUTE The asymmetry is absolute: **a fact is recoverable from the code in",
+     "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+     "confirmed: The claim is a general principle; its restatement reaches the host through the compiled boot lane, in the shorter form at STATIC.md:239-242. Searched for a host statement qualifying the absoluteness (a case where a reason WAS recovered from code): spec/design/ documents narrate rationale after the fact, and spec/design/README.md:7 explicitly assigns 'why a PROP is shaped the way it is' to that lane — recovery from a second document, not from the code. Nothing in the host contradicts or confirms the absoluteness."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "reasoning-is-gone-once-it-leaves-working-memory": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:32  ##reasoning-is-gone-once-it-leaves-working-memory Once reasoning",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:218  - ##HISTORY-PHASES-5-6-8 **2026-05-23 — Phases 5 + 6 + 8 shipped with M1.19.** Short-name resolution at the CLI input boundary (`vibe-cli::commands::short_name` — index-backed candidate sets, lockfile-prefers-locked); collision detection with the dedicated exit code `7` (`InstallError::AmbiguousPackage`); the live-registry migration to `fqdn` naming and the `vibe init` default fix (`cc32d7e` — the M1.19 defect AUDIT 2026-05-23-02 records). This entry back-fills the record: the work shipped with M1.19 but the history was not updated at the time. @spec/done",
+     "confirmed: The host has a self-declared instance of exactly this: PROP-008's version-history entry says in its own words \"This entry back-fills the record: the work shipped with M1.19 but the history was not updated at the time\" — reasoning written after it left working memory, which the protocol calls fiction at :152. Widened to the other 14 `## Version history` / `## Changelog` sections in spec/ for further self-declared backfills: this is the only one that says so explicitly."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DECISION-FORM-IS-WORTH-TEN-FACT-FORMS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:36  ##DECISION-FORM-IS-WORTH-TEN-FACT-FORMS The decision form is",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:37  worth ten of the fact form. @spec/done",
+     "confirmed: A valuation, not a measurable claim; the ratio ten is rhetorical and nothing in the tree computes it. Searched the host for any weighting of records against facts — spec/common/PROP-043-progress-markup.md's fact-grain scheme, spec/terraforms/, AUDIT.md, BACKLOG.md — and found no host statement assigning relative value. Widened to the redbook chapter this practice comes from (packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:190 onward): the chapter argues the same asymmetry without a numeric ratio. Only the package's own text supports the line."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "tribal-knowledge-in-a-pure-human-team": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:41  ##tribal-knowledge-in-a-pure-human-team In a pure-human team, unrecorded reasoning survives as tribal",
+     "packages/org.vibevm.world/decision-records/v0.1.0/README.md:17  ##tribal-knowledge-in-a-pure-human-team In a pure-human team, unrecorded reasoning limps along as tribal",
+     "confirmed: Second occurrence of this anchor id in the package. Searched the whole host perimeter — spec/, CLAUDE.md, AGENTS.md, GEMINI.md, crates/, campaigns/, AUDIT.md, BACKLOG.md — for 'Vasya', 'tribal' or 'glibc': the only hits are this package and its compiled copy at spec/boot/STATIC.md:284. This host is a single-owner repository, so the pure-human-team premise has no instance here to check. Widened to vibedeps/ and to the redbook source; neither adds a host-side referent."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "AGENT-CANNOT-ASK-VASYA": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:45  ##AGENT-CANNOT-ASK-VASYA The agent cannot ask Vasya. @spec/done",
+     "spec/boot/STATIC.md:284  The agent cannot ask Vasya why the library was chosen. It re-derives",
+     "confirmed: Third and last occurrence of this anchor id in the package. Searched the host for a channel from a session to the original decider: CLAUDE.md's memory-discipline section states the opposite of a channel — project facts must live in the repository because \"a teammate who clones the repo will never see global user-memory\". The compiled boot lane carries the sentence to every session (STATIC.md:284)."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "EVERY-SESSION-IS-A-NEW-DEVELOPER-WITH-ZERO-MEMORY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:47  ##EVERY-SESSION-IS-A-NEW-DEVELOPER-WITH-ZERO-MEMORY Every session is a brilliant new",
+     "spec/boot/INDEX.md:1  # spec/boot/INDEX.md — generated by vibe, do not edit.",
+     "spec/boot/INDEX.md:11  static = \"spec/boot/STATIC.md\"",
+     "confirmed: The host's entire boot design assumes this: CLAUDE.md instructs every session to read the boot files from scratch, spec/boot/INDEX.md is a generated manifest naming every file a session must read, and CLAUDE.md's memory-discipline section rules that project facts must be in the repository rather than in per-user harness memory. Widened to the RESUME SESSION contract in CLAUDE.md, which re-runs the full boot sequence rather than restoring any cached state. This is the strongest source-2 confirmation in the batch."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "two-failure-modes-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:51  ##two-failure-modes-lead Two failure modes follow: @spec/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:53  - ##FAILURE-RE-DERIVATION **Re-derivation.** The code shows the value, not the constraint.",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:57  - ##FAILURE-RE-LITIGATION **Re-litigation.** Every unrecorded decision is re-opened by every",
+     "confirmed: A lead-in whose two members are the next two facts in the same file; both are present and the count two is exact. Searched the host for a third failure mode attributed to zero memory (spec/terraforms/, AUDIT.md, spec/common/PROP-013-periodic-health-audit.md's five categories A–E): none names re-derivation or re-litigation as a health category, so the host neither adds to nor contradicts the pair."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "FAILURE-RE-DERIVATION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:53  - ##FAILURE-RE-DERIVATION **Re-derivation.** The code shows the value, not the constraint.",
+     "spec/boot/STATIC.md:285  from what it can read, and the code shows the value, not the",
+     "confirmed: The worked example has no host instance — there is no TIMEOUT constant of this shape here (`grep -rn 'verification.timeout|verification timeout'` over spec/ and crates/ returns only addressing examples and the wal golden fixture under crates/vibe-index/fixtures/). The shorter form reaches the host through the compiled boot lane. Searched AUDIT.md and BACKLOG.md for a logged re-derivation incident: none."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "FAILURE-RE-LITIGATION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:57  - ##FAILURE-RE-LITIGATION **Re-litigation.** Every unrecorded decision is re-opened by every",
+     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1142  c3b's file-level confirm although its trigger had fired on 2026-07-12 —",
+     "confirmed: The cost figure (an hour per re-open) is not measured anywhere in the host. The host's one recorded re-opening episode is the licence record, and the terraform's retrospective at :1142 records it as a verdict correction rather than a re-analysis with a cost. Widened to AUDIT.md and BACKLOG.md for a logged re-litigation with a time cost: none. With 127 host decisions carrying no reason at all, the exposure the fact describes is large but the cost claim itself is unmeasured here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "RECORD-IS-IMMUNITY-FROM-RE-LITIGATION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:61  ##RECORD-IS-IMMUNITY-FROM-RE-LITIGATION A recorded decision is **immunity from re-litigation**: the next",
+     "spec/boot/STATIC.md:287  300 s for performance.\" A recorded decision is immunity from",
+     "spec/common/PROP-000.md:57  ##LICENSE-REVISIT **When to revisit:** the previous trigger — \"when the owner decides to relicense (most likely UPL 1.0)\" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = \"UPL-1.0\"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done",
+     "confirmed: Same anchor id as boot snippet:63; this is the longer form. The host's single instance of the immunity actually operating is PROP-000 §3, where the record itself now answers the next reader by naming the trigger's spent state. Against that, the 127 one-field host decisions have no immunity at all, and spec/WAL.md's Constraints section (heading at :69) carries the do-not-touch list in prose, with its own count recording 4 of 26 entries citing a spec anchor."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:65  ##TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST The trigger field keeps the",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:67  ([`revisit-triggers.md` §sacred-cows](revisit-triggers.md#sacred-cows)). @spec/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:13  ## Why decisions rot without triggers {#sacred-cows}",
+     "confirmed: The cross-reference resolves: revisit-triggers.md carries the heading anchor {#sacred-cows} at line 13. On the host, 142 of the 153 Decision-bearing sections carry no trigger at all, and 2 of the 11 that do refuse one outright (PROP-000.md:23 \"Never, in the scope of v1\"; spec/modules/vibe-progress/PROP-043-progress-markup.md:141 \"never expected\"). Searched spec/, CLAUDE.md and BACKLOG.md for the phrase 'sacred cow' outside this package: 0 hits."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:71  ##EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS Every record carries exactly four fields: @impl/done",
+     "spec/boot/STATIC.md:250  | Field | Requirement |",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:83  **Decision.** The verdict object grows a third key: `{v, ev[], src:[…]}`, where",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:339  - ##decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their",
+     "DRIFT, and it is the batch's headline: 4 of 153. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). The word is «every»; the measured rate is 2.6 %. Placement, which the same protocol also requires, is obeyed almost everywhere — all 153 sit inside the section that governs the value — so what fails is completeness, not location."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FIELD-DECISION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:75  | ##ROW-FIELD-DECISION **Decision** @impl/done | The chosen value or approach. One line. @impl/done |",
+     "spec/boot/STATIC.md:252  | **Decision** | The chosen value or approach. One line. |",
+     "spec/modules/vibe-cli/PROP-036-package-tree.md:88  ##DECISION-ARTIFACTS-CANONICAL **Decision — read the effective type from the artifacts, not a fresh recompute.** @spec/done",
+     "confirmed: Identical row text to the boot snippet's table (25-flow-decision-records.md:22), so the two agree. Host use: 158 bolded **Decision** labels in four notations across spec/. The one-line requirement holds in the four complete records (PROP-036:88 is a single line; PROP-043:91, :134 likewise) and fails in the long one-field ones (PROP-002:42 runs to roughly 900 characters). No checker enforces it — grep 'Decision' over crates/vibe-check/ returns no rule."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FIELD-WHY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:76  | ##ROW-FIELD-WHY **Why** @impl/done | The observation that forced the choice — concrete, measured, cited. Name the data: log path, sample size, benchmark, incident, upstream constraint. @impl/done |",
+     "spec/boot/STATIC.md:253  | **Why** | Concrete and cited: a measurement, a constraint, an incident — with data. |",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:127  **Why:** the field §3.1 names is empty for every package that exists here.",
+     "spec/common/PROP-000.md:18  ##LANG-WHY **Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`, `serde`, `toml`, `reqwest`, `git2`, `tokio`, `anyhow`, `thiserror`, `tracing`, `dialoguer`, `console`, `sha2`). See `VIBEVM-SPEC.md` §10.1. @spec/done",
+     "confirmed: The protocol's row is stricter than the boot snippet's compiled row (\"Name the data: log path, sample size, benchmark, incident, upstream constraint\" vs \"Concrete and cited\"), so the two are not word-identical — worth noting since the snippet is what a host session actually reads. Host census: 26 bolded `**Why` labels across spec/, 16 in the record-field form; 26 of 153 Decision sections carry one. Named data appears in the batch plan's whys (a grep returning 36 at :127-133; a 0.03 s console probe at :103-109) and does not appear in PROP-000's (:18, :39, :71 cite properties and a spec section)"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FIELD-CONSIDERED-AND-REJECTED": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:77  | ##ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @impl/done | One line per alternative, each carrying the reason it lost. A loser without a reason invites the evaluation to be re-run. @impl/done |",
+     "spec/boot/STATIC.md:254  | **Considered and rejected** | One line per alternative, each carrying its rejection reason. |",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:210  - ##REJ-BUBBLE-UP **Bubble every dependency's boot into the root `spec/boot/`.** Rejected — it is the \"merge dependency specs into the authored spec\" the owner ruled out, and it makes one flat namespace for the whole workspace. @spec/done",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:139  - ##freeze-rejected **Considered and rejected:** `stage=\"done\"` (ambiguous against",
+     "the field is correctly defined and the host discharges it at the document level, which this same protocol sanctions two sections later: `## Rejected alternatives` appears in 19 documents in exactly the one-line-with-reason form the field requires, and 6 of those are titled «Rejected / deferred alternatives», adopting the deferral distinction as well. As a PER-RECORD field the string occurs 7 times in `spec/`; the completeness that measures is filed on EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-FIELD-WHEN-TO-REVISIT": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:78  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. \"Later\" is not a trigger. @impl/done |",
+     "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+     "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
+     "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed» — measured against every host instance individually rather than by rule. Eleven revisit lines exist across `spec/`. ONE carries a metric and a threshold (PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116, «a third of `world`'s units land `unverifiable`»); eight are event-shaped with no threshold; two refuse revisiting outright (PROP-000.md:23 «Never, in the scope of v1»; PROP-043:141 «never expected»). NONE carries all three parts, and only PROP-043:255 names a place to look. 142 of the 153 Decision-bearing sections carry no revisit condition at all."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "why-three-of-the-four-fields-exist": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:80  ##why-three-of-the-four-fields-exist Three of the four fields exist so the argument is *never re-had*:",
+     "spec/design/action-system.md:139  ##decisions-lead Recorded in the four-field form (Decision · Why · Considered-and-rejected · Revisit-when); these",
+     "confirmed: A rationale for the field set. The host restates the four-field form in two places — spec/design/action-system.md:139-140 and spec/modules/vibe-actions/PROP-039-action-system.md:339 — and in both cases uses the abbreviation Decision · Why · Rejected · Revisit rather than this three-questions framing. Searched spec/, CLAUDE.md and spec/terraforms/ for the three questions restated: no host occurrence. Only the package argues it."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "template-and-examples-pointer": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:84  ##template-and-examples-pointer Copy-ready",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:85  shape and worked examples: [`record-template.md`](record-template.md). @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:14  ## The template {#template}",
+     "confirmed: Same-directory relative link; resolves in the package and in the installed slot (vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md). Target does carry both promised things: the template fence at record-template.md:22-36 and two worked examples at :47 and :103. Counted in the harvest's 24 resolved / 0 broken join."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:89  ##RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR **At the spec anchor that governs the value.** @impl/done",
+     "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:339  - ##decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their",
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. The contract — *what* the system does — lives in the PROP / FEAT documents under [`spec/modules/`](../modules/) and [`spec/common/`](../common/); a `spec/design/` document explains *why a PROP is shaped the way it is*. When a design document and its PROP disagree, **the PROP wins** and the design document is corrected — the flow's precedence law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#precedence`): load-bearing rationale — the decision itself and the alternatives weighed, in each PROP's `Decision` / `Rejected alternatives` sections (the **decision-records** genre: `spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`) — stays inside the PROP; the narrative lore moves out to here (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#contract-vs-lore`). @doc/done",
+     "confirmed: Placement is the one clause the host obeys almost everywhere: all 153 Decision labels sit inside the section that governs the value, and there is no record file anywhere. The measured exception is PROP-039/action-system: PROP-039 §14 says the four-field records are \"recorded at their governing anchors above\", but PROP-039 contains 0 `**Decision`, 0 `**Why` and 0 'Considered and rejected' labels; the ten records (D1–D10) live in spec/design/action-system.md §5, and spec/design/README.md:7 declares that whole lane non-normative while explicitly assigning the decision itself to the PROP. That is "
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "timeout-record-sits-under-the-verification-heading": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:91  ##timeout-record-sits-under-the-verification-heading The timeout record",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:80  - ##IR-ADDRESS-DEPTH **Addressing depth.** A `spec://…#a.b.c` fragment is a **path down the tree** (`a` → `b` → `c`), which already matches addressable-specs' dotted anchors (`#verification.timeout`). Sections at any depth are addressable. @impl/done",
+     "confirmed: The worked example again; the host has no verification timeout, so the record it describes cannot exist here. `grep -rn 'verification.timeout'` over spec/ and crates/ returns two host hits, both about the ADDRESS shape rather than a record: PROP-035:80 uses `#verification.timeout` as the canonical dotted-anchor example, and PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1580 notes that review-workflow.md teaches naming an anchor that way. Also present in the wal golden fixture under crates/vibe-index/fixtures/. Widened to crates/ for a live timeout constant governed by a spec section: none found."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "departure-from-classic-adr-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:95  ##departure-from-classic-adr-lead This",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:96  deliberately departs from classic ADR practice: @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:98  | Classic ADR | This protocol |",
+     "confirmed: A lead-in to the four-row contrast table at 98-103; the table is present and has exactly four rows. Searched the host for any surviving ADR practice to contrast against: `find` for an `adr` directory returns nothing outside .git/vibedeps/.vibe/node_modules, and 'ADR' as a word appears in the host tree only via this package's compiled boot text. Nothing on the host bears on the departure claim."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "ROW-ADR-SILO": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:100  | ##ROW-ADR-SILO `adr/0007-use-blake3.md` — a separate silo @spec/done | The record sits inside the governing spec section @spec/done |",
+     "spec/common/PROP-000.md:16  ##LANG-RUST **Decision:** The vibevm CLI and all supporting crates are written in Rust. @spec/done",
+     "confirmed: `find . -type d -name adr` excluding .git/, vibedeps/, .vibe/ and node_modules/ returns nothing, so the silo half has no host instance to contrast. The in-section half is universal here: PROP-000 §1's Decision sits directly under `## 1. Language: Rust {#language}`, and all 153 Decision labels are similarly in-section. Widened to legacy-spec/ and refs/ for an archived ADR silo: none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-ADR-IMMUTABLE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:101  | ##ROW-ADR-IMMUTABLE Immutable, append-only; changes chain via \"superseded by ADR-0042\" @spec/done | The section is edited in place; a dated changelog line notes the change; git holds the history @spec/done |",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:214  ## 7. Version history {#history}",
+     "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
+     "confirmed: The edit-in-place half is confirmed by the host's one worked re-open: PROP-000 §3's licence record was rewritten inside its own section by commit 71d8383b, anchor ##LICENSE-REVISIT unchanged. The dated-changelog half is confirmed at scale: 15 `## Version history` / `## Changelog` sections across spec/, entries dated (PROP-029:49 carries an ISO date in brackets; PROP-008:218 a bold date). Searched for a 'superseded by' chain in the host: PROP-000.md:110 uses the word 'supersedes' for a PROP-to-PROP relation, not a record chain. Commit refs stated here because the ev grammar has no form for them"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-ADR-MUST-BE-SOUGHT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:102  | ##ROW-ADR-MUST-BE-SOUGHT The reader must know the ADR exists and go find it @spec/done | The record rides along with every read of the section @spec/done |",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:339  - ##decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:341  [`spec/design/action-system.md#decisions`](../../design/action-system.md#decisions) (D1–D10). @spec/done",
+     "confirmed: The host has one case that reproduces the silo failure the row describes, in a different building: the ten four-field records for the action system live in spec/design/action-system.md §5, and PROP-039 §14 is a pointer telling the reader to go find them — exactly 'the reader must know they exist and go find it'. Everywhere else the ride-along holds, because the Decision label is inside the governing section. Widened to the other four spec/design/ documents: none is pointed at from a PROP as the home of its records."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-ADR-NUMBERED-BY-TIME": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:103  | ##ROW-ADR-NUMBERED-BY-TIME Numbered by time of decision @spec/done | Anchored by the thing decided @spec/done |",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:243  - ##DECISION-TWO-REGISTERS **Decision — two anchor-id registers (owner ruling, 2026-07-24).**",
+     "spec/modules/vibe-cli/PROP-036-package-tree.md:88  ##DECISION-ARTIFACTS-CANONICAL **Decision — read the effective type from the artifacts, not a fresh recompute.** @spec/done",
+     "confirmed: Anchoring-by-subject is the host rule and it is itself a recorded decision: PROP-043 §3.8's DECISION-TWO-REGISTERS (a four-field record) rules that `##UPPER-SLUG` names a normative fact and `##kebab-case` a service unit — subject-named, never time-numbered. The host's record anchors follow it (##DECISION-ARTIFACTS-CANONICAL, ##DECISION-ELEMENT-NAME, ##DECISION-FREEZE-STAGE, ##LICENSE-REVISIT). Counter-note: the host DOES number by time in a different genre — spec/design/action-system.md's D1–D10 and the PROP-NNN document numbering itself."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "the-reason-is-the-reader": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:105  ##the-reason-is-the-reader The reason is the reader. @spec/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:107  ##agent-loads-context-by-anchor An agent loads context by anchor: when it",
+     "confirmed: A one-line rationale introducing the next three facts. Searched the host for a stated reason for its own placement practice: spec/design/README.md:7 gives a genre reason (contract vs lore) rather than a reader reason, and PROP-039 §14 gives none. Widened to spec/terraforms/ and CLAUDE.md: no host restatement. Only the package supports the line."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "agent-loads-context-by-anchor": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:107  ##agent-loads-context-by-anchor An agent loads context by anchor: when it",
+     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md:31  ##EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR Each fact has exactly one authoritative anchor. @impl/done",
+     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:80  - ##IR-ADDRESS-DEPTH **Addressing depth.** A `spec://…#a.b.c` fragment is a **path down the tree** (`a` → `b` → `c`), which already matches addressable-specs' dotted anchors (`#verification.timeout`). Sections at any depth are addressable. @impl/done",
+     "confirmed: Anchor-addressable loading is real on this host: the addressable-specs flow is installed (first contribution in the compiled boot lane per the harvest), PROP-035 specifies a spec compiler that addresses sections at any depth, and `spec://` occurs 117 times across spec/common/ + spec/modules/ (harvest:60). Widened to crates/: specmark::scope! macros carry spec:// scopes in source (crates/vibe-cli/src/commands/uninstall.rs:10). What is NOT checkable here is whether the record 'arrives for free' — for 127 host sections there is no record at the anchor to arrive."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "a-record-in-a-silo-is-never-looked-up": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:111  ##a-record-in-a-silo-is-never-looked-up A",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:341  [`spec/design/action-system.md#decisions`](../../design/action-system.md#decisions) (D1–D10). @spec/done",
+     "confirmed: The host's one silo case is instructive against this exact claim: PROP-039's records ARE in a separate document, but the anchor DOES point at them (PROP-039 §14 is a two-bullet signpost with a working relative link and a summary of the bindings). So the host's version of the silo carries the pointer the fact says will be missing. Searched the other 4 spec/design/ documents for records with no inbound pointer: none of them carries records at all. No `adr/` directory exists to test the literal claim."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SILOS-PRESERVE-TECHNICALLY-AND-LOSE-PRACTICALLY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:115  ##SILOS-PRESERVE-TECHNICALLY-AND-LOSE-PRACTICALLY Silos",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:116  preserve reasoning technically and lose it practically. @spec/done",
+     "confirmed: An evaluative summary of the three preceding facts. There is no ADR silo on this host to measure loss against (`find` for an `adr` directory returns nothing), and the nearest analogue — spec/design/ — is explicitly reachable from its PROP. Widened to AUDIT.md and BACKLOG.md for a logged instance of reasoning lost to a silo: none. Only the package's own argument supports the line."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "placement-consequences-lead": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:118  ##placement-consequences-lead Consequences of the placement rule: @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:120  - ##CONSEQUENCE-NO-ADR-DIRECTORY **No `adr/` directory.** The spec tree is the only home. @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:125  - ##CONSEQUENCE-RECORDS-ARE-CITABLE **Records are citable.** Give every record's heading an explicit",
+     "confirmed: Lead-in to the four bullets at 120-127; all four are present. Searched the host for a restatement of the consequence set (spec/, CLAUDE.md, spec/terraforms/): none — the host restates the four FIELDS twice (PROP-039:339, spec/design/action-system.md:139) but never the four placement consequences."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "CONSEQUENCE-NO-ADR-DIRECTORY": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:120  - ##CONSEQUENCE-NO-ADR-DIRECTORY **No `adr/` directory.** The spec tree is the only home. @impl/done",
+     "spec/boot/STATIC.md:257  There is no separate ADR directory and no immutable numbered log.",
+     "confirmed: `find . -type d -name adr` over the repository excluding .git/, vibedeps/, .vibe/ and node_modules/ returns nothing — no ADR directory exists here. The 'only home' half is qualified: the four complete records are in spec/, but 10 more four-field records live in spec/design/action-system.md and 3 in campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md, which is outside spec/ altogether. Widened to legacy-spec/ and refs/ for an archived ADR tree: none."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-SPEC-SECTION-IS-THE-RECORD": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:121  - ##CONSEQUENCE-SPEC-SECTION-IS-THE-RECORD **The spec section IS the record.** No second artefact to sync. @impl/done",
+     "spec/boot/STATIC.md:258  The spec section that governs the value IS the record; evolution is",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:341  [`spec/design/action-system.md#decisions`](../../design/action-system.md#decisions) (D1–D10). @spec/done",
+     "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE These documents are **non-normative**. The contract — *what* the system does — lives in the PROP / FEAT documents under [`spec/modules/`](../modules/) and [`spec/common/`](../common/); a `spec/design/` document explains *why a PROP is shaped the way it is*. When a design document and its PROP disagree, **the PROP wins** and the design document is corrected — the flow's precedence law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#precedence`): load-bearing rationale — the decision itself and the alternatives weighed, in each PROP's `Decision` / `Rejected alternatives` sections (the **decision-records** genre: `spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`) — stays inside the PROP; the narrative lore moves out to here (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#contract-vs-lore`). @doc/done",
+     "153 of 153 Decision labels sit in the governing section and no record file exists anywhere. One measured exception is recorded rather than counted, because the fact's own «no second artefact to sync» is what it predicts: PROP-039 §14 claims its load-bearing decisions are recorded four-field «at their governing anchors above», PROP-039 contains zero Decision/Why/Considered blocks, and the ten records (D1-D10) live in `spec/design/action-system.md` §5 in an italic variant — inside a lane `spec/design/README.md:7` declares NON-NORMATIVE. That is the silo failure this protocol exists to prevent, occurring in a different building."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-EVOLUTION-IS-AN-EDIT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:122  - ##CONSEQUENCE-EVOLUTION-IS-AN-EDIT **Evolution is an edit.** Rewrite the record in place, add a dated",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:124  [`revisit-triggers.md` §when-fired](revisit-triggers.md#when-fired). @impl/done",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:132  ## When a trigger fires {#when-fired}",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:214  ## 7. Version history {#history}",
+     "confirmed: The cross-reference resolves ({#when-fired} is at revisit-triggers.md:132). Host practice: 15 `## Version history` / `## Changelog` sections carry dated lines, and the one worked record rewrite (PROP-000 §3, commit 71d8383b) was done in place with the anchor unchanged. The gap: that rewrite did NOT add a dated changelog line — PROP-000 has no `## Version history` section at all (`grep -n '^#\\+ .*\\(Version history\\|Changelog\\)' spec/common/PROP-000.md` returns nothing), so the host's single in-place record evolution is undated except in git."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "CONSEQUENCE-RECORDS-ARE-CITABLE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:125  - ##CONSEQUENCE-RECORDS-ARE-CITABLE **Records are citable.** Give every record's heading an explicit",
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "crates/vibe-cli/src/commands/uninstall.rs:8  //! Spec: spec://vibevm/modules/vibe-workspace/PROP-009-loading-model.",
+     "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).",
+     "confirmed: Explicit heading anchors are the host norm — every section heading I read in PROP-000, PROP-001, PROP-036, PROP-043 and the terraform carries a `{#…}`. Citation happens in all three named surfaces: source comments (uninstall.rs:8), the host contract file (CLAUDE.md:5 cites spec://vibevm/common/PROP-000#commits), and commit bodies (520 of 2061 commits contain `spec://`). The counter-fact the harvest records at :60-64: `spec://` occurs 0 times in spec/WAL.md."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "WRITE-A-RECORD-FOR-ANY-REOPENABLE-CHOICE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:131  ##WRITE-A-RECORD-FOR-ANY-REOPENABLE-CHOICE Write a record for any choice a future reader could plausibly",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:134  | Occasion | Example |",
+     "spec/boot/STATIC.md:246  Any choice a future reader could plausibly re-open — a library pick,",
+     "the fact governs WHEN to write, and the host writes at 153 reopenable choices — library picks, constants, protocol shapes, process rules, one per occasion row. What those 153 contain is a different question and is filed on the four-field row."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "ROW-OCCASION-LIBRARY-PICK": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:136  | ##ROW-OCCASION-LIBRARY-PICK Library / dependency pick @impl/done | blake3 over SHA-256; one HTTP client over another @impl/done |",
+     "spec/common/PROP-000.md:208  - ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. @spec/done",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:59  ##SHELL-OUT **Decision:** `vibe-registry` performs all git operations by spawning the",
+     "confirmed: The host has library-pick decisions and none of them is a complete record. PROP-000 §15 (dependency-weight policy) is two-field: Decision at :208, Why at :211, no rejected alternatives, no trigger. PROP-001 §2.1 (shell out to git rather than libgit2/git2) is three-field: Decision :59, Why :63, revisit :113, no Considered-and-rejected field — though the document closes with `## 3. Rejected alternatives {#rejected}` at :286. PROP-003 §2.2 (libsolv as the SAT backend) is two-field. Searched crates/*/Cargo.toml for an HTTP client choice with a record: reqwest is listed in PROP-000:18's ecosystem l"
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-OCCASION-CONSTANT": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:137  | ##ROW-OCCASION-CONSTANT Constant with consequences @impl/done | timeouts, retry counts, buffer sizes, thresholds @impl/done |",
+     "spec/modules/vibe-registry/PROP-001-git-backend.md:225  ##FRESHNESS-TTL **Decision:** the default freshness TTL is **1 hour**, checked against",
+     "confirmed: The host's clearest constant-with-consequences is PROP-001 §2.5's 1-hour freshness TTL, and it is a two-field record: Decision at :225, Why at :231, no rejected alternatives, no revisit trigger — a timeout recorded exactly the way the protocol's headline example says not to. Searched spec/ for other consequential constants with records: exit code 7 (PROP-008, no Decision label), the retry/buffer classes return nothing. No host constant carries a four-field record."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-OCCASION-PROTOCOL-SHAPE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:138  | ##ROW-OCCASION-PROTOCOL-SHAPE Protocol / format shape @impl/done | wire format, schema, identity scheme, directory layout @impl/done |",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:91  ##DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.** @impl/done",
+     "spec/common/PROP-000.md:230  - ##JTD-SSOT **Decision:** JSON Type Definition (RFC 8927) schemas are the single source of truth for every client/server and machine-to-machine contract in this project. @spec/done",
+     "confirmed: This is the occasion the host records best: 3 of its 4 complete records are format/protocol shapes (PROP-043 §3.1 element name, §3.3 stage vocabulary, §3.8 anchor-id registers) and the fourth (PROP-036 §2.3) is a read-path shape. Against that, the two flagship schema decisions are incomplete: PROP-000 §16 (JTD as wire SSOT) is two-field (Decision :230, Why :234) and PROP-002 §2.1 (the identity tuple and content-hash scheme) is one-field. Searched spec/modules/vibe-wire/ and schemas/ for a record with a trigger: none."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-OCCASION-REJECTED-APPROACH": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:139  | ##ROW-OCCASION-REJECTED-APPROACH Rejected approach @impl/done | a road not taken that someone will propose again @impl/done |",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:208  ## 6. Rejected / deferred alternatives {#rejected}",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:210  - ##REJ-BUBBLE-UP **Bubble every dependency's boot into the root `spec/boot/`.** Rejected — it is the \"merge dependency specs into the authored spec\" the owner ruled out, and it makes one flat namespace for the whole workspace. @spec/done",
+     "confirmed: The host records rejected approaches heavily, but in the document-level section rather than as a record: 19 `## Rejected alternatives` / `## Rejected / deferred alternatives` sections across spec/ (PROP-001, PROP-002, PROP-003, PROP-007, PROP-008, PROP-009, PROP-010, PROP-011, PROP-012, PROP-020, PROP-021, PROP-022, PROP-023, PROP-024, PROP-027, PROP-028, PROP-031, PROP-032, PROP-033). Each bullet carries the loser and its reason, which is the form this protocol's §rejected-alternatives prescribes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "ROW-OCCASION-PROCESS-RULE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:140  | ##ROW-OCCASION-PROCESS-RULE Process rule @impl/done | a review gate, a commit convention, a naming law @impl/done |",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:243  - ##DECISION-TWO-REGISTERS **Decision — two anchor-id registers (owner ruling, 2026-07-24).**",
+     "spec/common/PROP-000.md:321  4. ##INV-ATOMIC-COMMITS **One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @spec/done",
+     "confirmed: The host's one four-field process-rule record is PROP-043 §3.8's two-register naming law (Decision :243, Why :248, Considered and rejected :251, Revisit when :255) — the naming-law example the row names, recorded completely. The commit convention, by contrast, is not a record: CLAUDE.md:5 says the rules \"live in that inline lane, not restated here\" and PROP-000 §Invariants item 4 restates the rule with no why, no alternatives and no trigger. Searched spec/ for a review-gate record: the conform/floor gates are specified in packages/org.vibevm.ai-native/ rather than recorded here."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:142  ##DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE Do **not** write records for facts with no plausible alternative, or",
+     "spec/common/PROP-000.md:77  - ##LAYOUT-PER-SPEC **Decision:** Per `VIBEVM-SPEC.md` §4.2. @spec/done",
+     "confirmed: The host has decisions labelled where the protocol would say not to bother — PROP-000 §5's LAYOUT-PER-SPEC is a **Decision:** whose whole content is a cross-reference, with no alternative available to reject. Searched for the converse (a host statement declining to record something as not worth it): spec/, CLAUDE.md, BACKLOG.md contain no such statement, and BACKLOG.md is the host's mechanism for deliberately not acting on findings, not for declining records. No checker enforces the negative rule."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "THE-COMPETENT-NEWCOMER-TEST": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:146  ##THE-COMPETENT-NEWCOMER-TEST The test: *would a competent newcomer,",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:147  reading the code cold, plausibly propose changing this?* @impl/done",
+     "confirmed: Searched the host for the test restated or applied: `grep -rn 'newcomer' spec/ CLAUDE.md` returns 2 hits, neither this test — spec/modules/vibe-actions/PROP-039-action-system.md:94 uses 'newcomer' for a competing product and spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:360 for newly authored documents. Widened to AUDIT.md, BACKLOG.md, campaigns/ and crates/: no occurrence. The test is not compiled into the host boot lane either (it is protocol-only, not in the boot snippet). Package text only."
+    ],
+    "src": [
+     1
+    ]
+   },
+   "WRITE-IN-THE-SESSION-THAT-DECIDES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:149  ##WRITE-IN-THE-SESSION-THAT-DECIDES The moment of writing is the moment of deciding — same session,",
+     "spec/boot/STATIC.md:268  1. Propose recording it at the governing anchor, with all four",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:78  *All three were surfaced with their measurements and ratified by the owner,",
+     "spec/modules/vibe-progress/PROP-043-progress-markup.md:243  - ##DECISION-TWO-REGISTERS **Decision — two anchor-id registers (owner ruling, 2026-07-24).**",
+     "confirmed: Two host records carry the deciding date in the record itself: PROP-043 §3.8 records '(owner ruling, 2026-07-24)' inline, and the batch plan's §2 says all three were ratified 2026-07-28 'before the first verdict was written'. Against those, PROP-008:218 self-declares a backfill ('This entry back-fills the record: the work shipped with M1.19 but the history was not updated at the time'). CLAUDE.md's END SESSION contract has five required behaviours and none of them is recording the session's decisions, so the duty has no host-side enforcement point."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "backfilled-reasoning-is-fiction": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:152  ##backfilled-reasoning-is-fiction Reasoning unwritten at session end does not survive",
+     "spec/modules/vibe-registry/PROP-008-qualified-naming.md:218  - ##HISTORY-PHASES-5-6-8 **2026-05-23 — Phases 5 + 6 + 8 shipped with M1.19.** Short-name resolution at the CLI input boundary (`vibe-cli::commands::short_name` — index-backed candidate sets, lockfile-prefers-locked); collision detection with the dedicated exit code `7` (`InstallError::AmbiguousPackage`); the live-registry migration to `fqdn` naming and the `vibe init` default fix (`cc32d7e` — the M1.19 defect AUDIT 2026-05-23-02 records). This entry back-fills the record: the work shipped with M1.19 but the history was not updated at the time. @spec/done",
+     "confirmed: The host has one self-declared backfill and it labels itself as such in the record — PROP-008:218. Searched the other 14 `## Version history` / `## Changelog` sections and the 26 host Why fields for undeclared backfills: undetectable from the text, and I will not infer them. The protocol's own escape hatch for this case, `TODO(owner)`, has 0 occurrences in spec/ or CLAUDE.md, so the host has no marker distinguishing a reconstructed why from a contemporaneous one."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "bigger-documents-outgrow-a-single-record": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:157  ##bigger-documents-outgrow-a-single-record Bigger documents — design proposals, subsystem specs — accumulate",
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:647  ## 3. Rejected alternatives {#rejected}",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:766  ## 4. Rejected alternatives {#rejected}",
+     "confirmed: Directly exhibited by this host: the two largest PROPs (PROP-002 at 647+ lines to its rejected section, PROP-003 at 766+) each close with a document-level rejected-alternatives section rather than distributing rejections into per-decision fields, and neither carries a single `**Considered and rejected:**` field. 19 such sections exist across spec/. Widened to spec/design/action-system.md, which instead compresses rejections into ten per-record `*Rejected:*` clauses — the opposite choice, in a smaller document."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "CLOSE-BIG-DOCUMENTS-WITH-A-REJECTED-OPTIONS-SECTION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:160  ##CLOSE-BIG-DOCUMENTS-WITH-A-REJECTED-OPTIONS-SECTION Close the document",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:208  ## 6. Rejected / deferred alternatives {#rejected}",
+     "spec/modules/vibe-workspace/PROP-009-loading-model.md:210  - ##REJ-BUBBLE-UP **Bubble every dependency's boot into the root `spec/boot/`.** Rejected — it is the \"merge dependency specs into the authored spec\" the owner ruled out, and it makes one flat namespace for the whole workspace. @spec/done",
+     "spec/common/PROP-024-code-bearing-packages.md:277  ## 4. Rejected / deferred alternatives {#rejected}",
+     "confirmed: This is the pattern the host adopts most thoroughly: `grep -rn '^#\\+ .*Rejected' spec/` returns 19 sections, in PROP-001, 002, 003, 007, 008, 009, 010, 011, 012, 020, 021, 022, 023, 024, 027, 028, 031, 032, 033. Sampled four of them (PROP-009 §6 with 4 bullets, PROP-024 §4 with 5, PROP-001 §3, PROP-002 §3) and every bullet names the loser in bold and its reason after a dash — the one-line-with-reason format the fact requires. Note the section is not always the document's close: PROP-009's is §6 of 8."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "why-the-line-with-reason-format": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:175  ##why-the-line-with-reason-format The line-with-reason format is the entire value: a bare list of",
+     "spec/common/PROP-024-code-bearing-packages.md:294  deferred: the installed package *is* the distribution, so the consumer depends",
+     "confirmed: Checked whether the host ever writes a bare list of losers without reasons: sampled all 19 rejected-alternatives sections' opening bullets and read four in full (PROP-009 §6, PROP-024 §4, PROP-001 §3, PROP-002 §3). Every bullet I read carries a reason after 'rejected:' or 'Rejected —'; PROP-024:294 is the deferral variant and still carries one. Found no bare-list instance in spec/. Widened to campaigns/packages-2026-09/deferrals.md and BACKLOG.md, which are triage lists rather than rejection lists."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:179  ##MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED Mark honest deferrals",
+     "spec/common/PROP-024-code-bearing-packages.md:277  ## 4. Rejected / deferred alternatives {#rejected}",
+     "spec/common/PROP-024-code-bearing-packages.md:294  deferred: the installed package *is* the distribution, so the consumer depends",
+     "confirmed: The host adopts the distinction in the section title itself: 6 of the 19 rejected-alternatives sections are titled `## Rejected / deferred alternatives` (PROP-007, PROP-009, PROP-010, PROP-011, PROP-012, PROP-024), and inside them individual entries are marked deferred rather than rejected — PROP-024's REJ-CRATES-IO at :293-296 reads 'deferred: the installed package *is* the distribution…'. The built-in-revisit half is not kept: none of the deferral entries I read carries a revisit condition, and BACKLOG.md — the host's home for deliberate non-action — is severity-triaged P1/P2/P3 rather than "
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "FOUNDATIONAL-DOCUMENTS-CLOSE-WITH-INVARIANTS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:184  ##FOUNDATIONAL-DOCUMENTS-CLOSE-WITH-INVARIANTS Foundational documents — the ones pinning decisions every other",
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "spec/common/PROP-000.md:316  ##INVARIANTS-STOP-RULE (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @spec/done",
+     "spec/common/PROP-000.md:324  7. ##INV-TOKEN-SECRECY **Tokens never appear in vibevm output.** See §20. Audited in unit tests; any new code path touching a `Token` or `RepoCreator` is reviewed for redaction and scope-escalation safety. @spec/done",
+     "confirmed: The host does this and does it in the protocol's exact shape. `grep -rn '^#\\+ .*Invariants' spec/` returns exactly 1 section, and it is in exactly the right document — PROP-000, whose own line 6 says 'Every subsequent PROP/FEAT may assume these are true'. It closes the file (line 314 of 328), carries 7 numbered one-liners, and several point back at their record by section (item 7 'See §20'; item 4 '(§12)'). Its stop-rule preamble at :316 is a near-paraphrase of the protocol's fenced example at :191-192. Widened to spec/modules/ for a second Invariants section: none — consistent with the fact s"
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "why-the-restatement-earns-its-place": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:198  ##why-the-restatement-earns-its-place The restatement is a concession to attention: a hurried reader — or",
+     "spec/common/PROP-000.md:316  ##INVARIANTS-STOP-RULE (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @spec/done",
+     "confirmed: The host's own invariants preamble gives the same rationale in the stop-rule form rather than the attention form. Testing the pointing-back half: of PROP-000's 7 invariants, items 4 and 7 cite a section (§12, §20), items 1, 3 and 5 cite VIBEVM-SPEC.md or a file path, and items 2 and 6 cite a flow or nothing — so 2 of 7 point at a record in this document. Searched CLAUDE.md for the same concession-to-attention argument: it makes the opposite move, keeping the four rules out of CLAUDE.md and in the inline lane (:5)."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "COPY-THE-TASK-NOT-THE-EXAMPLES": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:204  ##COPY-THE-TASK-NOT-THE-EXAMPLES Do not copy this protocol's examples verbatim — copy the *task*, and",
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:205  let the agent re-derive the records the project actually needs: @impl/done",
+     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done",
+     "confirmed: The re-derive prompt is a five-step fenced block at 207-222. Evidence the host followed it rather than copying: none of the protocol's examples appears in the host tree — no blake3, no 600 s timeout, no VPN log path (greps for 'blake3', 'vpn-test', '600 s' over spec/ and crates/ return nothing outside the packages). The host's records are about its own subjects (element naming, boot artifacts, anchor registers, licence). Evidence the prompt was NOT run to completion: step 3 asks for four-field drafts at the ten most reopenable anchors, and only 4 four-field records exist across 153 candidates."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-RECORD-DECISIONS-NOT-FACTS": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:226  - ##SUM-RECORD-DECISIONS-NOT-FACTS A fact is recoverable from the code in a second; a decision cannot",
+     "spec/boot/STATIC.md:239  This project records **decisions, not facts**. A fact (\"timeout is",
+     "confirmed: Summary restating ASYMMETRY-IS-ABSOLUTE (:29) and the boot snippet's opening; consistent with both. Installed on the host via the compiled lane. Host compliance measured under EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS: 127 of 153 Decision sections record the fact and not the reason, which is the failure this summary names."
+    ],
+    "src": [
+     1,
+     3
+    ]
+   },
+   "SUM-FOUR-FIELDS-ALWAYS": {
+    "v": "drift",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
+     "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
+     "spec/modules/vibe-cli/PROP-036-package-tree.md:95  - ##decision-artifacts-revisit **When to revisit:** if the artifacts stop being committed (generated",
+     "DRIFT on «always», the same census as EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). W1's precedent judges a summary restatement of a broken rule with the rule."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-RECORDS-LIVE-AT-THE-ANCHOR": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:231  - ##SUM-RECORDS-LIVE-AT-THE-ANCHOR Records live at the governing spec anchor. No ADR silo; the",
+     "spec/boot/STATIC.md:257  There is no separate ADR directory and no immutable numbered log.",
+     "spec/modules/vibe-actions/PROP-039-action-system.md:341  [`spec/design/action-system.md#decisions`](../../design/action-system.md#decisions) (D1–D10). @spec/done",
+     "confirmed: No ADR silo exists (`find . -type d -name adr` excluding .git/vibedeps/.vibe/node_modules returns nothing) and 153 of 153 Decision labels are in-section. The one relocation is the action system's ten records into spec/design/action-system.md, pointed at from PROP-039 §14 — a second document, not a silo, and reachable. Git-as-history is confirmed by the one in-place record rewrite (PROP-000 §3, commit 71d8383b)."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-RECORD-IN-THE-SAME-SESSION": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:233  - ##SUM-RECORD-IN-THE-SAME-SESSION Record in the same session the decision is made. @impl/done",
+     "spec/boot/STATIC.md:268  1. Propose recording it at the governing anchor, with all four",
+     "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:78  *All three were surfaced with their measurements and ratified by the owner,",
+     "confirmed: Restates WRITE-IN-THE-SESSION-THAT-DECIDES (:149) and the boot snippet's duty 1. Host evidence for: the batch plan's three decisions ratified 2026-07-28 before the first verdict, and PROP-043 §3.8's inline '(owner ruling, 2026-07-24)'. Host evidence against: PROP-008:218's self-declared backfill, and CLAUDE.md's END SESSION contract, whose five required behaviours do not include recording decisions."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   },
+   "SUM-CLOSING-SECTIONS-BY-DOCUMENT-SIZE": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:234  - ##SUM-CLOSING-SECTIONS-BY-DOCUMENT-SIZE Bigger docs close with rejected alternatives; foundational docs",
+     "spec/common/PROP-000.md:314  ## Invariants {#invariants}",
+     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:766  ## 4. Rejected alternatives {#rejected}",
+     "confirmed: Both halves hold on this host and the split falls exactly where the fact predicts: 19 rejected-alternatives sections, all in module/common PROPs of substantial length; exactly 1 Invariants section, in PROP-000, the document whose line 6 declares every other PROP may assume it. PROP-000 has no rejected-alternatives section and none of the 19 documents carrying one has an Invariants section — the two patterns are disjoint here, which is what the summary describes."
+    ],
+    "src": [
+     1,
+     2
+    ]
+   },
+   "SUM-IMMUNITY-AND-ITS-TRIGGER": {
+    "v": "confirmed",
+    "ev": [
+     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:236  - ##SUM-IMMUNITY-AND-ITS-TRIGGER A recorded decision is immunity from re-litigation; the trigger",
+     "spec/boot/STATIC.md:288  re-litigation. A recorded trigger is what keeps the immunity from",
+     "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
+     "confirmed: Third restatement of the immunity/trigger pair in the package (README:27, boot:63+66, here); all three agree. Host measurement: 11 triggers against 153 Decision sections, of which 2 explicitly refuse to be revisited (PROP-000.md:23; PROP-043-progress-markup.md:141) and 1 carries a metric plus a threshold (PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116). So the immunity is recorded far more often than the trigger that is supposed to bound it."
+    ],
+    "src": [
+     1,
+     2,
+     3
+    ]
+   }
+  }
+ }
+}
