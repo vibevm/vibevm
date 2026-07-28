@@ -36,9 +36,10 @@ Nothing is blocked. Tree clean, in sync with `origin/main`, mirrored to both hos
 |---|---|
 | host | 58 / 58 files, 4 499 verdicts (4 496 confirmed · 3 unverifiable) |
 | **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, **2 470 / 207 / 20, 91.6 %** |
-| **world** | **23 / 121 files** — 667 verdicts, **593 / 59 / 15, 88.9 %**, 30 self-referential (4.5 %); **3 483 anchors owed** |
+| **world** | **26 / 121 files** — 755 verdicts, **678 / 62 / 15, 89.8 %**, 39 self-referential (5.2 %); **3 395 anchors owed** |
 | `flow:wal` | **7 / 7 files CLOSED** — 260 verdicts, **225 / 27 / 8, 86.5 %** (W2a 81.1 %, W2b 90.6 %) |
-| phase | **3 364 of 6 847 — 49.1 %** |
+| `two-process-model` | **3 / 5 files** — 88 verdicts, **85 / 3 / 0, 96.6 %** (README 100 %, boot 82 %, model 100 %) |
+| phase | **3 452 of 6 847 — 50.4 %** |
 | gate | `progress check --exhaustive` clean, 259 files, 0 warnings |
 | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |
 
@@ -50,16 +51,26 @@ python campaigns/packages-2026-09/tasks/summary.py
 
 ## W2's remaining half — read, do not re-commission {#w2-remaining}
 
-**`ev-W2c.json` (179 rows) and `ev-W2d.json` (253) are on disk, committed, and
-UNJUDGED — 432 anchors.** Their three §3.1 sources are captured in
+**344 anchors are left, all on disk, committed and verified.** Their three §3.1
+sources are captured in
 [`harvest/world-w2-wal-family.md`](campaigns/packages-2026-09/harvest/world-w2-wal-family.md).
 
-| table | files | anchors | state |
+| table | files | rows | state |
 |---|---|---:|---|
 | `ev-W2a.json` | `wal` — README, boot snippet, `WAL-PROTOCOL.md`, the SKILL | 111 | **closed, 81.1 %** |
 | `ev-W2b.json` | `wal` — `cold-resume.md`, `morning-routine.md`, `session-end-hook.md` | 149 | **closed, 90.6 %** |
-| `ev-W2c.json` | `two-process-model` — all five files | 179 | **unjudged** |
+| `ev-W2c.json` | `two-process-model` — README, boot snippet, `TWO-PROCESS-MODEL.md` | 88 | **closed, 96.6 %** |
+| `ev-W2c.json` | `two-process-model` — `cognitive-load-split.md` | 50 | **unjudged** |
+| `ev-W2c.json` | `two-process-model` — `files-as-ipc.md` | 41 | **unjudged** |
 | `ev-W2d.json` | `sync-from-code` (5 files) + `wal-specspaces` (3) | 253 | **unjudged** |
+
+**One file per slice, merged and sealed on its own, is the granularity that has
+worked** — `merge-verdicts.py` takes a subset of a batch's files under the same
+batch id without complaint, and a slice that lands is a slice that cannot become
+a debt. `ev-W2c` carries **9 unresolvable refs that are not fictions**: all quote
+`spec/WAL.md` text a checkpoint deleted, verbatim at `100617b3`. `repair-refs.py`
+cannot re-point them because the text is gone; write the verdict's own citation
+against the current tree instead.
 
 **Two findings from the harvest capture alone still stand against those two files:**
 the host's `two-process-model` boot snippet is missing three `{#…}` heading anchors
@@ -296,14 +307,18 @@ ba3b18ca fix(campaign): four of the five git flows are stale, not all five
 ВОССТАНОВИ СЕССИЮ
 
 Затем продолжи Phase C кампании PROP-043 волны 2 (campaigns/packages-2026-09).
-БАТЧИ W2a И W2b ЗАКРЫТЫ поштучно. Пакет flow:wal завершён: 260 вердиктов,
-225 / 27 / 8 — 86.5 %. Кластер world = 593 / 59 / 15, 88.9 % на 23 файлах.
+ЗАКРЫТЫ поштучно: W2a, W2b и три файла из пяти в W2c. Пакет flow:wal завершён
+(260 вердиктов, 225 / 27 / 8 — 86.5 %); two-process-model — 88 из 179, 96.6 %.
+Кластер world = 678 / 62 / 15, 89.8 % на 26 файлах. Фаза C — 50.4 %.
 Открыта находка F-129 (в пакете wal ДВА противоречащих друг другу wind-down).
 
-ОСТАЛОСЬ ПОЛОВИНА W2, ТАБЛИЦЫ УЖЕ НА ДИСКЕ И В КОММИТАХ:
-  ev-W2c.json  179 строк — two-process-model, все пять файлов
+ОСТАЛОСЬ 344 ЯКОРЯ, ТАБЛИЦЫ УЖЕ НА ДИСКЕ, В КОММИТАХ И ПРОВЕРЕНЫ:
+  ev-W2c.json  50 строк — cognitive-load-split.md
+  ev-W2c.json  41 — files-as-ipc.md
   ev-W2d.json  253 — sync-from-code (5 файлов) + wal-specspaces (3)
-Итого 432 якоря. Ничего заказывать заново не нужно — начинай с чтения.
+Ничего заказывать заново не нужно — начинай с чтения. Режь по одному файлу:
+merge-verdicts.py спокойно принимает подмножество файлов батча под тем же id,
+а закрытый срез уже не станет долгом.
 
 Перед началом прочитай, в этом порядке:
   1. CONTINUE.md — целиком: §w2-remaining (что осталось), §recipe (цикл),

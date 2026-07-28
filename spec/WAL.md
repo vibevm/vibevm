@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-28 (**Phase C — `flow:wal` is CLOSED at 260 of 260; W2 is half
-judged, W2c and W2d remain**)_
+_Updated: 2026-07-28 (**Phase C — `flow:wal` CLOSED at 260; W2c is 88 of 179;
+two files of W2c and all of W2d remain**)_
 
 ## Current phase
 
@@ -9,10 +9,17 @@ judged, W2c and W2d remain**)_
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**3 364 verdicts written, sealed and committed — 49.1 % of the phase.** The
-`ai-native` cluster measures **2 470 / 207 / 20 — 91.6 %**; `world` now has **667
-verdicts — 593 / 59 / 15, 88.9 %, with 30 self-referential (4.5 %)**. One command
+**3 452 verdicts written, sealed and committed — 50.4 % of the phase.** The
+`ai-native` cluster measures **2 470 / 207 / 20 — 91.6 %**; `world` now has **755
+verdicts — 678 / 62 / 15, 89.8 %, with 39 self-referential (5.2 %)**. One command
 prints all of it: `python campaigns/packages-2026-09/tasks/summary.py`.
+
+**`two-process-model` is 88 of 179, and the three files judged so far separate the
+checkable layer from the abstract one cleanly:** README 22/22 (100 %), boot snippet
+14/17 (82 %, all three drifts the dangling `../flows/…` pointers), and
+`TWO-PROCESS-MODEL.md` **49/49 (100 %) — 45 of its 49 facts are `@spec/done`
+argument, and an argument cannot be contradicted by a repository.** Drift lives
+where a fact describes something the tree can answer.
 
 **`flow:wal` is CLOSED at 260 of 260 — 225 / 27 / 8, 86.5 %** (W2a's four files
 81.1 %, W2b's three 90.6 %), and it is the lowest-scoring package in `world` so
@@ -174,11 +181,23 @@ Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
 
 ## In progress
 
-**W2 is half judged.** `ev-W2a` (111) and `ev-W2b` (149) are read row by row,
-merged, sealed and committed. **`ev-W2c` (179, `two-process-model`, all five files)
-and `ev-W2d` (253, `sync-from-code` 5 files + `wal-specspaces` 3) are on disk,
-verified and UNJUDGED** — 432 anchors. Nothing needs re-commissioning; start by
-reading. Their three §3.1 sources are in `harvest/world-w2-wal-family.md`.
+**W2 is 348 of 692.** `ev-W2a` (111), `ev-W2b` (149) and three of `ev-W2c`'s five
+files (88) are read row by row, merged, sealed and committed — batches
+`batch-W2a`, `batch-W2b`, `batch-W2c-1`, `batch-W2c-2`.
+
+**Still unjudged — 344 anchors, all on disk and verified:**
+
+| left | file(s) | rows |
+|---|---|---:|
+| `ev-W2c.json` | `cognitive-load-split.md` | 50 |
+| `ev-W2c.json` | `files-as-ipc.md` | 41 |
+| `ev-W2d.json` | `sync-from-code` (5) + `wal-specspaces` (3) | 253 |
+
+Nothing needs re-commissioning; start by reading. `ev-W2c` carries **9 unresolvable
+refs that are not fictions** — all quote `spec/WAL.md` text this session's own
+checkpoint deleted, verbatim at `100617b3`; `repair-refs.py` cannot re-point them
+because the text is gone, and the verdicts written from those rows cite the current
+tree in their own words instead.
 
 **Two findings from the harvest capture alone are still open on those two files:**
 the host's `two-process-model` boot snippet is missing three `{#…}` heading anchors
@@ -189,9 +208,11 @@ on that file returns **0** — the same shape as F-128.
 
 ## Next
 
-1. **Judge `ev-W2c` (179), then `ev-W2d` (253).** Both already pass
-   `verify-evidence.py`; re-run it first anyway, because this session proved a
-   wind-down can invalidate a sealed table. Then `show-rows.py --brief` row by row.
+1. **Finish `ev-W2c` — `cognitive-load-split.md` (50) then `files-as-ipc.md` (41) —
+   then `ev-W2d` (253).** Re-run `verify-evidence.py` first anyway, because this
+   session proved twice that a checkpoint invalidates a sealed table. Then
+   `show-rows.py --brief --file <name>` row by row; one file per slice, merged and
+   sealed on its own, is the granularity that has worked.
    `CONTINUE.md` §recipe is the loop, §standard the verdict standard, and
    §w2-judged what W2a/W2b already settled — including the non-adoption line.
    **Re-measure the per-anchor cost when W2 closes** — W5 is provisional at ~697 and
