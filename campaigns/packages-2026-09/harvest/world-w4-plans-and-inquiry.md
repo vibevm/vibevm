@@ -145,12 +145,21 @@ host boot lane names 23 members; package source names 23
 
 The installed 0.2.0 copy (mtime 2026-07-15) names two members by short, unqualified
 names; the package source (mtime 2026-07-28) names them qualified. The **qualified
-names are the real ones** — `spec/boot/INDEX.md` and the provenance markers in
-`spec/boot/STATIC.md` both read `org.vibevm.world/git-atomic-commits` and
-`org.vibevm.world/git-attribution-policy`, and `vibedeps/flow-atomic-commits/` does
-not exist. **So the host's compiled boot lane names two members by names that no
-package in the registry carries.** One `name@version`, two contents — F-122's
-family, with a semantic difference rather than a markup one.
+names are the real ones**, and `vibedeps/flow-atomic-commits/` does not exist.
+**So the host's compiled boot lane names two members by names that no package in
+the registry carries.** One `name@version`, two contents — F-122's family, with a
+semantic difference rather than a markup one.
+
+> **Corrected by W4d's worker, 2026-07-29.** This paragraph originally cited two
+> locations for the qualified names. Only one is right:
+> ```console
+> $ grep -c 'atomic-commits\|attribution-policy\|git-practices' spec/boot/INDEX.md
+> 0
+> ```
+> `spec/boot/INDEX.md` is 40 lines naming seven `[[entry]]` paths, none of them a
+> git flow. The qualified names live **only** in `STATIC.md`'s `vibe:static`
+> provenance markers (lines 363, 421, 557, 615). The conclusion above stands; one
+> of its two supports did not.
 
 ### What the four slots actually ship {#payload}
 
@@ -183,6 +192,15 @@ WAL.md  boot  common  design  manual-tests  modules  terraforms
 of W4's boot snippets resolve nowhere in the consuming project — W1's 69-dangling
 finding, now in its eighth package. **`redbook` is the exception with zero**, which
 is the first W4 fact to check rather than assume.
+
+> **Corrected by W4c's worker, 2026-07-29: the count of nine is an undercount, and
+> the regex is why.** `grep -oE '\.\./flows/[^)]*'` matches only the `../`-spelled
+> form. `discovery-prompt` carries a **fourth** member of the same family spelled
+> ROOT-relative — `usage.md:176`, the first line of the re-derive prompt, tells the
+> assistant to `Read spec/flows/discovery-prompt/DISCOVERY-PROMPT.md in full`.
+> `grep -n 'spec/flows/'` across that package's three subject files returns five
+> hits. Any W5–W7 count of this family must use the path segment, not the `../`
+> prefix.
 
 ## Source 2 — the host's observed conformance {#source-2}
 
@@ -284,9 +302,22 @@ that the batch plan titles "spike" (`### C0 — spike: the harvest, and a contro
 the mechanism`), not the campaign's Phase 0. The flow's rule names Phase 0. Both
 readings are on the table and the reviewer settles it.
 
-**Gate panel at boundaries** — mentioned 5 times in wave 2's plan and 11 in wave 1's;
-the wave-2 instances read `floor green on the committed tree`, `floor green on 25
-steps`, `tools/self-check.sh steps 7 and 9 gated`.
+**Gate panel at boundaries — and this line originally gave numbers without their
+unit, which is the defect Phase B's close-out named.** Corrected by W4a's worker,
+2026-07-29; both counts are real and they measure different things:
+
+```console
+$ grep -cE 'self-check|floor green|gate panel' <wave2> <wave1>     # LINES, incl. self-check
+5    11
+$ grep -oiE 'gate panel|floor green|green floor|floor is green' <f> | wc -l   # OCCURRENCES
+4     5
+$ grep -oiE '\bfloor\b' <f> | wc -l                                # the bare word
+32   10
+```
+
+Use whichever unit the fact needs and say which. Note the bare-word count reverses
+the ordering. The wave-2 instances read `floor green on the committed tree`,
+`floor green on 25 steps`, `tools/self-check.sh steps 7 and 9 gated`.
 
 **Deferrals ledgers exist in both zones** (`campaigns/progress-2026-08/deferrals.md`,
 131 lines; `campaigns/packages-2026-09/deferrals.md`), and both plans' in-document
@@ -335,8 +366,28 @@ $ grep -c 'accessed\|Accessed' packages/org.vibevm.fractality/fractality/v0.1.0/
 21          # of 22 .md files in that directory; only rlm-source-selection.md carries any
 ```
 
-No two-way gap section, no per-quote access dates inside the notes. The access dates
-live once, out of band:
+> **CORRECTED by W4b's worker, 2026-07-29, and this correction is the important
+> one in the file.** The sentence that followed said the notes have no two-way gap
+> section. **That was an absence asserted, not checked** — the campaign's own named
+> trap, walked again. The directory holds two `*-SYNTHESIS.md` files this harvest
+> listed and never opened:
+> ```console
+> $ grep -n '## 2. Two-way gaps' .../notes/RLM-SYNTHESIS.md .../notes/FUGU-SYNTHESIS.md
+> RLM-SYNTHESIS.md:40:## 2. Two-way gaps {#gaps}
+> FUGU-SYNTHESIS.md:34:## 2. Two-way gaps {#gaps}
+> ```
+> Both carry named trail and lead paragraphs and numbered deltas with priority and
+> home (RD-1…21, FD-1…16), and `RLM-SYNTHESIS.md:5` cites this flow BY NAME as the
+> form it follows. **And the pipeline's downstream half is entirely in the living
+> tree:** `ROADMAP.md:43` records that milestones M1.7–M1.11 and M2.7–M2.10 derive
+> from the Tessl study, six of them carrying `Source: [PROP-004 §5.1]`
+> back-pointers; `spec/modules/vibe-resolver/PROP-003-dep-evolution.md` cites the
+> study at five anchors; and `FRACTALITY-RLM-PLAN-v0.1.md` cites `RD-n` 22 times,
+> converting deltas into ratified decisions. **The documents are archived; the
+> ratification is live.** Read the section below with that correction in force.
+
+The *study notes* proper carry no two-way gap section and no per-quote access
+dates. The access dates live once, out of band:
 
 ```console
 $ head -2 refs/articles/ACCESS-DATES.txt

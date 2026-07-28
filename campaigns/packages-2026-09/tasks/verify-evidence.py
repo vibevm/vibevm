@@ -38,7 +38,15 @@ Exit code 0 when every ref resolves (OFF-BY and ELIDED tolerated but named), 1 o
 import json, re, sys, pathlib, collections
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-REF = re.compile(r"^\s*([^\s:]+(?::[^\s:]*)??[^\s:]*\.[A-Za-z0-9]+):(\d+)\s*(.*)$")
+# The leading segment is `*` rather than `+` so an EXTENSIONLESS DOTFILE parses:
+# `.gitignore:37  /refs/` is a real, checkable ref, and with `+` the group before
+# `\.` had nothing to match and the whole ref fell through to UNPARSED. W4b hit it
+# three times on evidence that the reference sources are deliberately not in the
+# repository — refs that were true and that the checker could not read. Dotfile
+# paths recur (`.gitignore`, `.claude/`, `.github/`), so this is fixed rather than
+# worked around. Regression: the three already-trusted tables re-run to the
+# identical counts they returned before (C45-rust 2, C45-go 10, C6 0).
+REF = re.compile(r"^\s*([^\s:]*(?::[^\s:]*)??[^\s:]*\.[A-Za-z0-9]+):(\d+)\s*(.*)$")
 FUZZ = 3
 SPAN = 4          # how many lines a single quote may legitimately span
 BLOCK_CAP = 40    # and the ceiling on the block an elided quote may range over
