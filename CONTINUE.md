@@ -1,182 +1,143 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written 2026-07-28 (**Phase B CLOSED at zero; both queued wave-level DRIFTs
-landed**). `spec/WAL.md` is the canonical living state and supersedes this
-snapshot wherever they diverge._
+_Written 2026-07-28 (**Phase C: the `ai-native` cluster is CLOSED, 80 of 80 files;
+`world` is untouched**). `spec/WAL.md` is the canonical living state and supersedes
+this snapshot wherever they diverge._
 
 ## TL;DR
 
-**`progress check --exhaustive` exits 0 over all 259 files.** Every paragraph,
-list item and non-empty table body cell in the living corpus carries a stage, a
-state and an address. Sixteen batches; 4 276 unmarked facts on the morning of
-2026-07-27, none now.
+**Phase C of the packages campaign is 39.4 % done: 2 697 verdicts written, sealed
+and committed; 4 150 anchors remain, all of them in the `world` cluster.**
 
-**Both wave-level DRIFTs landed** on the owner's approval under sync-from-code:
-F-097 (four dead package names) and F-103 + F-110 (five boot snippets that could
-not resolve their own links).
+The `ai-native` cluster measured **92.4 % confirmed** (2 491 / 175 drift / 31
+unverifiable) across 80 files and six batches. Seven findings were opened, four of
+which need the owner. The exit gate's clause (iii) — the one wave 1 skipped — is
+**satisfied**: 39 captured runs live under `campaigns/packages-2026-09/harvest/`.
 
-**Nothing is running. Nothing is blocked.** The next phase is **Phase C**, its
-entry gate is met, and it was deliberately not started — see
-[`campaigns/packages-2026-09/PHASE-C-KICKOFF.md`](campaigns/packages-2026-09/PHASE-C-KICKOFF.md),
-which carries a paste-ready prompt for a fresh session.
+**Nothing is blocked. Nothing is running.** The next session has a paste-ready
+prompt in
+[`campaigns/packages-2026-09/PHASE-C-RESUME.md`](campaigns/packages-2026-09/PHASE-C-RESUME.md).
 
 ## Where the numbers are {#numbers}
 
 | | |
 |---|---|
-| corpus | **259 files** (58 host + 201 packages) |
-| unmarked | **0** — gate exits 0 |
-| markers | **12 797** (host 4 988 · ai-native 2 993 · world 4 816) |
-| markers with verdicts | **921** (`baseline.json`) — so Phase C owes ~11 900 |
-| batches | B1, B2, B5–B16 — **all done** |
-| rulings | **61**, three struck (18, 19, 45) |
-| findings this session | F-102 … F-116 |
+| host | 58 / 58 files, 4 499 verdicts (4 496 confirmed · 3 unverifiable) |
+| **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, **2 491 / 175 / 31, 92.4 %** |
+| **world** | **0 / 121 files** — **4 150 anchors owed**, batches W1…W7 |
+| phase | **2 697 of 6 847 — 39.4 %** |
+| gate | `progress check --exhaustive` clean, 259 files, 0 warnings |
+| tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |
 
 **Never decrement these; re-measure.** Every figure came from a command.
 
-## The one thing to do first
+## The one thing to do first {#first}
 
-**Nothing, until the owner picks.** The honest state is that Phase B finished
-and every remaining item either needs an owner decision or is explicitly
-off-limits. If the answer is "continue the campaign", paste the prompt from
-`PHASE-C-KICKOFF.md` into a fresh session.
+**Not `world`. Close the reviewing debt.** 138 rows were classified in bulk instead
+of read: 60 `partial` rows in `tasks/evidence/ev-C45-go.json` sorted by filename, and
+78 in `ev-C45-rust.json` sorted by a single two-branch rule. A `partial` is *related
+code that does not settle the claim* — the class that carries drift — so sorting 138
+of them by filename is the thinnest reviewing this phase has done, and the verdicts
+do not say so.
 
-## What Phase B's last three batches produced {#phase-b}
+Read them, judge each on its own evidence, restate what moves with
+`merge-verdicts.py … --force`. The tables are on disk and their refs are already
+machine-verified, so the job is reading plus a merge.
 
-| | B14 | B15 | B16 |
-|---|---|---|---|
-| files | 16 | 17 | 10 |
-| units | 479 | 409 | 281 |
-| predicted | 474–494 ✓ | 419–438 ✗ | 285–293 |
-| coefficient | 1.089 | 1.025 | 1.021 |
-| residual | 0 | 0 | 0 |
+## Then: the `world` cluster {#world}
 
-### The sizing rule stopped being a curve fit {#sizing}
+Seven batches, fixed in `tasks/PHASE-C-BATCHES.json`: **W1** git family (16 files,
+407) · **W2** two-process-model/wal/wal-specspaces/sync-from-code (20, 692) ·
+**W3** addressable-specs/decision-records/conflict-protocol (15, 615) · **W4**
+campaign-plans/discovery-prompt/comparative-research/redbook (15, 564) · **W5**
+operating-modes/health-audit/manual-tests/secrets-hygiene (21, 697) · **W6**
+licensing/source-mirrors/spec-genres/dev-runtime-docs (19, 572) · **W7**
+managed-blocks/qualified-naming/tool-design-lessons (15, 603).
 
-```
-predicted units ≈ 1.07–1.15 × terminators + pre-existing items + table cells
-```
+**Two of §3.1's three sources are already mechanised and captured**: the source-1
+link join reads **185 citations, 0 broken** over the observed corpus, and the
+source-2/3 boot-lane join reads **17 of 31 contributions carrying the package's exact
+word stream**. W2 and W5 are provisional at ~695 anchors; re-measure the per-anchor
+cost after the first world batch.
 
-**The quantity is TERMINATORS UNDER A RECORDED REGEX, not sentences** — the rule
-is in `BATCH-PLAN.md` verbatim, the coefficient is fitted to a 17 % undercount
-plus two artefacts (a quoted question and `(e.g. …)` both fire it), and
-repairing the counter breaks every prediction unless every coefficient is
-re-derived in the same commit.
+**`world` verdicts need a `src` field that `ai-native` did not** — a non-empty subset
+of `[1,2,3]` naming which source class the evidence rests on (amendment A2).
+`merge-verdicts.py` refuses a `world` batch without it.
 
-**B15 falsified the band, and the replacement is an explanation rather than
-another constant: the coefficient measures how aggressively a batch splits
-colons.** The formula multiplies terminators and adds items and cells at one, so
-only a manufactured list can exceed one unit per terminator. Measured on three
-consecutive batches — 25 manufactured bullets → +23 units, 10 → +6, 4 → +2.
-**B16 was predicted in advance to be insensitive to the coefficient and was.**
+## Non-obvious findings from this phase {#findings}
 
-Eight points span 1.021–1.153. **Read a miss as a report about colon-splitting,
-not about the files.**
+1. **The discipline gates everything except itself.** No package under
+   `packages/org.vibevm.ai-native/` carries a `conform.toml` or a `discipline/`
+   directory, so every discipline-specific floor step fails or is skipped in all six
+   slots, while the three portable steps pass wherever the toolchain is present.
+2. **F-121 is a family of four.** ENGINE-CONFORM, LEDGER-INTENT, BROWNFIELD and
+   PROP-014 each end with «any unexercised mechanism is removed from this document
+   rather than carried as aspiration», each marks it `@impl/done`, each is
+   contradicted by its own contents, and nothing enforces any of them.
+3. **F-122 — one `name@version`, two contents, 173 files across 33 packages.** Phase
+   B marked package files inside already-published version slots. Closing it is a
+   release event, not an edit.
+4. **F-123 — we break a rule we ship.** 82 of the last 400 commit subjects exceed
+   `conventional-commits`' 72-character hard limit (20.5 %), spread across the
+   campaign's working days. F-087 measured at the same time: 4 model mentions in 400
+   bodies, **none an authorship claim** — two are a colour-theme name.
+5. **The perimeter was wrong five times, and never in a worker's work.** A
+   mechanism's spec lives in `core-ai-native`, its engine in that package's library
+   crates, its driver in each stack's CLI, and its deployment in a consuming
+   project — `research/{rust,ts,go}-demo/`. A fact can be true at one layer and
+   invisible at the other three.
+6. **A count that includes `node_modules` is a count of somebody else's code.** Ten
+   TypeScript verdicts were confirmed on such a count and had to be restated to
+   drift; fifteen Go verdicts were recorded unverifiable on an absence asserted
+   without checking (`research/go-demo` exists and is complete).
+7. **Rust 100 %, TypeScript 98.8 %, Go 93.9 %** on the same nine scaffolds and the
+   same oracle shape. The ordering is about this repository: the host dogfoods the
+   Rust stack, the TypeScript consumer is complete, and the Go consumer's toolchain
+   (gopls) is not installed.
 
-## Non-obvious findings this session {#findings}
+## Decisions in force {#decisions}
 
-1. **F-102 — a fence matched by prefix, in three parsers.** A block opened with
-   four backticks was closed by a three-backtick line inside it, so the parse
-   inverted: shell commands became paragraphs the gate demanded markers for,
-   and the prose between them became code it could not see. **The gate and the
-   review tool agreed *because* they shared the defect** — the case the
-   "keep the tool independent" argument does not cover. A third implementation
-   found it. Fixed in `progress-core`, `batch_review` and `vibe-spec`.
-2. **A probe that passes is evidence about the probe.** The first test written
-   to demonstrate the `vibe-spec` half **passed against the broken code**: it
-   asked whether a section had children, and a stray `#` heading is level 1 and
-   therefore the root's. Only a negative control proved the test could fail.
-3. **F-114 — a contract falsified by the manifest that implements it.**
-   `redbook`'s README promises two projects on the same edition run
-   byte-identical practice text; the manifest, three lines above the pins, says
-   the cultural-extraction wave is "accumulated here in place" with the edition
-   bump deferred. **Owner's call.**
-4. **A path is not a name.** Only the *package* was renamed to `git-*`; the flow
-   directory, the document and a `spec://` URI's segments keep the short name.
-   One URI spells the dead string twice while being entirely correct.
-5. **F-110 pointed at the wrong side of its own disagreement.** Filed as "the
-   READMEs contradict their manifests"; the READMEs were right and the layout
-   had never caught up. Moving five files made five README edits unnecessary.
-6. **Counting-unit slips, not arithmetic.** Fifteen of twenty-four briefs
-   carried a factual error found by the batch running them, and the last three
-   were all units-of-measure: names against sites, headline against itemisation.
-   **State the unit with every count.**
+- **Verdicts live in the cache, never in markup** (PROP-043 §7.1/§7.5); mutate by
+  **load-and-merge only**; `verified_at` and `processed_hash` are written by
+  `vibe progress seal` and never by hand.
+- **Three ratified at the phase opening** (2026-07-28): a verdict carries its §3.1
+  source class in an `src` field rather than as a prose prefix; the subject is never
+  modified to make the measurement pass, so `<lang>-ai-native init` is not run; and
+  `vibedeps/` substitutes for §3.1's third source because `files_written` is `[]` for
+  all 36 packages.
+- **A finding is reported, never fixed, by a Phase C batch.**
+- **Delegation goes to the harness's built-in `opus5` subagents, not fractality**
+  (owner ruling, 2026-07-28). The verdict is never delegated; neither is the review
+  of delegated output.
+- **Owner grant:** work autonomously across batch and cluster boundaries; stop only
+  for a genuine semantic or architectural decision.
 
-## Traps that cost real time {#traps}
+## Campaign tooling built this phase {#tools}
 
-1. **A Python `str.replace` with `\n` in the pattern silently no-ops** — this
-   tree's working copy is CRLF (the blobs are LF), so a multi-line pattern never
-   matches and the script reports success. Struck twice. Use an editor tool that
-   errors, or anchor on one line.
-2. **`run/cache.json` carries the C-phase verdicts.** Load-and-merge only.
-3. **Every parsing `progress` subcommand writes the cache — `check` included**,
-   and it looks read-only. Always pass `--campaign`. **Never point one at
-   `campaigns/progress-2026-08`.**
-4. **Never hand-write `verified_at`** — a future stamp makes the invalidation
-   rule never fire, and it fails UNSAFE.
-5. **Never `git add -A` while an executor is running.** Stage explicit paths.
-6. **`grep -v '\.vibe'` deletes this repository's own packages.**
-7. **A rustdoc fence in a doc comment is a doctest** — and a four-backtick
-   wrapper is closed by a four-backtick line inside it. Wrap examples that quote
-   fences in five.
+All under `campaigns/packages-2026-09/tasks/`, each with its refusals tested before
+use:
 
-## Decisions still in force {#decisions}
-
-- **Hybrid markup (owner, 2026-07-26):** the executor marks a package; the
-  reviewer reads every diff and owns sense-preserving splits, anchor names and
-  `audience`. **The executor never touches root `spec/**`.**
-- **Verdicts live in the cache, never in markup** (PROP-043 §7.1/§7.5).
-- **Superseded version slots and frozen history are neither marked nor edited** —
-  `redbook/v0.1.0` kept its four dead names deliberately.
-- **A finding is reported, never fixed, by a markup batch.**
-- **`spec/boot/` is the boot-snippet layout** — all 27 `world` packages now agree
-  and `vibe init` scaffolds it.
-- **Owner grant (2026-07-28):** work autonomously, including across batch
-  boundaries; stop only for genuine semantic or architectural decisions.
-  **sync-from-code still requires surfacing a draft before applying.**
-
-## Recent commits {#commits}
-
-```
-17b1415b docs(wal): the two drifts landed, and one of them was smaller than filed
-96383299 docs(campaign): two findings closed, and each was wrong about itself
-7b0ec6aa fix(world): four package names that no reader could install
-521bb6cd fix(world): a boot snippet resolves from its own package
-053f1671 docs(wal): Phase B closed, and the instruments agreed once too often
-fc731127 chore(campaign): the phase boundary's baseline, and a headline that lied
-56172a8f chore(campaign): Phase B closes at zero, and the mechanism holds a third time
-c09c2827 docs(campaign): a contract falsified by the manifest that implements it
-c06ba73e docs(campaign): the one ruling whose obedience was a semantic edit
-66b6f04b docs(world): the last ten files, and the corpus reaches zero
-2378d394 docs(campaign): the last batch, and the one the rule cannot mis-size
-a8752fbb docs(campaign): a citation that fails for its own author too
-ad026076 chore(campaign): refresh the zone's measurement after B15
-647159a8 docs(campaign): three numbers, three criteria, and only one of them mine
-125940b4 docs(campaign): a same-file control bounds the widest colon ruling
-d5c9ec08 docs(campaign): the coefficient measures the reviewer, not the corpus
-545943ae docs(world): the git family becomes fact-addressable
-23b593d7 docs(campaign): the batch that has to tell a path from a name
-a7e769cb docs(campaign): the broken-link defect is the trait, not an accident
-1fcf8329 feat(batch-review): a licensed repair stops reading as a rewording
-742f72ac chore(campaign): refresh the zone's measurement after B14
-d679c273 docs(campaign): a sixth point, and the band stops being news
-8218ec13 docs(campaign): the counting rule gains the two clauses it was missing
-5464b679 docs(campaign): five findings kept, one dismissed on checking
-a7ef4322 docs(campaign): a count decides what an argument could not
-```
+| tool | what it settles |
+|---|---|
+| `merge-verdicts.py` | the three verdict rules stop being prose — six refusals, all made to fire |
+| `verify-evidence.py` | a delegated `path:line` is checked by machine — 3 947 refs, 12 unresolvable |
+| `source1-join.py` | §3.1 source 1: does every cited document exist and carry its anchor |
+| `source23-boot-join.py` | §3.1 sources 2 and 3, over the compiled boot lane |
+| `scaffold-three-way.py` | the parallel corpora — nine scaffolds ×3, and the `discipline-mcp` trio |
+| `coordinate-divergence.py` | one `name@version`, two contents (F-122) |
 
 ## Quick start {#quickstart}
 
 ```bash
+cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09
+```
+
+```bash
+python campaigns/packages-2026-09/tasks/verify-evidence.py campaigns/packages-2026-09/tasks/evidence/*.json
+```
+
+```bash
 bash tools/self-check.sh ; echo "EXIT=$?"
-```
-
-```bash
-cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --no-cache --campaign campaigns/packages-2026-09
-```
-
-```bash
-cargo xtask batch-review --selftest
 ```
 
 ```bash
@@ -188,17 +149,50 @@ Always pass `--campaign`. Use `--no-cache` after any parser change.
 ## Repository map {#map}
 
 - `spec/` — living corpus (0 unmarked) + `WAL.md` + both campaign plans in
-  `spec/terraforms/`.
-- `packages/` — wave 2's subject, now fully marked. `org.vibevm.fractality` and
-  `org.vibevm.vibeapp` are out of scope.
-- `campaigns/packages-2026-09/` — **live.** `BATCH-PLAN.md`, `baseline.json`,
-  **`PHASE-C-KICKOFF.md`**, `PHASE-T-*`, `PHASE-G-SPEC.md`, `run/`, and `tasks/`
-  (61 rulings live in `MARKUP-B1.md`; DRIFT-038/039 record the two fixes).
-- `crates/progress-core/src/parse/` — the gate's parser; `delimiters.rs` is the
-  run-matched delimiter cell F-102 created.
-- `xtask/src/batch_review/` — the review tool: `text.rs`, `fences.rs`,
-  `checks.rs`, `gate.rs`, `index.rs`, `refs.rs`, `report.rs`.
-- `BACKLOG.md` — P1/P2/P3, drained by the next wave.
+  `spec/terraforms/`. The §9 LOG of `PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` carries
+  this phase's record, entry by entry.
+- `packages/` — wave 2's subject. `org.vibevm.ai-native/` is **judged in full**;
+  `org.vibevm.world/` is next. `org.vibevm.fractality` and `org.vibevm.vibeapp` are
+  out of scope.
+- `campaigns/packages-2026-09/` — **live.** `PHASE-C-RESUME.md` (start here),
+  `PHASE-C-BATCH-PLAN.md`, `PHASE-C-KICKOFF.md`, `BATCH-PLAN.md`, `baseline.json`,
+  `harvest/` (39 captured runs), `tasks/` (6 tools + 15 evidence tables + the batch
+  assignment), `run/` (cache, journal, state).
+- `research/{rust,ts,go}-demo/` — **the discipline's consuming projects.** Not a
+  sandbox: they carry `conform.toml`, `specmap.toml`, `specmap.json` and
+  `discipline/registry/`, and they are where a language guide's rules are in force.
+- `crates/progress-core/` — the gate's parser. `xtask/src/batch_review/` — the review
+  tool. `BACKLOG.md` — P1/P2/P3.
 
-**The WAL is the canonical living state.** If this file and `spec/WAL.md`
-disagree, the WAL wins.
+## Recent commits {#commits}
+
+```
+6d82b5cf chore(campaign): the ai-native cluster closes at 80 of 80 files
+d9270e75 chore(campaign): C4+C5 in two languages, and a name that outlived its crate
+106e09c5 chore(campaign): C6 closes at 92.7 % and corrects C3 twice
+6702441a chore(campaign): C3 closes at 89.7 %, and Go's gap is the tree's
+55975e60 chore(campaign): C3a — the demos are the consumer, and forty facts turn on it
+89c90aed docs(campaign): F-123 — we break a rule we ship, at a fifth of commits
+9cabe34d docs(campaign): F-122 — one coordinate, two contents, 173 times
+bf679a1c chore(campaign): C7 closes at 99/99, and F-116 is about the family
+c8911c29 feat(campaign): F-116 stops being a reading and becomes a command
+4b266611 feat(campaign): C4's parallel corpus gets diffed instead of re-read
+76c6a142 chore(campaign): C2 closes at 92.4 %, and the drift is one thing said eleven ways
+2ff1cbed fix(campaign): an elided quote is one rule, not a list of cases
+0413154a chore(campaign): C2a — the ATLAS keeps its books and misstates its own source
+666fe2c6 feat(campaign): sources 2 and 3 become one command, over the boot lane
+1480aa25 docs(campaign): the perimeter law, written after C1 paid for it three times
+38f9816c chore(campaign): C1 closes at 353 verdicts, and the perimeter was wrong thrice
+036c7525 docs(campaign): the host does adopt PROP-014, by citation
+fd6d5ac2 chore(campaign): five workers' readings stop living in a scratchpad
+55bb7e71 chore(campaign): C1c — a not-found is a fact about the perimeter first
+423d2883 fix(campaign): the evidence checker stops crying wolf twice
+8a4d6b08 chore(campaign): C1b — the ledger is honest below the floor and empty above it
+1bd51ee4 chore(campaign): C1a — the transport holds and the engine spec does not
+f45202fc feat(campaign): a delegated line number gets checked by machine
+6f276b5d docs(campaign): the one broken citation sits where nothing looks
+726160a1 feat(campaign): source 1's mechanical half stops being a reading task
+```
+
+**The WAL is the canonical living state.** If this file and `spec/WAL.md` disagree,
+the WAL wins.
