@@ -56,3 +56,7 @@ desktop.ini
 # tracked it either; this makes the convention unstageable rather than merely
 # observed.
 /campaigns/*/run/mirror/
+
+# Python bytecode from the campaign task scripts (campaigns/**/tasks/*.py).
+__pycache__/
+*.pyc
