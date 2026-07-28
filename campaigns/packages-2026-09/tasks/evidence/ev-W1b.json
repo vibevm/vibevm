@@ -1,0 +1,939 @@
+[
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "a-long-session-leaves-the-tree-looking-like-a-weather-map",
+    "marker": "@spec/done",
+    "claim": "A long prototyping session leaves the working tree full of changes, some connected and some not.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:176  ##slicing-a-messy-tree-is-cognitively-expensive After a long prototyping session the",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:177  working tree is a mess, and slicing it cleanly is cognitively",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:3  A long prototyping session often leaves the working tree looking"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "The sibling protocol in the same package repeats the assertion verbatim in substance (ATOMIC-COMMITS-PROTOCOL.md #ai-advantage), so source 1 corroborates. Source 3: the installed copy carries the same two lines at vibedeps/…/splitting-large-changes.md:3-4 without anchor or marker (pre-DRIFT-039 text). What is missing is source 2: a working tree's untracked state leaves no trace in git history, so nothing in this repository's log, CLAUDE.md, spec/**, or campaigns/** observes whether a prototyping session here produced a mixed tree. Widened to CONTINUE.md, spec/WAL.md and campaigns/packages-2026-09/**; grep for 'prototyping'/'weather map'/'messy tree' outside the git-atomic-commits package returned only the fractality package's vendored copies of this same document."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "this-document-is-the-splitting-procedure",
+    "marker": "@impl/done",
+    "claim": "This document is the procedure for turning a messy tree into atomic commits without losing or reordering work.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:27  - ##CONTENT-THE-SPLITTING-PROCEDURE `spec/flows/atomic-commits/splitting-large-changes.md` — mechanical",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:44  ##splitting-procedure-pointer Procedure for splitting a messy working tree:",
+      "spec/boot/STATIC.md:399  Procedure for splitting a messy working tree:",
+      "spec/boot/STATIC.md:400  [`spec/flows/atomic-commits/splitting-large-changes.md`](../flows/atomic-commits/splitting-large-changes.md)."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1: the package README and the boot snippet both name this file as THE splitting procedure, and the sibling ATOMIC-COMMITS-PROTOCOL.md:112-113 points here from #splitting. Source 2: the host's compiled boot lane carries the same pointer twice (spec/boot/STATIC.md:399-400 and again at 593-594, via the git-practices umbrella — F-078). Source 3, and this is the finding: the pointer's relative target resolves from spec/boot/ to spec/flows/atomic-commits/splitting-large-changes.md in the HOST tree, and `ls spec/flows/` returns 'No such file or directory' — the host has no spec/flows/ at all. vibe.lock:251 records `files_written = []` for this package and its vibe.toml declares only a [boot_snippet] (no [writes] table, grep -c writes = 0), so the document is never written into a consumer's project. It IS vendored, at vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md (185 lines vs the package's 218) — so a consumer receives it, but not at the path the boot snippet sends them to."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "THE-TREE-MUST-BUILD-AND-IDEALLY-PASS-TESTS-BEFORE-STARTING",
+    "marker": "@impl/done",
+    "claim": "Before starting a split, the working tree must build and ideally pass tests.",
+    "evidence": [
+      "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+      "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+      "DEV-GUIDE.md:78  cargo build --workspace",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:10  Before starting, the working tree must build and (ideally) pass"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2: the host runs exactly this precondition as a named gate — tools/self-check.sh describes itself as 'the floor invariants every commit on `main` is supposed to satisfy' and its steps 1-3 are `cargo fmt --all --check`, `cargo test --workspace`, `cargo clippy … -D warnings` (lines 7-9); DEV-GUIDE.md:77-82 gives the same build/test/clippy/fmt quartet as the from-repo-root routine. The gate is per-commit, not specifically pre-split — the flow's wording is 'before starting [the split]'. Searched tools/, xtask/, .claude/, crates/ and .git/hooks for anything that enforces greenness BEFORE a split specifically: nothing; `.git/hooks` holds only the shipped `.sample` files and `git config core.hooksPath` is unset, so no commit-time hook exists. Source 3: installed copy line 10-11, same sentence, marker stripped."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "STABILISE-TO-GREEN-BEFORE-SPLITTING-A-BROKEN-TREE",
+    "marker": "@impl/done",
+    "claim": "If the tree is broken end to end, stabilise to green first — on a single WIP commit if necessary — then split from the green state.",
+    "evidence": [
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:11  tests. If the tree is broken end to end, do not try to split yet —",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:12  stabilise to a green state first, on a single WIP commit if"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 3 confirms delivery (installed copy lines 11-13, identical prose). Source 2 does not corroborate and the near-miss is worth recording: grep for 'WIP commit' / 'stabilise to green' / 'green state' across the whole perimeter (excluding vibedeps/, .vibe/, refs/, node_modules/) returned ONLY this package and the fractality package's vendored copies of it — no host document prescribes a WIP commit. In this repository's full history (2024 commits, `git rev-list --count HEAD`) exactly one subject mentions WIP: `2a68d29a docs(wal): record PROP-008 Phase 2 design + stashed WIP` (2026-05-22) — and that is a well-formed docs commit recording a *stash*, not the WIP commit this rule authorises. So the host has never taken the escape hatch, and there is no host rule either permitting or forbidding it."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "a-broken-starting-point-means-a-moving-target",
+    "marker": "@spec/done",
+    "claim": "A broken intermediate is sometimes inevitable, but a broken starting point means the split works against a moving target.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:124  alone; splitting them produces two intermediate commits where the",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:125  tree does not compile.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:15  A broken intermediate during a split is inevitable sometimes, but a"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: the sibling protocol's #batching section concedes the same point — that some decompositions necessarily produce non-compiling intermediates (ATOMIC-COMMITS-PROTOCOL.md:123-128). Source 3: installed copy lines 15-17, same prose. Source 2 is absent and cannot be otherwise: 'the starting point was broken' is a property of an uncommitted tree at a moment in time and leaves no trace in the log. Widened to spec/WAL.md, CONTINUE.md and campaigns/packages-2026-09/** for any post-mortem describing a split that went wrong because the base was red — grep for 'moving target' returned only this document and its vendored copies."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "run-lead",
+    "marker": "@impl/done",
+    "claim": "Step 1 of the split is to run the inventory commands (git status, git diff --stat HEAD, git diff HEAD).",
+    "evidence": [
+      "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:36  1. ##STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE Run `git status` and `git diff HEAD`. Name every change by intent. @impl/done",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:21  Run:"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2: the host's compiled boot lane prescribes the same first step verbatim at spec/boot/STATIC.md:391 (and again at 585 through the git-practices umbrella — F-078), so this repository's session-end contract literally opens with `git status` + `git diff HEAD`. The boot snippet's list omits the third command `git diff --stat HEAD`, which appears only in this document's fenced block (lines 28-32). Source 3: installed copy line 21 plus the same fence at 23-27, byte-identical. `git status` also appears in host operational docs as an acceptance predicate (campaigns/packages-2026-09/tasks/DRIFT-029.md:124, DRIFT-030.md:137, DRIFT-035.md:152) — a different use, noted so it is not mistaken for conformance to this step."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "READ-THE-OUTPUT-END-TO-END",
+    "marker": "@impl/done",
+    "claim": "The inventory output must be read end to end.",
+    "evidence": [
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:29  Read the output end to end. The goal is to name every changed"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "This is an instruction about an agent's reading behaviour and has no observable output anywhere. Source 3 confirms delivery: the installed copy carries the sentence at line 29, joined into the same paragraph as the next two facts (the installed text has no paragraph split there — the anchoring pass that produced NAME-EVERY-CHANGED-CHUNK… and produce-a-list-lead as separate facts happened after this copy was installed). Searched the host contract files (CLAUDE.md/AGENTS.md/GEMINI.md), spec/boot/**, spec/common/PROP-000.md and campaigns/packages-2026-09/** for any 'read the diff end to end' obligation: the closest is spec/boot/STATIC.md:404-405 'Humans verify code by reading diffs. A diff that mixes three concerns is not verifiable in one pass' — which motivates diff-reading but does not prescribe reading the inventory output end to end. Nothing in tools/, xtask/ or crates/ could check this."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "NAME-EVERY-CHANGED-CHUNK-BY-INTENT-NOT-BY-FILE",
+    "marker": "@impl/done",
+    "claim": "Every changed chunk is named by intent, not by file.",
+    "evidence": [
+      "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+      "spec/boot/STATIC.md:392  2. Group changes into atomic commits — one commit per intent, not per",
+      "spec/boot/00-core.md:23  3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** — one logical unit per commit, split mixed working trees. @impl/done",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:29  Read the output end to end. The goal is to name every changed"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2 is strong here. The host's own Rule 3 (spec/boot/00-core.md:23) is 'Group commits by meaning — one logical unit per commit, split mixed working trees', and the compiled boot lane restates the intent-not-file framing twice (spec/boot/STATIC.md:391-393, repeated at 585-587 through the umbrella). PROP-000 §12 pins it as GP-ATOMICITY, 'one commit = one logical idea' (spec/common/PROP-000.md:163). The harvest's file-per-commit measurement is deliberately NOT offered as conformance evidence: campaigns/packages-2026-09/harvest/world-w1-git-family.md:150-151 says 'A file count is not an idea count, and the atomic rule is explicitly *one idea, not one file* — so this measures the shape of the history, not conformance.' Source 3: installed copy lines 29-30."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "produce-a-list-lead",
+    "marker": "@impl/done",
+    "claim": "The intents are written out as a list, in a scratch document or a chat message to the agent.",
+    "evidence": [
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:30  chunk by **intent**, not by file. Produce a list in a scratch",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:31  document (or a chat message to the agent):"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 3 confirms delivery (installed copy lines 30-31 plus the example fence at 33-40). Source 2: the host's boot-lane session-end list (spec/boot/STATIC.md:391-393) prescribes naming and grouping but never prescribes materialising the list as an artifact, and there is no scratch-list convention in the host — searched CLAUDE.md/AGENTS.md/GEMINI.md, TASKS.md, BACKLOG.md, spec/WAL.md and campaigns/packages-2026-09/** for a split-plan or intent-list artifact; TASKS.md is described in CLAUDE.md as 'the current work-slice's checklist, each item a commit waiting to be made', which is an adjacent but different artifact (forward-planned work, not an inventory of an already-dirty tree). No such list is ever committed, by construction, so history cannot show it."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "six-items-six-intents",
+    "marker": "@impl/done",
+    "claim": "The worked example's inventory yields six items and therefore six intents.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:43  - Added retry helper in retry.rs",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:34  - Added retry helper in retry.rs",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:42  Six items. Six intents. Not necessarily six commits — some will"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "Self-contained arithmetic over the fence immediately above it: the fenced list at package lines 42-49 has exactly six bullets, matching 'Six items'. Source 3: the installed copy's fence at lines 33-40 carries the same six bullets and the same sentence at line 42, so the count is consistent in both copies. Source 2 does not apply — this is a statement about the document's own example, not about the host; nothing in this repository could confirm or falsify it, and I did not search for one."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "NOT-NECESSARILY-SIX-COMMITS",
+    "marker": "@impl/done",
+    "claim": "Six intents do not mean six commits — some collapse together in the grouping step.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:117  ##SOMETIMES-THREE-COUPLED-CHANGES-FORM-ONE-IDEA Sometimes three tightly coupled changes form one idea. @impl/done",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:130  ##THE-RULE-IS-ONE-IDEA-NOT-ONE-HUNK The rule is: atomic means *one idea*, not *one hunk*. @impl/done",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:42  Six items. Six intents. Not necessarily six commits — some will"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1 settles it: the sibling protocol's #batching section is the general rule this sentence instantiates — 'Sometimes three tightly coupled changes form one idea' (line 117) and 'atomic means *one idea*, not *one hunk*' (line 130), plus #splitting's CASE-CROSS-MODULE-CHANGE at lines 108-110 ('Do not over-split along file boundaries'). Source 3: installed copy lines 42-43, same sentence. Source 2 not consulted: the claim is about the document's own worked example, and the host's file-count distribution (harvest lines 146-147) is explicitly disclaimed as a non-measure of idea count."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "collapse-items-that-express-the-same-idea-lead",
+    "marker": "@impl/done",
+    "claim": "Step 2 is to collapse inventory items that express the same idea into one commit.",
+    "evidence": [
+      "spec/boot/STATIC.md:392  2. Group changes into atomic commits — one commit per intent, not per",
+      "spec/boot/STATIC.md:393  file.",
+      "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. …",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:47  Collapse items that express the same idea into one commit:"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2: the host prescribes the same grouping step in two places — the compiled boot lane's session-end step 2 (spec/boot/STATIC.md:392-393, repeated at 586-587), and the host's own END SESSION contract at CLAUDE.md:190 (identical text in AGENTS.md:190 and GEMINI.md:190), which names the resulting shape as 'topic-grouped commits per Rule 3' and gives a two-commit split of one session's changes. Source 3: installed copy line 47, same sentence, immediately above the same four-bullet worked example at 49-59."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "GROUP-EXAMPLE-RETRY-HELPER",
+    "marker": "@impl/done",
+    "claim": "Helper + its first use + its test are one idea and become one commit, `feat(core): retry helper for transient failures`.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:102  - ##CASE-TESTS-PLUS-IMPLEMENTATION **Tests + implementation they verify.** Usually one commit — both",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:119  ##example-a-new-type-its-first-user-and-its-test Example:",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:49  - \"Added retry helper\" + \"Used retry helper\" + \"Added test for retry"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1: the sibling protocol states the same rule twice — CASE-TESTS-PLUS-IMPLEMENTATION ('Usually one commit — both halves of one idea', lines 102-104) and the #batching example 'introducing a new type, the first function that uses it, and the test that verifies the function' (lines 119-128). Source 2, measured directly on this repository: of the last 400 commits, 44 carry a `feat`-prefixed subject (`git log -400 --format='%h\\t%s' | awk -F'\\t' '$2 ~ /^feat(\\(|!?:)/'`), and 4 of those 44 touch both a `src/` path and a separate test path in the SAME commit — e.g. `8b181522 feat(progress): progress-core crate + the vibe progress adapter`. That 4/44 undercounts by construction: this is a Rust workspace where unit tests live in inline `#[cfg(test)]` modules inside the same `src/` file, so a path-based count cannot see a test edit that rides in the feature commit. The harvest also records 7 standalone `test`-type commits in 400 (line 76), which is the protocol's stated exception (a battery of tests against pre-existing code). Source 3: installed copy lines 49-51."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "GROUP-EXAMPLE-RENAME",
+    "marker": "@impl/done",
+    "claim": "A mechanical rename is one concern and becomes one commit, `refactor(core): rename conn to connection`.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:99  - ##CASE-REFACTOR-PLUS-FEATURE **Refactor + feature.** Always separate. The refactor commit",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:52  - \"Renamed `conn` to `connection`\" → one commit:"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: the sibling protocol's CASE-REFACTOR-PLUS-FEATURE (lines 99-101) requires the refactor to be its own commit, which this example instantiates. Source 2 is thin and I state it as such: this repository has 3 `refactor`-subject commits in the last 400 (harvest line 87, reconfirmed by my own `git log -400`), and none of the three is a mechanical rename — they are `c1e2a0ff refactor(vibe-cli): the progress adapter splits before it is forced to`, `18ab7cb3 refactor(progress): split the scanner along its seams (DRIFT-002)`, `47281fc6 refactor(resolver,cli): EmbeddedProvider over LocalCompositeProvider`. So the host uses the `refactor` type but has produced no instance of the specific pattern (rename-only commit) in the observed window; a rename could also have been typed `chore`, which I did not attempt to detect. Note in passing that the third of those three carries the comma-separated multi-scope `(resolver,cli)` the harvest flags at lines 91-95 as outside the grammar. Source 3: installed copy lines 52-54."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "GROUP-EXAMPLE-TYPO-FIX",
+    "marker": "@impl/done",
+    "claim": "A README typo fix is trivially one concern and becomes one commit, `docs: fix typo in README`.",
+    "evidence": [
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:84  $ git log -400 --format=%s | grep -cE '^[a-z]+!?: '",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:85  0",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** …",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:55  - \"Fixed typo in README\" → one commit: `docs: fix typo in README`."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "The grouping judgement (a typo fix is one concern) is uncontroversial and matches ATOMIC-COMMITS-PROTOCOL.md:27-28. What the evidence settles, and what makes this row worth reading, is the example's MESSAGE: `docs: fix typo in README` is scope-less. The harvest's source-2 measurement (lines 84-85, 91) is that of this repository's last 400 commits, ZERO use a scope-less `type:` header — 'not one omits the scope'. I reconfirmed independently: `git log -400 --format=%s | grep -cE '^[a-z]+!?: '` returns 0. So the consuming host never writes the form this example teaches. The same scope-less form appears once more in the same document at line 106 (`git commit  # message: docs: fix typo in README`) and in the summary's sibling flow. Source 3: installed copy lines 55-56, same scope-less example."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "GROUP-EXAMPLE-REFORMATTED-IMPORTS",
+    "marker": "@impl/done",
+    "claim": "Reformatted unrelated imports are trivially one concern and become one commit, `style(core): reformat imports` — subject to the note below.",
+    "evidence": [
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:88        2 tools · 2 style · 1 spec · 1 build",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:105  - ##CASE-FORMAT-PLUS-SUBSTANCE **Format + substance.** Always separate. Whitespace-only commits",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:57  - \"Reformatted unrelated imports\" → one commit:"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1: CASE-FORMAT-PLUS-SUBSTANCE (ATOMIC-COMMITS-PROTOCOL.md:105-107) states the general rule — 'Always separate. Whitespace-only commits are fine' — which this example instantiates. Source 2: the host has produced exactly 2 `style` commits in the last 400 (harvest line 88), and I read both: `60e5cfc0 style(fmt): rustfmt touch-ups across the project-local layers` (4 files, all crates/) and `1d492c37 style(install): collapse two cloned-field lines in plan.rs` (1 file, 1 insertion 1 deletion). Both are formatting-only and both carry a scope, matching the example's `style(<scope>): …` shape (the scope word differs, `fmt`/`install` vs the example's `core`). Source 3: installed copy lines 57-59, including the same forward reference to the note below."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "six-items-collapsed-to-four-commits",
+    "marker": "@impl/done",
+    "claim": "The worked example's six inventory items collapse to four commits.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:60  - ##GROUP-EXAMPLE-RETRY-HELPER \"Added retry helper\" + \"Used retry helper\" + \"Added test for retry",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:61  Six items collapsed to four commits. That is the split plan."
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "Arithmetic over the four bullets immediately above (package lines 60-70): bullet 1 absorbs three of the six inventory items, bullets 2-4 take one each — six in, four out. The fenced command block at package lines 98-110 independently confirms the count: it contains exactly four `git commit` invocations. Source 3: the installed copy states the same total at line 61 and carries the same four-commit fence at 79-91. Source 2 not consulted — this is internal arithmetic about the document's own example."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "THAT-IS-THE-SPLIT-PLAN",
+    "marker": "@impl/done",
+    "claim": "The grouped set of commits is what the document calls the split plan.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:188  ##THE-HUMAN-VERIFIES-THE-SPLIT-PLAN The human verifies the **split plan**, not each individual",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:208  ##THE-HUMAN-VERIFIES-THE-PLAN-NOT-EACH-COMMIT The human verifies the split *plan*, not each commit individually. @impl/done",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:61  Six items collapsed to four commits. That is the split plan."
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "located",
+    "searched": "This fact defines the term 'split plan' that the document's #delegate section then makes the unit of human verification (package line 188) and that the sibling protocol reuses (ATOMIC-COMMITS-PROTOCOL.md:208). The definition and its two uses are internally consistent. Source 3: in the installed copy the definition is not a separate paragraph — it is the second sentence of line 61, joined to six-items-collapsed-to-four-commits; the split into two facts postdates the installed text. Source 2 not consulted: 'split plan' as a term does not appear in the host (grep across CLAUDE.md/AGENTS.md/GEMINI.md, spec/**, campaigns/** returned only this package's own documents and the fractality package's vendored copies)."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "reformatted-imports-are-often-an-auto-format-footprint",
+    "marker": "@spec/done",
+    "claim": "Reformatted unrelated imports are often the footprint of auto-format-on-save firing during a different task.",
+    "evidence": [
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:65  \"Reformatted unrelated imports\" is often the footprint of an",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:66  auto-format-on-save firing during a different task. If the reformat"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 3 confirms delivery (installed copy lines 65-66). Source 2 does not corroborate the mechanism and I looked specifically: this repository has no editor auto-format configuration — there is no `.vscode/` directory at the root, no `rustfmt.toml` or `.rustfmt.toml`, and the only `editor.formatOnSave` in the tree is `refs/src/warp/warp-master/.vscode/settings.json:13`, which is vendored third-party reference material and not this project's config. Formatting here is instead an explicit, invoked step: `cargo fmt --all` in DEV-GUIDE.md:81, as the fail-fast first gate of tools/self-check.sh (line 7, `cargo fmt --all --check`), and as a named post-delegation chore at CLAUDE.md:121. So the stray-reformat failure mode this fact describes has a different shape in the host — an unrun `cargo fmt` rather than an over-eager save hook."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "CONSIDER-REVERTING-AN-UNINTENTIONAL-REFORMAT",
+    "marker": "@impl/done",
+    "claim": "If a reformat was not intentional, consider reverting it rather than shipping a `style` commit for it.",
+    "evidence": [
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:66  auto-format-on-save firing during a different task. If the reformat",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:67  was not intentional, consider reverting it rather than shipping a",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:88        2 tools · 2 style · 1 spec · 1 build"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 3: installed copy lines 66-68, same instruction. Source 2 is suggestive but does not settle it. The host produced only 2 `style` commits in 400 (harvest line 88) — consistent with a project that does not ship stray reformats — but I cannot distinguish 'reverted the stray ones' from 'never generated any', and reverting an unstaged reformat leaves no trace at all. I checked the negative side too: `git log -400` contains 0 commits with a `revert` type, so there is no visible instance of the host reverting anything, formatting or otherwise. Widened to CLAUDE.md/AGENTS.md/GEMINI.md, spec/boot/**, DEV-GUIDE.md and campaigns/packages-2026-09/** for any rule about stray formatting: nothing prescribes reverting it; the only formatting rule is to RUN `cargo fmt --all` (DEV-GUIDE.md:81, CLAUDE.md:121), which is the opposite direction."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "AN-INTENTIONAL-PASS-IS-A-STYLE-COMMIT-A-STRAY-ONE-IS-CRUFT",
+    "marker": "@impl/done",
+    "claim": "An intentional formatting pass is a style commit; a stray one is cruft.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:105  - ##CASE-FORMAT-PLUS-SUBSTANCE **Format + substance.** Always separate. Whitespace-only commits",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:106  are fine; mixing whitespace into a semantic change buries the",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:68  `style` commit for it — tidy is not the same as intentional. An"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1: the sibling protocol's CASE-FORMAT-PLUS-SUBSTANCE (lines 105-107) licenses the first half — 'Whitespace-only commits are fine' — and forbids the mixing this fact calls cruft. Source 2: both of the host's `style` commits are intentional passes in the sense this fact means, and both are whitespace/formatting-only with no semantic change riding along — `60e5cfc0 style(fmt): rustfmt touch-ups across the project-local layers` (4 files under crates/) and `1d492c37 style(install): collapse two cloned-field lines in plan.rs` (1 file, +1/-1). I found no commit in the last 400 whose diff mixes a bulk reformat into a semantic change, though I checked this only by subject/type and the two style commits' diffstats, not by reading all 400 diffs. Source 3: installed copy lines 68-70."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "USE-GIT-ADD-P-TO-STAGE-EXACTLY-THE-HUNKS-THAT-BELONG",
+    "marker": "@impl/done",
+    "claim": "For each planned commit, `git add -p` (patch mode) stages exactly the hunks belonging to it.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:29    atomic commits using `git add -p`, including a prompt for",
+      "campaigns/packages-2026-09/PHASE-C-RESUME.md:255  6. **Never `git add -A` while a worker is running.** Stage explicit paths.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:74  For each planned commit, use `git add -p` (patch mode) to stage"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "`git add -p` is a claim about git itself, not about this repository, so its existence is not in question and I did not look for it in the tree as a capability. What I did check is whether the HOST practises it. Grep for the literal 'git add -p' across the whole perimeter, excluding vibedeps/, .vibe/, node_modules/ and the fractality package's vendored trees, returns 7 hits and every one is inside this package: README.md:29 and this document at lines 91, 99, 102, 108, 125, 214. It appears nowhere in CLAUDE.md/AGENTS.md/GEMINI.md, spec/boot/**, spec/common/**, DEV-GUIDE.md, campaigns/**, tools/, xtask/ or crates/. The host's nearest operational rule points the same way without naming patch mode: campaigns/packages-2026-09/PHASE-C-RESUME.md:255 'Stage explicit paths', which is this document's own fallback (USE-EXPLICIT-FILE-NAMES-OR-GIT-ADD-P) rather than patch mode. Staging method also leaves no trace in a commit, so history cannot settle it either way. Source 3: installed copy lines 74-75."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "THEN-COMMIT-WITH-THE-APPROPRIATE-CONVENTIONAL-COMMITS-MESSAGE",
+    "marker": "@impl/done",
+    "claim": "Each staged group is then committed with a Conventional Commits message, whose format is the git-conventional-commits flow at the cited spec:// URI.",
+    "evidence": [
+      "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:1  # Commit message format {#root}",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** …",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:77  `conventional-commits` flow: `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`)."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1: the cited spec:// URI resolves — packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md exists and its line 1 carries the `{#root}` anchor the URI names. The harvest's source-1 join over the five git-* flows reports 11 relative citations resolved, 0 broken (harvest lines 21-23). Source 2: the host does write Conventional Commits — 397 of its last 400 subjects carry a `type(scope):` header (harvest line 91); the harvest also records the known breaches (82 subjects over the 72-char hard limit, 42 capitalised first words, 3 out-of-table types) at lines 112-131, which belong to the conventional-commits flow's own facts, not this one. Source 3, and this is a drift worth naming: the installed copy at line 77 calls it the '`conventional-commits` flow' where the package now says '`git-conventional-commits` flow' — the package rename is not reflected in the vendored text, and the same stale name survives in the host's compiled boot lane at spec/boot/STATIC.md:381 ('the **conventional-commits** flow'). xtask/src/batch_review/mod.rs:178-182 already carries 'conventional-commits' and 'atomic-commits' in a `known_dead` set of four dead package names filed as F-097."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "RUN-GIT-STATUS-AFTER-EACH-COMMIT",
+    "marker": "@impl/done",
+    "claim": "After each commit, `git status` verifies the remaining tree holds only what has not yet been split — no stray staging, no wildcard-dragged files.",
+    "evidence": [
+      "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+      "campaigns/packages-2026-09/PHASE-C-RESUME.md:255  6. **Never `git add -A` while a worker is running.** Stage explicit paths.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:93  After each commit run `git status` to verify the remaining tree"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "`git status` is a git command, not a repository artifact — its availability is not in question. The prescription's specific content is 'after EACH commit', mid-split, and that is what source 2 does not corroborate. The host prescribes `git status` only at the START of the session-end sequence (spec/boot/STATIC.md:391, repeated at 585), never between commits. Elsewhere in the host `git status` appears as an acceptance predicate for idempotent-rerun checks (campaigns/packages-2026-09/tasks/DRIFT-029.md:124 and :132, DRIFT-030.md:137 and :147, DRIFT-035.md:152 and :160 — 'a second identical `update --all` leaves `git status` unchanged') and as a liveness probe for delegated workers (CLAUDE.md:117-118, `git -C runs/<id>/wt status`), both different uses. The stray-staging hazard the rule guards against IS recognised by the host, but as a worker-concurrency rule rather than a between-commits check: campaigns/packages-2026-09/PHASE-C-RESUME.md:255. Source 3: installed copy lines 93-95."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "AVOID-GIT-ADD-ALL-WHILE-SPLITTING",
+    "marker": "@impl/done",
+    "claim": "`git add -A` and `git add .` are to be avoided while splitting.",
+    "evidence": [
+      "campaigns/packages-2026-09/PHASE-C-RESUME.md:255  6. **Never `git add -A` while a worker is running.** Stage explicit paths.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:99  Avoid `git add -A` and `git add .` while splitting. They stage"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2 corroborates directly and this is the strongest host echo in the document: campaigns/packages-2026-09/PHASE-C-RESUME.md:255 is a standing rule in this repository's live campaign zone, 'Never `git add -A` while a worker is running. Stage explicit paths.' — same prohibition, same remedy, narrower trigger (a running worker rather than a split). I also enumerated where the host DOES use bulk staging, so the row is not read as a blanket conformance claim: crates/vibe-publish/src/git_publish.rs and the registry-publish/redirect paths use `git add -A` inside throwaway staging clones (docs/commands/registry-publish.md:56, docs/commands/registry-redirect-update.md:76, crates/vibe-index/src/cli/serve.rs:36), and manual-tests/M1.15/M1.16/M1.17/M1.6/M2.10 use it in `mktemp -d` fixture repos. None of those is a split of this repository's working tree, which is what the rule scopes to. Hits under refs/ (bazel, spec-kit) are third-party. Source 3: installed copy line 99."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "THEY-STAGE-EVERYTHING-AND-DEFEAT-THE-PATCH-MODE-INTENT",
+    "marker": "@impl/done",
+    "claim": "Bulk-add stages everything, defeating patch mode and possibly pulling in scratch files, credentials or large binary outputs.",
+    "evidence": [
+      "spec/boot/STATIC.md:506  - bringing in large binary blobs;",
+      "spec/boot/STATIC.md:507  - changing CI, signing, or secrets configuration;",
+      "CLAUDE.md:76    force-push, large blobs, CI / signing / secrets, irreversible ops) — those",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:100  *everything*, which defeats the patch-mode intent and may pull in"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "The behaviour of `git add -A` is a fact about git, not about this repository. What source 2 bears on is the named hazard set. The three items — scratch files, credentials, large binary outputs — all appear in the host's own red-line list, but as ASK-FIRST triggers under Rule 4 rather than as a staging hazard: spec/boot/STATIC.md:506-507 (repeated at 700-701 through the umbrella) and CLAUDE.md:74-78 / AGENTS.md / GEMINI.md name 'large blobs, CI / signing / secrets'. The host also installs a dedicated flow for one of them (org.vibevm.world/secrets-hygiene, compiled at spec/boot/STATIC.md:1045-1112). What I did NOT find is any host statement connecting bulk staging to those hazards — the causal link this fact asserts is present only in this package and its vendored copies. Source 3: installed copy lines 100-102."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "USE-EXPLICIT-FILE-NAMES-OR-GIT-ADD-P",
+    "marker": "@impl/done",
+    "claim": "Stage with explicit file names or `git add -p` instead.",
+    "evidence": [
+      "campaigns/packages-2026-09/PHASE-C-RESUME.md:255  6. **Never `git add -A` while a worker is running.** Stage explicit paths.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:102  large binary outputs). Use explicit file names or `git add -p`."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2 corroborates the first of the two alternatives exactly: campaigns/packages-2026-09/PHASE-C-RESUME.md:255's remedy is 'Stage explicit paths', which is this fact's 'explicit file names'. The second alternative, `git add -p`, appears nowhere in the host — see the USE-GIT-ADD-P row for the full grep (7 hits, all inside this package). The document itself uses the explicit-filename form once in its own worked example: package line 105 `git add README.md`. Source 3: installed copy line 102, where the sentence is the tail of the same paragraph rather than its own fact."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "EACH-INTERMEDIATE-COMMIT-SHOULD-LEAVE-THE-TREE-BUILDABLE",
+    "marker": "@impl/done",
+    "claim": "Whenever feasible, each intermediate commit leaves the tree buildable.",
+    "evidence": [
+      "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+      "tools/self-check.sh:3  # is supposed to satisfy. Designed to be cheap to invoke locally and",
+      "tools/self-check.sh:9  #   3. `cargo clippy --workspace ...`     — zero warnings under `-D warnings`.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:106  Whenever feasible, each intermediate commit should leave the tree"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2: the host has a named per-commit greenness contract. tools/self-check.sh:2-3 declares itself 'the floor invariants every commit on `main` is supposed to satisfy', and its ten enumerated steps (lines 7-40) start with fmt/test/clippy across the workspace. The obligation is invoked by name throughout the live campaign: campaigns/packages-2026-09/PHASE-T-WORKER-PROMPT.md:347, PHASE-T-RUNBOOK.md:90, and the per-task self-verify blocks of DRIFT-024 through DRIFT-035. CLAUDE.md:120 makes it the boss's gate before committing delegated work: 'boss runs the real gate (`self-check`) → boss commits + pushes'. The scope difference I checked and am naming: self-check gates commits on `main`, i.e. the commits that land — it says nothing about intermediates that exist only inside an in-progress split, and nothing runs it automatically (`.git/hooks` holds only `.sample` files; `git config core.hooksPath` unset). Source 3: installed copy lines 106-107."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "run-the-build-after-each-commit-lead",
+    "marker": "@impl/done",
+    "claim": "Run the build, and ideally tests, after each commit rather than only at the end (`cargo build`, `cargo test`, or the local equivalent).",
+    "evidence": [
+      "DEV-GUIDE.md:78  cargo build --workspace",
+      "DEV-GUIDE.md:79  cargo test --workspace",
+      "CLAUDE.md:110    edit-and-verify task pays a full `cargo build` — hand such a worker a",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:107  buildable. Run the build (and ideally tests) after each commit,"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "The commands named in the fence (package lines 135-138: `cargo build`, `cargo test`) are cargo's, not this repository's inventions, and they are the host's actual build/test pair — DEV-GUIDE.md:77-82 gives `cargo build --workspace` / `cargo test --workspace` / clippy / fmt as the from-root routine, and tools/self-check.sh runs test+clippy as steps 2-3. What is NOT corroborated is the cadence 'after each commit': the host's cadence is per-session and per-landing (self-check before the boss commits, CLAUDE.md:120), and the one place it explicitly tunes the cadence goes the other way — CLAUDE.md:109-111 tells a delegated worker to self-verify with `cargo check` rather than the full suite because a cold worktree pays a full build. Searched DEV-GUIDE.md, RUNTIME-GUIDE.md, tools/, xtask/ and campaigns/** for a between-commits build loop: none found. Source 3: installed copy lines 107-108 plus the same fence at 110-113."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "BROKEN-INTERMEDIATES-ARE-A-BISECT-LIABILITY",
+    "marker": "@impl/done",
+    "claim": "Two good commits plus two broken intermediates is a bisect liability — `git bisect` hits the broken ones and mis-attributes failures.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:35  - ##QOL-CLEANER-BISECTS cleaner bisects, @spec/done",
+      "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:84  ##omnibus-spec-edits-make-history-unbisectable Omnibus spec edits",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:115  A split that produces two compilable commits plus two broken"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "`git bisect` is a git command; its behaviour is not a claim about this repository. Source 1: two sibling flows carry the same rationale — this package's own README.md:13 and ATOMIC-COMMITS-PROTOCOL.md:35 ('cleaner bisects'), and, outside the nominal package, packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:84-85 ('Omnibus spec edits are how history becomes unbisectable'), which is a second world flow making the same argument about a different artifact class. Source 2: the host has never bisected, as far as the perimeter shows — grep for 'bisect' across CLAUDE.md/AGENTS.md/GEMINI.md, spec/**, DEV-GUIDE.md, RUNTIME-GUIDE.md, tools/, xtask/, crates/ and campaigns/** returns nothing outside those package documents; remaining hits are under refs/ (bazel, cargo), which is vendored third-party material. Source 3: installed copy lines 115-117."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "SQUASH-THE-INTERMEDIATES-WHEN-GREENNESS-IS-IMPRACTICAL",
+    "marker": "@impl/done",
+    "claim": "When between-commit greenness is impractical, squash the intermediates so at least the boundary is clean.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:123  ##NONE-OF-THE-THREE-MAKES-SENSE-ALONE None of the three makes sense",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:124  alone; splitting them produces two intermediate commits where the",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:119  If strict between-commit greenness is impractical (for example, a"
+    ],
+    "src": [
+      1,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: the sibling protocol's #batching section (ATOMIC-COMMITS-PROTOCOL.md:117-128) is the same escape hatch reached from the other side — keep the coupled change as one commit rather than splitting into non-compiling intermediates. Source 2 finds nothing: grep for 'squash' across the whole perimeter, excluding vibedeps/, .vibe/, refs/ and node_modules/, returns ONLY this document (package line 146) and the fractality package's vendored copies of it — no host rule, no campaign practice, no tooling. The operation is also invisible after the fact: a squashed set is indistinguishable in the log from a set that was authored as one commit, so this repository's 400-commit window cannot show whether it was ever done. Note the adjacent tension I checked but am not asserting a verdict on: squashing already-committed work is a history rewrite, which the host's Rule 4 red lines put behind owner approval (spec/boot/00-core.md:24) — the flow does not say whether its squash is pre- or post-push, and #prepush later freezes only PUSHED history."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "after-the-split-lead",
+    "marker": "@impl/done",
+    "claim": "After the split, run `git log --oneline -n <N>`.",
+    "evidence": [
+      "CLAUDE.md:186     - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.",
+      "CONTINUE.md:279  ## The recent commit chain {#commits}",
+      "CONTINUE.md:293  6d82b5cf chore(campaign): the ai-native cluster closes at 80 of 80 files",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:126  After the split:"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2: the host mandates exactly this readback as part of its own session-end contract — CLAUDE.md:186 (identically AGENTS.md:186, GEMINI.md:186) requires 'The recent commit chain (last ~25 commits, oneline format)' in CONTINUE.md, and CONTINUE.md:279-307 actually carries it as a fenced oneline block. The cadence differs from the flow's: the host reads the log back at session end rather than immediately after a split, and the readback is written into a durable artifact rather than merely eyeballed. Source 3: installed copy line 126 plus the same fence at 128-130 (`git log --oneline -n <N>`)."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "READ-THE-SUBJECT-LINES-BACK",
+    "marker": "@impl/done",
+    "claim": "The subject lines produced by the split are read back.",
+    "evidence": [
+      "CLAUDE.md:186     - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.",
+      "CONTINUE.md:279  ## The recent commit chain {#commits}",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:132  Read the subject lines back. Each should make sense in isolation."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Same evidence base as after-the-split-lead, and the readback is the operative half: the host's CONTINUE.md commit-chain block (lines 167-176) is precisely a set of subject lines re-read and preserved, and the session-end contract at CLAUDE.md:186 makes producing it obligatory. What the host does not do is read them back *at the split boundary* — the trigger is END SESSION, per the trigger-phrase list at CLAUDE.md:172-176. Source 3: installed copy line 132, where this fact and the next share one line (the split into two facts postdates the installed text)."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "EACH-SUBJECT-SHOULD-MAKE-SENSE-IN-ISOLATION",
+    "marker": "@impl/done",
+    "claim": "Each commit subject should make sense on its own.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:61  - ##NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED Never write a subject that summarises *what* changed — the diff does",
+      "spec/boot/STATIC.md:416  - Never write a subject that summarises *what* changed — the diff does",
+      "CONTINUE.md:294  d9270e75 chore(campaign): C4+C5 in two languages, and a name that outlived its crate",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:132  Read the subject lines back. Each should make sense in isolation."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: the package's boot snippet carries the adjacent rule (write *why*, not *what*), which the host's compiled lane repeats at spec/boot/STATIC.md:416 and 610. Source 2 is only partly decisive because 'makes sense in isolation' is a judgement no command returns. What is measurable and does bear on it: the harvest records that 397 of 400 subjects are well-formed `type(scope):` headers with a scope (line 91) and 399 of 400 carry an explanatory body (line 140), and I found 0 subjects in 400 matching the document's own uninformative patterns. Against that, the harvest also records 82 subjects over the 72-char hard limit and 297 over the soft 60 (lines 104-116, F-123) — long subjects are self-contained but are the conventional-commits flow's breach, not this fact's. Source 3: installed copy line 132, second sentence."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "STOP-ON-AN-UNINFORMATIVE-SUBJECT-LINE",
+    "marker": "@impl/done",
+    "claim": "Seeing `chore: more stuff`, `wip`, or `fix: address review` in the log means the split is incomplete or the message uninformative — stop.",
+    "evidence": [
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:85  0",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:91  **397 of 400 carry a `type(scope):` header and not one omits the scope.** …",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:133  If you see `chore: more stuff`, `wip`, or `fix: address review` in"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "This is the one step of the procedure whose output history CAN show, and the host is clean on all three patterns. I measured directly over the last 400 subjects: `grep -icE '(^|[^a-z])wip([^a-z]|$)'` → 0; `grep -icE 'more stuff|address review'` → 0. Widening to the full 2024-commit history (`git rev-list --count HEAD` = 2024), 'wip' matches exactly once, `2a68d29a docs(wal): record PROP-008 Phase 2 design + stashed WIP` (2026-05-22) — a well-formed `docs(wal):` subject that mentions a stash, not a bare `wip` commit. Note that all three of the document's example patterns are scope-less (`chore:`, `fix:`), a form this repository never uses at all (harvest lines 84-85, 91: 0 of 400 omit the scope), so the host could not produce them in exactly that shape even if the discipline lapsed. Source 3: installed copy lines 133-135."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "REWRITE-BEFORE-MOVING-ON",
+    "marker": "@impl/done",
+    "claim": "An uninformative subject is rewritten before moving on.",
+    "evidence": [
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:135  uninformative. Rewrite before moving on.",
+      "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 3: installed copy line 135. Source 2: no host document prescribes rewriting a subject, and none forbids it at this point either — the relevant host rule is Rule 4 (spec/boot/00-core.md:24, compiled at spec/boot/STATIC.md:956 and 978-979), which puts 'history rewrites' behind owner approval. Whether this fact collides with that depends on a distinction the sentence does not draw: rewriting an unpushed subject is not the history rewrite Rule 4 means, and #prepush (package lines 194-208) later confirms the freeze applies only after push — but this fact sits in §spotcheck, before the pre-push section, and does not say so. The action is also invisible afterwards: an amended-then-pushed subject looks identical to one authored correctly. Independent corroboration attempted and not found: `git log -400 --format='%at %ct' | awk '$1!=$2'` gives 3 commits whose author and committer timestamps differ (harvest lines 158-159, 162) — consistent with amend or rebase but equally with cherry-pick or merge, so it settles nothing."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "the-agent-is-better-at-this-than-most-humans-under-pressure",
+    "marker": "@spec/done",
+    "claim": "Splitting is highly mechanical and the agent is genuinely better at it than most humans under time pressure; a working delegation prompt follows.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:180  ##most-humans-under-deadline-pressure-skip-the-discipline Most humans under deadline pressure skip the discipline. @spec/done",
+      "CLAUDE.md:89    Golden: `…/fractality/v0.1.0/spec/examples/hello-glm.toml`. Workers **cannot",
+      "CLAUDE.md:90    run git** — the boss commits/merges the `fractality/<id>` branch.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:139  This is a highly mechanical task and the agent is genuinely better"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: the sibling protocol's #ai-advantage section (ATOMIC-COMMITS-PROTOCOL.md:174-191) argues the same thesis at length and ships a near-identical prompt at lines 195-206. Source 2 cuts against the specific delegation this fact recommends, and that is the finding: this repository runs a delegation-first directive (CLAUDE.md:9-11) whose worker contract explicitly excludes git — CLAUDE.md:89-90 'Workers **cannot run git** — the boss commits/merges the `fractality/<id>` branch', and the reviewed workflow at lines 118-126 keeps diff-reading, `self-check`, commit and push with the boss ('exactly the \"boss verifies + finishes the tail\" split'). So the host delegates the mechanical EDITS and retains the commit split, which is the inverse of what this section proposes. The claim about relative human/agent capability is not itself measurable here and I did not look for a measurement. Source 3: installed copy lines 139-140 plus the same delegation prompt fence at 142-156."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "THE-HUMAN-VERIFIES-THE-SPLIT-PLAN",
+    "marker": "@impl/done",
+    "claim": "The human verifies the split plan, not each individual `git commit` invocation.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:208  ##THE-HUMAN-VERIFIES-THE-PLAN-NOT-EACH-COMMIT The human verifies the split *plan*, not each commit individually. @impl/done",
+      "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+      "CLAUDE.md:120    applies clean) → boss runs the real gate (`self-check`) → boss commits +",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:158  The human verifies the **split plan**, not each individual"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1: restated verbatim in substance by the sibling protocol (ATOMIC-COMMITS-PROTOCOL.md:208) and by this package's README.md:68-71 ('delegate the split, verify the plan'). Source 2: the host runs a review-the-artifact-not-the-keystrokes discipline for delegated work, documented as a live operating fact — CLAUDE.md:118-121 'Review path (workers can't git): `git -C runs/<id>/wt diff` → read as a PR → `git apply` it into the host tree … → boss runs the real gate (`self-check`) → boss commits + pushes', summarised at lines 125-126 as 'the \"boss verifies + finishes the tail\" split'. The unit of review differs from the flow's: the host reviews a worker's DIFF as a PR, not a proposed commit-split plan, because workers never commit (CLAUDE.md:89-90). Source 3: installed copy lines 158-159."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "that-is-where-the-division-of-labour-pays-off",
+    "marker": "@spec/done",
+    "claim": "Verifying the plan rather than each commit is where the human-agent division of labour pays off.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:189  ##the-human-ai-team-is-strictly-faster-here This is one of the places where the human-AI",
+      "CLAUDE.md:124    map-guided migration faithfully (0 stale values); the only boss fixes were",
+      "CLAUDE.md:125    fmt + 2 behavioural edge cases — exactly the \"boss verifies + finishes the",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:159  `git commit` invocation. That is where the division of labour"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: the sibling protocol makes the same payoff claim in stronger form — 'This is one of the places where the human-AI team is strictly faster than either participant alone' (ATOMIC-COMMITS-PROTOCOL.md:189-191). Source 2 records one measured instance of the pattern paying off, but for a different task: CLAUDE.md:107-126 logs the first real host delegation (a ~40-edit migration) where 'the only boss fixes were fmt + 2 behavioural edge cases'. That is a review-the-diff payoff, not a review-the-split-plan payoff — the host has no logged instance of delegating a commit split, since workers cannot run git (CLAUDE.md:89-90). No cost or time figures for either mode exist in the perimeter, so 'pays off' is not quantified anywhere. Source 3: installed copy lines 159-160."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "after-the-split-before-pushing-lead",
+    "marker": "@impl/done",
+    "claim": "After the split and before `git push`, a four-step review runs.",
+    "evidence": [
+      "CLAUDE.md:120    applies clean) → boss runs the real gate (`self-check`) → boss commits +",
+      "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:164  After the split, before `git push`:"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2: the host does interpose a gate between committing and pushing, and orders the two the same way. Its END SESSION contract is explicit about the sequence — commit (CLAUDE.md:190) then push (CLAUDE.md:191), with push conditioned on Rule 4 — and the delegated-work path puts `self-check` before both (CLAUDE.md:120). PROP-016 adds a push-side gate: spec/common/PROP-016-source-mirrors.md:59 makes `cargo xtask mirror` the standard rollout, 'fast-forward-only, never `--force`'. What differs is the CONTENT of the four steps, which I assess per item in the four PREPUSH-* rows below — the host's pre-push gate is a build/test/lint gate, not a log-and-diff readback. Source 3: installed copy line 164 plus the numbered list at 166-170."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "PREPUSH-RE-READ-THE-LOG",
+    "marker": "@impl/done",
+    "claim": "Pre-push step 1: re-read the log with `git log --oneline origin/<branch>..HEAD`.",
+    "evidence": [
+      "CLAUDE.md:186     - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.",
+      "CONTINUE.md:279  ## The recent commit chain {#commits}",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:166  1. Re-read the log (`git log --oneline origin/<branch>..HEAD`)."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "`git log --oneline origin/<branch>..HEAD` is a git invocation, not a repository artifact. Source 2 corroborates the readback but not the range or the trigger: the host reads the recent chain back in oneline form at SESSION END and writes it into CONTINUE.md (CLAUDE.md:186; the block itself at CONTINUE.md:279-307), and its RESUME contract requires verifying 'sync with origin' empirically (CLAUDE.md:205) — but grep for the unpushed-range form `origin/main..HEAD` or `origin/<branch>..HEAD` across CLAUDE.md/AGENTS.md/GEMINI.md, spec/**, DEV-GUIDE.md, tools/, xtask/ and campaigns/** returns nothing outside this package and the fractality package's vendored copies of this same document. Source 3: installed copy line 166."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "PREPUSH-SKIM-EACH-DIFF",
+    "marker": "@impl/done",
+    "claim": "Pre-push step 2: skim each diff with `git show <sha>` — the subject should match the diff.",
+    "evidence": [
+      "CLAUDE.md:118    status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as",
+      "CLAUDE.md:119    a PR → `git apply` it into the host tree (worker touches disjoint files → it",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:167  2. Skim each diff (`git show <sha>`). Subject should match diff."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "`git show` is a git command; the claim under test is the practice. Source 2 corroborates diff-reading as the host's verification channel but at a different point and over a different object: CLAUDE.md:118-119 has the boss read a worker's worktree diff 'as a PR' BEFORE it is committed, and the compiled boot lane's rationale is the same ('Humans verify code by reading diffs', spec/boot/STATIC.md:404-405). I found no host rule to re-read committed diffs between commit and push — grep for 'git show' across CLAUDE.md/AGENTS.md/GEMINI.md, spec/**, DEV-GUIDE.md, campaigns/** and tools/ returns nothing outside this package and its vendored copies. The subject-matches-diff predicate has no checker anywhere: nothing in crates/, xtask/ or tools/ inspects commit messages against diffs (the `commit_msg` hits in crates/vibe-cli and crates/vibe-publish are message BUILDERS for registry publishing, not validators). Source 3: installed copy line 167."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "PREPUSH-CHECK-FOR-SECRETS-AND-STRAYS",
+    "marker": "@impl/done",
+    "claim": "Pre-push step 3: check for secrets, large binaries, or scratch files that slipped in.",
+    "evidence": [
+      "spec/boot/00-core.md:24  4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done",
+      "spec/boot/STATIC.md:1045  <!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:168  3. Check for secrets, large binaries, or scratch files that"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 2: all three hazards are governed in the host, but by a different mechanism and at a different moment. Rule 4 (spec/boot/00-core.md:24, compiled at spec/boot/STATIC.md:506-507 and 700-701) makes large blobs and CI/signing/secrets ASK-FIRST triggers — the agent stops before doing them, rather than sweeping for them before push; CLAUDE.md:74-78 extends the same list to delegated work. Secrets have their own installed flow whose boot snippet is compiled at spec/boot/STATIC.md:1045-1112 and which points at SECRETS-HYGIENE-PROTOCOL.md and scope-discipline.md — that flow's own facts are out of this batch. Scratch files: CLAUDE.md's scratchpad convention keeps temporary files outside the project entirely, so they never reach staging. What I did not find is any pre-push sweep, automated or prescribed: tools/self-check.sh contains no `git` step at all (grep 'git ' → no hits) and `.git/hooks` holds only `.sample` files with `core.hooksPath` unset. Source 3: installed copy lines 168-169."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "PREPUSH-ONLY-NOW-PUSH",
+    "marker": "@impl/done",
+    "claim": "Pre-push step 4: only after the first three checks, push.",
+    "evidence": [
+      "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+      "spec/common/PROP-016-source-mirrors.md:59  - ##CMD-MIRROR `cargo xtask mirror` — push mainline (`main` + tags) to every `push` target, **fast-forward-only, never `--force`**; … This — not `git push origin` — is the standard rollout. @spec/done",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:170  4. Only now push.",
+      "CLAUDE.md:120    applies clean) → boss runs the real gate (`self-check`) → boss commits +"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 2 settles the ordering claim: push is the last step of the host's session-end sequence, after the commits (CLAUDE.md:190 then :191, identically in AGENTS.md and GEMINI.md), and it is gated — conditioned on Rule 4, with an explicit escape hatch if it would be non-fast-forward. For delegated work the gate is named: `self-check` runs, then 'boss commits + pushes' (CLAUDE.md:120-121). PROP-016 §CMD-MIRROR further replaces bare `git push origin` with `cargo xtask mirror`, fast-forward-only and never `--force`. What is gated differs from the flow's three checks (build/test/lint rather than log/diff/secrets readback) — see the three PREPUSH rows above. Source 3: installed copy line 170."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "PUSHED-HISTORY-IS-FROZEN",
+    "marker": "@impl/done",
+    "claim": "Pushed history is frozen, per ATOMIC-COMMITS-PROTOCOL.md §pushed.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:155  ## Pushed history is frozen {#pushed}",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:161  - ##FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL **Never** `git push --force` or `--force-with-lease` without",
+      "spec/boot/STATIC.md:395  4. Do not amend or force-push commits that are already pushed; create a",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:172  Pushed history is frozen (see"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Source 1: the cross-reference resolves exactly — `ATOMIC-COMMITS-PROTOCOL.md#pushed` exists at line 155 with the heading 'Pushed history is frozen', and its three bullets (159-162) are never amend / never rebase the pushed range / never force-push without approval. This is one of the harvest's 11 resolved relative citations, 0 broken (harvest lines 21-23). Source 2: the host's compiled boot lane carries the rule (spec/boot/STATIC.md:395-397, repeated at 589-591) and Rule 4 puts history rewrites and force-push behind owner approval (spec/boot/00-core.md:24); PROP-016 §CMD-MIRROR makes the standard rollout 'fast-forward-only, never `--force`'. I did NOT treat the absence of visible force-pushes as confirmation — the harvest says so explicitly at lines 163-167: 'the autonomy flow's red lines … leave no positive trace in a repository's own log … A verdict resting on «no force-push is visible» would be an absence asserted rather than checked.' Source 3: installed copy lines 172-173, with the same relative link."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "A-MISTAKE-AFTER-THE-PUSH-MEANS-A-NEW-COMMIT",
+    "marker": "@impl/done",
+    "claim": "Fixing a mistake after the push means a new `fix`/`revert` commit, not a force-push.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:164  ##A-MISTAKE-IN-A-PUSHED-COMMIT-IS-FIXED-BY-A-NEW-COMMIT A mistake in a pushed commit is fixed by a new commit (type",
+      "spec/boot/STATIC.md:395  4. Do not amend or force-push commits that are already pushed; create a",
+      "spec/boot/STATIC.md:396     new commit instead, unless the human explicitly approves history",
+      "campaigns/packages-2026-09/harvest/world-w1-git-family.md:87      273 docs · 45 chore · 42 feat · 21 fix · 7 test · 3 refactor · 3 perf"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: the sibling protocol says the same at lines 164-165 with the same two types. Source 2: the host's compiled boot lane prescribes exactly the remedy — 'create a new commit instead' (spec/boot/STATIC.md:395-397, repeated at 589-591). The history half is asymmetric and I state both sides: `fix` is a live type here (21 of the last 400 per harvest line 87, 20 in my own recount), but `revert` is used ZERO times in 400 — `git log -400 --format='%h %s' | grep -cE '^[0-9a-f]+ revert'` returns 0, and the harvest's type tally has no `revert` row. That is consistent with the rule but does not confirm it, because I cannot tell which of the 21 `fix` commits corrected an already-pushed mistake versus an unpushed one. The negative half is unmeasurable for the reason the harvest gives at lines 163-167. Source 3: installed copy lines 174-175."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "SUM-STABILISE-THEN-SPLIT",
+    "marker": "@impl/done",
+    "claim": "Summary: stabilise to green first, split second.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:16  ##STABILISE-TO-GREEN-BEFORE-SPLITTING-A-BROKEN-TREE If the tree is broken end to end, do not try to split yet —",
+      "tools/self-check.sh:2  # vibevm self-check — runs the floor invariants every commit on `main`",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:179  - Stabilise to green first; split second."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "Internal consistency first: this summary bullet restates §precondition (package lines 13-18) without adding or dropping a condition — including the 'first/second' ordering. Source 2: the host owns a named greenness gate (tools/self-check.sh:2-3, 'the floor invariants every commit on `main` is supposed to satisfy') but does not tie it to a split, and no host document uses the phrase 'stabilise to green' — see the STABILISE-TO-GREEN row for that grep, which found the phrase only in this package and the fractality package's vendored copies. Source 3: installed copy line 179, identical bullet."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "SUM-INVENTORY-AND-GROUP-BY-INTENT",
+    "marker": "@impl/done",
+    "claim": "Summary: inventory by intent, not by file; group by intent.",
+    "evidence": [
+      "spec/boot/STATIC.md:391  1. Run `git status` and `git diff HEAD`. Name every change by intent.",
+      "spec/boot/STATIC.md:392  2. Group changes into atomic commits — one commit per intent, not per",
+      "spec/boot/00-core.md:23  3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** — one logical unit per commit, split mixed working trees. @impl/done",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:180  - Inventory by intent, not by file. Group by intent."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "This bullet compresses §inventory and §group; both halves are restated without drift (compare package lines 36-37 and 58). Source 2 is the strongest available for any fact in this document: the host's own Rule 3 is the same rule (spec/boot/00-core.md:23), PROP-000 §12 pins it as GP-ATOMICITY 'one commit = one logical idea' (spec/common/PROP-000.md:163), and the compiled boot lane carries the intent-not-file phrasing twice (spec/boot/STATIC.md:391-393 and 585-587 — the F-078 double read). CLAUDE.md:190 applies it operationally as 'topic-grouped commits per Rule 3'. As with the NAME-EVERY-CHANGED-CHUNK row I do not offer the file-per-commit numbers as conformance: harvest lines 150-151 disclaim them. Source 3: installed copy line 180."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "SUM-STAGE-HUNKS-WITH-GIT-ADD-P",
+    "marker": "@impl/done",
+    "claim": "Summary: use `git add -p` to stage hunks per commit; avoid `git add -A`.",
+    "evidence": [
+      "campaigns/packages-2026-09/PHASE-C-RESUME.md:255  6. **Never `git add -A` while a worker is running.** Stage explicit paths.",
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:29    atomic commits using `git add -p`, including a prompt for",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:181  - Use `git add -p` to stage hunks per commit. Avoid `git add -A`."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Both commands are git's, not this repository's, so their existence is not the question. The summary compresses §apply and §add-all faithfully but drops the third option the body offers — 'explicit file names' (package line 125) — leaving `git add -p` as the only positive instruction; the README's one-line description of this document does the same (README.md:27-30). Source 2 splits: the prohibition half is echoed by a live host rule (campaigns/packages-2026-09/PHASE-C-RESUME.md:255), while the prescription half has zero host uptake — 'git add -p' occurs 7 times in the perimeter and all 7 are inside this package (README.md:29 and this document at 91, 99, 102, 108, 125, 214), with nothing in CLAUDE.md/AGENTS.md/GEMINI.md, spec/**, DEV-GUIDE.md, campaigns/**, tools/, xtask/ or crates/. Source 3: installed copy line 181."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "SUM-BUILD-BETWEEN-COMMITS",
+    "marker": "@impl/done",
+    "claim": "Summary: build between commits when feasible.",
+    "evidence": [
+      "tools/self-check.sh:7  #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.",
+      "tools/self-check.sh:8  #   2. `cargo test --workspace`          — all tests green.",
+      "DEV-GUIDE.md:78  cargo build --workspace",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:182  - Build between commits when feasible."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "The bullet compresses §verify (package lines 129-147) and keeps the 'when feasible' hedge, but drops the squash escape hatch that the body pairs with it (SQUASH-THE-INTERMEDIATES, lines 144-147) — worth noting because the escape hatch is the half with no host trace at all. Source 2: the host's per-commit green floor is tools/self-check.sh (steps 1-3 at lines 7-9), invoked by name across the live campaign (campaigns/packages-2026-09/PHASE-T-RUNBOOK.md:90, PHASE-T-WORKER-PROMPT.md:347, DRIFT-024 through DRIFT-035) and required before the boss commits delegated work (CLAUDE.md:120); the build/test pair itself is DEV-GUIDE.md:78-79. As on the EACH-INTERMEDIATE row, that gate covers commits that land on `main`, not intermediates internal to a split, and nothing runs it automatically (only `.sample` files in `.git/hooks`, `core.hooksPath` unset). Source 3: installed copy line 182."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "SUM-DELEGATE-AND-VERIFY-THE-PLAN",
+    "marker": "@impl/done",
+    "claim": "Summary: delegate the mechanical split to the agent; verify the plan, not the typing.",
+    "evidence": [
+      "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md:68  ##short-version-delegate-the-split-and-keep-the-log-as-an-archive Short version: humans",
+      "CLAUDE.md:89    Golden: `…/fractality/v0.1.0/spec/examples/hello-glm.toml`. Workers **cannot",
+      "CLAUDE.md:90    run git** — the boss commits/merges the `fractality/<id>` branch.",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:183  - Delegate the mechanical split to the agent; verify the plan,"
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "partial",
+    "searched": "Source 1: consistent across the package — README.md:68-71 and ATOMIC-COMMITS-PROTOCOL.md:189-191 and :208 all say delegate the split, verify the plan. Source 2 is the substantive finding and it points both ways. This repository runs a delegation-first directive (CLAUDE.md:9-11) and reviews delegated output rather than keystrokes ('boss verifies + finishes the tail', CLAUDE.md:125-126) — so the second clause holds. The first clause does not: the host's worker contract forbids the delegated agent from touching git at all (CLAUDE.md:89-90, 'Workers **cannot run git** — the boss commits/merges the `fractality/<id>` branch'), so the specific delegation this bullet recommends is the one thing the host's delegation model excludes. Searched CLAUDE.md/AGENTS.md/GEMINI.md, campaigns/packages-2026-09/** and packages/org.vibevm.fractality/** for any instance of a worker performing a commit split: none. Source 3: installed copy lines 183-184."
+  },
+  {
+    "file": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+    "anchor": "SUM-PRE-PUSH-REVIEW-IS-SEPARATE",
+    "marker": "@impl/done",
+    "claim": "Summary: pre-push review is a separate, deliberate step.",
+    "evidence": [
+      "CLAUDE.md:190  3. **Commit the changes in topic-grouped commits** per Rule 3. …",
+      "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+      "spec/common/PROP-016-source-mirrors.md:59  - ##CMD-MIRROR `cargo xtask mirror` — push mainline (`main` + tags) to every `push` target, **fast-forward-only, never `--force`**; … This — not `git push origin` — is the standard rollout. @spec/done",
+      "vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:185  - Pre-push review is a separate, deliberate step."
+    ],
+    "src": [
+      1,
+      2,
+      3
+    ],
+    "found": "located",
+    "searched": "The structural claim — that push is its own gated step, not a tail of committing — is corroborated by the host in three independent places: the END SESSION contract separates commit (CLAUDE.md:190) from push (CLAUDE.md:191) as numbered steps with the push conditioned on Rule 4 and carrying its own stop-and-ask escape hatch; the delegated-work path interposes `self-check` before 'boss commits + pushes' (CLAUDE.md:120-121); and PROP-016 §CMD-MIRROR replaces bare `git push origin` with a verified fan-out that is 'fast-forward-only, never `--force`'. The flow's own §prepush content (re-read the log, skim each diff, sweep for secrets) is a different review than the host's build/test/lint gate — assessed per item in the four PREPUSH-* rows. Also note the last-line position: this bullet closes the document, and in the installed copy it is line 185, the file's final line, with no trailing newline difference observed. Source 3: installed copy line 185."
+  }
+]
