@@ -2304,6 +2304,30 @@ command that would have tested it.
   a count of 177 that meant nothing. Matching on package identity gives 173. **Two
   numbers three apart, one of which was arithmetic over a category error.**
 
+- **2026-07-28 · F-123 — the host breaks the subject-length rule of a flow it
+  installs, and this campaign is the largest contributor.** §3.1's source 2 for the
+  git family is this repository's own history, and it is the cheapest independent
+  evidence in `world`: no document is asked whether another document is right.
+
+  **What conforms:** 394 of 400 subjects carry the `type(scope):` header, 399 of 400
+  carry a body — which is where the flow puts the *why* — and there are **zero
+  `Co-Authored-By` trailers and one author** across four hundred commits.
+
+  **What does not:** `conventional-commits` sets a **hard limit of 72 characters**
+  on the subject, and **82 of 400 exceed it — 20.5 %, the longest at 89.** The
+  violation is not a slip: 28 on 2026-07-25, 27 on 07-26, 14 on 07-24, **6 written
+  by this phase today**. The campaign that exists to measure whether the discipline
+  holds itself to its own rule has been breaking one of them at about a fifth of its
+  commits.
+
+  **F-087 is measured rather than reported.** Four commit bodies name a model — two
+  use `Anthropic` as the name of a colour theme, two describe model tiers as
+  configuration data — so the policy's «never mention model names in commit
+  messages» is broken four times in four hundred, and its «never state or imply
+  machine authorship» is **not broken at all**. The finding is real and smaller than
+  its filing suggests, and the distinction between naming a model and claiming it
+  wrote something is the whole of it.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
