@@ -48,14 +48,12 @@ Gate: `progress check --exhaustive` **clean, 259 files, 0 warnings**.
 python campaigns/packages-2026-09/tasks/summary.py
 ```
 
-## W2 is open and its evidence is in flight {#w2-in-flight}
+## W2's evidence is COMPLETE and unjudged {#w2-in-flight}
 
-**Four `opus5` workers were commissioned for W2's 20 files / 692 anchors and had not
-returned when this checkpoint was written.** Check first:
-
-```bash
-ls campaigns/packages-2026-09/tasks/evidence/ev-W2*.json
-```
+**All four tables are on disk and committed — 692 anchors, 2 404 refs, 3
+unresolvable (two bare paths, one six-character elided segment; none a fiction).
+No W2 verdict has been written.** Start by reading them, not by commissioning
+anything.
 
 | table | files | anchors |
 |---|---|---:|
@@ -72,8 +70,31 @@ added on 2026-07-27, so three of its four sections cannot be cited — the corpu
 first WORDS-DIFFER, and a stale install rather than a changed rule — and the
 `wal-status` skill this package ships is **not installed** in `.claude/skills/`.
 
+**What the four tables already establish, before any verdict.** The prescribed
+sync-from-code subject `docs(spec): sync <section> with code` has been used **0 times
+in 2 041 commits**, while the propose-then-approve path it belongs to IS the
+practice, recorded three independent ways — so only the grammar is missing, and of
+the three mandatory draft parts the **revisit trigger never lands**. The host has
+**no morning ritual at all**. The WAL's `_Updated:` line is a bare date where the
+protocol requires ISO 8601 UTC, so the flow's own 24-hour test cannot be evaluated to
+the hour and its skill has no hours to report. The wind-down report the flow asks for
+and the one the host asks for share **none of four** base items, while the
+cold-resume file's ten required contents match **10 of 10**. Both `CLAUDE.md:141` and
+`SPECSPACES.md:8` place the specspaces snippet at «slot 11 of `spec/boot/INDEX.md`»
+and `grep -c` on that file returns **0** — the same shape as F-128. And the installed
+`vibedeps/` payloads for both W2 flows are stale by 92-176 changed lines per file,
+carrying 10 and 0 fact anchors against the package's 39.
+
+**Three counter-instances are this repository's own, one of them from the session
+that wrote this file:** commit `6a026de1` rewrote the WAL's In-progress and Next and
+touched `_Updated:` zero times, which is what one of the flow's nevers forbids; nine
+active days since 2026-06-01 ended with commits and no WAL commit; and the read order
+is reversed — `CLAUDE.md:205` reads the WAL then this file, while this file's own
+resume prompt lists itself first.
+
 **Do not touch a table while its worker may still be writing**, and do not edit the
-harvest while they cite it. Both lessons are below and both were paid for in W1.
+harvest or the WAL while they cite it. Three of the four W2 workers reported the boss
+moving a file under them. Both lessons are below and both were paid for in W1.
 
 ## The recipe that closed W1, to run again on W2 {#recipe}
 
