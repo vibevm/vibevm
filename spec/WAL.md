@@ -1,7 +1,7 @@
 # WAL — Project Continuation State
 
 _Updated: 2026-07-28 (**Phase C — W2 and W3 both CLOSED; the cluster is 51 of
-121 files and the phase is past 61 %**)_
+121 files and the phase is past 64 %**)_
 
 ## Current phase
 
@@ -9,7 +9,7 @@ _Updated: 2026-07-28 (**Phase C — W2 and W3 both CLOSED; the cluster is 51 of
 Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
 **archival**.
 
-**4 222 verdicts written, sealed and committed — 61.7 % of the phase.** The
+**4 411 verdicts written, sealed and committed — 64.4 % of the phase.** The
 `ai-native` cluster measures **2 470 / 207 / 20 — 91.6 %**; `world` now has
 **1 557 / 140 / 17 — 90.8 %** over 51 of its 121 files, with 138 self-referential
 (8.1 %). One command prints all of it:
@@ -207,7 +207,7 @@ model — `harvest/world-w3-ipc-core-ii.md`.
 3. **Every `world` verdict carries `src`** (a non-empty subset of `[1,2,3]`, A2);
    `merge-verdicts.py` refuses a batch without it. `world`'s self-referential
    share so far is 138 of 1 714, 8.1 %.
-4. **Then W5, W6, W7** — 1 872 anchors over 55 files. **W5 does not need
+4. **Then W5, W6, W7** — 1 872 anchors over 55 files; 2 436 remain in all. **W5 does not need
    splitting** (§4's open question, answered in the LOG): the per-file slice
    replaced the batch as the unit.
 5. **At the phase close:** the X/Y/Z summary in the LOG, the self-referential

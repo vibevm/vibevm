@@ -1,7 +1,7 @@
 # CONTINUE — cold-resume checkpoint
 
 _Written 2026-07-28 (**Phase C: W1, W2 and W3 are CLOSED — 1 714 anchors judged
-row by row; the phase is past 61 %**). `spec/WAL.md` is the canonical living
+row by row; the phase is past 64 %**). `spec/WAL.md` is the canonical living
 state and supersedes this snapshot wherever they diverge._
 
 ## TL;DR
@@ -31,7 +31,7 @@ and its evidence has not been gathered.
 | host | 58 / 58 files, 4 499 verdicts — 99.9 % |
 | **ai-native** | **80 / 80 files CLOSED** — 2 697 verdicts, 2 470 / 207 / 20, **91.6 %** |
 | **world** | **51 / 121 files** — 1 714 verdicts, **1 557 / 140 / 17, 90.8 %**, 138 self-referential (8.1 %); **2 436 anchors owed** |
-| phase | **4 222 of 6 847 — 61.7 %** |
+| phase | **4 411 of 6 847 — 64.4 %** |
 | gate | `progress check --exhaustive` clean, 259 files |
 | tree | clean, in sync with `origin/main`, mirrored to GitVerse + GitHub |
 
@@ -267,7 +267,7 @@ a43159b9 chore(campaign): the wal flow measured against the WAL it specifies
 
 Затем продолжи Phase C кампании PROP-043 волны 2 (campaigns/packages-2026-09).
 ЗАКРЫТЫ W1 (407), W2 (692) и W3 (615) — 1 714 якорей, поштучно. Кластер world =
-1 557 / 140 / 17, 90.8 % на 51 файле из 121. Фаза C — 61.7 %. Ничего не в полёте:
+1 557 / 140 / 17, 90.8 % на 51 файле из 121. Фаза C — 64.4 %, осталось 2 436 якорей. Ничего не в полёте:
 воркеров нет, недочитанных таблиц нет.
 
 СЛЕДУЮЩЕЕ — БАТЧ W4 (campaign-plans, discovery-prompt, comparative-research,
