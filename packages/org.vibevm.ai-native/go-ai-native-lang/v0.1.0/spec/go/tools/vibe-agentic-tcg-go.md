@@ -45,8 +45,10 @@ port. @spec/done
 than rust-analyzer is to rustc, and one honest step short of the TS
 oracle (which IS tsc's engine). @spec/done
 
-##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` →
-gofmt/vet/build/test) remains the truth, verbatim. @impl/done
+##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` → gofmt →
+vet → test → staticcheck+exhaustive → conform → specmap → test-gate;
+seven steps, and no separate `build` — the compile is the first half
+of `go test ./...`) remains the truth, verbatim. @impl/done
 
 ## 2. Design stance (consequences of what we know) {#design-stance}
 
@@ -136,8 +138,10 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
 
 - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope /
   complete / type over LSP overlays, discipline-enriched, MCP +
-  one-shot delivery, mechanics proven by the differential corpus and
-  the bench baseline on `research/go-demo`. @impl/done
+  one-shot delivery. The ops ship; the differential corpus and the
+  bench baseline that would PROVE the mechanics are specified and NOT
+  written yet — the committed corpora and baselines are the TypeScript
+  and the Rust ones. @spec/done
 - ##STAGE-B-RICHER-DISCIPLINE-ADVICE **Stage B — richer discipline advice:** defined-type constructor
   suggestions at seams, policy-ranked completions, cell-topology
   answers — fields the protocol already carries. @spec/done

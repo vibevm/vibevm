@@ -8,7 +8,7 @@
 
 ##EMPTY-MAP-MEANS-SHALLOW-RESEARCH *An empty contradiction map means shallow research.* @impl/done
 
-##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline decision it drove.* @impl/done
+##ENTRY-CARRIES-FOUR-PARTS *Each resolved entry (C-1…C-6): the conflict, the evidence on each side, the resolution, and which discipline decision it drove. C-7 is the open register and carries a third shape — the question and why it is still open, with no side/resolution triple, because there is nothing yet to resolve.* @impl/done
 
 ## C-1 — "AI-native = stricter/more meta" (H1) vs "engineered dialects underperform" (H5) {#c-1-stricter-vs-in-distribution}
 - ##c-1-side-a **Side A (H1):** stricter, more machine-checkable form helps comprehension/modification. Evidence: type-error dominance, compiler-as-oracle (theory + benchmark). @spec/done
@@ -37,12 +37,12 @@
 
 ## C-6 — Optimism vs the floor: "current models are fine" vs "weak models stay near floor" {#c-6-optimism-vs-the-floor}
 - ##c-6-side-a **Side A (owner, dated, correct):** 2026 models recover OOD via tools; pessimistic readings are stale (3-month-old generations, one-shot prompting). Evidence: R2C-007 (same tasks ~4%→~90–100% in 3 months). @spec/done
-- ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplify, don't create capability. @spec/done
+- ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor; resources amplify, don't create capability. Evidence: R2C-008 (the three-condition weak-agent test that includes Haiku 4.5 — it publishes per-model figures for Sonnet 4.6, 12→64, and GPT-5.4-mini, 5→53, and none for Haiku, so no Haiku score is on record here). @spec/done
 - ##C-6-RESOLUTION **Resolution:** **both true, scoped by reader capability.** Optimism holds for Sonnet/GPT-mini class; a floor remains for the weakest tier (and Qwen-32B may sit lower on some axes). → the discipline **lowers** the floor (consume-only scaffolds for the weakest tier; build/use boundary, scaffold catalog §4) but does not claim to **remove** it (Manifesto §7). This is the open pilot question (R4). @impl/done
 
 ## C-7 — Unresolved / open (honest) {#c-7-unresolved-open}
 - ##C-7-OPEN-TRANSFER **Transfer generation→modification:** every scaffold's value is shown for *generation*; transfer to *comprehension/modification* of in-distribution Rust is [E-mid], unmeasured on our codebase. **No source resolves this.** It is the central pilot validation target. @spec/done
 - ##C-7-OPEN-BUILD-USE-BOUNDARY **Build/use boundary:** whether weak agents can *parameterize* scaffolds (Classes A/I) or only *consume* them (G/H) — first-principles, unmeasured. @spec/done
-- ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** no controlled measurement of internal-uniformity effect exists in the literature; our own hypothesis, pilot candidate. @spec/done
+- ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** partly measured, not settled. The ATLAS files four records under H6, and one of them measures a uniformity effect: DR1-022 (benchmark, med) — matching the syntactic paradigm of prompt and test examples lifts rule extraction 2.3–125%, read there as support that intra-corpus uniformity is an in-context signal. What no record measures under control is a *codebase's own* internal uniformity; that is the part that stays our hypothesis and the pilot candidate. @spec/done
 
 ##open-items-are-why-the-package-is-beta These open items are why the package is BETA and why every card carries a falsifiable prediction in place of a present measurement. @spec/done

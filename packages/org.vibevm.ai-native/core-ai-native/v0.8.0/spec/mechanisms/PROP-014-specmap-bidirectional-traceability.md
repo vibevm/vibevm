@@ -196,7 +196,7 @@ specmark::scope!("<spec-uri>" [, r = <N>]);      // module-level inheritance mar
 ##edge-model-is-a-typed-directed-multigraph-lead A **typed, directed property multigraph**: @impl/done
 
 - ##EDGE-MODEL-NODES **Nodes:** `SpecUnit { uri, kind, r, content_hash }`, `CodeItem { symbol_path, item_kind, crate, content_hash }`, plus derived `Command`, `ErrorVariant` views. @impl/done
-- ##EDGE-MODEL-EDGES **Edges:** `(CodeItem) --implements/verifies/documents/deviates/informs--> (SpecUnit @ r)`, each with provenance (`authored` | `generated` | `proposed`) and, for `deviates`, the mandatory reason. *(Brownfield amendment:)* spec units additionally carry a lifecycle status (`ratified` | `planned` | `disputed` | `retired`), and a spec↔spec edge `conflicts_with` records detected contradictions; edges into `disputed` units are frozen — exempt from suspect-clearing — until adjudication. Coverage math reports `planned` scope separately and never penalizes it. @impl/done
+- ##EDGE-MODEL-EDGES **Edges:** `(CodeItem) --implements/verifies/documents/deviates/informs--> (SpecUnit @ r)`, each with provenance (`authored` | `generated` | `proposed`) and, for `deviates`, the mandatory reason — this much is built. *(Brownfield amendment, specified and not built:)* spec units additionally carry a lifecycle status (`ratified` | `planned` | `disputed` | `retired`), and a spec↔spec edge `conflicts_with` records detected contradictions; edges into `disputed` units are frozen — exempt from suspect-clearing — until adjudication; coverage math reports `planned` scope separately and never penalizes it. Of that amendment only the status field ships, and only two of its four values — `planned` and `disputed(#anchor)`, an absent status meaning ratified, `retired` having no representation at all. There is no `conflicts_with` edge type; the suspect table is computed from pinned-versus-current revision without consulting status, so nothing is frozen; and there is no coverage math to report `planned` separately. @spec/done
 - ##EDGE-MODEL-DIRECTION-OF-AUTHORITY **Direction of authority:** spec → code (the Red Book's top-down flow). The reverse direction is *computed* (the index inverts edges) plus one social channel: a `proposed` edge pool (§4, Phase 2) feeding the Sync-from-Code protocol when code grows meaning the spec lacks. @impl/done
 
 ### 2.5 The index: `specmap.json` {#index}
@@ -309,7 +309,7 @@ vibe explain <command|symbol|spec-uri> [--json|--text|--prose]
 - ##PHASE-0-SPECMARK-CRATE `crates/specmark/`: the no-op attribute + `scope!` + `verifies` macros (syn parse of the grammar, rustdoc line injection, zero runtime cost). @spec/done
 - ##PHASE-0-XTASK-SPECMAP-SUBCOMMAND `xtask specmap` subcommand: markdown unit parser + syn-based item scanner + canonical JSON emitter; `--check` mode (regenerate-and-diff, the `check-codegen` idiom). @spec/done
 - ##PHASE-0-SCHEMA-AND-CODEGEN `schemas/specmap.jtd.json` + codegen. @spec/done
-- ##PHASE-0-ACCEPTANCE Acceptance: index builds deterministically twice on the untouched repo (zero edges, full node inventory); CI job wired but non-blocking. @spec/done
+- ##PHASE-0-ACCEPTANCE Acceptance: index builds deterministically twice on the untouched repo — zero edges, a full spec-unit inventory, and an empty code-item one, because the scanner inventories only tagged items and the full-orphan table is a later phase; CI job wired but non-blocking. @spec/done
 
 ### Phase 1 — pilot: PROP-003 §2.6.1 × `vibe-resolver/src/conditional.rs` {#phase-1-pilot}
 
@@ -422,4 +422,4 @@ crates/vibe-resolver and the proposals file.
 
 ##RATIFICATION-HAPPENS-THROUGH-PR-REVIEW *Ratification — and the `specmark`/xtask implementation start — happens through PR review against this document.* @impl/done
 
-##UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC *Any mechanism specified here that is not exercised by the end of Phase 2 is removed from the spec rather than carried as aspirational documentation.* @impl/done
+##UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC *Any mechanism specified here that is not exercised by the end of Phase 2 is removed from the spec rather than carried as aspirational documentation.* Standing policy, unenforced: nothing checks it and the sweep has not been run against this revision. Until it is, the unexercised mechanisms above are marked `@spec/done` and named as designed-not-built rather than silently carried as aspiration. @spec/done

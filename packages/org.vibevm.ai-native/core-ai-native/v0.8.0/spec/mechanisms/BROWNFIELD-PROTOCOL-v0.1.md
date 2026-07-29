@@ -37,7 +37,7 @@
 - ##PRINCIPLE-B1-INVENTORY-NOT-GATE **B1 — Inventory, not gate.** The only absolute precondition is "the workspace compiles." Everything else is recorded with a status at Phase −1; thereafter every gate means **monotone non-regression against the inventory**, in both directions (see §4, xfail-strict). @impl/done
 - ##PRINCIPLE-B2-ASPIRATION-LEGAL-ONLY-WHEN-LABELED **B2 — Aspiration is legal only when labeled.** Unimplemented intent is a first-class tracked object (`planned` spec units, intent records), never ambient knowledge. The migration carries a **carry-over guarantee**: at exit, every harvested intention is `done | rescoped | rejected(reason)` — zero unaccounted. @impl/done
 - ##PRINCIPLE-B3-CONTRADICTION-IS-DATA **B3 — Contradiction is data.** Conflicting spec units are recorded (`conflicts_with` + `disputed` status) with evidence; normalization **never resolves conflicts inline**. Adjudication is an explicit owner act. @impl/done
-- ##PRINCIPLE-B4-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD **B4 — Characterization is the truth-of-record where truth is uncertain.** Golden transcripts of currently-passing observable behavior pin "don't break it" independently of whether tests or specs are trustworthy. @impl/done
+- ##PRINCIPLE-B4-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD **B4 — Characterization is the truth-of-record where truth is uncertain.** Golden transcripts of currently-passing observable behavior pin "don't break it" independently of whether tests or specs are trustworthy. Specified, not built: no shipped tool captures a golden transcript, so the principle has nothing to pin with yet (§6). @spec/done
 - ##PRINCIPLE-B5-MONOTONE-UTILITY **B5 — Monotone utility.** Every tool yields useful output at 0% migration and improves continuously to 100%. No cliffs: queries outside the migrated frontier degrade to best-effort facts with an explicit "outside frontier" mark, never to errors. @impl/done
 
 ##principles-mechanize-what-vibevm-does-socially These mechanize what vibevm's own AUDIT.md / PROP-013 already do socially: dated findings, severities, dispositions (`fixed / filed / accepted / open`), carry-forward. @impl/done
@@ -94,17 +94,17 @@
 ##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR Unit statuses (kind line grammar, see GUIDE-SPEC-AUTHORING amendment): `req r2` (default: ratified) · `req r1 planned` · `req r2 disputed(#other-anchor)` · retired (tombstone). @impl/done
 
 - ##STATUS-PLANNED `planned`: zero coverage is *expected*; coverage reports count planned scope separately; gaining a first `implements` edge prompts a status flip in the same PR. @impl/done
-- ##STATUS-DISPUTED `disputed`: recorded pair with `conflicts_with` edge + a `disputed-spec` debt entry holding the evidence quotes. Detection: a crude heuristic pass (duplicate anchors; MUST/MUST-NOT keyword collisions on a shared subject window) plus LLM-proposed semantic conflicts — proposals only, interpretations class in the ledger. **No inline resolution during normalization** — a silent semantic merge is worse than an honest contradiction. @impl/done
+- ##STATUS-DISPUTED `disputed`: recorded pair with `conflicts_with` edge + a `disputed-spec` debt entry holding the evidence quotes. Detection, specified and not built: a crude heuristic pass (duplicate anchors; MUST/MUST-NOT keyword collisions on a shared subject window) plus LLM-proposed semantic conflicts — proposals only, interpretations class in the ledger. What ships is the *declaration* alone: an author writes `disputed(#other-anchor)` on the kind line and the parser records it. Nothing proposes a pair, there is no `conflicts_with` edge type, and the duplicate-anchor check emits an unrelated warning. **No inline resolution during normalization** — a silent semantic merge is worse than an honest contradiction. @spec/done
 - ##ADJUDICATION-HAS-THREE-OUTCOMES Adjudication (owner act), three outcomes: **supersede** (loser retired with tombstone → winner), **scope-split** (both refined with explicit applicability contexts), **stay open** (rare; the dispute itself becomes load-bearing documentation). @impl/done
 - ##WHILE-DISPUTED-EDGES-ARE-FROZEN While disputed: edges into the pair are **frozen** — exempt from suspect-clearing and from coverage penalties; implementations carry the dispute's debt id in commit bodies. Presumption (not resolution): the more specific, more recently revised unit is *presumed* current for read purposes, displayed with the presumption label. @impl/done
 
 ## 6. Characterization of record {#characterization}
 
-##CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME At inventory time, capture golden transcripts for currently-passing observable flows (the `manual-tests/` scenarios + fixture-driven e2e): exact CLI output, exit codes, written-file trees, normalized for volatile fields. @impl/done
+##CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME At inventory time, capture golden transcripts for currently-passing observable flows (the `manual-tests/` scenarios + fixture-driven e2e): exact CLI output, exit codes, written-file trees, normalized for volatile fields. Specified, not built: nothing captures a transcript — neither this package's crates nor the Rust stack's CLI carries a snapshot path or a golden file. @spec/done
 
 ##CHARACTERIZATION-IS-A-STABILITY-ORACLE-NOT-A-CORRECTNESS-CLAIM These are stability oracles, not correctness claims — they may pin bugs, and that is the point (a pinned bug is a visible debt; an unpinned bug is a landmine). @impl/done
 
-##PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED Phase gates that previously said "behavior unchanged" now mean "characterization snapshots unchanged, except where a debt/intent record says we changed it deliberately." @impl/done
+##PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED Phase gates that previously said "behavior unchanged" are to mean "characterization snapshots unchanged, except where a debt/intent record says we changed it deliberately." Specified, not built: nothing captures a snapshot, so no gate can compare one. A phase gate today is the floor — format, tests, lints, the conform gate, the specmap check, and the xfail-strict test-gate where a baseline registry exists. @spec/done
 
 ## 7. Frontier and monotone utility {#frontier}
 
@@ -122,14 +122,14 @@
 
 ##PHASE-6-CLOSES-WITH-ASPIRATION-RECONCILIATION Phase 6 (playbook v0.2) closes with **aspiration reconciliation**: every `intent.json` item reaches `done | rescoped (→ new spec URI or debt id) | rejected (reason recorded)`. @impl/done
 
-##REPORT-PUBLISHES-THE-EXIT-NUMBERS The REPORT publishes: debt burn-down slope, disputed half-life, baseline shrinkage, and `intent unaccounted = 0` as a hard exit criterion. @impl/done
+##REPORT-PUBLISHES-THE-EXIT-NUMBERS The REPORT publishes: debt burn-down slope, disputed half-life, baseline shrinkage, and `intent unaccounted = 0` as a hard exit criterion. Specified, not built: no REPORT generator exists and not one of the four numbers has a producer. @spec/done
 
-##EVERYTHING-PLANNED-LANDS-OR-IS-LET-GO "Everything planned eventually lands or is consciously let go" is thereby a checkable property of the migration, not a hope. @impl/done
+##EVERYTHING-PLANNED-LANDS-OR-IS-LET-GO "Everything planned eventually lands or is consciously let go" is thereby designed to be a checkable property of the migration rather than a hope. Specified, not built: nothing reconciles `intent.json` entries against outcomes, so the property is stated and not yet checkable. @spec/done
 
 ## 9. Governance {#governance}
 
 - ##DEBT-ENTRIES-CARRY-SUNSETS Debt entries carry sunsets and are re-dispositioned at audit runs — symmetric with rule sunsets (Charter R-050): debt that nobody re-reads is wish-ratio's evil twin. @impl/done
-- ##ANTI-ENTRENCHMENT-CLOSE-QUOTA **Anti-entrenchment escape:** if the debt count flatlines while the frontier advances for two consecutive phases, a per-phase close-quota activates (each subsequent phase must close K debts, K set by the owner). Ratchets guard against regression; quotas guard against the ratchet becoming a museum. @impl/done
+- ##ANTI-ENTRENCHMENT-CLOSE-QUOTA **Anti-entrenchment escape:** if the debt count flatlines while the frontier advances for two consecutive phases, a per-phase close-quota activates (each subsequent phase must close K debts, K set by the owner). Ratchets guard against regression; quotas guard against the ratchet becoming a museum. Specified, not built: nothing measures the flatline and nothing enforces a quota. @spec/done
 - ##ACCEPTED-DEBT-BUDGET-PER-CRATE Accepted-debt budget per crate (error-budget idea, SRE lineage — concepts only): exceeding the budget blocks new `accepted` dispositions in that crate until something burns down. @impl/done
 
 ## 10. Prior art {#prior-art}
@@ -149,4 +149,4 @@
 
 ---
 
-##UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED *Any registry field, status, or policy here not exercised by Playbook (v0.2) Phase 2 is removed rather than carried as aspiration — yes, the brownfield document eats its own rule.* @impl/done
+##UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED *Any registry field, status, or policy here not exercised by Playbook (v0.2) Phase 2 is removed rather than carried as aspiration — yes, the brownfield document eats its own rule.* Standing policy, unenforced: nothing checks it and the sweep has not been run against this revision. Until it is, the unexercised items above are marked `@spec/done` and named as designed-not-built rather than silently carried as aspiration. @spec/done

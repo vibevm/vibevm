@@ -44,10 +44,11 @@ specmap → test-gate. @impl/done
 ##RED-FLOOR-ADMITS-ONLY-GREENING-WORK Red? The only legal work is making it green — fix, do
 not proceed. @impl/done
 
-##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy
-means the project is not bootstrapped (`go-ai-native init`), and every
-`DISABLED by policy` line is a standing decision to re-question weekly — a
-floor that shrank quietly is the failure mode this line exists to catch. @impl/done
+##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `NO conform.toml — topology
+default in force` line means the project is not bootstrapped (`go-ai-native
+init`), and every `DISABLED by policy` line is a standing decision to
+re-question weekly — a floor that shrank quietly is the failure mode this
+line exists to catch. @impl/done
 
 ## Tier 1 — the ratchet (every run) {#tier-one}
 
@@ -76,11 +77,12 @@ work-list; its git diff is the trend). @impl/done
 4. ##RATCHET-ORPHAN-BACKLOG **orphan backlog** — untagged exported identifiers the ratchet will
    block on: tag the item (`//spec:implements …`), `//spec:scope` its
    package (doc.go), or unexport it. @impl/done
-5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /
-   `naked_go_in_cell` / `error_string_match` / `seam_error_missing_req`
+5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_decl` / `ambient_call` /
+   `naked_go` / `error_string_match` / `seam_error_missing_req`
    non-zero on a gated package) — drain immediately; restructure beats
    testify. On an ungated package they are the adoption backlog: **flip a
-   package into `gated_packages` only after it drains to zero.** @impl/done
+   package into `gated_crates` only after it drains to zero** — the
+   conform.toml key keeps the `crates` spelling. @impl/done
 
 ## Tier 2 — drift (weekly) {#tier-two}
 

@@ -3,13 +3,13 @@
 <status stage="impl" state="done"/>
 
 ##GO-CODE-FOLLOWS-THE-GO-GUIDE Go code in this project follows the AI-Native Go guide
-(`go/GUIDE-AI-NATIVE-GO.md` in this package). @impl/done
+(`spec/go/GUIDE-AI-NATIVE-GO.md` in this package). @impl/done
 
 ##READ-THE-GUIDE-FOR-STRUCTURE Read the guide when
 authoring or reviewing structure; per-edit work needs only the card
 whose trigger fires. @impl/done
 
-##CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` in this package (trigger → card;
+##CARD-REGISTRY-FOR-GO Card registry for Go: `spec/cards/INDEX.md` in this package (trigger → card;
 the nine executable scaffolds A–I in their Go shape). @impl/done
 
 ##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION This stack ships

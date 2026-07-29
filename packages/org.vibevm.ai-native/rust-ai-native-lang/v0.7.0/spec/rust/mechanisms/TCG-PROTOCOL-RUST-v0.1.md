@@ -160,9 +160,10 @@ product edit. @impl/done
   semantic changes bump `ORACLE_PROTOCOL` and the bridge treats the
   mismatch as its own error class. @impl/done
 
-##REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer
-shape in this package's tests; recorded LSP transcripts pin the inner
-hop the same way (both r-a-free in the unit suite). @impl/done
+##REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS Scripted LSP frames pin the INNER hop in
+this package's unit suite, at the client and oracle layers and
+r-a-free. The outer hop is NOT pinned: no replay golden exists and no
+test drives `run_serve` over recorded outer frames. @spec/done
 
 ##MARKERS-RESERVATION-MAY-BE-FILLED-IN-A-FUTURE-MINOR The `markers: []`
 reservation (§2) may be filled in a future minor by the specmark tag

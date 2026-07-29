@@ -120,4 +120,6 @@ go-ai-native floor           # the gate panel, one exit code
 with YOUR project: this package ships engines, never policy. @impl/done
 
 ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a
-miniature reconciler with the whole chain green. @impl/done
+miniature reconciler carrying the whole consumer layout: `go.mod`, cells
+under `internal/cells/`, `conform.toml`, `specmap.toml` and a populated
+`discipline/`. @impl/done

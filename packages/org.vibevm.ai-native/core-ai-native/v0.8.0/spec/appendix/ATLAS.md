@@ -11,7 +11,7 @@
 
 ##distribution-by-evidence-class By evidence class: benchmark=48, theory=17, manifesto=7, case-study=6, production=6, anecdote=3 @impl/done
 
-##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=31, contradicts=5, known=5 @impl/done
+##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=15, contradicts=5, known=5, unclassified=16 (the sixteen are the BLD-* records in axis H, which carry no status field at all) @impl/done
 
 ##surprise-findings-roster Surprise findings: 11 — DR1-011, DR2-003, DR2-006, DR2-015, BLD-003, BLD-007, BLD-023, R2C-002, R2C-003, R2C-007, R2C-008 @impl/done
 

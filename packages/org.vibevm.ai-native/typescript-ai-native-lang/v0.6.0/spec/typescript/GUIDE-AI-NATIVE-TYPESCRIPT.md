@@ -87,7 +87,7 @@
 ##mandatory-tsconfig-floor-lead Mandatory `tsconfig` floor: @impl/done
 - ##TSCONFIG-STRICT-TRUE `"strict": true` — bundles the eight base flags (`strictNullChecks`, `strictFunctionTypes`, `strictBindCallApply`, `strictPropertyInitialization`, `noImplicitAny`, `noImplicitThis`, `alwaysStrict`, `useUnknownInCatchVariables`). @impl/done
 - ##TSCONFIG-BEYOND-STRICT **Beyond `strict` (NOT included, all mandatory here):** `noUncheckedIndexedAccess` (array/index access yields `T | undefined` — catches a whole class of "it's always there" hallucinations), `exactOptionalPropertyTypes` (distinguishes absent from `undefined`), `noPropertyAccessFromIndexSignature`, `noImplicitOverride`. @impl/done
-- ##TSCONFIG-DEFECT-CATCHERS **Defect-catchers:** `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, `noImplicitReturns`, `allowUnreachableCode: false`. @impl/done
+- ##TSCONFIG-DEFECT-CATCHERS **Defect-catchers:** `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, `noImplicitReturns`, `allowUnreachableCode: false`. Mandated here and enforced nowhere yet: no shipped rule reads `tsconfig.json`, and the stack's own oracle fixture sets none of the five. @spec/done
 - ##TSCONFIG-ERASABLE-SYNTAX-ONLY **Forward-looking erasure flag:** `erasableSyntaxOnly` — restricts to syntax that erases cleanly (forbids runtime `enum`/`namespace`), keeping TypeScript a thin typed layer over JavaScript. This matters now that the native compiler (TS 7 / "Corsa") and Node's type-stripping treat types as erasable annotations. It is also AI-native: it removes constructs whose runtime behavior diverges from their syntax. @impl/done
 
 ##TSCONFIG-IS-A-VERSIONED-DISCIPLINE-ARTIFACT The `tsconfig` is a **versioned artifact of the discipline** (a card-checked file), not a per-developer preference. @impl/done
@@ -164,7 +164,7 @@
 
 ##FLAGS-READ-ONCE-AT-THE-COMPOSITION-ROOT Flags and external configuration are read **once, at the composition root** (the app/entry cell), narrowed there through a schema (so `process.env` — pure untyped exterior — is validated and typed exactly once), and a **registry** (a typed `as const` map, or a discriminated-union selector) chooses the cell/strategy. @impl/done
 
-##NO-IF-FLAG-IN-DOMAIN-CELLS **No `if (flag)` scattered through domain cells** (R-001). @impl/done
+##NO-IF-FLAG-IN-DOMAIN-CELLS **No `if (flag)` scattered through domain cells** (R-001 — defined in the shared conform engine, not yet mounted on the TypeScript gate). @spec/done
 
 ##EXPLICIT-SWITCH-BEATS-DYNAMIC-LOOKUP An explicit `switch` over a discriminated config union at the composition root, exhaustiveness-checked, beats string-keyed dynamic lookup and module-load side effects — "one switch is the system's table of contents." @impl/done
 
@@ -174,7 +174,7 @@
 
 ##FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE The flag/registry is **typed data with provenance, birth, and sunset** — a branded or `as const` table, not stringly-typed ambient lookup, and never a module-level mutable singleton (which would breach §3 closure). @impl/done
 
-##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED *Rule:* flags are read at the composition root and dispatched through a typed registry; `if (flag)` in a domain cell, or reading config outside the root, requires `deviates` + reason. @impl/done
+##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED *Rule:* flags are read at the composition root and dispatched through a typed registry; `if (flag)` in a domain cell, or reading config outside the root, requires `deviates` + reason. Unchecked today — R-001 is unmounted here, so the `deviates` clause has nothing to fire against. @spec/done
 
 ## 8. Bans and their escape hatches — the TypeScript `unsafe` set *(≈ Rust §6)* {#bans}
 
@@ -271,7 +271,7 @@
 
 ##MODIFICATION-SAFETY-IS-STILL-THE-PILOTS-JOB A type oracle makes a weak agent *write* well-typed TypeScript (by construction at token level; by cheap consultation agentically); whether it then *modifies* existing TypeScript safely is still the pilot's job — and erasure means well-typed code can still lie at runtime if an `as` slipped through, which is why the §8 ban on `as` matters even with the type oracle on. @spec/done
 
-##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT The agentic battery (two arms, weak model, mechanical verification — see the sibling brief §6) is the first standing measurement of exactly this question. @impl/done
+##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT The agentic battery — two arms, weak model, mechanical verification; the sibling brief `vibe-agentic-tcg-ts` names it in §2 (the weak population it measures) and §4 (the stage it measures) — is the first standing measurement of exactly this question. @impl/done
 
 ## 15. Wiring a consumer (the shipped toolchain) *(≈ Rust §13)* {#wiring}
 

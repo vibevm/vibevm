@@ -54,12 +54,15 @@ UTF-16 code units through the line's text. @impl/done
 ##PATHS-ARE-ROOT-RELATIVE-WITH-FORWARD-SLASHES Paths are
 project-root-relative with forward slashes. @impl/done
 
-- ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version,
-  root_files, ready}` — resolves and spawns gopls (ORACLE-GO §1),
+- ##OP-INIT **`init`** `{}` → `{gopls_version, position_encoding,
+  pull_diagnostics, ready}` — resolves and spawns gopls (ORACLE-GO §1),
   negotiates capabilities (§2), applies §3 config, waits for readiness
-  bounded by a deadline. Re-`init` on a live session restarts the
-  child; overlays are cleared. The relay self-inits at `serve` start,
-  so a host's first frame may be any op. @impl/done
+  bounded by a deadline. The op takes NO parameters: the root is the
+  relay's own, fixed at `serve` start. Re-`init` on a live session
+  restarts the child; overlays are cleared. The relay self-inits at
+  `serve` start, so a host's first frame may be any op. `gopls_path`,
+  `go_version` and `root_files` are specified for this result and are
+  not carried yet. @spec/done
 - ##OP-UPDATE **`update`** `{file, content | null}` → `{version}` — set/replace an
   overlay (`didOpen`/`didChange`, monotonic version) or clear it
   (`didClose`). @impl/done
