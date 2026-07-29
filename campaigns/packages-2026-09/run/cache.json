@@ -1,9 +1,9 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T16:08:20Z",
+  "updated_at": "2026-07-29T16:15:34Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
-      "content_hash": "4701c39ac793d453942687a538c6210b67480eec6a45215bd34393e7e290ed93",
+      "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
       "rollup": {
         "explicit": [
           "doc",
@@ -4113,7 +4113,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
-      "content_hash": "d5c68efe87dc6877be1f95b1dbaf507a71709c1988258e6e6b31512caf404f3d",
+      "content_hash": "115fb5bff2dc49c4c02181a781b1f53199a139adf46c0787850c1413981cfe77",
       "rollup": {
         "explicit": [
           "spec",
@@ -4546,7 +4546,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md": {
-      "content_hash": "f9db467ee79759db6472ca811a87c49d98e7ad34535763db5ad47444a4405ded",
+      "content_hash": "68301a694ffb5adf791920e751b91e03bc13fc91861a7d528cfe52288d2c793f",
       "rollup": {
         "explicit": [
           "spec",
@@ -5487,7 +5487,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
-      "content_hash": "b361ad1a094fa71b8c90d6ab36c1334bd0fc92676145f4b514d87a4420554635",
+      "content_hash": "6c6ff1c87d589f0576e281656afe7f37564f80f95b14e5bb50aeb2112043a2dd",
       "rollup": {
         "explicit": [
           "spec",
@@ -6176,7 +6176,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "af5375c7583e963c06f6a2a58f180434e9b0b680efceca4cb916ccaee77b7da8",
+      "content_hash": "a31e1c7778da5f25eacfd140047c59ea490255b313974fb6987bfdc7f06a4421",
       "rollup": {
         "explicit": [
           "spec",
@@ -7841,7 +7841,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md": {
-      "content_hash": "affae5377ec73f9e275dcd7bbb9267004397b73d79e20e117dd431c90973b88f",
+      "content_hash": "a4e363c6331613c0fea4f6fbc41c9c47c425755fb7e578b206fe75fbd1eceda0",
       "rollup": {
         "explicit": [
           "impl",
@@ -10874,7 +10874,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
-      "content_hash": "7bcc4599a1f0f8bf537c5a2801d5e6abb877455f2fa70a42aea137f193eda85f",
+      "content_hash": "f5ebd784c40a0d36957e3e48b216f5adb49e896ff1cec80b05897a27be2d5743",
       "rollup": {
         "explicit": [
           "spec",
@@ -11507,7 +11507,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
-      "content_hash": "437ca7f44f2d717686fd656664b08520b137e914a7ce46d3ffe5c51783c4b6b1",
+      "content_hash": "d8e6ba429937c0280e459c648bcacb104288645d0fa08da8bc83d94cf878fbe5",
       "rollup": {
         "explicit": [
           "spec",
@@ -12413,7 +12413,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md": {
-      "content_hash": "1cb1e8a0cb37b8f0ee402d9a43fcd63eff761763c2a06a93632476595ace43a7",
+      "content_hash": "5d86dcf52da27cb1861b2625ac7183ff7ebea9b052270bb79cbfec6f556f01ad",
       "rollup": {
         "explicit": [
           "spec",
@@ -12759,7 +12759,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
-      "content_hash": "dea659f2bc1c7cca2b4ef2eef825c7aa1fa008c6209d1b0d791419eba2f656e8",
+      "content_hash": "7d3c1f614cc7e78c5c2a89f419e84a9b36396e1db853010dad4aaeeefcdb9ae6",
       "rollup": {
         "explicit": [
           "impl",
@@ -13838,7 +13838,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md": {
-      "content_hash": "9c06a303325687c39aaf5fbb59ff03cf3fc784a31f772a50aa1a8bc7a9f72386",
+      "content_hash": "36c6fd842ba09b560d66f6a0af9eba462c61a459f470b0e33ef4e697d8e61e64",
       "rollup": {
         "explicit": [
           "doc",
@@ -14606,7 +14606,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md": {
-      "content_hash": "b6e0fd7cf56802fd2cbab3468799be66e2f382e6dc93919fd890c2395ff3f318",
+      "content_hash": "4fc8272e5822f7f60c82a682a3a62d1e2d71163901f9325b5aa437aef0316f42",
       "rollup": {
         "explicit": [
           "spec",
@@ -16573,7 +16573,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
-      "content_hash": "d8d692939ea92ab13f6538e2508f377b3a2f82a5993e02070e536c949a0ef7a8",
+      "content_hash": "9bdac518e930e35f74eb07d15e910e3bdc56c21d72570ef02af27e9292c99d6e",
       "rollup": {
         "explicit": [
           "spec",
@@ -17201,7 +17201,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
-      "content_hash": "b9dc5a5acf3b375e971cdc2e0d0aeefc15ff88d2a02a52122944213d704abb23",
+      "content_hash": "f2c338a2590478bb4430fa05c4eb0c4c0d2f0d4b074787dd76c74df90235387a",
       "rollup": {
         "explicit": [
           "spec",
@@ -17911,7 +17911,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
-      "content_hash": "fe89ad19d3338e0488c4bf57a4c7516c2f9a5c0e1b1da6cc8f77def9a9609094",
+      "content_hash": "23d40984aa2d23c9c6545319471b33913c1fadc962d055bc41446a61104f5879",
       "rollup": {
         "explicit": [
           "spec",
@@ -18288,7 +18288,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
-      "content_hash": "a794750975ebe5bf4f2ea1abc0571af494c6da31bf446068848270e5a161e682",
+      "content_hash": "311723053c462cff642eb84ec6f59feb03c8bd32ebce09a9d070c457843aa15f",
       "rollup": {
         "explicit": [
           "impl",
@@ -19986,7 +19986,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md": {
-      "content_hash": "65dd6274add829f000303865b9b906d8aae53da41a2bbc00c1df6e4e46a1a60f",
+      "content_hash": "0f29ac518af4424048f10f90cb94f61dbe25a47a2db9ed733a3e03459520b752",
       "rollup": {
         "explicit": [
           "spec",
@@ -21001,7 +21001,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md": {
-      "content_hash": "95b33886d083d72d2d582c7f7b1684cd7173411063b847eee14e5f161de311d0",
+      "content_hash": "d556d4e5de9591e8803960b4756e006d1f4fd4f4b7770877a266b8818bd1dfcf",
       "rollup": {
         "explicit": [
           "impl",
@@ -21551,7 +21551,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
-      "content_hash": "8c9cefbf939a7f4eaeeb5dc1d74512fe87e5d4aea826baef60aa7936125e8f0e",
+      "content_hash": "bc9aff0a57d03e7e1b707cf5fe965ea7d98dbe1ff5681c4f8216386a72c54028",
       "rollup": {
         "explicit": [
           "spec",
@@ -22847,7 +22847,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
-      "content_hash": "8e832afa68d0d8e47e126f31d301b144dfd9ffdf4609026011757da7978d5a56",
+      "content_hash": "1a451863c2a7c10913a101577da43f226c4ea24da8cc6b79e7edc0650c5a5fd6",
       "rollup": {
         "explicit": [
           "spec",

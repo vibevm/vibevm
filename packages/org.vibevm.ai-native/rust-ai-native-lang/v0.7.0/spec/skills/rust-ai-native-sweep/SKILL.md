@@ -44,9 +44,9 @@ rust-ai-native floor
 ##RED-FLOOR-ADMITS-ONLY-GREENING-WORK Red? The only legal work is making it green — fix, do not proceed. @impl/done
 
 ##CHECK-THE-PRINTED-POLICY-ORIGIN-LINES Check
-the printed policy-origin lines: a `NO conform.toml — topology default in
-force` line means the project is not bootstrapped (`rust-ai-native init`),
-and a green on a defaulted policy is vacuous. @impl/done
+the printed policy-origin lines: a `Defaulted` policy means the project is
+not bootstrapped (`rust-ai-native init`), and a green on a defaulted
+policy is vacuous. @impl/done
 
 ## Tier 1 — the ratchet (every run) {#tier-one}
 

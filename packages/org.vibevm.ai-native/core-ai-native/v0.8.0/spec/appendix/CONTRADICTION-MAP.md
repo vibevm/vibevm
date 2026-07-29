@@ -8,7 +8,7 @@
 
 ##EMPTY-MAP-MEANS-SHALLOW-RESEARCH *An empty contradiction map means shallow research.* @impl/done
 
-##ENTRY-CARRIES-FOUR-PARTS *Each resolved entry (C-1…C-6): the conflict, the evidence on each side, the resolution, and which discipline decision it drove. C-7 is the open register and carries a third shape — the question and why it is still open, with no side/resolution triple, because there is nothing yet to resolve.* @impl/done
+##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline decision it drove.* @impl/done
 
 ## C-1 — "AI-native = stricter/more meta" (H1) vs "engineered dialects underperform" (H5) {#c-1-stricter-vs-in-distribution}
 - ##c-1-side-a **Side A (H1):** stricter, more machine-checkable form helps comprehension/modification. Evidence: type-error dominance, compiler-as-oracle (theory + benchmark). @spec/done

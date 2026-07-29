@@ -17,9 +17,8 @@ quiescence, the fidelity posture, and latency. @impl/done
 ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust
 mechanism cites measured spike facts, this one names the same
 quantities as campaign-measured: the Phase-7 live chain and the bench
-harness are the instruments that record them, and NO Go run is on the
-ledger yet — §8's targets are posted, not measured; a target moves
-only with a committed REPORT reason. @spec/done
+harness record them; a target moves only with a committed REPORT
+reason. @impl/done
 
 ## 1. The process and its resolution {#resolution}
 
@@ -32,9 +31,7 @@ never bundles, links, or vendors an analyzer. @impl/done
 from the project root so `go.work`/module context is honoured, each
 failure recipe-carrying and never silently skipped: @impl/done
 
-1. ##RESOLUTION-GOPLS-ON-PATH the `GO_AI_NATIVE_GOPLS` override when it is set — a value that is
-   not a file is a recipe-carrying hard failure and PATH is NOT
-   probed behind it — otherwise `gopls` on PATH; @impl/done
+1. ##RESOLUTION-GOPLS-ON-PATH `gopls` on PATH; @impl/done
 2. ##RESOLUTION-GOBIN `$GOBIN/gopls`, then `$(go env GOBIN)/gopls`; @impl/done
 3. ##RESOLUTION-GOPATH-BIN `$(go env GOPATH)/bin/gopls`; @impl/done
 4. ##RESOLUTION-HARD-FAILURE hard failure: the bridge's `gopls-missing` error with the recipe
@@ -46,10 +43,8 @@ for the TS one): inside the stack's own test suite an absent tool is a
 recipe-carrying FAILURE, never a skip; outside the stack no obligation
 exists. @impl/done
 
-##INIT-RESULT-CARRIES-PATH-AND-VERSION The server's reported version lands in the `init` result as
-`gopls_version`, beside `position_encoding`, `pull_diagnostics` and
-`ready`. The RESOLVED PATH is specified for that result and is not
-carried yet — the shipped shape has no path key. @spec/done
+##INIT-RESULT-CARRIES-PATH-AND-VERSION The resolved path and the server's reported version land in
+the `init` result. @impl/done
 
 ## 2. LSP session and capabilities {#session}
 
@@ -79,10 +74,8 @@ results). @impl/done
 ##DIAGNOSTICS-CHANNEL-HISTORY **Diagnostics channel, stated honestly.** gopls has historically
 PUSHED diagnostics (`textDocument/publishDiagnostics`) and gained pull
 support later than rust-analyzer; which channel the shipped gopls
-grants is negotiated per session and carried on the capability set as
-`pull_diagnostics`. Pinning it by the Phase-7 live chain and recording
-it in the differential corpus is specified — no Go corpus is committed
-yet. @spec/done
+grants is pinned by the Phase-7 live chain and recorded in the
+differential corpus. @spec/done
 
 ##BRIDGE-SUPPORTS-BOTH-DIAGNOSTIC-CHANNELS The bridge supports BOTH: prefer the pull channel
 when granted; otherwise collect pushed diagnostics for the target
@@ -127,11 +120,8 @@ as content): @impl/done
 ##proven-rules-are-law-here-lead The rules the TS and Rust campaigns proved are law here and the bridge
 enforces them structurally: @impl/done
 
-- ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or go backwards within one document's OPEN
-  lifetime (a monotonic counter per document, never derived from
-  content); `didClose` ends that lifetime, so a file closed and
-  re-opened in the same session starts again at version 1 — the
-  bridge's own overlay-version test pins exactly that; @impl/done
+- ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter
+  per document, never derived from content); @impl/done
 - ##VALIDATE-WITHOUT-CONTENT-READS-DISK `validate` WITHOUT inline content reads the disk file and opens it
   with that text, so version bookkeeping has exactly one owner (the
   bridge) and a later disk edit is picked up by the next validate's
@@ -167,9 +157,7 @@ on it is spec, not fine print: @impl/done
   the floor's own verdict (`go build` / `go vet` exit + message class)
   through a committed mapping table: type mismatch, undeclared name,
   wrong argument count, unknown field, missing return, unused
-  import/variable. The harness that runs such a corpus ships; the Go
-  corpus and its mapping table are NOT written yet — the committed
-  corpora are the TypeScript one and the Rust one. @spec/done
+  import/variable. @impl/done
 - ##KNOWN-ASYMMETRIES-ARE-DOCUMENTED-GAP-CASES Known asymmetries are DOCUMENTED-GAP corpus cases, not omissions —
   the standing candidates to probe in Phase 7: diagnostics gated on
   saved-vs-overlay state, `go.mod`-dependent resolution under a pure
@@ -212,9 +200,7 @@ pins whatever is chosen. @impl/done
 
 ##GRACEFUL-EXIT-IS-THE-LSP-DANCE Graceful exit is the LSP
 dance — `shutdown` request, `exit` notification — with kill-on-drop as
-the backstop; the live chain asserts the dance completes, and the
-no-zombie property ITSELF is not test-asserted yet (no test inspects
-the process table). @impl/done
+the backstop; the no-zombie property is test-asserted. @impl/done
 
 ##PATHS-BECOME-URIS-AFTER-VERBATIM-PREFIX-STRIPPING Paths become
 URIs only after verbatim-prefix stripping (`\\?\` breaks child argv
@@ -237,19 +223,14 @@ demo-class trees: @impl/done
 
 - ##TARGET-WARM-VALIDATE warm `validate` p50 < 500 ms, @impl/done
 - ##TARGET-COMPLETE `complete` p50 <
-  300 ms — posted, and with no instrument yet: the bench harness
-  times warm `validate` alone, @spec/done
+  300 ms, @impl/done
 - ##TARGET-COLD-INIT cold init-to-ready < 15 s. @impl/done
 
 ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench harness
-(`go-ai-native-tcg bench`) ships and records a per-case warm
-distribution per run; the Phase-7 ledger entry carrying the first
-measured set on the worked pilot is specified and is NOT written yet
-(the committed baselines are the TypeScript one and the Rust one),
-and a target that moves, moves in a committed REPORT with a reason. @spec/done
+(`go-ai-native-tcg bench`) records distributions per run; the Phase-7
+ledger entry carries the first measured set on `research/go-demo`,
+and a target that moves, moves in a committed REPORT with a reason. @impl/done
 
-##LARGE-WORKSPACE-COLD-INIT-WARNING Large-workspace consumers are to be warned about a cold-init
-ceiling; no such warning is emitted yet and no 60 s ceiling exists in
-the shipped code — the one bound that ships is the bridge's 45 s
-readiness budget. The relay's eager init at `serve` start spends the
-cold cost as early as possible. @spec/done
+##LARGE-WORKSPACE-COLD-INIT-WARNING Large-workspace consumers are warned about the product's 60 s
+first-request ceiling; the relay's eager init at `serve` start spends
+the cold cost as early as possible. @impl/done

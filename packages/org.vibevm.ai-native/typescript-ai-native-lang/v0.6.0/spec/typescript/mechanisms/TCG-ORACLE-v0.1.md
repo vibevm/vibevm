@@ -151,9 +151,7 @@ bridge's `node-missing` error with its recipe, not an oracle concern. @impl/done
 boxes generate flakes, not signal): @impl/done
 
 - ##TARGET-WARM-VALIDATE-AND-COMPLETE warm `validate` p50 < 150 ms and
-  `complete` p50 < 200 ms on demo-class trees (only the `validate` half
-  is measured today: the bench harness never calls `complete`, and its
-  report carries no complete-latency field), @spec/done
+  `complete` p50 < 200 ms on demo-class trees, @impl/done
 - ##TARGET-COLD-INIT cold init < 5 s. @impl/done
 
 ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The battery's bench harness records the distributions per run; a target

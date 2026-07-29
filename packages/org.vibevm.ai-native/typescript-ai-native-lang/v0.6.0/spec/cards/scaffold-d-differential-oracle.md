@@ -57,7 +57,7 @@
 ##risks-and-assumptions-lead **Risks & Assumptions:** @impl/done
 - ##RISK-OLD-IMPLEMENTATION-IS-AVAILABLE Assumes the old implementation is available or its behavior is capturable (as a snapshot). @spec/done
 - ##RISK-INPUTS-ARE-GENERATABLE-WITH-COVERAGE Assumes inputs are *generatable* with enough coverage; a weak `fast-check` arbitrary gives false confidence. @spec/done
-- ##RISK-SUNSET *Sunset condition:* if generation-time tools (`typescript-ai-native-tcg`, the stack's shipped type oracle) plus full contracts ever make behavior-preservation statically provable for a class of cells, the differential oracle becomes redundant for that class and retires there. @spec/done
+- ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) plus full contracts ever make behavior-preservation statically provable for a class of cells, the differential oracle becomes redundant for that class and retires there. @spec/done
 - ##RISK-TRANSFER Transfer risk: the value of executable scaffolds for *modification* (vs generation) is [E-mid], not yet measured on a TypeScript codebase — this card is a prime pilot validation target on the forthcoming VibeVM TypeScript surface. @spec/done
 
 ##EVIDENCE-AND-TRANSFER-STRENGTH **Evidence & Transfer-strength:** findings R-040 (replacement protocol, production), R2C-008 (executable scaffolds transformative for weak agents, benchmark), Feathers characterization method (production). Evidence class: production + benchmark. Transfer tag: **[E-mid]** (executable-scaffold value shown for generation; modification transfer to be validated in the TypeScript pilot). @spec/done

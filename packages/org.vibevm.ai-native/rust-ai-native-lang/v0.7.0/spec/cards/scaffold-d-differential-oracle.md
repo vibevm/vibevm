@@ -6,7 +6,7 @@
 
 ##demonstrates-all-three-bands *Demonstrates all three bands, especially the operational Band 3.* @impl/done
 
-##card-is-beta *This card is itself BETA: oracle-presence ships as the conform rule `cell-has-oracle` (rust-ai-native-conform), and the `replacement-has-oracle` rule this card's CHECKER names is specified but not yet implemented in the pilot.* @impl/done
+##card-is-beta *This card is itself BETA (its checker is specified but the conform rule is not yet implemented in the pilot).* @impl/done
 
 ## Band 1 — Identity & Recognition {#band-one-identity}
 

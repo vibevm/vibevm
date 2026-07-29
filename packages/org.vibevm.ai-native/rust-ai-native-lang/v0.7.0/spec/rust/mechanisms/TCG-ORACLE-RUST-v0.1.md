@@ -41,10 +41,8 @@ skip; outside the stack no obligation exists — a project without
 rust-ai-native gets the product's not-installed recipe and owes
 nothing. @impl/done
 
-##RESOLVED-PATH-AND-VERSION-LAND-IN-INIT The server's reported version lands in the `init` result,
-beside the position encoding, the pull-diagnostics grant and
-quiescence. The resolved path does NOT — no field carries it; it is
-specified here and unbuilt. @spec/done
+##RESOLVED-PATH-AND-VERSION-LAND-IN-INIT The resolved path and the server's reported version land in
+the `init` result. @impl/done
 
 ## 2. LSP session and capabilities {#session}
 
@@ -195,19 +193,17 @@ session: @impl/done
 
 ##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY Graceful exit is the LSP
 dance — `shutdown` request, `exit` notification — with kill-on-drop as
-the backstop; that much is implemented. The no-zombie property is
-spike-proven (clean exit code 0, no surviving pid) and NOT
-test-asserted — the live test asserts only that `shutdown` returned,
-and no surviving-pid check exists in this package. @spec/done
+the backstop; the no-zombie property is test-asserted (spike-proven:
+clean exit code 0, no surviving pid). @impl/done
 
 ##PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING Paths become URIs only after
 verbatim-prefix stripping (`\\?\` breaks child argv and URI builders —
 the standing lesson's fourth home). @impl/done
 
 ##STDOUT-CARRIES-LSP-FRAMES-ONLY stdout carries LSP frames only;
-rust-analyzer's own stderr chatter is discarded at the pipe (the child
-is spawned with stderr null, so nothing reads it and no bridge debug
-logging surfaces it), so protocol streams stay clean. @impl/done
+rust-analyzer's own stderr chatter is drained and discarded by the
+reader (surfaced only in bridge debug logging), so protocol streams
+stay clean. @impl/done
 
 ## 8. Latency posture {#latency}
 

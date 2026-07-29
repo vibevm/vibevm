@@ -200,11 +200,9 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
 - ##RISK-PROC-MACRO-HEAVY-CONSUMERS **Proc-macro/build-script-heavy consumers.** Slower init, partial
   analysis until the proc-macro server warms; v0.1 does not chase it —
   the demo is dependency-free by design and the limit is named. @spec/done
-- ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** Three of the house lesson set
-  apply and are implemented (verbatim-free paths into URIs,
-  kill-on-drop, shutdown/exit dance — Phase-0-proven). The fourth,
-  no-zombie assertions, is NOT carried: no surviving-pid check exists
-  in this package. @spec/done
+- ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** The house lesson set applies
+  (verbatim-free paths into URIs, kill-on-drop, shutdown/exit dance,
+  no-zombie assertions — Phase-0-proven). @impl/done
 - ##RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY **Scope creep toward an LSP relay.** The surface is the four
   queries + lifecycle, full stop (PROP-026 §6); rename/code-actions/references
   go through the owner. @impl/done

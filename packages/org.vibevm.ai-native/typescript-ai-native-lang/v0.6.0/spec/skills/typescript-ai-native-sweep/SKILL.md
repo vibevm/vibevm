@@ -45,11 +45,10 @@ test-gate. @impl/done
 ##RED-FLOOR-ADMITS-ONLY-GREENING-WORK Red? The only legal work is making it green — fix, do not
 proceed. @impl/done
 
-##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `NO conform.toml — topology
-default in force` line means the project is not bootstrapped
-(`typescript-ai-native init`), and every `DISABLED by policy` line is a
-standing decision to re-question weekly — a floor that shrank quietly is the
-failure mode this line exists to catch. @impl/done
+##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy means
+the project is not bootstrapped (`typescript-ai-native init`), and every
+`DISABLED by policy` line is a standing decision to re-question weekly —
+a floor that shrank quietly is the failure mode this line exists to catch. @impl/done
 
 ## Tier 1 — the ratchet (every run) {#tier-one}
 
