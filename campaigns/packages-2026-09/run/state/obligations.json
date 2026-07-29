@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 582,
+ "drift_verdicts": 579,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -2942,8 +2942,16 @@
    "closure_route": "prose-edit",
    "fact": "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 4,
+   "routed_out": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#ROW-BUDGET-BOOT-FILE",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#ROW-BUDGET-WAL",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#ROW-BUDGET-MODULE-SPEC",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#SUM-THE-SIZE-BUDGETS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-170",
    "id_source": "minted",
    "carried": true
@@ -7417,8 +7425,14 @@
    "closure_route": "prose-edit",
    "fact": "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header …",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#GENRE-TYPING-REMOVES-ALL-THREE",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#PLACE-DO-NOT-BLEND"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-247",
    "id_source": "minted",
    "carried": true
@@ -7464,8 +7478,14 @@
    "closure_route": "prose-edit",
    "fact": "spec/design/loading-and-boot-model.md:124  ### Fork 1 — the form of static boot delivery",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md#RECORD-EACH-FORK-AS-A-FIXED-SKELETON",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md#SUM-RECORD-FORKS-AS-A-SKELETON"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-248",
    "id_source": "minted",
    "carried": true
@@ -7510,8 +7530,14 @@
    "closure_route": "prose-edit",
    "fact": "spec/design/README.md:36  ##when-to-write When a design discussion produces more reasoning than a PROP can absorb without losing its contract readability …",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md#MOST-DECISIONS-PRODUCE-BOTH",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md#SUM-A-DECISION-PRODUCES-BOTH"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-249",
    "id_source": "minted",
    "carried": true
@@ -7656,59 +7682,15 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:147  1. ##PART-THE-NEW-VALUE **The new value.** The primary change, matching the code. @impl/done",
    "falsifier": "self",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md#PART-THE-REVISIT-TRIGGER",
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md#SUM-OUTPUT-IS-VALUE-REASON-AND-REVISIT-TRIGGER"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-252",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/sync-from-code"
-   ],
-   "files": [
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md#BOUNDARY-FLOW-ATOMIC-COMMITS",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md#BOUNDARY-VIBE-BUILD"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "campaigns",
-    "spec"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
-    "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
-    "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @spec/done",
-    "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`; @spec/done",
-    "spec/common/PROP-018-agentic-standalone-modes.md:247     which is what lets a future deterministic command (`vibe build`) park a",
-    "spec/design/loading-and-boot-model.md:223  - ##SUBSUMES-INSTALL-BUILD **Workspace-aware `vibe install` / `vibe build`** (PROP-007 §9.3, §6 q3) is no longer",
-    "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:854  - ##PF-BUILD-LOOP Wire into the `vibe build` LLM tool-use loop. @impl/plan"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the framing is attributed to the wrong sibling. Conventional Commits format is defined by `flow:git-conventional-commits`, not by `flow:git-atomic-commits` — and git-atomic-commits' own boot snippet says so in as many words («Commit messages follow the **conventional-commits** flow — a sibling package»), drawing the same line between format and atomicity that this claim erases. Both flows are installed here, so the misattribution is checkable against the shipped payload.",
-   "reasons": [
-    "DRIFT, and the milestone label is what makes it measurable rather than aspirational. The claim names `vibe build` «(M1.5+)» as the flow handling the other direction. The top-level subcommand enum in crates/vibe-cli/src/cli.rs has no `Build` variant — the nearest shipped surface is `vibe bin build`, which builds declared tool binaries rather than generating code from spec — and this repository is long past the milestone the label promises: its WAL records M1.17, M1.18 and M1.19 as closed. A referent a package declares as future work is admitted by the verdict standard; a referent whose declared milestone has passed by fourteen minor versions is not."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-253",
    "id_source": "minted",
    "carried": true
   },
@@ -9058,8 +9040,13 @@
    "closure_route": "prose-edit",
    "fact": "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#HARNESS-ENTRY-FILES-ARE-THIN-REDIRECTS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-286",
    "id_source": "minted",
    "carried": true
@@ -9187,8 +9174,13 @@
    "closure_route": "prose-edit",
    "fact": "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-289",
    "id_source": "minted",
    "carried": true
@@ -9229,8 +9221,13 @@
    "closure_route": "prose-edit",
    "fact": "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading…",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#ROW-HOME-SPEC-PROTOCOL"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-290",
    "id_source": "minted",
    "carried": true
@@ -11191,8 +11188,13 @@
    "closure_route": "prose-edit",
    "fact": "spec/design/README.md:30  ##TWO-WAY-LINKING … A one-directional link is a latent break. @doc/done",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#AN-UNLINKED-DESIGN-DOC-IS-A-DEFECT"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-335",
    "id_source": "minted",
    "carried": true
@@ -11408,8 +11410,13 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:165  ##ON-APPROVAL-WRITE-THE-DIFF-AND-COMMIT On approval: write the diff, commit it using Conventional Commits. @impl/done",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md#STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-340",
    "id_source": "minted",
    "carried": true
@@ -11453,9 +11460,61 @@
    "closure_route": "prose-edit",
    "fact": "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md#APPROVAL-STEP-COMMITS-WITH-CONVENTIONAL-COMMITS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-341",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/sync-from-code"
+   ],
+   "files": [
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md#BOUNDARY-VIBE-BUILD"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "spec"
+   ],
+   "evidence_refs": [
+    "spec/common/PROP-018-agentic-standalone-modes.md:247     which is what lets a future deterministic command (`vibe build`) park a",
+    "spec/design/loading-and-boot-model.md:223  - ##SUBSUMES-INSTALL-BUILD **Workspace-aware `vibe install` / `vibe build`** (PROP-007 §9.3, §6 q3) is no longer",
+    "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:854  - ##PF-BUILD-LOOP Wire into the `vibe build` LLM tool-use loop. @impl/plan"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and the milestone label is what makes it measurable rather than aspirational. The claim names `vibe build` «(M1.5+)» as the flow handling the other direction. The top-level subcommand enum in crates/vibe-cli/src/cli.rs has no `Build` variant — the nearest shipped surface is `vibe bin build`, which builds declared tool binaries rather than generating code from spec — and this repository is long past the milestone the label promises: its WAL records M1.17, M1.18 and M1.19 as closed. A referent a package declares as future work is admitted by the verdict standard; a referent whose declared milestone has passed by fourteen minor versions is not.",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "spec/common/PROP-018-agentic-standalone-modes.md:247     which is what lets a future deterministic command (`vibe build`) park a",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md#BOUNDARY-VIBE-BUILD"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-253",
    "id_source": "minted",
    "carried": true
   },
@@ -11641,46 +11700,6 @@
    "carried": true
   },
   {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/two-process-model"
-   ],
-   "files": [
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md#TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "CLAUDE.md"
-   ],
-   "evidence_refs": [
-    "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files."
-   ],
-   "cites": [],
-   "reason": "DRIFT, and the contradiction is inside the collection before it reaches the host. This fact says one text serves all three readers «for free». The sibling package's session-end-hook.md says the opposite in its own words — «The report is for the human's quick scan. The WAL is for the next session's agent. They serve different readers.» — and specifies two separate artefacts for the same state. The host implements the sibling: CLAUDE.md:178-192 requires the machine-readable CONTINUE.md AND, on top of it, a separate chat TL;DR scannable in one screen, «detailed enough that the user can verify nothing was missed without opening the files». The transfer is not free here; it is paid for with a second rendering, specified as a mandatory step.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-346",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -11716,8 +11735,13 @@
    "closure_route": "prose-edit",
    "fact": "spec/boot/00-core.md:10  1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6. @impl/done",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md#ROW-PLANE-CONTROL"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-347",
    "id_source": "minted",
    "carried": true
@@ -11962,51 +11986,6 @@
     "packages/org.vibevm.world/wal-specspaces"
    ],
    "files": [
-    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md#READS-THE-SPECSPACES-OWN-BOOT-CONTRACT"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "SPECSPACES.md",
-    "packages/org.vibevm.fractality/CLAUDE.md",
-    "spec"
-   ],
-   "evidence_refs": [
-    "SPECSPACES.md:22  | fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-12 — **five-task goal COMPLETE (5/5)** (~28 …",
-    "packages/org.vibevm.fractality/CLAUDE.md:1  # fractality — specspace contract (read this first)",
-    "packages/org.vibevm.fractality/CLAUDE.md:21  2. This file, end to end.",
-    "spec/boot/STATIC.md:1479  2. the specspace's own boot contract (`CLAUDE.md` at the specspace"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the alternative it offers, which its own package cannot express. The default branch holds — packages/org.vibevm.fractality/CLAUDE.md exists at the root and its own step 2 is «This file, end to end.» But the fact's escape hatch is «or the file the registry names», and the registry format this same package defines has six fields — `default`, `name`, `root`, `wal`, `continue`, `status` — and none of them names a boot contract. The live table has no such column. The sibling field definition says something different again: FIELD-ROOT places «the specspace's `CLAUDE.md` (or equivalent boot contract)» AT THE ROOT rather than naming it in the registry. Two statements, one package, and only one of them is implementable.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "SPECSPACES.md:22  | fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-12 — **five-task goal COMPLETE (5/5)** (~28 …",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-353",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/wal-specspaces"
-   ],
-   "files": [
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md"
    ],
    "anchors": [
@@ -12035,8 +12014,13 @@
    "closure_route": "prose-edit",
    "fact": "SPECSPACES.md:18  default: host",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md#SUM-THE-REGISTRY"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-354",
    "id_source": "minted",
    "carried": true
@@ -12281,6 +12265,80 @@
    "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
    "falsifier": "self",
    "id": "F-301",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/two-process-model"
+   ],
+   "files": [
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md#TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "CLAUDE.md"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and the contradiction is inside the collection before it reaches the host. This fact says one text serves all three readers «for free». The sibling package's session-end-hook.md says the opposite in its own words — «The report is for the human's quick scan. The WAL is for the next session's agent. They serve different readers.» — and specifies two separate artefacts for the same state. The host implements the sibling: CLAUDE.md:178-192 requires the machine-readable CONTINUE.md AND, on top of it, a separate chat TL;DR scannable in one screen, «detailed enough that the user can verify nothing was missed without opening the files». The transfer is not free here; it is paid for with a second rendering, specified as a mandatory step.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-346",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/wal-specspaces"
+   ],
+   "files": [
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md#READS-THE-SPECSPACES-OWN-BOOT-CONTRACT"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "SPECSPACES.md",
+    "packages/org.vibevm.fractality/CLAUDE.md",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the alternative it offers, which its own package cannot express. The default branch holds — packages/org.vibevm.fractality/CLAUDE.md exists at the root and its own step 2 is «This file, end to end.» But the fact's escape hatch is «or the file the registry names», and the registry format this same package defines has six fields — `default`, `name`, `root`, `wal`, `continue`, `status` — and none of them names a boot contract. The live table has no such column. The sibling field definition says something different again: FIELD-ROOT places «the specspace's `CLAUDE.md` (or equivalent boot contract)» AT THE ROOT rather than naming it in the registry. Two statements, one package, and only one of them is implementable.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "SPECSPACES.md:22  | fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-12 — **five-task goal COMPLETE (5/5)** (~28 …",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-353",
    "id_source": "minted",
    "carried": true
   }

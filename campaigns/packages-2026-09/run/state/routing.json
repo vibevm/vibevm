@@ -817,6 +817,174 @@
    "obligation": "F-320",
    "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
    "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#ROW-BUDGET-BOOT-FILE",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-170",
+   "why": "Route (b). The package obeys its own rule - 480 tokens against its own 500 - and the host's boot lane is 32x over. Note the budget triple is authored in BOTH addressable-specs and two-process-model with nothing forcing agreement: a latent cross-package duplication.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#ROW-BUDGET-WAL",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-170",
+   "why": "Route (b). The package obeys its own rule - 480 tokens against its own 500 - and the host's boot lane is 32x over. Note the budget triple is authored in BOTH addressable-specs and two-process-model with nothing forcing agreement: a latent cross-package duplication.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#ROW-BUDGET-MODULE-SPEC",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-170",
+   "why": "Route (b). The package obeys its own rule - 480 tokens against its own 500 - and the host's boot lane is 32x over. Note the budget triple is authored in BOTH addressable-specs and two-process-model with nothing forcing agreement: a latent cross-package duplication.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#SUM-THE-SIZE-BUDGETS",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-170",
+   "why": "Route (b). The package obeys its own rule - 480 tokens against its own 500 - and the host's boot lane is 32x over. Note the budget triple is authored in BOTH addressable-specs and two-process-model with nothing forcing agreement: a latent cross-package duplication.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#HARNESS-ENTRY-FILES-ARE-THIN-REDIRECTS",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-286",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-289",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#ROW-HOME-SPEC-PROTOCOL",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-290",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#GENRE-TYPING-REMOVES-ALL-THREE",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-247",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#PLACE-DO-NOT-BLEND",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-247",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md#RECORD-EACH-FORK-AS-A-FIXED-SKELETON",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-248",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md#SUM-RECORD-FORKS-AS-A-SKELETON",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-248",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md#MOST-DECISIONS-PRODUCE-BOTH",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-249",
+   "why": "Route (b). The verdict's `5 of 42` reproduces as 3 on a strict header match and 9 on any `design/` mention; the quantifier fails on all three readings, so the route is unchanged and only the figure is unreliable.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md#SUM-A-DECISION-PRODUCES-BOTH",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-249",
+   "why": "Route (b). The verdict's `5 of 42` reproduces as 3 on a strict header match and 9 on any `design/` mention; the quantifier fails on all three readings, so the route is unchanged and only the figure is unreliable.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#AN-UNLINKED-DESIGN-DOC-IS-A-DEFECT",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-335",
+   "why": "Route (b), and the Phase C reason is partly wrong: it reads as though the design doc is unlinked, but PROP-035 exists at 37 KB and spec/design/structural-loader.md names it three times. The real defect is the missing return leg in PROP-035's ##related - a one-line HOST fix.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md#PART-THE-REVISIT-TRIGGER",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-252",
+   "why": "Route (b), and the verdict is TRUE despite an easy false re-check: `git show 4ea09ad0 | grep -ci revisit` returns 13, every hit an anchor id inside the 94 481-line cache.json the same commit carries. Scoped `-- spec/` it is 0 and the verdict holds. Anyone re-judging this unscoped will call a true verdict false.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md#SUM-OUTPUT-IS-VALUE-REASON-AND-REVISIT-TRIGGER",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-252",
+   "why": "Route (b), and the verdict is TRUE despite an easy false re-check: `git show 4ea09ad0 | grep -ci revisit` returns 13, every hit an anchor id inside the 94 481-line cache.json the same commit carries. Scoped `-- spec/` it is 0 and the verdict holds. Anyone re-judging this unscoped will call a true verdict false.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md#BOUNDARY-VIBE-BUILD",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-253",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md#STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-340",
+   "why": "Route (b) here, but the underlying defect is a cross-package `duplication` and a §4.5 release event: ONE commit is governed by three different subject grammars - sync-from-code's boot snippet, its own SYNC-PROTOCOL.md:171, and git-conventional-commits' conventional-commits.md:169. Repairing it spans two packages and is not a wave edit.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md#APPROVAL-STEP-COMMITS-WITH-CONVENTIONAL-COMMITS",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-341",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md#ROW-PLANE-CONTROL",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-347",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md#SUM-THE-REGISTRY",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-354",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
   }
  ]
 }

@@ -141,9 +141,11 @@ Run Sync-from-Code (SYNC-PROTOCOL.md).
 - ##BOUNDARY-FLOW-WAL **`flow:wal`** handles session continuity. A successful sync may
   trigger a WAL update; that update goes through the WAL flow, not
   this one. @impl/done
-- ##BOUNDARY-FLOW-ATOMIC-COMMITS **`flow:git-atomic-commits`** handles commit discipline. A sync commit
-  follows Conventional Commits and carries `docs(spec)` as its type;
-  that framing is defined by the git-atomic-commits flow, not here. @impl/done
+- ##BOUNDARY-FLOW-ATOMIC-COMMITS **`flow:git-atomic-commits`** handles commit discipline: one sync,
+  one commit, one logical idea. The message *format* — Conventional
+  Commits, with `docs(spec)` as the type a sync commit carries — is
+  defined by the sibling `flow:git-conventional-commits`, not by the
+  atomicity flow and not here. @impl/done
 - ##BOUNDARY-VIBE-BUILD **`vibe build`** (M1.5+) handles the other direction — generating
   code from spec. A sync can be followed by a build, but they are
   independent flows. @spec/done

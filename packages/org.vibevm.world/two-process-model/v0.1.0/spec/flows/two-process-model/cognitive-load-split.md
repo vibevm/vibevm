@@ -121,8 +121,11 @@ never knew. @spec/done
 once — the AI's next session, your future self, the next human —
 from one source. @impl/done
 
-##TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO If the text works for the AI, it works for the
-other two for free. @spec/done
+##TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO Text that works for the AI carries the
+other two most of the way, though not for free: where a reader needs
+a different shape — the human's end-of-session scan against the
+checkpoint the next session reads — the cost is a second rendering
+of the one source, never a second source. @spec/done
 
 ## Delegation rule of thumb {#delegation}
 

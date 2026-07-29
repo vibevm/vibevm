@@ -53,7 +53,7 @@ host root, a bare `восстанови сессию` / `RESUME SESSION` restore
 1. ##READS-THE-HOSTS-REPO-WIDE-RULES the host's repo-wide non-negotiable rules (the section the host
    contract marks as binding for every commit), @impl/done
 2. ##READS-THE-SPECSPACES-OWN-BOOT-CONTRACT the specspace's own boot contract (`CLAUDE.md` at the specspace
-   root, or the file the registry names), @impl/done
+   root, or the equivalent boot contract living there), @impl/done
 3. ##READS-THE-SPECSPACE-WAL the specspace WAL, @impl/done
 4. ##READS-THE-SPECSPACE-COLD-RESUME-FILE the specspace cold-resume file (the WAL wins where they diverge), @impl/done
 5. ##READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES any active plan the specspace WAL names. @impl/done

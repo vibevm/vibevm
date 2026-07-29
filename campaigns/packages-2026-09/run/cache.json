@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T16:50:24Z",
+  "updated_at": "2026-07-29T17:23:24Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -75723,7 +75723,7 @@
       }
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md": {
-      "content_hash": "32d16176ddf5706d6218c266d69cef3c5685484225882aa4a4dad471393ef06c",
+      "content_hash": "5ae1c2526ebf574b898804bced03e2663724fb9c754ee8dec971a4254c1bd50d",
       "rollup": {
         "explicit": [
           "spec",
@@ -75745,7 +75745,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "32d16176ddf5706d6218c266d69cef3c5685484225882aa4a4dad471393ef06c",
+        "processed_hash": "5ae1c2526ebf574b898804bced03e2663724fb9c754ee8dec971a4254c1bd50d",
         "verdicts": {
           "SYNC-FROM-CODE-IS-AN-EXCEPTIONAL-PROTOCOL-NOT-A-DEFAULT": {
             "v": "confirmed",
@@ -76187,17 +76187,15 @@
             ]
           },
           "BOUNDARY-FLOW-ATOMIC-COMMITS": {
-            "v": "drift",
-            "ev": [
-              "spec/common/PROP-000.md:162  - ##GP-CONVENTIONAL the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @spec/done",
-              "spec/common/PROP-000.md:163  - ##GP-ATOMICITY **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`; @spec/done",
-              "spec/boot/STATIC.md:363  <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->",
-              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
-              "DRIFT: the framing is attributed to the wrong sibling. Conventional Commits format is defined by `flow:git-conventional-commits`, not by `flow:git-atomic-commits` — and git-atomic-commits' own boot snippet says so in as many words («Commit messages follow the **conventional-commits** flow — a sibling package»), drawing the same line between format and atomicity that this claim erases. Both flows are installed here, so the misattribution is checkable against the shipped payload."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md  - ##BOUNDARY-FLOW-ATOMIC-COMMITS **`flow:git-atomic-commits`** handles commit discipline: one sync, one commit, one logical idea. The message *format* - Conventional",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:22  the atomicity flow's own snippet draws the format/atomicity line and disclaims the format rule",
+              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md  the flow that does own the format",
+              "CLOSED F-253 (Phase D wave 3, route a - a false claim about a sibling package, measurable entirely inside packages/). The boundary note credited Conventional Commits to `flow:git-atomic-commits`, which disclaims exactly that in its own boot snippet: atomicity is one idea per commit, the message format is `flow:git-conventional-commits`. The same misattribution W2 found from the other side at addressable-specs' COMPOSES-ATOMIC-COMMITS. Nothing prescriptive changed - the sync commit still follows Conventional Commits and still carries `docs(spec)`; only the flow credited with the rule did."
             ]
           },
           "BOUNDARY-VIBE-BUILD": {
@@ -76214,8 +76212,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T19:59:11Z",
-        "verify_batch": "W2d"
+        "verified_at": "2026-07-29T17:23:24Z",
+        "verify_batch": "W2d + D3a"
       }
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md": {
@@ -80795,7 +80793,7 @@
       }
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md": {
-      "content_hash": "d0baa15f7e83c474faf72a9259dfedf5be554851c2e3f3f4d9f21156ed749856",
+      "content_hash": "3d24734e76f5064f879063064319a3f99678db25f97b10ba79478743ca9e28b2",
       "rollup": {
         "explicit": [
           "spec",
@@ -80817,7 +80815,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d0baa15f7e83c474faf72a9259dfedf5be554851c2e3f3f4d9f21156ed749856",
+        "processed_hash": "3d24734e76f5064f879063064319a3f99678db25f97b10ba79478743ca9e28b2",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -81335,14 +81333,14 @@
             ]
           },
           "TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO": {
-            "v": "drift",
-            "ev": [
-              "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
-              "DRIFT, and the contradiction is inside the collection before it reaches the host. This fact says one text serves all three readers «for free». The sibling package's session-end-hook.md says the opposite in its own words — «The report is for the human's quick scan. The WAL is for the next session's agent. They serve different readers.» — and specifies two separate artefacts for the same state. The host implements the sibling: CLAUDE.md:178-192 requires the machine-readable CONTINUE.md AND, on top of it, a separate chat TL;DR scannable in one screen, «detailed enough that the user can verify nothing was missed without opening the files». The transfer is not free here; it is paid for with a second rendering, specified as a mandatory step."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md  ##TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO Text that works for the AI carries the other two most of the way, though not for free",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md  the sibling flow: the report is for the human's quick scan, the WAL for the next session's agent - they serve different readers",
+              "CLOSED F-346 (Phase D wave 3, route a). `for free` is falsified by a shipped sibling in the same namespace, not by the consumer: `flow:wal` specifies TWO artefacts for one state and says in its own words that they serve different readers. The one-source principle is kept word for word and the cost is now stated - a second RENDERING of the one source, never a second source - which is what the sibling actually prescribes. Route (a) rather than a release event because the drift is in this package's sentence and repairing it needs nothing from `wal`."
             ]
           },
           "ASK-WHETHER-THE-WORK-IS-BOUNDED-MECHANICAL-AND-CHECKABLE": {
@@ -81434,8 +81432,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T19:50:42Z",
-        "verify_batch": "W2c"
+        "verified_at": "2026-07-29T17:23:24Z",
+        "verify_batch": "W2c + D3a"
       }
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md": {
@@ -82142,7 +82140,7 @@
       }
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md": {
-      "content_hash": "ae01747f8a227d7a4274d6199deafaace1587a0da3b40bbf6a230e74720bc21f",
+      "content_hash": "db1e68a85ef8769b3ca9845ef95717172a89ac9ccbb9f0db715b31d5a0d4d734",
       "rollup": {
         "explicit": [
           "impl",
@@ -82164,7 +82162,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "ae01747f8a227d7a4274d6199deafaace1587a0da3b40bbf6a230e74720bc21f",
+        "processed_hash": "db1e68a85ef8769b3ca9845ef95717172a89ac9ccbb9f0db715b31d5a0d4d734",
         "verdicts": {
           "THE-PROJECT-MAY-HOST-SPECSPACES": {
             "v": "confirmed",
@@ -82361,17 +82359,15 @@
             ]
           },
           "READS-THE-SPECSPACES-OWN-BOOT-CONTRACT": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.fractality/CLAUDE.md:1  # fractality — specspace contract (read this first)",
-              "packages/org.vibevm.fractality/CLAUDE.md:21  2. This file, end to end.",
-              "SPECSPACES.md:22  | fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-12 — **five-task goal COMPLETE (5/5)** (~28 …",
-              "spec/boot/STATIC.md:1479  2. the specspace's own boot contract (`CLAUDE.md` at the specspace",
-              "DRIFT on the alternative it offers, which its own package cannot express. The default branch holds — packages/org.vibevm.fractality/CLAUDE.md exists at the root and its own step 2 is «This file, end to end.» But the fact's escape hatch is «or the file the registry names», and the registry format this same package defines has six fields — `default`, `name`, `root`, `wal`, `continue`, `status` — and none of them names a boot contract. The live table has no such column. The sibling field definition says something different again: FIELD-ROOT places «the specspace's `CLAUDE.md` (or equivalent boot contract)» AT THE ROOT rather than naming it in the registry. Two statements, one package, and only one of them is implementable."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md  2. ##READS-THE-SPECSPACES-OWN-BOOT-CONTRACT the specspace's own boot contract (`CLAUDE.md` at the specspace root, or the equivalent boot contract living there), @impl/done",
+              "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md:55  | name | root | wal | continue | status |",
+              "SPECSPACES.md:20  | name | root | wal | continue | status |",
+              "CLOSED F-353 (Phase D wave 3, route a, and the route was checked rather than taken). The snippet sent a reader to «the file the registry names», and the registry has no such column - the protocol defines the row itself at :55 as name / root / wal / continue / status, and the host's registry carries exactly those five. So the falsifier is the package's OWN protocol, not the consumer's table: the boot snippet promised a mechanism the package never defined. The phrase now names the thing that exists."
             ]
           },
           "READS-THE-SPECSPACE-WAL": {
@@ -82492,8 +82488,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T19:52:56Z",
-        "verify_batch": "W2d"
+        "verified_at": "2026-07-29T17:23:24Z",
+        "verify_batch": "W2d + D3a"
       }
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md": {
