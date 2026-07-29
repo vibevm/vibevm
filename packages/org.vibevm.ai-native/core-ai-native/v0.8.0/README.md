@@ -28,7 +28,7 @@ per-language cards, the guides — ships in each language stack
 1. ##READ-MANIFESTO `spec/00-MANIFESTO.md` — mission, axioms, the central law, §8 the package map. Start here. @impl/done
 2. ##READ-PATTERN-CARD-FORMAT `spec/01-PATTERN-CARD-FORMAT.md` — the format every pattern card is written in. @impl/done
 3. ##READ-SCAFFOLDS `spec/02-EXECUTABLE-SCAFFOLDS.md` — the nine runnable-capital classes. @impl/done
-4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @impl/done
+4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `spec/rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @impl/done
 5. ##READ-PLAYBOOKS `spec/03-RAID-PLAYBOOK.md` + `spec/04-SWEEP-PLAYBOOK.md` + `spec/05-CAMPAIGN-FORM.md` — campaigns and the standing sweep. @impl/done
 6. ##READ-WAL-CONVENTION `spec/06-WAL-CONVENTION.md` — session-durable project state (optional but preferred). @impl/done
 7. ##READ-MECHANISMS `spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT: the normative mechanism specs; `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…` is what code tags cite. @impl/done

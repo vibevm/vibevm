@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 564,
+ "drift_verdicts": 550,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -3165,69 +3165,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/git-atomic-commits"
-   ],
-   "files": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-MESSAGE-IS-THE-ONLY-PLACE-THE-WHY-IS-RECORDED-DURABLY",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#FROZEN-NEVER-AMEND",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#FROZEN-NEVER-REBASE-THE-PUSHED-RANGE"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "CLAUDE.md",
-    "campaigns",
-    "packages/org.vibevm.world/git-atomic-commits",
-    "packages/org.vibevm.world/wal",
-    "spec"
-   ],
-   "evidence_refs": [
-    "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
-    "CLAUDE.md:5  … and commit **autonomy** (routine proceeds; non-routine stops and asks) …",
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:213  - ##SUM-THE-NO-ALSO-TEST The \"no 'also' in the body\" test catches violations mechanically. @impl/done",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:221  fallback resume path is `git log` plus a fresh look at the tree: commit",
-    "spec/boot/STATIC.md:602  - **Commit log as decision record.** The message is the only place",
-    "spec/boot/STATIC.md:603    where *why* survives after the WAL and spec prose decay.",
-    "spec/boot/STATIC.md:612  - Never `git commit --amend` on a pushed commit without explicit human",
-    "spec/boot/STATIC.md:613    approval. Same for `git push --force`.",
-    "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask",
-    "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, …) stop and ask"
-   ],
-   "cites": [],
-   "reason": "but this repository records *why* durably in at least four other places: the `spec/common/PROP-*` decision records, the campaign LOGs, AUDIT.md, and the `decision-records` flow this same corpus ships — whose entire purpose is that a decision's reason is recorded at its governing anchor. Two installed flows claim the same exclusive role for different artifacts",
-   "reasons": [
-    "the mechanical form was run and returns 43 of 400 bodies, 10.8 % — a number that cannot be turned into a violation count without exactly the judgement the word «mechanical» denies. No commit-message check of any kind exists in this repository, and the boot snippet does not carry the test at all, so a session reading only the boot lane never sees it",
-    "the divergence is not cosmetic: a reader following the protocol literally would refuse an owner-approved amend, which is the one case every other carrier of the rule allows. Its sibling bullet on force-push carries the approval clause, so the inconsistency is inside a single three-item list. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence",
-    "so this specific prohibition reaches a session through no carrier a session actually reads, and where it is stated it is stricter than the rule the host adopted. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 4,
-   "id": "F-175",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/health-audit"
    ],
    "files": [
@@ -5232,56 +5169,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-path-does-not-resolve",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md#MAP-RUST-GUIDE",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md#ADOPTION-PLAN-LIVES-OUTSIDE"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "legacy-spec",
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "terraform"
-   ],
-   "evidence_refs": [
-    "legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md:23  | `DISCIPLINE-CHARTER-v0.1.md` | **superseded** | `discipline-v0.2/00-MANIFESTO.md` ...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:3  **Status.** Beta; second T2 guide. Section structure is deliberately isomorphic to `GUIDE-RUST-v0.1.md` ...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:1  # AI-Native Rust — The Guide {#root}",
-    "terraform/REPORT.md:1  # terraform/REPORT.md — the Discipline terraform, close-out report",
-    "terraform/adopt-v0.3/PREDICTIONS.md:1  # Pilot Prediction Ledger — Discipline v0.2 adoption (TERRAFORM-PLAN-v0.3)"
-   ],
-   "cites": [],
-   "reason": "the map's path does not resolve: it names `rust/GUIDE-AI-NATIVE-RUST.md` and the guide is at `spec/rust/GUIDE-AI-NATIVE-RUST.md`, in the `rust-ai-native-lang` package rather than under core. The same defect the README carries at `READ-STACK-GUIDE`, in the map that is supposed to be the corrected index",
-   "reasons": [
-    "the placement is right and the name is wrong: the adoption plan does live outside this package, at the host's `terraform/` — BASELINE.md, LOG.md, REPORT.md and adopt-v0.3/PREDICTIONS.md are all there — and there is no directory called `vibevm-terraform` anywhere in the tree"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md:23  | `DISCIPLINE-CHARTER-v0.1.md` | **superseded** | `discipline-v0.2/00-MANIFESTO.md` ...",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-209",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -6055,8 +5942,14 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:12  ## The obligation {#obligation}",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT",
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-226",
    "id_source": "minted",
    "carried": true
@@ -6157,8 +6050,14 @@
    "closure_route": "prose-edit",
    "fact": "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT",
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md#NEVER-DEFER-THE-DOC-UPDATE-TO-LATER"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-228",
    "id_source": "minted",
    "carried": true
@@ -6260,8 +6159,14 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:101  ##NO-RESTATEMENT-ANYWHERE-ELSE No repeating it in the README, no per-directory",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#NO-RESTATEMENT-ANYWHERE-ELSE",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#SUM-RUN-IT-HONESTLY"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-231",
    "id_source": "minted",
    "carried": true
@@ -6475,8 +6380,14 @@
    "closure_route": "prose-edit",
    "fact": "campaigns/packages-2026-09/harvest/world-w1-git-family.md:112  **82 of 400 break the hard limit of 72 — 20.5 %, longest at 89.** And **297 of 400",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md#HEADER-SUBJECT-LENGTH-MOOD-AND-CASE",
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md#NEVER-CAPITALISE-OR-OMIT-THE-TYPE"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-122",
    "id_source": "adopted (plan LOG)",
    "carried": true
@@ -7899,170 +7810,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md#TRIGGER-INLINE"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:39  mode: inline",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md:39  mode: inline"
-   ],
-   "cites": [],
-   "reason": "the trigger taxonomy does not match the shipped registry: the cards' INDEX assigns inline to 2 of 9 Rust cards (C, F) and gate to 5 (B, D, E, G, H), and the same split holds in the TypeScript stack. The claim that inline fires in the per-cell loop is authored; which cards it covers is a different number in the registry",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-264",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md#PARENT-GOF-RECOGNITION"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — boilerplate repeats across cells; ...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:23  ##COLLABORATIONS Collaborations: Output is checked by Class E loop; generator emits Class G doctests for its products; ..."
-   ],
-   "cites": [],
-   "reason": "GoF's Related Patterns section is claimed as a parent contribution and no card carries one: a grep for «Related Patterns» over all three cards/ directories returns nothing. The nearest shipped field is Collaborations",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — boilerplate repeats across cells; ...",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-265",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md#PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "the redefinition rests on snapshots that do not exist (see CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME). A phase gate cannot mean 'characterization snapshots unchanged' where nothing captures one; the floor's actual gate is fmt/test/clippy/conform/specmap",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-268",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "relocation",
-   "rule": "r-path-does-not-resolve",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md#READ-STACK-GUIDE"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:31  4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @imp...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:1  # AI-Native Rust — The Guide {#root}"
-   ],
-   "cites": [
-    "F-103",
-    "F-110"
-   ],
-   "reason": "the path is wrong: the README sends a reader to `rust/GUIDE-…` and the guide is at `spec/rust/GUIDE-…`. Same family as F-103/F-110 — a front-door pointer that does not resolve from where the reader stands",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:31  4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @imp...",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-269",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -8187,49 +7934,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-mcp"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md#campaign-in-flight-note"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "legacy-spec",
-    "packages/org.vibevm.ai-native/go-ai-native-mcp"
-   ],
-   "evidence_refs": [
-    "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:1  # GO-AI-NATIVE-PLAN v0.1 — Go as the third supported language of the Discipline",
-    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md:12  > ##campaign-in-flight-note Campaign in flight: built end-to-end per",
-    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:1  # go-ai-native-mcp — the server brief {#root}"
-   ],
-   "cites": [],
-   "reason": "`spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md` is not in this package: the only copy is at the host's `legacy-spec/terraforms/`, and this package's `spec/` holds `tools/` alone",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md:12  > ##campaign-in-flight-note Campaign in flight: built end-to-end per",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-274",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -8268,47 +7972,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-275",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#RISK-TRANSFER-UNPROVEN"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:108    _benchmark · high · refines:H2_ — Decisive scope boundary (Mündler et al. PLDI 2025, eth-sri repo) ... 'has to be ..."
-   ],
-   "cites": [],
-   "reason": "**the figure the corpus records is not 74.8 %.** The family's own findings register measures the PLDI'25 result at «75.3% (synthesis) and 70.2% (translation)» (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106). The TypeScript guide's two uses of «~74.8 %» were recorded drift earlier in this phase for the same reason, and this brief carries it twice more (here and at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:65). The figure is not a cache artefact: the live CONTRADICTION-MAP publishes it in C-4's own title (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31), so the two appendices of one package disagree and every consumer quotes whichever it read",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-276",
    "id_source": "minted",
    "carried": true
   },
@@ -9397,10 +9060,10 @@
     "packages/org.vibevm.world/git-atomic-commits"
    ],
    "files": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md"
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
    ],
    "anchors": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md#COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE"
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO"
    ],
    "drift_count": 1,
    "cross_package": false,
@@ -9408,24 +9071,28 @@
    "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
-    "packages/org.vibevm.world/git-atomic-commits",
-    "packages/org.vibevm.world/sync-from-code"
+    "packages/org.vibevm.world/git-atomic-commits"
    ],
    "evidence_refs": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:41  4. ##STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT On approval, apply + commit (`docs(spec): sync <section> with code`)."
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:213  - ##SUM-THE-NO-ALSO-TEST The \"no 'also' in the body\" test catches violations mechanically. @impl/done"
    ],
    "cites": [],
-   "reason": "**this flow does not pin any message format, and says so.** The sibling's step 4 is verbatim `docs(spec): sync <section> with code` and the host writes 82 such commits in 400 — the first half holds. The second half attributes the pinning to this flow, and this package's own boot snippet delegates message FORMAT to `git-conventional-commits`; nothing in any of its files pins a format. The fact claims a role its own package hands to a sibling",
+   "reason": "the mechanical form was run and returns 43 of 400 bodies, 10.8 % — a number that cannot be turned into a violation count without exactly the judgement the word «mechanical» denies. No commit-message check of any kind exists in this repository, and the boot snippet does not carry the test at all, so a session reading only the boot lane never sees it",
    "reasons": [],
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-304",
+   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
+   "falsifier": "self",
+   "routed_out": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-175",
    "id_source": "minted",
    "carried": true
   },
@@ -9941,8 +9608,13 @@
    "closure_route": "prose-edit",
    "fact": "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md#WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-314",
    "id_source": "minted",
    "carried": true
@@ -10515,51 +10187,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/redbook"
-   ],
-   "files": [
-    "packages/org.vibevm.world/redbook/v0.2.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/redbook/v0.2.0/README.md#THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.world/redbook"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral** @impl/done",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred** @impl/done",
-    "packages/org.vibevm.world/redbook/v0.2.0/README.md:99  ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is"
-   ],
-   "cites": [],
-   "reason": "DRIFT, and this is the THIRD instance of one defect — the sentence that states it for both packages at once. It claims «the Discipline's internal copies defer to them from their next release», naming flow:wal and flow:campaign-plans. The next release arrived and deferred in neither. Measured directly: core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`), five days after campaign-plans reached org.vibevm.world (`69708287`, 2026-07-12) and ten days after wal 0.2.0; `vibe.lock:111` shows v0.8.0 is the slot the host installs; and its `spec/05-CAMPAIGN-FORM.md` is 117 lines carrying ZERO occurrences of `campaign-plans`, `defer` or `superseded`, while `grep -ril 'campaign-plans' packages/org.vibevm.ai-native/v0.8.0-slot` returns no files at all. The worker's independent sweep found `grep -rn 'redbook' packages/org.vibevm.ai-native/` returns zero across the entire tree, installed side included. W2 measured the wal half separately and reached the same result on `06-WAL-CONVENTION.md`. The canonical-home assertion is stated only here; nothing on the other side records it.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/redbook/v0.2.0/README.md:99  ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-326",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -10656,48 +10283,6 @@
     "packages/org.vibevm.world/secrets-hygiene"
    ],
    "files": [
-    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md#COMPOSES-ATTRIBUTION-POLICY"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/git-attribution-policy",
-    "packages/org.vibevm.world/secrets-hygiene"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:1  # Flow: Attribution Policy {#root}",
-    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md:1  # Flow: Secrets Hygiene {#root}"
-   ],
-   "cites": [],
-   "reason": "DRIFT on «enforced by mechanical scans», which holds for one half of the pairing and not the other. The SECRETS half is enforced and enforced well — 11 `fn .*redact` across `crates/`, and two unit tests at `crates/vibe-publish/src/token.rs:280` and `:289` that plant a literal and assert its ABSENCE rather than assert the mask appears. The ATTRIBUTION half has no scan in this host: `grep -rln 'attribution' xtask/ tools/ crates/vibe-check/` returns exactly one file, a batch-review tool rather than an attribution scan, and `grep -rn 'Co-Authored|Generated with' xtask/src/ --include='*.rs'` returns nothing. A composition that asserts mechanical enforcement for both is half-supported. RECORDED separately: the sibling's boot snippet is named `55-flow-attribution-policy.md` while its package directory is `git-attribution-policy` — a fact about the filename, not about this rule.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:1  # Flow: Attribution Policy {#root}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-329",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/secrets-hygiene"
-   ],
-   "files": [
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md"
    ],
    "anchors": [
@@ -10767,8 +10352,13 @@
    "closure_route": "prose-edit",
    "fact": "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-331",
    "id_source": "minted",
    "carried": true
@@ -11858,6 +11448,46 @@
    "carried": true
   },
   {
+   "type": "relocation",
+   "rule": "r-path-does-not-resolve",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md#MAP-RUST-GUIDE",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md#ADOPTION-PLAN-LIVES-OUTSIDE"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "legacy-spec",
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "terraform"
+   ],
+   "cites": [],
+   "reason": "the map's path does not resolve: it names `rust/GUIDE-AI-NATIVE-RUST.md` and the guide is at `spec/rust/GUIDE-AI-NATIVE-RUST.md`, in the `rust-ai-native-lang` package rather than under core. The same defect the README carries at `READ-STACK-GUIDE`, in the map that is supposed to be the corrected index",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md:23  | `DISCIPLINE-CHARTER-v0.1.md` | **superseded** | `discipline-v0.2/00-MANIFESTO.md` ...",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-209",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -11976,6 +11606,78 @@
     "packages/org.vibevm.ai-native/core-ai-native"
    ],
    "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md#TRIGGER-INLINE"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "the trigger taxonomy does not match the shipped registry: the cards' INDEX assigns inline to 2 of 9 Rust cards (C, F) and gate to 5 (B, D, E, G, H), and the same split holds in the TypeScript stack. The claim that inline fires in the per-cell loop is authored; which cards it covers is a different number in the registry",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-264",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md#PARENT-GOF-RECOGNITION"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "GoF's Related Patterns section is claimed as a parent contribution and no card carries one: a grep for «Related Patterns» over all three cards/ directories returns nothing. The nearest shipped field is Collaborations",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — boilerplate repeats across cells; ...",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-265",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md"
    ],
    "anchors": [
@@ -12045,6 +11747,80 @@
     "single row"
    ],
    "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md#PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "the redefinition rests on snapshots that do not exist (see CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME). A phase gate cannot mean 'characterization snapshots unchanged' where nothing captures one; the floor's actual gate is fmt/test/clippy/conform/specmap",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-268",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-path-does-not-resolve",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md#READ-STACK-GUIDE"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [
+    "F-103",
+    "F-110"
+   ],
+   "reason": "the path is wrong: the README sends a reader to `rust/GUIDE-…` and the guide is at `spec/rust/GUIDE-…`. Same family as F-103/F-110 — a front-door pointer that does not resolve from where the reader stands",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:31  4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @imp...",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-269",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
     "packages/org.vibevm.ai-native/go-ai-native-lang"
    ],
    "files": [
@@ -12069,6 +11845,79 @@
    "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:122  ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a",
    "falsifier": "self",
    "id": "F-272",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-mcp"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md#campaign-in-flight-note"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "legacy-spec",
+    "packages/org.vibevm.ai-native/go-ai-native-mcp"
+   ],
+   "cites": [],
+   "reason": "`spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md` is not in this package: the only copy is at the host's `legacy-spec/terraforms/`, and this package's `spec/` holds `tools/` alone",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md:12  > ##campaign-in-flight-note Campaign in flight: built end-to-end per",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-274",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#RISK-TRANSFER-UNPROVEN"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "cites": [],
+   "reason": "**the figure the corpus records is not 74.8 %.** The family's own findings register measures the PLDI'25 result at «75.3% (synthesis) and 70.2% (translation)» (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106). The TypeScript guide's two uses of «~74.8 %» were recorded drift earlier in this phase for the same reason, and this brief carries it twice more (here and at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:65). The figure is not a cache artefact: the live CONTRADICTION-MAP publishes it in C-4's own title (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31), so the two appendices of one package disagree and every consumer quotes whichever it read",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-276",
    "id_source": "minted",
    "carried": true
   },
@@ -12241,6 +12090,117 @@
    "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
    "falsifier": "self",
    "id": "F-301",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/git-atomic-commits"
+   ],
+   "files": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md#COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/git-atomic-commits",
+    "packages/org.vibevm.world/sync-from-code"
+   ],
+   "cites": [],
+   "reason": "**this flow does not pin any message format, and says so.** The sibling's step 4 is verbatim `docs(spec): sync <section> with code` and the host writes 82 such commits in 400 — the first half holds. The second half attributes the pinning to this flow, and this package's own boot snippet delegates message FORMAT to `git-conventional-commits`; nothing in any of its files pins a format. The fact claims a role its own package hands to a sibling",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-304",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/redbook"
+   ],
+   "files": [
+    "packages/org.vibevm.world/redbook/v0.2.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/redbook/v0.2.0/README.md#THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.world/redbook"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and this is the THIRD instance of one defect — the sentence that states it for both packages at once. It claims «the Discipline's internal copies defer to them from their next release», naming flow:wal and flow:campaign-plans. The next release arrived and deferred in neither. Measured directly: core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`), five days after campaign-plans reached org.vibevm.world (`69708287`, 2026-07-12) and ten days after wal 0.2.0; `vibe.lock:111` shows v0.8.0 is the slot the host installs; and its `spec/05-CAMPAIGN-FORM.md` is 117 lines carrying ZERO occurrences of `campaign-plans`, `defer` or `superseded`, while `grep -ril 'campaign-plans' packages/org.vibevm.ai-native/v0.8.0-slot` returns no files at all. The worker's independent sweep found `grep -rn 'redbook' packages/org.vibevm.ai-native/` returns zero across the entire tree, installed side included. W2 measured the wal half separately and reached the same result on `06-WAL-CONVENTION.md`. The canonical-home assertion is stated only here; nothing on the other side records it.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/README.md:99  ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-326",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/secrets-hygiene"
+   ],
+   "files": [
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md#COMPOSES-ATTRIBUTION-POLICY"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/git-attribution-policy",
+    "packages/org.vibevm.world/secrets-hygiene"
+   ],
+   "cites": [],
+   "reason": "DRIFT on «enforced by mechanical scans», which holds for one half of the pairing and not the other. The SECRETS half is enforced and enforced well — 11 `fn .*redact` across `crates/`, and two unit tests at `crates/vibe-publish/src/token.rs:280` and `:289` that plant a literal and assert its ABSENCE rather than assert the mask appears. The ATTRIBUTION half has no scan in this host: `grep -rln 'attribution' xtask/ tools/ crates/vibe-check/` returns exactly one file, a batch-review tool rather than an attribution scan, and `grep -rn 'Co-Authored|Generated with' xtask/src/ --include='*.rs'` returns nothing. A composition that asserts mechanical enforcement for both is half-supported. RECORDED separately: the sibling's boot snippet is named `55-flow-attribution-policy.md` while its package directory is `git-attribution-policy` — a fact about the filename, not about this rule.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:1  # Flow: Attribution Policy {#root}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-329",
    "id_source": "minted",
    "carried": true
   },

@@ -54,8 +54,10 @@ never touched. @impl/done
 
 - ##COMPOSES-WAL-AND-SYNC-FROM-CODE-BY-DISTINCT-PREFIXES Works with `flow:wal` (`10-…`) and `flow:sync-from-code` (`20-…`):
   numeric boot-snippet prefixes are distinct by design. @impl/done
-- ##COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE `flow:sync-from-code`'s final step is a `docs(spec)` commit; the
-  format of that commit message is pinned by this flow. @impl/done
+- ##COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE `flow:sync-from-code`'s final step is a `docs(spec)` commit; this
+  flow is why the sync lands as its own commit and not folded into the
+  code change. The *format* of that message is pinned by the sibling
+  `flow:git-conventional-commits`, not here. @impl/done
 - ##COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT End-of-session WAL rewrite (from `flow:wal`) ends in a commit;
   git-atomic-commits is how that commit is shaped. @impl/done
 

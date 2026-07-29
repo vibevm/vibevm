@@ -1137,6 +1137,94 @@
    "obligation": "F-225",
    "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
    "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-226",
+   "why": "Route (b). The host keeps the same-commit doc rule 3 times in 36; the measurement reproduces exactly.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-226",
+   "why": "Route (b). The host keeps the same-commit doc rule 3 times in 36; the measurement reproduces exactly.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-228",
+   "why": "examined in Phase D wave 4 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md#NEVER-DEFER-THE-DOC-UPDATE-TO-LATER",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-228",
+   "why": "examined in Phase D wave 4 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#NO-RESTATEMENT-ANYWHERE-ELSE",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-231",
+   "why": "examined in Phase D wave 4 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#SUM-RUN-IT-HONESTLY",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-231",
+   "why": "examined in Phase D wave 4 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md#HEADER-SUBJECT-LENGTH-MOOD-AND-CASE",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-122",
+   "why": "Route (b). 123 of 400 subjects over 72 characters and 62 of 400 capitalised, with no checker anywhere; the type-omission clause holds.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md#NEVER-CAPITALISE-OR-OMIT-THE-TYPE",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-122",
+   "why": "Route (b). 123 of 400 subjects over 72 characters and 62 of 400 capitalised, with no checker anywhere; the type-omission clause holds.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md#WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-314",
+   "why": "Route (b). The relicense touched one file, PROP-000 followed thirteen days later, and `README.md:164` is still stale today - the finding Phase C filed and deliberately did not repair.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-331",
+   "why": "Route (b), and it needs the OWNER specifically: this is a policy fork stated and not decided. `spec/boot/90-user.md` FORBIDS `git push origin` at line 13 and PRESCRIBES it as routine at line 34, and `CLAUDE.md:191` makes the forbidden form step 4 of the END SESSION contract. 130 direct pushes on the reflogs. The package is not the side that yields.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO",
+   "route": "host",
+   "wave": 4,
+   "obligation": "F-175",
+   "why": "examined in Phase D wave 4 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
   }
  ]
 }

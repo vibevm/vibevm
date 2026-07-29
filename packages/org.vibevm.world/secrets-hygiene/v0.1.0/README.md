@@ -63,9 +63,11 @@ snippet. @impl/done
 ## Composition {#composition}
 
 - ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` (`55-…`) is the sibling policy package:
-  both are one-place policies enforced by mechanical scans — one keeps
-  authorship marks off every surface, this one keeps secret values off
-  every surface. @impl/done
+  both are one-place policies, mechanised where mechanisation reaches
+  and reviewed everywhere else — the sibling scans two of its eight
+  surfaces before push, this one backs Law 4's redaction with a unit
+  test. One keeps authorship marks off every surface, this one keeps
+  secret values off every surface. @impl/done
 - ##COMPOSES-MANUAL-TESTS `flow:manual-tests`: its clean-slate rule is the test-side of Law 2
   — tests never touch real per-user state, including real credential
   files, so a test run can never read or persist a live secret. @impl/done

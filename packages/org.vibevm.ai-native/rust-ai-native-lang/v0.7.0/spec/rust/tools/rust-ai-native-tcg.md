@@ -75,7 +75,7 @@
 - ##licensing-net Net: the whole stack is buildable permissively. No viral-license trap on the critical path. @spec/done
 
 ## 6. The honest risk register {#risk-register}
-- ##RISK-TRANSFER-UNPROVEN **Transfer unproven:** the 74.8% is TypeScript. Rust's richer types may yield smaller gains, or the per-completion analyzer latency may make Stage 3 impractical for interactive generation. Measure at Stage 2 before committing to Stage 3. @spec/done
+- ##RISK-TRANSFER-UNPROVEN **Transfer unproven:** the PLDI'25 reduction — 75.3% on synthesis and 70.2% on translation (DR2-012) — is TypeScript. Rust's richer types may yield smaller gains, or the per-completion analyzer latency may make Stage 3 impractical for interactive generation. Measure at Stage 2 before committing to Stage 3. @spec/done
 - ##RISK-RUST-ANALYZER-BUILT-FOR-IDES **rust-analyzer was built for IDEs, not decoding loops:** query latency and partial-file analysis under a half-written buffer may need work; rust-analyzer's tolerance for incomplete code is an asset here but its per-query cost in a tight decode loop is the open engineering risk. @spec/done
 - ##RISK-OVER-CONSTRAINT-HURTS-STRONG-MODELS **Over-constraint can hurt strong models (DR1-015: Hermes-4-405B dropped 92.5%→35.0%).** The tool must be CAPABILITY-ROUTED: on for the weak swarm, optional/off for strong authors. A profile that helps Qwen-32B may distort Opus. @spec/done
 - ##RISK-DOES-NOT-FIX-SEMANTICS **It does not fix semantics, only well-typedness:** well-typed wrong code still compiles. `rust-ai-native-tcg` is necessary-not-sufficient; it pairs with Class C/D oracles (contracts, differential tests) that check INTENT, not just types. (The CITYWALK false-positive trap, DR2-012 caveat.) @spec/done

@@ -10,6 +10,6 @@ host straight from this package's slot. @impl/done
 the machine (PROP-027 §2.6). @impl/done
 
 > ##campaign-in-flight-note Campaign in flight: built end-to-end per
-> `spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md`; the server brief is
-> `spec/tools/discipline-mcp-go.md`. This README is finalized at campaign
-> close. @spec/done
+> GO-AI-NATIVE-PLAN v0.1, the campaign plan, which is authored outside
+> this package; the server brief is `spec/tools/discipline-mcp-go.md`.
+> This README is finalized at campaign close. @spec/done

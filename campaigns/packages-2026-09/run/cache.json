@@ -1,9 +1,9 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T17:36:21Z",
+  "updated_at": "2026-07-29T18:08:25Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
-      "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
+      "content_hash": "0b6ab592a3faa226e0ff4877cdfc118797c7c72b27f3bc7b6c8403b50403fb8d",
       "rollup": {
         "explicit": [
           "doc",
@@ -25,7 +25,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
+        "processed_hash": "0b6ab592a3faa226e0ff4877cdfc118797c7c72b27f3bc7b6c8403b50403fb8d",
         "verdicts": {
           "core-contents-lead": {
             "v": "confirmed",
@@ -132,11 +132,11 @@
             ]
           },
           "READ-STACK-GUIDE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:31  4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @imp...",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:1  # AI-Native Rust — The Guide {#root}",
-              "the path is wrong: the README sends a reader to `rust/GUIDE-…` and the guide is at `spec/rust/GUIDE-…`. Same family as F-103/F-110 — a front-door pointer that does not resolve from where the reader stands"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md  4. ##READ-STACK-GUIDE the active language stack's GUIDE, at `spec/<lang>/GUIDE-AI-NATIVE-<LANG>.md`",
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:1  # AI-Native Rust - The Guide {#root}",
+              "CLOSED F-269 (Phase D wave 4, route a). The front door sent a reader to `rust/GUIDE-...` and the guide is at `spec/rust/GUIDE-...`; the bare form resolves in no package. A front-door pointer that does not resolve from where the reader stands is the same family as the boot-lane links this phase is repairing, at a smaller scale and inside one package."
             ]
           },
           "READ-PLAYBOOKS": {
@@ -254,12 +254,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T09:38:29Z",
-        "verify_batch": "C2"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "C2 + D4a"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md": {
-      "content_hash": "7f0933ad9bbc050398ff46e608ed12115c693ef2ce6ea6a56f66abcff90a1128",
+      "content_hash": "f6465bff45f108efbcccbaa7d739894a44b2c55abcc88ee110fbe145a7217cc7",
       "rollup": {
         "explicit": [
           "spec",
@@ -281,7 +281,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "7f0933ad9bbc050398ff46e608ed12115c693ef2ce6ea6a56f66abcff90a1128",
+        "processed_hash": "f6465bff45f108efbcccbaa7d739894a44b2c55abcc88ee110fbe145a7217cc7",
         "verdicts": {
           "status-line": {
             "v": "drift",
@@ -784,12 +784,10 @@
             ]
           },
           "TRIGGER-INLINE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:39  mode: inline",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md:39  mode: inline",
-              "the trigger taxonomy does not match the shipped registry: the cards' INDEX assigns inline to 2 of 9 Rust cards (C, F) and gate to 5 (B, D, E, G, H), and the same split holds in the TypeScript stack. The claim that inline fires in the per-cell loop is authored; which cards it covers is a different number in the registry"
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md  the shipped registry: 2 of 9 cards at inline, 5 at gate - and the same split in the TypeScript and Go stacks",
+              "CLOSED F-264 (Phase D wave 4, route a). «Most cards aim here» is falsified by all three shipped registries at once, which agree with each other and disagree with the manifesto: inline is 2 of 9, gate is 5. The claim about which trigger dominates is now what the registries say."
             ]
           },
           "TRIGGER-GATE": {
@@ -1032,11 +1030,10 @@
             ]
           },
           "MAP-RUST-GUIDE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:1  # AI-Native Rust — The Guide {#root}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:3  **Status.** Beta; second T2 guide. Section structure is deliberately isomorphic to `GUIDE-RUST-v0.1.md` ...",
-              "the map's path does not resolve: it names `rust/GUIDE-AI-NATIVE-RUST.md` and the guide is at `spec/rust/GUIDE-AI-NATIVE-RUST.md`, in the `rust-ai-native-lang` package rather than under core. The same defect the README carries at `READ-STACK-GUIDE`, in the map that is supposed to be the corrected index"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md  ##MAP-RUST-GUIDE the Rust stack's guide at `spec/rust/GUIDE-AI-NATIVE-RUST.md`",
+              "CLOSED F-209 partially (Phase D wave 4, route a). The same wrong path as the README, in the map that exists to be the corrected index - which is what made it worth its own anchor."
             ]
           },
           "MAP-RUST-TCG": {
@@ -1136,21 +1133,19 @@
             ]
           },
           "ADOPTION-PLAN-LIVES-OUTSIDE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "terraform/adopt-v0.3/PREDICTIONS.md:1  # Pilot Prediction Ledger — Discipline v0.2 adoption (TERRAFORM-PLAN-v0.3)",
-              "legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md:23  | `DISCIPLINE-CHARTER-v0.1.md` | **superseded** | `discipline-v0.2/00-MANIFESTO.md` ...",
-              "terraform/REPORT.md:1  # terraform/REPORT.md — the Discipline terraform, close-out report",
-              "the placement is right and the name is wrong: the adoption plan does live outside this package, at the host's `terraform/` — BASELINE.md, LOG.md, REPORT.md and adopt-v0.3/PREDICTIONS.md are all there — and there is no directory called `vibevm-terraform` anywhere in the tree"
+              "terraform/BASELINE.md:1  the adoption plan really does live outside this package, at the host's terraform/",
+              "CLOSED F-209 partially (Phase D wave 4, route a). The placement was right and the NAME was wrong: the fact pointed at a directory called `vibevm-terraform`, which exists nowhere in the tree, while the plan it means is the host's `terraform/` - BASELINE.md, LOG.md, REPORT.md and adopt-v0.3/PREDICTIONS.md."
             ]
           }
         },
-        "verified_at": "2026-07-28T09:58:27Z",
-        "verify_batch": "C2"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "C2 + D4a"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md": {
-      "content_hash": "8041b7191db9aa9cee6e0fd6c5d2c48639a9be3637a14a114aec99d940b78bdb",
+      "content_hash": "66fa38370b8f0ed76b0ba3ad0538e73e4b3cc7f44e9da3c5c5134a307487ce58",
       "rollup": {
         "explicit": [
           "spec",
@@ -1172,7 +1167,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "8041b7191db9aa9cee6e0fd6c5d2c48639a9be3637a14a114aec99d940b78bdb",
+        "processed_hash": "66fa38370b8f0ed76b0ba3ad0538e73e4b3cc7f44e9da3c5c5134a307487ce58",
         "verdicts": {
           "status-line": {
             "v": "drift",
@@ -1201,11 +1196,10 @@
             ]
           },
           "PARENT-GOF-RECOGNITION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — boilerplate repeats across cells; ...",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:23  ##COLLABORATIONS Collaborations: Output is checked by Class E loop; generator emits Class G doctests for its products; ...",
-              "GoF's Related Patterns section is claimed as a parent contribution and no card carries one: a grep for «Related Patterns» over all three cards/ directories returns nothing. The nearest shipped field is Collaborations"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md  the format's own field list, which carries no Related-Patterns field",
+              "CLOSED F-265 (Phase D wave 4, route a - the format was wrong about itself). GoF's *Related Patterns* was claimed as a parent contribution, and the format's own nineteen fields carry no such field; the nearest shipped one is Collaborations. Checked against the format's own definition rather than against the cards."
             ]
           },
           "PARENT-JEP-ACCOUNTABILITY": {
@@ -1476,8 +1470,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T09:58:27Z",
-        "verify_batch": "C2"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "C2 + D4a"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md": {
@@ -4897,9 +4891,11 @@
             ]
           },
           "PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the redefinition rests on snapshots that do not exist (see CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME). A phase gate cannot mean 'characterization snapshots unchanged' where nothing captures one; the floor's actual gate is fmt/test/clippy/conform/specmap"
+              "discipline/golden/capture.sh:3  # (PLAYBOOK-TERRAFORM-VIBEVM v0.2 Phase -1; BROWNFIELD-PROTOCOL §6).",
+              "terraform/BASELINE.md:117  debt/intent reference in the PR (BROWNFIELD §6).",
+              "RE-JUDGED confirmed, and the demotion it reverses was WRONG (F-268, Phase D wave 4). The demotion rested on «nothing captures a golden transcript», from a grep over `rust-ai-native-cli/src/`. The host implements exactly this mechanism and cites this anchor by name in two places: `discipline/golden/capture.sh` declares BROWNFIELD-PROTOCOL §6 as its own contract on line 3, and `terraform/BASELINE.md:117` applies §6 by name. Five golden transcripts are committed. This is the third time in one phase that a not-found was a fact about the search perimeter rather than about the tree, and the first where it nearly demoted a mechanism the consumer had already built."
             ]
           },
           "RATCHET-FILE-IS-THE-FRONTIER": {
@@ -5070,7 +5066,7 @@
           }
         },
         "verified_at": "2026-07-28T06:30:32Z",
-        "verify_batch": "C1"
+        "verify_batch": "C1 + D4a"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
@@ -13402,7 +13398,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md": {
-      "content_hash": "fceecd955a778a95752e62248fe2b077b73efa917fa3b2769aff38bbd128bb07",
+      "content_hash": "8efe2c3f54507f8f3d9f1e69db1766636340e896e9e07f6c57b2b0f7e13e161b",
       "rollup": {
         "explicit": [
           "doc",
@@ -13424,7 +13420,7 @@
       "unit_count": 1,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "fceecd955a778a95752e62248fe2b077b73efa917fa3b2769aff38bbd128bb07",
+        "processed_hash": "8efe2c3f54507f8f3d9f1e69db1766636340e896e9e07f6c57b2b0f7e13e161b",
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -13444,17 +13440,15 @@
             ]
           },
           "campaign-in-flight-note": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md:12  > ##campaign-in-flight-note Campaign in flight: built end-to-end per",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:1  # GO-AI-NATIVE-PLAN v0.1 — Go as the third supported language of the Discipline",
-              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:1  # go-ai-native-mcp — the server brief {#root}",
-              "`spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md` is not in this package: the only copy is at the host's `legacy-spec/terraforms/`, and this package's `spec/` holds `tools/` alone"
+              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md  the note now names a directory that exists",
+              "CLOSED F-274 (Phase D wave 4, route a). The note pointed into `spec/terraforms/`, which this package does not have - its `spec/` holds `tools/` alone."
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "C6 + D4a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md": {
@@ -17587,7 +17581,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md": {
-      "content_hash": "358e0775e5641255c530543e2252547c9857ee339ea1ed870756005a70c9967f",
+      "content_hash": "f13bee0aab83d8069ef6f7277c6f1f90284341b1f966ff72c64e8ea7b348c7d9",
       "rollup": {
         "explicit": [
           "spec",
@@ -17609,7 +17603,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "358e0775e5641255c530543e2252547c9857ee339ea1ed870756005a70c9967f",
+        "processed_hash": "f13bee0aab83d8069ef6f7277c6f1f90284341b1f966ff72c64e8ea7b348c7d9",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17861,11 +17855,10 @@
             ]
           },
           "RISK-TRANSFER-UNPROVEN": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:108    _benchmark · high · refines:H2_ — Decisive scope boundary (Mündler et al. PLDI 2025, eth-sri repo) ... 'has to be ...",
-              "**the figure the corpus records is not 74.8 %.** The family's own findings register measures the PLDI'25 result at «75.3% (synthesis) and 70.2% (translation)» (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106). The TypeScript guide's two uses of «~74.8 %» were recorded drift earlier in this phase for the same reason, and this brief carries it twice more (here and at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md:65). The figure is not a cache artefact: the live CONTRADICTION-MAP publishes it in C-4's own title (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31), so the two appendices of one package disagree and every consumer quotes whichever it read"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md  DR2-012, which reports 75.3 % and 70.2 % - not 74.8 %",
+              "CLOSED F-276 (Phase D wave 4, route a). The risk cited 74.8 %, a figure in no findings register; the ATLAS record it means reports two different numbers. A figure with no record behind it is the same defect the CONTRADICTION-MAP carried at c-6-side-b and was closed the same way. NOTE recorded and not fixed: the same 74.8 % sits at twelve sites across five packages on three different closure routes, sourced from a section TITLE that carries no verdict at all - a cross-package obligation no wave has opened."
             ]
           },
           "RISK-RUST-ANALYZER-BUILT-FOR-IDES": {
@@ -17902,8 +17895,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5 + C45-rust-review"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D4a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
@@ -41028,7 +41021,7 @@
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md": {
-      "content_hash": "5ea1bbb263504601faa59b025716b2aefb30ae01a0e96ace5403d8b7acacb1e7",
+      "content_hash": "9d3496481efe946ea66bc7babe65fbaa437df1a0925a22a1866e9f767df84a9f",
       "rollup": {
         "explicit": [
           "doc",
@@ -41050,7 +41043,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "5ea1bbb263504601faa59b025716b2aefb30ae01a0e96ace5403d8b7acacb1e7",
+        "processed_hash": "9d3496481efe946ea66bc7babe65fbaa437df1a0925a22a1866e9f767df84a9f",
         "verdicts": {
           "PACKAGE-INSTALLS-THE-ATOMIC-COMMITS-DISCIPLINE": {
             "v": "confirmed",
@@ -41215,15 +41208,13 @@
             ]
           },
           "COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md:41  4. ##STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT On approval, apply + commit (`docs(spec): sync <section> with code`).",
-              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
-              "**this flow does not pin any message format, and says so.** The sibling's step 4 is verbatim `docs(spec): sync <section> with code` and the host writes 82 such commits in 400 — the first half holds. The second half attributes the pinning to this flow, and this package's own boot snippet delegates message FORMAT to `git-conventional-commits`; nothing in any of its files pins a format. The fact claims a role its own package hands to a sibling"
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:22  the package's own snippet draws the format/atomicity line",
+              "CLOSED F-304 (Phase D wave 4, route a). The README claimed this flow pins the FORMAT of the sync commit message, which its own boot snippet disclaims: atomicity is why the sync lands as its own commit; the format belongs to `flow:git-conventional-commits`. Third instance of one misattribution, after addressable-specs and sync-from-code, and the first one found inside the flow that is being mis-credited."
             ]
           },
           "COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT": {
@@ -41282,8 +41273,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T14:08:06Z",
-        "verify_batch": "W1a"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "W1a + D4b"
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md": {
@@ -41636,7 +41627,7 @@
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md": {
-      "content_hash": "5bf6a45c7a14fe1850b19548c89f7fd1ceda0b8518273b2158f1440452f6b49c",
+      "content_hash": "9cb60441285b871d2c22062e7c2423c8fee05914a1fcfc18a1c3aae5a65e7720",
       "rollup": {
         "explicit": [
           "spec",
@@ -41658,7 +41649,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "5bf6a45c7a14fe1850b19548c89f7fd1ceda0b8518273b2158f1440452f6b49c",
+        "processed_hash": "9cb60441285b871d2c22062e7c2423c8fee05914a1fcfc18a1c3aae5a65e7720",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -41923,20 +41914,13 @@
             ]
           },
           "THE-MESSAGE-IS-THE-ONLY-PLACE-THE-WHY-IS-RECORDED-DURABLY": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:602  - **Commit log as decision record.** The message is the only place",
-              "spec/boot/STATIC.md:603    where *why* survives after the WAL and spec prose decay.",
-              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:221  fallback resume path is `git log` plus a fresh look at the tree: commit",
-              "CLAUDE.md:188     - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:140  **399 of 400 carry a body.** The one that does not is `fcc1cff9`.",
-              "**«the only place» is false of this repository, and the contradiction comes from a flow installed beside it.** The premises hold — the wal flow names `git log` as the fallback when the WAL is gone, the host's cold-resume file is overwritten wholesale, and 399 of 400 commits carry a body.",
-              "but this repository records *why* durably in at least four other places: the `spec/common/PROP-*` decision records, the campaign LOGs, AUDIT.md, and the `decision-records` flow this same corpus ships — whose entire purpose is that a decision's reason is recorded at its governing anchor. Two installed flows claim the same exclusive role for different artifacts"
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:1  the sibling flow that gives a decision's why its own durable home",
+              "CLOSED F-175 partially (Phase D wave 4, route a). «The ONLY place the why is recorded durably» is falsified by a shipped sibling in the same namespace whose entire subject is recording a why durably at the governing spec anchor. The sentence now distinguishes the why of a CHANGE, which belongs to the commit and its diff, from the why of a DECISION, which belongs to the record - and says neither substitutes for the other. Nothing about commit discipline was relaxed."
             ]
           },
           "three-rationales-in-one-message-each-get-watered-down": {
@@ -42253,33 +42237,27 @@
             ]
           },
           "FROZEN-NEVER-AMEND": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:612  - Never `git commit --amend` on a pushed commit without explicit human",
-              "spec/boot/STATIC.md:613    approval. Same for `git push --force`.",
-              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, …) stop and ask",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
-              "**the package states this rule three ways and the strictest version is the one no other carrier repeats.** This bullet is unconditional — «**Never** `git commit --amend`» — while the boot snippet, the document's own summary, the host's authoritative record and rule 4 all permit it with explicit human approval.",
-              "the divergence is not cosmetic: a reader following the protocol literally would refuse an owner-approved amend, which is the one case every other carrier of the rule allows. Its sibling bullet on force-push carries the approval clause, so the inconsistency is inside a single three-item list. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
               3
+            ],
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human approval.",
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:63  ##NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human approval.",
+              "spec/boot/STATIC.md:418  - Never `git commit --amend` on a pushed commit without explicit human",
+              "CLOSED F-175 partially (Phase D wave 4, route a, and the route was checked hard because the edit LOOKS like a weakening). It is not. Three places in this package already carried the approval clause - its own summary at :216, its boot snippet at :63 whose ANCHOR ID is NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL, and the third sibling in this very list, FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL. The compiled host lane carries the qualified form too, at STATIC.md:418, so the DELIVERED rule was never the bare one. A single line was the outlier and it is now harmonised to the package's own settled wording."
             ]
           },
           "FROZEN-NEVER-REBASE-THE-PUSHED-RANGE": {
-            "v": "drift",
-            "ev": [
-              "spec/common/PROP-000.md:164  - ##GP-AUTONOMY commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask",
-              "CLAUDE.md:5  … and commit **autonomy** (routine proceeds; non-routine stops and asks) …",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:163  autonomy flow's red lines — force-push, history rewrite — leave no positive trace",
-              "**unconditional here and absent everywhere else.** «Never `git rebase -i` the pushed range» carries no approval clause, unlike the third bullet beside it — and `rebase` appears nowhere in the host's own contract files, while the boot snippet's Never list omits it entirely, carrying only amend and force-push.",
-              "so this specific prohibition reaches a session through no carrier a session actually reads, and where it is stated it is stricter than the rule the host adopted. a rewrite that did not happen leaves no positive trace, so the log can neither confirm nor falsify the rule; the absence is recorded and not offered as evidence"
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:216  Amend/force-push only with human approval.",
+              "CLOSED F-175 partially (Phase D wave 4, route a). Same outlier, same list, same repair as its neighbour."
             ]
           },
           "FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL": {
@@ -42498,8 +42476,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T14:08:06Z",
-        "verify_batch": "W1a"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "W1a + D4b"
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md": {
@@ -64167,7 +64145,7 @@
       }
     },
     "packages/org.vibevm.world/redbook/v0.2.0/README.md": {
-      "content_hash": "8e24643e70dbc86fc6b367f4bd462ace89c7ad770a4901c5d48b48250790ed14",
+      "content_hash": "a8fee43a4f6fe8a0efd31b6ab2ae8bbdceda90d84f185630f614b51165fe7578",
       "rollup": {
         "explicit": [
           "doc",
@@ -64189,7 +64167,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "8e24643e70dbc86fc6b367f4bd462ace89c7ad770a4901c5d48b48250790ed14",
+        "processed_hash": "a8fee43a4f6fe8a0efd31b6ab2ae8bbdceda90d84f185630f614b51165fe7578",
         "verdicts": {
           "REDBOOK-IS-A-CURATED-COLLECTION-OF-PRACTICES": {
             "v": "confirmed",
@@ -64810,18 +64788,14 @@
             ]
           },
           "THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/redbook/v0.2.0/README.md:99  ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred** @impl/done",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral** @impl/done",
-              "DRIFT, and this is the THIRD instance of one defect — the sentence that states it for both packages at once. It claims «the Discipline's internal copies defer to them from their next release», naming flow:wal and flow:campaign-plans. The next release arrived and deferred in neither. Measured directly: core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`), five days after campaign-plans reached org.vibevm.world (`69708287`, 2026-07-12) and ten days after wal 0.2.0; `vibe.lock:111` shows v0.8.0 is the slot the host installs; and its `spec/05-CAMPAIGN-FORM.md` is 117 lines carrying ZERO occurrences of `campaign-plans`, `defer` or `superseded`, while `grep -ril 'campaign-plans' packages/org.vibevm.ai-native/v0.8.0-slot` returns no files at all. The worker's independent sweep found `grep -rn 'redbook' packages/org.vibevm.ai-native/` returns zero across the entire tree, installed side included. W2 measured the wal half separately and reached the same result on `06-WAL-CONVENTION.md`. The canonical-home assertion is stated only here; nothing on the other side records it."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  the release that was to defer and did not",
+              "CLOSED F-326 (Phase D wave 4, route a). The fourth instance of one shape this phase has now closed in four packages: a claim that a sibling defers «from its next release». That release landed five days later and defers in neither document."
             ]
           },
           "UNINSTALLING-THE-UMBRELLA-REMOVES-ONLY-ITS-OWN-FILES": {
@@ -64872,8 +64846,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:15:43Z",
-        "verify_batch": "W4"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "W4 + D4b"
       }
     },
     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md": {
@@ -65518,7 +65492,7 @@
       }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md": {
-      "content_hash": "9d203dfbcd5f0403f063d52bf218a5cff3b4a83322cf8f89b615bd60c184a02a",
+      "content_hash": "bb83343c2ba4a674754d806f3d57908fc0f98c5b7cf2042030d6703316f30af2",
       "rollup": {
         "explicit": [
           "doc",
@@ -65540,7 +65514,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "9d203dfbcd5f0403f063d52bf218a5cff3b4a83322cf8f89b615bd60c184a02a",
+        "processed_hash": "bb83343c2ba4a674754d806f3d57908fc0f98c5b7cf2042030d6703316f30af2",
         "verdicts": {
           "PACKAGE-INSTALLS-A-DEFENSIVE-SECRETS-POSTURE": {
             "v": "confirmed",
@@ -65707,15 +65681,13 @@
             ]
           },
           "COMPOSES-ATTRIBUTION-POLICY": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:1  # Flow: Attribution Policy {#root}",
-              "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md:1  # Flow: Secrets Hygiene {#root}",
-              "DRIFT on «enforced by mechanical scans», which holds for one half of the pairing and not the other. The SECRETS half is enforced and enforced well — 11 `fn .*redact` across `crates/`, and two unit tests at `crates/vibe-publish/src/token.rs:280` and `:289` that plant a literal and assert its ABSENCE rather than assert the mask appears. The ATTRIBUTION half has no scan in this host: `grep -rln 'attribution' xtask/ tools/ crates/vibe-check/` returns exactly one file, a batch-review tool rather than an attribution scan, and `grep -rn 'Co-Authored|Generated with' xtask/src/ --include='*.rs'` returns nothing. A composition that asserts mechanical enforcement for both is half-supported. RECORDED separately: the sibling's boot snippet is named `55-flow-attribution-policy.md` while its package directory is `git-attribution-policy` — a fact about the filename, not about this rule."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:1  the sibling that says of itself it is only partly mechanised",
+              "CLOSED F-329 (Phase D wave 4, route a). The composition claimed a mechanised guarantee that both packages disclaim in their own words."
             ]
           },
           "COMPOSES-MANUAL-TESTS": {
@@ -65806,8 +65778,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:17:42Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-07-29T18:08:25Z",
+        "verify_batch": "W5 + D4b"
       }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md": {

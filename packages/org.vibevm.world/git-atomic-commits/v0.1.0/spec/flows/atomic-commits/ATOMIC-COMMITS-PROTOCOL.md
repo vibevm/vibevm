@@ -70,9 +70,13 @@ commits to begin with. @impl/done
 
 ### Commit log as decision history {#why-log}
 
-##THE-MESSAGE-IS-THE-ONLY-PLACE-THE-WHY-IS-RECORDED-DURABLY The commit message is the only place where the *why* of a change is
-recorded at a granularity that survives spec prose decay and WAL
-overwrites. @impl/done
+##THE-MESSAGE-IS-THE-ONLY-PLACE-THE-WHY-IS-RECORDED-DURABLY The commit message is where the *why* of a **change** is recorded at
+per-change granularity, bound to its diff and surviving spec prose
+decay and WAL overwrites. The *why* of a **decision** has its own
+durable home — the sibling `decision-records` flow puts it at the
+governing spec anchor
+(`spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`)
+— and neither substitutes for the other. @impl/done
 
 ##three-rationales-in-one-message-each-get-watered-down If one message has to carry three rationales, each one
 gets watered down. @spec/done
@@ -156,8 +160,9 @@ story told over them. @impl/done
 
 ##once-a-commit-has-been-pushed-lead Once a commit has been pushed: @impl/done
 
-- ##FROZEN-NEVER-AMEND **Never** `git commit --amend`. @impl/done
-- ##FROZEN-NEVER-REBASE-THE-PUSHED-RANGE **Never** `git rebase -i` the pushed range. @impl/done
+- ##FROZEN-NEVER-AMEND **Never** `git commit --amend` without explicit human approval. @impl/done
+- ##FROZEN-NEVER-REBASE-THE-PUSHED-RANGE **Never** `git rebase -i` the pushed range without explicit
+  human approval. @impl/done
 - ##FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL **Never** `git push --force` or `--force-with-lease` without
   explicit human approval. @impl/done
 

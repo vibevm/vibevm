@@ -126,7 +126,7 @@
 
 ##triggers-escalate-lead Triggers escalate by cost: @impl/done
 
-1. ##TRIGGER-INLINE **Inline (edit-time)** — lint-detectable, fires in the per-cell loop. Most cards aim here. @impl/done
+1. ##TRIGGER-INLINE **Inline (edit-time)** — lint-detectable, fires in the per-cell loop; the cheapest mode and the one that fires most often. Each stack's `cards/INDEX.md` is the roster: of the nine scaffold cards, 2 sit here (C, F) against 5 at gate. @impl/done
 2. ##TRIGGER-GATE **Gate (merge-time)** — heavier checks (oracles, proofs) that need not run per keystroke. @impl/done
 3. ##TRIGGER-RAID **Raid (scheduled)** — swept periodically across a layer when per-edit triggers cannot keep up (`03-RAID-PLAYBOOK.md`). @impl/done
 4. ##TRIGGER-REVIEW **Review (human/strong-agent)** — needs judgment a weak reader lacks. @impl/done
@@ -169,7 +169,7 @@
 ##SPEC-UNIT-URI-FORM Spec-unit URIs for this package read `spec://org.vibevm.ai-native/core-ai-native/<docpath>#<anchor>` (e.g. `spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`rust-ai-native-conform`, `rust-ai-native-specmap`, `rust-ai-native`). @impl/done
 
 ##language-projections-lead **Language projections (T2):** @impl/done
-- ##MAP-RUST-GUIDE `rust/GUIDE-AI-NATIVE-RUST.md` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.) @impl/done
+- ##MAP-RUST-GUIDE `spec/rust/GUIDE-AI-NATIVE-RUST.md` in `stack:org.vibevm.ai-native/rust-ai-native-lang` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.) @impl/done
 - ##MAP-RUST-TCG `rust/tools/rust-ai-native-tcg.md` — token-level type-aware constrained generation for Rust (very-far-future; carries the family prefix per PROP-028 §2.4). @idea/plan
 - ##MAP-RUST-TCG-AGENTIC The AGENTIC delivery shipped first: `rust/tools/vibe-agentic-tcg-rust.md` — the consultation oracle over rust-analyzer. @impl/done
 - ##MAP-TYPESCRIPT-GUIDE `typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` — projected onto TypeScript (typed language only; JS guide separate). The language where the generation-time type oracle already exists and codemods are mature. @impl/done
@@ -184,4 +184,4 @@
 - ##MAP-CONTRADICTION-MAP `appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions. @impl/done
 - ##MAP-ATLAS `appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). @impl/done
 
-##ADOPTION-PLAN-LIVES-OUTSIDE The vibevm-specific adoption plan lives OUTSIDE this package, in `vibevm-terraform/`, because the Discipline is the product and vibevm is its pilot. @impl/done
+##ADOPTION-PLAN-LIVES-OUTSIDE The vibevm-specific adoption plan lives OUTSIDE this package, in the host's `terraform/`, because the Discipline is the product and vibevm is its pilot. @impl/done

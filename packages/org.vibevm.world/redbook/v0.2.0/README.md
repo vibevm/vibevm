@@ -98,8 +98,11 @@ complementary layers: @spec/done
 
 ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is
 canonical**: `flow:wal` is the canonical home of the WAL convention
-and `flow:campaign-plans` of the campaign-plan format; the
-Discipline's internal copies defer to them from their next release. @spec/done
+and `flow:campaign-plans` of the campaign-plan format. That is this
+package's position, and the Discipline has not recorded it: as of
+core-ai-native 0.8.0 its `05-CAMPAIGN-FORM.md` and
+`06-WAL-CONVENTION.md` carry no deferral, so the two remain parallel
+copies until one lands. @spec/done
 
 ## Install {#install}
 
