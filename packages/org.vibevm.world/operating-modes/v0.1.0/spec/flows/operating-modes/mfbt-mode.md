@@ -20,7 +20,8 @@ when context makes the intent unambiguous. @impl/done
 
 ## 2. Authoritative description {#description}
 
-##the-owners-framing-lead The owner's framing, recorded as spoken: @impl/done
+##the-owners-framing-lead The owner's framing, given 2026-05-06 and rendered here in
+English rather than the Russian it was spoken in: @impl/done
 
 > ##THE-OWNERS-RECORDED-FRAMING Aim straight at the maximum version. Work in phases, each phase
 > verifiable by tests. Cover everything with tests. The activity is
@@ -29,8 +30,9 @@ when context makes the intent unambiguous. @impl/done
 > All of this is too important to economise on. Work at full
 > reasoning depth. @impl/done
 
-##THE-DESCRIPTION-IS-RECORDED-VERBATIM The description is recorded verbatim because the mode is the owner's
-authorisation, and a paraphrase is a different authorisation. @impl/done
+##THE-DESCRIPTION-IS-RECORDED-VERBATIM A description is recorded verbatim, in the owner's own words and
+language, because the mode is the owner's authorisation, and a
+paraphrase is a different authorisation. @impl/done
 
 ## 3. Operative interpretation {#interpretation}
 

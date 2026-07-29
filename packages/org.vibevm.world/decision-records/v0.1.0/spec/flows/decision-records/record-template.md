@@ -128,8 +128,10 @@ NIST-approved hash, or blake3 upstream ships no release for
 one an unambiguous external event, one a threshold on a fact anyone
 can check from the upstream repository today. @spec/done
 
-##either-condition-fires-unprompted Either fires without
-anyone having to remember to wonder. @spec/done
+##either-condition-fires-unprompted Either can be answered
+yes-or-no by a stranger without the project instrumenting anything —
+though neither fires itself: what fires a trigger is a re-read
+([`revisit-triggers.md` §periodic-sweep](revisit-triggers.md#periodic-sweep)). @spec/done
 
 ## Anti-patterns {#anti-patterns}
 

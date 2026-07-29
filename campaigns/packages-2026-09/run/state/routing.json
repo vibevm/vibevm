@@ -985,6 +985,158 @@
    "obligation": "F-354",
    "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
    "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#CAPTURE-THE-OWNERS-OWN-FRAMING-IN-THEIR-WORDS-DATED",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-177",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#DO-NOT-TIDY-THE-DESCRIPTION-INTO-YOUR-OWN-PROSE",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-177",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#EACH-RULE-IS-TESTABLE-BY-THE-AGENT-ITSELF",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-177",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#AN-UNCATALOGUED-PHRASE-IS-A-PROPOSAL",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-177",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#every-codeword-is-specified-with-the-same-five-parts-lead",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-201",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#A-PHRASE-MISSING-A-PART-IS-A-PROPOSAL-NOT-A-CODEWORD",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-201",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-201",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md#THE-OWNERS-RECORDED-FRAMING",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-202",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#ROW-PART-AUTHORITATIVE-DESCRIPTION",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-321",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md#ROW-PREFER-NO-NEW-DEPENDENCY",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-298",
+   "why": "Route (c) rather than (b): the host records its exception in writing, so the fact is confirmed-with-exception per Phase C's ruling that a marked exception is not drift. Recorded here as examined and not owed by the package.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ANY-REOPENABLE-CHOICE-GETS-A-RECORD",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-197",
+   "why": "Route (b). Host census reproduced independently: 149 of ~154 Decision-bearing sections are stubs or bare Decision lines, and `**Considered and rejected` occurs 4 times, in exactly the two files Phase C names.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ASK-RATHER-THAN-INVENT-DATA",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-197",
+   "why": "Route (b). Host census reproduced independently: 149 of ~154 Decision-bearing sections are stubs or bare Decision lines, and `**Considered and rejected` occurs 4 times, in exactly the two files Phase C names.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-197",
+   "why": "Route (b). Host census reproduced independently: 149 of ~154 Decision-bearing sections are stubs or bare Decision lines, and `**Considered and rejected` occurs 4 times, in exactly the two files Phase C names.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-198",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#ROW-FIELD-WHEN-TO-REVISIT",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-198",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#SUM-FOUR-FIELDS-ALWAYS",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-198",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ROW-FIELD-WHEN-TO-REVISIT",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-224",
+   "why": "Route (b), and the tempting edit was declined on purpose. The verdict scores eight of eleven host revisit lines as event-shaped without a threshold, while revisit-triggers.md:58 sanctions event triggers - so the obvious repair, widening the field definition, would have been licensed by HOST practice and is exactly what §6.1 forbids. A genuine self-falsifier was recorded instead and no verdict in the batch names it: record-template.md:45 defines the field as metric + threshold + observation point while its own {#example-library} twelve lines below ships a pure event trigger as the correct model.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#ROW-FIELD-WHEN-TO-REVISIT",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-224",
+   "why": "Route (b), and the tempting edit was declined on purpose. The verdict scores eight of eleven host revisit lines as event-shaped without a threshold, while revisit-triggers.md:58 sanctions event triggers - so the obvious repair, widening the field definition, would have been licensed by HOST practice and is exactly what §6.1 forbids. A genuine self-falsifier was recorded instead and no verdict in the batch names it: record-template.md:45 defines the field as metric + threshold + observation point while its own {#example-library} twelve lines below ships a pure event trigger as the correct model.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER",
+   "route": "host",
+   "wave": 3,
+   "obligation": "F-225",
+   "why": "examined in Phase D wave 3 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
+   "recorded": "2026-07-29"
   }
  ]
 }

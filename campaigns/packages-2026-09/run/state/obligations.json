@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 579,
+ "drift_verdicts": 567,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -3165,62 +3165,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/conflict-protocol"
-   ],
-   "files": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#ROW-TESTS-ARE-THE-SPEC-EXECUTABLE",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#ROW-CODE-BEATS-WAL",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#TESTS-SIT-BESIDE-THE-SPEC-NOT-BELOW-IT",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#SUM-FIXED-PRIORITY-SETTLES-EVERYTHING"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/redbook",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
-    "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
-    "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
-    "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
-    "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
-    "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
-    "spec/boot/STATIC.md:193  - Tests are the spec in executable form: a test that contradicts the",
-    "spec/boot/STATIC.md:195  - The volatile state file (WAL or equivalent) is a record, dead last:",
-    "spec/boot/STATIC.md:227    newer. Recency is not authority; the hierarchy is."
-   ],
-   "cites": [],
-   "reason": "DRIFT: the host's model has no Tests rung to be equal to. Installed at STATIC.md:193 and sourced verbatim in redbook chapter 1:210, but the consuming project's own reading layers name four — Head, WAL, Spec, Code — and fold tests into the last. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head.",
-   "reasons": [
-    "DRIFT on the ordering, confirmed on the remedy. «Correct the record, not the truth» is host practice and mechanised — the WAL is rewritten wholesale at session end (00-core.md:64). But the relation itself is inverted: this row makes the WAL the lowest rung, beneath Code, and the host places it SECOND of four, above both Spec and Code, reading it at boot step 2 as the description of current state. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head.",
-    "DRIFT, and it is the sharpest single instance of the divergence. The flow: «Tests sit beside the spec, not below it». The host: `spec/boot/00-core.md:43` reads «**Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts», which places tests BELOW the spec and inside the artefact layer — the exact arrangement this fact exists to forbid. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head.",
-    "DRIFT on the ordering half, confirmed on the other. «Recency settles nothing» holds — the host's only spec-to-code reconciliations travel through an owner ruling and the sanctioned sync path, never through an assumption that the newer file wins. The stated order does not. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 4,
-   "id": "F-174",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/git-atomic-commits"
    ],
    "files": [
@@ -3479,8 +3423,16 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:23  ##the-owners-framing-lead The owner's framing, recorded as spoken: @impl/done",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 4,
+   "routed_out": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#CAPTURE-THE-OWNERS-OWN-FRAMING-IN-THEIR-WORDS-DATED",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#DO-NOT-TIDY-THE-DESCRIPTION-INTO-YOUR-OWN-PROSE",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#EACH-RULE-IS-TESTABLE-BY-THE-AGENT-ITSELF",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md#AN-UNCATALOGUED-PHRASE-IS-A-PROPOSAL"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-177",
    "id_source": "minted",
    "carried": true
@@ -4634,62 +4586,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/conflict-protocol"
-   ],
-   "files": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/redbook",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
-    "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
-    "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
-    "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
-    "spec/boot/00-core.md:43  - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done",
-    "spec/boot/STATIC.md:185  Every disagreement between layers is settled by fixed priority:",
-    "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
-    "spec/boot/STATIC.md:193  - Tests are the spec in executable form: a test that contradicts the",
-    "spec/boot/STATIC.md:194    spec is a bug in exactly one of the two, never both.",
-    "spec/boot/STATIC.md:195  - The volatile state file (WAL or equivalent) is a record, dead last:",
-    "spec/boot/STATIC.md:196    when it disagrees with anything above it, it is stale."
-   ],
-   "cites": [],
-   "reason": "DRIFT: fixed priority settles everything only if there is one priority. The flow orders five terms `Human > Spec > Tests > Code > WAL` (installed verbatim, STATIC.md:188). The host's own boot file orders four — **Head > WAL > Spec > Code** (spec/boot/00-core.md:38-45) — with the WAL SECOND and read at boot step 2, and no Tests rung at all: :43 folds tests into Code as artefacts. The upstream the flow cites has three rungs and no WAL. Three orderings, no two alike. A session booting this repository reads both orders, one from the compiled snippet and one from the host's own core boot file, within the same session-start read.",
-   "reasons": [
-    "DRIFT: the host's model has no Tests rung for the equation to hold. Installed verbatim at STATIC.md:193-194 and traced cleanly to redbook chapter 1:210-211, but spec/boot/00-core.md:43 places each crate's own `tests/` inside the Code layer and calls that layer artefacts.",
-    "DRIFT on the ranking, confirmed on the staleness. The host does treat the WAL as a checkpoint rather than a source of truth about intent, and rewrites it wholesale at session end. It does not rank it last: 00-core.md:41 places it second of four and reads it at boot step 2. The flow orders five terms `Human > Spec > Tests > Code > WAL` (installed verbatim, STATIC.md:188). The host's own boot file orders four — **Head > WAL > Spec > Code** (spec/boot/00-core.md:38-45) — with the WAL SECOND and read at boot step 2, and no Tests rung at all: :43 folds tests into Code as artefacts. The upstream the flow cites has three rungs and no WAL. Three orderings, no two alike."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-196",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/decision-records"
    ],
    "files": [
@@ -4734,8 +4630,15 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ANY-REOPENABLE-CHOICE-GETS-A-RECORD",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ASK-RATHER-THAN-INVENT-DATA",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-197",
    "id_source": "minted",
    "carried": true
@@ -4791,8 +4694,15 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#ROW-FIELD-WHEN-TO-REVISIT",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#SUM-FOUR-FIELDS-ALWAYS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-198",
    "id_source": "minted",
    "carried": true
@@ -5047,63 +4957,16 @@
    "closure_route": "prose-edit",
    "fact": "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
+   "routed_out": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#every-codeword-is-specified-with-the-same-five-parts-lead",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#A-PHRASE-MISSING-A-PART-IS-A-PROPOSAL-NOT-A-CODEWORD",
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-201",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/operating-modes"
-   ],
-   "files": [
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md#the-owners-framing-lead",
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md#THE-OWNERS-RECORDED-FRAMING",
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md#THE-DESCRIPTION-IS-RECORDED-VERBATIM"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
-    "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — aim at the maximum version of the deliverable, phase the work into testable iterations, begin without asking, drive to completion without confirmation handshakes, and spend whatever time / tokens / reasoning depth it takes (the owner's verbatim description is recorded in the flow) — is the operating-modes flow's `spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root`. @freeze/done",
-    "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — … (the owner's verbatim description is recorded in the flow) — is the operating-modes flow's `spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root`. @freeze/done",
-    "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — … (the owner's verbatim description is recorded in the flow) — … @freeze/done",
-    "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md:18  The owner's framing, recorded as spoken:",
-    "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md:20  > Aim straight at the maximum version. Work in phases, each phase",
-    "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md:25  > reasoning depth.",
-    "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md:27  The description is recorded verbatim because the mode is the owner's",
-    "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md:28  authorisation, and a paraphrase is a different authorisation."
-   ],
-   "cites": [],
-   "reason": "DRIFT on «recorded as spoken», carrying the verdict of the blockquote it introduces. The owner spoke Russian on 2026-05-06; this document records an English rendering. The extraction commit said so in its own words while keeping the original elsewhere, and the next day's commit deleted the original on the opposite assumption. What is recorded here is a translation, and no live file now holds what was spoken.",
-   "reasons": [
-    "DRIFT on «verbatim», and the host's own commit record settles it against this blockquote. I read both commit bodies directly. `a6df6050` (2026-07-13), written while performing the extraction into this flow, KEPT the owner's Russian authorisation in `spec/common/PROP-006-operating-modes.md` on this stated ground: «the package's own copy is an English paraphrase and a paraphrase of an authorisation is a different authorisation». `4d5ccf83` (2026-07-14) REMOVED it one day later, saying the package «already carries … the «move fast and break things» codeword with the owner's verbatim description (mfbt-mode)». Only one can be right about this blockquote, and the first was written by the session that produced it. The Russian original is now in NO live file — a full-tree search including ignored paths returns nothing — so it survives only in git history. Also lost with it: the original named four specific depth switches that this blockquote compresses to «Work at full reasoning depth». The seven clauses of the CONTENT do map onto the host's condensations; what fails is the word this fact turns on.",
-    "DRIFT, and the failure is unusually clean because the host adopted the rule, applied it, and then broke it in two commits one day apart. The rule is stated identically on both sides, and `a6df6050`'s body USES this exact reasoning as its justification — «a paraphrase of an authorisation is a different authorisation» — while classifying this document's blockquote as the paraphrase and keeping the Russian original in the host. `4d5ccf83` then deleted the original on the ground that this document holds the verbatim. The rule is adopted; the artefact it governs does not satisfy it; and there is now no live file holding the spoken text to compare against, which is exactly the loss the rule exists to prevent."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-202",
    "id_source": "minted",
    "carried": true
   },
@@ -6093,56 +5956,6 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/conflict-protocol"
-   ],
-   "files": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md#the-core-law-fits-on-one-line",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md#HUMAN-CHANGES-THE-SPEC-CODE-CONFORMS-AND-STATE-FILES-ARE-LAST"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/redbook",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:207  Иерархия приоритетов:",
-    "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done",
-    "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
-    "spec/boot/STATIC.md:188  Human  >  Spec  >  Tests  >  Code  >  WAL",
-    "spec/boot/STATIC.md:191  - The human may change the spec; nobody else may — silently.",
-    "spec/boot/STATIC.md:192  - Code must conform to the spec, never the other way around.",
-    "spec/boot/STATIC.md:195  - The volatile state file (WAL or equivalent) is a record, dead last:"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the one line is installed verbatim and the consumer's own one line is a different line. The flow orders five terms `Human > Spec > Tests > Code > WAL` (installed verbatim, STATIC.md:188). The host's own boot file orders four — **Head > WAL > Spec > Code** (spec/boot/00-core.md:38-45) — with the WAL SECOND and read at boot step 2, and no Tests rung at all: :43 folds tests into Code as artefacts. The upstream the flow cites has three rungs and no WAL. Three orderings, no two alike.",
-   "reasons": [
-    "DRIFT on the third clause. Human-changes-the-spec and code-conforms are installed verbatim and restated host-side in the host's own vocabulary. «State files are last» is inverted: the host's ranking puts the WAL second of four, above Spec and Code. The flow orders five terms `Human > Spec > Tests > Code > WAL` (installed verbatim, STATIC.md:188). The host's own boot file orders four — **Head > WAL > Spec > Code** (spec/boot/00-core.md:38-45) — with the WAL SECOND and read at boot step 2, and no Tests rung at all: :43 folds tests into Code as artefacts. The upstream the flow cites has three rungs and no WAL. Three orderings, no two alike."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:207  Иерархия приоритетов:",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-223",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
     "reason-text j=1.00"
    ],
    "packages": [
@@ -6183,58 +5996,15 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ROW-FIELD-WHEN-TO-REVISIT",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#ROW-FIELD-WHEN-TO-REVISIT"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-224",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/decision-records"
-   ],
-   "files": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#either-condition-fires-unprompted",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/decision-records",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:131  ##either-condition-fires-unprompted Either fires without",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:132  anyone having to remember to wonder. @spec/done",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md:97  ##TRIGGERS-DO-NOT-FIRE-THEMSELVES Triggers do not fire themselves. @spec/done",
-    "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would"
-   ],
-   "cites": [],
-   "reason": "DRIFT, and its own package supplies the refutation: revisit-triggers.md:97 states «Triggers do not fire themselves» and «Nothing pages anyone… unless the project wires an alert», naming re-reading as the only mechanism that fires them. The host settles it. Its single event-shaped trigger — PROP-000 §3's licence record, branch (b) — did NOT fire unprompted: the condition was met on 2026-07-12, the record went on stating the superseded posture for roughly six weeks, and a re-reading pass caught it. Nobody was fired at by an unprompted condition.",
-   "reasons": [
-    "DRIFT on all three clauses, each measured. Why with data: 0 of the 22 whys in `spec/common/` + `spec/modules/**` names a log path, a sample size or a benchmark run. Rejections with reasons: the field appears 6 times against 153 records. Trigger with metric + threshold + observation point: 0 of 11. The one place all three land is the campaign's own batch plan §2, outside the spec tree this summary governs."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:131  ##either-condition-fires-unprompted Either fires without",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-225",
    "id_source": "minted",
    "carried": true
   },
@@ -9508,8 +9278,13 @@
    "closure_route": "prose-edit",
    "fact": "docs/commands/uninstall.md:69  - Transitive packages installed only because this package required them are **not** auto-removed. That's a pruning policy for a later command.",
    "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md#ROW-PREFER-NO-NEW-DEPENDENCY"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-298",
    "id_source": "minted",
    "carried": true
@@ -9555,6 +9330,54 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-299",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/decision-records"
+   ],
+   "files": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/decision-records",
+    "spec"
+   ],
+   "evidence_refs": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
+    "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
+    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would"
+   ],
+   "cites": [],
+   "reason": "DRIFT on all three clauses, each measured. Why with data: 0 of the 22 whys in `spec/common/` + `spec/modules/**` names a log path, a sample size or a benchmark run. Rejections with reasons: the field appears 6 times against 153 records. Trigger with metric + threshold + observation point: 0 of 11. The one place all three land is the campaign's own batch plan §2, outside the spec tree this summary governs.",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-225",
    "id_source": "minted",
    "carried": true
   },
@@ -10585,8 +10408,13 @@
    "closure_route": "prose-edit",
    "fact": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:23  ##the-owners-framing-lead The owner's framing, recorded as spoken: @impl/done",
    "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
+   "routed_out": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#ROW-PART-AUTHORITATIVE-DESCRIPTION"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-321",
    "id_source": "minted",
    "carried": true
@@ -10675,6 +10503,55 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-323",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/operating-modes"
+   ],
+   "files": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md#THE-OWNERS-RECORDED-FRAMING"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "spec",
+    "vibedeps"
+   ],
+   "evidence_refs": [
+    "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
+    "spec/common/PROP-006-operating-modes.md:19  ##mfbt-pointer The pre-authorised heads-down execution codeword — aim at the maximum version of the deliverable, phase the work into testable iterations, begin without asking, drive to completion without confirmation handshakes, and spend whatever time / tokens / reasoning depth it takes (the owner's verbatim description is recorded in the flow) — is the operating-modes flow's `spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root`. @freeze/done",
+    "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md:20  > Aim straight at the maximum version. Work in phases, each phase",
+    "vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md:25  > reasoning depth."
+   ],
+   "cites": [],
+   "reason": "DRIFT on «verbatim», and the host's own commit record settles it against this blockquote. I read both commit bodies directly. `a6df6050` (2026-07-13), written while performing the extraction into this flow, KEPT the owner's Russian authorisation in `spec/common/PROP-006-operating-modes.md` on this stated ground: «the package's own copy is an English paraphrase and a paraphrase of an authorisation is a different authorisation». `4d5ccf83` (2026-07-14) REMOVED it one day later, saying the package «already carries … the «move fast and break things» codeword with the owner's verbatim description (mfbt-mode)». Only one can be right about this blockquote, and the first was written by the session that produced it. The Russian original is now in NO live file — a full-tree search including ignored paths returns nothing — so it survives only in git history. Also lost with it: the original named four specific depth switches that this blockquote compresses to «Work at full reasoning depth». The seven clauses of the CONTENT do map onto the host's condensations; what fails is the word this fact turns on.",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md#THE-OWNERS-RECORDED-FRAMING"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-202",
    "id_source": "minted",
    "carried": true
   },
@@ -12027,6 +11904,123 @@
   }
  ],
  "resolved": [
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/conflict-protocol"
+   ],
+   "files": [
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#ROW-TESTS-ARE-THE-SPEC-EXECUTABLE",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#ROW-CODE-BEATS-WAL",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#TESTS-SIT-BESIDE-THE-SPEC-NOT-BELOW-IT",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md#SUM-FIXED-PRIORITY-SETTLES-EVERYTHING"
+   ],
+   "drift_count": 4,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/redbook",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the host's model has no Tests rung to be equal to. Installed at STATIC.md:193 and sourced verbatim in redbook chapter 1:210, but the consuming project's own reading layers name four — Head, WAL, Spec, Code — and fold tests into the last. Three orderings exist and no two agree. The FLOW: `Human > Spec > Tests > Code > WAL` (installed verbatim at STATIC.md:188). The HOST, in its own boot file at spec/boot/00-core.md:38-45: **Head > WAL > Spec > Code** — the WAL SECOND with a live role («volatile, rewritten each session, describes *current* state», :41) and read at boot step 2, and NO Tests layer at all, :43 folding them into Code as artefacts. The UPSTREAM, redbook chapter 1:207-211 byte-identical to `refs/book/`: three rungs only, Человек → Спека → Тесты, with no WAL rung. So the flow added the WAL at the tail and the host added it at the head.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 4,
+   "id": "F-174",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/conflict-protocol"
+   ],
+   "files": [
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/redbook",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT: fixed priority settles everything only if there is one priority. The flow orders five terms `Human > Spec > Tests > Code > WAL` (installed verbatim, STATIC.md:188). The host's own boot file orders four — **Head > WAL > Spec > Code** (spec/boot/00-core.md:38-45) — with the WAL SECOND and read at boot step 2, and no Tests rung at all: :43 folds tests into Code as artefacts. The upstream the flow cites has three rungs and no WAL. Three orderings, no two alike. A session booting this repository reads both orders, one from the compiled snippet and one from the host's own core boot file, within the same session-start read.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-196",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/conflict-protocol"
+   ],
+   "files": [
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md#the-core-law-fits-on-one-line",
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md#HUMAN-CHANGES-THE-SPEC-CODE-CONFORMS-AND-STATE-FILES-ARE-LAST"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/redbook",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the one line is installed verbatim and the consumer's own one line is a different line. The flow orders five terms `Human > Spec > Tests > Code > WAL` (installed verbatim, STATIC.md:188). The host's own boot file orders four — **Head > WAL > Spec > Code** (spec/boot/00-core.md:38-45) — with the WAL SECOND and read at boot step 2, and no Tests rung at all: :43 folds tests into Code as artefacts. The upstream the flow cites has three rungs and no WAL. Three orderings, no two alike.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:207  Иерархия приоритетов:",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-223",
+   "id_source": "minted",
+   "carried": true
+  },
   {
    "type": "contradiction",
    "rule": "r-contradiction",
