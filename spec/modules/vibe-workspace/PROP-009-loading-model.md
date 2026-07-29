@@ -77,6 +77,7 @@ when = "os:windows"
 ```
 
 - ##ARTIFACTS-GENERATED Both artifacts are generated, git-tracked, and marked "generated — do not edit". @impl/done
+- ##ARTIFACTS-CARRY-NO-TOKEN-BUDGET **A generated boot artifact carries no token budget** (owner ruling, 2026-07-29). The size budgets of the `addressable-specs` flow govern **authored** documents, where a page over budget is a page nobody re-reads and the remedy is to split it. `STATIC.md` — the project-wide one and every per-node one — is compiler output: it is not read by a human, not edited, and not splittable, because its size is the sum of what the resolution graph says the session must have. Compiling a document *into* the lane is therefore a legitimate answer to a dangling pointer, and «the lane grew» is not an objection to it. What remains measurable, and is the honest cost, is the **session's** context, which the `dynamic` lane exists to keep off the critical path (§2.4). @impl/done
 - ##AUTHORED-ALONGSIDE Authored boot files (the user-owned snippets, the node's own authored boot) continue to live alongside as ordinary files; `INDEX.md` references them in computed order. @impl/done
 
 - ##SESSION-START-ORDER **Session-start order:** the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect → `spec/boot/STATIC.md` (if present) → `spec/boot/INDEX.md` and the entries it names, in order. @impl/done
