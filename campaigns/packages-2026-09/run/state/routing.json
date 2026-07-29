@@ -1409,6 +1409,14 @@
    "obligation": "F-351",
    "why": "the rule said to be unhonoured is compiled verbatim into the host's own boot lane ('Rewrite, not append'); what contradicts it is CLAUDE.md's step 2, host-internally. NOTE: this row is typed missing-support and is a CONTRADICTION - nothing is missing at any layer.",
    "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-307",
+   "why": "the package states the policy in exactly one place - it installs one boot snippet - and the CONSUMER'S COMPILER emits it twice, at spec/boot/STATIC.md:421 and :615 from the identical source path. Systemic rather than local: 31 static contributions resolve to 27 distinct sources, and all four duplicates are the git-* family, reached both directly and through the git-practices umbrella. The package is not the side that yields; the duplication is a host build defect, filed as BACKLOG.md B-006. The clause 'plus this flow's documents' is not a defect at all - an installed flow's documents live in the install slot, which is where they are.",
+   "recorded": "2026-07-29"
   }
  ]
 }

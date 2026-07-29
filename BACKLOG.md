@@ -247,6 +247,40 @@ already written from it is the specification of the work.)*
   Where a flow ships a reference script, that script is a witness, and the port
   is the thing to audit against it.
 
+### B-006 — the highest-priority boot lane carries four normative snippets twice {#b-006}
+
+| | |
+|---|---|
+| ##B006-ANCHOR **anchor** | falsifies `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE` — from the host side, not the package's |
+| ##B006-LOCATOR **locator** | `spec/boot/STATIC.md:421` and `:615` carry the identical `vibe:static org.vibevm.world/git-attribution-policy` provenance marker and source path; the emitter is `crates/vibe-workspace/src/boot_artifacts.rs` / the `bootgen` static lane |
+| ##B006-SEVERITY **severity** | P2 |
+| ##B006-DISPOSITION **disposition** | `open` |
+| ##B006-FILED **filed by** | the packages-actualization campaign, Phase D, wave 6, 2026-07-29 |
+
+- ##B006-WHAT **What it is, measured.** `spec/boot/STATIC.md` carries **31 static
+  contributions resolving to 27 distinct sources**. The four duplicates are the
+  whole `git-*` family — `git-atomic-commits`, `git-attribution-policy`,
+  `git-autonomy`, `git-conventional-commits` — each emitted twice from the same
+  `vibedeps/` path. They are reached both directly and through the
+  `git-practices` umbrella the boot contract loads first, and the compiler
+  concatenates both arrivals instead of emitting the contribution once.
+- ##B006-WHY-IT-MATTERS **Why it is worth fixing rather than tolerating.** This is the lane
+  `CLAUDE.md` tells every session to read «first and in full», so the cost is
+  paid on every session by the most expensive reader in the project. And the
+  content duplicated is **normative** — the commit rules — which is the
+  `duplication` defect class this whole campaign exists to remove: one norm
+  authored in two places with nothing forcing them to agree. Here they agree
+  because they are byte-identical copies of one source, so nothing is *wrong*
+  today; what is wrong is the shape.
+- ##B006-IT-FALSIFIES-A-SHIPPED-CLAIM **It falsifies a shipped package's claim, and the package is not at
+  fault.** `git-attribution-policy` states the policy «in exactly one
+  always-loaded place (the boot snippet this package installs)». It installs
+  exactly one. The consumer's compiler emits two. Wave 6 routed that obligation
+  to the host on this evidence rather than softening the package's sentence.
+- ##B006-WHY-P2 **Why P2 and not P1.** Nothing lies and nothing is lost: both copies are
+  byte-identical and the rule they carry is the one in force. It is waste and a
+  broken invariant, not a gate reporting green while not looking.
+
 ## P3 — accepted, no action planned {#p3}
 
 *(empty)*
