@@ -513,7 +513,12 @@ def carry_ids(obligations: list[dict], prior_path: Path) -> tuple[list[dict], se
     """
     if not prior_path.exists():
         return [], set()
-    prior = json.loads(prior_path.read_text(encoding="utf-8")).get("obligations", [])
+    prior_doc = json.loads(prior_path.read_text(encoding="utf-8"))
+    prior = prior_doc.get("obligations", [])
+    # History accumulates: an entry leaves the registry only by changing
+    # disposition, never by deletion. Recomputing `resolved` from the prior
+    # generation alone dropped every obligation closed two generations back.
+    history = {h["id"]: h for h in prior_doc.get("resolved", [])}
     pairs = []
     for pi, p in enumerate(prior):
         pa = set(p.get("anchors") or [])
@@ -536,7 +541,7 @@ def carry_ids(obligations: list[dict], prior_path: Path) -> tuple[list[dict], se
         obligations[ci]["carried"] = True
         obligations[ci]["status"] = prior[pi].get("status", "open")
         obligations[ci]["wave"] = prior[pi].get("wave", 1)
-    closed = []
+    live = {o["id"] for o in obligations if o.get("id")}
     for pi, p in enumerate(prior):
         if pi in taken_p:
             continue
@@ -544,8 +549,13 @@ def carry_ids(obligations: list[dict], prior_path: Path) -> tuple[list[dict], se
         p["status"] = "resolved"
         for k in ("reasons", "evidence_refs", "installed_copies"):
             p.pop(k, None)
-        closed.append(p)
-    return closed, {p["id"] for p in prior}
+        history[p["id"]] = p
+    # an id that came BACK (a closure reverted) leaves history and is live again
+    for i in list(history):
+        if i in live:
+            del history[i]
+    closed = [history[i] for i in sorted(history)]
+    return closed, {p["id"] for p in prior} | set(history)
 
 
 def build(rows, groups, spent: set[str], ledger: dict, vendored: dict):

@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 596,
+ "drift_verdicts": 595,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -8287,45 +8287,6 @@
     "packages/org.vibevm.ai-native/go-ai-native-lang"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md#WORKED-PILOT-IS-RESEARCH-GO-DEMO"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:122  ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:19  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | specified (pilot: `research/go-demo` fuzz differe"
-   ],
-   "cites": [],
-   "reason": "**this one resolves, and it caught an error of mine.** `research/go-demo/` exists and is a complete Go consumer — go.mod, 15 production files in the cell layout, conform.toml, specmap.json, four discipline/ files. I had asserted its absence one batch earlier without checking, and this fact is what sent me to look",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:122  ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a",
-   "falsifier": "self",
-   "id": "F-272",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md"
    ],
    "anchors": [
@@ -11601,6 +11562,74 @@
    "id": "F-229",
    "id_source": "minted",
    "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md#WORKED-PILOT-IS-RESEARCH-GO-DEMO"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**this one resolves, and it caught an error of mine.** `research/go-demo/` exists and is a complete Go consumer — go.mod, 15 production files in the cell layout, conform.toml, specmap.json, four discipline/ files. I had asserted its absence one batch earlier without checking, and this fact is what sent me to look",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:122  ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a",
+   "falsifier": "self",
+   "id": "F-272",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md#END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "the cross-reference misses by one section and by the artifact: §5 of the Sweep Playbook is «What the sweep deliberately does NOT do», the output section is §4, and **no table appears anywhere in that playbook**",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:90  ##END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE End every sweep with the outcome table the Playbook §5 specifies: per tier,",
+   "falsifier": "self",
+   "id": "F-283",
+   "id_source": "minted"
   },
   {
    "type": "reality-mismatch",
