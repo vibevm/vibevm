@@ -3237,6 +3237,55 @@ command that would have tested it.
   further refs by +60 lines; those are repairable and were repaired with
   `tasks/repair-refs.py --apply`.
 
+- **2026-07-29 · the boot-link diagnosis was too strong by one PROP, and the
+  correction is the more interesting half.** The entry above, and the commit
+  that carried it, said the readable repair «contradicts PROP-009's *verbatim*
+  and needs an amendment». That was written without reading PROP-035, and it is
+  wrong. **The compiler is already a preprocessor and a linker.** PROP-035 is
+  `Status: IMPLEMENTED`, extends PROP-009 explicitly, and calls itself «a real
+  preprocessor + linker»; `render_static` concatenates the bodies at
+  `crates/vibe-workspace/src/boot_artifacts.rs:259` and then calls
+  `expand_embeds` at `:268`, under two tests — one of which asserts that text
+  *without* directives is left verbatim (`boot_artifacts/tests.rs:264`). So
+  «verbatim» describes the linker stage, coexists with directive expansion, and
+  forbids only a rewrite of plain Markdown links.
+
+  **The directive vocabulary, and how much of it is used.** `#embed` (macro
+  splice), `#use` (dependency edge), `#source` (contract→impl edge), `@spec://`
+  (mandatory in-place use), bare `spec://` (discretionary) —
+  `crates/vibe-spec/src/directives.rs:1-21`, PROP-035 §7. Adoption over the
+  whole tree, host and packages: **0 `#embed`, 0 `#use`, 0 `#source`**, and 11
+  `@spec://` of which every one is documentation *about* the grammar rather
+  than a use of it. The linker shipped three times over and has never been fed.
+
+  **Three owner rulings, 2026-07-29, and they settle the family.** *(i)* A
+  relative path to a specification is a **spec bug**, so the 69 links are a
+  defect in 27 package files rather than in the compiler; they take `@spec://`
+  where they are pointers and `#embed` where the target belongs in the lane.
+  *(ii)* **A generated boot artifact carries no token budget** — recorded at
+  [PROP-009 `##ARTIFACTS-CARRY-NO-TOKEN-BUDGET`](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts)
+  — which removes the only objection to `#embed`, and leaves the package's own
+  budget row owed the same scope clarification at its next release
+  (`BACKLOG.md` B-002). *(iii)* PROP-035 §10's link tables are **not** a
+  precondition and are filed as `BACKLOG.md` B-001: they are the vtable of the
+  §13 structural executor, a mode this project does not run, and an `@spec://`
+  address that costs a lookup is strictly better than the confidently wrong
+  path it replaces. No new compiler layer is built mid-refactor.
+
+- **2026-07-29 · the first route-(b) ruling, and the plans this campaign runs
+  were the ones breaking the rule.** `flow:campaign-plans`'
+  `##COLD-A-LITERAL-QUICK-START-BLOCK` requires a literal quick-start block in a
+  campaign plan. The archive keeps it — 13 of 25 files in `legacy-spec/terraforms/`
+  carry the heading — and **both live plans in `spec/terraforms/` carried none**,
+  which is what the W4 verdict measured. Owner ruling: the rule is sound and the
+  host was wrong to drop it, so the package does not move and the documents do.
+  Both plans now carry one (§10 here, §12 in wave 1's), and every command in
+  both blocks was run before it was written down — one had to be corrected for a
+  Windows encoding failure first, because a quick-start whose commands do not run
+  is the defect this campaign keeps finding, not a fix for it. **The archive was
+  not touched:** adding a quick-start to a plan that has already executed would
+  be inventing history rather than repairing a contract.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
@@ -3244,3 +3293,23 @@ command that would have tested it.
 ## 9. REPORT {#report}
 
 *(empty — filled at close-out against §6)*
+
+## 10. Quick-start for the executing session {#quick-start}
+
+*Added 2026-07-29 by owner ruling: `flow:campaign-plans`'
+`##COLD-A-LITERAL-QUICK-START-BLOCK` requires it, the rule is sound, and this
+plan had none. Every line prints a number — none of them is quoted from here.*
+
+```sh
+python campaigns/packages-2026-09/tasks/summary.py            # verdicts by zone; the campaign's headline
+python campaigns/packages-2026-09/tasks/batch-progress.py     # what each phase-C batch owes vs wrote
+python campaigns/packages-2026-09/tasks/drift-registry.py     # Phase D: the open obligation registry
+python campaigns/packages-2026-09/tasks/drift-registry.py --task F-142   # one obligation, as a SPEC task's §2
+bash tools/self-check.sh; echo "EXIT=$?"                      # the gate panel — 0 before anything
+```
+
+Then read [`campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md`](../../campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md)
+for the phase in flight, and §7's LOG **from the end** for what the last session
+did. The registry is generated, never hand-edited: a closure edits the document,
+re-judges its anchors through `tasks/merge-verdicts.py --force`, seals with
+`vibe progress seal`, and the registry shrinks by exactly that many rows.

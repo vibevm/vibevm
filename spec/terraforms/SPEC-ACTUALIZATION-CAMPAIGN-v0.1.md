@@ -1416,3 +1416,22 @@ not evidence about a schedule.
   runs afresh or admit it is writing from something else. *A phase whose exit
   gate does not check its own steps will skip the ones nothing downstream
   fails on — until something downstream does.*
+
+## 12. Quick-start for the executing session {#quick-start}
+
+*Added 2026-07-29 by owner ruling: `flow:campaign-plans`'
+`##COLD-A-LITERAL-QUICK-START-BLOCK` requires it and this plan had none. Wave 1
+is closed out, so this block is a **verification** quick-start — how a cold
+session re-measures what the campaign claims, rather than how it resumes it.*
+
+```sh
+cargo run -q -p vibe-cli --bin vibe -- progress report --json --campaign campaigns/progress-2026-08 | head -40
+python -c "import json;d=json.load(open('campaigns/progress-2026-08/run/state/findings.json',encoding='utf-8'));print(len(d['findings']),'findings,',sum(1 for f in d['findings'] if f['status']!='resolved'),'unresolved')"
+bash tools/self-check.sh; echo "EXIT=$?"       # the gate panel — 0
+```
+
+The campaign's own claims live in §11 REPORT, scored against §8's predictions;
+§9's LOG read **from the end** is what actually happened, batch by batch. Wave 2
+— the packages, the sibling corpus — is
+[`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md),
+and its own quick-start is that plan's §10.
