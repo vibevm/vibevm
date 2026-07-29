@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 595,
+ "drift_verdicts": 582,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -115,12 +115,11 @@
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE",
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#RUN-THE-ACCEPTANCE-SCRIPT-BEFORE-WRITING-THE-REPORT",
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#A-DEFERRAL-LIVES-IN-THE-PLAN-FILE-UNTIL-DRAINED",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#a-real-chain-anonymized",
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE",
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD",
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS"
    ],
-   "drift_count": 13,
+   "drift_count": 12,
    "cross_package": false,
    "installed": true,
    "installed_differs": true,
@@ -138,9 +137,6 @@
     "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
     "campaigns/progress-2026-08/deferrals.md:1  # Deferrals — campaign `progress-2026-08`",
     "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:11  65 ms — every §4 prediction HELD, no target moved, nothing to escalate",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:20  Mandate (owner, 2026-07-07): take everything listed in",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:27  ## 0. The seven items this campaign closes",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:29  | # | §10 deferral | Closure shape |",
     "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:463  ## 13. Execution ledger {#ledger}",
     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:692  ## 13. Execution ledger (filled by the executing session)",
     "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:712  - Close panel: self-check 22 steps exit 0; corpus 9/9 (cold 2 538 ms,",
@@ -158,7 +154,6 @@
     "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:5  _Status: **EXECUTED 2026-07-15** · all phases shipped, floor green at every",
     "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:12  > recipes, the risks, and the acceptance gates are all here. The git log is",
     "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:13  > the authoritative per-item record; the WAL is the canonical living state",
-    "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:782  ## 10. Deferred, named (not this campaign)",
     "legacy-spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:5  _Status: PLANNED · written 2026-07-16 · cold-executable: каждая фаза ends `bash",
     "legacy-spec/terraforms/SETTINGS-UI-PLAN-v0.1.md:5  _Status: **EXECUTED** (2026-07-16) — all seven phases S1–S7 landed on `main`,",
     "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:15  ## 0. Target arithmetic",
@@ -186,7 +181,6 @@
     "DRIFT over the live window. `grep -rn 'no target moved'` returns exactly 2 hits, both in the archive, both in a close panel — and the «corpus 9/9 … no target moved» phrasing this fact quotes as its example is MCP-SOVEREIGNTY's Wave 6 panel verbatim. Wave 2's batch closes report the floor without saying whether any target shifted, which is precisely the shape the rule calls concealment in audit: «A close panel that reports numbers without saying whether they shifted reads as concealment».",
     "DRIFT, and wave 1's own REPORT records the failure this rule exists to prevent. Wave 1 has no acceptance script at all, and its report notes that prediction 1 was measured at close-out specially, «purely to fill this row» — a number produced by the report rather than cited from a run. The archived plans do carry acceptance sections, but none of their reports cites the script's output as such, so the ordering the rule prescribes has no instance anywhere.",
     "DRIFT of the strongest kind — the host does the opposite and documents why, citing this package by name elsewhere while doing it. Both live plans' in-file Deferrals sections are empty, wave 1's naming the destination it drained into; the real ledgers are per-zone files; and BACKLOG.md adds a third home at the repository root with the reason that a campaign zone is disposable. The archived plans do keep §15 in the plan file, so the rule matches older practice and not current practice. Same defect as the boot snippet's NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE.",
-    "DRIFT on three checkable details of one anecdote, and it is not anonymized in this repository at all — the chain is SELF-SUFFICIENCY-PLAN §10 → DEFERRALS-CLOSEOUT-PLAN, both present under their own names. (1) «Seven named deferrals»: §10 lists SIX bullets; the closeout's table has 7 numbered rows plus a `+` row, and row 3 is an owner amendment rather than a §10 deferral. (2) «Verbatim»: the mandate's actual wording names the file and section and adds a standing note, where the quoted sentence generalizes the object. (3) «Weeks later» has no support — SELF-SUFFICIENCY carries no authoring date in its status line. The chain itself is real and is confirmed at the two facts that assert it; this row's retelling is what fails.",
     "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. `EXECUTING` occurs nowhere in the repository; the archive uses two further states the summary does not list (SUPERSEDED, CLOSED, BACKLOGGED); and the refresh half fails for wave 2, whose line is three phases behind its own LOG.",
     "DRIFT, same verdict as the rule it summarises. Six archived plans carry an `## … Execution record` section; `grep -rlE '^## .*Execution record' spec/terraforms/*.md` returns 0, so neither live plan has the slot — and the one live campaign that has closed did not prepend one.",
     "DRIFT: neither live plan carries a commit map at all — `grep -niE 'commit map' spec/terraforms/*.md campaigns/**/*.md` returns 0 against 3 archived plans that carry the form completely. The binding half is attested where the maps exist (Wave 3's ends «P2/P3/P4 CONFIRMED; PROP-027 §2.6 live»); the «written at the boundary» half cannot be settled from file contents, since all six waves carry one date."
@@ -406,91 +400,6 @@
    "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:32  ##full-protocol-pointer Full protocol:",
    "falsifier": "mixed",
    "id": "F-136",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/wal"
-   ],
-   "files": [
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#NOT-A-TO-DO-LIST",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-UPDATED-LINE",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-CURRENT-PHASE",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-CONSTRAINTS",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-IN-PROGRESS",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-NEXT",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-SESSION-CONTEXT",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#MORE-AUTONOMY-DEMANDS-A-MORE-PRECISE-WAL",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#BUDGET-TARGET",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SUM-SIZE-AND-CONSTRAINTS"
-   ],
-   "drift_count": 11,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "CLAUDE.md",
-    "packages/org.vibevm.world/wal",
-    "spec"
-   ],
-   "evidence_refs": [
-    "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did",
-    "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
-    "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:179  _Updated: 2026-04-16T18:23:00Z_",
-    "spec/WAL.md:1  # WAL — Project Continuation State",
-    "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
-    "spec/WAL.md:162  ## In progress",
-    "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for",
-    "spec/WAL.md:175  ## Next",
-    "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one",
-    "spec/WAL.md:187  3. **Then W3…W7.** 3 743 anchors remain in `world`.",
-    "spec/WAL.md:188  3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential",
-    "spec/WAL.md:235  ## Session context",
-    "spec/WAL.md:237  **The debt's own result is one sentence: no row moved because a worker's evidence",
-    "spec/WAL.md:250  **The standard had been in use for 690 rows and had never been stated**, which is",
-    "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt",
-    "spec/WAL.md:56  ## Constraints — do not violate",
-    "spec/WAL.md:58  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
-    "spec/WAL.md:6  ## Current phase",
-    "spec/WAL.md:71  - **Never classify a group of rows by one rule to save time.** That is how 138 rows",
-    "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
-    "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
-    "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
-    "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
-    "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section"
-   ],
-   "cites": [],
-   "reason": "DRIFT: both halves are false in this consumer, and one of them is false against the flow's own two-file model. 'The only persistent memory': CLAUDE.md, spec/boot/ (1585 compiled lines), the spec tree and CONTINUE.md are all persistent memory the agent reads every session, and CONTINUE.md is specified by this very package. 'Read first': the host reads it third (CLAUDE.md:3, spec/boot/00-core.md:9-13). The sentence belongs to a one-file model that 0.2.0 replaced two sections earlier in the same document.",
-   "reasons": [
-    "DRIFT on the one-next-action half, systematic. Measured over the 14 most recent spec/WAL.md revisions: the Next section carries 4 or 5 numbered items in every one of them, never one, and none marks a default — the fallback clause §sections offers for several candidates. The backlog half holds in substance (the backlog is out of the WAL) though not in form: this repository keeps it in BACKLOG.md rather than an issue tracker.",
-    "DRIFT on the format, and it is total. The protocol requires `_Updated: <ISO 8601 UTC>_` 'always and without exception' and its own worked example at :179 reads `_Updated: 2026-04-16T18:23:00Z_`. Measured over the 14 most recent spec/WAL.md revisions: 14 of 14 carry a bare calendar date, 0 carry a timestamp, and the current value wraps a parenthetical status summary onto line 4. Consequence: 'older than 24 hours' cannot be evaluated to the hour from the line, which is the one thing the line exists to make possible.",
-    "DRIFT on the length, systematic. Measured over the 14 most recent spec/WAL.md revisions the Current phase section runs 25 to 50 lines; it is 50 today against the claimed one or two, and has never been within it. Its first two lines carry the whole naming function and the remaining 48 are progress detail.",
-    "DRIFT on the citation requirement. The section exists, is the largest in the file (86 lines) and every entry carries a why — but the protocol requires that why to cite a spec anchor or an issue, and counted individually only 4 of the 26 entries do (15 %); the other 22 carry prose rationale alone. `spec://` occurs 0 times in spec/WAL.md, in every one of the 8 most recent revisions, while the URI form is in daily use in the host's boot files.",
-    "DRIFT on the anchor requirement, which the fact states with its own URI form. The pick-it-up half passes concretely — the section names the four workers, the file each writes, the harvest and the CONTINUE.md section. But `spec://` occurs 0 times in spec/WAL.md and 0 times in each of the 8 most recent revisions; the section cites repository paths and campaign artifacts instead.",
-    "DRIFT, and on both branches of the rule. Not the single next action: 4 numbered items over lines 175-191, and 4 or 5 in each of the 14 most recent revisions. Not the several-candidates fallback either: none is marked as the default, and the items are sequenced work rather than alternatives. The numbering itself repeats — the list reads 1, 2, 3, 3, 4.",
-    "DRIFT on the slot's content. The optional section is present but holds a retrospective on what the reviewing debt found and what the verdict standard cost — 65 lines in each of the 5 most recent revisions, 41 to 65 across the 8 measured, never one paragraph, and never the three named contents. The orientation the slot is specified to hold exists, split between Next item 1 and CONTINUE.md §recipe.",
-    "DRIFT on the spec-anchored half. The correlation holds — this host grants high autonomy and carries the largest Constraints section in its WAL history — but the claim pairs precision with anchoring, and `spec://` occurs 0 times in spec/WAL.md across all 8 revisions measured, with only 4 of 26 constraints citing a spec anchor or issue in any notation.",
-    "DRIFT: the host exceeds the target. spec/WAL.md is 299 lines / 2 914 words / 18 972 bytes — roughly 4 700 tokens at 4 bytes/token, roughly 3 800 at words×1.3; above 3 000 on either conversion, and 'roughly one page' is exceeded on any reading. Same shape as W1's HEADER-TARGET-LENGTH-AND-HARD-LIMIT, which was judged drift on the same kind of measurement.",
-    "DRIFT on 'keep it under a page', for the same measurement as BUDGET-TARGET: 299 lines / 18 972 bytes, over 3 000 tokens on either conversion. W1 judged the summary restatement of a broken numeric rule as drift alongside the rule itself (HEADER-SUBJECT-LENGTH-MOOD-AND-CASE beside HEADER-TARGET-LENGTH-AND-HARD-LIMIT); this is the same shape. The constraints half is confirmed and visible."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did",
-   "falsifier": "mixed",
-   "id": "F-137",
    "id_source": "minted",
    "carried": true
   },
@@ -737,79 +646,76 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/health-audit"
+    "packages/org.vibevm.world/wal"
    ],
    "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md"
    ],
    "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ONLY-A-READER-CATCHES-A-TEST-THAT-ENCODES-THE-WRONG-ANSWER",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-FIELD-ID",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-DISP-FILED",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE"
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#NOT-A-TO-DO-LIST",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-UPDATED-LINE",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-CURRENT-PHASE",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-CONSTRAINTS",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-IN-PROGRESS",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-NEXT",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-SESSION-CONTEXT",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#MORE-AUTONOMY-DEMANDS-A-MORE-PRECISE-WAL",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#BUDGET-TARGET",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SUM-SIZE-AND-CONSTRAINTS"
    ],
-   "drift_count": 9,
+   "drift_count": 10,
    "cross_package": false,
    "installed": true,
    "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
-    "AUDIT.md",
-    "ROADMAP.md",
-    "discipline",
+    "CLAUDE.md",
+    "packages/org.vibevm.world/wal",
     "spec"
    ],
    "evidence_refs": [
-    "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
-    "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-    "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-    "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-    "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-    "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
-    "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-    "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
-    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-    "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
-    "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-    "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
-    "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
-    "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
-    "AUDIT.md:425  the new `cargo xtask conform freeze`: `error-message-cites-req`",
-    "AUDIT.md:58  **A test encoded the `vibe init` bug as correct.**",
-    "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-    "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-    "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
-    "spec/common/PROP-013-periodic-health-audit.md:20  - ##M119-CAUGHT-BY-SMOKE It was caught only by a live smoke run during the registry migration. @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done"
+    "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did",
+    "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:179  _Updated: 2026-04-16T18:23:00Z_",
+    "spec/WAL.md:1  # WAL — Project Continuation State",
+    "spec/WAL.md:142  ## Done (collapsed — see `git log`)",
+    "spec/WAL.md:162  ## In progress",
+    "spec/WAL.md:164  **W2's evidence gathering is in flight.** Four `opus5` workers were commissioned for",
+    "spec/WAL.md:175  ## Next",
+    "spec/WAL.md:177  1. **W2 — check for the four tables first**, then `verify-evidence.py` each one",
+    "spec/WAL.md:187  3. **Then W3…W7.** 3 743 anchors remain in `world`.",
+    "spec/WAL.md:188  3. **At the phase close:** the X/Y/Z summary in the LOG and the self-referential",
+    "spec/WAL.md:235  ## Session context",
+    "spec/WAL.md:237  **The debt's own result is one sentence: no row moved because a worker's evidence",
+    "spec/WAL.md:250  **The standard had been in use for 690 rows and had never been stated**, which is",
+    "spec/WAL.md:3  _Updated: 2026-07-28 (**Phase C — the reviewing debt",
+    "spec/WAL.md:56  ## Constraints — do not violate",
+    "spec/WAL.md:58  - **The verdict standard, written down 2026-07-28 after it was applied to 690 rows",
+    "spec/WAL.md:6  ## Current phase",
+    "spec/WAL.md:71  - **Never classify a group of rows by one rule to save time.** That is how 138 rows",
+    "spec/WAL.md:8  **Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**",
+    "spec/boot/00-core.md:15  ##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done",
+    "spec/boot/STATIC.md:1387  3. Honour every constraint listed in the WAL's **Constraints** section"
    ],
    "cites": [],
-   "reason": "DRIFT on «breadth-first», which is the leg the artefact does not carry. Deliberate, judgment-heavy and durably recorded all hold — the 2026-06-12 run is owner-requested, describes its method as three structural deep-reads plus one empirical gate probe, and wrote 12 findings. But two of the three runs disclaim a full sweep IN THEIR OWN TEXT: `AUDIT.md:23` «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist» and `:158` «It is **not** the full §2.2 breadth sweep». The third claims a sweep and is scoped to the new category E. No run in the artefact records walking A, B, C and D breadth-first.",
+   "reason": "DRIFT on the one-next-action half, systematic. Measured over the 14 most recent spec/WAL.md revisions: the Next section carries 4 or 5 numbered items in every one of them, never one, and none marks a default — the fallback clause §sections offers for several candidates. The backlog half holds in substance (the backlog is out of the WAL) though not in form: this repository keeps it in BACKLOG.md rather than an issue tracker.",
    "reasons": [
-    "DRIFT on the mechanism, in the host's one instance of exactly this defect. The first half is settled and vivid: the `cli_init` test asserted `primary.naming == NamingConvention::KindName` and stayed green, and PROP-013's `##A3-WRONG-BEHAVIOR` calls it «Detectable only by reading the assertion against the spec». How it was ACTUALLY caught is recorded one line away, at PROP-013:20 — «It was caught only by a live smoke run during the registry migration». A live integration run, not a reader judging an assertion. The host's own record names a third mechanism this sentence excludes.",
-    "DRIFT on the walking, not on the mapping. The mapping is adopted — PROP-013's `##CHECKLIST-WALK` says vibevm walks the checklist breadth-first and cites this document's own anchor, and AUDIT.md's header enumerates the same A/B/C/D groups. The walking never happened: two of three runs disclaim it in their own text, and of the 29 finding headings the sub-rows that have ever produced a finding are A1, A2, A3, B1, B2, C1, C2, C3, C4, D1 plus two group-level entries — **nothing has ever been filed under D2, D3 or D4**.",
-    "DRIFT on the format, in one run of three. The 2026-05-23 and 2026-06-12 runs both use `<run-date>-NN`, unique within the run. The 2026-06-10 run numbers its four findings AUD-0014 … AUD-0017 — a repository-wide sequence, not a run-date — and a third id space runs alongside all of them in `discipline/registry/debt.json` as DBT-0001…DBT-0022. Stability across carry-forward does hold for both schemes, and that half is confirmed by the 2026-06-12 carry-forward re-listing originals under their own ids.",
-    "DRIFT on the destination the row names. Nine findings are `filed` and where-it-went is recorded for three of them (AUD-0017 «filed — DBT-0019», 2026-06-12-03 «filed (DBT-0019, escalated P3→P2)», and the registry's typed `filed_as` field); the other six are bare «filed» in their headings with the destination only in body prose. On the named destinations: **`TASKS.md` contains ZERO occurrences of «audit»**, so no finding has ever been filed as a TASKS.md line. The destination the host actually uses is `discipline/registry/debt.json`, which this flow does not name.",
-    "DRIFT on «every run». Both forces are real and both have fired here — a new defect class became category E and mechanisable checks migrated into `cargo xtask conform` — but both fired in the SAME single run, 2026-06-12. The 2026-05-23 seed added no category and moved nothing into the gate; the 2026-06-10 run added none either. One of three runs exercised both forces and two exercised neither.",
-    "DRIFT on the floor, confirmed on the trigger — the same ruling as this fact's twin in the boot snippet. Owner-triggered holds (the 2026-06-12 run is recorded «Owner-requested» with the instruction quoted). The floor does not: M1.26 and M1.24 both SHIPPED (2026-07-07) against a last audit of 2026-06-12, with 1 546 commits in the gap and no audit section between.",
-    "DRIFT on the half the sentence insists on. The fix half holds cleanly — the seed run left 9 of 13 open and the 2026-06-12 run filed 7 P2s rather than fixing them in-run, which is the rule working. The INVENTORY half fails in two of three runs, by their own admission: «it is **not** a fresh full sweep … The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». INT-0001 is the full-sweep window both runs name, and no run has closed it.",
-    "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. Five facts across this package now assert the once-per-milestone floor or its `#never`, and all five fail on the same two ship lines."
+    "DRIFT on the format, and it is total. The protocol requires `_Updated: <ISO 8601 UTC>_` 'always and without exception' and its own worked example at :179 reads `_Updated: 2026-04-16T18:23:00Z_`. Measured over the 14 most recent spec/WAL.md revisions: 14 of 14 carry a bare calendar date, 0 carry a timestamp, and the current value wraps a parenthetical status summary onto line 4. Consequence: 'older than 24 hours' cannot be evaluated to the hour from the line, which is the one thing the line exists to make possible.",
+    "DRIFT on the length, systematic. Measured over the 14 most recent spec/WAL.md revisions the Current phase section runs 25 to 50 lines; it is 50 today against the claimed one or two, and has never been within it. Its first two lines carry the whole naming function and the remaining 48 are progress detail.",
+    "DRIFT on the citation requirement. The section exists, is the largest in the file (86 lines) and every entry carries a why — but the protocol requires that why to cite a spec anchor or an issue, and counted individually only 4 of the 26 entries do (15 %); the other 22 carry prose rationale alone. `spec://` occurs 0 times in spec/WAL.md, in every one of the 8 most recent revisions, while the URI form is in daily use in the host's boot files.",
+    "DRIFT on the anchor requirement, which the fact states with its own URI form. The pick-it-up half passes concretely — the section names the four workers, the file each writes, the harvest and the CONTINUE.md section. But `spec://` occurs 0 times in spec/WAL.md and 0 times in each of the 8 most recent revisions; the section cites repository paths and campaign artifacts instead.",
+    "DRIFT, and on both branches of the rule. Not the single next action: 4 numbered items over lines 175-191, and 4 or 5 in each of the 14 most recent revisions. Not the several-candidates fallback either: none is marked as the default, and the items are sequenced work rather than alternatives. The numbering itself repeats — the list reads 1, 2, 3, 3, 4.",
+    "DRIFT on the slot's content. The optional section is present but holds a retrospective on what the reviewing debt found and what the verdict standard cost — 65 lines in each of the 5 most recent revisions, 41 to 65 across the 8 measured, never one paragraph, and never the three named contents. The orientation the slot is specified to hold exists, split between Next item 1 and CONTINUE.md §recipe.",
+    "DRIFT on the spec-anchored half. The correlation holds — this host grants high autonomy and carries the largest Constraints section in its WAL history — but the claim pairs precision with anchoring, and `spec://` occurs 0 times in spec/WAL.md across all 8 revisions measured, with only 4 of 26 constraints citing a spec anchor or issue in any notation.",
+    "DRIFT: the host exceeds the target. spec/WAL.md is 299 lines / 2 914 words / 18 972 bytes — roughly 4 700 tokens at 4 bytes/token, roughly 3 800 at words×1.3; above 3 000 on either conversion, and 'roughly one page' is exceeded on any reading. Same shape as W1's HEADER-TARGET-LENGTH-AND-HARD-LIMIT, which was judged drift on the same kind of measurement.",
+    "DRIFT on 'keep it under a page', for the same measurement as BUDGET-TARGET: 299 lines / 18 972 bytes, over 3 000 tokens on either conversion. W1 judged the summary restatement of a broken numeric rule as drift alongside the rule itself (HEADER-SUBJECT-LENGTH-MOOD-AND-CASE beside HEADER-TARGET-LENGTH-AND-HARD-LIMIT); this is the same shape. The constraints half is confirmed and visible."
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "fact": "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
-   "falsifier": "host",
-   "id": "F-141",
+   "fact": "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did",
+   "falsifier": "mixed",
+   "id": "F-137",
    "id_source": "minted",
    "carried": true
   },
@@ -934,88 +840,6 @@
    "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:100  ##TWO-ASSERTIONS-DESERVE-THEIR-OWN-TESTS Two assertions deserve their own tests beyond the verdict: @impl/done",
    "falsifier": "mixed",
    "id": "F-143",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/campaign-plans"
-   ],
-   "files": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#STATUS-BLOCK-THE-LIFECYCLE-STATE",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#STATUS-BLOCK-THE-COLD-START-FLAG",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#QUICK-START-CONFIRM-THE-TREE",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#SUM-THE-PLANS-STANDING-OBLIGATIONS"
-   ],
-   "drift_count": 8,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "campaigns",
-    "legacy-spec",
-    "spec"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/PHASE-C-RESUME.md:16  | tree | clean, in sync with `origin/main`, mirrored to both hosts |",
-    "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:877  ## 13. Risks & fallbacks",
-    "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:915  ## 14. Non-goals (named, so they stay visible)",
-    "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:41  any phase is a safe stop; the floor must be green at every phase boundary._",
-    "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:822  ## 14. Non-goals (named, so they stay visible)",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:16  rewritten accordingly). vibe-tcg-ts is explicitly OUT — a",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:307  1. Re-probe network at execution time (ssh gitverse/github; npm ping) —",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:5  _Status: ACCEPTED with owner amendments, 2026-07-07. Written against tree",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:6  `57fa42e`; owner review resolved the three open questions: (1) editing",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:65  - **Network: present but flaky.** The first probe of 2026-07-07 got",
-    "legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md:5  _Status: EXECUTED 2026-07-15 · written against tree `a9fdd63` · cold-executable: Phase 0 is",
-    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:306  ## 9 — Risks & fallbacks",
-    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:316  ## 10 — Non-goals",
-    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:5  _Status: **EXECUTED 2026-07-15** · all phases shipped, floor green at every",
-    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:6  boundary · written against tree `bf2897b` · commit span `7822052` → `007c030`",
-    "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:744  grep -rn 'v0\\.2\\.0' --include='*.toml' --include='*.sh' Cargo.toml tools/ xtask/ vibe.toml",
-    "legacy-spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:5  _Status: PLANNED · written 2026-07-16 · cold-executable: каждая фаза ends `bash",
-    "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:128  ## 8. What this plan deliberately does NOT do",
-    "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:15  ## 0. Target arithmetic",
-    "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:7  *Execution record: all six phases ran to the exit state in one session — baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files, exactly §0's arithmetic). 19 commits (`254b974` … `475fa75`). …",
-    "legacy-spec/terraforms/TREE-TUI-PLAN-v0.1.md:5  _Status: **SUPERSEDED by [TREE-TUI-PLAN v0.2](TREE-TUI-PLAN-v0.2.md) · ARCHIVE — do not execute.** v0.2 declares itself this plan's successor and is the one that executed (2026-07-16, phases P0–P10); v0.1 never carried the superseded notice, so a cold reader landing here alone could have started executing it. Corrected by the spec-actualization campaign (2026-07-25). Original: PLANNED · written against tree `6473ecb` · cold-executable: every phase",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:15  ## 0. Mandate (owner's words, 2026-07-25, recorded verbatim) {#mandate}",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:40  | **total** | **37** | **294** | **28 733** | |",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:413  ## 6. Predictions (falsifiable, campaign-wide) {#predictions}",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:42  Of those 294 `.md` files, **286 are observable**: eight are extractor test",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
-    "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — waves d1 + d2 landed 2026-07-25 (302 of 311 drift rows closed; the tree measures 99.7 % confirmed; 42 of 55 findings resolved) · next: the two escalations (F-046 wire-or-demote, F-035 user-owned boot file), then Phase E · vibevm-specific · first consumer of PROP-043 (Progress Control)**"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the vocabulary, both directions. The prescribed three states are PLANNED → EXECUTING → EXECUTED <date>. The archive uses FIVE — PLANNED, EXECUTED <date>, SUPERSEDED, CLOSED, BACKLOGGED — and neither live plan uses ANY of the three: wave 2 says RATIFIED, wave 1 says AUTHORED … IN FLIGHT. `EXECUTING` occurs nowhere in the repository as a status; the words appear in live plans only inside LOG prose about other plans.",
-   "reasons": [
-    "DRIFT: `grep -niE 'written against tree' spec/terraforms/*.md` returns 0 — neither live plan names the tree it was written against. Three archived plans do, and one of them is the source of this package's own §1 example (tree `57fa42e`, DEFERRALS-CLOSEOUT-PLAN-v0.1.md:5-6, with the same cold-executable clause). The window is the two campaigns this repository is running; the archive is what makes this drift rather than non-adoption — the host did it, then stopped.",
-    "DRIFT, same slot and same window: `grep -rn 'cold-executable' spec/terraforms/*.md` returns 0 — no live plan flags itself cold-executable, while several archived ones carry the flag in the exact `· cold-executable: <what makes it cold>` form the example uses. The live campaign does practise cold resumption, through PHASE-C-KICKOFF, PHASE-C-RESUME and a generated run/RESUME.md — but not in the status block this fact is about.",
-    "DRIFT on the exit half and therefore on the reconciliation. SHRINK-PLAN is the complete instance — §0 decomposes 130 into five named classes and the execution record closes at exactly 10, «exactly §0's arithmetic». Wave 2's baseline is exact and even reconciles a sub-count, but states no exit state at all: `grep -niE 'exit state' spec/terraforms/*.md` returns 0, so there is no campaign-level number for the exit half to reconcile against. Restates the boot snippet's COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS, ruled drift there on the same measurement.",
-    "DRIFT over the live window: 16 archived plans carry a Risks (usually «Risks & fallbacks») section and NEITHER live plan has one. The worked example is the host's own — DEFERRALS-CLOSEOUT recorded the flaky-network risk at :65-66 and turned it into Phase 0 step 1 plus per-step re-probes — which is what makes this an abandoned practice rather than an unadopted one.",
-    "DRIFT over the live window. Both halves of this fact are archived host section titles verbatim — SHRINK-PLAN §8 «What this plan deliberately does NOT do», two others «Non-goals (named, so they stay visible)» — across 9 archived plans. `grep -niE '^## .*Non-goals' spec/terraforms/*.md` returns 0: neither live campaign names its non-goals, and wave 1's only hit is a passing LOG mention of some other document's non-goal.",
-    "DRIFT even where the block survives. The prescribed step is `git log --oneline -3  # tree must match the status line`, and `grep -rn 'git log --oneline'` across all three plan homes returns **0** — not one of the 7 archived quick-start blocks confirms the tree that way. SELF-SUFFICIENCY's opens by verifying the floor and greps for the current version instead. The tree identity is carried in the status line, which is a different slot and separately drifting.",
-    "DRIFT on one of its six, checked one by one against the live wave-2 plan: mandate verbatim yes, arithmetic exact yes on the baseline (no exit state), facts verified at writing yes, decisions carry rejections yes, predictions falsifiable yes — and **non-goals named, no**. `grep -niE '^## .*Non-goals' spec/terraforms/*.md` returns 0 for both live plans. A summary that lists six obligations of which the host meets five is drift on the list, per W1's precedent that a summary restatement carries its clause's verdict."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "campaigns/packages-2026-09/PHASE-C-RESUME.md:16  | tree | clean, in sync with `origin/main`, mirrored to both hosts |",
-   "falsifier": "host",
-   "id": "F-144",
    "id_source": "minted",
    "carried": true
   },
@@ -1260,6 +1084,79 @@
    "fact": "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and…",
    "falsifier": "host",
    "id": "F-147",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-FIELD-ID",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-DISP-FILED",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE"
+   ],
+   "drift_count": 7,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md",
+    "ROADMAP.md",
+    "discipline",
+    "spec"
+   ],
+   "evidence_refs": [
+    "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
+    "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+    "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
+    "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+    "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
+    "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
+    "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
+    "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
+    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
+    "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
+    "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
+    "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
+    "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
+    "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+    "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
+    "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
+    "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
+    "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
+    "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done"
+   ],
+   "cites": [],
+   "reason": "DRIFT on «breadth-first», which is the leg the artefact does not carry. Deliberate, judgment-heavy and durably recorded all hold — the 2026-06-12 run is owner-requested, describes its method as three structural deep-reads plus one empirical gate probe, and wrote 12 findings. But two of the three runs disclaim a full sweep IN THEIR OWN TEXT: `AUDIT.md:23` «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist» and `:158` «It is **not** the full §2.2 breadth sweep». The third claims a sweep and is scoped to the new category E. No run in the artefact records walking A, B, C and D breadth-first.",
+   "reasons": [
+    "DRIFT on the walking, not on the mapping. The mapping is adopted — PROP-013's `##CHECKLIST-WALK` says vibevm walks the checklist breadth-first and cites this document's own anchor, and AUDIT.md's header enumerates the same A/B/C/D groups. The walking never happened: two of three runs disclaim it in their own text, and of the 29 finding headings the sub-rows that have ever produced a finding are A1, A2, A3, B1, B2, C1, C2, C3, C4, D1 plus two group-level entries — **nothing has ever been filed under D2, D3 or D4**.",
+    "DRIFT on the format, in one run of three. The 2026-05-23 and 2026-06-12 runs both use `<run-date>-NN`, unique within the run. The 2026-06-10 run numbers its four findings AUD-0014 … AUD-0017 — a repository-wide sequence, not a run-date — and a third id space runs alongside all of them in `discipline/registry/debt.json` as DBT-0001…DBT-0022. Stability across carry-forward does hold for both schemes, and that half is confirmed by the 2026-06-12 carry-forward re-listing originals under their own ids.",
+    "DRIFT on the destination the row names. Nine findings are `filed` and where-it-went is recorded for three of them (AUD-0017 «filed — DBT-0019», 2026-06-12-03 «filed (DBT-0019, escalated P3→P2)», and the registry's typed `filed_as` field); the other six are bare «filed» in their headings with the destination only in body prose. On the named destinations: **`TASKS.md` contains ZERO occurrences of «audit»**, so no finding has ever been filed as a TASKS.md line. The destination the host actually uses is `discipline/registry/debt.json`, which this flow does not name.",
+    "DRIFT on the floor, confirmed on the trigger — the same ruling as this fact's twin in the boot snippet. Owner-triggered holds (the 2026-06-12 run is recorded «Owner-requested» with the instruction quoted). The floor does not: M1.26 and M1.24 both SHIPPED (2026-07-07) against a last audit of 2026-06-12, with 1 546 commits in the gap and no audit section between.",
+    "DRIFT on the half the sentence insists on. The fix half holds cleanly — the seed run left 9 of 13 open and the 2026-06-12 run filed 7 P2s rather than fixing them in-run, which is the rule working. The INVENTORY half fails in two of three runs, by their own admission: «it is **not** a fresh full sweep … The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». INT-0001 is the full-sweep window both runs name, and no run has closed it.",
+    "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. Five facts across this package now assert the once-per-milestone floor or its `#never`, and all five fail on the same two ship lines."
+   ],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
+   "falsifier": "host",
+   "id": "F-141",
    "id_source": "minted",
    "carried": true
   },
@@ -1757,6 +1654,77 @@
    "fact": "conform.toml:36  max_file_lines = 600",
    "falsifier": "mixed",
    "id": "F-154",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/campaign-plans"
+   ],
+   "files": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#STATUS-BLOCK-THE-COLD-START-FLAG",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#SUM-THE-PLANS-STANDING-OBLIGATIONS"
+   ],
+   "drift_count": 6,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "legacy-spec",
+    "spec"
+   ],
+   "evidence_refs": [
+    "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:877  ## 13. Risks & fallbacks",
+    "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:915  ## 14. Non-goals (named, so they stay visible)",
+    "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:41  any phase is a safe stop; the floor must be green at every phase boundary._",
+    "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:822  ## 14. Non-goals (named, so they stay visible)",
+    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:16  rewritten accordingly). vibe-tcg-ts is explicitly OUT — a",
+    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:307  1. Re-probe network at execution time (ssh gitverse/github; npm ping) —",
+    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:5  _Status: ACCEPTED with owner amendments, 2026-07-07. Written against tree",
+    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:6  `57fa42e`; owner review resolved the three open questions: (1) editing",
+    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:65  - **Network: present but flaky.** The first probe of 2026-07-07 got",
+    "legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md:5  _Status: EXECUTED 2026-07-15 · written against tree `a9fdd63` · cold-executable: Phase 0 is",
+    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:306  ## 9 — Risks & fallbacks",
+    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:316  ## 10 — Non-goals",
+    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:6  boundary · written against tree `bf2897b` · commit span `7822052` → `007c030`",
+    "legacy-spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:5  _Status: PLANNED · written 2026-07-16 · cold-executable: каждая фаза ends `bash",
+    "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:128  ## 8. What this plan deliberately does NOT do",
+    "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:15  ## 0. Target arithmetic",
+    "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:7  *Execution record: all six phases ran to the exit state in one session — baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files, exactly §0's arithmetic). 19 commits (`254b974` … `475fa75`). …",
+    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:15  ## 0. Mandate (owner's words, 2026-07-25, recorded verbatim) {#mandate}",
+    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:34  ## 1. Baseline (verified at authoring time, 2026-07-25) {#baseline}",
+    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:40  | **total** | **37** | **294** | **28 733** | |",
+    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:413  ## 6. Predictions (falsifiable, campaign-wide) {#predictions}",
+    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:42  Of those 294 `.md` files, **286 are observable**: eight are extractor test"
+   ],
+   "cites": [],
+   "reason": "DRIFT: `grep -niE 'written against tree' spec/terraforms/*.md` returns 0 — neither live plan names the tree it was written against. Three archived plans do, and one of them is the source of this package's own §1 example (tree `57fa42e`, DEFERRALS-CLOSEOUT-PLAN-v0.1.md:5-6, with the same cold-executable clause). The window is the two campaigns this repository is running; the archive is what makes this drift rather than non-adoption — the host did it, then stopped.",
+   "reasons": [
+    "DRIFT, same slot and same window: `grep -rn 'cold-executable' spec/terraforms/*.md` returns 0 — no live plan flags itself cold-executable, while several archived ones carry the flag in the exact `· cold-executable: <what makes it cold>` form the example uses. The live campaign does practise cold resumption, through PHASE-C-KICKOFF, PHASE-C-RESUME and a generated run/RESUME.md — but not in the status block this fact is about.",
+    "DRIFT on the exit half and therefore on the reconciliation. SHRINK-PLAN is the complete instance — §0 decomposes 130 into five named classes and the execution record closes at exactly 10, «exactly §0's arithmetic». Wave 2's baseline is exact and even reconciles a sub-count, but states no exit state at all: `grep -niE 'exit state' spec/terraforms/*.md` returns 0, so there is no campaign-level number for the exit half to reconcile against. Restates the boot snippet's COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS, ruled drift there on the same measurement.",
+    "DRIFT over the live window: 16 archived plans carry a Risks (usually «Risks & fallbacks») section and NEITHER live plan has one. The worked example is the host's own — DEFERRALS-CLOSEOUT recorded the flaky-network risk at :65-66 and turned it into Phase 0 step 1 plus per-step re-probes — which is what makes this an abandoned practice rather than an unadopted one.",
+    "DRIFT over the live window. Both halves of this fact are archived host section titles verbatim — SHRINK-PLAN §8 «What this plan deliberately does NOT do», two others «Non-goals (named, so they stay visible)» — across 9 archived plans. `grep -niE '^## .*Non-goals' spec/terraforms/*.md` returns 0: neither live campaign names its non-goals, and wave 1's only hit is a passing LOG mention of some other document's non-goal.",
+    "DRIFT on one of its six, checked one by one against the live wave-2 plan: mandate verbatim yes, arithmetic exact yes on the baseline (no exit state), facts verified at writing yes, decisions carry rejections yes, predictions falsifiable yes — and **non-goals named, no**. `grep -niE '^## .*Non-goals' spec/terraforms/*.md` returns 0 for both live plans. A summary that lists six obligations of which the host meets five is drift on the list, per W1's precedent that a summary restatement carries its clause's verdict."
+   ],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:877  ## 13. Risks & fallbacks",
+   "falsifier": "host",
+   "id": "F-144",
    "id_source": "minted",
    "carried": true
   },
@@ -4403,62 +4371,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/campaign-plans"
-   ],
-   "files": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#COLD-A-LITERAL-QUICK-START-BLOCK",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "campaigns",
-    "legacy-spec",
-    "spec"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
-    "campaigns/packages-2026-09/PHASE-C-RESUME.md:21  cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09",
-    "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
-    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:305  ## 3. Phase 0 — probes and spikes (no commits; gate for everything after)",
-    "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501  ## 5. Wave 0 — spikes (no commits; gates for everything after)",
-    "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:694  ### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE",
-    "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
-    "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:734  ## 8. Quick-start (for the executing session)",
-    "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:738  bash tools/self-check.sh; echo \"EXIT=$?\"          # must be 0",
-    "spec/boot/STATIC.md:106  2. Write the phase's commit-map entry in the execution ledger —",
-    "spec/boot/STATIC.md:89  rejected options and reasons, a literal quick-start block, and a",
-    "spec/boot/STATIC.md:95  Phase 0 is spikes and probes — no commits — and it gates everything"
-   ],
-   "cites": [],
-   "reason": "DRIFT, and I measured it myself before ruling: `grep -ci 'quick.start'` returns **0 in both live plans**. The section exists in 7 archived plans under its canonical title and in neither live one, and `grep -rniE 'quick.start' campaigns/packages-2026-09/*.md` is 0 as well. The live campaign's nearest equivalent is a per-phase resume document, not a plan-level block a cold session runs first. The host has a quick-start habit — it keeps one in its checkpoint — but not where this rule puts it.",
-   "reasons": [
-    "DRIFT on the antecedent, not on the rule: **neither live campaign has a Phase 0 at all.** I checked both plans' phase headings directly — wave 2 runs A, B, C, D, E, T, F, G and wave 1 runs A, B, L, C, D, E, F, G, and `grep -c 'Phase 0'` returns 0 in each. Five archived plans do carry one, with the no-commits clause almost verbatim in the heading. So a rule stated as «every campaign opens with a phase that produces no commits» is broken by the two campaigns this repository is currently running. The live campaign's only self-named spike, C0, is a batch inside Phase C and it committed.",
-    "DRIFT: `grep -niE 'commit map|commit-map'` over both live plans and both campaign zones returns **0 hits**, against 3 archived plans that carry the form completely — MCP-SOVEREIGNTY §13 has six `### Wave N — EXECUTED (date); commit map` sections, one entry per commit with hash, subject, what it did and what it confirmed. The live plans cite hashes inside LOG prose — 17 unique in wave 2, 20 in wave 1, re-measured and matching — but never as a per-phase map, and 17 against 189 commits in the zone is the same gap counted from the other end."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
-   "falsifier": "host",
-   "id": "F-195",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/conflict-protocol"
    ],
    "files": [
@@ -5023,59 +4935,6 @@
    "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:181      if [ -n \"$remote_head\" ] && ! git merge-base --is-ancestor \"$remote_head\" \"$branch\"; then",
    "falsifier": "mixed",
    "id": "F-204",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/wal"
-   ],
-   "files": [
-    "packages/org.vibevm.world/wal/v0.2.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/wal/v0.2.0/README.md#PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-WAL-CONVENTION",
-    "packages/org.vibevm.world/wal/v0.2.0/README.md#DISCIPLINE-DEFERS-TO-THIS-PACKAGE-FROM-ITS-NEXT-RELEASE",
-    "packages/org.vibevm.world/wal/v0.2.0/README.md#ideas-are-chapters-two-and-three"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.world/redbook",
-    "vibe.lock"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:49  - `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:31  ##two-hard-rules-lead Two hard rules: @impl/done",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred** @impl/done",
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:1  # Глава третья.<br>Архитектура памяти",
-    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:4  которая определяет всё. WAL как checkpoint, не лог.",
-    "vibe.lock:62      \"flow:org.vibevm.world/wal@=0.2.0\","
-   ],
-   "cites": [],
-   "reason": "DRIFT: a second complete WAL convention ships in this tree and does not cede canonicity. core-ai-native v0.8.0's spec/06-WAL-CONVENTION.md states the same two-file model, the same canonicity rule and the same supersession, marks itself OPTIONAL but preferred, and names neither flow:wal nor org.vibevm.world/wal anywhere. The host installs and boots BOTH (vibe.lock:62; the core-ai-native snippet lists 06-WAL-CONVENTION.md among its operating playbooks), and nothing in the repository cites this package as its WAL authority.",
-   "reasons": [
-    "DRIFT: the next release came and did not defer. wal 0.2.0 landed 2026-07-07 (ec6b5b5a, subject 'the canonical WAL convention'); core-ai-native v0.8.0 landed 2026-07-17 (bfb72da7), ten days later, is the installed slot, and still ships the full convention with zero occurrences of 'defer', 'flow:wal' or 'org.vibevm.world/wal'.",
-    "DRIFT: the range excludes one of the four ideas it lists. ls over redbook v0.2.0's spec/book/ru/ returns exactly three chapters, and two-process cooperation is chapter 1 ('Два процесса, одна задача'), not 2-3. 0.1.0's README said 'chapters 1-3'; 0.2.0 narrowed the range and kept chapter 1's subject in the list."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:49  - `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).",
-   "falsifier": "host",
-   "id": "F-205",
    "id_source": "minted",
    "carried": true
   },
@@ -5852,20 +5711,20 @@
    "carried": true
   },
   {
-   "type": "contradiction",
-   "rule": "r-contradiction",
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
    "merged_by": [
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/comparative-research"
+    "packages/org.vibevm.world/campaign-plans"
    ],
    "files": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md"
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md"
    ],
    "anchors": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md#the-fragment-obeys-all-five-laws-lead",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md#SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA"
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER",
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY"
    ],
    "drift_count": 2,
    "cross_package": false,
@@ -5873,32 +5732,31 @@
    "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
+    "campaigns",
     "legacy-spec",
-    "packages/org.vibevm.fractality/fractality",
-    "packages/org.vibevm.world/comparative-research"
+    "spec"
    ],
    "evidence_refs": [
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:963  *This PROP is research only — it ratifies no implementation.…",
-    "legacy-spec/research/action-systems-vscode-idea.md:725  | Δ | Delta | Answers | → prospective PROP-039 REQ |",
-    "legacy-spec/research/settings-system-vscode-idea.md:358  …**D-01 [P0, settings-system PROP]** Layered deep-merge `L1 ⊂ L2 ⊂ L3` (L3 wins)…",
-    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-SYNTHESIS.md:56  - **FD-1** Two-tier orchestration: a cheap `route` verdict",
-    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:74  …**RD-1 (P1) The need-gate is an isolated, auditable call**…",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:156  …quarry.example/docs/caching, accessed 2026-07-01",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:169  ## 3.1 Shared remote cache",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:174  ## 4.1 Offline-first by default",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:181  ### D1 — Optional shared remote cache"
+    "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
+    "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
+    "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:305  ## 3. Phase 0 — probes and spikes (no commits; gate for everything after)",
+    "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501  ## 5. Wave 0 — spikes (no commits; gates for everything after)",
+    "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:694  ### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE",
+    "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
+    "spec/boot/STATIC.md:106  2. Write the phase's commit-map entry in the execution ledger —",
+    "spec/boot/STATIC.md:95  Phase 0 is spikes and probes — no commits — and it gates everything"
    ],
    "cites": [],
-   "reason": "DRIFT, and it needs no host to settle — the package's own worked fragment does not obey the five laws the sentence above it says it obeys. Laws 2, 3 and 4 are demonstrably present: quotes precede analysis, §3.1 trail and §4.1 lead both appear, and D1 is numbered, prioritized MEDIUM, homed to «a future caching spec section» and closes «Ratified here: nothing.» Law 1 holds in the dated-quote sense. **Law 5 is not demonstrated at all: the fragment has no re-fetch section.** The skeleton this very file defines requires one at its lines 101-109 with a `**Subject version at capture:**` field, and the illustration omits it. A worked example that claims all five and shows four is the clearest kind of self-contradiction this campaign can find.",
+   "reason": "DRIFT on the antecedent, not on the rule: **neither live campaign has a Phase 0 at all.** I checked both plans' phase headings directly — wave 2 runs A, B, C, D, E, T, F, G and wave 1 runs A, B, L, C, D, E, F, G, and `grep -c 'Phase 0'` returns 0 in each. Five archived plans do carry one, with the no-commits clause almost verbatim in the heading. So a rule stated as «every campaign opens with a phase that produces no commits» is broken by the two campaigns this repository is currently running. The live campaign's only self-named spike, C0, is a batch inside Phase C and it committed.",
    "reasons": [
-    "DRIFT on «prioritize», scored across the five located studies against the summary's three verbs: numbered 5/5, homed 5/5, **prioritized 3/5** — action-systems' delta table has no priority column at all and FUGU-SYNTHESIS's brackets carry only a home. The ratification clause holds 4/5 explicitly, with the settings study carrying the contradictory pair of lines recorded at its Law-4 row. Same measurement as `LAW-FOUR-FINDINGS-BECOME-NUMBERED-PRIORITIZED-HOMED-DELTAS`, and the summary carries its verdict per W1's precedent."
+    "DRIFT: `grep -niE 'commit map|commit-map'` over both live plans and both campaign zones returns **0 hits**, against 3 archived plans that carry the form completely — MCP-SOVEREIGNTY §13 has six `### Wave N — EXECUTED (date); commit map` sections, one entry per commit with hash, subject, what it did and what it confirmed. The live plans cite hashes inside LOG prose — 17 unique in wave 2, 20 in wave 1, re-measured and matching — but never as a per-phase map, and 17 against 189 commits in the zone is the same gap counted from the other end."
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:169  ## 3.1 Shared remote cache",
-   "falsifier": "mixed",
-   "id": "F-222",
+   "fact": "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
+   "falsifier": "host",
+   "id": "F-195",
    "id_source": "minted",
    "carried": true
   },
@@ -6498,53 +6356,6 @@
    "falsifier": "mixed",
    "id": "F-122",
    "id_source": "adopted (plan LOG)",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#TWO-RULES-GOVERN-THE-LISTS-GROWTH",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "AUDIT.md",
-    "spec"
-   ],
-   "evidence_refs": [
-    "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-    "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-    "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
-    "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the implied cadence, the same measurement as the protocol's `TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN` and ruled identically. Both rules HAVE fired here — the 2026-06-12 run added category E and its fixes moved four checks into `cargo xtask conform` — but both fired in that one run. The 2026-05-23 seed added no category and moved nothing, and the 2026-06-10 run did neither. One of three runs applied both, two applied neither.",
-   "reasons": [
-    "DRIFT on «walked breadth-first», carrying the verdict of the two rules it summarises. The four groups are adopted verbatim in AUDIT.md's header and in PROP-013 §2 — that half is real. The walk is not: the seed run says «it is **not** a fresh full sweep», the 2026-06-10 run says «it is **not** the full §2.2 breadth sweep» and was scoped to C plus the gate panel, and the 2026-06-12 run was the INT-0001 window run scoped to the category it had just added. No run's text records touching A, B, C and D once each before going deep."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-   "falsifier": "host",
-   "id": "F-235",
-   "id_source": "minted",
    "carried": true
   },
   {
@@ -9003,90 +8814,6 @@
    "carried": true
   },
   {
-   "type": "duplication",
-   "rule": "r-duplication",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/campaign-plans"
-   ],
-   "files": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md#core-ai-native-defers-from-its-next-release"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:11  ##THIS-DOCUMENT-IS-THE-PAPER-TRAIL *This document is the",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:28  | ##ROW-ARTIFACT-PLAN **PLAN** @impl/done | before work starts @impl/done | the cold-executable recipe (see §2) @impl/done |",
-    "vibedeps/flow-core-ai-native/0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}"
-   ],
-   "cites": [],
-   "reason": "DRIFT, and the SECOND instance of one defect — W2 measured the flow:wal half and the redbook README states it for both packages at once (ruled drift in that slice). Measured here on my own commands and independently by the worker. The campaign-form document exists and duplicates this package's artifact-role table almost row for row; the deference does not exist anywhere. `grep -rn 'campaign-plans' packages/org.vibevm.ai-native/` returns zero across BOTH version slots, and zero in `vibedeps/flow-core-ai-native/`. The release the claim points at has arrived and passed: campaign-plans reached org.vibevm.world 2026-07-12 (`69708287`), core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`) five days later, `vibe.lock:111` shows v0.8.0 is the installed slot, and its `spec/05-CAMPAIGN-FORM.md` is 117 lines with zero occurrences of `campaign-plans`, `defer` or `superseded`. The next release came; it did not defer.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
-   "falsifier": "mixed",
-   "id": "F-292",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/campaign-plans"
-   ],
-   "files": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md#CONTENT-THE-PLAN-FORMAT"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "legacy-spec",
-    "packages/org.vibevm.world/campaign-plans"
-   ],
-   "evidence_refs": [
-    "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:431  ## 15 — Deferrals ledger",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:236  ### 15 — Deferrals ledger {#s15-deferrals}",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:33  ## The five artifact roles {#artifacts}",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:61  ## The section skeleton {#skeleton}"
-   ],
-   "cites": [],
-   "reason": "DRIFT on its last clause, measured section by section rather than taken. «The canonical fifteen-section plan skeleton» is exact — the document's `### N — …` headings run 1 through 15, `{#s1-status}` … `{#s15-deferrals}`. «Each section with a spec and a worked mini example» is not: I counted fenced blocks per section and read the four that have none. Seven sections carry a fenced example (§1, §3, §4, §6, §11, §12, §15); four more carry a worked example inline in prose (§5's stale-trio, §7's «P3 — fewer than 10 test expectations break…», §9's «flaky network: re-probe…», §10's «does NOT extend the gate…»); and **four carry no example of any kind — §2 Execution record, §8 Phases, §13 Review points, §14 Execution ledger**, which are bullets and pointers to sibling documents. Eleven of fifteen, not each. The worker counted thirteen of fifteen and also did not reach «each»; my count is lower because I required an example rather than any illustrative text.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:431  ## 15 — Deferrals ledger",
-   "falsifier": "mixed",
-   "id": "F-293",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "relocation",
    "rule": "r-dangling-flows",
    "merged_by": [
@@ -9209,6 +8936,49 @@
    "fact": "legacy-spec/research/action-systems-vscode-idea.md:15  …Everything here is in our words; short verbatim snippets (`file:line`) ground claims,",
    "falsifier": "host",
    "id": "F-296",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/comparative-research"
+   ],
+   "files": [
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md#SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "legacy-spec",
+    "packages/org.vibevm.fractality/fractality"
+   ],
+   "evidence_refs": [
+    "legacy-spec/research/PROP-004-tessl-comparative-research.md:963  *This PROP is research only — it ratifies no implementation.…",
+    "legacy-spec/research/action-systems-vscode-idea.md:725  | Δ | Delta | Answers | → prospective PROP-039 REQ |",
+    "legacy-spec/research/settings-system-vscode-idea.md:358  …**D-01 [P0, settings-system PROP]** Layered deep-merge `L1 ⊂ L2 ⊂ L3` (L3 wins)…",
+    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-SYNTHESIS.md:56  - **FD-1** Two-tier orchestration: a cheap `route` verdict",
+    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:74  …**RD-1 (P1) The need-gate is an isolated, auditable call**…"
+   ],
+   "cites": [],
+   "reason": "DRIFT on «prioritize», scored across the five located studies against the summary's three verbs: numbered 5/5, homed 5/5, **prioritized 3/5** — action-systems' delta table has no priority column at all and FUGU-SYNTHESIS's brackets carry only a home. The ratification clause holds 4/5 explicitly, with the settings study carrying the contradictory pair of lines recorded at its Law-4 row. Same measurement as `LAW-FOUR-FINDINGS-BECOME-NUMBERED-PRIORITIZED-HOMED-DELTAS`, and the summary carries its verdict per W1's precedent.",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "legacy-spec/research/PROP-004-tessl-comparative-research.md:963  *This PROP is research only — it ratifies no implementation.…",
+   "falsifier": "host",
+   "id": "F-222",
    "id_source": "minted",
    "carried": true
   },
@@ -9759,6 +9529,47 @@
    "fact": "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
    "falsifier": "host",
    "id": "F-311",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md"
+   ],
+   "evidence_refs": [
+    "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+    "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
+    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013"
+   ],
+   "cites": [],
+   "reason": "DRIFT on «walked breadth-first», carrying the verdict of the two rules it summarises. The four groups are adopted verbatim in AUDIT.md's header and in PROP-013 §2 — that half is real. The walk is not: the seed run says «it is **not** a fresh full sweep», the 2026-06-10 run says «it is **not** the full §2.2 breadth sweep» and was scoped to C plus the gate panel, and the 2026-06-12 run was the INT-0001 window run scoped to the category it had just added. No run's text records touching A, B, C and D once each before going deep.",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+   "falsifier": "host",
+   "id": "F-235",
    "id_source": "minted",
    "carried": true
   },
@@ -11409,6 +11220,46 @@
     "packages/org.vibevm.world/wal"
    ],
    "files": [
+    "packages/org.vibevm.world/wal/v0.2.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/wal/v0.2.0/README.md#PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-WAL-CONVENTION"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "evidence_refs": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:31  ##two-hard-rules-lead Two hard rules: @impl/done",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:5  ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred** @impl/done"
+   ],
+   "cites": [],
+   "reason": "DRIFT: a second complete WAL convention ships in this tree and does not cede canonicity. core-ai-native v0.8.0's spec/06-WAL-CONVENTION.md states the same two-file model, the same canonicity rule and the same supersession, marks itself OPTIONAL but preferred, and names neither flow:wal nor org.vibevm.world/wal anywhere. The host installs and boots BOTH (vibe.lock:62; the core-ai-native snippet lists 06-WAL-CONVENTION.md among its operating playbooks), and nothing in the repository cites this package as its WAL authority.",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
+   "falsifier": "host",
+   "id": "F-205",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/wal"
+   ],
+   "files": [
     "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md"
    ],
    "anchors": [
@@ -11630,6 +11481,76 @@
    "falsifier": "self",
    "id": "F-283",
    "id_source": "minted"
+  },
+  {
+   "type": "duplication",
+   "rule": "r-duplication",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/campaign-plans"
+   ],
+   "files": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md#core-ai-native-defers-from-its-next-release"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and the SECOND instance of one defect — W2 measured the flow:wal half and the redbook README states it for both packages at once (ruled drift in that slice). Measured here on my own commands and independently by the worker. The campaign-form document exists and duplicates this package's artifact-role table almost row for row; the deference does not exist anywhere. `grep -rn 'campaign-plans' packages/org.vibevm.ai-native/` returns zero across BOTH version slots, and zero in `vibedeps/flow-core-ai-native/`. The release the claim points at has arrived and passed: campaign-plans reached org.vibevm.world 2026-07-12 (`69708287`), core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`) five days later, `vibe.lock:111` shows v0.8.0 is the installed slot, and its `spec/05-CAMPAIGN-FORM.md` is 117 lines with zero occurrences of `campaign-plans`, `defer` or `superseded`. The next release came; it did not defer.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
+   "falsifier": "mixed",
+   "id": "F-292",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/campaign-plans"
+   ],
+   "files": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md#CONTENT-THE-PLAN-FORMAT"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "legacy-spec",
+    "packages/org.vibevm.world/campaign-plans"
+   ],
+   "cites": [],
+   "reason": "DRIFT on its last clause, measured section by section rather than taken. «The canonical fifteen-section plan skeleton» is exact — the document's `### N — …` headings run 1 through 15, `{#s1-status}` … `{#s15-deferrals}`. «Each section with a spec and a worked mini example» is not: I counted fenced blocks per section and read the four that have none. Seven sections carry a fenced example (§1, §3, §4, §6, §11, §12, §15); four more carry a worked example inline in prose (§5's stale-trio, §7's «P3 — fewer than 10 test expectations break…», §9's «flaky network: re-probe…», §10's «does NOT extend the gate…»); and **four carry no example of any kind — §2 Execution record, §8 Phases, §13 Review points, §14 Execution ledger**, which are bullets and pointers to sibling documents. Eleven of fifteen, not each. The worker counted thirteen of fifteen and also did not reach «each»; my count is lower because I required an example rather than any illustrative text.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:431  ## 15 — Deferrals ledger",
+   "falsifier": "mixed",
+   "id": "F-293",
+   "id_source": "minted",
+   "carried": true
   },
   {
    "type": "reality-mismatch",

@@ -526,7 +526,13 @@ def carry_ids(obligations: list[dict], prior_path: Path) -> tuple[list[dict], se
             ca = set(c["anchors"])
             inter = len(pa & ca)
             if inter:
-                pairs.append((inter / len(pa | ca), inter, pi, ci))
+                # CONTAINMENT, not symmetric overlap. A partial closure shrinks
+                # a cluster — two of F-205's three anchors were re-judged and
+                # symmetric Jaccard scored the remainder at 0.33, so it was
+                # minted a fresh id and the obligation was filed `resolved`
+                # while one of its anchors still drifted. Scoring against the
+                # SMALLER set makes a shrunk cluster still itself.
+                pairs.append((inter / min(len(pa), len(ca)), inter, pi, ci))
     pairs.sort(reverse=True)
     taken_p, taken_c = set(), set()
     for j, _inter, pi, ci in pairs:

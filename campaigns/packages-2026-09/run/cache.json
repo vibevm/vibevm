@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T16:15:34Z",
+  "updated_at": "2026-07-29T16:50:24Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -28022,7 +28022,7 @@
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md": {
-      "content_hash": "8669fd60c0225dfee99a6a5cf5fca79c2600297d30b2f2ebc8a499d06808fbc9",
+      "content_hash": "db347569068e99f882c39a93e002f29cfccfc61a56199c3788ac3f1a3a821014",
       "rollup": {
         "explicit": [
           "doc",
@@ -28044,7 +28044,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "8669fd60c0225dfee99a6a5cf5fca79c2600297d30b2f2ebc8a499d06808fbc9",
+        "processed_hash": "db347569068e99f882c39a93e002f29cfccfc61a56199c3788ac3f1a3a821014",
         "verdicts": {
           "PACKAGE-INSTALLS-THE-CAMPAIGN-PLAN-FORMAT": {
             "v": "confirmed",
@@ -28145,17 +28145,14 @@
             ]
           },
           "CONTENT-THE-PLAN-FORMAT": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:33  ## The five artifact roles {#artifacts}",
-              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:61  ## The section skeleton {#skeleton}",
-              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:236  ### 15 — Deferrals ledger {#s15-deferrals}",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:431  ## 15 — Deferrals ledger",
-              "DRIFT on its last clause, measured section by section rather than taken. «The canonical fifteen-section plan skeleton» is exact — the document's `### N — …` headings run 1 through 15, `{#s1-status}` … `{#s15-deferrals}`. «Each section with a spec and a worked mini example» is not: I counted fenced blocks per section and read the four that have none. Seven sections carry a fenced example (§1, §3, §4, §6, §11, §12, §15); four more carry a worked example inline in prose (§5's stale-trio, §7's «P3 — fewer than 10 test expectations break…», §9's «flaky network: re-probe…», §10's «does NOT extend the gate…»); and **four carry no example of any kind — §2 Execution record, §8 Phases, §13 Review points, §14 Execution ledger**, which are bullets and pointers to sibling documents. Eleven of fifteen, not each. The worker counted thirteen of fifteen and also did not reach «each»; my count is lower because I required an example rather than any illustrative text."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md:23  plan skeleton, each section with a spec and most with a worked mini example. @impl/done",
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  the fifteen-section skeleton this sentence describes",
+              "CLOSED F-293 (Phase D wave 2, route a - the package was wrong about its own document). The README promised the skeleton gives EACH of fifteen sections a spec and a worked mini example; counted section by section, ten carry one. `each` is now `most`, and nothing else in the sentence moved. Source 1 alone by construction: the claim is about a document inside this package."
             ]
           },
           "CONTENT-THE-PHASE-GATES": {
@@ -28242,18 +28239,16 @@
             ]
           },
           "core-ai-native-defers-from-its-next-release": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:11  ##THIS-DOCUMENT-IS-THE-PAPER-TRAIL *This document is the",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:28  | ##ROW-ARTIFACT-PLAN **PLAN** @impl/done | before work starts @impl/done | the cold-executable recipe (see §2) @impl/done |",
-              "vibedeps/flow-core-ai-native/0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
-              "DRIFT, and the SECOND instance of one defect — W2 measured the flow:wal half and the redbook README states it for both packages at once (ruled drift in that slice). Measured here on my own commands and independently by the worker. The campaign-form document exists and duplicates this package's artifact-role table almost row for row; the deference does not exist anywhere. `grep -rn 'campaign-plans' packages/org.vibevm.ai-native/` returns zero across BOTH version slots, and zero in `vibedeps/flow-core-ai-native/`. The release the claim points at has arrived and passed: campaign-plans reached org.vibevm.world 2026-07-12 (`69708287`), core-ai-native v0.8.0 landed 2026-07-17 (`bfb72da7`) five days later, `vibe.lock:111` shows v0.8.0 is the installed slot, and its `spec/05-CAMPAIGN-FORM.md` is 117 lines with zero occurrences of `campaign-plans`, `defer` or `superseded`. The next release came; it did not defer."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
               3
+            ],
+            "ev": [
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md:47  AI-Native Discipline (`flow:core-ai-native`) ships its own campaign-form document, `spec/05-CAMPAIGN-FORM.md`, which restates part of this format; the two are not yet reconciled. @spec/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  the document that was to defer and does not",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/05-CAMPAIGN-FORM.md:1  the installed slot carries the same text, so the consumer reads the unreconciled version too",
+              "CLOSED F-292 (Phase D wave 2, route a - a false claim about a sibling package). The release the claim pointed at arrived and passed: campaign-plans reached org.vibevm.world 2026-07-12, core-ai-native v0.8.0 landed 2026-07-17, and its campaign-form document contains zero occurrences of `campaign-plans`, `defer` or `superseded` in either version slot or in the installed slot. The sentence now says what the discipline actually ships. The anchor id still reads `core-ai-native-defers-from-its-next-release` against prose that says it does not - RULE-ANCHORS-IMMUTABLE's stated cost, flagged rather than renamed."
             ]
           },
           "COMPOSES-WAL": {
@@ -28369,8 +28364,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:25:29Z",
-        "verify_batch": "W4"
+        "verified_at": "2026-07-29T16:50:24Z",
+        "verify_batch": "W4 + D2a"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md": {
@@ -28599,17 +28594,16 @@
             ]
           },
           "COLD-A-LITERAL-QUICK-START-BLOCK": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:89  rejected options and reasons, a literal quick-start block, and a",
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:734  ## 8. Quick-start (for the executing session)",
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:738  bash tools/self-check.sh; echo \"EXIT=$?\"          # must be 0",
-              "campaigns/packages-2026-09/PHASE-C-RESUME.md:21  cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09",
-              "DRIFT, and I measured it myself before ruling: `grep -ci 'quick.start'` returns **0 in both live plans**. The section exists in 7 archived plans under its canonical title and in neither live one, and `grep -rniE 'quick.start' campaigns/packages-2026-09/*.md` is 0 as well. The live campaign's nearest equivalent is a per-phase resume document, not a plan-level block a cold session runs first. The host has a quick-start habit — it keeps one in its checkpoint — but not where this rule puts it."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md:41  - ##COLD-A-LITERAL-QUICK-START-BLOCK a literal quick-start block, @impl/done",
+              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md  ## 10. Quick-start for the executing session {#quick-start}",
+              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md  ## 12. Quick-start for the executing session {#quick-start}",
+              "RE-JUDGED confirmed, NO EDIT (F-195, Phase D wave 2). The verdict was true when written - `grep -ci 'quick.start'` returned 0 in both live plans - and is false now, because the owner ruled on 2026-07-29 that this rule is sound and the host was wrong to drop it, and both live plans gained the block the same day. This is route (b) executed to completion: the package did not move, the host did. The first obligation of the phase closed that way."
             ]
           },
           "COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT": {
@@ -28811,7 +28805,7 @@
           }
         },
         "verified_at": "2026-07-28T21:27:17Z",
-        "verify_batch": "W4"
+        "verify_batch": "W4 + D2a"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
@@ -29118,17 +29112,16 @@
             ]
           },
           "STATUS-BLOCK-THE-LIFECYCLE-STATE": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:5  _Status: **EXECUTED 2026-07-15** · all phases shipped, floor green at every",
-              "legacy-spec/terraforms/TREE-TUI-PLAN-v0.1.md:5  _Status: **SUPERSEDED by [TREE-TUI-PLAN v0.2](TREE-TUI-PLAN-v0.2.md) · ARCHIVE — do not execute.** v0.2 declares itself this plan's successor and is the one that executed (2026-07-16, phases P0–P10); v0.1 never carried the superseded notice, so a cold reader landing here alone could have started executing it. Corrected by the spec-actualization campaign (2026-07-25). Original: PLANNED · written against tree `6473ecb` · cold-executable: every phase",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — waves d1 + d2 landed 2026-07-25 (302 of 311 drift rows closed; the tree measures 99.7 % confirmed; 42 of 55 findings resolved) · next: the two escalations (F-046 wire-or-demote, F-035 user-owned boot file), then Phase E · vibevm-specific · first consumer of PROP-043 (Progress Control)**",
-              "DRIFT on the vocabulary, both directions. The prescribed three states are PLANNED → EXECUTING → EXECUTED <date>. The archive uses FIVE — PLANNED, EXECUTED <date>, SUPERSEDED, CLOSED, BACKLOGGED — and neither live plan uses ANY of the three: wave 2 says RATIFIED, wave 1 says AUTHORED … IN FLIGHT. `EXECUTING` occurs nowhere in the repository as a status; the words appear in live plans only inside LOG prose about other plans."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md  ##STATUS-BLOCK-THE-LIFECYCLE-STATE the lifecycle state, from the prescribed three",
+              "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:5  **status: EXECUTING (2026-07-15)",
+              "legacy-spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md:3  status line says EXECUTING 2026-07-20, decisions LOCKED",
+              "RE-JUDGED confirmed, NO EDIT (F-144, Phase D wave 2). The drift verdict said `EXECUTING` occurs nowhere as a status. It occurs twice, and the Phase C grep missed it because its perimeter was `spec/terraforms/`, `legacy-spec/terraforms/` and `campaigns/` - and there are EIGHT further plan documents in `legacy-spec/research/`. A not-found is a fact about the search perimeter until the perimeter has been checked; this is the third time this campaign has paid for that law. What survives after the perimeter is repaired - that the archive annotates the three states - is host non-compliance with a sound prescription, and the document already admits annotation at its own :78-79. Route (b), recorded, not edited."
             ]
           },
           "STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST": {
@@ -29524,17 +29517,15 @@
             ]
           },
           "QUICK-START-CONFIRM-THE-TREE": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:744  grep -rn 'v0\\.2\\.0' --include='*.toml' --include='*.sh' Cargo.toml tools/ xtask/ vibe.toml",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:6  boundary · written against tree `bf2897b` · commit span `7822052` → `007c030`",
-              "campaigns/packages-2026-09/PHASE-C-RESUME.md:16  | tree | clean, in sync with `origin/main`, mirrored to both hosts |",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:5  _Status: ACCEPTED with owner amendments, 2026-07-07. Written against tree",
-              "DRIFT even where the block survives. The prescribed step is `git log --oneline -3  # tree must match the status line`, and `grep -rn 'git log --oneline'` across all three plan homes returns **0** — not one of the 7 archived quick-start blocks confirms the tree that way. SELF-SUFFICIENCY's opens by verifying the floor and greps for the current version instead. The tree identity is carried in the status line, which is a different slot and separately drifting."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md  ##QUICK-START-CONFIRM-THE-TREE the quick-start block confirms the tree before anything runs",
+              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:931  ## 15. Quick-start for the executing session",
+              "RE-JUDGED confirmed, NO EDIT (F-144, Phase D wave 2). The drift verdict said a `git log --oneline` confirmation appears in none of the archived quick-start blocks; it appears thirteen times, six of them inside quick-start blocks using this package's own prescribed comment form. Same perimeter miss as its sibling."
             ]
           },
           "QUICK-START-VERIFY-THE-GREEN-FLOOR": {
@@ -29735,11 +29726,11 @@
           }
         },
         "verified_at": "2026-07-28T21:30:50Z",
-        "verify_batch": "W4"
+        "verify_batch": "W4 + D2a"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md": {
-      "content_hash": "334fbcf2307726c0c3ba8d652f2a1535a349a49277418b759045a4cc2c21d556",
+      "content_hash": "4aec81d89199b3cacc0345d386c84a93abb6080670c4ea694e34175f9b35035f",
       "rollup": {
         "explicit": [
           "spec",
@@ -29761,7 +29752,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "334fbcf2307726c0c3ba8d652f2a1535a349a49277418b759045a4cc2c21d556",
+        "processed_hash": "4aec81d89199b3cacc0345d386c84a93abb6080670c4ea694e34175f9b35035f",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -30323,17 +30314,15 @@
             ]
           },
           "a-real-chain-anonymized": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:782  ## 10. Deferred, named (not this campaign)",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:20  Mandate (owner, 2026-07-07): take everything listed in",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:27  ## 0. The seven items this campaign closes",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:29  | # | §10 deferral | Closure shape |",
-              "DRIFT on three checkable details of one anecdote, and it is not anonymized in this repository at all — the chain is SELF-SUFFICIENCY-PLAN §10 → DEFERRALS-CLOSEOUT-PLAN, both present under their own names. (1) «Seven named deferrals»: §10 lists SIX bullets; the closeout's table has 7 numbered rows plus a `+` row, and row 3 is an owner amendment rather than a §10 deferral. (2) «Verbatim»: the mandate's actual wording names the file and section and adds a standing note, where the quoted sentence generalizes the object. (3) «Weeks later» has no support — SELF-SUFFICIENCY carries no authoring date in its status line. The chain itself is real and is confirmed at the two facts that assert it; this row's retelling is what fails."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md:96  ##a-real-chain-anonymized A real chain, anonymized: a self-sufficiency campaign closed with six named deferrals",
+              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:1  the campaign the anecdote anonymizes, whose deferral ledger is the count",
+              "CLOSED F-133 partially (one anchor of thirteen; Phase D wave 2, route a). The anecdote miscounted its own history - six named deferrals, not seven - and called the owner's commissioning words `verbatim` over a paraphrase. Both corrected; `weeks later` dropped to `later` because the interval is not on the record either. The other twelve anchors of F-133 stay open and are route (b): they are prescriptions the host does not keep, and the package is not the side that yields."
             ]
           },
           "THE-LEDGER-OF-ONE-CAMPAIGN-IS-THE-RAW-MANDATE-OF-THE-NEXT": {
@@ -30435,8 +30424,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:33:30Z",
-        "verify_batch": "W4"
+        "verified_at": "2026-07-29T16:50:24Z",
+        "verify_batch": "W4 + D2a"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md": {
@@ -33626,16 +33615,14 @@
             ]
           },
           "the-fragment-obeys-all-five-laws-lead": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:156  …quarry.example/docs/caching, accessed 2026-07-01",
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:169  ## 3.1 Shared remote cache",
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:174  ## 4.1 Offline-first by default",
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:181  ### D1 — Optional shared remote cache",
-              "DRIFT, and it needs no host to settle — the package's own worked fragment does not obey the five laws the sentence above it says it obeys. Laws 2, 3 and 4 are demonstrably present: quotes precede analysis, §3.1 trail and §4.1 lead both appear, and D1 is numbered, prioritized MEDIUM, homed to «a future caching spec section» and closes «Ratified here: nothing.» Law 1 holds in the dated-quote sense. **Law 5 is not demonstrated at all: the fragment has no re-fetch section.** The skeleton this very file defines requires one at its lines 101-109 with a `**Subject version at capture:**` field, and the illustration omits it. A worked example that claims all five and shows four is the clearest kind of self-contradiction this campaign can find."
-            ],
+            "v": "confirmed",
             "src": [
               1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md  ##the-fragment-obeys-all-five-laws-lead The fragment obeys all five laws in miniature: @impl/done",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md  ## 7. Re-fetch list",
+              "RE-JUDGED confirmed, NO EDIT (F-222, Phase D wave 2). The verdict was true when written - the fragment obeyed four of five, missing Law 5's closing re-fetch list - and is false now because Phase D wave 1 repaired it under F-297, on the stronger side: the fragment gained the section its own skeleton defines rather than the caption being softened. A verdict falsified by this campaign's own earlier closure."
             ]
           },
           "MINIATURE-LAWS-ONE-AND-TWO": {
@@ -33759,7 +33746,7 @@
           }
         },
         "verified_at": "2026-07-29T08:26:30Z",
-        "verify_batch": "W4 + D1b"
+        "verify_batch": "W4 + D1b + D2a"
       }
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md": {
@@ -47924,7 +47911,7 @@
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md": {
-      "content_hash": "e9a25e03d33c3b7b53003de9742d6dc63cabdf896a67022fafc9bf574833740d",
+      "content_hash": "fee85116f5511638646081b0eaff08efabf993f925dbffd622a33acda52881a9",
       "rollup": {
         "explicit": [
           "spec",
@@ -47946,7 +47933,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "e9a25e03d33c3b7b53003de9742d6dc63cabdf896a67022fafc9bf574833740d",
+        "processed_hash": "fee85116f5511638646081b0eaff08efabf993f925dbffd622a33acda52881a9",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -48157,16 +48144,14 @@
             ]
           },
           "ONLY-A-READER-CATCHES-A-TEST-THAT-ENCODES-THE-WRONG-ANSWER": {
-            "v": "drift",
-            "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
-              "spec/common/PROP-013-periodic-health-audit.md:20  - ##M119-CAUGHT-BY-SMOKE It was caught only by a live smoke run during the registry migration. @spec/done",
-              "AUDIT.md:58  **A test encoded the `vibe init` bug as correct.**",
-              "DRIFT on the mechanism, in the host's one instance of exactly this defect. The first half is settled and vivid: the `cli_init` test asserted `primary.naming == NamingConvention::KindName` and stayed green, and PROP-013's `##A3-WRONG-BEHAVIOR` calls it «Detectable only by reading the assertion against the spec». How it was ACTUALLY caught is recorded one line away, at PROP-013:20 — «It was caught only by a live smoke run during the registry migration». A live integration run, not a reader judging an assertion. The host's own record names a third mechanism this sentence excludes."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:58  test that encodes the wrong answer; a reader judging the assertion against the intent can - and so can a live end-to-end run of the real thing, which is what caught the initializer defect above. @spec/done",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:50  ##the-canonical-failure-is-the-broken-initializer The canonical failure is a milestone",
+              "CLOSED F-141 partially (one anchor of nine; Phase D wave 2, route a - an internal contradiction that needed no host at all). The document said ONLY a reader catches a test that encodes the wrong answer, and its own canonical example fifty lines earlier is a live run catching exactly that. The `only` is gone and the live run is named beside the reader; the audit's standing as a different activity is untouched."
             ]
           },
           "not-more-gate-but-a-different-activity": {
@@ -48663,16 +48648,14 @@
             ]
           },
           "TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN": {
-            "v": "drift",
-            "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
-              "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
-              "AUDIT.md:425  the new `cargo xtask conform freeze`: `error-message-cites-req`",
-              "DRIFT on «every run». Both forces are real and both have fired here — a new defect class became category E and mechanisable checks migrated into `cargo xtask conform` — but both fired in the SAME single run, 2026-06-12. The 2026-05-23 seed added no category and moved nothing into the gate; the 2026-06-10 run added none either. One of three runs exercised both forces and two exercised neither."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md  ##TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN Two forces reshape it over time, each when its own condition holds: @impl/done",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md  - ##FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY **A new defect class becomes a permanent category.** WHEN a run discovers a kind of rot the checklist did not name",
+              "CLOSED F-141 partially (Phase D wave 2, route a). The lead said two forces reshape the checklist EVERY RUN while both forces are written as conditionals in the bullets directly underneath - `when a run discovers`, `when a category stops earning its place`. The lead now says what its own bullets say. The anchor id keeps `EVERY-RUN` against prose that no longer claims it; flagged, not renamed."
             ]
           },
           "FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY": {
@@ -48977,12 +48960,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:55:02Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-07-29T16:50:24Z",
+        "verify_batch": "W5 + D2a"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md": {
-      "content_hash": "c10db3d6a98f3676253b03e6435b0151a9eb8c401021452dc8a73c63e3f752c7",
+      "content_hash": "009dd2b994279ec28dcf689450419f6edde9d6473fc2efcf132c51a67681c94b",
       "rollup": {
         "explicit": [
           "spec",
@@ -49004,7 +48987,7 @@
       "unit_count": 20,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c10db3d6a98f3676253b03e6435b0151a9eb8c401021452dc8a73c63e3f752c7",
+        "processed_hash": "009dd2b994279ec28dcf689450419f6edde9d6473fc2efcf132c51a67681c94b",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -49723,17 +49706,14 @@
             ]
           },
           "TWO-RULES-GOVERN-THE-LISTS-GROWTH": {
-            "v": "drift",
-            "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:77  - ##HIST-CATEGORY-E **2026-06-12 — category E (discipline depth) added** by that day's owner-requested full sweep — the first post-adoption depth audit. Permanent per the living-checklist law: the same gap (surface adoption mistaken for depth) is never re-missed. … @spec/done",
-              "AUDIT.md:424  - **-08 · fixed.** Three rules + one widening shipped and frozen via",
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "DRIFT on the implied cadence, the same measurement as the protocol's `TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN` and ruled identically. Both rules HAVE fired here — the 2026-06-12 run added category E and its fixes moved four checks into `cargo xtask conform` — but both fired in that one run. The 2026-05-23 seed added no category and moved nothing, and the 2026-06-10 run did neither. One of three runs applied both, two applied neither."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md  ##TWO-RULES-GOVERN-THE-LISTS-GROWTH Two rules govern its growth, each applying when its own condition holds: @impl/done",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md  1. ##GROWTH-RULE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-ROW **A new defect class becomes a permanent row.** WHEN a run finds a kind of rot no category named",
+              "CLOSED F-235 partially (one anchor of two; Phase D wave 2, route a). Same defect as its sibling in the protocol and settled the same way: `every run applies both` said of two rules that are conditional in their own text. The second anchor of F-235 stays open as route (b)."
             ]
           },
           "GROWTH-RULE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-ROW": {
@@ -49865,8 +49845,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:56:45Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-07-29T16:50:24Z",
+        "verify_batch": "W5 + D2a"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md": {
@@ -83172,7 +83152,7 @@
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/README.md": {
-      "content_hash": "809d1988b79862aeb0130e4115fd023353d6608e1a0a4249c4de2585cd6128d1",
+      "content_hash": "a84f93c981aa146a04d9a2d3cf0acd928275c8e21d02a40c95ff178147a8b3c3",
       "rollup": {
         "explicit": [
           "doc",
@@ -83194,7 +83174,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "809d1988b79862aeb0130e4115fd023353d6608e1a0a4249c4de2585cd6128d1",
+        "processed_hash": "a84f93c981aa146a04d9a2d3cf0acd928275c8e21d02a40c95ff178147a8b3c3",
         "verdicts": {
           "PACKAGE-INSTALLS-THE-WAL-PROTOCOL": {
             "v": "confirmed",
@@ -83251,16 +83231,16 @@
             ]
           },
           "DISCIPLINE-DEFERS-TO-THIS-PACKAGE-FROM-ITS-NEXT-RELEASE": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  # The WAL Convention — session-durable project state {#root}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:49  - `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).",
-              "vibe.lock:62      \"flow:org.vibevm.world/wal@=0.2.0\",",
-              "DRIFT: the next release came and did not defer. wal 0.2.0 landed 2026-07-07 (ec6b5b5a, subject 'the canonical WAL convention'); core-ai-native v0.8.0 landed 2026-07-17 (bfb72da7), ten days later, is the installed slot, and still ships the full convention with zero occurrences of 'defer', 'flow:wal' or 'org.vibevm.world/wal'."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               3
+            ],
+            "ev": [
+              "packages/org.vibevm.world/wal/v0.2.0/README.md  ##DISCIPLINE-DEFERS-TO-THIS-PACKAGE-FROM-ITS-NEXT-RELEASE The AI-Native Discipline (`flow:core-ai-native`) still ships its own WAL convention document, marked OPTIONAL but preferred; the deference this package expects has not landed in one of its releases yet. @spec/done",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md:1  the convention document that was to defer",
+              "vibedeps/flow-core-ai-native/0.8.0/spec/06-WAL-CONVENTION.md:1  and the installed slot the consumer actually reads",
+              "CLOSED F-205 partially (one anchor of three; Phase D wave 2, route a). The same defect as campaign-plans' and measured the same way: core-ai-native v0.8.0 shipped ten days after wal 0.2.0 carrying zero occurrences of `defer` or `flow:wal`, and the host boots both conventions. The sentence now describes the shipped state. The anchor id still promises deference; flagged, not renamed."
             ]
           },
           "package-contents-lead": {
@@ -83473,17 +83453,16 @@
             ]
           },
           "ideas-are-chapters-two-and-three": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:3  # Глава первая.<br>Два процесса, одна задача",
-              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  # Глава вторая.<br>Shared state: файлы как IPC",
-              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:1  # Глава третья.<br>Архитектура памяти",
-              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:4  которая определяет всё. WAL как checkpoint, не лог.",
-              "DRIFT: the range excludes one of the four ideas it lists. ls over redbook v0.2.0's spec/book/ru/ returns exactly three chapters, and two-process cooperation is chapter 1 ('Два процесса, одна задача'), not 2-3. 0.1.0's README said 'chapters 1-3'; 0.2.0 narrowed the range and kept chapter 1's subject in the list."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/wal/v0.2.0/README.md  ##ideas-are-chapters-two-and-three ... are chapters 1-3 of *AI-native development*, shipped in Russian inside `flow:redbook` at `spec/book/ru/`. @spec/done",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:1  chapter 1 is the two-process model, the first idea the sentence lists",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md:1  chapter 2 is files as the IPC",
+              "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md:1  chapter 3 is the memory hierarchy",
+              "CLOSED F-205 partially (Phase D wave 2, route a). The sentence enumerates three ideas - two-process cooperation, files as the IPC, the memory hierarchy - and placed them in chapters 2-3, excluding the chapter that carries the first of them. The redbook's own filenames settle it: the range is 1-3. Checked in the package rather than reported from reading."
             ]
           },
           "AGENT-SESSION-HAS-NO-PERSISTENT-MEMORY": {
@@ -83569,8 +83548,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T18:52:29Z",
-        "verify_batch": "W2a"
+        "verified_at": "2026-07-29T16:50:24Z",
+        "verify_batch": "W2a + D2a"
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md": {
@@ -83822,7 +83801,7 @@
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md": {
-      "content_hash": "60406c05c416db4c72ab1d43308e4990074ee31d3475b2ec090ad204758758fe",
+      "content_hash": "0224a8990b6e4f52f3d21ab20a1f539ab568e9edcac3f31b90dc0e1beb66eaa6",
       "rollup": {
         "explicit": [
           "spec",
@@ -83844,7 +83823,7 @@
       "unit_count": 15,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "60406c05c416db4c72ab1d43308e4990074ee31d3475b2ec090ad204758758fe",
+        "processed_hash": "0224a8990b6e4f52f3d21ab20a1f539ab568e9edcac3f31b90dc0e1beb66eaa6",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -84031,17 +84010,14 @@
             ]
           },
           "FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
-              "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
-              "spec/boot/00-core.md:41  - ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done",
-              "DRIFT: both halves are false in this consumer, and one of them is false against the flow's own two-file model. 'The only persistent memory': CLAUDE.md, spec/boot/ (1585 compiled lines), the spec tree and CONTINUE.md are all persistent memory the agent reads every session, and CONTINUE.md is specified by this very package. 'Read first': the host reads it third (CLAUDE.md:3, spec/boot/00-core.md:9-13). The sentence belongs to a one-file model that 0.2.0 replaced two sections earlier in the same document."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md  ##FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY For the **agent** it is the canonical persistent memory: each session starts blank, and the WAL is read first. @impl/done",
+              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:15  ##two-files-lead Session-durable state lives in two repository files: @impl/done",
+              "CLOSED F-137 partially (one anchor of eleven; Phase D wave 2, route a, and the distinction is worth recording). `only` was falsified not by the consumer but by THIS DOCUMENT'S OWN two-file model twelve lines earlier: session-durable state lives in two files, so the WAL cannot be the only persistent memory. `canonical` keeps the primacy the rule is for and drops the exclusivity the package itself contradicts. The near-identical softening in campaign-plans - `single` to `authoritative` on the status line - was REVERSED in the same review, because there the falsifier was the host carrying three indicators, which is non-compliance and route (b). The two look alike and are opposite."
             ]
           },
           "FOR-THE-HUMAN-IT-IS-THE-SINGLE-MORNING-RE-READ": {
@@ -84641,8 +84617,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T18:52:29Z",
-        "verify_batch": "W2a"
+        "verified_at": "2026-07-29T16:50:24Z",
+        "verify_batch": "W2a + D2a"
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md": {
