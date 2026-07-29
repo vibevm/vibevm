@@ -87,9 +87,12 @@ the work-list; its git diff is the trend). @impl/done
 
 ## Output contract {#output-contract}
 
-##END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE End every sweep with the outcome table the Playbook §5 specifies: per tier,
-what ran, what was found, the ONE ratchet item taken, and what was
-deliberately left (with why). @impl/done
+##END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE End every sweep with an outcome table — this stack's own
+addition, and not something the Sweep Playbook prescribes: per tier, what ran,
+what was found, the ONE ratchet item taken, and what was deliberately left
+(with why). The Playbook's own closing contract is its §4 «Output of a sweep»
+— topic-grouped commits, the refreshed health snapshot, the resume pointer —
+and it holds here unchanged. @impl/done
 
 ##green-gates-only-is-not-a-sweep A sweep that only reports green gates did the
 floor's job, not the sweep's. @spec/done

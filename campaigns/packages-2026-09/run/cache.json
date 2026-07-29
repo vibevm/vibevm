@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-28T23:21:05Z",
+  "updated_at": "2026-07-29T08:19:55Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -20999,7 +20999,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md": {
-      "content_hash": "41c68add9099a030ba54c244be84f6a48f598c56a7130fde075a4ff390706b47",
+      "content_hash": "d556d4e5de9591e8803960b4756e006d1f4fd4f4b7770877a266b8818bd1dfcf",
       "rollup": {
         "explicit": [
           "impl",
@@ -21021,7 +21021,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "41c68add9099a030ba54c244be84f6a48f598c56a7130fde075a4ff390706b47",
+        "processed_hash": "d556d4e5de9591e8803960b4756e006d1f4fd4f4b7770877a266b8818bd1dfcf",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -21196,12 +21196,12 @@
             ]
           },
           "END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:90  ##END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE End every sweep with the outcome table the Playbook §5 specifies: per tier,",
-              "vibedeps/flow-core-ai-native/0.8.0/spec/04-SWEEP-PLAYBOOK.md:122  ## 4. Output of a sweep {#output}",
-              "vibedeps/flow-core-ai-native/0.8.0/spec/04-SWEEP-PLAYBOOK.md:137  ## 5. What the sweep deliberately does NOT do {#non-goals}",
-              "the cross-reference misses by one section and by the artifact: §5 of the Sweep Playbook is «What the sweep deliberately does NOT do», the output section is §4, and **no table appears anywhere in that playbook**"
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:90  ##END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE End every sweep with an outcome table - this stack's own addition, and not something the Sweep Playbook prescribes",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:165  ## 4. Output of a sweep {#output}",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:183  ## 5. What the sweep deliberately does NOT do {#non-goals}",
+              "CLOSED F-283 (Phase D, wave 1, route a - the package's statement was wrong). The fact attributed an outcome table to 'the Playbook 5'; 5 is the non-goals section, the output section is 4, and grep over 04-SWEEP-PLAYBOOK.md finds six table lines, all of them the cadence table at 148-153 (tiers x daily/weekly) - the Playbook prescribes no outcome table at any section. The sibling rust and go sweep skills mirror 4 faithfully and carry no such table, so the claim was this stack's alone. The sentence now owns the table as this stack's addition and names 4 correctly for the shared closing contract; the requirement itself is unchanged, so nothing is weakened."
             ]
           },
           "green-gates-only-is-not-a-sweep": {
@@ -21257,8 +21257,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verified_at": "2026-07-29T08:19:55Z",
+        "verify_batch": "C6 + D1a"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md": {
