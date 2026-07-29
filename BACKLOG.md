@@ -212,6 +212,41 @@ already written from it is the specification of the work.)*
   Anywhere a fenced block carries an instruction rather than an illustration, it
   is unverified by construction.
 
+### B-005 — `mirror --check` tests equality where the flow specifies ancestry {#b-005}
+
+| | |
+|---|---|
+| ##B005-ANCHOR **anchor** | `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#INVARIANT-THE-ANCESTRY-GATE` — the rule; the defect is in the host's port of it |
+| ##B005-LOCATOR **locator** | `xtask/src/mirror.rs:327-342` (`probe`), against the flow's own reference script at `fanout-mechanics.md:190-195` |
+| ##B005-SEVERITY **severity** | P2 |
+| ##B005-DISPOSITION **disposition** | `open` |
+| ##B005-FILED **filed by** | the packages-actualization campaign, Phase D, wave 6, 2026-07-29 — found in passing while re-verifying F-204, outside its anchor list |
+
+- ##B005-WHAT **What it is.** The flow specifies an **ancestry** gate: the target's main
+  must be an ancestor of local mainline. Its own fifteen-line reference script
+  implements exactly that — `git ls-remote` for the target's tip, then
+  `git merge-base --is-ancestor`. The host's port does not: `probe` matches
+  `Some(sha) if sha == head => SyncState::InSync` and sends everything else to
+  `SyncState::Drift`. That is **equality**, and a target legitimately *behind*
+  mainline — the ordinary state of every target between two fan-outs — is
+  reported as drifted.
+- ##B005-WHY-P2 **Why P2 and not P1.** It cannot produce a false green. `sha == head`
+  implies in-sync under either test, so the error is strictly in the
+  conservative direction: it reports red where the truth is «behind, which is
+  fine». That is noise, and noise in a check is how a check stops being read —
+  but it is not a gate that lies. Same reasoning as [B-003](#b-003), same
+  direction.
+- ##B005-NOT-THE-PUSH-PATH **What it is not.** The *push* path is sound and stays sound: it is
+  fast-forward-only by construction, and `push_args_never_force`
+  (`mirror.rs:426-440`) pins the never-`--force` invariant across four ref
+  shapes. This is the read-only `--check` probe only.
+- ##B005-THE-GENERAL-SHAPE **The shape worth remembering.** The package shipped a correct
+  reference implementation *in shell*, and the consumer's re-implementation in
+  Rust lost a property of it. Wave 6 nearly demoted the rule for the consumer's
+  omission — the perimeter check caught that the package itself implements it.
+  Where a flow ships a reference script, that script is a witness, and the port
+  is the thing to audit against it.
+
 ## P3 — accepted, no action planned {#p3}
 
 *(empty)*
