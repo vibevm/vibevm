@@ -32,9 +32,16 @@ supersede every figure in this file: `tasks/batch-progress.py` and
 **2 216 units**; two shape mismatches are recorded there for whoever runs the
 next `rescan` — 60 units omitted for want of a judged fact WILL read as `new`.
 
-**Next is §9 REPORT**, still empty, to be filled at close-out against §6. The
-three findings this phase filed and deliberately did not repair are named in the
-LOG entry and in `CONTINUE.md`; draining them is a later wave's job, not Phase C's.
+**Three candidate next steps, none started, and the owner picks.** (1) **Phase D
+— Stitching**, whose entry condition «C verdicts exist for the cluster» is now
+met: its input is the 601 drifts, clustered hard — `core-ai-native` alone carries
+104, a sixth of everything, and its prose is copied by four language families, so
+§phase-d's rule that a cross-package finding is a **release event** binds before
+the first edit. Note there is no `PHASE-D-*` spec or batch plan in the zone —
+drafting it is the first piece of work. (2) **§9 REPORT**, still empty, scored
+against §6's falsifiable predictions. (3) **The three findings** this phase filed
+and deliberately did not repair, named in the LOG entry and in `CONTINUE.md` —
+each an owner decision rather than a mechanical fix.
 
 **The per-file slice replaced the batch as the unit of work, and that closes the
 split question §4 left open.** Seventeen slices landed here, one file each, 17 to
