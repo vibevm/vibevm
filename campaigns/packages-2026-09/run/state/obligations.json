@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 567,
+ "drift_verdicts": 564,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -7729,48 +7729,6 @@
    "carried": true
   },
   {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md#c-6-side-b"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:144  - ##BOUNDARY-THERE-IS-A-FLOOR **There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-cla...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  _benchmark · high · refines:R3-010_ — The follow-up's causal core, directly relevant to the spec-vs-code debate. THRE...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplif..."
-   ],
-   "cites": [],
-   "reason": "the side cites a `4–7/80` figure that appears in **no record of the ATLAS this map indexes**. A contradiction map's job is to name where each position is stated; a number with no record behind it names nothing",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplif...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-259",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -8020,90 +7978,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-265",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md#distribution-by-status-vs-prior-knowledge"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:14  ##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=31, contradicts=5, known=5 ...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:148  _theory · high · _ — Code uniquely offers cheap, fast, machine-readable correctness signals (compile/type/lint/test) ...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:22  _production · high · new_ — Holzmann's 10 rules (2006) target restrictions that most increase analyzability per unit ..."
-   ],
-   "cites": [],
-   "reason": "the arithmetic sums to 87 and one of its four buckets is manufactured: `new=31` is **15 records literally marked `new` plus 16 whose status field is EMPTY**, all BLD-* in axis H. The distribution reports an absent status as a present one, so a reader counting genuinely-new findings is over by sixteen. The other three distributions — by axis (10+8+9+10+8+4+8+30) and by evidence class (48+17+7+6+6+3) — each sum to 87 and are sound",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:14  ##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=31, contradicts=5, known=5 ...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-266",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md#C-7-OPEN-H6-UNIFORMITY"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:132  _benchmark · med · refines:H6_ — LLM-aided code profiling finds that keeping prompt and test examples in the same syn...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be m...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:46  - ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** no controlled measurement of internal-uniformity effect exists in the l..."
-   ],
-   "cites": [],
-   "reason": "the entry records H6-uniformity as OPEN, and **DR1-022 in the same package's ATLAS reports a measured uniformity effect**. The question the map calls open is answered by a record the map's own index carries",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:46  - ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** no controlled measurement of internal-uniformity effect exists in the l...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-267",
    "id_source": "minted",
    "carried": true
   },
@@ -12053,6 +11927,114 @@
    "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
    "falsifier": "self",
    "id": "F-229",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md#c-6-side-b"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "cites": [],
+   "reason": "the side cites a `4–7/80` figure that appears in **no record of the ATLAS this map indexes**. A contradiction map's job is to name where each position is stated; a number with no record behind it names nothing",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplif...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-259",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md#distribution-by-status-vs-prior-knowledge"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "cites": [],
+   "reason": "the arithmetic sums to 87 and one of its four buckets is manufactured: `new=31` is **15 records literally marked `new` plus 16 whose status field is EMPTY**, all BLD-* in axis H. The distribution reports an absent status as a present one, so a reader counting genuinely-new findings is over by sixteen. The other three distributions — by axis (10+8+9+10+8+4+8+30) and by evidence class (48+17+7+6+6+3) — each sum to 87 and are sound",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:14  ##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=31, contradicts=5, known=5 ...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-266",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md#C-7-OPEN-H6-UNIFORMITY"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "cites": [],
+   "reason": "the entry records H6-uniformity as OPEN, and **DR1-022 in the same package's ATLAS reports a measured uniformity effect**. The question the map calls open is answered by a record the map's own index carries",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:46  - ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** no controlled measurement of internal-uniformity effect exists in the l...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-267",
    "id_source": "minted",
    "carried": true
   },

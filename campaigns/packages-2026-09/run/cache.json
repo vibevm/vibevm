@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T17:25:49Z",
+  "updated_at": "2026-07-29T17:36:21Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -3268,7 +3268,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1e88af6949b8076d1a85f1f50589becb6e774341cff94591cefae184224f9774",
+        "processed_hash": "d09c56dbaafa4fd28b124a909141b87dac01f0e7483fe470121717f01cf8878d",
         "verdicts": {
           "status-line": {
             "v": "drift",
@@ -3307,12 +3307,10 @@
             ]
           },
           "distribution-by-status-vs-prior-knowledge": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:14  ##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=31, contradicts=5, known=5 ...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:148  _theory · high · _ — Code uniquely offers cheap, fast, machine-readable correctness signals (compile/type/lint/test) ...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:22  _production · high · new_ — Holzmann's 10 rules (2006) target restrictions that most increase analyzability per unit ...",
-              "the arithmetic sums to 87 and one of its four buckets is manufactured: `new=31` is **15 records literally marked `new` plus 16 whose status field is EMPTY**, all BLD-* in axis H. The distribution reports an absent status as a present one, so a reader counting genuinely-new findings is over by sixteen. The other three distributions — by axis (10+8+9+10+8+4+8+30) and by evidence class (48+17+7+6+6+3) — each sum to 87 and are sound"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:14  ##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=15, contradicts=5, known=5, unclassified=16",
+              "CLOSED F-266 (Phase D, route a - arithmetic the appendix can check against itself). The distribution reported `new=31`, which was 15 records literally marked `new` plus 16 whose status field is EMPTY, all BLD-* in axis H. An absent status was being reported as a present one, so a reader counting genuinely-new findings was over by sixteen. The bucket is now split and named, the total still sums to 87, and the three distributions that were already sound - by axis and by evidence class - are untouched."
             ]
           },
           "surprise-findings-roster": {
@@ -4108,8 +4106,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T09:38:29Z",
-        "verify_batch": "C2"
+        "verified_at": "2026-07-29T17:36:21Z",
+        "verify_batch": "C2 + D3c"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
@@ -4135,7 +4133,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "92ad3c1816d15dc4d0e8c4f09a78f2d78327f53755bb3f8c9dc3b83346fa84ea",
+        "processed_hash": "115fb5bff2dc49c4c02181a781b1f53199a139adf46c0787850c1413981cfe77",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4315,12 +4313,11 @@
             ]
           },
           "c-6-side-b": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplif...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  _benchmark · high · refines:R3-010_ — The follow-up's causal core, directly relevant to the spec-vs-code debate. THRE...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:144  - ##BOUNDARY-THERE-IS-A-FLOOR **There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-cla...",
-              "the side cites a `4–7/80` figure that appears in **no record of the ATLAS this map indexes**. A contradiction map's job is to name where each position is stated; a number with no record behind it names nothing"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor; resources amplify, don't create capability. Evidence: R2C-008",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  R2C-008, the three-condition weak-agent test the side now names",
+              "CLOSED F-259 (Phase D, route a - the map was wrong about the index it indexes). The side cited a `4-7/80` figure that appears in no record of the ATLAS this map exists to index. A contradiction map's job is to name where each position is stated, and a number with no record behind it names nothing. The figure is gone and the side now cites R2C-008 by id, stating what that record does and does not publish per model - Sonnet 4.6 and GPT-5.4-mini have figures, Haiku has none on record here. The claim is weaker in evidence and stronger in honesty, and it is the map's own standard applied to itself."
             ]
           },
           "C-6-RESOLUTION": {
@@ -4351,12 +4348,11 @@
             ]
           },
           "C-7-OPEN-H6-UNIFORMITY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:46  - ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** no controlled measurement of internal-uniformity effect exists in the l...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:132  _benchmark · med · refines:H6_ — LLM-aided code profiling finds that keeping prompt and test examples in the same syn...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be m...",
-              "the entry records H6-uniformity as OPEN, and **DR1-022 in the same package's ATLAS reports a measured uniformity effect**. The question the map calls open is answered by a record the map's own index carries"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:46  - ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** partly measured, not settled.",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md  DR1-022 (benchmark, med) - the record that measures a uniformity effect",
+              "CLOSED F-267 (Phase D, route a). The entry recorded H6-uniformity as fully OPEN - «no controlled measurement of internal-uniformity effect exists» - while DR1-022 in the same package's ATLAS, which this map indexes, reports one. The entry now separates the two questions: the in-context uniformity effect IS measured and named by record id, and what stays open and ours is a codebase's own internal uniformity, which no record measures under control. The open item survives; only its scope was wrong."
             ]
           },
           "open-items-are-why-the-package-is-beta": {
@@ -4369,8 +4365,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T09:38:29Z",
-        "verify_batch": "C2"
+        "verified_at": "2026-07-29T17:36:21Z",
+        "verify_batch": "C2 + D3c"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
