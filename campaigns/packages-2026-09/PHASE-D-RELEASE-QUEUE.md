@@ -41,6 +41,82 @@ itself needs no further ruling.
 package* — the targets live under `spec/`. It needs no tag and no decision, only
 the correct intra-package path.
 
+### A.1 The group is larger than three obligations, and the measurement says why {#addresses-scope}
+
+_Measured 2026-07-29, wave 6. Reproduce the lane counts with
+[`tasks/address-repair.py`](tasks/address-repair.py)._
+
+**The package is not the broken side.** The same link resolves or dangles
+depending only on which lane you read it in:
+
+| lane | `../flows/…` links | dangling |
+|---|---:|---:|
+| `packages/**` — where the text is authored | 70 | **0** |
+| `vibedeps/**` — the installed slots | 142 | 21 |
+| `spec/boot/STATIC.md` — where a session reads it | 75 | **75** |
+
+`spec/flows/` does not exist in this host (`ls spec/` → `WAL.md boot common
+design manual-tests modules terraforms`). The boot compiler concatenates snippet
+bodies verbatim (PROP-035's linker stage), so a relative path that meant
+`<pkg>/spec/flows/…` in the package means the host's `spec/flows/…` once
+compiled. The defect is the **form**: a relative path cannot survive being
+moved, and an `@spec://` address can. That is why the owner's ruling puts the
+repair in the packages and not in the compiler — and it is also why the repair
+**cannot be verified by editing a package**.
+
+- ##A1-EVERY-ROUTE-NEEDS-PUBLICATION **The consequence for the queue.** `spec/boot/STATIC.md` is
+  generated from `vibedeps/` — its own provenance comments say so
+  (`<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/… -->`).
+  So a package edit reaches the lane only through a version bump and
+  `cargo xtask sync-engines`. **No address obligation closes without
+  publication, whatever route the registry assigns it.** Joining the repaired
+  links to the registry by their governing anchor gives **24 obligations · 54
+  drift verdicts · 22 packages**, and only **two** of those sit on the `release`
+  route:
+
+  | route | obligations |
+  |---|---:|
+  | `prose-edit` | 19 |
+  | `release` | 2 (`F-136`, `F-145`) |
+  | `build-or-demote` | 2 (`F-316`, `F-332`) |
+  | `sync-from-code` | 1 (`F-087`) |
+
+  The nineteen `prose-edit` rows read as ordinary boss work and are not: their
+  verdicts name the compiled lane explicitly — «the compiled lane keeps
+  `../flows/addressable-specs/…`» (F-193), «`STATIC.md:1135`» (F-334),
+  «STATIC.md:1365 keeps the relative link» (F-348). **One approval covers all
+  24, and nothing in the family is boss-closable before it.**
+- ##A1-THE-EDIT-IS-A-COMMAND **The edit is prepared as a transformation, not as 62 hand edits.**
+  `tasks/address-repair.py` computes every replacement, refuses to apply if any
+  emitted address does not resolve, and is line-indexed rather than text-wide
+  (a whole-text replace was caught being wrong — `two-process-model` carries the
+  identical link on two lines). Dry-run, verified: **62 link constructs · 25
+  files · 25 packages · 62/62 addresses resolve · 0 malformed against the
+  PROP-035 §6 grammar · 0 residual `../flows/` after the rewrite.** The 62
+  constructs cover all 69 raw occurrences because 7 carry the path twice, once
+  as visible link text.
+- ##A1-ALL-POINTERS-NO-EMBEDS **The `#embed` half of the ruling has no member here.** The owner
+  ruled `@spec://` for pointers and `#embed` where the target belongs in the
+  lane. Read line by line, **all 69 are pointers** — «Full protocol:», «Full
+  model:», «Full rationale:», «Grammar and forms:», «Responsibility table:»,
+  «read …». Every one deliberately withholds the target's content. The emitted
+  form copies the house form already live in the host's own spec
+  (`spec/common/PROP-000.md:161-164`, `PROP-016:8`):
+  `spec://<group>/<name>/<doc-path>#<anchor>`, no `.md`, always an anchor.
+- ##A1-F240-IS-SCOPED-AT-TWO-AND-THE-DEFECT-IS-IN-SEVENTEEN **`F-240`'s scope is wrong, and this is the one thing here that
+  changes what the owner should approve.** The root-relative variant — a
+  re-derive prompt whose first instruction is `Read spec/flows/<name>/ …` —
+  is recorded in two packages and **present in seventeen**: addressable-specs,
+  comparative-research, conflict-protocol, decision-records, discovery-prompt,
+  git-attribution-policy, health-audit, licensing, managed-blocks, manual-tests,
+  operating-modes, qualified-naming, secrets-hygiene, source-mirrors,
+  spec-genres, two-process-model, wal. The fifteen unrecorded ones are not
+  mis-judged verdicts — the instruction lives **inside a fenced block**, which
+  carries no anchor, so which of the prompt's claims got tested varied by
+  worker. Filed as [`BACKLOG.md` B-004](../../BACKLOG.md#b-004). **Publishing
+  the two-package fix alone is what §4.5 calls not a closure**; the ask should
+  be scoped at seventeen or the remainder recorded as a deferral.
+
 ---
 
 ## B. The three-stack parallel corpus — 9 obligations {#stacks}
@@ -108,8 +184,17 @@ against the package's own contents.
 
 ## What is being asked, in one screen {#ask}
 
-1. **Group A — publish.** One approval covering 19 packages; the repair is
-   decided and needs no further ruling.
+1. **Group A — publish, and the approval covers more than the three rows say.**
+   Measured in §A.1: the `../flows/…` defect exists only in the **compiled
+   lane**, which is generated from `vibedeps/`, so every address obligation —
+   **24 of them across four routes, not the 3 listed here** — closes through
+   publication and none is boss-closable before it. The edit itself is decided
+   and is one verified command
+   ([`tasks/address-repair.py`](tasks/address-repair.py): 62 links, 25 packages,
+   62/62 resolve, 0 residual). **One further decision is owed and it is new:**
+   `F-240`'s root-relative variant is recorded in 2 packages and present in
+   **17** (`BACKLOG.md` B-004) — publish the narrow fix and fifteen packages ship
+   the same broken first instruction.
 2. **Group B — two product decisions first** (`F-189` go dispatch, `F-187` the
    Go skills), then publish the other seven.
 3. **Group C — one which-side ruling** on `F-220` and `F-233`; `F-219` needs
