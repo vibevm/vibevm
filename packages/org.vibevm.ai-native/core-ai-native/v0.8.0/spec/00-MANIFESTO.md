@@ -122,7 +122,7 @@
 
 ##CARD-CARRIES-FOUR-PARTS Each rule/pattern is a *card* (`01-PATTERN-CARD-FORMAT.md`) carrying a **Trigger** (when to switch on), a short **Routine** (≤7 steps), a **Checker** (machine verification), and a **Budget** (attention cost). @impl/done
 
-##HARNESS-DELIVERS-LAZY-PUSH The harness delivers only the cards whose triggers fire, as a small activation-matched set (lazy-push). @impl/done
+##HARNESS-DELIVERS-LAZY-PUSH The harness delivers only the cards whose triggers fire, as a small activation-matched set (lazy-push). *Specified, not built at card grain: no harness reads a card. Lazy-push itself is real one level up — `vibe` implements `DeliveryMode::LazyPush` for **subskills**, matching an agent's task description against a subskill `description`, with `vibe check` enforcing that a lazy-push unit carries one and warning on activation overlap between siblings. Nothing applies that machinery to cards: no reader of `card-ops`, of a card `trigger`, or of `cards/INDEX.md` exists in any language anywhere in the repository. Card delivery today is a boot instruction a session follows by hand, not an activation match the harness computes.* @spec/done
 
 ##triggers-escalate-lead Triggers escalate by cost: @impl/done
 
@@ -142,7 +142,7 @@
 ##stated-plainly-lead Stated plainly so the pilot can falsify it: @spec/done
 - ##BOUNDARY-TRANSFER-UNPROVEN **Transfer is unproven.** The executable-scaffold result is generation, not modification. [E-mid]. @spec/done
 - ##BOUNDARY-THERE-IS-A-FLOOR **There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-class, and our target Qwen-32B may sit lower on some axes) did *not* recover — scaffolds amplify capability, they do not create it. The discipline lowers the floor; it does not remove it. @spec/done
-- ##BOUNDARY-SURFACE-IS-CURRENT **Surface-distribution is current.** The "stay in-distribution" law is tied to today's model generation; it carries a sunset (R-050) and must be re-checked as models change. @spec/done
+- ##BOUNDARY-SURFACE-IS-CURRENT **Surface-distribution is current.** The "stay in-distribution" law is tied to today's model generation; it carries a sunset (R-050) and must be re-checked as models change. *The obligation stands; the sunset it names has no carrier. R-050 is authored in no document that ships — every occurrence across this package, the language stacks, the engine crates and the host is a citation, and the ATLAS roster it would live in holds only `BLD-` / `DR1-` / `DR2-` / `R2C-` / `R3-` ids. Nothing schedules the re-check, expires the law, or records when it was last examined. The sunset **mechanism** does exist one grain over — every one of the 22 entries in the host's debt registry carries a `sunset` field, and cards carry a `Sunset:` clause in their Risks band — so the pattern is proven and simply not applied to this law.* @spec/done
 - ##BOUNDARY-MEASUREMENT-DEFERRED **Measurement is deferred by design.** We build the core on internal logic plus others' published evidence, and instrument later, at a buyer's expense. Every card therefore carries a falsifiable `prediction` in place of a present measurement. @spec/done
 
 ##names-its-own-failure-modes A discipline that names its own failure modes is more trustworthy than one that hides them. @spec/done
@@ -182,6 +182,6 @@
 
 ##appendix-lead **Appendix (synthesis provenance):** @impl/done
 - ##MAP-CONTRADICTION-MAP `appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions. @impl/done
-- ##MAP-ATLAS `appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). @impl/done
+- ##MAP-ATLAS `appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). *Correction: the ledger is real and is the appendix itself — 87 `#FINDING-*` records, whose ids the cards cite and resolve against. The generator is not: no `findings.jsonl` is tracked anywhere in this repository, in any package, or in any consumer, so ATLAS is authored directly rather than rendered from a source. Read the parenthetical as the intended pipeline, not as the current one (F-088).* @impl/done
 
 ##ADOPTION-PLAN-LIVES-OUTSIDE The vibevm-specific adoption plan lives OUTSIDE this package, in the host's `terraform/`, because the Discipline is the product and vibevm is its pilot. @impl/done

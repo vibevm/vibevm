@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-29T18:43:24Z",
+  "updated_at": "2026-07-29T18:53:31Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -9515,10 +9515,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "58f9e96fda6d18c6e0b4656687e942bc455d0d2a7d84e25ed46441574cb2a41f",
+        "processed_hash": "0dd793c0c17e968ca707f396410db3d117062595937932c53cad1bed91fdb91a",
         "summary": {
-          "confirmed": 140,
-          "drift": 7,
+          "confirmed": 142,
+          "drift": 5,
           "unverifiable": 2
         },
         "verdicts": {
@@ -9957,10 +9957,9 @@
             ]
           },
           "BASELINE-BOUNDARY-VALIDATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:19  - **Boundary validation (parse, don't validate):** JSON decoding is loose by default — missing fields become zero values silently",
-              "**restated 2026-07-28; the first verdict's REASON was wrong and it was mine.** It read unverifiable on «there is no research/go-demo» — asserted rather than checked. **`research/go-demo/` exists and is a complete Go consumer**: `go.mod`, 15 production `.go` files in the cell layout the guide prescribes (`internal/cells/{batchplanner,naiveplanner}`, `internal/registry`, `internal/seams`, `cmd/reconcile`), `conform.toml` with `cells_dir = \"internal/cells\"`, `specmap.toml`, `specmap.json`, a conform baseline and four `discipline/` files. Measured over its own sources: `DisallowUnknownFields` occurs **zero** times. The fact calls it the MUST decode configuration and the one Go consumer in the tree does not use it"
+              "CLOSED F-184 partially (Phase D wave 5, demotion - genuinely uncheckered over the full perimeter)."
             ]
           },
           "kind-line-cells": {
@@ -10753,12 +10752,10 @@
             ]
           },
           "SWEEP-CENSUS-REGRESSIONS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/go.rs:104  \"init_decl\" | \"blank_import\" | \"ambient_call\" | \"naked_go\"",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:79  5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/health.rs:141  \"ban_census\": {",
-              "the five census names have no producer: no census exists in the stack, the host or the captured runs, so nothing can hold them at zero on gated packages"
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/  the census has a live three-stage producer; two of the five names are shipped kinds verbatim",
+              "CLOSED F-184 partially (Phase D wave 5) - CORRECTED, not demoted. The census producer ships and two of the five kind names are the shipped strings; only the other three were wrong, and only those changed."
             ]
           },
           "SWEEP-FLIP-ONLY-AFTER-DRAIN": {
@@ -10771,8 +10768,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:03:47Z",
-        "verify_batch": "C3"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C3 + D5a"
       }
     },
     {
@@ -10791,11 +10788,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "f5ebd784c40a0d36957e3e48b216f5adb49e896ff1cec80b05897a27be2d5743",
+        "processed_hash": "0ce2921f9088a1609c79d3d9adb19b7bdc4de1e77b051848347a939a80b07013",
         "summary": {
-          "confirmed": 58,
-          "drift": 10,
-          "unverifiable": 3
+          "confirmed": 64,
+          "drift": 5,
+          "unverifiable": 2
         },
         "verdicts": {
           "status-line": {
@@ -10902,11 +10899,9 @@
             ]
           },
           "INIT-RESULT-CARRIES-PATH-AND-VERSION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:46  ##INIT-RESULT-CARRIES-PATH-AND-VERSION The resolved path and the server's reported version land in the `init` result....",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74  fn init_result(oracle: &GoOracle<ChildTransport>) -> serde_json::Value { serde_json::json!({ \"gopls_version\": oracle....",
-              "**the resolved path never lands in the init result.** `init_result` returns gopls_version, position_encoding, pull_diagnostics and ready — and no path (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74-84). Half the fact holds (the version is there), the other half is absent from the shipped shape"
+              "CLOSED F-160 partially (Phase D wave 5, demotion, partial - the version half ships, the path half does not)."
             ]
           },
           "kind-line-session": {
@@ -10989,11 +10984,9 @@
             ]
           },
           "DIAGNOSTICS-CHANNEL-HISTORY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:74  ##DIAGNOSTICS-CHANNEL-HISTORY **Diagnostics channel, stated honestly.** gopls has historically PUSHED diagnostics (`t...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:33  pub position_encoding: PositionEncoding, pub pull_diagnostics: bool, pub server_version: String, }",
-              "the historical half is true; the second half is not. The fact says which channel the shipped gopls grants «is pinned by the Phase-7 live chain and **recorded in the differential corpus**» — and **no Go corpus file exists anywhere**: research/tcg-bench/ carries a TypeScript corpus and a Rust one. The capability is negotiated at runtime (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:33 carries `pull_diagnostics`), but nothing records it"
+              "CLOSED F-160 partially (Phase D wave 5, demotion)."
             ]
           },
           "BRIDGE-SUPPORTS-BOTH-DIAGNOSTIC-CHANNELS": {
@@ -11209,11 +11202,10 @@
             ]
           },
           "DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:156  - ##DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES The differential corpus curates diagnostic classes and pins each to t...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:2  //! (ORACLE-GO §5, §8): every corpus case runs through the LIVE oracle //! (warm ×3) and through `go build ./...` in...",
-              "the corpus is language-specific and Go has none: `research/tcg-bench/` carries a TypeScript corpus and a Rust one, and no Go corpus or mapping table exists"
+              "research/tcg-bench/  carries corpus and corpus-rust and no Go corpus - verified over the repository root",
+              "CLOSED F-160 partially (Phase D wave 5, demotion). The history the fact claims is true; the Go corpus that would pin it is not written."
             ]
           },
           "KNOWN-ASYMMETRIES-ARE-DOCUMENTED-GAP-CASES": {
@@ -11377,33 +11369,26 @@
             ]
           },
           "TARGET-COLD-INIT": {
-            "v": "unverifiable",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:227  - ##TARGET-COLD-INIT cold init-to-ready < 15 s. @impl/done",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/lib.rs:30  /// How long the relay waits for gopls readiness at boot; a pass /// degrades answers, it never fails the session (OR...",
-              "a performance target, unmeasurable here for want of gopls. The 45 s readiness budget (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/lib.rs:30-32) is how long the relay WAITS, not a target it claims to meet, so it neither confirms nor falsifies a 15 s figure"
+              "CLOSED F-160 partially (Phase D wave 5, demotion - posted, not measured)."
             ]
           },
           "BENCH-HARNESS-RECORDS-DISTRIBUTIONS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:229  ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench harness (`go-ai-native-tcg bench`) records distributions per run; the...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:106  pub fn run_bench(root: &Path, corpus_rel: &str, report_rel: &str) -> Result<()> {",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:77  Bench {",
-              "**the ledger entry does not exist.** The harness half holds — `run_bench` records a per-case distribution (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:56,106). The fact then states that «the Phase-7 ledger entry carries the first measured set on research/go-demo»: research/tcg-bench/reports/ holds bench-2026-07-07-baseline.json and bench-rust-2026-07-07-baseline.json and **no Go run**"
+              "CLOSED F-160 partially (Phase D wave 5, demotion)."
             ]
           },
           "LARGE-WORKSPACE-COLD-INIT-WARNING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:234  ##LARGE-WORKSPACE-COLD-INIT-WARNING Large-workspace consumers are warned about the product's 60 s first-request ceili...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:232  // The relay owns the session: boot gopls up front so the host's // FIRST frame can be validate/scope/… (client init...",
-              "**no consumer is warned of anything.** The eager-init half holds (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:232). The first half says large-workspace consumers ARE warned about a 60 s first-request ceiling, and no 60 s constant and no warning string exists in the shipped code or in spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md"
+              "CLOSED F-160 partially (Phase D wave 5) - PERIMETER CATCH: the cold-init warning exists one document over, so the fact was not the absence it was reported as. The `60 s` figure, by contrast, exists nowhere - the shipped budget is 45 s and the posted target 15 s. The number was NOT silently synced: reconciling a posted target against a shipped bound is a sync-from-code diff and belongs to the owner's route."
             ]
           }
         },
-        "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5 + C45-go-review"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a"
       }
     },
     {
@@ -12318,10 +12303,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "5d86dcf52da27cb1861b2625ac7183ff7ebea9b052270bb79cbfec6f556f01ad",
+        "processed_hash": "d84abc3c12943492c44ea65d942e769e0d72851367162dce7d6dd80989ac5e7c",
         "summary": {
-          "confirmed": 34,
-          "drift": 3
+          "confirmed": 35,
+          "drift": 2
         },
         "verdicts": {
           "status-line": {
@@ -12498,11 +12483,10 @@
             ]
           },
           "STAGE-A-CONSULTATION-ORACLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:137  - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope / complete / typ...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:30  Serve, /// Validate one file (optionally hypothetical content) and print /// the enriched answer. Exit 1 = an error-g...",
-              "**the proof named does not exist.** Stage A claims mechanics «proven by the differential corpus and the bench baseline on research/go-demo». research/tcg-bench/ carries a TypeScript corpus and a Rust one, its reports directory carries a TypeScript baseline and a Rust one, and there is no Go corpus and no Go baseline. The ops themselves ship (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:30)"
+              "research/tcg-bench/reports/  bench-2026-07-07-baseline.json and bench-rust-2026-07-07-baseline.json, and no Go baseline; `find research/tcg-bench -iname '*go*'` returns nothing",
+              "CLOSED F-271 (Phase D wave 5, demotion). The ops ship; the Go corpus and baseline that would prove the mechanics do not, over a repository-wide perimeter. The Rust and TypeScript twins of this sentence are TRUE and were left alone - the absence is Go's alone."
             ]
           },
           "STAGE-B-RICHER-DISCIPLINE-ADVICE": {
@@ -12641,8 +12625,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5 + C45-go-review"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a"
       }
     },
     {
@@ -13720,10 +13704,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "36c6fd842ba09b560d66f6a0af9eba462c61a459f470b0e33ef4e697d8e61e64",
+        "processed_hash": "bd1b2f3c8fd115dcd283b48d567ae2af94f89562af863d72c3b8cb8fd544c994",
         "summary": {
-          "confirmed": 14,
-          "drift": 2
+          "confirmed": 15,
+          "drift": 1
         },
         "verdicts": {
           "RUST-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
@@ -13808,12 +13792,10 @@
             ]
           },
           "SHIPS-SPECMARK-PROC-MACRO": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md:39  - ##SHIPS-SPECMARK-PROC-MACRO **The specmark proc-macro** (`crates/specmark`) — the inert",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/Cargo.toml:46  specmark = { package = \"core-ai-native-specmark\", path = \"crates/vendor/core-ai-native-specmark\" }",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs:101  /// `specmark::scope!(\"<spec-uri>\" [, r = N]);` — module-level inheritance",
-              "`crates/specmark` does not exist in this package or anywhere else; the proc-macro ships as `crates/vendor/core-ai-native-specmark`"
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmark/  the proc-macro crate, present",
+              "CLOSED F-277 (Phase D wave 5) - CORRECTED, NOT DEMOTED, and that is the point. The verdict said the proc-macro does not ship. It ships, at `crates/vendor/core-ai-native-specmark`, taken under the dependency alias `specmark`; every `crates/specmark` path in the tree is a `.vibe/cache/` copy of a superseded slot, which is what the original search found. The README now names the real path and the alias. Marker stays `@impl/done` - demoting this would have made the README LESS true."
             ]
           },
           "SHIPS-SPECMAP-WIRE-SCHEMA": {
@@ -13871,8 +13853,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C6 + D5a"
       }
     },
     {
@@ -15607,10 +15589,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "e000dc8463043c173a0644d4bf72ccd4f3aa2ac61b79ba805821fff4fe5814cb",
+        "processed_hash": "ffb67c1df8b1bb77115f91067fc91b4b6ba320aaea7c0e094f3494d66ee1f396",
         "summary": {
-          "confirmed": 79,
-          "drift": 9
+          "confirmed": 82,
+          "drift": 6
         },
         "verdicts": {
           "status-line": {
@@ -15861,12 +15843,10 @@
             ]
           },
           "CONTRACT-FIRST-ORDERING-WITHIN-AN-ITEM": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:35  - ##FINDING-R3-002 **R3-002** — Contract-first ordering: intent before body within every item",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:39  - `rule-contract-first-ordering` (R3-002) — intent before body.",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:113  contract-first ordering, lying prose, closed-vocabulary naming). @impl/done",
-              "the ordering is carried by a card (`rule-contract-first-ordering`) that is named and **not authored** — the cards directory holds INDEX plus scaffold-a..i and nothing else. A rule marked implemented whose card does not exist"
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md  lists `rule-contract-first-ordering` as PENDING - the card is unauthored",
+              "CLOSED F-191 partially (Phase D wave 5, demotion per §3.3). The rule stands word for word; the card that would carry it is listed pending in the stack's own registry, so it is specified and not built. Marker `@impl/done` -> `@spec/done`. The Go and TypeScript twins carry no verdict and were NOT touched - see the batch note on half-demoted families."
             ]
           },
           "POSITION-IS-A-RESOURCE": {
@@ -15986,12 +15966,10 @@
             ]
           },
           "ONE-ERROR-ENUM-PER-LAYER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs:314          \"error-enum-cites-req\"",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs:317          \"errors are contract surface and agent food: the error layer \\",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs:66      ErrorVariant {",
-              "the one-enum-per-layer rule holds and is verified elsewhere in this phase (MCP-CORE 34/34). **`#[track_caller]` occurs zero times repo-wide** outside this guide's own line, so the attribute the fact names is nowhere on an error type. re-searched over the wider perimeter that C3a's TypeScript batch established — the host's crates AND `research/rust-demo/`, the discipline's own Rust demonstration project, which carries conform.toml, specmap.toml and all three discipline/registry files. The gap holds on both"
+              "perimeter: packages/**, crates/**, xtask/**, research/**, spec/** - `#[track_caller]` occurs zero times on any error type in our own surface; the hits are third-party under refs/",
+              "CLOSED F-191 partially (Phase D wave 5, demotion). The one-enum-per-layer half holds and is verified elsewhere in this phase; the attribute the fact names is nowhere on an error type across the whole perimeter."
             ]
           },
           "ERROR-MESSAGES-ARE-AGENT-FOOD": {
@@ -16066,11 +16044,10 @@
             ]
           },
           "BAN-HIDDEN-CONTROL-FLOW": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:93  ##FORBIDDEN-LEGAL-WITH-REASON Forbidden-by-default constructs (raw `unwrap` in domain logic, inline asm, proc-macro magic, stringly-typed protocols) remain legal *with machinery and a recorded reason*",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:405    fan-in/fan-out topologies as public surface are hidden control flow (R-021). @impl/done",
-              "names **R-021** as the enforcing rule, and R-021 does not exist — the same absence C1a recorded against ENGINE-CONFORM's example roster, now cited a second time by a second document"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md  R-021 is absent from the roster",
+              "CLOSED F-191 partially (Phase D wave 5, demotion). The rule the fact cites as its authority is not in the ATLAS roster it points at."
             ]
           },
           "BAN-STRINGLY-TYPED-SURFACES": {
@@ -16393,8 +16370,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:02:15Z",
-        "verify_batch": "C3"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C3 + D5a"
       }
     },
     {
@@ -16413,10 +16390,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "9bdac518e930e35f74eb07d15e910e3bdc56c21d72570ef02af27e9292c99d6e",
+        "processed_hash": "37608f267410d260c52255755e1b57640c0ab45cf4564f6a36c21b448443afe8",
         "summary": {
-          "confirmed": 66,
-          "drift": 5
+          "confirmed": 69,
+          "drift": 2
         },
         "verdicts": {
           "status-line": {
@@ -16513,11 +16490,10 @@
             ]
           },
           "RESOLVED-PATH-AND-VERSION-LAND-IN-INIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76  fn init_result(oracle: &RustOracle<ChildTransport>) -> serde_json::Value {",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:78          \"ra_version\": oracle.capabilities().server_version,",
-              "**the resolved path never lands in the init result.** The version does: `init_result` emits ra_version, position_encoding, pull_diagnostics and quiescent (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76-78). `ra_path` occurs zero times in the package. Half the fact holds and the half it is named for does not — the same shape as the Go twin's INIT-RESULT-CARRIES-PATH-AND-VERSION"
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/*/src/lib.rs:146  the path IS resolved - and never emitted",
+              "CLOSED F-192 partially (Phase D wave 5, demotion written as a PARTIAL rather than a flat absence). The resolution happens; the emission does not. Saying «not built» flatly would have been false in the half that works, so the prose now says which half ships."
             ]
           },
           "kind-line-session": {
@@ -16877,12 +16853,9 @@
             ]
           },
           "GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:356      pub fn shutdown(mut self) -> Result<(), TcgBridgeError> {",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:348          let _ = self.child.kill();",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs:116      oracle.shutdown().expect(\"shutdown\");",
-              "**the no-zombie property is not test-asserted.** The dance is implemented — shutdown at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:356, kill-on-drop at client.rs:348 — and the live test asserts only that `shutdown()` returned (tests/live_oracle.rs:116). No process-table or surviving-pid check exists anywhere in the package. Reading the test settles this without running it, and the Go twin fails the same way"
+              "CLOSED F-192 partially (Phase D wave 5, demotion, partial). The no-zombie MECHANISM ships; the ASSERTION does not - no test inspects the process table. The mechanism half was kept as true."
             ]
           },
           "PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING": {
@@ -16895,11 +16868,9 @@
             ]
           },
           "STDOUT-CARRIES-LSP-FRAMES-ONLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303              .stderr(std::process::Stdio::null())",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs:53  pub fn read_frame(reader: &mut impl BufRead) -> Result<Option<serde_json::Value>, TcgBridgeError> {",
-              "**stderr is dropped at the pipe, not drained by a reader.** The fact says rust-analyzer's stderr chatter «is drained and discarded by the reader (surfaced only in bridge debug logging)». The child is spawned with `.stderr(std::process::Stdio::null())` (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303), so nothing reads it and no debug logging can surface it. The conclusion — stdout carries frames only — holds; the mechanism described does not exist"
+              "CLOSED F-192 partially (Phase D wave 5, demotion). stderr is `Stdio::null()` at the pipe, not drained by a reader, and the bridge carries no logging at all."
             ]
           },
           "kind-line-latency": {
@@ -17018,8 +16989,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5 + C45-rust-review"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a"
       }
     },
     {
@@ -17038,10 +17009,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "f2c338a2590478bb4430fa05c4eb0c4c0d2f0d4b074787dd76c74df90235387a",
+        "processed_hash": "17f406bd1c9ea4b7de86afabb9d254239911021ec9e8ae4127c6c063a362f3aa",
         "summary": {
-          "confirmed": 38,
-          "drift": 4
+          "confirmed": 40,
+          "drift": 2
         },
         "verdicts": {
           "status-line": {
@@ -17137,12 +17108,10 @@
             ]
           },
           "ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42  - ##TCG-CRATE-DELETED `vibe-tcg` and the vibe-mcp `tcg_*` adapters are DELETED. @impl/done",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:33  - ##TOOLS-NEW-HOME The tools now ship in the per-language",
-              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/tools_tcg.rs:2  //! harness, over ONE persistent rust-analyzer session shared by all",
-              "**the client named was deleted.** The fact says one `vibe-tcg` OracleRegistry client drives both relays, pinned by goldens. `vibe-tcg` and the vibe-mcp `tcg_*` adapters are DELETED by the corpus's own record (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42), the tools now ship per-family (:33), and `OracleRegistry` occurs zero times in crates/. The Go sibling ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS is already recorded drift for the same reason"
+              "perimeter: both `-mcp` packages carry the two live-chain tests; the goldens do not exist",
+              "CLOSED F-214 partially (Phase D wave 5) - and this is a PERIMETER CATCH. The verdict said the live-chain tests do not exist; they do, in both `-mcp` packages, one layer over from where the search looked. Only the goldens are genuinely absent, and only that half is demoted."
             ]
           },
           "RESTATES-RATHER-THAN-INCLUDES-THE-TS-TEXT": {
@@ -17349,11 +17318,9 @@
             ]
           },
           "PRODUCT-LINK-LAYER-SPECIAL-CASES-ONLY-ORACLE-CRASHED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208              let crashed = matches!(e, TcgBridgeError::OracleCrashed { .. });",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:125  3. ##REG-RESPAWN a dead child (`oracle-crashed`) → ONE transparent respawn attempt,",
-              "**the layer described no longer exists.** «The product's link layer special-cases only `oracle-crashed` … verified against the shipped `vibe-tcg`» — and `vibe-tcg` was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). What survives is a server-local special-case inside the per-family MCP crate (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208). The behaviour outlived the layer; the sentence names the layer"
+              "CLOSED F-278 partially (Phase D wave 5, demotion)."
             ]
           },
           "kind-line-compat": {
@@ -17405,8 +17372,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5 + C45-rust-review"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a"
       }
     },
     {
@@ -17425,10 +17392,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "f13bee0aab83d8069ef6f7277c6f1f90284341b1f966ff72c64e8ea7b348c7d9",
+        "processed_hash": "bd6f5fa179306439a43d3e65f0f0c632474cb4caea99cef8ea9d3dfe5e13854c",
         "summary": {
-          "confirmed": 33,
-          "drift": 3
+          "confirmed": 34,
+          "drift": 2
         },
         "verdicts": {
           "status-line": {
@@ -17449,12 +17416,9 @@
             ]
           },
           "RENAMED-FROM-VIBE-TCG": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-028-package-families.md:136  - ##D13-SUPERSEDED **Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —",
-              "spec/common/PROP-028-package-families.md:141  - ##D13-LANGUAGE-LEADS `conform-rust` becomes `rust-ai-native-conform`, not a suffixed",
-              "spec/common/PROP-028-package-families.md:148  - ##D13-NEUTRAL-OUTSIDE Language-NEUTRAL artifacts stay outside any family stem: vibevm's own generic",
-              "**the crate the name is reserved for was deleted.** The fact says «the bare name `vibe-tcg` belongs solely to vibevm's language-generic product crate». That crate no longer exists: spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42 records `vibe-tcg` and the vibe-mcp `tcg_*` adapters DELETED, and `vibe-tcg` occurs zero times in crates/. A name reserved for nothing. The rename policy it cites — D13 superseded by PROP-028 §2.4 — does resolve (spec/common/PROP-028-package-families.md:136-148)"
+              "CLOSED F-278 partially (Phase D wave 5)."
             ]
           },
           "DERIVED-FROM-THE-EVIDENCE": {
@@ -17721,8 +17685,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:08:25Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D4a"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D4a + D5a"
       }
     },
     {
@@ -19780,10 +19744,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "0f29ac518af4424048f10f90cb94f61dbe25a47a2db9ed733a3e03459520b752",
+        "processed_hash": "e088f68842b7f549d5d98343dbb894623b629d03d698bd2e3808ef68ce5165be",
         "summary": {
-          "confirmed": 51,
-          "drift": 1
+          "confirmed": 52
         },
         "verdicts": {
           "status-line": {
@@ -20044,11 +20007,9 @@
             ]
           },
           "RISK-SUNSET": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:60  - ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) plus full contracts ever make ...",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:45  name = \"typescript-ai-native-tcg\"",
-              "the binary named does not exist: `vibe-tcg-ts` survives only in `.vibe/cache/` copies of the superseded v0.2.0 and v0.3.0 slots, and the shipped binary is `typescript-ai-native-tcg`"
+              "CLOSED F-282 (Phase D wave 5) - CORRECTED, not demoted. `vibe-tcg-ts` is now `typescript-ai-native-tcg`, and both the binary and the token-level brief carry the new name. The marker was already `@spec/done`, so `build-or-demote` had nothing to demote - the row was typed on the absence of a NAME, which is a rename."
             ]
           },
           "RISK-TRANSFER": {
@@ -20161,8 +20122,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C4+C5 + D5a"
       }
     },
     {
@@ -21316,10 +21277,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "bc9aff0a57d03e7e1b707cf5fe965ea7d98dbe1ff5681c4f8216386a72c54028",
+        "processed_hash": "f73d76c107b170884facf3259ca6a1e63ad2227496b83a4978d66042dab2146e",
         "summary": {
-          "confirmed": 133,
-          "drift": 19,
+          "confirmed": 137,
+          "drift": 15,
           "unverifiable": 1
         },
         "verdicts": {
@@ -21461,12 +21422,9 @@
             ]
           },
           "ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:39  ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT … type-constrained decoding cutting compile errors ~74.8% — was measured *on TypeScript* (Mündler et al., PLDI'25; the only language with a real implementation, R2C-005 / DR1-014). @spec/done",
-              "**the verdict stands and its REASON was wrong, which matters more.** It read «that figure appears in the live tree only under `.vibe/cache/**`, in an older CONTRADICTION-MAP». It does not: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28 titles C-4 with «Type-constrained decoding cuts errors 74.8%» and :31 repeats it in the resolution — the LIVE v0.8.0 slot, inside this campaign's own corpus.",
-              "so the defect is bigger than a stale quote: **two appendices of one package publish different numbers for one result.** packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106 records «75.3% (synthesis) and 70.2% (translation)» for the same Mündler et al. PLDI'25 measurement. Every consumer quotes whichever appendix it happened to read, and four documents across three stacks quote the CONTRADICTION-MAP's figure.",
-              "and the fact carries a second break the first pass did not name: **`DR1-014` resolves nowhere** — no `##FINDING-DR1-014` exists in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md, and the id survives only here and in the Rust tcg brief"
+              "CLOSED F-168 partially (Phase D wave 5, demotion). `R2C-005` resolves; `DR1-014` does not."
             ]
           },
           "RUST-ORACLE-IS-A-MULTI-YEAR-FUTURE-BET": {
@@ -22053,25 +22011,22 @@
             ]
           },
           "TIER-BUILD-TIME": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:83  ## 5. Registry & flags {#registry-and-flags}",
-              "the build-time tier — bundler `define`, dead-code elimination, env-gated conditional compilation — has no implementation anywhere: no bundler is configured in the demo consumer, and no crate or tool reads such a definition. The Rust analogue it names (cargo features) is real; its TypeScript twin is not"
+              "research/ts-demo/  no bundler - verified in the bootstrapped demo, which is the right place to look for a consumer-side claim",
+              "CLOSED F-168 partially (Phase D wave 5, demotion)."
             ]
           },
           "TIER-RUNTIME": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:27      /// Repo-relative path of the one legal construction site.",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:28      pub registry_file: String,",
-              "the runtime tier's «registry object selects the cell at run time» has no instance: no typed flag registry exists in the stack, in the host, or in the demo consumer"
+              "CLOSED F-168 partially (Phase D wave 5, demotion)."
             ]
           },
           "FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:41    (module-level mutable singletons, `declare global`) is forbidden. @impl/done",
-              "the registry the fact describes — typed data carrying provenance, birth and sunset per flag — does not exist in any of the three places it could: the stack, the host, or `research/ts-demo/`"
+              "CLOSED F-168 partially (Phase D wave 5, demotion). `FlagSites` exists in the engine and is constructed only in tests, so the type ships and the registry does not."
             ]
           },
           "RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED": {
@@ -22590,8 +22545,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:00:01Z",
-        "verify_batch": "C3 + C45-cross-language"
+        "verified_at": "2026-07-29T18:48:47Z",
+        "verify_batch": "C3 + C45-cross-language + D5a"
       }
     },
     {

@@ -129,7 +129,7 @@
 ## 9. Governance {#governance}
 
 - ##DEBT-ENTRIES-CARRY-SUNSETS Debt entries carry sunsets and are re-dispositioned at audit runs — symmetric with rule sunsets (Charter R-050): debt that nobody re-reads is wish-ratio's evil twin. @impl/done
-- ##ANTI-ENTRENCHMENT-CLOSE-QUOTA **Anti-entrenchment escape:** if the debt count flatlines while the frontier advances for two consecutive phases, a per-phase close-quota activates (each subsequent phase must close K debts, K set by the owner). Ratchets guard against regression; quotas guard against the ratchet becoming a museum. @impl/done
+- ##ANTI-ENTRENCHMENT-CLOSE-QUOTA **Anti-entrenchment escape:** if the debt count flatlines while the frontier advances for two consecutive phases, a per-phase close-quota activates (each subsequent phase must close K debts, K set by the owner). Ratchets guard against regression; quotas guard against the ratchet becoming a museum. *Specified, not built: nothing detects a flatline and nothing activates a quota — no flatline comparison across phases, no per-phase quota counter and no value for K exists in any engine crate, stack CLI or host registry. What ships is the input the rule would read: `debt.json` carries a count and a disposition per entry, and the phase-to-phase debt totals are published by hand in the terraform REPORT. K itself is still an open question in §11.* @spec/done
 - ##ACCEPTED-DEBT-BUDGET-PER-CRATE Accepted-debt budget per crate (error-budget idea, SRE lineage — concepts only): exceeding the budget blocks new `accepted` dispositions in that crate until something burns down. @impl/done
 
 ## 10. Prior art {#prior-art}

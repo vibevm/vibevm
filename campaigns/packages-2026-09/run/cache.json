@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T18:48:47Z",
+  "updated_at": "2026-07-29T18:55:16Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -25,7 +25,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0b6ab592a3faa226e0ff4877cdfc118797c7c72b27f3bc7b6c8403b50403fb8d",
+        "processed_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
         "verdicts": {
           "core-contents-lead": {
             "v": "confirmed",
@@ -157,12 +157,9 @@
             ]
           },
           "READ-MECHANISMS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:34  7. ##READ-MECHANISMS `spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT: the...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md:1  # LEDGER — the intent ledger, v0.1 {#root}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/tests/usage.rs:14  const URI: &str = \"spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code\";",
-              "the sentence enumerates the mechanisms and **omits a fifth that ships**: `MCP-CORE-v0.1.md` is in `spec/mechanisms/` and is named nowhere in the list. A roster wrong by one is how a reader concludes a mechanism does not exist"
+              "CORRECTED, not demoted (Phase D wave 5). `MCP-CORE-v0.1.md` ships in `spec/mechanisms/` and the roster omitted it; the repair is an ADDITION to the list, not a retraction. Demoting would have made the README less true."
             ]
           },
           "READ-APPENDIX": {
@@ -254,12 +251,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:08:25Z",
-        "verify_batch": "C2 + D4a"
+        "verified_at": "2026-07-29T18:55:16Z",
+        "verify_batch": "C2 + D4a + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md": {
-      "content_hash": "f1d667639726c13cba7b89d1619cd63e8440918533b6f90140d3a6d1b4885ea4",
+      "content_hash": "8782a55ff9f4f0744bff60f48c912c515b299a2051b406902a3e270555429274",
       "rollup": {
         "explicit": [
           "spec",
@@ -281,7 +278,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "f6465bff45f108efbcccbaa7d739894a44b2c55abcc88ee110fbe145a7217cc7",
+        "processed_hash": "8782a55ff9f4f0744bff60f48c912c515b299a2051b406902a3e270555429274",
         "verdicts": {
           "status-line": {
             "v": "drift",
@@ -767,12 +764,9 @@
             ]
           },
           "HARNESS-DELIVERS-LAZY-PUSH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:4  *The navigable registry of the Rust projection's cards. The harness uses this to resolve a trigger to a card and to deliver the Band-3 extract ...",
-              "crates/vibe-core/src/manifest/subskill.rs:139  DeliveryMode::LazyPush => \"lazy-push\",",
-              "crates/vibe-core/src/manifest/lockfile.rs:379  /// Resolved delivery mode — `eager` / `lazy-push` / `lazy-pull`.",
-              "**no extractor exists anywhere.** The `card-ops` block is authored in all 27 cards (3 stacks × 9), and a search for `card-ops` / `Band-3` / `band_three` / `cards/INDEX` across every .rs, .ts, .go, .py and .js in crates/, xtask/, packages/, spec/ and schemas/ finds no reader. Nothing resolves a trigger to a card and nothing selects a band, so the lazy-push delivery this fact describes is authored on one side and unimplemented on the other"
+              "MIXED (Phase D wave 5). Five demoted — no machine reads a card, confirmed over the full perimeter — and `##BAND-3-ON-TRIGGER` RE-JUDGED confirmed, because the delivery rule is live in THIS repository's compiled boot lane."
             ]
           },
           "triggers-escalate-lead": {
@@ -867,21 +861,15 @@
             ]
           },
           "BOUNDARY-SURFACE-IS-CURRENT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:62  - ##CARDS-CARRY-SUNSET-CONDITIONS Cards carry sunset conditions; ... the card retires with its checker (R-050).",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:31  ... *Sunset:* if a future language feature expresses the pattern natively, the generator retires. ...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:195  - ##FINDING-R2C-007 **R2C-007 * [CONTRADICTS]** — DATING CORRECTION: EsoLang collapse is a 3-month-old static-prompt artifact ...",
-              "the in-distribution law is said to carry a sunset, R-050, that must be re-checked. Every occurrence of R-050 across packages, crates, xtask, spec and campaigns is a CITATION of the rule; nothing schedules the re-check, expires the law, or records when it was last examined"
+              "MIXED (Phase D wave 5), and NO MARKER MOVED — both anchors were already `@spec/done`, so `build-or-demote` had nothing to demote. One corrected; the prediction ledger the R-050 sunset is paired with is real and complete."
             ]
           },
           "BOUNDARY-MEASUREMENT-DEFERRED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "terraform/adopt-v0.3/PREDICTIONS.md:3  Measurement is deferred by owner decision; every adopted card and",
-              "terraform/adopt-v0.3/PREDICTIONS.md:4  every phase records a **falsifiable prediction** instead",
-              "terraform/adopt-v0.3/PREDICTIONS.md:12  | ID | Source (card / phase) | Prediction | Recorded | Verdict |",
-              "«every card carries a falsifiable prediction» is false of every card: no `prediction` field exists in any of the 27 shipped cards, and the Band-3 field list at 01-PATTERN-CARD-FORMAT.md:42-47 does not define one"
+              "MIXED (Phase D wave 5), and NO MARKER MOVED — both anchors were already `@spec/done`, so `build-or-demote` had nothing to demote. One corrected; the prediction ledger the R-050 sunset is paired with is real and complete."
             ]
           },
           "names-its-own-failure-modes": {
@@ -1124,12 +1112,9 @@
             ]
           },
           "MAP-ATLAS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:1  # Atlas — Findings Ledger (human view) {#root}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:5  ##status-line **Discipline v0.2 · BETA · appendix · GENERATED from findings.jsonl (A2: derived, do not hand-edit)** @impl/done",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:7  ##totals-and-research-passes Total records: 98 · unique (non-duplicate): 87 · passes: DR-1, DR-2, blind-control, R3 ...",
-              "the map's entry repeats the generator claim: `findings*.json*` across the repository returns only the two campaigns' F-NNN ledgers, neither of which is `findings.jsonl` (F-088)"
+              "MIXED (Phase D wave 5). `findings.jsonl` is confirmed absent on the widest perimeter, and the LEDGER it names is real — 87 `#FINDING-*` records in the ATLAS. Two anchors corrected to point at what exists. The third is BLOCKED and stays open: the ATLAS status line carries a standing `OWNER RULING NEEDED` from 2026-07-26, so the line to be edited is the line forbidding the edit, on a finding already escalated."
             ]
           },
           "ADOPTION-PLAN-LIVES-OUTSIDE": {
@@ -1140,12 +1125,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:08:25Z",
-        "verify_batch": "C2 + D4a"
+        "verified_at": "2026-07-29T18:55:16Z",
+        "verify_batch": "C2 + D4a + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md": {
-      "content_hash": "cfc247829bf662f69df18bc550cb7c2dd890cf61a4c305f28f25350672f49b8c",
+      "content_hash": "b2b8e03ad3ece3025a646dc74ac765ec3e11c84f9d7824fe8e9fe4f4eee7f82e",
       "rollup": {
         "explicit": [
           "spec",
@@ -1167,7 +1152,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "66fa38370b8f0ed76b0ba3ad0538e73e4b3cc7f44e9da3c5c5134a307487ce58",
+        "processed_hash": "b2b8e03ad3ece3025a646dc74ac765ec3e11c84f9d7824fe8e9fe4f4eee7f82e",
         "verdicts": {
           "status-line": {
             "v": "drift",
@@ -1178,12 +1163,9 @@
             ]
           },
           "EVERY-PATTERN-IS-A-CARD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:7  ## Band 1 — Identity & Recognition {#band-one-identity}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:11  ##EACH-PATTERN-IS-ALSO-A-CARD *Each pattern is also a card, shipped per-language in each stack's `cards/`; ...*",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:36  ## Pending cards (named, not yet authored — pilot will prioritize)",
-              "the cards/ directories of all three stacks hold `INDEX.md` plus `scaffold-a` … `scaffold-i` and nothing else. The rule cards and anti-pattern cards this fact says every pattern becomes are not authored anywhere"
+              "DEMOTED 3/3 (Phase D wave 5, §3.3). Every-pattern-is-a-card, ratified format changes and empty-ops-as-a-defect are three claims with no carrier anywhere in the perimeter — the `cards/` directories of all three stacks hold `INDEX.md` plus `scaffold-a` … `scaffold-i` and nothing else."
             ]
           },
           "FORMAT-SYNTHESIZES-THREE-PARENTS": {
@@ -1212,12 +1194,9 @@
             ]
           },
           "PARENT-OPERATIONAL-EXECUTION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:37  ```card-ops",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:48  raid_role: layer=codegen; order=after:naming-uniformity; batch=crate",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:49  budget: active_rules=1; first_signal=regen+compile (<60s/crate)",
-              "the operational block is authored in every card, exactly as stated; the «machine-extractable» half has no machine. **no extractor exists anywhere.** The `card-ops` block is authored in all 27 cards (3 stacks × 9), and a search for `card-ops` / `Band-3` / `band_three` / `cards/INDEX` across every .rs, .ts, .go, .py and .js in crates/, xtask/, packages/, spec/ and schemas/ finds no reader. Nothing resolves a trigger to a card and nothing selects a band, so the lazy-push delivery this fact describes is authored on one side and unimplemented on the other"
+              "MIXED (Phase D wave 5). Five demoted — no machine reads a card, confirmed over the full perimeter — and `##BAND-3-ON-TRIGGER` RE-JUDGED confirmed, because the delivery rule is live in THIS repository's compiled boot lane."
             ]
           },
           "BANDS-1-2-ARE-AUTHORING-PROSE": {
@@ -1230,12 +1209,9 @@
             ]
           },
           "BAND-3-SHIPPED-TO-WEAK-READER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:35  ## Band 3 — Operation {#band-three-operation}",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md:26  - ##BAND-3-ON-TRIGGER load a card's Band-3 ops block only when its trigger",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:4  ... The harness uses this to resolve a trigger to a card and to deliver the Band-3 extract for a `.rs` edit. ...",
-              "**no extractor exists anywhere.** The `card-ops` block is authored in all 27 cards (3 stacks × 9), and a search for `card-ops` / `Band-3` / `band_three` / `cards/INDEX` across every .rs, .ts, .go, .py and .js in crates/, xtask/, packages/, spec/ and schemas/ finds no reader. Nothing resolves a trigger to a card and nothing selects a band, so the lazy-push delivery this fact describes is authored on one side and unimplemented on the other"
+              "MIXED (Phase D wave 5). Five demoted — no machine reads a card, confirmed over the full perimeter — and `##BAND-3-ON-TRIGGER` RE-JUDGED confirmed, because the delivery rule is live in THIS repository's compiled boot lane."
             ]
           },
           "FIELD-CARD-ID-AND-NAME": {
@@ -1331,20 +1307,15 @@
             ]
           },
           "FIELD-EVIDENCE-AND-TRANSFER-STRENGTH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 ..., R2C-003 ..., A2/A3. Class: benchmark + production. Tag: **[E-strong]** ...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:198  ... R2C-008 ... mid-tier agents 'do not lack the high-level idea; they struggle to build the reusable code to carry it out.'",
-              "the field is specified as carrying `findings.jsonl` IDs and that file does not exist. The IDs the cards actually cite — R2C-008, R2C-003, DR2-019 — resolve as `##FINDING-*` anchors inside ATLAS.md, so the mechanism works and the source it names does not (F-088)"
+              "MIXED (Phase D wave 5). `findings.jsonl` is confirmed absent on the widest perimeter, and the LEDGER it names is real — 87 `#FINDING-*` records in the ATLAS. Two anchors corrected to point at what exists. The third is BLOCKED and stays open: the ATLAS status line carries a standing `OWNER RULING NEEDED` from 2026-07-26, so the line to be edited is the line forbidding the edit, on a finding already escalated."
             ]
           },
           "band-three-fields-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:37  ```card-ops",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md:37  ```card-ops",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:84  ```card-ops",
-              "**no extractor exists anywhere.** The `card-ops` block is authored in all 27 cards (3 stacks × 9), and a search for `card-ops` / `Band-3` / `band_three` / `cards/INDEX` across every .rs, .ts, .go, .py and .js in crates/, xtask/, packages/, spec/ and schemas/ finds no reader. Nothing resolves a trigger to a card and nothing selects a band, so the lazy-push delivery this fact describes is authored on one side and unimplemented on the other"
+              "MIXED (Phase D wave 5). Five demoted — no machine reads a card, confirmed over the full perimeter — and `##BAND-3-ON-TRIGGER` RE-JUDGED confirmed, because the delivery rule is live in THIS repository's compiled boot lane."
             ]
           },
           "FIELD-TRIGGER": {
@@ -1399,12 +1370,9 @@
             ]
           },
           "WEAK-READER-RECEIVES-BAND-3-ONLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:37  ```card-ops",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:50  ```",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md:26  - ##BAND-3-ON-TRIGGER load a card's Band-3 ops block only when its trigger",
-              "two halves and both fail: the block runs 13 lines in scaffold-a-generators.md against the stated ~10, and no selector or cap exists to enforce either number. **no extractor exists anywhere.** The `card-ops` block is authored in all 27 cards (3 stacks × 9), and a search for `card-ops` / `Band-3` / `band_three` / `cards/INDEX` across every .rs, .ts, .go, .py and .js in crates/, xtask/, packages/, spec/ and schemas/ finds no reader. Nothing resolves a trigger to a card and nothing selects a band, so the lazy-push delivery this fact describes is authored on one side and unimplemented on the other"
+              "MIXED (Phase D wave 5). Five demoted — no machine reads a card, confirmed over the full perimeter — and `##BAND-3-ON-TRIGGER` RE-JUDGED confirmed, because the delivery rule is live in THIS repository's compiled boot lane."
             ]
           },
           "BANDS-1-2-CONSUMED-BY-AUTHOR-AND-REVIEWER": {
@@ -1434,12 +1402,9 @@
             ]
           },
           "FORMAT-CHANGES-ARE-RATIFIED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:5  version = \"0.8.0\"",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:135  - ##REVISION-R-IS-AN-AUTHOR-ASSERTED-SEMANTIC-BUMP `r<N>` is an **author-asserted semantic revision**. ...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:98  _theory · high · refines:A1/R-030_ — Context assembly is retrieval. ...",
-              "versioning is real — the format carries v0.2 — and ratification is not: every occurrence of R-030 is a citation, and no ratification record, review gate or changelog exists for the format. «Never silently» is a promise with nothing that could catch a silent change"
+              "DEMOTED 3/3 (Phase D wave 5, §3.3). Every-pattern-is-a-card, ratified format changes and empty-ops-as-a-defect are three claims with no carrier anywhere in the perimeter — the `cards/` directories of all three stacks hold `INDEX.md` plus `scaffold-a` … `scaffold-i` and nothing else."
             ]
           },
           "CARD-IS-BETA-UNTIL-CHECKER-EXISTS": {
@@ -1461,17 +1426,14 @@
             ]
           },
           "EMPTY-OPERATIONAL-FIELDS-ARE-A-DEFECT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:51  - **WISH** = no checker yet (A5); the card is advisory until one exists.",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:46  checker: the codemod's own post-check (compile + cargo test) ; conform `multi-file-change-has-codemod` (advisory, WISH until pilot-validated)",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:90  checker: <conform tier | clippy lint | test>   # or: WISH",
-              "a defect nothing can detect: no checker reads the card-ops fields, so an empty operational field is a defect by assertion only. Under the Charter's own A5 that makes it a WISH, not a rule"
+              "DEMOTED 3/3 (Phase D wave 5, §3.3). Every-pattern-is-a-card, ratified format changes and empty-ops-as-a-defect are three claims with no carrier anywhere in the perimeter — the `cards/` directories of all three stacks hold `INDEX.md` plus `scaffold-a` … `scaffold-i` and nothing else."
             ]
           }
         },
-        "verified_at": "2026-07-29T18:08:25Z",
-        "verify_batch": "C2 + D4a"
+        "verified_at": "2026-07-29T18:55:16Z",
+        "verify_batch": "C2 + D4a + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md": {
@@ -1723,52 +1685,54 @@
             ]
           },
           "BUILD-ORDER-E": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md:47  raid_role: layer=infrastructure; order=after:cell-boundaries; batch=cell",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:71  - ##SCAFFOLD-E-PER-CELL-FAST-LOOP **E — Per-cell fast loop** (`scaffold-e-fast-loop`). Every cell independently compilable ...",
-              "the catalog's numbered build order appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan. Each card does declare its own `raid_role.order` in its card-ops block, and **the one raid this repository actually executed ordered its cards D/H → C → F → G → traces**, which is not the catalog's order. A build order stated once and contradicted by the only execution of it"
+              "terraform/adopt-v0.3/LOG.md:131  ## 2026-06-11 - Phase 1: Substrate - the fast loop (Class E)",
+              "terraform/adopt-v0.3/LOG.md:443  ## 2026-06-11 - Phase 6: Codemods (I), pilot-gated",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:55  1. ##BUILD-ORDER-E **E (fast loop)** - substrate; nothing pays off without it. First.",
+              "RE-JUDGED confirmed, no edit (Phase D wave 5), and the whole six-anchor family with it. The verdict said the catalog's numbered build order «appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan» — and `terraform/` is none of those categories, which is exactly where it is. `terraform/adopt-v0.3/LOG.md` carries the order as its phase headings, six for six, position for position, PAIRINGS INCLUDED: Phase 1 Class E · Phase 2 F+G · Phase 3 B+C · Phase 4 D · Phase 5 A+H · Phase 6 I, pilot-gated — and `##BUILD-ORDER-I`'s own «prototype and measure before» is that «pilot-gated» verbatim. Verified by the boss directly against both files. The verdict on this family was restated once to make its six members consistent, so consistency propagated the error to all six; they are corrected as a set for the same reason."
             ]
           },
           "BUILD-ORDER-G-AND-F": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:1  //! Diagnostics rules — Class G and Class F: every public seam shows",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:16  | `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | shipped (`seam-has-doctest` + `pub-doctest`, ...",
-              "the catalog's numbered build order appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan. Each card does declare its own `raid_role.order` in its card-ops block, and **the one raid this repository actually executed ordered its cards D/H → C → F → G → traces**, which is not the catalog's order. A build order stated once and contradicted by the only execution of it"
+              "terraform/adopt-v0.3/LOG.md:131  ## 2026-06-11 - Phase 1: Substrate - the fast loop (Class E)",
+              "terraform/adopt-v0.3/LOG.md:443  ## 2026-06-11 - Phase 6: Codemods (I), pilot-gated",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:55  1. ##BUILD-ORDER-E **E (fast loop)** - substrate; nothing pays off without it. First.",
+              "RE-JUDGED confirmed, no edit (Phase D wave 5), and the whole six-anchor family with it. The verdict said the catalog's numbered build order «appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan» — and `terraform/` is none of those categories, which is exactly where it is. `terraform/adopt-v0.3/LOG.md` carries the order as its phase headings, six for six, position for position, PAIRINGS INCLUDED: Phase 1 Class E · Phase 2 F+G · Phase 3 B+C · Phase 4 D · Phase 5 A+H · Phase 6 I, pilot-gated — and `##BUILD-ORDER-I`'s own «prototype and measure before» is that «pilot-gated» verbatim. Verified by the boss directly against both files. The verdict on this family was restated once to make its six members consistent, so consistency propagated the error to all six; they are corrected as a set for the same reason."
             ]
           },
           "BUILD-ORDER-B-AND-C": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:11  ##INTENT Intent: Make the statistically-likely wrong call un-representable, so a hallucinated edit fails `cargo check` ...",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md:47  raid_role: layer=cells; order=after:naming-uniformity; batch=cell",
-              "the catalog's numbered build order appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan. Each card does declare its own `raid_role.order` in its card-ops block, and **the one raid this repository actually executed ordered its cards D/H → C → F → G → traces**, which is not the catalog's order. A build order stated once and contradicted by the only execution of it"
+              "terraform/adopt-v0.3/LOG.md:131  ## 2026-06-11 - Phase 1: Substrate - the fast loop (Class E)",
+              "terraform/adopt-v0.3/LOG.md:443  ## 2026-06-11 - Phase 6: Codemods (I), pilot-gated",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:55  1. ##BUILD-ORDER-E **E (fast loop)** - substrate; nothing pays off without it. First.",
+              "RE-JUDGED confirmed, no edit (Phase D wave 5), and the whole six-anchor family with it. The verdict said the catalog's numbered build order «appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan» — and `terraform/` is none of those categories, which is exactly where it is. `terraform/adopt-v0.3/LOG.md` carries the order as its phase headings, six for six, position for position, PAIRINGS INCLUDED: Phase 1 Class E · Phase 2 F+G · Phase 3 B+C · Phase 4 D · Phase 5 A+H · Phase 6 I, pilot-gated — and `##BUILD-ORDER-I`'s own «prototype and measure before» is that «pilot-gated» verbatim. Verified by the boss directly against both files. The verdict on this family was restated once to make its six members consistent, so consistency propagated the error to all six; they are corrected as a set for the same reason."
             ]
           },
           "BUILD-ORDER-D": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:70  - ##SCAFFOLD-D-DIFFERENTIAL-ORACLES **D — Differential / characterization oracles** (`scaffold-d-differential-oracle`). ...",
-              "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:184  - **D2 — card-set & order (RAID §1.2).** No behavior-changing card here (all",
-              "the catalog's numbered build order appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan. Each card does declare its own `raid_role.order` in its card-ops block, and **the one raid this repository actually executed ordered its cards D/H → C → F → G → traces**, which is not the catalog's order. A build order stated once and contradicted by the only execution of it"
+              "terraform/adopt-v0.3/LOG.md:131  ## 2026-06-11 - Phase 1: Substrate - the fast loop (Class E)",
+              "terraform/adopt-v0.3/LOG.md:443  ## 2026-06-11 - Phase 6: Codemods (I), pilot-gated",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:55  1. ##BUILD-ORDER-E **E (fast loop)** - substrate; nothing pays off without it. First.",
+              "RE-JUDGED confirmed, no edit (Phase D wave 5), and the whole six-anchor family with it. The verdict said the catalog's numbered build order «appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan» — and `terraform/` is none of those categories, which is exactly where it is. `terraform/adopt-v0.3/LOG.md` carries the order as its phase headings, six for six, position for position, PAIRINGS INCLUDED: Phase 1 Class E · Phase 2 F+G · Phase 3 B+C · Phase 4 D · Phase 5 A+H · Phase 6 I, pilot-gated — and `##BUILD-ORDER-I`'s own «prototype and measure before» is that «pilot-gated» verbatim. Verified by the boss directly against both files. The verdict on this family was restated once to make its six members consistent, so consistency propagated the error to all six; they are corrected as a set for the same reason."
             ]
           },
           "BUILD-ORDER-A-AND-H": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:17  | `scaffold-h-simulators` | E+H | scaffold H | gate | [E-strong] | specified |",
-              "the catalog's numbered build order appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan. Each card does declare its own `raid_role.order` in its card-ops block, and **the one raid this repository actually executed ordered its cards D/H → C → F → G → traces**, which is not the catalog's order. A build order stated once and contradicted by the only execution of it"
+              "terraform/adopt-v0.3/LOG.md:131  ## 2026-06-11 - Phase 1: Substrate - the fast loop (Class E)",
+              "terraform/adopt-v0.3/LOG.md:443  ## 2026-06-11 - Phase 6: Codemods (I), pilot-gated",
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:55  1. ##BUILD-ORDER-E **E (fast loop)** - substrate; nothing pays off without it. First.",
+              "RE-JUDGED confirmed, no edit (Phase D wave 5), and the whole six-anchor family with it. The verdict said the catalog's numbered build order «appears nowhere outside this document: not in any stack's cards, not in a host crate, not in an xtask task, not in a campaign plan» — and `terraform/` is none of those categories, which is exactly where it is. `terraform/adopt-v0.3/LOG.md` carries the order as its phase headings, six for six, position for position, PAIRINGS INCLUDED: Phase 1 Class E · Phase 2 F+G · Phase 3 B+C · Phase 4 D · Phase 5 A+H · Phase 6 I, pilot-gated — and `##BUILD-ORDER-I`'s own «prototype and measure before» is that «pilot-gated» verbatim. Verified by the boss directly against both files. The verdict on this family was restated once to make its six members consistent, so consistency propagated the error to all six; they are corrected as a set for the same reason."
             ]
           },
           "BUILD-ORDER-I": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:18  | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`rust-ai-native codemod add-cell`); ...",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:1  //! `rust-ai-native codemod …` — scaffolded edit operations (discipline",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; ...",
-              "restated 2026-07-28 to match its five siblings: the worker located this step's card and not the ORDER, which is the claim. The catalog's numbered build order appears nowhere outside 02-EXECUTABLE-SCAFFOLDS, and the one raid this repository executed ordered its cards D/H -> C -> F -> G -> traces. Judging the sixth step confirmed because a search happened to resolve its card, while the other five are drift on the same reasoning, would have split one claim class two ways on an accident of the search"
+              "RE-JUDGED confirmed, no edit (Phase D wave 5). See the BUILD-ORDER family note: the catalog's order IS the adoption's phase headings."
             ]
           },
           "CHECKLIST-RUNS-OR-CHECKS": {
@@ -1841,7 +1805,7 @@
           }
         },
         "verified_at": "2026-07-28T09:58:27Z",
-        "verify_batch": "C2"
+        "verify_batch": "C2 + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md": {
@@ -3265,12 +3229,9 @@
         "processed_hash": "d09c56dbaafa4fd28b124a909141b87dac01f0e7483fe470121717f01cf8878d",
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:5  ##status-line **Discipline v0.2 · BETA · appendix · GENERATED from findings.jsonl (A2: derived, do not hand-edit)** @...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:185  - ##MAP-ATLAS `appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). @impl/...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, executable...",
-              "the fact says this appendix is GENERATED from `findings.jsonl` and must not be hand-edited. **No file named `findings.jsonl` exists anywhere in the repository.** The only `findings.json` files are the two campaigns' F-NNN ledgers, which are a different artifact on a different schema. A generated file whose generator's input is absent cannot be regenerated, and the instruction not to hand-edit it leaves no way to change it at all. This is F-088, open on the owner, now confirmed against the tree rather than reported from reading"
+              "MIXED (Phase D wave 5). `findings.jsonl` is confirmed absent on the widest perimeter, and the LEDGER it names is real — 87 `#FINDING-*` records in the ATLAS. Two anchors corrected to point at what exists. The third is BLOCKED and stays open: the ATLAS status line carries a standing `OWNER RULING NEEDED` from 2026-07-26, so the line to be edited is the line forbidding the edit, on a finding already escalated."
             ]
           },
           "totals-and-research-passes": {
@@ -4101,7 +4062,7 @@
           }
         },
         "verified_at": "2026-07-29T17:36:21Z",
-        "verify_batch": "C2 + D3c"
+        "verify_batch": "C2 + D3c + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
@@ -4350,17 +4311,14 @@
             ]
           },
           "open-items-are-why-the-package-is-beta": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:48  ##open-items-are-why-the-package-is-beta These open items are why the package is BETA and why every card carries a fa...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:146  - ##BOUNDARY-MEASUREMENT-DEFERRED **Measurement is deferred by design.** We build the core on internal logic plus oth...",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md:47  raid_role: layer=cells; order=after:contracts; batch=cell",
-              "the fact turns on a `prediction` field that does not exist: `01-PATTERN-CARD-FORMAT.md:42-47` lists the Band-3 fields and carries no such field, and no shipped card's `card-ops` block has one"
+              "RE-JUDGED confirmed, no edit (Phase D wave 5). The `prediction` the beta rationale turns on exists — the prediction ledger is real and carries all nine cards."
             ]
           }
         },
         "verified_at": "2026-07-29T17:36:21Z",
-        "verify_batch": "C2 + D3c"
+        "verify_batch": "C2 + D3c + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
@@ -4460,12 +4418,9 @@
             ]
           },
           "BAND-3-ON-TRIGGER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:35  ## Band 3 — Operation {#band-three-operation}",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:38  trigger: WHEN near-duplicate blocks differ only by a key, OR a hand-maintained artifact mirrors a spec THEN apply",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:20  ## Trigger-mode delivery summary",
-              "**no extractor exists anywhere.** The `card-ops` block is authored in all 27 cards (3 stacks × 9), and a search for `card-ops` / `Band-3` / `band_three` / `cards/INDEX` across every .rs, .ts, .go, .py and .js in crates/, xtask/, packages/, spec/ and schemas/ finds no reader. Nothing resolves a trigger to a card and nothing selects a band, so the lazy-push delivery this fact describes is authored on one side and unimplemented on the other"
+              "MIXED (Phase D wave 5). Five demoted — no machine reads a card, confirmed over the full perimeter — and `##BAND-3-ON-TRIGGER` RE-JUDGED confirmed, because the delivery rule is live in THIS repository's compiled boot lane."
             ]
           },
           "PLAYBOOK-ON-PROCEDURE": {
@@ -4532,7 +4487,7 @@
           }
         },
         "verified_at": "2026-07-28T09:58:27Z",
-        "verify_batch": "C2"
+        "verify_batch": "C2 + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md": {
@@ -4558,7 +4513,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "68301a694ffb5adf791920e751b91e03bc13fc91861a7d528cfe52288d2c793f",
+        "processed_hash": "0de12e84e6ff06f150d34ae87938fe46ececf24983800cf94858257cfb821580",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4712,11 +4667,9 @@
             ]
           },
           "PRINCIPLE-B4-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:150  /// crate — the differential / characterization oracle the",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:179  or characterization oracle against prior behavior (R-040; card \\",
-              "no characterization suite exists: grep for golden over the language stack's whole CLI returns no file. The principle names golden transcripts as the independent pin, and there are none to pin with"
+              "MIXED (Phase D wave 5) — and this obligation is why the whole batch was re-verified instead of demoted. FIVE of its six facts are falsified by HOST artefacts and are RE-JUDGED confirmed: the golden transcripts, the conflict detection, the REPORT and the reconciliation all exist, in `discipline/` and `terraform/`. Only one is genuinely unbuilt, and only that one moved. The original searches were confined to the package and to one crate's `src/` — and this package SPECIFIES a discipline while the host is the project that ADOPTED it, so a package-scoped search is structurally blind to compliance and reads every successful adoption as an absence."
             ]
           },
           "PRINCIPLE-B5-MONOTONE-UTILITY": {
@@ -4852,12 +4805,9 @@
             ]
           },
           "STATUS-DISPUTED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:101  Some(w) if w.starts_with(\"disputed(#\") && w.ends_with(')') => {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:207  fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/tripwire.rs:98  { \"id\": \"DBT-0015\", \"kind\": \"disputed-spec\", \"severity\": \"P2\", \"title\": \"fixed already\",",
-              "the STATUS is real — PROP-014:199 carries `disputed` in the lifecycle enum — and the DETECTION the fact describes is not: no heuristic pass and no LLM detection exist anywhere, which the document's own open question (#OPEN-CONFLICT-HEURISTIC-PRECISION) treats as still to be tuned. A status nothing can assign is half a mechanism"
+              "MIXED (Phase D wave 5) — and this obligation is why the whole batch was re-verified instead of demoted. FIVE of its six facts are falsified by HOST artefacts and are RE-JUDGED confirmed: the golden transcripts, the conflict detection, the REPORT and the reconciliation all exist, in `discipline/` and `terraform/`. Only one is genuinely unbuilt, and only that one moved. The original searches were confined to the package and to one crate's `src/` — and this package SPECIFIES a discipline while the host is the project that ADOPTED it, so a package-scoped search is structurally blind to compliance and reads every successful adoption as an absence."
             ]
           },
           "ADJUDICATION-HAS-THREE-OUTCOMES": {
@@ -4876,9 +4826,9 @@
             ]
           },
           "CAPTURE-GOLDEN-TRANSCRIPTS-AT-INVENTORY-TIME": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "no tool captures a characterization transcript: grep for golden over rust-ai-native-cli/src/ returns no file at all, and there is no CLI output, exit-code or file-tree snapshot path. The inventory step this fact describes has no implementation"
+              "MIXED (Phase D wave 5) — and this obligation is why the whole batch was re-verified instead of demoted. FIVE of its six facts are falsified by HOST artefacts and are RE-JUDGED confirmed: the golden transcripts, the conflict detection, the REPORT and the reconciliation all exist, in `discipline/` and `terraform/`. Only one is genuinely unbuilt, and only that one moved. The original searches were confined to the package and to one crate's `src/` — and this package SPECIFIES a discipline while the host is the project that ADOPTED it, so a package-scoped search is structurally blind to compliance and reads every successful adoption as an absence."
             ]
           },
           "CHARACTERIZATION-IS-A-STABILITY-ORACLE-NOT-A-CORRECTNESS-CLAIM": {
@@ -4959,15 +4909,15 @@
             ]
           },
           "REPORT-PUBLISHES-THE-EXIT-NUMBERS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "none of the four published numbers has a producer: grep for burn-down / half-life / shrinkage / unaccounted over the package returns 0, and no REPORT generator exists"
+              "MIXED (Phase D wave 5) — and this obligation is why the whole batch was re-verified instead of demoted. FIVE of its six facts are falsified by HOST artefacts and are RE-JUDGED confirmed: the golden transcripts, the conflict detection, the REPORT and the reconciliation all exist, in `discipline/` and `terraform/`. Only one is genuinely unbuilt, and only that one moved. The original searches were confined to the package and to one crate's `src/` — and this package SPECIFIES a discipline while the host is the project that ADOPTED it, so a package-scoped search is structurally blind to compliance and reads every successful adoption as an absence."
             ]
           },
           "EVERYTHING-PLANNED-LANDS-OR-IS-LET-GO": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the fact claims the property is CHECKABLE, and nothing computes it: there is no code that reconciles intent entries against outcomes. A checkable property with no checker is the WISH the Charter's own A5 forbids"
+              "MIXED (Phase D wave 5) — and this obligation is why the whole batch was re-verified instead of demoted. FIVE of its six facts are falsified by HOST artefacts and are RE-JUDGED confirmed: the golden transcripts, the conflict detection, the REPORT and the reconciliation all exist, in `discipline/` and `terraform/`. Only one is genuinely unbuilt, and only that one moved. The original searches were confined to the package and to one crate's `src/` — and this package SPECIFIES a discipline while the host is the project that ADOPTED it, so a package-scoped search is structurally blind to compliance and reads every successful adoption as an absence."
             ]
           },
           "DEBT-ENTRIES-CARRY-SUNSETS": {
@@ -4979,9 +4929,9 @@
             ]
           },
           "ANTI-ENTRENCHMENT-CLOSE-QUOTA": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the close-quota does not exist: grep for quota / flatline / entrench over the package returns 0 for every term. The mechanism that is supposed to stop debt becoming a museum is itself unbuilt"
+              "MIXED (Phase D wave 5) — and this obligation is why the whole batch was re-verified instead of demoted. FIVE of its six facts are falsified by HOST artefacts and are RE-JUDGED confirmed: the golden transcripts, the conflict detection, the REPORT and the reconciliation all exist, in `discipline/` and `terraform/`. Only one is genuinely unbuilt, and only that one moved. The original searches were confined to the package and to one crate's `src/` — and this package SPECIFIES a discipline while the host is the project that ADOPTED it, so a package-scoped search is structurally blind to compliance and reads every successful adoption as an absence."
             ]
           },
           "ACCEPTED-DEBT-BUDGET-PER-CRATE": {
@@ -5065,8 +5015,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:30:32Z",
-        "verify_batch": "C1 + D4a"
+        "verified_at": "2026-07-29T18:55:16Z",
+        "verify_batch": "C1 + D4a + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
@@ -5092,7 +5042,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "dc043662c20520236ea40b8626d6d19416e1834a1cc27b6b4de541a695365147",
+        "processed_hash": "90c9092d565acffe1ad0bae48dc0f87e1582f56e68c943cbb74d8bafd510dc0a",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5278,100 +5228,69 @@
             ]
           },
           "BALANCE-IS-EXPLICIT-THROUGH-ESCALATION-TIERS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:157  /// A fact producer for one language (ENGINE-CONFORM §2). T-syn for",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
-              "no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+              "DEMOTED 3/3 (Phase D wave 5, §3.3). T-lex has no backend and T-sem has one that is not a tier. The same absence as F-138, seen from the row side."
             ]
           },
           "RULE-RECORD-DECLARES-ITS-TIER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:54      fn id(&self) -> &'static str;",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:55      fn why(&self) -> &'static str;",
-              "read directly 2026-07-28: `pub trait Rule { fn id(); fn why(); fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>; }` (finding.rs:53-57). There is no `tier` on a rule record. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "ENGINE-RUNS-THE-CHEAPEST-ADEQUATE-FRONTEND": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:95          frontend: &dyn Frontend,",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go(",
-              "there is no selection at all: store.rs:95-105 exposes per-language entry points that each take a caller-supplied `&dyn Frontend`. Nothing chooses, so nothing can choose the cheapest. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "ROW-TIER-T-LEX": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:22  pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:20  walkdir.workspace = true",
-              "the tier does not exist, and neither does its stated backend: grep for T-lex / ripgrep / forbidden-token / license header over the crate returns 0. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+              "DEMOTED 3/3 (Phase D wave 5, §3.3). T-lex has no backend and T-sem has one that is not a tier. The same absence as F-138, seen from the row side."
             ]
           },
           "ROW-TIER-T-SYN": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:1  //! The Rust T-syn frontend (ENGINE-CONFORM §2): `syn` in-process, the",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
-              "`syn` is real (the Rust frontend depends on it), but the row's universal backend is not: grep for tree-sitter / tree_sitter over the engine and both named frontends returns 0. The tier itself is unbuilt. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "ROW-TIER-T-SEM": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:157  /// A fact producer for one language (ENGINE-CONFORM §2). T-syn for",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:158  /// Phase 4; the trait carries id+version so the store key changes when",
-              "the TypeScript frontend does reach a compiler, but as a frontend rather than as a tier: there is no T-sem to escalate to. no `Tier` type, no `tier` field and no escalation logic exists anywhere in core-ai-native-conform: `pub trait Rule` (finding.rs:53-57) is id / why / check, and the store's entry points take a caller-supplied `&dyn Frontend` (store.rs:95-105) rather than selecting one. The whole tier vocabulary is unbuilt"
+              "DEMOTED 3/3 (Phase D wave 5, §3.3). T-lex has no backend and T-sem has one that is not a tier. The same absence as F-138, seen from the row side."
             ]
           },
           "EXAMPLE-R-021-FORBIDDEN-IDIOM": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:24  pub use structure::{CellHasOracle, CellIsolation, FlagSites};",
-              "R-021 does not exist. The complete in-tree rule roster is rules/mod.rs:21-25 and grep for 'R-021' / forbidden-idiom over the crate returns 0"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:77  /// R-002 — cell isolation: a cell module imports seams and core",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:91          \"R-002\"",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:106                  let Fact::Import { to_path, line, .. } = f else {",
-              "R-002 itself is real — structure.rs:77-91 `CellIsolation` with id \"R-002\", projected as TsCellIsolation and GoCellIsolation — but the fact as written maps it onto tiers that do not exist and onto a C++ frontend that does not exist. The half that is true is the rule; the half that is stated is the mapping"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "EXAMPLE-R-020-NAMING-VS-MANIFEST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:22  pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:14  specmark.workspace = true",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
-              "R-020 does not exist, and neither does the specmap join it names: grep for 'R-020' returns 0, and the conform crate does not depend on the specmap crate at all"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "ROW-FRONTEND-RUST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:11  description = \"The conform engine's Rust T-syn frontend (ENGINE-CONFORM §2): syn-precision facts — items, attributes, imports, ctor sites, unsafe\"",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:61          let Ok(ast) = syn::parse_file(text) else {",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml:18  syn.workspace = true",
-              "the T-syn column is right (`syn` in-process) and the T-sem column names software that is absent: grep for rust-analyzer / rustc_driver / ra_ap / hir over the engine and both named frontends returns 0"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "ROW-FRONTEND-CPP": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:25  pub enum Fact {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = [",
-              "there is no C++ frontend. grep for tree-sitter / libclang / clang-sys / cpp over the engine, its manifests and both named frontends returns 0, and no C++ variant exists in the `Fact` model"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "ROW-FRONTEND-TS-JS": {
@@ -5384,12 +5303,9 @@
             ]
           },
           "ROW-FRONTEND-GO": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:120      /// produced by the `go-extract` frontend: `kind` is one of",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:2  //! `go-extract` frontend's facts: the ban census with its",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:71      /// `go-ai-native-conform` (the `go-extract` frontend). Absent for",
-              "the T-syn column is exactly right: tools/go-extract/extract.go:21-22 imports go/ast and go/parser and is stdlib-only. The T-sem column names gopls, which appears nowhere; `go vet` runs as a FLOOR STEP (harvest/go-ai-native-lang-floor.md) and is not ingested as an evidence provider by conform"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "ROW-FRONTEND-PYTHON": {
@@ -5420,12 +5336,9 @@
             ]
           },
           "LINTERS-ARE-CITED-NOT-REIMPLEMENTED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:87  pub struct CellIsolation;",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs:5  //! cannot drift between language projections (the Ф6 brief's argument",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:35  #[serde(default, deny_unknown_fields)]",
-              "the `check: { tool, id, status }` shape the fact quotes does not exist on a rule; grep over the engine returns 0. The second half is true — cell isolation, the check no generic linter can know, is structure.rs:87"
+              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
             ]
           },
           "RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN": {
@@ -5474,8 +5387,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:21:47Z",
-        "verify_batch": "C1"
+        "verified_at": "2026-07-29T18:55:16Z",
+        "verify_batch": "C1 + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
@@ -5501,7 +5414,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "6c6ff1c87d589f0576e281656afe7f37564f80f95b14e5bb50aeb2112043a2dd",
+        "processed_hash": "c31df0cf731cb9ede355b82a0c0f1ef73df2b86e2cb40640b6e4bcf89afa5a8a",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5628,12 +5541,9 @@
             ]
           },
           "ROW-CLASS-INTERPRETATIONS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:12  //! `(subject subgraph, epoch, producer)` per LEDGER §2; entries under",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:128  /// stored entry is keyed by `(subgraph, epoch, producer)` so an",
-              "the implemented key is producer + epoch + subject (ledger.rs:136). Of the six components the row lists — subjects, spec revs, epoch, producer, prompt rev, model — three are absent, and `prompt_rev` and a model id return zero hits across the crate"
+              "MIXED (Phase D wave 5). Five demoted; `##QUERY-PROPOSE-LINKS` RE-JUDGED confirmed — it executed, its output is in `terraform/specmap-proposals.json`, and six affirmation commits followed."
             ]
           },
           "CONFORM-FACT-STORE-IS-THE-FACTS-CLASS": {
@@ -5673,12 +5583,9 @@
             ]
           },
           "RECOMPUTE-DECISION-HAPPENS-ABOVE-THE-FLOOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:79  /// contextual-rot rate, incremented when a re-verification of an",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:80  /// epoch-invalidated entry runs (none do yet — the template producer",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:151      let text = render_prose(&subgraph, target, &epoch, PRODUCER);",
-              "`prose_explain` (ledger.rs:131-163) renders from scratch on every miss and never reads a prior-epoch entry, so the 'old entry as draft input for cheap re-affirmation' path the fact describes does not exist"
+              "MIXED (Phase D wave 5). Five demoted; `##QUERY-PROPOSE-LINKS` RE-JUDGED confirmed — it executed, its output is in `terraform/specmap-proposals.json`, and six affirmation commits followed."
             ]
           },
           "ENTRY-CARRIES-ITS-PROVENANCE-FIELDS": {
@@ -5709,12 +5616,9 @@
             ]
           },
           "STORAGE-LAYOUT-IS-SHARDED-LIKE-GIT-OBJECTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:120      root.join(\".ledger\")",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:122          .join(&key_hex[..2])",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:15  //! Storage: `.ledger/objects/<sha256[0..2]>/<sha256>` plus",
-              "the sharded `.ledger/objects` layout is real (ledger.rs:119-120) and the other two thirds of the fact are not: grep for `index` in ledger.rs returns zero, and no CI warm-copy path exists anywhere"
+              "MIXED (Phase D wave 5). Five demoted; `##QUERY-PROPOSE-LINKS` RE-JUDGED confirmed — it executed, its output is in `terraform/specmap-proposals.json`, and six affirmation commits followed."
             ]
           },
           "GC-IS-LRU-WITH-A-PIN-SET": {
@@ -5762,19 +5666,15 @@
             ]
           },
           "QUERY-CLASSIFY-LEGACY-UNIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:198  pub fn classify_drift(old: &Specmap, new: &Specmap) -> Vec<String> {",
-              "the query kind does not exist: grep for classify / legacy_unit over the crates finds a conform error message and an unrelated `classify_drift` in the specmap index, and no importer path at all"
+              "MIXED (Phase D wave 5). Five demoted; `##QUERY-PROPOSE-LINKS` RE-JUDGED confirmed — it executed, its output is in `terraform/specmap-proposals.json`, and six affirmation commits followed."
             ]
           },
           "QUERY-PROPOSE-LINKS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:62      #[serde(rename = \"proposed\")]",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
-              "the query kind does not exist. The only trace is the `EdgeProvenance::Proposed` wire variant in the generated specmap module — a value the format can carry, not a producer that writes it; there is no proposals-file writer"
+              "MIXED (Phase D wave 5). Five demoted; `##QUERY-PROPOSE-LINKS` RE-JUDGED confirmed — it executed, its output is in `terraform/specmap-proposals.json`, and six affirmation commits followed."
             ]
           },
           "QUERY-KIND-ADDED-ON-TWO-CONSUMERS": {
@@ -5821,12 +5721,9 @@
             ]
           },
           "FAILURE-CACHE-POISONING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:132      const PRODUCER: &str = \"explain.item/prose-template-1\";",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:7  /// a field or variant bumps the frontend version, which retires old",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:85              .join(format!(\"{}-{}\", frontend.id(), frontend.version()))",
-              "the mitigation as stated cannot work: `prompt_rev` is not in the key (zero hits crate-wide), and no predicate or command sweeps a bad producer's entries. The 'one predicate' the fact promises has no implementation"
+              "MIXED (Phase D wave 5). Five demoted; `##QUERY-PROPOSE-LINKS` RE-JUDGED confirmed — it executed, its output is in `terraform/specmap-proposals.json`, and six affirmation commits followed."
             ]
           },
           "FAILURE-KEY-UNDER-SPECIFICATION": {
@@ -5855,8 +5752,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:24:40Z",
-        "verify_batch": "C1"
+        "verified_at": "2026-07-29T18:55:16Z",
+        "verify_batch": "C1 + D5b"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md": {
@@ -6168,7 +6065,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "c519391d627a56e8006cb38aa86e1e262b09bcbebc50cccabea563315cd6891c",
+      "content_hash": "884d98b767ddc31401e33b41e65290593df8f3e8c7ff5a340b2ca366fc12e6a1",
       "rollup": {
         "explicit": [
           "spec",
@@ -6190,7 +6087,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "a31e1c7778da5f25eacfd140047c59ea490255b313974fb6987bfdc7f06a4421",
+        "processed_hash": "884d98b767ddc31401e33b41e65290593df8f3e8c7ff5a340b2ca366fc12e6a1",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6311,10 +6208,9 @@
             ]
           },
           "SYSTEM-REPRESENTS-MANY-TO-MANY-AND-LINTS-ITS-GROWTH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:86  #[derive(Serialize, Deserialize)]  pub struct Edge {",
-              "many-to-many is represented (912 edges over 898 code items in the host index) and nothing lints its growth: no edges-per-item check exists in `vibe check`'s roster or anywhere else"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "source-maps-work-because-a-compiler-emits-them": {
@@ -6371,11 +6267,9 @@
             ]
           },
           "FORCE-MAP-IS-LOAD-BEARING-IN-DAILY-WORK": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:199  pub fn explain_text(map: &Specmap, target: &str) -> Result<String> {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:131  pub fn prose_explain(root: &Path, map: &Specmap, target: &str) -> Result<ProseRender> {",
-              "one of the three named forces holds. `explain` is real (`vibe trace explain`); agent context paging and index-driven error provenance have no implementation at all"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "CONSEQUENCE-M1-5-CONVERGENCE": {
@@ -6386,11 +6280,9 @@
             ]
           },
           "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:209  pub fn explain_json(map: &Specmap, target: &str) -> Result<serde_json::Value> {",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:163  /// Render the traceability subgraph around one target (a spec:// URI",
-              "no runtime channel exists: grep for specmap_query / specmap_explain / specmap_source across the host's crates returns nothing. An agent can reach the map through a CLI, never by asking the running tool"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY": {
@@ -6401,9 +6293,9 @@
             ]
           },
           "CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "`[metamodel] profile` appears nowhere in the crates — the open/contract/none profile the fact describes has no manifest key, no parser and no redaction path"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "DECISIONS-SECTION-IS-THE-BINDING-MODEL": {
@@ -6507,12 +6399,9 @@
             ]
           },
           "ROW-KIND-PROP": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs:78  \"prop\" => SpecUnitKind::Prop,",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:130  Prop,",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:40  pub enum Verb {",
-              "the `decides` verb does not exist: the Verb enum in specmark-grammar carries no such variant, and grep for `decides` across the crates returns 0. The kind is declared with an edge verb nothing can emit"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "ROW-KIND-REQ": {
@@ -6595,11 +6484,9 @@
             ]
           },
           "INVALIDATION-CODE-CHANGE-KEEPS-EDGES-VALID": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:93  for e in &edges {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:34  pub struct CodeItem {",
-              "the first half is true and structurally so — `code_item` in the committed index carries crate_name/file/item_kind/line/symbol and NO content hash, so a code change cannot invalidate an edge. The second half has no implementation: nothing treats a `deviates` edge specially on either side"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "kind-line-addressing-code": {
@@ -6771,12 +6658,9 @@
             ]
           },
           "INDEX-CONTENTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:11  pub struct Specmap {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:22  //! Orphans are computed at gate time and deliberately not serialised",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:11  //! index and is emitted as regeneration-time stderr, never stored.",
-              "read from the host's committed index: its six keys are code_items, edges, schema, spec_units, suspects, warnings. Of the six contents this fact names, coverage-per-REQ and the orphans table are absent — orphan coverage is computed at gate time by the ratchet and never stored"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "INDEX-DETERMINISM-IS-A-TESTED-PROPERTY": {
@@ -6830,10 +6714,9 @@
             ]
           },
           "LLM-AS-PROPOSER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,",
-              "there is no proposal path: `specmap-proposals.json` appears nowhere, no link mining exists, and nothing constructs `EdgeProvenance::Proposed`"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "LLM-AS-RENDERER": {
@@ -6860,10 +6743,9 @@
             ]
           },
           "RUNTIME-DISTRIBUTION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:54  pub fn content_hash(text: &str) -> String {",
-              "no published package ships an index, and no content-hash fragment resolution exists"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "RUNTIME-PROFILES": {
@@ -6874,9 +6756,9 @@
             ]
           },
           "RUNTIME-SECURITY-IS-NON-OPTIONAL": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "nothing is signed: no signing path exists anywhere, and this document's own #OPEN-SIGNING-SCHEME calls the scheme undecided and blocking. A non-optional security property marked implemented, whose own open question says it cannot be"
+              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
             ]
           },
           "GRAMMAR-IS-LANGUAGE-NEUTRAL": {
@@ -7537,8 +7419,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T09:21:43Z",
-        "verify_batch": "C1"
+        "verified_at": "2026-07-29T18:55:16Z",
+        "verify_batch": "C1 + D5b"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
