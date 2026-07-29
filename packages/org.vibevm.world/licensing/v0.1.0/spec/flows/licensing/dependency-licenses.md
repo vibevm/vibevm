@@ -60,7 +60,18 @@ nowhere. @impl/done
   no checker is a wish. @impl/done
 - ##RE-AUDIT-ON-A-SCHEDULE **Re-audit on a schedule.** A dependency can relicense between
   versions; a periodic audit line (see `flow:health-audit`) re-runs
-  the listing and flags any new non-permissive entry. @impl/done
+  the listing and flags any new non-permissive entry. *Specified, not built,
+  and the sibling it points at does not carry the line: `flow:health-audit`'s
+  `spec/flows/health-audit/audit-checklist.md` has one dependency category, D4
+  · Dependency staleness, whose «Look for» and «Aid» rows name outdated
+  versions and security advisories (`npm audit`, `cargo audit`,
+  `cargo outdated`) and no licence at all — a search of that package's whole
+  `spec/` for `licen` · `copyleft` · `GPL` · `permissive` · `SPDX` returns
+  nothing. Nor is there a listing to re-run: no `deny.toml`, no `about.toml`,
+  no SBOM or SPDX manifest anywhere in the perimeter, and a lockfile that
+  records no licence field. The adopter must therefore author the line itself;
+  `audit-checklist.md` is explicitly «a starting set, not a closed one», which
+  is where it would go.* @spec/done
 - ##POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST **Point the product's carve-out at the generated list**, never a
   hand-maintained copy — the hand copy drifts, the generated one
   cannot. @impl/done
@@ -94,6 +105,16 @@ stated: @impl/done
 - ##SUM-WEIGHT-IS-NEVER-A-LICENCE-REASON Weight is never a licence reason — keep those conversations
   separate. @impl/done
 - ##SUM-AUTOMATE-AND-RE-AUDIT Automate the listing in CI and re-audit on a schedule; point the
-  carve-out at the generated list. @impl/done
+  carve-out at the generated list. *One of the three is built, one is a
+  recorded exception, one is built by nothing. Built: the carve-out points at
+  the generated list rather than a hand copy. A recorded exception rather than
+  a gap: the CI listing was wanted, filed, and deliberately declined — the
+  intent «cargo deny in CI (automated license check)» is registered and marked
+  `rescoped`, its resolution reading «couples to the CI decision; the license
+  policy itself is enforced by review», which couples it to a standing
+  owner-level no-CI posture. Built by nothing: the scheduled re-audit, per
+  `##RE-AUDIT-ON-A-SCHEDULE` above — no periodic licence line exists in the
+  `health-audit` flow, in any adopting project's audit record, or in any
+  tooling.* @spec/done
 - ##SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION A forbidden licence is only ever adopted by an explicit, recorded
   owner exception. @impl/done

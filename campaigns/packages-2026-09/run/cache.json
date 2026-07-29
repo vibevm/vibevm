@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T18:55:16Z",
+  "updated_at": "2026-07-29T20:02:26Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -10195,12 +10195,11 @@
             ]
           },
           "EXHAUSTIVENESS-IS-CARRIED-BY-A-LINTER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:138  // (the one Discipline rule a linter carries entirely — GUIDE §5).",
+              "C:/opt/gotools/exhaustive.exe  the linter the fact says carries this rule entirely is installed on this machine",
               "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:152  let mut cmd = crate::tools::path_tool(root, \"exhaustive\");",
-              "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:25  floor: the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest",
-              "the linter the fact says carries this entirely is **not installed**, and its floor step fails rather than skipping: «the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest» (harvest/go-ai-native-lang-floor.md). Nothing carries closed-set switches"
+              "re-judged in wave 6. The verdict's sole evidence was a harvest line reading `the step's tool did not spawn (program not found)` - a PATH fact of the capturing machine, not a property of the package; that harvest file has since been annotated to say so. With the tool's directory on PATH the Go pilot prints `floor: all green (7 step(s) run, 0 disabled by policy)`, and on a falsifying input the step reports `missing cases in switch of type main.Op: main.OpDelete`, so the linter is not merely present but doing the work the fact assigns it. The fact was true as written and no edit was made."
             ]
           },
           "PANIC-IS-THE-INVARIANT-VIOLATION-CHANNEL": {
@@ -10741,7 +10740,7 @@
           }
         },
         "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + D5a"
+        "verify_batch": "C3 + D5a + D6"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
@@ -25384,7 +25383,7 @@
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
-      "content_hash": "21c00f525836f42ec9b30273a9a85df5142f7bba9d0c238840eba892239ba038",
+      "content_hash": "fc6f60c68b3f1c07f23d154b4a6e83567b1642e61d904b0dea2b2cddb4122e0f",
       "rollup": {
         "explicit": [
           "spec",
@@ -25406,7 +25405,7 @@
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "21c00f525836f42ec9b30273a9a85df5142f7bba9d0c238840eba892239ba038",
+        "processed_hash": "fc6f60c68b3f1c07f23d154b4a6e83567b1642e61d904b0dea2b2cddb4122e0f",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -26279,7 +26278,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:12:30Z",
+        "verified_at": "2026-07-29T20:02:26Z",
         "verify_batch": "W3"
       }
     },
@@ -28378,17 +28377,15 @@
             ]
           },
           "COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:87  quoted verbatim and dated, baseline and exit state as exact counts,",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:40  | **total** | **37** | **294** | **28 733** | |",
-              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:15  ## 0. Target arithmetic",
-              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:7  *Execution record: all six phases ran to the exit state in one session — baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files, exactly §0's arithmetic). 19 commits (`254b974` … `475fa75`). …",
-              "DRIFT on its second half, over the whole live window. The baseline half holds — both live plans open with a dated exact-count section, wave 2's a table of 37 packages / 294 files / 28 733 lines. The exit half has no live instance at all: `grep -niE 'exit state' spec/terraforms/*.md` returns 0, and neither plan states campaign-level arithmetic reconciling which of its units end where. The archive shows the host once did it completely — SHRINK-PLAN's §0 reads 130 = 68 + 28 + 24 + 8 + 2 and its execution record closes at exactly 10. Adopted, then dropped: 0 of 2 live campaigns, which is the whole window."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:32  **§4 exit state, reconciled:** 1 code package `fractality` v0.1.0 with",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md:144  **Exit state:**",
+              "re-judged in wave 6. The exit half was reported to have no live instance from `grep -niE 'exit state' spec/terraforms/*.md`; a consuming project reconciles its exit state unit by unit in two plans."
             ]
           },
           "COLD-FACTS-VERIFIED-AT-WRITING-TIME": {
@@ -28434,17 +28431,14 @@
             ]
           },
           "COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:90  runnable whole-campaign acceptance script. Wrong current-state facts",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:339  ## 12 — Whole-campaign acceptance",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:342  bash tools/self-check.sh; echo \"EXIT=$?\"                       # exit 0",
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:308  ## 7. The exit gate, restated as five checks {#gate}",
-              "DRIFT, same shape and the same window: 8 archived plans carry `## … Whole-campaign acceptance`, 0 live plans and 0 campaign zones do. What the live campaign has instead is a five-check prose exit gate at PHASE-C-BATCH-PLAN.md:308-318, of which one check names a command and check 4 says outright «No shipped command counts this; the phase writes the script that does». A prose gate is not the runnable script this rule requires, and the archived PACKAGE-TREE-PLAN §12 shows the host knows the difference."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1101-1112  ## 12. Whole-campaign acceptance, followed by a fenced sh block of eight asserting commands",
+              "re-judged in wave 6: the runnable acceptance script exists in the consuming project's plans."
             ]
           },
           "WRONG-CURRENT-STATE-FACTS-ARE-THE-MOST-EXPENSIVE-PLAN-BUG": {
@@ -28476,17 +28470,14 @@
             ]
           },
           "EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:96  after. Every later phase ends with the project's full gate panel",
-              "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:41  any phase is a safe stop; the floor must be green at every phase boundary._",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:782    bigger than diagnosed.** Two commits, floor green on the committed tree,",
-              "campaigns/packages-2026-09/PHASE-C-RESUME.md:16  | tree | clean, in sync with `origin/main`, mirrored to both hosts |",
-              "DRIFT on two of its three clauses. The gate-panel clause holds — `tools/self-check.sh` is real and the floor is asserted at batch and phase closes in wave 2's LOG. The safe-stop law is stated in 12 archived plans and **0 live ones**. And «the plan plus its execution ledger are the resume pointer» is not how the live campaign resumes: it uses PHASE-C-RESUME.md and a generated run/RESUME.md instead. Correcting the harvest I wrote while ruling on it: its «5 times in wave 2 and 11 in wave 1» is a LINE count over a pattern that also matches `self-check`; the occurrence count of gate-panel wording is 4 and 5, and the bare word `floor` is 32 and 10 — the opposite ordering. State the unit with the count; the harvest now does."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md  carries the safe-stop law; also FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md and FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+              "re-judged in wave 6. The safe-stop law is stated in three of the consuming project's plans in this package's own wording."
             ]
           },
           "sibling-document-pointers": {
@@ -28632,7 +28623,7 @@
           }
         },
         "verified_at": "2026-07-28T21:27:17Z",
-        "verify_batch": "W4 + D2a"
+        "verify_batch": "W4 + D2a + D6"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
@@ -28800,17 +28791,15 @@
             ]
           },
           "ROW-ROLE-LOG": {
-            "v": "drift",
-            "ev": [
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:444  ## 7. LOG {#log}",
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:339  ## 9. LOG (execution ledger — append per batch/wave/phase) {#log}",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1786    **The size correction first, because it is the same slip B16 named.** The",
-              "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:241  do carry them carry subjects and outcomes too. Note the counts are not",
-              "DRIFT on one of three contents. Deviations and discovered work are richly present — 98 dated entries in wave 2's LOG. «Per-phase commit maps» are absent: `grep -niE 'commit map|commit-map'` over both live plans and both campaign zones returns 0, against 3 archived plans carrying the form completely. The hashes that do appear sit in prose — 17 unique in wave 2, 20 in wave 1, both re-measured. Same defect as BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY and THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS; W1's precedent is that a restatement of a failing claim drifts with it."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1141  ### Phase 0 - EXECUTED (2026-07-09); commit map",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md:37  path = \"vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md\"",
+              "re-judged in wave 6. The drift rested on `grep -niE 'commit map|commit-map'` returning 0 over `spec/terraforms/` and the two campaign zones. That perimeter omits a registered specspace which INSTALLS this flow and boots it at slot 40 of its own INDEX. Its plans carry the form as literal phase headings - `commit map` at IGNITION lines 1141, 1155, 1210, 1274 - over 72 hash-shaped tokens across six plans. The form is live; the original measurement was of the wrong window."
             ]
           },
           "ROW-ROLE-REPORT": {
@@ -29246,17 +29235,15 @@
             ]
           },
           "PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501  ## 5. Wave 0 — spikes (no commits; gates for everything after)",
-              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:58  *Exit:* `no-unwrap-in-domain` = 0 in the baseline; every (b) site carries a reason a reviewer can argue with.",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:304    rows say `shipped`). *Commits:* guide+boot; cards.",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:299  *Exit gate:* `check --exhaustive` green over both corpora; batch diffs contain",
-              "DRIFT on two of the four elements plus the antecedent. Numbered steps and an exit criterion are universal; per-phase predictions appear in 3 of wave 2's 8 phases and 6 of wave 1's. But «its planned commit set with subjects spelled in advance» is 4 archived plans and 0 live ones, and the Phase 0 half has no live instance at all — neither live campaign has a Phase 0, whose phases run A…G in both."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1141  ### Phase 0 - EXECUTED (2026-07-09); commit map",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md:11  Format: `flow:org.vibevm.world/campaign-plans` (one file, five roles)",
+              "re-judged in wave 6 on the same widened perimeter as ROW-ROLE-LOG. Two plans name this flow as their format in their own status lines, so they are this flow's output rather than a coincidental resemblance."
             ]
           },
           "phase-anatomy-pointer": {
@@ -29330,17 +29317,15 @@
             ]
           },
           "the-quick-start-block-lead": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:734  ## 8. Quick-start (for the executing session)",
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:736  ```sh",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:327  ## 11 — Quick-start for the executing session",
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:931  ## 15. Quick-start for the executing session",
-              "DRIFT: 7 archived plans carry `## … Quick-start for the executing session` and 0 live ones do, with `grep -rniE 'quick.start'` returning 0 across both live plans and the live campaign zone. SELF-SUFFICIENCY's is a literal ```sh block of three sub-blocks, so «literal shell block» is exact where the practice survives. Restates the boot snippet's COLD-A-LITERAL-QUICK-START-BLOCK, ruled drift there."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1101  ## 12. Whole-campaign acceptance",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1103  ```sh",
+              "re-judged in wave 6. The block exists and is runnable - eight commands ending `(cd ../../../.. && bash tools/self-check.sh); echo \"EXIT=$?\"`. Note also that the host's own two plans gained one on 2026-07-29 by owner route-(b) ruling, so the live population is no longer zero on either side of the perimeter."
             ]
           },
           "QUICK-START-CONFIRM-THE-TREE": {
@@ -29384,17 +29369,15 @@
             ]
           },
           "ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:339  ## 12 — Whole-campaign acceptance",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:342  bash tools/self-check.sh; echo \"EXIT=$?\"                       # exit 0",
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:753  ## 9. Acceptance for the whole campaign (the fresh-project scenario)",
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:314  4. **Every `world` verdict carries `src`**, and the summary counts `src == [1]`",
-              "DRIFT: 8 archived plans carry `## … Whole-campaign acceptance` — PACKAGE-TREE-PLAN's first line is byte-for-byte this package's own example, comment included — and 0 live plans or zones do. The live campaign's nearest artifact is Phase C's five-check exit gate, which is prose and whose check 4 says outright «No shipped command counts this; the phase writes the script that does». A prose gate is not a runnable script asserting an end state."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1103-1112  a fenced sh block whose lines each assert an end state (`exit 0`, `healthy`, `non-empty result`, `>=5 completed runs`, `empty at close`)",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md:566  ## 12. Whole-campaign acceptance",
+              "re-judged in wave 6: the runnable acceptance script the fact requires is present in two executed plans of a consuming project, asserting the end state rather than listing steps."
             ]
           },
           "REVIEW-POINTS-GO-OPEN-THEN-RESOLVED": {
@@ -29412,17 +29395,15 @@
             ]
           },
           "THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:692  ## 13. Execution ledger (filled by the executing session)",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:711    vibevm-on-vibevm cycle is broken on vibevm itself.",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:361  ## 14 — Execution ledger",
-              "DRIFT: 8 archived plans carry an Execution ledger section and 0 live ones do — both live plans call the section LOG and cite hashes in prose without a per-phase map. MCP-SOVEREIGNTY §13 is the complete instance and shows what is missing: six per-wave commit maps, each entry a hash plus its conventional-commit subject plus what it did, one of them closing «D15/P6 CONFIRMED» — a commit bound to a decision and a prediction at once."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1141,1155,1210,1274  four `commit map` phase headings under EXECUTED phases",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md  28 unique hash-shaped tokens; 72 across the six plans",
+              "re-judged in wave 6. The binding of hashes to planned subjects is exactly what those commit-map sections are; the original verdict's `hashes sit in prose` was true of the host's plans and false of the consumer's."
             ]
           },
           "EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION": {
@@ -29553,7 +29534,7 @@
           }
         },
         "verified_at": "2026-07-28T21:30:50Z",
-        "verify_batch": "W4 + D2a"
+        "verify_batch": "W4 + D2a + D6"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md": {
@@ -30490,17 +30471,15 @@
             ]
           },
           "a-phase-carries-four-elements-lead": {
-            "v": "drift",
-            "ev": [
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:305  ### Phase C — Verification (evidence pass) {#phase-c}",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:316  *Exit gate (**A1 — enumerates this phase's own steps, not just its headline**):*",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:328  *Prediction, falsifiable and deliberately uncomfortable:* **`world` measures",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:304    rows say `shipped`). *Commits:* guide+boot; cards.",
-              "DRIFT on the fourth element. Numbered steps and an exit criterion are universal; per-phase predictions cover 3 of wave 2's 8 phases and 6 of wave 1's. The commit set with subjects spelled in advance appears in 4 archived files and **0 live plans** — about one plan in six across the repository, which makes «every phase carries four elements» false as a description of how this host writes phases."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1141  ### Phase 0 - EXECUTED (2026-07-09); commit map",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md:37  the specspace installs and boots flow-campaign-plans",
+              "re-judged in wave 6. The fourth element - a commit set with subjects spelled in advance - was reported as 4 archived files and 0 live plans; it is live in the fractality specspace's executed plans."
             ]
           },
           "ROW-ELEMENT-NUMBERED-STEPS": {
@@ -30574,31 +30553,25 @@
             ]
           },
           "why-subjects-are-spelled-in-advance": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:374  **Commits:** `build(packages): bump the discipline packages to 0.3.0` +",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:322    ratchet. *Commits:* conform pair; specmap pair.",
-              "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\",",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:294  Batching runs by package, largest first, because a package is the natural",
-              "DRIFT on the object of the sentence. The planning-time split DOES happen here, but at batch grain rather than commit grain: wave 2's Phase B declares its batching rule with its reason («a package is the natural review unit») and Phase C's batch plan cuts 15 named units. The commit-subject half has no live instance — no live plan writes subjects in advance — and `grep -rniE 'commits-by-meaning|commit.by.meaning'` across the spec tree, the archive and the git-atomic-commits package returns 0, so the phrase the rationale rests on is the flow's alone."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "spec/boot/00-core.md:23  3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** - one logical unit per commit, split mixed working trees. @impl/done",
+              "re-judged in wave 6. This verdict is false on the perimeter its own text names: it reported `grep -rniE 'commits.by.meaning' spec/` as empty, and that grep returns the host's Rule 3 in the compiled boot lane. The rationale the fact gives is the rule the host actually runs on."
             ]
           },
           "EXECUTION-STAGES-ONTO-A-PRE-DRAWN-MAP": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:762    the kind's first real inhabitant. TWO PLAN SIMPLIFICATIONS recorded:",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:767    version-mirroring the `=0.5.0` pin; D10 amended by execution:",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:463  ## 13. Execution ledger {#ledger}",
-              "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
-              "DRIFT because the map it stages onto does not exist in the live window. The drift-is-a-finding half is attested — MCP-SOVEREIGNTY's Wave 3 map records two plan simplifications and a decision amended by execution — but binding requires a pre-drawn map, only 4 archived plans have one, and the live campaigns have neither planned subjects nor commit maps, so nothing binds. The gap counted from the other end is 17 plan-cited hashes against 189 commits in the wave-2 zone."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1141,1155,1210,1274  phases marked EXECUTED against a map drawn at plan time",
+              "re-judged in wave 6 on the widened perimeter; the pre-drawn map with execution staged onto it is the literal shape of those four phase sections."
             ]
           },
           "ANY-PHASE-BOUNDARY-IS-A-SAFE-STOP": {
@@ -30966,17 +30939,14 @@
             ]
           },
           "SUM-EVERY-LATER-PHASE-CARRIES-FOUR-ELEMENTS": {
-            "v": "drift",
-            "ev": [
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:316  *Exit gate (**A1 — enumerates this phase's own steps, not just its headline**):*",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:328  *Prediction, falsifiable and deliberately uncomfortable:* **`world` measures",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:304    rows say `shipped`). *Commits:* guide+boot; cards.",
-              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:59  *Prediction:* ≥1/3 of the 24 land as (b) deviates — the ban's value here is the *testimony*, not the conversion count. @freeze/done",
-              "DRIFT: «every» holds for two of the four elements in this repository. Steps and exit criteria are universal; per-phase predictions cover 3 of wave 2's 8 phases and 6 of wave 1's; the commit set with spelled subjects is 4 archived files and 0 live plans. Same measurement as the anatomy lead, and the summary carries its verdict."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md:1141  ### Phase 0 - EXECUTED (2026-07-09); commit map",
+              "re-judged in wave 6. Three of this obligation's four verdicts say in their own words that they were restated to agree with one another, and they agreed on the premise the widened perimeter falsifies - the campaign's own `consistency propagates an error` corollary, fired a second time."
             ]
           },
           "SUM-ANY-BOUNDARY-IS-A-SAFE-STOP": {
@@ -31037,7 +31007,7 @@
           }
         },
         "verified_at": "2026-07-28T21:35:13Z",
-        "verify_batch": "W4"
+        "verify_batch": "W4 + D6"
       }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/README.md": {
@@ -32534,16 +32504,14 @@
             ]
           },
           "ROW-VERDICT-ACCEPT": {
-            "v": "drift",
-            "ev": [
-              "ROADMAP.md:341  ### M1.7 — `vibe-mcp` server (Claude-native context provider)",
-              "ROADMAP.md:43  > [PROP-004 Tessl comparative research](legacy-spec/research/PROP-004-tessl-comparative-research.md):",
-              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md:74  - **D-C3-1 Need-gate verb** (RD-1, RD-2, RD-6, RD-16; FD-1): one",
-              "DRIFT: acceptance is observable as a LANDING and nowhere as a verdict. The Tessl deltas became ROADMAP milestones M1.7-M1.11 and M2.7-M2.10, each carrying a `Source: [PROP-004 §5.x]` back-pointer, and the RLM deltas became Stage B decisions cited 22 times — but `grep -niE '\\bAccept(ed)?\\b' ROADMAP.md` returns no verdict line against any milestone, and neither synthesis marks a delta accepted. The acceptance is INFERRED from the milestone existing. And the decision-records shape the row invokes is absent: `grep -rn 'When to revisit' ROADMAP.md spec/` finds no trigger at any of these landings."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md  RP-C3-1 carries the owner's per-delta ruling verbatim",
+              "re-judged in wave 6. The pipeline was measured over one ARCHIVED study whose own status line says its deltas ratify downstream; a second, live research programme runs all four steps including a per-delta verdict."
             ]
           },
           "ROW-VERDICT-REJECT": {
@@ -32613,16 +32581,14 @@
             ]
           },
           "this-is-decision-records-doing-its-job": {
-            "v": "drift",
-            "ev": [
-              "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:224  …The three modes mirror Tessl's \"rules eager-push / skills lazy-push / docs lazy-pull\" framing…",
-              "spec/modules/vibe-index/PROP-005-package-index.md:9  …[PROP-004](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) §5.x (gap analysis)…",
-              "vibe.lock:46      \"flow:org.vibevm.world/decision-records@=0.1.0\",",
-              "DRIFT: the citation half is strong and the record half is absent. Living spec sections DO cite the study as their justification — PROP-003 at five anchors, PROP-005 at one, ROADMAP.md at two — which is more than the flow strictly asks. But those are inline prose references, not `decision-records` records: `grep -rn 'Considered and rejected' spec/ ROADMAP.md` returns no hit at any Tessl-derived section. The sibling flow is not doing its job here; it is being cited by name while its form is not used."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/  ten D-C3-N decisions citing their delta numbers",
+              "re-judged in wave 6: acceptance is recorded as decisions that cite the delta they accept, which is the composition this fact claims."
             ]
           },
           "a-recorded-decision-carries-lead": {
@@ -32664,16 +32630,14 @@
             ]
           },
           "RECORD-FIELD-CONSIDERED-AND-REJECTED": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:77  …**Considered and rejected** @impl/done | One line per alternative, each carrying the reason it lost. A loser without a reason invites the evaluation to be re-run. @impl/done |",
-              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:155  **Rejected:** ranking by stars/citations alone (popularity is not",
-              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/barkain-study.md:98  ## Non-adoptions (named)",
-              "DRIFT at the object this field is about. The field IS practised in the fractality plans — 5 `**Rejected:**` lines, one per decision, each naming the alternative and why it lost — and the study notes carry the analogous non-adoption sections. It is absent at every study-derived landing: `grep -rn 'Considered and rejected' ROADMAP.md spec/` returns no hit there. And no located study weighs «do nothing» explicitly, which this field names as the alternative most often skipped."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "spec/  `grep -rn 'Considered and rejected' ROADMAP.md spec/` returns 7 hits, against the verdict's reported zero",
+              "re-judged in wave 6. False on the perimeter the verdict's own text names - no widening required."
             ]
           },
           "RECORD-FIELD-WHEN-TO-REVISIT": {
@@ -32689,15 +32653,14 @@
             ]
           },
           "THE-STUDY-NOTES-THE-ACCEPTANCE-AND-POINTS-AT-THE-ANCHOR": {
-            "v": "drift",
-            "ev": [
-              "legacy-spec/research/PROP-004-tessl-comparative-research.md:782  Maps to §5.1.",
-              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:74  …**RD-1 (P1) The need-gate is an isolated, auditable call**…",
-              "DRIFT: the back-annotation does not exist anywhere, and the citation runs the OPPOSITE way from what this fact prescribes. Six living sections point AT the Tessl study (`grep -rn 'PROP-004' spec/ ROADMAP.md`); the study points at no decision anchor — its §6 carries only the forward recommendation. The same on the fractality side: the Stage B plan cites RD-n twenty-two times and `RLM-SYNTHESIS.md` names no D-C3 decision back. The loop this fact closes is open in every instance."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/  FUGU-FRACTALITY-MAPPING.md section 2 is a 16-row delta -> anchor -> disposition table",
+              "re-judged in wave 6: a delta-to-anchor table with dispositions is precisely the study noting the acceptance and pointing at the anchor."
             ]
           },
           "THE-DELTA-IS-HISTORY-IN-THE-STUDY-AND-LIVE-IN-THE-SPEC": {
@@ -33200,7 +33163,7 @@
           }
         },
         "verified_at": "2026-07-28T21:47:48Z",
-        "verify_batch": "W4"
+        "verify_batch": "W4 + D6"
       }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md": {
@@ -43079,7 +43042,7 @@
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md": {
-      "content_hash": "eb51325693a1fe24cc0ebe56eb3fd055129d8854d06befbb1d489bbead4dbe99",
+      "content_hash": "9dc11f88e01b678cd61c2b3a335561b25012685f3ed6b8523a7b9780265bc7b3",
       "rollup": {
         "explicit": [
           "doc",
@@ -43101,7 +43064,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "eb51325693a1fe24cc0ebe56eb3fd055129d8854d06befbb1d489bbead4dbe99",
+        "processed_hash": "9dc11f88e01b678cd61c2b3a335561b25012685f3ed6b8523a7b9780265bc7b3",
         "verdicts": {
           "PACKAGE-INSTALLS-A-DELIBERATE-ATTRIBUTION-POSTURE": {
             "v": "confirmed",
@@ -43132,18 +43095,15 @@
             ]
           },
           "PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:14  ##PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED This package makes the choice explicit",
-              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md:39  git log --format='%H %B' @{u}..HEAD |",
-              "AUDIT.md:1  # AUDIT.md — project health inventory",
-              "**explicit yes, enforced no.** The rule is explicit twice over in the always-loaded lane, and the package ships a pre-push scan as prose. **nothing enforces it in this consumer.** `ls .git/hooks/ | grep -v sample` returns nothing, there is no `.github/` and no tracked CI file of any kind, AUDIT.md is 458 lines and carries no attribution line, and `git config --local --list` shows no trailer setting. The flow's own law names the state: «A policy with no checker is a wish».",
-              "the fact is marked @impl/done and claims the choice is *enforced*; what is implemented is a checklist, and the flow's own A-POLICY-WITH-NO-CHECKER-IS-A-WISH is the standard that convicts it"
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml  declares one [boot_snippet] and no executable, so an install writes a snippet and three documents",
+              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md  the fact now reads `Explicit ships; enforced does not` and carries @spec/done",
+              "re-judged in wave 6 after the demotion. Written as a PARTIAL because the configuration half measurably holds on this consumer - `git log --format='%an' -n 400` returns one author and a line-anchored search for Co-Authored-By / Signed-off-by / `Generated with [Claude` returns zero. A flat `not built` would have been false in the half that works."
             ]
           },
           "THE-DEFAULT-POSTURE-IS-CONCEALMENT": {
@@ -43397,8 +43357,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T13:57:48Z",
-        "verify_batch": "W1c"
+        "verified_at": "2026-07-29T19:59:26Z",
+        "verify_batch": "W1c + D6"
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md": {
@@ -50299,7 +50259,7 @@
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/README.md": {
-      "content_hash": "b5485020c0836c374ed827ac1d8d9eb5da1fd55b19734888d3f29326d2e56696",
+      "content_hash": "e4b4efaa704886e5ae943e98c942162000d69f851d75fb5387b47ba31a66c0de",
       "rollup": {
         "explicit": [
           "doc",
@@ -50321,7 +50281,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b5485020c0836c374ed827ac1d8d9eb5da1fd55b19734888d3f29326d2e56696",
+        "processed_hash": "e4b4efaa704886e5ae943e98c942162000d69f851d75fb5387b47ba31a66c0de",
         "verdicts": {
           "package-installs-a-licensing-posture-lead": {
             "v": "confirmed",
@@ -50628,16 +50588,15 @@
             ]
           },
           "COMPOSES-HEALTH-AUDIT": {
-            "v": "drift",
-            "ev": [
-              "vibedeps/flow-licensing/0.1.0/README.md:65  - `flow:health-audit` — a periodic audit line re-runs the dependency",
-              "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:54  - **Re-audit on a schedule.** A dependency can relicense between",
-              "spec/common/PROP-000.md:53  - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done",
-              "DRIFT, and unusually it is source 1 against source 1 — the package asserts a composition its SIBLING does not implement, inside the same shipped collection. The claim is that a periodic audit line re-runs the dependency licence listing. `grep -rn -i 'licen' vibedeps/flow-health-audit/` hits only that package's own LICENSE.md, README and vibe.toml: its `audit-checklist.md` carries no licence line at all, so the line this fact points at does not exist in the flow it points at. The host side is empty the same way, three searches deep: `AUDIT.md` is 458 lines with three dated run sections and `grep -n -i 'licen\\|copyleft\\|GPL\\|permissive'` returns ZERO hits across all of it — not one finding, checklist item or carry-forward; and the host's own audit contract `spec/common/PROP-013-periodic-health-audit.md` has one dependency category, D4 at line 51, naming `cargo update --dry-run`, `cargo audit` and `cargo outdated` — staleness and CVEs, no licence listing. Ruled drift rather than non-adoption because the missing line is in the shipped sibling, not only in the host."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               3
+            ],
+            "ev": [
+              "packages/org.vibevm.world/licensing/v0.1.0/README.md  the entry now reads `Specified, not built: the composition is a good one and the sibling does not yet hold up its end` and carries @spec/done",
+              "packages/org.vibevm.world/licensing/v0.1.0/README.md  the two neighbouring ##COMPOSES-* entries already carry @spec/done for stating relationships, so the demotion brings this one into line rather than inventing a state",
+              "re-judged in wave 6 after demotion. This is the rare source-1-against-source-1 case: the package asserts a composition that its SIBLING inside the same shipped collection does not implement, so no host search could settle it either way."
             ]
           },
           "COMPOSES-ATTRIBUTION-POLICY": {
@@ -50701,8 +50660,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:47:02Z",
-        "verify_batch": "W6"
+        "verified_at": "2026-07-29T20:02:26Z",
+        "verify_batch": "W6 + D6"
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md": {
@@ -50896,17 +50855,15 @@
             ]
           },
           "THE-DRAFT-EULA-SKILL-DRAFTS-OR-REVIEWS-THE-POSTURE": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:837  The `draft-eula` skill drafts or reviews the posture. Full detail:",
-              "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:19  [[skill]]",
-              "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:20  name = \"draft-eula\"",
-              "packages/org.vibevm.world/licensing/v0.1.0/vibe.toml:21  path = \"spec/skills/draft-eula\"",
-              "DRIFT for the same structural reason as the pointer three lines above it: the boot lane tells every session in this repository that a tool is available, and from where that sentence is read the tool cannot be reached. It lands at `spec/boot/STATIC.md:837`. The skill file IS installed, at `vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md`. It is materialised into NONE of the three harness skill homes — `.claude/skills/` (5 entries), `.agents/skills/` (4), `.opencode/skills/` (4) — and `grep -rn 'draft-eula' .claude/ .agents/ .opencode/` returns nothing; there is no host `spec/skills/`. So a session that reads this boot line cannot act on it without opening the `vibedeps/` path by hand. RECORDED, and it is the sharper version of the same gap noted at the README's `##CONTENT-THE-DRAFT-EULA-SKILL`, which is confirmed there because it claims only that the skill is installable — this one puts the capability in front of a session that cannot invoke it. The host performed its 2026-07-12 relicensing, this skill's exact job, without it."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               3
+            ],
+            "ev": [
+              "vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md  the skill ships and is installed in the consumer's slot",
+              "crates/vibe-cli/src/commands/skill/mod.rs:51-100  the `vibe skill` driver reads exactly that slot",
+              "re-judged in wave 6. The skill exists, ships and is installed; what the verdict measured is that it is not materialised into any of the three harnesses - and neither is any other `world` flow skill, while all four ai-native ones are. That is a uniform host deployment posture, not a false sentence in this package. Checked: .claude/skills/ carries five entries, none of them a world flow skill."
             ]
           },
           "sibling-document-pointers": {
@@ -51015,7 +50972,7 @@
           }
         },
         "verified_at": "2026-07-28T22:47:02Z",
-        "verify_batch": "W6"
+        "verify_batch": "W6 + D6"
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md": {
@@ -51777,7 +51734,7 @@
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md": {
-      "content_hash": "3eceab77b197652870a15fdc5a4df0f39cb5208d1f783ce30939984e5d0bf52f",
+      "content_hash": "cba36d2263486802ddb40eea437917f5de59698648373c36c264b9a6cf62c975",
       "rollup": {
         "explicit": [
           "spec",
@@ -51799,7 +51756,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "3eceab77b197652870a15fdc5a4df0f39cb5208d1f783ce30939984e5d0bf52f",
+        "processed_hash": "cba36d2263486802ddb40eea437917f5de59698648373c36c264b9a6cf62c975",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -52036,16 +51993,15 @@
             ]
           },
           "RE-AUDIT-ON-A-SCHEDULE": {
-            "v": "drift",
-            "ev": [
-              "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:54  - **Re-audit on a schedule.** A dependency can relicense between",
-              "spec/common/PROP-000.md:53  - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done",
-              "DRIFT, and like `##COMPOSES-HEALTH-AUDIT` in this package's README it is source 1 against source 1 — the line does not exist in the flow this one points at. Host: `grep -n -i 'licen\\|copyleft\\|GPL\\|permissive' AUDIT.md` returns ZERO hits across 458 lines and three dated run sections (headings at 20, 154, 191). The host's audit contract has one dependency category, `spec/common/PROP-013-periodic-health-audit.md:51` (D4 · Dependency staleness), and it names `cargo update --dry-run`, `cargo audit` and `cargo outdated` — versions and CVEs, not licences. The referenced flow: `grep -rn -i 'licen' vibedeps/flow-health-audit/` hits only that package's own LICENSE.md, README and vibe.toml, so its `audit-checklist.md` carries no licence line either. The schedule this fact prescribes has no home in either place."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md  the fact now carries `Specified, not built, and the sibling it points at does not carry the line` and @spec/done",
+              "packages/org.vibevm.world/health-audit/v0.1.0/spec/  searched the CANONICAL package, not only the vendored copy: no hit for licen, copyleft, GPL, permissive or SPDX across all five documents; its one dependency category names versions and advisories",
+              "re-judged in wave 6 after demotion. The demotion names its perimeter and records that no listing exists for such a line to re-run - no deny.toml, no about.toml, no SBOM anywhere in the perimeter."
             ]
           },
           "POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST": {
@@ -52226,20 +52182,14 @@
             ]
           },
           "SUM-AUTOMATE-AND-RE-AUDIT": {
-            "v": "drift",
-            "ev": [
-              "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md:78  - Automate the listing in CI and re-audit on a schedule; point the",
-              "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
-              "discipline/registry/INTENT.md:63  | INT-0030 | `cargo deny` in CI | open |",
-              "discipline/registry/intent.json:428     \"state\": \"rescoped\",",
-              "discipline/registry/intent.json:432      \"note\": \"cargo deny — couples to the CI decision (INT-0017); the license policy itself is enforced by review per PROP-000 §3.\"",
-              "ROADMAP.md:1018  - **`cargo deny` in CI.** Licence-check automated: fail the build if a",
-              "DRIFT, one of three realised, carrying the re-audit body rule per W1's summary-restatement precedent. DONE: the carve-out points at the generated list (`LICENSE.md:44`). NOT DONE, and this half is non-adoption rather than drift — no automated listing exists, and the intent to add `cargo deny` was recorded and then declined: `ROADMAP.md:1018` became INT-0030, marked `rescoped` in `discipline/registry/intent.json:428` with the note at `:432` that the policy «is enforced by review per PROP-000 §3», coupled to the standing no-CI owner decision at `INTENT.md:73-74`. NOT DONE, and this half IS drift — the scheduled re-audit has no home in the host (AUDIT.md: 0 licence hits in 458 lines) NOR in the `health-audit` flow it would live in. One third realised on the host that authored the sentence."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md  the summary now splits its three clauses: one built, one a recorded exception, one built by nothing; @spec/done",
+              "re-judged in wave 6 after demotion. Written as a three-way split rather than a flat `not built` because one clause is a MARKED EXCEPTION rather than a gap - the CI listing was filed and deliberately declined under a standing no-CI owner posture, which section 3.6(c) says is not drift. Flattening it would have recorded a deliberate decision as neglect."
             ]
           },
           "SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION": {
@@ -52258,8 +52208,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:50:48Z",
-        "verify_batch": "W6"
+        "verified_at": "2026-07-29T20:02:26Z",
+        "verify_batch": "W6 + D6"
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/eula-template.md": {
@@ -54238,21 +54188,15 @@
             ]
           },
           "EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:154  ##EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS Everything the tool does to the block is one of three operations. @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:155  ",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:156  - ##VERB-CREATE **Create** — the file is *absent* of a block. Append the block at",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:161  - ##VERB-UPDATE **Update** — the file is *present*. Replace the content between the",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:165  - ##VERB-REMOVE **Remove** — the file is *present* and the tool is uninstalling.",
-              "crates/vibe-workspace/src/boot_artifacts.rs:410              BlockLocation::Absent => {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:403              BlockLocation::Present { start, end } => {",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:11  ##discipline-line **Discipline:** the general co-tenant / managed-block pattern — the co-tenant law, the marker design, the well-formedness state machine that classifies a file before mutation, and the create / update / remove verbs — is the `managed-blocks` flow: `spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root`. This PROP is vibevm's instance of it — the `<vibevm>` redirect block in the agent instruction files, verified by `vibe-workspace::boot_artifacts` and the `vibe check` `RedirectBlock` finding. @spec/done",
-              "DRIFT at two of three, rooted in the missing remove verb (`##VERB-REMOVE`). Create is the Absent arm (`boot_artifacts.rs:410-428`); update is the Present arm (`:403-409`); remove has no implementation anywhere in `crates/`. The sentence claims a closed set of three operations and the host runs a closed set of two — which is not a smaller version of the same design, because «create / update / remove» is what makes the block's lifecycle reversible, and here it is not."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:350  pub(crate) fn remove(target: Option<&camino::Utf8Path>, project: bool) -> u8",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-managed-blocks  the specspace installs this flow, so its harness is a consumer of it",
+              "re-judged in wave 6. The verdict searched the host's crates/ and concluded remove has no implementation anywhere. The adopter is a second complete project inside packages/ - own vibe.toml, own vibedeps, own Cargo workspace - and it implements the closed set of three."
             ]
           },
           "VERB-CREATE": {
@@ -54315,25 +54259,15 @@
             ]
           },
           "VERB-REMOVE": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:165  - ##VERB-REMOVE **Remove** — the file is *present* and the tool is uninstalling.",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:166    Delete the block **and its separation** — the blank line the create",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:167    step added — leaving the surrounding content byte-identical to what",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:168    it was before the block ever existed. A remove that leaves a",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:169    dangling blank line is a remove with a bug. @impl/done",
-              "crates/vibe-workspace/src/boot_artifacts.rs:306  pub enum BlockLocation {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:368  /// Write vibevm's managed block into the instruction file at `path`",
-              "crates/vibe-workspace/src/boot_artifacts.rs:369  /// (PROP-012 §2.3). Returns the path when the file changed, or `None`",
-              "crates/vibe-cli/src/commands/uninstall.rs:119      if mode.is_in_place() {",
-              "crates/vibe-cli/src/commands/uninstall.rs:123          vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)",
-              "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:11  ##discipline-line **Discipline:** the general co-tenant / managed-block pattern — the co-tenant law, the marker design, the well-formedness state machine that classifies a file before mutation, and the create / update / remove verbs — is the `managed-blocks` flow: `spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root`. This PROP is vibevm's instance of it — the `<vibevm>` redirect block in the agent instruction files, verified by `vibe-workspace::boot_artifacts` and the `vibe check` `RedirectBlock` finding. @spec/done",
-              "DRIFT, and this is the ROOT of five drifts in this package: the flow specifies a third verb, the host's own PROP cites it, and no implementation exists. Four negative searches. (1) `grep -rn 'remove_block\\|remove_managed\\|strip_block\\|delete.*block' crates/ --include='*.rs'` returns one hit, `crates/vibe-cli/src/commands/registry/config/remove.rs:2`, about a `[[mirror]]` block and unrelated. (2) `grep -rn 'BlockLocation::' crates/ --include='*.rs'` returns only Absent / Present / Malformed — no removal state. (3) `write_managed_block`'s own doc comment enumerates append / splice / error only. (4) `vibe uninstall` removes the vibedeps slot and regenerates boot but never touches the `<vibevm>` block, so uninstalling the last package leaves the block behind. Two of three verbs are real and tested; the third is prose. Carried onward at `##EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS`, `##ROW-STATE-PRESENT`, `##SUM-THREE-STATES` and `##SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING`."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:177  /// Removes our entries. Pure; empty containers left behind by the removal are dropped so a clean uninstall restores a foreign-only (or empty) document.",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:407  assert_eq!(doc, json!({}), \"a clean uninstall leaves no residue\");",
+              "re-judged in wave 6. The verb ships, is wired to the CLI, and its round-trip test asserts the residue-free restore this fact demands. The adaptation is to JSON rather than to a marker pair in Markdown, so the blank-line clause is instantiated as dropping emptied containers - the same stated end, which is what the fact requires."
             ]
           },
           "THE-TOOL-DECIDES-THE-POSITION-EXACTLY-ONCE": {
@@ -54842,45 +54776,27 @@
             ]
           },
           "SUM-THREE-STATES": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:294  - ##SUM-THREE-STATES Three states: absent → create at end of file; present → update or",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:295    remove the body; malformed → hard stop, human decides. @impl/done",
-              "crates/vibe-workspace/src/boot_artifacts.rs:306  pub enum BlockLocation {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:348          (0, 0, _, _) => BlockLocation::Absent,",
-              "crates/vibe-workspace/src/boot_artifacts.rs:349          (1, 1, Some((open_start, _)), Some((close_start, close_end))) => {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
-              "crates/vibe-workspace/src/boot_artifacts.rs:410              BlockLocation::Absent => {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:403              BlockLocation::Present { start, end } => {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:83  - ##CLASS-ABSENT **Absent** (zero markers) — `vibe` appends a fresh block at the end of the file, preceded by one blank line. If the file itself does not exist, `vibe` creates it containing only the block. @impl/done",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:84  - ##CLASS-PRESENT **Present** (one well-formed pair) — `vibe` replaces the content *between* the markers with freshly-generated content; the markers themselves and all text outside them are untouched. If the new inter-marker content is byte-identical to the old, `vibe` writes nothing — no git churn. @impl/done",
-              "DRIFT on the same missing verb, carried per W1's summary-restatement precedent. The three STATES and two of the three actions are exact — `BlockLocation` has precisely three variants (`boot_artifacts.rs:306-316`), absent→append-at-end (`:410-426`), present→splice (`:403-409`), malformed→`Err` before any write (`:396-401`) — and `PROP-012:82-84` restates all three. «Remove the body» has no implementation, and `vibe uninstall` leaves the block in place. Root at `##VERB-REMOVE`."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "crates/vibe-workspace/src/boot_artifacts.rs:410-428  the Absent arm (create); :403-409 the Present arm (update)",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:350-369  the remove arm",
+              "re-judged in wave 6: all three states are witnessed, create and update in the host, remove in the second adopter, and the malformed arm as a hard stop at boot_artifacts.rs:396-401."
             ]
           },
           "SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:296  - ##SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING Remove deletes the block *and* its separation, restoring the file",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:297    byte-for-byte. Never rewrite when the result is byte-identical. @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:165  - ##VERB-REMOVE **Remove** — the file is *present* and the tool is uninstalling.",
-              "crates/vibe-workspace/src/boot_artifacts.rs:432      if existing.as_deref() == Some(new_content.as_str()) {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:433          return Ok(None);",
-              "crates/vibe-workspace/src/boot_artifacts.rs:434      }",
-              "crates/vibe-workspace/src/boot_artifacts/tests.rs:557  #[test]",
-              "crates/vibe-workspace/src/boot_artifacts/tests.rs:563      assert!(write_managed_block(&path).unwrap().is_none());",
-              "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:84  - ##CLASS-PRESENT **Present** (one well-formed pair) — `vibe` replaces the content *between* the markers with freshly-generated content; the markers themselves and all text outside them are untouched. If the new inter-marker content is byte-identical to the old, `vibe` writes nothing — no git churn. @impl/done",
-              "DRIFT on the first half only, and the second half is one of the cleanest confirmations in the package. NO-OP: fully settled — `boot_artifacts.rs:432-434` compares and returns `Ok(None)` when the result would be byte-identical, tested at `boot_artifacts/tests.rs:557-564`, and `PROP-012:84` states the rule. REMOVE: nothing to check, four negative searches, root at `##VERB-REMOVE`. So the sentence pairs an implemented guarantee with an unimplemented one."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:416  assert_eq!(doc, once, \"reinstall is byte-identical\");",
+              "crates/vibe-workspace/src/boot_artifacts.rs:370  /// when it already carried a byte-identical block (no write - no churn).",
+              "re-judged in wave 6. Both clauses have a witness: remove-restores by the residue-free round trip, and no-op-writes-nothing by the host's own byte-identical guard. Each clause was checked separately rather than carried on the other."
             ]
           },
           "SUM-CLASSIFY-AT-PLAN-TIME": {
@@ -54926,7 +54842,7 @@
           }
         },
         "verified_at": "2026-07-28T23:01:22Z",
-        "verify_batch": "W7"
+        "verify_batch": "W7 + D6"
       }
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md": {
@@ -55144,22 +55060,15 @@
             ]
           },
           "CONVERT-ONCE-AND-GATE-IT-ON-EXPLICIT-CONSENT": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:48  ##CONVERT-ONCE-AND-GATE-IT-ON-EXPLICIT-CONSENT Do the legacy-to-block conversion **once**, and gate it on explicit",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:49  consent when there is any doubt the file is purely tool-owned. @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:50  ",
-              "crates/vibe-workspace/src/boot_artifacts.rs:411                  if content.trim().is_empty()",
-              "crates/vibe-workspace/src/boot_artifacts.rs:412                      || content.trim_start().starts_with(OLD_GENERATED_HEADER)",
-              "crates/vibe-workspace/src/boot_artifacts.rs:417                      block",
-              "crates/vibe-cli/src/commands/uninstall.rs:85          DestructiveGuard::ConfirmInteractively => Confirm::new()",
-              "crates/vibe-cli/src/commands/uninstall.rs:97          DestructiveGuard::Proceed => {",
-              "crates/vibe-cli/src/commands/uninstall.rs:105                  Confirm::new()",
-              "DRIFT on the consent half, and the two halves come apart cleanly. ONCE holds by construction: after the conversion the file carries markers, so `locate_block` returns Present and the Absent branch at `boot_artifacts.rs:410` is never reached again. CONSENT does not exist: `grep -rn 'Confirm\\|user_attended\\|assume_yes\\|interact()' crates/vibe-workspace/src/` returns NOTHING — the whole crate has no interactive surface at all — and the conversion runs unprompted on first encounter with a legacy file. What the host did instead was announce it once, out of band, at `CHANGELOG.md:55` and `:57`. Whether a release note discharges the per-file consent this fact asks for is a judgement the owner may make differently; measured against the sentence as written, an unprompted rewrite of a file the tool does not own is exactly what it forbids."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "crates/vibe-workspace/src/bins.rs:299  pub fn consent_to_build(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsError>",
+              "crates/vibe-workspace/src/materialization.rs:34  ConfirmInteractively,",
+              "re-judged in wave 6. The verdict rested on its own grep over crates/vibe-workspace/src/ returning NOTHING; re-run verbatim it returns nine hits, including a consent gate named consent_to_build, a ConsentRequired error and a DestructiveGuard::ConfirmInteractively arm. The crate holds the decision and the CLI holds the prompt, which is why a grep for a prompt inside the crate missed it."
             ]
           },
           "A-SILENT-CONVERSION-IS-THE-SAME-TRUST-VIOLATION": {
@@ -55564,22 +55473,15 @@
             ]
           },
           "ASSERT-CLEAN-REMOVAL-IS-THE-IDENTITY-FUNCTION": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:104  - ##ASSERT-CLEAN-REMOVAL-IS-THE-IDENTITY-FUNCTION **Clean removal.** After a remove, the file equals what it was before",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:105    the block was ever created, separation blank line included — a",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:106    round-trip create-then-remove is the identity function on the",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:107    surrounding content. @impl/done",
-              "crates/vibe-workspace/src/boot_artifacts.rs:306  pub enum BlockLocation {",
-              "crates/vibe-workspace/src/boot_artifacts.rs:368  /// Write vibevm's managed block into the instruction file at `path`",
-              "crates/vibe-workspace/src/boot_artifacts.rs:369  /// (PROP-012 §2.3). Returns the path when the file changed, or `None`",
-              "crates/vibe-cli/src/commands/uninstall.rs:144      regenerate_boot(&workspace).context(\"regenerating boot artifacts\")?;",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:11  ##discipline-line **Discipline:** the general co-tenant / managed-block pattern — the co-tenant law, the marker design, the well-formedness state machine that classifies a file before mutation, and the create / update / remove verbs — is the `managed-blocks` flow: `spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root`. This PROP is vibevm's instance of it — the `<vibevm>` redirect block in the agent instruction files, verified by `vibe-workspace::boot_artifacts` and the `vibe check` `RedirectBlock` finding. @spec/done",
-              "DRIFT: the round-trip this fact asks to assert cannot be written here, because the operation it round-trips does not exist. Four negative searches, the same set that establishes `##VERB-REMOVE`: no `remove_block` / `remove_managed` / `strip_block`; `BlockLocation` has only Absent / Present / Malformed; `write_managed_block`'s doc comment enumerates append / splice / error; and `vibe uninstall` never touches the block. So «write then remove returns the original bytes» has no first step to invert."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              2
+              2,
+              3
+            ],
+            "ev": [
+              "packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:392  fn install_into_an_empty_document_then_remove_restores_empty()",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:407  assert_eq!(doc, json!({}), \"a clean uninstall leaves no residue\");",
+              "re-judged in wave 6. The round-trip assertion the guide says cannot be written is written, twice, in the second adopter."
             ]
           },
           "THE-MOVED-AND-NESTED-ROWS-ARE-THE-ONES-NAIVE-TOOLS-GET-WRONG": {
@@ -55837,7 +55739,7 @@
           }
         },
         "verified_at": "2026-07-28T23:01:22Z",
-        "verify_batch": "W7"
+        "verify_batch": "W7 + D6"
       }
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md": {
@@ -69238,16 +69140,15 @@
             ]
           },
           "SUM-WHAT-IT-COSTS": {
-            "v": "drift",
-            "ev": [
-              "spec/common/PROP-016-source-mirrors.md:72  1. ##open-server-side **Server-side mirroring.** When a host must originate writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host), add one-directional server-side mirroring (a GitHub Action mirroring GitHub→GitVerse, or GitVerse's own pull-mirror for the reverse). It touches CI secrets (an owner act), so it is deferred until needed. @spec/work",
-              "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:142  - What it costs: one human serializes merges. Acceptable — and cheaper",
-              "DRIFT on the revisit-trigger clause, carrying the body rule per W1's summary-restatement precedent. What holds: the cost is factually this host's situation (one author, all 4 merges local-branch), and the escape hatch is recorded in the prescribed one-directional server-side form at `PROP-016` §5 open question 1. What does not: the revisit trigger this summary demands does not exist — `grep -n -i 'revisit\\|parallel\\|integrator' spec/common/PROP-016-source-mirrors.md` → 0 hits over all 81 lines. RECORDED: the «acceptable and cheaper than the alternative» evaluation is likewise absent from every host document searched, so the summary asserts a judgement the host never made."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "spec/common/PROP-016-source-mirrors.md  ##open-server-side records `add one-directional server-side mirroring` under a stated condition and defers it until needed",
+              "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:153-157  the remedy the flow's own body prescribes, which is verbatim what PROP-016 recorded",
+              "re-judged in wave 6, a false absence twice over. The revisit trigger the summary demands exists, in the flow's own prescribed wording, in the host's decision record; the verdict's own command missed it by searching for the word `revisit` rather than for the recorded condition. And the anchor was ALREADY @spec/done at HEAD, so section 3.3's closure move - drop the marker - did not exist for it in form either."
             ]
           },
           "SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL": {
@@ -69266,7 +69167,7 @@
           }
         },
         "verified_at": "2026-07-28T22:57:38Z",
-        "verify_batch": "W6"
+        "verify_batch": "W6 + D6"
       }
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md": {
@@ -70005,7 +69906,7 @@
       }
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md": {
-      "content_hash": "88ecac0157075218016b0785e401ec0500fd4592f63b6e644de654973ec28cf0",
+      "content_hash": "cc28a7cce4e372518da822051b8d421fc497c950d7fb03f892a6207f477d8468",
       "rollup": {
         "explicit": [
           "spec",
@@ -70027,7 +69928,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "88ecac0157075218016b0785e401ec0500fd4592f63b6e644de654973ec28cf0",
+        "processed_hash": "cc28a7cce4e372518da822051b8d421fc497c950d7fb03f892a6207f477d8468",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -70344,18 +70245,15 @@
             ]
           },
           "RESPONSE-ABORT-THAT-TARGET": {
-            "v": "drift",
-            "ev": [
-              "xtask/src/mirror.rs:297                          eprintln!(",
-              "xtask/src/mirror.rs:298                              \"  FAIL   {} {r} -- {}\",",
-              "xtask/src/mirror.rs:302                          failures.push(format!(\"{}:{r}\", t.name));",
-              "xtask/src/mirror.rs:317              failures.len(),",
-              "xtask/src/mirror.rs:318              failures.join(\", \")",
-              "DRIFT on the half of the message contract the host cannot meet. Implemented: «abort that target» and «naming the host» — the per-ref `FAIL` line names the target and ref and prints git's stderr, and the final bail lists every failed `<target>:<ref>` pair. NOT implemented, and not implementable on the current shape: the host never names «the commits it has that mainline lacks», because `fan_out` performs no `ls-remote` and no `merge-base` and therefore does not know the target's tip, let alone the commit range. The operator gets git's raw rejection text instead. `--check` does surface the target's sha (`DRIFT  {name} at {sha}`) but never a commit list. This is the downstream consequence of the missing ancestry gate, carried separately at `##INVARIANT-THE-ANCESTRY-GATE`."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md  the fact now reads `Half built: the host is named, the commits are not` and carries @spec/done",
+              "xtask/src/mirror.rs:157  the only ls-remote in the fan-out is remote_main, reached solely from probe and the self-pull arm; rev-list appears nowhere, so the push path never learns the target's tip and cannot compute the range",
+              "re-judged in wave 6 after a PARTIAL demotion. Written as a partial because the clause splits: naming the host is built on both sides, enumerating the divergent commits is built by nothing - including this document's own reference script, which prints `DRIFT - host has commits mainline lacks` without listing one. Perimeter searched for the computation rather than the wording: merge-base, is-ancestor, ls-remote, rev-list over the standing perimeter."
             ]
           },
           "RESPONSE-NEVER-FORCE": {
@@ -70777,17 +70675,15 @@
             ]
           },
           "SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD": {
-            "v": "drift",
-            "ev": [
-              "xtask/src/mirror.rs:302                          failures.push(format!(\"{}:{r}\", t.name));",
-              "xtask/src/mirror.rs:313      if !failures.is_empty() {",
-              "xtask/src/mirror.rs:315              \"mirror: {} push(es) failed -- a non-fast-forward means a target diverged \\",
-              "xtask/src/mirror.rs:316               (someone wrote it directly); reconcile by hand, never --force: {}\",",
-              "DRIFT on one clause of four, and the three that hold are worth naming because they are the load-bearing ones. IMPLEMENTED: the per-target abort with the other targets still served; the non-zero exit; and «reconcile by hand, never --force» stated in the failure message itself. NOT IMPLEMENTED: «names the divergence» — the message names the failed `<target>:<ref>` pairs but never the commits the host has that mainline lacks, because the fan-out never learns the target's tip. Unexercised in this repository: no non-fast-forward has occurred, so the whole path is judged from the code rather than from an event."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "xtask/src/mirror.rs:296-320  per-target abort, other targets still served, non-zero exit; :315-319 carries the reconcile-by-hand message verbatim",
+              "xtask/src/mirror.rs:426-440  push_args_never_force asserts no --force, no -f and no +-refspec across four ref shapes",
+              "re-judged in wave 6 after a PARTIAL demotion. Three of the four clauses are built and one is half built, so the summary was demoted on the same half as its body rule rather than flattened. The never-force clause is hardened past the document's ask into a unit test, which PROP-016:64 calls runnable capital."
             ]
           },
           "SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST": {
@@ -70833,8 +70729,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:57:38Z",
-        "verify_batch": "W6"
+        "verified_at": "2026-07-29T20:02:26Z",
+        "verify_batch": "W6 + D6"
       }
     },
     "packages/org.vibevm.world/spec-genres/v0.1.0/README.md": {

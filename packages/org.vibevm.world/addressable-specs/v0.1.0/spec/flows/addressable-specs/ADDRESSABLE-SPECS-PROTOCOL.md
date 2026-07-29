@@ -219,7 +219,15 @@ invariant is an invariant the agent statistically did not read. @spec/done
 ##ADDRESSABLE-SPECS-GIVE-A-DEPENDENCY-GRAPH-FOR-FREE Addressable specs give the project a dependency graph for free. @impl/done
 
 ##CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT Code
-marks what it implements; the spec records what verifies it: @impl/done
+marks what it implements; the spec records what verifies it: *(the two
+forms below are the plain-text ones, and they are what needs no tooling.
+Where a project mechanizes the graph, both records are commonly authored
+on the **code** side instead — the implements edge as a language-native
+tag on the item, and the verification edge as the same kind of tag on
+the **test** rather than as a `Test:` line in the document — and the
+spec-side answer, "what verifies this unit", is then rendered from the
+graph rather than maintained by hand. Either form yields the same
+bidirectional edge; only the authoring side moves.)* @impl/done
 
 ```
 // Implements: spec://com.example.shop/PROP-001#verification.timeout

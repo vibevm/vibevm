@@ -92,7 +92,19 @@ that host. @impl/done
 ##the-fan-outs-response-is-fixed The fan-out's response is fixed: @impl/done
 
 - ##RESPONSE-ABORT-THAT-TARGET **Abort that target**, with a message naming the divergence (the
-  host, and the commits it has that mainline lacks). @impl/done
+  host, and the commits it has that mainline lacks). *Half built: the host is
+  named, the commits are not — by anything. This document's own reference
+  script below aborts the target and prints `"$name: DRIFT — host has commits
+  mainline lacks"`, which states that a divergence exists without enumerating
+  one commit of it; and the only port in the perimeter, `xtask/src/mirror.rs`,
+  names the failed `<target>:<ref>` pairs and relays git's rejection text
+  (`:296-303`, `:313-320`) while performing no `ls-remote` and no `merge-base`
+  on the push path, so it never learns the target's tip and cannot compute the
+  range. Searched for the commit-range computation, not the wording:
+  `merge-base` · `is-ancestor` · `ls-remote` · `rev-list` over the standing
+  perimeter — the only `ls-remote` in the fan-out is `remote_main`
+  (`mirror.rs:157`), reached solely from `probe` and the `self-pull` arm, and
+  `rev-list` appears nowhere.* @spec/done
 - ##RESPONSE-NEVER-FORCE **Never `--force`.** The tool has no force path to reach for. @impl/done
 - ##RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS **Do not block the other targets.** A divergence on host B does not
   stop host A from receiving its legitimate fast-forward. @impl/done
@@ -230,7 +242,18 @@ you cannot run is a rule you cannot trust. @impl/done
 - ##SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT Fan-out per target: fetch, verify the target is an ancestor of
   mainline, push fast-forward-only by URL, report. @impl/done
 - ##SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD A non-fast-forward aborts *that* target loud, names the divergence,
-  and never forces. Reconcile into mainline by hand, then re-fan. @impl/done
+  and never forces. Reconcile into mainline by hand, then re-fan. *Three of the
+  four are built and the fourth is half built. Loud per-target abort with the
+  other targets still served, and a non-zero exit: `xtask/src/mirror.rs:296-320`.
+  Never forces, and hardened past this document's ask into a unit test —
+  `push_args` is a pure function and `push_args_never_force`
+  (`mirror.rs:426-440`) asserts no `--force`, `-f` or `+`-refspec for four ref
+  shapes, which `spec/common/PROP-016-source-mirrors.md:64` calls «runnable
+  capital, not prose». «Reconcile by hand, then re-fan» is the failure message
+  itself (`mirror.rs:315-319`). What is only half built is «names the
+  divergence» in the sense `##RESPONSE-ABORT-THAT-TARGET` defines it: the
+  diverged target is named, the commits it carries are not, by any
+  implementation including this document's own reference script.* @spec/done
 - ##SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST A `--check` mode probes drift read-only; bring a web merge home with
   `merge --ff-only` before fanning out. @impl/done
 - ##SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE Deletions and history rewrites do not propagate — a safety choice. @impl/done

@@ -78,7 +78,17 @@ origin project's placeholder named as its intended destination. @impl/done
   mechanical check in CI over a prose promise. @spec/done
 - ##COMPOSES-HEALTH-AUDIT `flow:health-audit` — a periodic audit line re-runs the dependency
   licence listing, catching a dependency that relicensed between
-  versions. @impl/done
+  versions. *Specified, not built: the composition is a good one and the
+  sibling does not yet hold up its end. `flow:health-audit`'s
+  `spec/flows/health-audit/audit-checklist.md` carries no licence line
+  anywhere — its one dependency category, D4 · Dependency staleness, names
+  outdated versions and security advisories and nothing about licences, and
+  the whole of that package's `spec/` returns no hit for `licen` · `copyleft`
+  · `GPL` · `permissive` · `SPDX`. Nor is there a listing for such a line to
+  re-run: no `deny.toml`, no `about.toml`, no SBOM. Until the line exists, this
+  entry describes an intended composition rather than a running one; the body
+  rule is `spec/flows/licensing/dependency-licenses.md#RE-AUDIT-ON-A-SCHEDULE`,
+  demoted on the same evidence.* @spec/done
 - ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` — the two together define how the
   repository presents itself: who authored it, and under what terms
   it may be used. @spec/done

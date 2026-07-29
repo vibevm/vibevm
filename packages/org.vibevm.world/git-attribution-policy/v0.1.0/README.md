@@ -12,7 +12,20 @@ inconsistent record: neither a clean human-authored surface nor a
 reliable provenance trail. @spec/done
 
 ##PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED This package makes the choice explicit
-and enforced. @impl/done
+and enforced. *Explicit ships; enforced does not. `vibe.toml` declares one
+`[boot_snippet]` and no executable, so an install writes the snippet and three
+documents; the enforcement is `enforcement-checklist.md`'s pre-push scan — a
+fenced shell snippet each project must wire for itself — beside
+tool-configuration advice and a periodic-audit line. Searched the whole
+consuming tree (`packages/`, `vibedeps/`, `crates/`, `xtask/`, `tools/`,
+`spec/`, `discipline/`, `terraform/`, `campaigns/`, `legacy-spec/`, root
+scripts) and by name for `.git/hooks/`, `.githooks/`, `.github/` and
+`core.hooksPath`: no hook, no CI file, no trailer setting. By this flow's own
+law that a policy with no checker is a wish, the «enforced» half is a wish. The
+half that does ship is the configuration the checklist calls cheaper than
+catching — the boot snippet as the agent's standing instruction — and on this
+consumer it holds: zero attribution trailers and one author across 400
+commits.* @spec/done
 
 ##THE-DEFAULT-POSTURE-IS-CONCEALMENT **The default posture is concealment**: the repository presents a
 human-authored surface on every artifact. @impl/done
