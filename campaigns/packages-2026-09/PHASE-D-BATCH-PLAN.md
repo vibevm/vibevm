@@ -401,6 +401,31 @@ What is delegated and what is not:
 - **A worker quiet for several times its siblings' runtime is stuck, not
   thinking.** Re-commission. A late original costs nothing.
 
+### 6.1 Two rules bought at full price on the first wave {#delegation-lessons}
+
+*Both were paid for on 2026-07-29, when 24 obligations were delegated onto
+owner routes and had to be reverted wholesale by owner ruling.*
+
+- ##ROUTE-BEFORE-FALSIFIER **A batch is cut by `closure_route` FIRST, and by
+  `falsifier` only inside it.** The first wave was cut the other way — by
+  `falsifier == "self"`, «the package is wrong about itself» — and 24 of the 28
+  obligations it handed out turned out to sit on `release`, `sync-from-code` or
+  `build-or-demote`, every one of which §1.2 routes through the owner. The field
+  that answers «who approves this» had been written into this plan hours
+  earlier and was not read when the work was handed out. Nothing was *closed*
+  without approval, because no verdict moved; what landed was the right work in
+  the wrong order, and it cost a full revert.
+- ##ABSENCE-NAMES-ITS-PERIMETER **A demotion whose whole basis is an absence
+  must name the perimeter it searched, in the record, before the marker moves.**
+  Two demotions in the first wave rested on «nothing captures a golden
+  transcript», from a grep over one crate's `src/`. The transcripts exist —
+  `discipline/golden/capture.sh` and two `.transcript.md` files, in the host.
+  This is [§4.5 of the Phase C plan](PHASE-C-BATCH-PLAN.md#perimeter) restated
+  where it keeps being needed: **a `not-found` is a fact about the search
+  perimeter until the perimeter has been checked.** Phase C paid for it three
+  times; Phase D's first wave paid three more — a missing linter read as a
+  broken pilot, a package-rooted floor run read as a pilot's chain, and this.
+
 ## 7. Convergence and the exit gate {#gate}
 
 **Convergence is loop-until-dry, and it is a command.** A wave ends when every
