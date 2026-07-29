@@ -120,8 +120,4 @@ go-ai-native floor           # the gate panel, one exit code
 with YOUR project: this package ships engines, never policy. @impl/done
 
 ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a
-miniature reconciler with the whole chain green: gofmt, vet, tests, conform
-(1 finding, frozen in baseline, 0 new), specmap (0 suspects, 0 orphans) and
-the xfail-strict test-gate all pass. The `staticcheck` step needs
-`staticcheck` and `exhaustive` on PATH, or a recorded reason in
-`conform.toml [go].floor_disable`. @impl/done
+miniature reconciler with the whole chain green. @impl/done

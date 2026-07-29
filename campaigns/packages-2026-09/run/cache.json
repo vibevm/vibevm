@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T15:58:39Z",
+  "updated_at": "2026-07-29T16:08:20Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "4701c39ac793d453942687a538c6210b67480eec6a45215bd34393e7e290ed93",
@@ -7550,7 +7550,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
-      "content_hash": "9912c61818f6c9f349ae281e538bb9640c11c7990179c83f3782b1e9f4f14801",
+      "content_hash": "0bb204d621551276a7e07d540ac48c1b6e29bbd1731d19ac6f2ba53f4757a299",
       "rollup": {
         "explicit": [
           "doc",
@@ -7572,7 +7572,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "9912c61818f6c9f349ae281e538bb9640c11c7990179c83f3782b1e9f4f14801",
+        "processed_hash": "0bb204d621551276a7e07d540ac48c1b6e29bbd1731d19ac6f2ba53f4757a299",
         "verdicts": {
           "GO-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
             "v": "confirmed",
@@ -7828,15 +7828,15 @@
           "WORKED-PILOT-IS-RESEARCH-GO-DEMO": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:122  ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` - a miniature reconciler with the whole chain green",
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:122  ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` - a miniature reconciler with the whole chain green. @impl/done",
               "research/go-demo/conform.toml:1  the pilot carries its own policy - the floor loads it rather than defaulting",
               "research/go-demo/specmap.json:1  the pilot carries its own index - specmap --check reads it clean",
-              "MEASURED 2026-07-29, rooted at the pilot rather than at the package, which is what nobody had done: `cd research/go-demo && go-ai-native floor --keep-going` prints gofmt clean, `go vet` clean, `go test ./...` 5 packages ok and 0 failures, `go-ai-native-conform check` 1 finding 1 frozen in baseline 0 new, `go-ai-native-specmap --check` clean at 7 spec units / 16 tagged code items / 16 edges / 0 suspects / 0 warnings with the ratchet at 0 orphans, and `test-gate` green under xfail-strict at 21 results 0 failed 0 skipped. Six steps of seven pass. The seventh, `staticcheck`, exits `program not found` for `staticcheck` and `exhaustive`, which is this machine's provisioning and not a property of the pilot - and the floor's own message names the sanctioned alternative, a recorded reason in `conform.toml [go].floor_disable`.",
-              "F-272 RE-JUDGED confirmed, reversing a wrong drift verdict and the edit taken on it. The Phase C reason said the claim is settled by nothing on the record, which was true OF THE RECORD and false as a basis for editing: the captured harvest run is rooted at the package, and the measurement that settles the claim was one command away. An absence must be checked, not asserted - the campaign's own named trap, walked by the session that keeps quoting it. The sentence is restored and now names the six steps it passes and the one it needs tooling for, so the next reader can reproduce it instead of taking it."
+              "MEASURED 2026-07-29, rooted at the pilot rather than at the package, which is what nobody had done. `cd research/go-demo && go-ai-native floor --keep-going` with C:/opt/gotools on PATH prints the certifying line verbatim: `floor: all green (7 step(s) run, 0 disabled by policy)`. Step by step: gofmt clean; `go vet` clean; `go test ./...` five packages ok and zero failures; staticcheck and exhaustive clean; `go-ai-native-conform check` 1 finding, 1 frozen in baseline, 0 new; `go-ai-native-specmap --check` clean at 7 spec units / 16 tagged code items / 16 edges / 0 suspects / 0 warnings with the ratchet at 0 orphans; `test-gate` green under xfail-strict at 21 results, 0 failed, 0 skipped. SEVEN of seven.",
+              "F-272 RE-JUDGED confirmed, reversing a wrong drift verdict and the edit taken on it, and then reversing the hedge that replaced it. The Phase C reason said the claim is settled by nothing on the record - true OF THE RECORD, since the captured harvest run is rooted at the PACKAGE and says so, and false as a basis for editing, because the measurement was one command away. A first correction restored the sentence with a caveat about staticcheck being absent; the tools were on the machine at C:/opt/gotools and not on PATH, so that caveat was a second unmeasured claim and it is gone too. The sentence now stands exactly as its author wrote it."
             ]
           }
         },
-        "verified_at": "2026-07-29T15:58:39Z",
+        "verified_at": "2026-07-29T16:08:20Z",
         "verify_batch": "C6 + D1c"
       }
     },
