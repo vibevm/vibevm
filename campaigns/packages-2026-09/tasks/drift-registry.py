@@ -49,6 +49,9 @@ FID = re.compile(r"\bF-(\d{3})\b")
 # ---------------------------------------------------------------- extraction
 
 
+ROOT_HINT: list = []
+
+
 def repo_root() -> Path:
     here = Path(__file__).resolve()
     for p in here.parents:
@@ -498,6 +501,53 @@ def cluster(rows: list[dict], threshold: float) -> list[list[int]]:
 # ------------------------------------------------------------------- assembly
 
 
+def carry_ids(obligations: list[dict], prior_path: Path) -> tuple[list[dict], set[str]]:
+    """Reuse the id a cluster carried last run, matched by its ANCHOR SET.
+
+    Ids must survive regeneration or the ledger is worthless: a closure removes
+    drift rows, the sort order changes, and a positional id would silently
+    rename every obligation after it. Matching is greedy by Jaccard over the
+    anchor sets — a cluster that loses anchors to a closure is still the same
+    obligation — and a prior row with no match at all has been fully closed, so
+    it is returned as history rather than dropped.
+    """
+    if not prior_path.exists():
+        return [], set()
+    prior = json.loads(prior_path.read_text(encoding="utf-8")).get("obligations", [])
+    pairs = []
+    for pi, p in enumerate(prior):
+        pa = set(p.get("anchors") or [])
+        for ci, c in enumerate(obligations):
+            ca = set(c["anchors"])
+            inter = len(pa & ca)
+            if inter:
+                pairs.append((inter / len(pa | ca), inter, pi, ci))
+    pairs.sort(reverse=True)
+    taken_p, taken_c = set(), set()
+    for j, _inter, pi, ci in pairs:
+        if j < 0.5 or pi in taken_p or ci in taken_c:
+            continue
+        taken_p.add(pi)
+        taken_c.add(ci)
+        obligations[ci]["id"] = prior[pi]["id"]
+        # provenance is kept as first assigned; `carried` is the separate fact
+        # that this run recognised the cluster rather than re-minting it.
+        obligations[ci]["id_source"] = prior[pi].get("id_source", "minted")
+        obligations[ci]["carried"] = True
+        obligations[ci]["status"] = prior[pi].get("status", "open")
+        obligations[ci]["wave"] = prior[pi].get("wave", 1)
+    closed = []
+    for pi, p in enumerate(prior):
+        if pi in taken_p:
+            continue
+        p = dict(p)
+        p["status"] = "resolved"
+        for k in ("reasons", "evidence_refs", "installed_copies"):
+            p.pop(k, None)
+        closed.append(p)
+    return closed, {p["id"] for p in prior}
+
+
 def build(rows, groups, spent: set[str], ledger: dict, vendored: dict):
     obligations = []
     next_free = 130
@@ -550,8 +600,14 @@ def build(rows, groups, spent: set[str], ledger: dict, vendored: dict):
     # biggest first: a cluster's size is how many verdicts one closure clears.
     obligations.sort(key=lambda o: (-o["drift_count"], o["packages"], o["type"]))
 
+    closed, prior_ids = carry_ids(obligations, ROOT_HINT[0] / ZONE / OUT_JSON)
+    spent |= prior_ids
+
     adopted: set[str] = set()
     for o in obligations:
+        if o.get("id"):  # carried from the prior registry — never re-minted
+            adopted.add(o["id"])
+            continue
         adopt = [c for c in o["cites"] if c in spent and c not in adopted]
         if len(adopt) == 1:
             o["id"] = adopt[0]
@@ -566,7 +622,7 @@ def build(rows, groups, spent: set[str], ledger: dict, vendored: dict):
             next_free += 1
             while "F-%03d" % next_free in spent:
                 next_free += 1
-    return obligations
+    return obligations, closed
 
 
 def main() -> int:
@@ -579,13 +635,14 @@ def main() -> int:
     args = ap.parse_args()
 
     root = repo_root()
+    ROOT_HINT.append(root)
     rows = load_drifts(root)
     for r in rows:
         r["type"], r["rule"] = classify(normalise(r["reason"]))
     ledger, spent = known_finding_ids(root)
     vendored = installed_copies(root, {r["file"] for r in rows})
     groups = cluster(rows, args.threshold)
-    obligations = build(rows, groups, spent, ledger, vendored)
+    obligations, closed = build(rows, groups, spent, ledger, vendored)
 
     if args.task:
         return emit_task(obligations, args.task)
@@ -610,9 +667,11 @@ def main() -> int:
           "(of which %d already differ from the installed copy)"
           % (sum(1 for o in obligations if o["installed"]),
              sum(1 for o in obligations if o["installed_differs"])))
-    print("adopted ids: %d · minted ids: %d"
-          % (sum(1 for o in obligations if o["id_source"].startswith("adopted")),
-             sum(1 for o in obligations if o["id_source"] == "minted")))
+    print("ids: %d carried from the prior registry, %d newly assigned · "
+          "%d obligation(s) RESOLVED and moved to history"
+          % (sum(1 for o in obligations if o.get("carried")),
+             sum(1 for o in obligations if not o.get("carried")),
+             len(closed)))
     print()
     print("%-18s %8s %8s   %s" % ("closure route", "oblig", "drifts", "who approves"))
     who = {
@@ -659,6 +718,7 @@ def main() -> int:
             "threshold": args.threshold,
             "drift_verdicts": len(rows),
             "obligations": obligations,
+            "resolved": closed,
         }
         p = root / ZONE / OUT_JSON
         p.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n",
