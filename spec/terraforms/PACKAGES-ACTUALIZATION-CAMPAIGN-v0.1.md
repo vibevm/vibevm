@@ -3431,6 +3431,121 @@ command that would have tested it.
   broken anyway: verdict JSON generated through an unquoted heredoc lost every
   backticked identifier to the shell, and had to be rewritten and re-merged.
 
+- **2026-07-29 · wave 6 — §3.7 has a mirror image, and the discipline's second
+  adopter was invisible to every perimeter this campaign had drawn.** The
+  remaining `build-or-demote` route was re-verified rather than executed: six
+  delegated batches, **31 obligations over 57 verdicts**, cut by route first and
+  by package inside it. **31 of the 59 claimed absences did not survive.**
+
+  The cause is one structure, and it is §3.7 turned around. That rule was written
+  against a search confined to `packages/` that could not see the host. Wave 6's
+  verdicts made the opposite error: they scoped to the host's `crates/`,
+  `spec/terraforms/` and `campaigns/`, and the project that falsifies them lives
+  **inside `packages/`**. `packages/org.vibevm.fractality/fractality/v0.1.0/` is
+  not a document collection — it is a **second complete project that adopted this
+  discipline**, with its own `vibe.toml`, its own `vibedeps/` carrying twenty-odd
+  installed flows, its own Cargo workspace, and six executed campaign plans. So
+  the invariant is neither «search the host» nor «search the packages»: **the
+  perimeter must contain every project that adopted the discipline, wherever it
+  sits.** Recorded at
+  [§3.7 of the batch plan](../../campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md#compliance-blindness).
+
+  **What that one blind spot cost, by batch.** `campaign-plans` +
+  `comparative-research`: **16 of 16 false** — every form called «zero live
+  instances» (per-phase commit maps, the four-element phase, the runnable
+  acceptance script, the hash-to-subject ledger) is live in the specspace's
+  plans, which name `Format: flow:org.vibevm.world/campaign-plans` in their own
+  status lines. `managed-blocks`: **6 of 9 false** — `remove`, recorded at the
+  Phase C close as one of the two canonical «verbs specified and never built», is
+  built, wired and round-trip tested there. Its paired half was re-verified on
+  the same widened perimeter and **does not** fall: `qualified-naming`'s
+  `KindMismatch` has no error type and no check anywhere, its only trace a doc
+  comment at `crates/vibe-core/src/package_ref.rs:428` asserting the validation
+  happens.
+
+  **Three verdicts were false on the perimeter their own text named**, with no
+  widening at all: `grep -rn 'Considered and rejected' ROADMAP.md spec/` returns
+  **7**, reported as zero; `grep -rniE 'commits.by.meaning' spec/` returns the
+  host's own Rule 3 in the compiled boot lane, reported as empty; and
+  `grep -rn 'Confirm\|user_attended\|assume_yes\|interact()' crates/vibe-workspace/src/`
+  returns **nine** hits including a gate named `consent_to_build`, reported as
+  NOTHING. Re-running the verdict's own command is the cheapest re-verification
+  there is and it caught three.
+
+  **And two recorded figures did not survive re-measurement.** The imperative-mood
+  breach is **211 of 400 subjects, 52.8 %** — not the recorded 144/400 — and the
+  uppercase breach is 62 naive of which the large majority are identifiers, not
+  42. The 400-commit window spans **four days** and is dominated by this
+  campaign's own commits, so a figure over it must name its HEAD or it decays
+  within the week.
+
+  **The wave's shape is still routing, not repair.** 6 package edits landed —
+  five §3.3 partial demotions and one correction — against **23 anchors routed
+  out** under §3.6(b). The demotions that did land are all PARTIALs, because a
+  flat «not built» would have been false in the half that works: the mirror names
+  the host and not the divergent commits; the licence summary has one clause
+  built, one a **marked exception** (a CI listing filed and deliberately declined
+  under a standing no-CI posture, which §3.6(c) says is not drift), and one built
+  by nothing.
+
+  **The sharpest near-miss, and it is the argument for the whole re-verification
+  pass.** `##INVARIANT-THE-ANCESTRY-GATE` was about to be demoted for the host's
+  omission — and the gate **is** implemented, by this package's own fifteen-line
+  reference script (`git ls-remote` then `git merge-base --is-ancestor`). Only
+  the host's Rust port lacks it. Demoting would have printed «specified, not
+  built» over a gate the package ships in `sh`. Auditing the port against that
+  reference then turned up a real host defect, filed as `BACKLOG.md` B-005:
+  `probe` tests **equality**, not ancestry, so `mirror --check` reports a target
+  legitimately *behind* mainline as drifted.
+
+  **Two instrument facts.** `merge-verdicts.py` accepted all 31 verdicts across
+  three slices with **zero refusals** — the first wave in this phase to do so,
+  which is what a batch cut by route and reviewed anchor-by-anchor looks like.
+  And measured at HEAD, **2 of the route's 59 anchors were already `@spec/done`**,
+  so §3.3's named closure move — drop the marker — did not exist for them in
+  form; the route was assigned without consulting marker state.
+
+  **State at wave 6's close:** corpus **10 863 confirmed / 439 drift / 44
+  unverifiable — 95.7 %**, from 94.3 % at the Phase C gate. By zone: `host`
+  99.9 %, `ai-native` 95.1 %, `world` **91.6 %** (was 90.9). Registry **171
+  obligations**, from 181. **263 of 439 verdicts still owe a package repair; 176
+  are routed out; 78 obligations have nothing left owed.** The `build-or-demote`
+  route is **23 obligations / 28 verdicts**, from 33 / 59.
+
+- **2026-07-29 · the address family cannot be closed by editing a package, and
+  that changes who has to approve it.** Measured over three lanes: the
+  `../flows/…` links dangle **0 of 70** in `packages/`, 21 of 142 in `vibedeps/`,
+  and **75 of 75** in `spec/boot/STATIC.md`. The package is not the broken side.
+  The boot compiler concatenates snippet bodies verbatim, so a relative path that
+  meant `<pkg>/spec/flows/…` means the host's `spec/flows/…` once compiled, and
+  the host has no such directory. The defect is the **form** — a relative path
+  cannot survive being moved and an `@spec://` address can — which is exactly why
+  the owner's ruling puts the repair in the packages rather than in the compiler.
+
+  `STATIC.md` is generated from `vibedeps/`, so a package edit reaches the lane
+  only through a bump and `cargo xtask sync-engines`. **No address obligation
+  closes without publication, on any route** — joined to the registry by
+  governing anchor that is **24 obligations, 47 of their 54 verdicts, 22
+  packages**, of which only two sit on the `release` route and nineteen read as
+  ordinary boss-closable prose edits. One approval covers all of them.
+
+  The repair is therefore prepared as a command rather than as 62 hand edits:
+  [`tasks/address-repair.py`](../../campaigns/packages-2026-09/tasks/address-repair.py),
+  verified at **62 link constructs, 25 files, 25 packages, 62/62 addresses
+  resolving, 0 malformed against the PROP-035 §6 grammar, 0 residual `../flows/`
+  after the rewrite**. Read line by line, **all 69 links are pointers** — «Full
+  protocol:», «Full model:», «Grammar and forms:» — so the `#embed` half of the
+  ruling has no member in this corpus.
+
+  **And one decision is owed that the queue did not know it needed.** `F-240`'s
+  root-relative variant — a re-derive prompt opening `Read spec/flows/<name>/ …`
+  — is recorded in **2 packages and present in 17**. The fifteen unrecorded ones
+  are not mis-judged: the instruction lives inside a **fenced block**, which
+  carries no anchor, so which of the prompt's claims got tested varied by worker.
+  The same `##re-derive-prompt-lead` was judged `drift` where a worker read the
+  path and `confirmed` where one read the prompt's shape. Filed as `BACKLOG.md`
+  B-004. Publishing the two-package fix alone is what §4.5 calls not a closure.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
