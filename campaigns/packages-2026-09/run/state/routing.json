@@ -1225,6 +1225,190 @@
    "obligation": "F-175",
    "why": "examined in Phase D wave 4 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move.",
    "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md#ROW-FIXTURE-EMPTY-BODY",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-200",
+   "why": "one row of a ten-row fixture table this guide PRESCRIBES to adopters. The rule is sound and no consumer has authored that fixture; the package does not move for a fixture the consumer owes.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#a-worked-message",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-241",
+   "why": "the drill's worked message is the package stating the standard. What fails it is the consumer's implementation, which omits line numbers it has already computed; the standard is not the side that yields.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md#INVARIANT-THE-ANCESTRY-GATE",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-204",
+   "why": "the gate IS implemented - by this package's own fifteen-line reference script, which runs `git ls-remote` then `git merge-base --is-ancestor` and refuses the target on failure. What lacks it is the host's port, `xtask/src/mirror.rs`, whose push path performs neither call. Demoting would have printed 'specified, not built' over a gate the package ships in sh.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md#NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-237",
+   "why": "a `## Never` prohibition the host broke at Cargo.toml:106 and LICENSE.md:42-43. Nothing is missing from the package; a consumer that breaks a prohibition does not make the prohibition false.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md#LAW-NEVER-PERSISTED",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-327",
+   "why": "the 'permission-protected, readable only by the owner' clause is a LAW, and this consumer does not keep it - measured directly on Windows terms rather than by grepping for chmod. `C:\\Users\\<user>\\.vibe` carries an explicit, non-inherited ACE granting a sandbox group ReadAndExecute with ContainerInherit+ObjectInherit, and every credential file under it inherits that ACE with zero Deny rules. The rule is right and the deployment is wrong; the package does not move.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md#EXACTLY-ONE-SANCTIONED-AT-REST-LOCATION",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-328",
+   "why": "judged as one set with F-327 per the consistency corollary. 'Exactly one location' is enforced; the permission qualifier is not, and the measured ACL on the sanctioned directory is what falsifies it. Route (b), and the host obligation it raises reached the owner in-session as a P1 rather than as a filed plan.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#SPLIT-WHEN-OVER-BUDGET",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-288",
+   "why": "the trigger sits under the imperative lead 'Split when any of these fires:', so it is a prescription rather than a description of practice. The consumer proves it CAN keep it - the identical trigger runs mechanically over code as FileLength{max_lines:600} in conform.toml with real splits recorded - while nine spec documents sit over the limit with no checker.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-244",
+   "why": "PARTIAL route (b). 'Never disambiguates' is enforced by the types themselves; 'validates' is not - every read of pkgref.kind renders it, carries it or builds a repo name from it, and none checks it against the resolved manifest. The root of the validation gap is F-178, which sits on sync-from-code and is the owner's route, so this anchor is not closed here.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-244",
+   "why": "the summary of the same clause, routed with its body rather than judged apart from it.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md#P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-342",
+   "why": "the absence is real and deeper than the verdict found - HookContext carries no project-root field at all - but the consumer has already WRITTEN THE GAP DOWN: PROP-020 ##HOOK-ENV says of VIBE_PROJECT_ROOT 'it lands with that work', and PROP-024 ##HOOK-BUILD is @spec/done. A gap the host records honestly is a host obligation, not a false package sentence.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-MECHANICS-CONSENT-AND-HONESTY",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-343",
+   "why": "the consent gate is NOT missing: confirm() ships with a --yes bypass and a non-TTY hard error, and is applied on four mutating paths. Only run_use_cmd skips it, which is a bug in one consumer function rather than an unbuilt mechanism.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#A-POSTURE-IS-CHOSEN-ONCE-RECORDED-AND-ENFORCED",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-230",
+   "why": "a prescription ('a posture must be chosen once, recorded, and enforced') that this consumer fails: .git/hooks empty, no .githooks, no .github, core.hooksPath unset, no trailer setting, and self-check.sh's ten steps carry no attribution gate. The flow's own law that a policy with no checker is a wish is the standard convicting the consumer, not the package.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#one-place-to-read-one-place-to-change",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-230",
+   "why": "the single-place law's payoff, failed by the same consumer: two verbatim copies of the snippet sit in one generated spec/boot/STATIC.md plus six restatements.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md#HEADER-IMPERATIVE-MOOD",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-234",
+   "why": "a rule the consumer does not keep, re-measured at HEAD: 211 of 400 subjects (52.8 %) open with the/a/an after the conventional-commit prefix - a noun phrase that does not complete the rule's own test sentence. The recorded 144/400 was an undercount by roughly seventy. The window spans four days and is dominated by this campaign's own commits, so any figure carried forward must name its HEAD.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md#HEADER-LOWERCASE",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-234",
+   "why": "same shape: 62 of 400 subjects begin with an uppercase character, and the large majority of those are identifiers rather than sentence case. The rule is sound; the consumer is the side that drifts.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md#STEP-DRAFT-A-DIFF-AGAINST-THE-SPEC-SECTION",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-338",
+   "why": "four code-driven spec syncs ran in this repository, not two, and every one carries zero revisit trigger in its spec diff - while the step requiring it sat verbatim in the compiled boot lane that those very sessions loaded at start. The rule was present and unread; the package does not move for that.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md#PART-A-REVISIT-TRIGGER",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-339",
+   "why": "the reviewer-side statement of the same rule, and the row's falsifier=self is a heuristic artefact: its four in-package evidence refs, opened one by one, show the package KEEPING its own rule, including a worked example carrying metric, threshold and observation point.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md#FIELD-STATUS",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-258",
+   "why": "the package's own worked example keeps the one-line rule in 44 characters while the consumer's live status cell runs to 1 029 - 23x - and CLAUDE.md restates the very rule it breaks. The package is demonstrably the side that complies.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md#LAW-STATE-LOCALITY",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-258",
+   "why": "the law behind the field, routed with it.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/decision-records/v0.1.0/README.md#FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-299",
+   "why": "the count reproduces digit for digit on a third independent pass (153 sections with a Decision label, 4 carrying all four fields) and the package keeps its own rule 6 of 6 in its own tree. A consumer that writes the Decision line alone is the side that drifts.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md#DO-NOT-ACT-UNTIL-THE-OWNER-HAS-FIXED-THE-FIVE",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-322",
+   "why": "the package's one shipped codeword carries all five parts under five numbered headings; what fails is the consumer acting on two uncatalogued two-part phrase families it calls codewords. NOTE: this is the third row of an EXISTING host obligation already recorded as F-177 and F-201 - do not mint a new one.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md#NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-336",
+   "why": "ruled route (b) rather than 3.6(c). The offending file, spec/design/structural-loader.md, declares stage=\"spec\" at :3 - which by this flow's own declared-genre rule would exempt it - but calls itself 'DESIGN - provisional' at :5. A file that says two things about its own genre is not a MARKED EXCEPTION, and 3.6(c) requires the exception to be written down deliberately. The host resolves the self-contradiction; the package does not move either way.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md#STEP-REWRITE-THE-WAL",
+   "route": "host",
+   "wave": 6,
+   "obligation": "F-351",
+   "why": "the rule said to be unhonoured is compiled verbatim into the host's own boot lane ('Rewrite, not append'); what contradicts it is CLAUDE.md's step 2, host-internally. NOTE: this row is typed missing-support and is a CONTRADICTION - nothing is missing at any layer.",
+   "recorded": "2026-07-29"
   }
  ]
 }
