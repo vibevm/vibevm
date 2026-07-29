@@ -3286,6 +3286,95 @@ command that would have tested it.
   not touched:** adding a quick-start to a plan that has already executed would
   be inventing history rather than repairing a contract.
 
+- **2026-07-29 · waves 2–4 — the phase's central finding is a ratio, and it is
+  not the one the plan expected.** Across four delegated waves, **179 anchors
+  were examined and 25 moved**. The other 154 are §3.6 route (b): these are
+  shipped **normative flows**, so most of what Phase C recorded as drift reads
+  «the consumer does less than the rule asks», and the package is not the side
+  that yields. A package moves only where its own sentence is false about
+  something inside its own tree — its own bullets, its own summary, its own
+  example, or a shipped sibling in the same namespace.
+
+  That ratio changes what Phase D *is*. It is not mainly a document-repair
+  phase; it is a **routing** phase that produces two queues for the owner and
+  a small number of genuine package repairs on the way.
+
+  **The repairs that did happen have four recurring shapes**, each closed in
+  three or four packages: a claim that `flow:core-ai-native` «defers to this
+  package from its next release», where the release landed days later and
+  deferred in neither document (campaign-plans, wal, redbook, and the
+  campaign-form pair); a commit-format rule mis-credited to
+  `flow:git-atomic-commits`, which disclaims it in its own boot snippet, found
+  three times including once inside the flow being mis-credited; a figure with
+  no record behind it (`4–7/80`, `74.8 %`); and a lead sentence contradicted by
+  its own bullets («two forces reshape it EVERY RUN», over bullets that are
+  conditionals).
+
+- **2026-07-29 · three claimed absences were perimeter misses, and the third
+  nearly demoted a mechanism the consumer had already built.** The campaign's
+  own law — *a `not-found` is a fact about the search perimeter until the
+  perimeter has been checked* — was written after Phase C's C1 paid for it three
+  times. Phase D paid three more in one session. A linter reported missing was
+  installed and off PATH: with `C:\opt\gotools` on it, the Go pilot prints
+  `floor: all green (7 step(s) run, 0 disabled by policy)`, and the claim a
+  worker had deleted as unmeasured was exactly true. A floor run rooted at a
+  *package* was read as a verdict on `research/go-demo`. And BROWNFIELD's
+  phase-gate anchor was demoted on «nothing captures a golden transcript», from
+  a grep over one crate's `src/` — while five transcripts sit at the host's
+  `discipline/golden/`, `capture.sh:3` names **BROWNFIELD-PROTOCOL §6** as its
+  own contract, and `terraform/BASELINE.md:117` applies §6 by name. **The host
+  had implemented the mechanism and cited the anchor being demoted.**
+
+- **2026-07-29 · twenty-four diffs reverted by owner ruling, and the rule that
+  cost it.** The first wave's batches were cut by `falsifier == "self"` and not
+  by `closure_route` — the field written into the batch plan hours earlier for
+  the sole purpose of answering «who approves this». 24 of the 28 obligations
+  handed out sat on `release`, `sync-from-code` or `build-or-demote`. Nothing
+  was *closed* without approval, because no verdict moved; what landed was the
+  right work in the wrong order, and the owner chose the full revert. Both rules
+  are now [§6.1 of the batch plan](../../campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md#delegation-lessons):
+  **a batch is cut by route first**, and **a demotion whose whole basis is an
+  absence must name the perimeter it searched**.
+
+- **2026-07-29 · the routing record, without which this phase cannot converge.**
+  An anchor routed to the host is never repaired in the package, so it never
+  stops reading `drift`. Left in prose, the registry could never empty, the next
+  wave would re-derive the same answer, and the exit gate could not tell «not
+  worked» from «worked, and the work belongs to the host» — the two things it
+  exists to distinguish. `run/state/routing.json` is that record, one entry per
+  anchor with its obligation and why, written by the boss at review time and
+  never by a worker. The generator reports CONVERGENCE against it, and that is
+  what §7's gate now measures.
+
+  Two instrument defects were found and fixed by the work rather than by
+  inspection. Obligation ids were positional and **shifted once**, before
+  carrying them across regenerations landed — F-134→F-136 and F-142→F-145, both
+  already cited in this LOG and in the batch plan, where they named nothing;
+  five citations re-pointed. And carrying ids matched by *symmetric* Jaccard,
+  which a partial closure defeats: two of F-205's three anchors were re-judged,
+  the remainder scored 0.33, and the registry minted it a fresh id while filing
+  F-205 `resolved` with one of its anchors still drifting. Matching is now
+  containment.
+
+- **2026-07-29 · state at the end of the prose-edit route.** Corpus **10 751
+  confirmed / 550 drift / 45 unverifiable — 94.8 %**, from 94.3 % at the Phase C
+  gate. Registry **206 obligations**; **397 of 550 verdicts still owe a package
+  repair, 153 are routed out, 60 obligations have nothing left owed**. The
+  `prose-edit` route is drained outside the address family. What remains is
+  `build-or-demote` (54 / 134, the boss's, and every demotion now re-verified
+  against the host perimeter first), `sync-from-code` (52 / 176, owner approval
+  per diff), `release` (17 / 59, owner before publication), and the 26-obligation
+  address family whose tag decision the owner has given and whose publication he
+  has not.
+
+  Two queues now await the owner rather than the phase:
+  [`PHASE-D-RELEASE-QUEUE.md`](../../campaigns/packages-2026-09/PHASE-D-RELEASE-QUEUE.md)
+  — 17 release events in four groups, two of them needing a product decision
+  before an edit exists to approve — and
+  [`PHASE-D-HOST-OBLIGATIONS.md`](../../campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md)
+  — 53 obligations where the rule is sound and the host does not keep it, each
+  taking one of three answers and none of them «soften the package».
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
