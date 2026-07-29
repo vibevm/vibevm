@@ -297,6 +297,51 @@ CODE_EXT = (
 )
 
 
+def fact_sentence(o: dict) -> str:
+    """The subject fact's own line, which Phase C put first in every `ev`."""
+    subjects = set(o["files"])
+    for ref in o["evidence_refs"]:
+        head = ref.split(":", 1)[0]
+        if head in subjects and "##" in ref:
+            return ref
+    return o["evidence_refs"][0] if o["evidence_refs"] else ""
+
+
+def falsifier(o: dict) -> str:
+    """Which side of the package boundary the falsifying evidence sits on.
+
+    This decides one thing and refuses to decide another. It decides that a
+    `self` obligation — every falsifying ref inside the subject package or its
+    own install slot — is the package being wrong ABOUT ITSELF, which is always
+    a package edit and always the boss's. It does **not** decide `host` or
+    `mixed`: there the package may be right and the consumer not complying, and
+    weakening a shipped rule to match a lax consumer is the profanation the
+    mandate names. That call is made per obligation at closure time, not by a
+    regex over prose.
+
+    `campaigns/` is neither side: a harvest file is this campaign's own capture
+    of a run, not a fact about the consumer's behaviour.
+    """
+    subject_pkgs = tuple(o["packages"])
+    host = pkg = False
+    for ref in o["evidence_refs"]:
+        head = ref.split(":", 1)[0]
+        if head.startswith("campaigns/"):
+            continue
+        # package-side is the closed set; everything else is the consumer. A
+        # prefix list of host directories would silently mis-file whatever it
+        # forgot — `discipline/AUDIT.md` fell through it and read as `self`.
+        if head.startswith(subject_pkgs) or head.startswith("vibedeps/"):
+            pkg = True
+        else:
+            host = True
+    if host and pkg:
+        return "mixed"
+    if host:
+        return "host"
+    return "self"
+
+
 def closure_route(o: dict) -> str:
     """How this obligation can be closed — which decides who must approve it.
 
@@ -499,6 +544,8 @@ def build(rows, groups, spent: set[str], ledger: dict, vendored: dict):
 
     for o in obligations:
         o["closure_route"] = closure_route(o)
+        o["fact"] = fact_sentence(o)
+        o["falsifier"] = falsifier(o)
 
     # biggest first: a cluster's size is how many verdicts one closure clears.
     obligations.sort(key=lambda o: (-o["drift_count"], o["packages"], o["type"]))
@@ -578,6 +625,17 @@ def main() -> int:
         sel = [o for o in obligations if o["closure_route"] == r]
         print("%-18s %8d %8d   %s"
               % (r, len(sel), sum(o["drift_count"] for o in sel), who[r]))
+    print()
+    print("WHERE THE FALSIFYING EVIDENCE SITS - the question 'which side is")
+    print("wrong' is a judgement, and this settles only the half a script can:")
+    for f, note in (
+        ("self", "package wrong about ITSELF -> package edit, boss, unambiguous"),
+        ("host", "the consumer falsifies it -> which side is wrong is a judgement"),
+        ("mixed", "both cited -> which side is wrong is a judgement"),
+    ):
+        sel = [o for o in obligations if o["falsifier"] == f]
+        print("  %-6s %4d obligations %4d drifts   %s"
+              % (f, len(sel), sum(o["drift_count"] for o in sel), note))
     print()
     print("rule usage:")
     for r, c in Counter(o["rule"] for o in obligations).most_common():

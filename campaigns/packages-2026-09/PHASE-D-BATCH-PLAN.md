@@ -242,6 +242,47 @@ It reads cleaner and it breaks every `F-NNN` citation already written into 18
 verdict reasons. **Revisit when:** the ledger is consolidated into one file and
 the LOG stops minting ids in prose — a Phase F or close-out job.
 
+### 3.6 A package does not yield to a consumer that simply does not comply {#which-side}
+
+**The question this answers, and it governs 191 of the 228 obligations.** When a
+shipped package says one thing and the host does another, *which side changes?*
+Get it wrong in the easy direction and Phase D quietly rewrites the discipline to
+describe a lax consumer — which is, in the owner's own word, the *профанация*
+[§0](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#mandate)
+exists to prevent. The mandate's acceptance criterion is that «the discipline can
+be shown to hold itself to its own rule», so the default runs the other way.
+
+**Decision.** Before any edit, the obligation is routed by *which side is wrong*,
+and the routes are these three — never a fourth:
+
+- **(a) the package's statement is wrong** — a roster, a path, an internal
+  count, a described practice stated as fact, its own example breaking its own
+  rule. The package yields: prose edit, re-judge, done. **This is the only route
+  that edits a package because of a disagreement with the host.**
+- **(b) the rule is sound and the host should keep it** — the package does not
+  move. A host obligation is recorded, the registry row goes
+  `status: deferred` naming it, and the compliance work belongs to Phase E or a
+  host task. Sprawl of work is forbidden; sprawl of records is mandatory.
+- **(c) the rule is sound and the host deliberately does otherwise** — the
+  exception is **written down on the host side**, as a decision record or a
+  marked exception, and the fact is then re-judged confirmed with the exception
+  named. This is not a loophole: it is Phase C's own ruling, that **a marked
+  exception is not drift** while an unmarked one is, and it converts a silent
+  gap into a recorded choice. The owner rules on (c) wherever the exception is a
+  policy choice rather than a note.
+
+**What the script settles and what it does not.** `falsifier` is mechanical and
+reliable: **37 obligations over 81 drifts are `self`** — every falsifying ref
+sits inside the subject package or its own install slot, so the package is wrong
+about *itself* and route (a) is unambiguous. The other **191 (`host` 72,
+`mixed` 119)** carry the judgement, made per obligation at closure and recorded
+in the row. **Considered and rejected:** deciding it with a regex over normative
+language (`never` / `every` / `must`). It was written, measured, and thrown away
+— it typed `EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE` as descriptive, and a
+number that wrong is worse than no number. **Revisit when:** a wave's routing
+record shows one of the three dominating, which would be worth knowing before
+wave 2 plans its own cut.
+
 ### 3.5 Every judged file already differs from its installed copy {#vendored}
 
 **Measured, not decided.** 212 of the 228 obligations touch a file that is

@@ -87,7 +87,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-131",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
+   "falsifier": "mixed",
+   "id": "F-132",
    "id_source": "minted"
   },
   {
@@ -191,7 +193,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-132",
+   "fact": "BACKLOG.md:24    disposable.** `ZONE-LIFETIMES` says `run/` is throwaway after close-out and",
+   "falsifier": "host",
+   "id": "F-133",
    "id_source": "minted"
   },
   {
@@ -286,7 +290,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-133",
+   "fact": ".gitignore:37  /refs/",
+   "falsifier": "host",
+   "id": "F-135",
    "id_source": "minted"
   },
   {
@@ -394,7 +400,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-134",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:32  ##full-protocol-pointer Full protocol:",
+   "falsifier": "mixed",
+   "id": "F-136",
    "id_source": "minted"
   },
   {
@@ -476,7 +484,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-135",
+   "fact": "CLAUDE.md:155  - `BACKLOG.md` at repo root — findings the work surfaced and deliberately did",
+   "falsifier": "mixed",
+   "id": "F-137",
    "id_source": "minted"
   },
   {
@@ -558,7 +568,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-136",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = [",
+   "falsifier": "mixed",
+   "id": "F-138",
    "id_source": "minted"
   },
   {
@@ -627,7 +639,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-137",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:199  pub fn explain_text(map: &Specmap, target: &str) -> Result<String> {",
+   "falsifier": "mixed",
+   "id": "F-139",
    "id_source": "minted"
   },
   {
@@ -703,7 +717,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-138",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:77  - **Exhaustiveness:** closed sets are discriminated unions with compiler-checked exhaustive `switch` (`assertNever` in `default` ...)",
+   "falsifier": "mixed",
+   "id": "F-140",
    "id_source": "minted"
   },
   {
@@ -783,7 +799,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-139",
+   "fact": "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
+   "falsifier": "host",
+   "id": "F-141",
    "id_source": "minted"
   },
   {
@@ -904,7 +922,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-140",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:100  ##TWO-ASSERTIONS-DESERVE-THEIR-OWN-TESTS Two assertions deserve their own tests beyond the verdict: @impl/done",
+   "falsifier": "mixed",
+   "id": "F-143",
    "id_source": "minted"
   },
   {
@@ -983,7 +1003,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-141",
+   "fact": "campaigns/packages-2026-09/PHASE-C-RESUME.md:16  | tree | clean, in sync with `origin/main`, mirrored to both hosts |",
+   "falsifier": "host",
+   "id": "F-144",
    "id_source": "minted"
   },
   {
@@ -1083,7 +1105,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-142",
+   "fact": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:18  ##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done",
+   "falsifier": "mixed",
+   "id": "F-145",
    "id_source": "minted"
   },
   {
@@ -1153,7 +1177,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-143",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:38  pub fn load(path: &Path) -> Result<Baseline> {",
+   "falsifier": "mixed",
+   "id": "F-146",
    "id_source": "minted"
   },
   {
@@ -1218,7 +1244,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-144",
+   "fact": "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and…",
+   "falsifier": "host",
+   "id": "F-147",
    "id_source": "minted"
   },
   {
@@ -1310,7 +1338,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-145",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:149  ##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT When classification (see",
+   "falsifier": "mixed",
+   "id": "F-148",
    "id_source": "minted"
   },
   {
@@ -1385,7 +1415,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-146",
+   "fact": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md:102  ##MANUAL-TESTS-LIVE-IN-A-DEDICATED-DIRECTORY-AT-THE-REPOSITORY-ROOT Manual tests live in a dedicated **`manual-tests/`** directory at the",
+   "falsifier": "mixed",
+   "id": "F-149",
    "id_source": "minted"
   },
   {
@@ -1451,7 +1483,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-147",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md:26  - ##BAND-3-ON-TRIGGER load a card's Band-3 ops block only when its trigger",
+   "falsifier": "mixed",
+   "id": "F-150",
    "id_source": "minted"
   },
   {
@@ -1501,7 +1535,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-148",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:150  /// crate — the differential / characterization oracle the",
+   "falsifier": "self",
+   "id": "F-151",
    "id_source": "minted"
   },
   {
@@ -1561,7 +1597,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-149",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:7  /// a field or variant bumps the frontend version, which retires old",
+   "falsifier": "self",
+   "id": "F-152",
    "id_source": "minted"
   },
   {
@@ -1628,7 +1666,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-150",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:12  ##CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` in this package (trigger → card;",
+   "falsifier": "self",
+   "id": "F-153",
    "id_source": "minted"
   },
   {
@@ -1694,7 +1734,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-151",
+   "fact": "conform.toml:36  max_file_lines = 600",
+   "falsifier": "mixed",
+   "id": "F-154",
    "id_source": "minted"
   },
   {
@@ -1763,7 +1805,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-152",
+   "fact": "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
+   "falsifier": "host",
+   "id": "F-155",
    "id_source": "minted"
   },
   {
@@ -1831,7 +1875,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-153",
+   "fact": "ROADMAP.md:341  ### M1.7 — `vibe-mcp` server (Claude-native context provider)",
+   "falsifier": "mixed",
+   "id": "F-156",
    "id_source": "minted"
   },
   {
@@ -1904,7 +1950,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-154",
+   "fact": "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
+   "falsifier": "host",
+   "id": "F-157",
    "id_source": "minted"
   },
   {
@@ -1959,7 +2007,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-155",
+   "fact": "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:184  - **D2 — card-set & order (RAID §1.2).** No behavior-changing card here (all",
+   "falsifier": "mixed",
+   "id": "F-158",
    "id_source": "minted"
   },
   {
@@ -2014,7 +2064,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-156",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:51  /// fail the gate; stale entries are prune candidates (the file may",
+   "falsifier": "self",
+   "id": "F-159",
    "id_source": "minted"
   },
   {
@@ -2068,7 +2120,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-157",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:156  - ##DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES The differential corpus curates diagnostic classes and pins each to t...",
+   "falsifier": "self",
+   "id": "F-160",
    "id_source": "minted"
   },
   {
@@ -2119,7 +2173,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-158",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:258  ##TOOLING-ASYMMETRY-STATED-HONESTLY … (~74.8% compile-error reduction; ~94% of TS compile errors are type-level) … @spec/done",
+   "falsifier": "self",
+   "id": "F-161",
    "id_source": "minted"
   },
   {
@@ -2176,7 +2232,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-159",
+   "fact": "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
+   "falsifier": "host",
+   "id": "F-162",
    "id_source": "minted"
   },
   {
@@ -2241,7 +2299,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-160",
+   "fact": "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:314  4. **Every `world` verdict carries `src`**, and the summary counts `src == [1]`",
+   "falsifier": "host",
+   "id": "F-163",
    "id_source": "minted"
   },
   {
@@ -2298,7 +2358,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-161",
+   "fact": "AUDIT.md:1  # AUDIT.md — project health inventory",
+   "falsifier": "host",
+   "id": "F-164",
    "id_source": "minted"
   },
   {
@@ -2355,7 +2417,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-162",
+   "fact": "CLAUDE.md:173  - Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.",
+   "falsifier": "host",
+   "id": "F-165",
    "id_source": "minted"
   },
   {
@@ -2411,6 +2475,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:11  ##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline...",
+   "falsifier": "self",
    "id": "F-121",
    "id_source": "adopted (plan LOG)"
   },
@@ -2464,7 +2530,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-163",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:100  - **Release map for free:** every Go binary carries `runtime/debug.ReadBuildInfo` — VCS revision, dirty flag, module versions",
+   "falsifier": "mixed",
+   "id": "F-166",
    "id_source": "minted"
   },
   {
@@ -2513,7 +2581,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-164",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:17  ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust mechanism cites measured spike facts, this one names the sa...",
+   "falsifier": "self",
+   "id": "F-167",
    "id_source": "minted"
   },
   {
@@ -2560,7 +2630,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-165",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:39  ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT … type-constrained decoding cutting compile errors ~74.8% — was measured *on TypeScript* (Mündler et al., PLDI'25; the only language with a real implementation, R2C-005 / DR1-014). @spec/done",
+   "falsifier": "mixed",
+   "id": "F-168",
    "id_source": "minted"
   },
   {
@@ -2619,7 +2691,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-166",
+   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
+   "falsifier": "mixed",
+   "id": "F-169",
    "id_source": "minted"
   },
   {
@@ -2672,7 +2746,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-167",
+   "fact": "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
+   "falsifier": "host",
+   "id": "F-170",
    "id_source": "minted"
   },
   {
@@ -2729,7 +2805,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-168",
+   "fact": "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
+   "falsifier": "host",
+   "id": "F-171",
    "id_source": "minted"
   },
   {
@@ -2786,7 +2864,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-169",
+   "fact": "ROADMAP.md:341  ### M1.7 — `vibe-mcp` server (Claude-native context provider)",
+   "falsifier": "host",
+   "id": "F-172",
    "id_source": "minted"
   },
   {
@@ -2851,7 +2931,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-170",
+   "fact": "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …(quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead…",
+   "falsifier": "host",
+   "id": "F-173",
    "id_source": "minted"
   },
   {
@@ -2902,7 +2984,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-171",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
+   "falsifier": "host",
+   "id": "F-174",
    "id_source": "minted"
   },
   {
@@ -2960,7 +3044,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-172",
+   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
+   "falsifier": "mixed",
+   "id": "F-175",
    "id_source": "minted"
   },
   {
@@ -3020,6 +3106,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
+   "fact": "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+   "falsifier": "mixed",
    "id": "F-097",
    "id_source": "adopted (plan LOG)"
   },
@@ -3097,7 +3185,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-173",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:154  ##EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS Everything the tool does to the block is one of three operations. @impl/done",
+   "falsifier": "mixed",
+   "id": "F-176",
    "id_source": "minted"
   },
   {
@@ -3153,7 +3243,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-174",
+   "fact": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:23  ##the-owners-framing-lead The owner's framing, recorded as spoken: @impl/done",
+   "falsifier": "mixed",
+   "id": "F-177",
    "id_source": "minted"
   },
   {
@@ -3208,7 +3300,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-175",
+   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:110  > ##PERSISTED-STATE-IS-QUALIFIED-ONLY **Persisted state is qualified-only.** Every reference written to a",
+   "falsifier": "mixed",
+   "id": "F-178",
    "id_source": "minted"
   },
   {
@@ -3262,7 +3356,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-176",
+   "fact": "mirrors.toml:28  refs = [\"main\", \"tags\"]",
+   "falsifier": "mixed",
+   "id": "F-179",
    "id_source": "minted"
   },
   {
@@ -3315,7 +3411,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-177",
+   "fact": "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+   "falsifier": "host",
+   "id": "F-180",
    "id_source": "minted"
   },
   {
@@ -3367,7 +3465,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-178",
+   "fact": "xtask/src/mirror.rs:284              Mode::Push => {",
+   "falsifier": "host",
+   "id": "F-181",
    "id_source": "minted"
   },
   {
@@ -3419,6 +3519,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:185  - ##MAP-ATLAS `appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). @impl/...",
+   "falsifier": "mixed",
    "id": "F-088",
    "id_source": "adopted (plan LOG)"
   },
@@ -3468,7 +3570,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-179",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:90  checker: <conform tier | clippy lint | test>   # or: WISH",
+   "falsifier": "mixed",
+   "id": "F-182",
    "id_source": "minted"
   },
   {
@@ -3516,7 +3620,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-180",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:20  walkdir.workspace = true",
+   "falsifier": "mixed",
+   "id": "F-183",
    "id_source": "minted"
   },
   {
@@ -3570,6 +3676,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:5  ##status-line **Status.** Beta. @impl/done",
+   "falsifier": "mixed",
    "id": "F-120",
    "id_source": "adopted (plan LOG)"
   },
@@ -3627,6 +3735,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md:17  ##AGG-FRONT-DOOR No code, no boot snippet, no policy lives here; see the `-lang` stack's",
+   "falsifier": "self",
    "id": "F-115",
    "id_source": "adopted (plan LOG)"
   },
@@ -3675,7 +3785,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-181",
+   "fact": "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:25  floor: the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest",
+   "falsifier": "mixed",
+   "id": "F-184",
    "id_source": "minted"
   },
   {
@@ -3722,7 +3834,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-182",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:107  ##CONFORM-TOML-GAINS-A-GO-SECTION `conform.toml` gains a `[go]` section, written by `go-ai-native init` from the modu...",
+   "falsifier": "mixed",
+   "id": "F-185",
    "id_source": "minted"
   },
   {
@@ -3775,7 +3889,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-183",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable reference material transformative,...",
+   "falsifier": "mixed",
+   "id": "F-186",
    "id_source": "minted"
   },
   {
@@ -3830,7 +3946,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-184",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:80  ##PROCEDURES-AS-AGENT-SKILLS Procedures as agent skills: `/go-ai-native-sweep`",
+   "falsifier": "mixed",
+   "id": "F-187",
    "id_source": "minted"
   },
   {
@@ -3884,7 +4002,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-185",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:19  ##MOTIVATION Motivation: A weak agent asked to \"add a planner variant\" must create the cell package, the conformance...",
+   "falsifier": "mixed",
+   "id": "F-188",
    "id_source": "minted"
   },
   {
@@ -3940,7 +4060,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-186",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:127  - ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the SAME four `tcg_*` tools; `language: \"go\"`...",
+   "falsifier": "mixed",
+   "id": "F-189",
    "id_source": "minted"
   },
   {
@@ -3995,7 +4117,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-187",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:47  ##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy",
+   "falsifier": "self",
+   "id": "F-190",
    "id_source": "minted"
   },
   {
@@ -4044,7 +4168,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-188",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:93  ##FORBIDDEN-LEGAL-WITH-REASON Forbidden-by-default constructs (raw `unwrap` in domain logic, inline asm, proc-macro magic, stringly-typed protocols) remain legal *with machinery and a recorded reason*",
+   "falsifier": "mixed",
+   "id": "F-191",
    "id_source": "minted"
   },
   {
@@ -4090,7 +4216,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-189",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303              .stderr(std::process::Stdio::null())",
+   "falsifier": "self",
+   "id": "F-192",
    "id_source": "minted"
   },
   {
@@ -4142,7 +4270,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-190",
+   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:34  ## Why addressability is requirement #1 {#why}",
+   "falsifier": "mixed",
+   "id": "F-193",
    "id_source": "minted"
   },
   {
@@ -4195,7 +4325,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-191",
+   "fact": "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:308  ## 7. The exit gate, restated as five checks {#gate}",
+   "falsifier": "host",
+   "id": "F-194",
    "id_source": "minted"
   },
   {
@@ -4248,7 +4380,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-192",
+   "fact": "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
+   "falsifier": "host",
+   "id": "F-195",
    "id_source": "minted"
   },
   {
@@ -4299,7 +4433,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-193",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:210  3. Тесты — это спека в исполняемой форме (если тест",
+   "falsifier": "host",
+   "id": "F-196",
    "id_source": "minted"
   },
   {
@@ -4351,7 +4487,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-194",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
+   "falsifier": "mixed",
+   "id": "F-197",
    "id_source": "minted"
   },
   {
@@ -4403,7 +4541,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-195",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
+   "falsifier": "mixed",
+   "id": "F-198",
    "id_source": "minted"
   },
   {
@@ -4460,7 +4600,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-196",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:43  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at",
+   "falsifier": "mixed",
+   "id": "F-199",
    "id_source": "minted"
   },
   {
@@ -4525,6 +4667,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:8  ##THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the",
+   "falsifier": "mixed",
    "id": "F-087",
    "id_source": "adopted (plan LOG)"
   },
@@ -4590,7 +4734,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-197",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:104  - ##ASSERT-CLEAN-REMOVAL-IS-THE-IDENTITY-FUNCTION **Clean removal.** After a remove, the file equals what it was before",
+   "falsifier": "mixed",
+   "id": "F-200",
    "id_source": "minted"
   },
   {
@@ -4639,7 +4785,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-198",
+   "fact": "CLAUDE.md:167  ## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`",
+   "falsifier": "mixed",
+   "id": "F-201",
    "id_source": "minted"
   },
   {
@@ -4688,7 +4836,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-199",
+   "fact": "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** … Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …",
+   "falsifier": "mixed",
+   "id": "F-202",
    "id_source": "minted"
   },
   {
@@ -4739,7 +4889,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-200",
+   "fact": "crates/vibe-cli/src/commands/install/mod.rs:224      let allowed: Vec<String> = DEFAULT_ALLOWED_GROUPS",
+   "falsifier": "host",
+   "id": "F-203",
    "id_source": "minted"
   },
   {
@@ -4792,7 +4944,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-201",
+   "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:181      if [ -n \"$remote_head\" ] && ! git merge-base --is-ancestor \"$remote_head\" \"$branch\"; then",
+   "falsifier": "mixed",
+   "id": "F-204",
    "id_source": "minted"
   },
   {
@@ -4842,7 +4996,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-202",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:49  - `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).",
+   "falsifier": "host",
+   "id": "F-205",
    "id_source": "minted"
   },
   {
@@ -4886,7 +5042,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-203",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = [",
+   "falsifier": "mixed",
+   "id": "F-206",
    "id_source": "minted"
   },
   {
@@ -4929,7 +5087,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-204",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:138  pub enum SpecUnitStatus {",
+   "falsifier": "self",
+   "id": "F-207",
    "id_source": "minted"
   },
   {
@@ -4974,7 +5134,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-205",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md:62  - ##CARDS-CARRY-SUNSET-CONDITIONS Cards carry sunset conditions; ... the card retires with its checker (R-050).",
+   "falsifier": "mixed",
+   "id": "F-208",
    "id_source": "minted"
   },
   {
@@ -5019,7 +5181,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-206",
+   "fact": "legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md:23  | `DISCIPLINE-CHARTER-v0.1.md` | **superseded** | `discipline-v0.2/00-MANIFESTO.md` ...",
+   "falsifier": "mixed",
+   "id": "F-209",
    "id_source": "minted"
   },
   {
@@ -5062,7 +5226,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-207",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158  ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer shape in this package's tests; recorded LSP trans...",
+   "falsifier": "mixed",
+   "id": "F-210",
    "id_source": "minted"
   },
   {
@@ -5108,7 +5274,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-208",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns...",
+   "falsifier": "self",
+   "id": "F-211",
    "id_source": "minted"
   },
   {
@@ -5154,7 +5322,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-209",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:79  5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /",
+   "falsifier": "self",
+   "id": "F-212",
    "id_source": "minted"
   },
   {
@@ -5200,7 +5370,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-210",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`, `testdata/` goldens): must",
+   "falsifier": "mixed",
+   "id": "F-213",
    "id_source": "minted"
   },
   {
@@ -5244,7 +5416,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-211",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208              let crashed = matches!(e, TcgBridgeError::OracleCrashed { .. });",
+   "falsifier": "mixed",
+   "id": "F-214",
    "id_source": "minted"
   },
   {
@@ -5285,7 +5459,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-212",
+   "fact": "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:719     `complete` p50 < 300 ms. Falsified → the §13 R1 ladder, targets",
+   "falsifier": "mixed",
+   "id": "F-215",
    "id_source": "minted"
   },
   {
@@ -5328,7 +5504,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-213",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
+   "falsifier": "mixed",
+   "id": "F-216",
    "id_source": "minted"
   },
   {
@@ -5373,7 +5551,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-214",
+   "fact": "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
+   "falsifier": "host",
+   "id": "F-217",
    "id_source": "minted"
   },
   {
@@ -5419,7 +5599,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-215",
+   "fact": "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
+   "falsifier": "host",
+   "id": "F-218",
    "id_source": "minted"
   },
   {
@@ -5470,7 +5652,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-216",
+   "fact": "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:298    runnable); host floor green. *Commit:* `feat(ai-native): go-ai-native family skeletons`.",
+   "falsifier": "mixed",
+   "id": "F-219",
    "id_source": "minted"
   },
   {
@@ -5519,7 +5703,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-217",
+   "fact": "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+   "falsifier": "mixed",
+   "id": "F-220",
    "id_source": "minted"
   },
   {
@@ -5566,7 +5752,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-218",
+   "fact": "BACKLOG.md:19  | ##REL-DEFERRALS `campaigns/<id>/deferrals.md` | **one campaign's** tails; dies with the zone | the next campaign's mandate (`campaign-plans` law) |",
+   "falsifier": "host",
+   "id": "F-221",
    "id_source": "minted"
   },
   {
@@ -5614,7 +5802,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-219",
+   "fact": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:169  ## 3.1 Shared remote cache",
+   "falsifier": "mixed",
+   "id": "F-222",
    "id_source": "minted"
   },
   {
@@ -5659,7 +5849,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-220",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md:207  Иерархия приоритетов:",
+   "falsifier": "host",
+   "id": "F-223",
    "id_source": "minted"
   },
   {
@@ -5704,7 +5896,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-221",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
+   "falsifier": "mixed",
+   "id": "F-224",
    "id_source": "minted"
   },
   {
@@ -5748,7 +5942,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-222",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:131  ##either-condition-fires-unprompted Either fires without",
+   "falsifier": "mixed",
+   "id": "F-225",
    "id_source": "minted"
   },
   {
@@ -5796,7 +5992,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-223",
+   "fact": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md:12  ## The obligation {#obligation}",
+   "falsifier": "mixed",
+   "id": "F-226",
    "id_source": "minted"
   },
   {
@@ -5843,7 +6041,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-224",
+   "fact": "DEV-GUIDE.md:330  It runs three invariants in order, exiting non-zero on the first failure (pass `--keep-going` to run all three regardless):",
+   "falsifier": "host",
+   "id": "F-227",
    "id_source": "minted"
   },
   {
@@ -5888,7 +6088,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-225",
+   "fact": "DEV-GUIDE.md:7  **Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.md) — the obligation is load-bearing.",
+   "falsifier": "host",
+   "id": "F-228",
    "id_source": "minted"
   },
   {
@@ -5932,7 +6134,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-226",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
+   "falsifier": "self",
+   "id": "F-229",
    "id_source": "minted"
   },
   {
@@ -5979,7 +6183,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-227",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:109  ##one-place-to-read-one-place-to-change One place to read it, one place to change",
+   "falsifier": "mixed",
+   "id": "F-230",
    "id_source": "minted"
   },
   {
@@ -6025,7 +6231,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-228",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:101  ##NO-RESTATEMENT-ANYWHERE-ELSE No repeating it in the README, no per-directory",
+   "falsifier": "mixed",
+   "id": "F-231",
    "id_source": "minted"
   },
   {
@@ -6072,7 +6280,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-229",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:101  - ##SUM-SWITCHING-IS-FORWARD-ONLY Switching postures is one edit in one place, forward-only, with a",
+   "falsifier": "mixed",
+   "id": "F-232",
    "id_source": "minted"
   },
   {
@@ -6121,7 +6331,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-230",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:70  - ##COMPOSES-DECISION-RECORDS `flow:decision-records` (`25-…`): the posture choice is a recorded",
+   "falsifier": "mixed",
+   "id": "F-233",
    "id_source": "minted"
   },
   {
@@ -6170,7 +6382,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-231",
+   "fact": "campaigns/packages-2026-09/harvest/world-w1-git-family.md:127  **It is broken 42 times in 400 — 10.5 % — and every one of them is the same word,",
+   "falsifier": "mixed",
+   "id": "F-234",
    "id_source": "minted"
   },
   {
@@ -6220,6 +6434,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
+   "fact": "campaigns/packages-2026-09/harvest/world-w1-git-family.md:112  **82 of 400 break the hard limit of 72 — 20.5 %, longest at 89.** And **297 of 400",
+   "falsifier": "mixed",
    "id": "F-122",
    "id_source": "adopted (plan LOG)"
   },
@@ -6264,7 +6480,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-232",
+   "fact": "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+   "falsifier": "host",
+   "id": "F-235",
    "id_source": "minted"
   },
   {
@@ -6319,7 +6537,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-233",
+   "fact": "CLAUDE.md:132    `license-file.workspace`). The `\"EULA\"` strings that remain are all **off-limits",
+   "falsifier": "mixed",
+   "id": "F-236",
    "id_source": "minted"
   },
   {
@@ -6371,7 +6591,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-234",
+   "fact": "Cargo.toml:106  # Third-party (all permissive licenses — PROP-000 §3)",
+   "falsifier": "mixed",
+   "id": "F-237",
    "id_source": "minted"
   },
   {
@@ -6420,7 +6642,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-235",
+   "fact": "LICENSE.md:44  this license and continue to govern their respective code (see `cargo metadata`",
+   "falsifier": "mixed",
+   "id": "F-238",
    "id_source": "minted"
   },
   {
@@ -6473,7 +6697,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-236",
+   "fact": "CLAUDE.md:130    (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed",
+   "falsifier": "mixed",
+   "id": "F-239",
    "id_source": "minted"
   },
   {
@@ -6519,7 +6745,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-237",
+   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:180  Read spec/flows/spec-genres/ in full, then adapt it to this project:",
+   "falsifier": "mixed",
+   "id": "F-240",
    "id_source": "minted"
   },
   {
@@ -6575,7 +6803,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-238",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:112  ##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done",
+   "falsifier": "mixed",
+   "id": "F-241",
    "id_source": "minted"
   },
   {
@@ -6636,7 +6866,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-239",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:116  ##CARRY-A-VERSION-TOKEN-IN-THE-OPENING-MARKER Carry a small version token in the",
+   "falsifier": "mixed",
+   "id": "F-242",
    "id_source": "minted"
   },
   {
@@ -6694,7 +6926,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-240",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:26  ##shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a",
+   "falsifier": "mixed",
+   "id": "F-243",
    "id_source": "minted"
   },
   {
@@ -6736,7 +6970,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-241",
+   "fact": "crates/vibe-cli/src/commands/short_name.rs:37      Ambiguous(Vec<Group>),",
+   "falsifier": "host",
+   "id": "F-244",
    "id_source": "minted"
   },
   {
@@ -6779,7 +7015,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-242",
+   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md:19  ##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE This is a design-time",
+   "falsifier": "mixed",
+   "id": "F-245",
    "id_source": "minted"
   },
   {
@@ -6823,7 +7061,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-243",
+   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:16  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
+   "falsifier": "mixed",
+   "id": "F-246",
    "id_source": "minted"
   },
   {
@@ -6875,6 +7115,8 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/README.md:116  ##UNINSTALLING-THE-UMBRELLA-REMOVES-ONLY-ITS-OWN-FILES Uninstalling the umbrella removes its own files; member packages are",
+   "falsifier": "mixed",
    "id": "F-114",
    "id_source": "adopted (plan LOG)"
   },
@@ -6919,7 +7161,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-244",
+   "fact": "spec/design/README.md:30  ##TWO-WAY-LINKING Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header …",
+   "falsifier": "host",
+   "id": "F-247",
    "id_source": "minted"
   },
   {
@@ -6961,7 +7205,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-245",
+   "fact": "spec/design/loading-and-boot-model.md:124  ### Fork 1 — the form of static boot delivery",
+   "falsifier": "host",
+   "id": "F-248",
    "id_source": "minted"
   },
   {
@@ -7002,7 +7248,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-246",
+   "fact": "spec/design/README.md:36  ##when-to-write When a design discussion produces more reasoning than a PROP can absorb without losing its contract readability …",
+   "falsifier": "host",
+   "id": "F-249",
    "id_source": "minted"
   },
   {
@@ -7046,7 +7294,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-247",
+   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:43  | Genre | Charter | Mutability | Reader | Authority |",
+   "falsifier": "mixed",
+   "id": "F-250",
    "id_source": "minted"
   },
   {
@@ -7088,7 +7338,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "id": "F-248",
+   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md:22  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
+   "falsifier": "mixed",
+   "id": "F-251",
    "id_source": "minted"
   },
   {
@@ -7133,7 +7385,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-249",
+   "fact": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:147  1. ##PART-THE-NEW-VALUE **The new value.** The primary change, matching the code. @impl/done",
+   "falsifier": "self",
+   "id": "F-252",
    "id_source": "minted"
   },
   {
@@ -7178,7 +7432,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-250",
+   "fact": "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
+   "falsifier": "host",
+   "id": "F-253",
    "id_source": "minted"
   },
   {
@@ -7224,7 +7480,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-251",
+   "fact": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:24    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md). @impl/done",
+   "falsifier": "mixed",
+   "id": "F-254",
    "id_source": "minted"
   },
   {
@@ -7269,7 +7527,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-252",
+   "fact": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
+   "falsifier": "mixed",
+   "id": "F-255",
    "id_source": "minted"
   },
   {
@@ -7314,7 +7574,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-253",
+   "fact": "CLAUDE.md:205  1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).",
+   "falsifier": "host",
+   "id": "F-256",
    "id_source": "minted"
   },
   {
@@ -7358,7 +7620,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-254",
+   "fact": "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:",
+   "falsifier": "mixed",
+   "id": "F-257",
    "id_source": "minted"
   },
   {
@@ -7405,7 +7669,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-255",
+   "fact": "SPECSPACES.md:22  | fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-12 — **five-task goal COMPLETE (5/5)** (~28 commits, both remotes). ✅1 branch cleanup · ✅3 PP-004 (caps + `decisions` …",
+   "falsifier": "mixed",
+   "id": "F-258",
    "id_source": "minted"
   },
   {
@@ -7442,7 +7708,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-256",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:40  - ##c-6-side-b **Side B:** even WITH executable scaffolds, Haiku-4.5 stayed near the floor (4–7/80); resources amplif...",
+   "falsifier": "self",
+   "id": "F-259",
    "id_source": "minted"
   },
   {
@@ -7479,7 +7747,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-257",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:34  7. ##READ-MECHANISMS `spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT: the...",
+   "falsifier": "self",
+   "id": "F-260",
    "id_source": "minted"
   },
   {
@@ -7516,7 +7786,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-258",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:1  //! `rust-ai-native codemod …` — scaffolded edit operations (discipline",
+   "falsifier": "host",
+   "id": "F-261",
    "id_source": "minted"
   },
   {
@@ -7554,7 +7826,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-259",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:48  ##open-items-are-why-the-package-is-beta These open items are why the package is BETA and why every card carries a fa...",
+   "falsifier": "mixed",
+   "id": "F-262",
    "id_source": "minted"
   },
   {
@@ -7592,7 +7866,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-260",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:19  ##PROMPT-CONTENT-ONLY This package is prompt content only. @impl/done",
+   "falsifier": "self",
+   "id": "F-263",
    "id_source": "minted"
   },
   {
@@ -7629,7 +7905,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-261",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:21  - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.",
+   "falsifier": "host",
+   "id": "F-264",
    "id_source": "minted"
   },
   {
@@ -7665,7 +7943,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-262",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — boilerplate repeats across cells; ...",
+   "falsifier": "host",
+   "id": "F-265",
    "id_source": "minted"
   },
   {
@@ -7702,7 +7982,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-263",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:14  ##distribution-by-status-vs-prior-knowledge By status vs prior knowledge: refines=46, new=31, contradicts=5, known=5 ...",
+   "falsifier": "self",
+   "id": "F-266",
    "id_source": "minted"
   },
   {
@@ -7739,7 +8021,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-264",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:46  - ##C-7-OPEN-H6-UNIFORMITY **H6 uniformity:** no controlled measurement of internal-uniformity effect exists in the l...",
+   "falsifier": "self",
+   "id": "F-267",
    "id_source": "minted"
   },
   {
@@ -7770,7 +8054,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-265",
+   "fact": "",
+   "falsifier": "self",
+   "id": "F-268",
    "id_source": "minted"
   },
   {
@@ -7810,7 +8096,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-266",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:31  4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @imp...",
+   "falsifier": "mixed",
+   "id": "F-269",
    "id_source": "minted"
   },
   {
@@ -7847,7 +8135,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-267",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:123  - ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter per d...",
+   "falsifier": "self",
+   "id": "F-270",
    "id_source": "minted"
   },
   {
@@ -7883,7 +8173,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-268",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:137  - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope / complete / typ...",
+   "falsifier": "self",
+   "id": "F-271",
    "id_source": "minted"
   },
   {
@@ -7919,7 +8211,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-269",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:122  ##WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a",
+   "falsifier": "self",
+   "id": "F-272",
    "id_source": "minted"
   },
   {
@@ -7955,7 +8249,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-270",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:48  ##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` → gofmt/vet/build/test) remains the truth, verbatim. @impl/...",
+   "falsifier": "self",
+   "id": "F-273",
    "id_source": "minted"
   },
   {
@@ -7993,7 +8289,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-271",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md:12  > ##campaign-in-flight-note Campaign in flight: built end-to-end per",
+   "falsifier": "mixed",
+   "id": "F-274",
    "id_source": "minted"
   },
   {
@@ -8030,7 +8328,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-272",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:78  ##CHECKER **Checker:** conform T-sem rule `replacement-has-oracle` ... *(Status: specified, NOT yet implemented in p ...",
+   "falsifier": "self",
+   "id": "F-275",
    "id_source": "minted"
   },
   {
@@ -8066,7 +8366,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-273",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106    _benchmark · high · refines:H2_ — Mündler & He et al. (PLDI 2025): type-constrained decoding ... reduces compilati ...",
+   "falsifier": "host",
+   "id": "F-276",
    "id_source": "minted"
   },
   {
@@ -8103,7 +8405,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-274",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md:39  - ##SHIPS-SPECMARK-PROC-MACRO **The specmark proc-macro** (`crates/specmark`) — the inert",
+   "falsifier": "self",
+   "id": "F-277",
    "id_source": "minted"
   },
   {
@@ -8140,7 +8444,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-275",
+   "fact": "spec/common/PROP-028-package-families.md:136  - ##D13-SUPERSEDED **Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —",
+   "falsifier": "host",
+   "id": "F-278",
    "id_source": "minted"
   },
   {
@@ -8178,7 +8484,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-276",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md:41  - ##SHIPS-SPECMAP-WIRE-SCHEMA `schemas/specmap.jtd.json` — the wire schema of `specmap.json` (the",
+   "falsifier": "mixed",
+   "id": "F-279",
    "id_source": "minted"
   },
   {
@@ -8214,7 +8522,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-277",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1  //! Replay tests: the whole client layer against scripted transports —",
+   "falsifier": "self",
+   "id": "F-280",
    "id_source": "minted"
   },
   {
@@ -8251,7 +8561,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-278",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:348          let _ = self.child.kill();",
+   "falsifier": "self",
+   "id": "F-281",
    "id_source": "minted"
   },
   {
@@ -8287,7 +8599,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-279",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:60  - ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) plus full contracts ever make ...",
+   "falsifier": "self",
+   "id": "F-282",
    "id_source": "minted"
   },
   {
@@ -8325,7 +8639,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-280",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:90  ##END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE End every sweep with the outcome table the Playbook §5 specifies: per tier,",
+   "falsifier": "self",
+   "id": "F-283",
    "id_source": "minted"
   },
   {
@@ -8361,7 +8677,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-281",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md:153  - ##TARGET-WARM-VALIDATE-AND-COMPLETE warm `validate` p50 < 150 ms and",
+   "falsifier": "self",
+   "id": "F-284",
    "id_source": "minted"
   },
   {
@@ -8400,7 +8718,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-282",
+   "fact": "crates/vibe-spec/src/doctree.rs:244  pub fn duplicate_anchors(&self) -> &[String] { &self.duplicate_anchors",
+   "falsifier": "host",
+   "id": "F-285",
    "id_source": "minted"
   },
   {
@@ -8437,7 +8757,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-283",
+   "fact": "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
+   "falsifier": "host",
+   "id": "F-286",
    "id_source": "minted"
   },
   {
@@ -8475,7 +8797,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-284",
+   "fact": "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+   "falsifier": "host",
+   "id": "F-287",
    "id_source": "minted"
   },
   {
@@ -8513,7 +8837,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-285",
+   "fact": "VIBEVM-SPEC.md:1373  - Size budget (target ≤ 3000 tokens, hard limit ≤ 5000 tokens).",
+   "falsifier": "host",
+   "id": "F-288",
    "id_source": "minted"
   },
   {
@@ -8551,7 +8877,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-286",
+   "fact": "spec/boot/00-core.md:42  - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done",
+   "falsifier": "host",
+   "id": "F-289",
    "id_source": "minted"
   },
   {
@@ -8588,7 +8916,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-287",
+   "fact": "spec/boot/00-core.md:38  ##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading…",
+   "falsifier": "host",
+   "id": "F-290",
    "id_source": "minted"
   },
   {
@@ -8628,7 +8958,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-288",
+   "fact": "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
+   "falsifier": "host",
+   "id": "F-291",
    "id_source": "minted"
   },
   {
@@ -8667,7 +8999,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-289",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md:1  # The Campaign Form — plans, baselines, and the paper trail {#root}",
+   "falsifier": "mixed",
+   "id": "F-292",
    "id_source": "minted"
   },
   {
@@ -8706,7 +9040,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-290",
+   "fact": "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:431  ## 15 — Deferrals ledger",
+   "falsifier": "mixed",
+   "id": "F-293",
    "id_source": "minted"
   },
   {
@@ -8747,7 +9083,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-291",
+   "fact": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
+   "falsifier": "mixed",
+   "id": "F-294",
    "id_source": "minted"
   },
   {
@@ -8786,7 +9124,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-292",
+   "fact": "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:196  …no text/code shapes from repos; short dated",
+   "falsifier": "host",
+   "id": "F-295",
    "id_source": "minted"
   },
   {
@@ -8823,7 +9163,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-293",
+   "fact": "legacy-spec/research/action-systems-vscode-idea.md:15  …Everything here is in our words; short verbatim snippets (`file:line`) ground claims,",
+   "falsifier": "host",
+   "id": "F-296",
    "id_source": "minted"
   },
   {
@@ -8860,7 +9202,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-294",
+   "fact": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:101  ## 7. Re-fetch list {#refetch}",
+   "falsifier": "self",
+   "id": "F-297",
    "id_source": "minted"
   },
   {
@@ -8895,7 +9239,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-295",
+   "fact": "docs/commands/uninstall.md:69  - Transitive packages installed only because this package required them are **not** auto-removed. That's a pruning policy for a later command.",
+   "falsifier": "host",
+   "id": "F-298",
    "id_source": "minted"
   },
   {
@@ -8934,7 +9280,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-296",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/README.md:12  ##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR So every choice a future reader could plausibly",
+   "falsifier": "mixed",
+   "id": "F-299",
    "id_source": "minted"
   },
   {
@@ -8974,7 +9322,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-297",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
+   "falsifier": "mixed",
+   "id": "F-300",
    "id_source": "minted"
   },
   {
@@ -9010,7 +9360,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-298",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
+   "falsifier": "self",
+   "id": "F-301",
    "id_source": "minted"
   },
   {
@@ -9049,7 +9401,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-299",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+   "falsifier": "mixed",
+   "id": "F-302",
    "id_source": "minted"
   },
   {
@@ -9087,7 +9441,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-300",
+   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test …",
+   "falsifier": "self",
+   "id": "F-303",
    "id_source": "minted"
   },
   {
@@ -9124,7 +9480,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-301",
+   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
+   "falsifier": "mixed",
+   "id": "F-304",
    "id_source": "minted"
   },
   {
@@ -9165,7 +9523,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-302",
+   "fact": "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+   "falsifier": "mixed",
+   "id": "F-305",
    "id_source": "minted"
   },
   {
@@ -9205,7 +9565,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-303",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:14  ##PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED This package makes the choice explicit",
+   "falsifier": "mixed",
+   "id": "F-306",
    "id_source": "minted"
   },
   {
@@ -9247,7 +9609,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-304",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:97  ##THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE The policy is stated in **exactly one always-loaded place** (the",
+   "falsifier": "mixed",
+   "id": "F-307",
    "id_source": "minted"
   },
   {
@@ -9289,7 +9653,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-305",
+   "fact": "campaigns/packages-2026-09/harvest/world-w1-git-family.md:112  **82 of 400 break the hard limit of 72 — 20.5 %, longest at 89.** And **297 of 400",
+   "falsifier": "mixed",
+   "id": "F-308",
    "id_source": "minted"
   },
   {
@@ -9329,7 +9695,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-306",
+   "fact": "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:27  \"flow:org.vibevm.world/git-autonomy\" = \"=0.1.0\"",
+   "falsifier": "mixed",
+   "id": "F-309",
    "id_source": "minted"
   },
   {
@@ -9369,7 +9737,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-307",
+   "fact": "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+   "falsifier": "host",
+   "id": "F-310",
    "id_source": "minted"
   },
   {
@@ -9407,7 +9777,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-308",
+   "fact": "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+   "falsifier": "host",
+   "id": "F-311",
    "id_source": "minted"
   },
   {
@@ -9447,7 +9819,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-309",
+   "fact": "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+   "falsifier": "host",
+   "id": "F-312",
    "id_source": "minted"
   },
   {
@@ -9486,7 +9860,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-310",
+   "fact": "spec/boot/STATIC.md:780  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
+   "falsifier": "mixed",
+   "id": "F-313",
    "id_source": "minted"
   },
   {
@@ -9529,7 +9905,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-311",
+   "fact": "LICENSE.md:3  The Universal Permissive License (UPL), Version 1.0",
+   "falsifier": "host",
+   "id": "F-314",
    "id_source": "minted"
   },
   {
@@ -9567,7 +9945,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-312",
+   "fact": "spec/common/PROP-000.md:53  - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done",
+   "falsifier": "mixed",
+   "id": "F-315",
    "id_source": "minted"
   },
   {
@@ -9613,7 +9993,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-313",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:19  ##READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a",
+   "falsifier": "mixed",
+   "id": "F-316",
    "id_source": "minted"
   },
   {
@@ -9655,7 +10037,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-314",
+   "fact": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:48  - ##NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE **Never let a manual test touch real user state.** Every run",
+   "falsifier": "mixed",
+   "id": "F-317",
    "id_source": "minted"
   },
   {
@@ -9696,7 +10080,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-315",
+   "fact": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:52  - ##NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH **Never write a step without an \"Expected\" paragraph.** A command",
+   "falsifier": "mixed",
+   "id": "F-318",
    "id_source": "minted"
   },
   {
@@ -9735,7 +10121,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-316",
+   "fact": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md:13  ##A-WALKTHROUGH-THAT-BREAKS-ANY-OF-THESE-IS-A-BUG-IN-THE-TEST A walkthrough that breaks any of these is a bug in the test, not a",
+   "falsifier": "mixed",
+   "id": "F-319",
    "id_source": "minted"
   },
   {
@@ -9776,7 +10164,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-317",
+   "fact": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md:181  - ##SUM-WHAT-EACH-SECTION-DOES Purpose justifies the tier; Preconditions gate the run; Setup",
+   "falsifier": "mixed",
+   "id": "F-320",
    "id_source": "minted"
   },
   {
@@ -9815,7 +10205,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-318",
+   "fact": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md:23  ##the-owners-framing-lead The owner's framing, recorded as spoken: @impl/done",
+   "falsifier": "mixed",
+   "id": "F-321",
    "id_source": "minted"
   },
   {
@@ -9853,7 +10245,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-319",
+   "fact": "spec/boot/STATIC.md:996  - Never act on a codeword that is not in the catalogue — propose",
+   "falsifier": "mixed",
+   "id": "F-322",
    "id_source": "minted"
   },
   {
@@ -9892,7 +10286,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-320",
+   "fact": "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
+   "falsifier": "host",
+   "id": "F-323",
    "id_source": "minted"
   },
   {
@@ -9930,7 +10326,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-321",
+   "fact": "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
+   "falsifier": "host",
+   "id": "F-324",
    "id_source": "minted"
   },
   {
@@ -9967,7 +10365,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-322",
+   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:9  ##IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE It is a design discipline, not a runtime",
+   "falsifier": "mixed",
+   "id": "F-325",
    "id_source": "minted"
   },
   {
@@ -10007,7 +10407,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-323",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/README.md:99  ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is",
+   "falsifier": "mixed",
+   "id": "F-326",
    "id_source": "minted"
   },
   {
@@ -10046,7 +10448,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-324",
+   "fact": "crates/vibe-publish/src/token.rs:228  fn token_file_candidates(host: &str) -> Vec<PathBuf> {",
+   "falsifier": "host",
+   "id": "F-327",
    "id_source": "minted"
   },
   {
@@ -10084,7 +10488,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-325",
+   "fact": "crates/vibe-publish/src/token.rs:223  /// This is the entire disk surface for credentials. One directory means",
+   "falsifier": "host",
+   "id": "F-328",
    "id_source": "minted"
   },
   {
@@ -10121,7 +10527,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-326",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:1  # Flow: Attribution Policy {#root}",
+   "falsifier": "mixed",
+   "id": "F-329",
    "id_source": "minted"
   },
   {
@@ -10156,7 +10564,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-327",
+   "fact": "crates/vibe-cli/src/commands/registry/publish.rs:126      // at every method call as defence in depth.",
+   "falsifier": "host",
+   "id": "F-330",
    "id_source": "minted"
   },
   {
@@ -10196,7 +10606,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-328",
+   "fact": "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
+   "falsifier": "host",
+   "id": "F-331",
    "id_source": "minted"
   },
   {
@@ -10235,7 +10647,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-329",
+   "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:159  ## Reference implementation {#reference}",
+   "falsifier": "mixed",
+   "id": "F-332",
    "id_source": "minted"
   },
   {
@@ -10272,7 +10686,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-330",
+   "fact": "spec/common/PROP-016-source-mirrors.md:72  1. ##open-server-side **Server-side mirroring.** When a host must originate writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host), add one-directional server-side mirroring (a GitHub Action mirroring GitHub→GitVerse, or GitVerse's own pull-mirror for the reverse). It touches CI secrets (an owner act), so it is deferred until needed. @spec/work",
+   "falsifier": "mixed",
+   "id": "F-333",
    "id_source": "minted"
   },
   {
@@ -10311,7 +10727,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-331",
+   "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
+   "falsifier": "mixed",
+   "id": "F-334",
    "id_source": "minted"
   },
   {
@@ -10348,7 +10766,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-332",
+   "fact": "spec/design/README.md:30  ##TWO-WAY-LINKING … A one-directional link is a latent break. @doc/done",
+   "falsifier": "host",
+   "id": "F-335",
    "id_source": "minted"
   },
   {
@@ -10386,7 +10806,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-333",
+   "fact": "spec/design/README.md:50  - ##idx-structural-loader [Structural loader](structural-loader.md) — provisional loader instructions held for PROP-035; not yet wired into any live boot. @spec/hold",
+   "falsifier": "host",
+   "id": "F-336",
    "id_source": "minted"
   },
   {
@@ -10424,7 +10846,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-334",
+   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md:14  ## What stays in the contract, what spills out {#split}",
+   "falsifier": "mixed",
+   "id": "F-337",
    "id_source": "minted"
   },
   {
@@ -10463,7 +10887,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-335",
+   "fact": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:147  1. ##PART-THE-NEW-VALUE **The new value.** The primary change, matching the code. @impl/done",
+   "falsifier": "mixed",
+   "id": "F-338",
    "id_source": "minted"
   },
   {
@@ -10501,7 +10927,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-336",
+   "fact": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:61  ### 3. Is the revisit trigger concrete? {#check-trigger}",
+   "falsifier": "self",
+   "id": "F-339",
    "id_source": "minted"
   },
   {
@@ -10540,7 +10968,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-337",
+   "fact": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:165  ##ON-APPROVAL-WRITE-THE-DIFF-AND-COMMIT On approval: write the diff, commit it using Conventional Commits. @impl/done",
+   "falsifier": "mixed",
+   "id": "F-340",
    "id_source": "minted"
   },
   {
@@ -10580,7 +11010,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-338",
+   "fact": "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:87  ```console",
+   "falsifier": "mixed",
+   "id": "F-341",
    "id_source": "minted"
   },
   {
@@ -10621,7 +11053,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-339",
+   "fact": "crates/vibe-workspace/src/hooks.rs:355  /// The documented environment a hook receives (PROP-020 §2.2). The publish",
+   "falsifier": "host",
+   "id": "F-342",
    "id_source": "minted"
   },
   {
@@ -10662,7 +11096,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-340",
+   "fact": "crates/vibe-cli/src/commands/vvm/doctor.rs:103      if args.fix && confirm(ctx, args.yes, \"Write shims and put the shim dir on PATH?\")? {",
+   "falsifier": "host",
+   "id": "F-343",
    "id_source": "minted"
   },
   {
@@ -10701,7 +11137,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "id": "F-341",
+   "fact": "crates/vibe-index/src/content_hash.rs:28  const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"];",
+   "falsifier": "host",
+   "id": "F-344",
    "id_source": "minted"
   },
   {
@@ -10741,7 +11179,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-342",
+   "fact": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:26    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md). @impl/done",
+   "falsifier": "mixed",
+   "id": "F-345",
    "id_source": "minted"
   },
   {
@@ -10776,7 +11216,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-343",
+   "fact": "CLAUDE.md:192  5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: … Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.",
+   "falsifier": "host",
+   "id": "F-346",
    "id_source": "minted"
   },
   {
@@ -10813,7 +11255,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-344",
+   "fact": "spec/boot/00-core.md:10  1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6. @impl/done",
+   "falsifier": "host",
+   "id": "F-347",
    "id_source": "minted"
   },
   {
@@ -10851,7 +11295,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-345",
+   "fact": "spec/WAL.md:24  files), and a second family runs through every package: **69 relative `../flows/…`",
+   "falsifier": "mixed",
+   "id": "F-348",
    "id_source": "minted"
   },
   {
@@ -10887,7 +11333,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-346",
+   "fact": "CLAUDE.md:176  **Required behaviour** when a trigger phrase fires:",
+   "falsifier": "host",
+   "id": "F-349",
    "id_source": "minted"
   },
   {
@@ -10927,7 +11375,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "id": "F-347",
+   "fact": "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
+   "falsifier": "mixed",
+   "id": "F-351",
    "id_source": "minted"
   },
   {
@@ -10966,7 +11416,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-348",
+   "fact": "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.",
+   "falsifier": "host",
+   "id": "F-352",
    "id_source": "minted"
   },
   {
@@ -11006,7 +11458,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-349",
+   "fact": "SPECSPACES.md:22  | fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-12 — **five-task goal COMPLETE (5/5)** (~28 …",
+   "falsifier": "host",
+   "id": "F-353",
    "id_source": "minted"
   },
   {
@@ -11045,7 +11499,9 @@
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "id": "F-350",
+   "fact": "SPECSPACES.md:18  default: host",
+   "falsifier": "host",
+   "id": "F-354",
    "id_source": "minted"
   }
  ]
