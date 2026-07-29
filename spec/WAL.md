@@ -1,81 +1,77 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-29 (**PHASE C IS CLOSED — 6 847 / 6 847 anchors, zero owed, all
-seven world batches complete and the exit gate discharged**)_
+_Updated: 2026-07-29 (**PHASE D OPEN — 601 → 470 drift, 228 → 181 obligations,
+corpus 95.5 %; the `prose-edit` route drained and two queues waiting on the
+owner**)_
 
 **Every number below is reproduced by two commands; run them rather than quoting
 this file.**
 
 ```bash
-python campaigns/packages-2026-09/tasks/batch-progress.py   # owed vs judged, per batch
-python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts said
+python campaigns/packages-2026-09/tasks/drift-registry.py   # obligations, routes, convergence
+python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts say now
 ```
 
 ## Current phase
 
-**Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase C, mid-flight.**
-Live zone `campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is
-**archival**.
+**Progress Control (PROP-043) — wave 2, `packages-2026-09`. Phase D (Stitching),
+open and about a third through.** Live zone `campaigns/packages-2026-09/`;
+`campaigns/progress-2026-08/` is **archival**.
 
-**Phase C is DONE: 6 847 / 6 847 anchors, zero owed.** Every addressable anchor in
-every shipped package file carries a verdict backed by evidence that resolves to
-a real line in a real file. All seven world batches closed — W1 407, W2 692,
-W3 615, W4 564, W5 697, W6 572, W7 603. Two commands print the truth and
-supersede every figure in this file: `tasks/batch-progress.py` and
-`tasks/summary.py`.
+**Phase C closed at 6 847 / 6 847 anchors and 94.3 % confirmed.** Phase D opened
+on its 601 drift verdicts, clustered into **228 obligations** by
+`tasks/drift-registry.py`, and stands at **470 / 181** with the corpus at
+**95.5 %** — `host` 99.9 %, `ai-native` 95.1 % (was 91.6), `world` 90.9 %
+(was 90.0).
 
-**The exit gate is discharged**, all three clauses, in the plan's §7 LOG.
-(ii) The corpus reads **10 700 confirmed / 601 drift / 45 unverifiable = 11 346,
-94.3 %** — host 4 496/0/3 (99.9 %), ai-native 2 470/207/20 (91.6 %), world
-3 734/394/22 (90.0 %). (iv) **248 of world's 4 150 verdicts carry `src == [1]`,
-6.0 %**, self-referential and to be discounted. (v) `baseline.json` written,
-**2 216 units**; two shape mismatches are recorded there for whoever runs the
-next `rescan` — 60 units omitted for want of a judged fact WILL read as `new`.
+**The phase is not what its plan expected, and this is its central finding.** It
+is not mainly a document-repair phase; it is a **routing** phase. Of roughly 255
+anchors examined, about 40 moved. The rest split two ways: the rule is sound and
+the **host** does not keep it — 153 anchors recorded in `run/state/routing.json`
+— or the **verdict was wrong**, about 40 of them, re-judged `confirmed` with no
+edit at all.
 
-**Three candidate next steps, none started, and the owner picks.** (1) **Phase D
-— Stitching**, whose entry condition «C verdicts exist for the cluster» is now
-met: its input is the 601 drifts, clustered hard — `core-ai-native` alone carries
-104, a sixth of everything, and its prose is copied by four language families, so
-§phase-d's rule that a cross-package finding is a **release event** binds before
-the first edit. Note there is no `PHASE-D-*` spec or batch plan in the zone —
-drafting it is the first piece of work. (2) **§9 REPORT**, still empty, scored
-against §6's falsifiable predictions. (3) **The three findings** this phase filed
-and deliberately did not repair, named in the LOG entry and in `CONTINUE.md` —
-each an owner decision rather than a mechanical fix.
+**The most expensive thing learned, and it invalidates a class of Phase C
+verdict rather than a handful:** a search confined to `packages/` reads every
+successful adoption as an absence. Over 76 `build-or-demote` verdicts, **18
+claimed absences were false and 17 were disproved by HOST artefacts** — nine in
+`discipline/` or `terraform/`. These packages *specify* a discipline; the host
+is the project that *adopted* it; the artefacts proving adoption live in the
+consumer because creating them is what complying means. Since §3.3 closes a
+`missing-support` by moving a marker, each would have written «specified, not
+built» over a mechanism that ships. Written up as
+[§3.7](../campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md#compliance-blindness).
 
-**The per-file slice replaced the batch as the unit of work, and that closes the
-split question §4 left open.** Seventeen slices landed here, one file each, 17 to
-149 rows, each merged and sealed on its own — `merge-verdicts.py` takes a subset
-of a batch's files under the same id, so a slice that lands cannot become a debt.
-**W5 does not need splitting; it needs twenty-one slices.**
+**Six `BUILD-ORDER` verdicts were corrected as a set**, because the family had
+been *restated once to make its members agree* and agreed on a false premise:
+the catalog's order is `terraform/adopt-v0.3/LOG.md`'s phase headings, six for
+six with pairings intact. When a verdict says it was restated for consistency,
+re-verify the set.
 
-**The prediction is settled and it inverted.** §5-C said `world` would measure
-higher than `ai-native`. Over 1 714 anchors it reads **90.8 % against 91.6 %**,
-and the reason is the opposite of the one predicted: these flows make claims
-about the consuming project, and this consumer is measurable to the line.
+**What remains, by route:** `prose-edit` 80 obligations / 181 verdicts (nearly
+all of it the address family), `build-or-demote` 33 / 59 (the boss's, and every
+demotion re-verified against the whole tree first), `sync-from-code` 51 / 171
+(**owner approves each spec diff**), `release` 17 / 59 (**owner before
+publication**). Convergence: **317 of 470 verdicts still owe a package repair,
+153 are routed out, 60 obligations have nothing left owed.**
 
-**What the three closed batches measured, by family:** the boot lane is **~16 100
-tokens against its own 500-token budget** (32×) and «split when over» has fired
-zero times; **4 of 153** decision-bearing sections carry all four required fields
-and **127** carry the Decision line alone; the prescribed sync subject
-`docs(spec): sync …` has been typed **0 times in 2 041 commits**; 857 of 982
-headings are anchored and the 125 that are not are **all 23 in `spec/boot/` and
-all 8 in this file**; and **59 `duplicate-anchor` warnings** say `{#root}` means
-27 things inside the generated boot lane.
+**Two queues wait on the owner and nothing in them proceeds without a ruling.**
+`PHASE-D-RELEASE-QUEUE.md` — 17 release events in four groups, two needing a
+product decision before an edit exists to approve. `PHASE-D-HOST-OBLIGATIONS.md`
+— 53 obligations where the rule is sound and the host does not keep it, each
+taking one of three answers and none of them «soften the package».
 
-**Three internal contradictions were found inside single packages** — the `wal`
-package's two incompatible wind-downs (F-129), `record-template` against
-`revisit-triggers` on whether a trigger fires unprompted, and
-`cognitive-load-split` against the wal package on whether one text serves three
-readers. **And one collision of principle**: `uncertainty-protocol` prefers no new
-dependency; `PROP-000` §15 decides the opposite at the governing anchor, in the
-four-field form.
+**Owner rulings taken this phase and in force:** the 69 dangling `../flows/…`
+links take `@spec://` where they are pointers and `#embed` where the target
+belongs in the lane; **a generated boot artifact carries no token budget**
+(PROP-009 `##ARTIFACTS-CARRY-NO-TOKEN-BUDGET`); PROP-035 §10 link tables are not
+a precondition and are `BACKLOG.md` B-001; the `campaign-plans` quick-start rule
+is sound and the **host** yielded — both live plans gained the block. And one
+revert: 24 diffs cut by the wrong field landed on owner routes and were taken
+back in full.
 
-**Exit-gate clause (iii) is satisfied** — 39 captured runs under `harvest/`, plus
-three per-batch source captures. **Clauses (ii) and (iv) have a producer**:
-`tasks/summary.py`.
-
-Nothing is blocked. The resume prompt is `CONTINUE.md` §prompt.
+Nothing is blocked. The next unblocked work is the remaining 33
+`build-or-demote` obligations, run as a re-verification pass first.
 
 ## Constraints — do not violate
 

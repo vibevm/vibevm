@@ -3,7 +3,7 @@
 **Do not quote the numbers in this file. Measure them.**
 
 ```bash
-python campaigns/packages-2026-09/tasks/batch-progress.py
+python campaigns/packages-2026-09/tasks/drift-registry.py
 ```
 
 ```bash
@@ -17,294 +17,188 @@ hint about where to look, not a fact to repeat.
 
 ## TL;DR
 
-**Phase C of the PROP-043 wave-2 campaign is CLOSED.** 6847 / 6847 anchors, zero
-owed, all seven world batches complete, every judged file sealed and re-verified
-against the text on disk (259 files, 0 unsealed, 0 stale). The exit gate is
-discharged in all three clauses in the plan's §7 LOG.
+**Phase D (Stitching) of the PROP-043 wave-2 campaign is OPEN and roughly a
+third through.** It opened on 601 drift verdicts / 228 obligations and stands at
+**470 / 181**; the corpus moved from 94.3 % to **95.5 %** confirmed.
 
-Branch `main`, clean, in sync with both mirrors.
+**The phase turned out not to be what its plan expected.** It is not mainly a
+document-repair phase — it is a **routing** phase. Of ~255 anchors examined,
+about 40 moved. The rest split two ways: the rule is sound and the *host* does
+not keep it (153 anchors, routed out), or the verdict itself was **wrong** (~40
+re-judged `confirmed`, most of them because the original search could not see
+the host).
 
-**Nothing is in flight.** What comes next is a decision, and this file does not
-authorise any of it.
+Branch `main`, clean, **31 commits ahead of origin** at the time of writing.
 
----
-
-## The state, in numbers that came from commands
-
-| | | |
-|---|---|---|
-| Phase C coverage | `batch-progress.py` | **6847/6847**, all seven batches `CLOSED` |
-| Corpus verdicts | `summary.py` | **10 700 confirmed / 601 drift / 45 unverifiable** = 11 346, **94.3 %** |
-| host | `summary.py` | 4 496 / 0 / 3 over 58 files — 99.9 % |
-| ai-native | `summary.py` | 2 470 / 207 / 20 over 80 files — 91.6 % |
-| world | `summary.py` | 3 734 / 394 / 22 over 121 files — 90.0 % |
-| Self-referential (A2, clause iv) | `summary.py` | **248 of world's 4 150 — 6.0 %** |
-| Baseline (A6, clause v) | `baseline.json` | **2 216 units** — 1 706 / 491 / 19 |
+**Two queues wait on the owner and nothing in them proceeds without a ruling:**
+[`PHASE-D-RELEASE-QUEUE.md`](campaigns/packages-2026-09/PHASE-D-RELEASE-QUEUE.md)
+and
+[`PHASE-D-HOST-OBLIGATIONS.md`](campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md).
 
 ---
 
-## The three candidate next steps
+## The one thing to read before touching anything {#the-lesson}
 
-Pick one; none is started, and the owner decides.
+**A search confined to `packages/` reads every successful adoption as an
+absence.** Written up as
+[§3.7 of the batch plan](campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md#compliance-blindness).
 
-### 1. Phase D — Stitching. Its entry condition is now met.
+These packages *specify* a discipline; the host is the project that *adopted*
+it; and the artefacts that prove adoption — `discipline/registry/`,
+`discipline/golden/`, `terraform/`, `specmap.json`, `conform.toml` — live in the
+**consumer**, because creating them is what complying means.
 
-The plan's §phase-d says *«Entry: C verdicts exist for the cluster»*, and they
-do. Its exit gate is *«ledger empty or every survivor is an owner-ruled
-deferral»*. Its input is the **601 drift verdicts**, which cluster hard:
+Measured over 76 `build-or-demote` verdicts: **18 claimed absences were false,
+17 of them disproved by host artefacts.** And §3.3 closes a `missing-support` by
+*moving a marker*, so every one would have written «specified, not built» over a
+mechanism that ships.
+
+**Practical consequence: never demote before searching the whole tree, and name
+the perimeter in the record.** Six perimeter misses have now been paid for in
+this phase alone.
+
+---
+
+## Where work stands, by route {#state}
+
+| route | obligations | verdicts | who approves |
+|---|---:|---:|---|
+| `prose-edit` | 80 | 181 | **boss** — but ~all that remain are the address family |
+| `build-or-demote` | 33 | 59 | boss; re-verify the perimeter first, always |
+| `sync-from-code` | 51 | 171 | **owner**, on every spec diff |
+| `release` | 17 | 59 | **owner**, before publication |
+
+Convergence, which is what the exit gate measures:
 
 ```
-org.vibevm.ai-native   207        org.vibevm.world   394
-  104  core-ai-native            50  campaign-plans
-   36  rust-ai-native-lang       35  addressable-specs
-   35  go-ai-native-lang         31  comparative-research
-   28  typescript-ai-native-lang 30  managed-blocks
+obligations with nothing left owed to the package :   60
+drift verdicts still owed a package repair        :  317 of 470
+routed out of the package (route b / owner)       :  153
 ```
 
-`core-ai-native` alone carries 104 — a sixth of everything — and it is the
-package whose prose the four language families copy, which is why §phase-d
-carries a wave-2-specific rule worth reading before starting: **a finding that
-spans a package boundary is a release event.** Fixing `core-ai-native` may need a
-version bump and a re-vendor into three family members, so such a finding is not
-closed by an edit but by a published version.
+---
 
-**There is no `PHASE-D-*` spec or batch plan in the campaign zone.** Phases C, T
-and G each have one; D does not. Drafting it is the first piece of work, and it
-has to answer: what an obligation record looks like, how the 601 are clustered
-into them, and how the loop-until-dry waves terminate.
+## The next step, and the two before it {#next}
 
-### 2. §9 REPORT — the campaign's close-out, filled against §6.
+**Unblocked and next:** the remaining **33 `build-or-demote`** obligations —
+`managed-blocks` 4, `source-mirrors` 3, `licensing` 3, `campaign-plans` 3, and
+sixteen packages with one or two each. Run them exactly like wave 5: a
+re-verification pass first, demotion only for what survives the whole-tree
+perimeter. Expect a quarter of the absences to be false.
 
-Currently `*(empty — filled at close-out against §6)*`. §6 holds falsifiable
-campaign-wide predictions; the report scores them. This is cheap relative to D
-and answers «was the campaign worth it» directly.
+**Then the address family** — 26 obligations, 54 verdicts, 22 packages, the
+largest single defect in the campaign. **The owner has already ruled on the
+repair** (2026-07-29): the 69 `../flows/…` links take `@spec://` where they are
+pointers and `#embed` where the target belongs in the lane; a generated boot
+artifact carries no token budget
+([PROP-009 `##ARTIFACTS-CARRY-NO-TOKEN-BUDGET`](spec/modules/vibe-workspace/PROP-009-loading-model.md#artifacts));
+PROP-035 §10's link tables are **not** a precondition and are `BACKLOG.md`
+B-001. **What is not ruled is publication**, and every one of the 22 packages
+needs it.
 
-### 3. Drain the three findings Phase C filed and deliberately did not repair.
-
-Each is small, and each is the owner's call rather than a mechanical fix:
-
-- **The root `README.md:164` still calls vibevm proprietary** — «ships under the
-  proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the moment» —
-  over a file that has been UPL-1.0 since 2026-07-12, and it links to the file it
-  contradicts. It is on none of `CLAUDE.md:132-137`'s enumerated stale-string
-  exemptions, while `VIBEVM-SPEC.md:8`, which says the same thing, is. Three more
-  `license = "EULA"` strings sit in `docs/authoring-{flow,feat,stack}.md` as
-  example manifests package authors copy.
-- **The mirrors do not carry the branches.** Both targets in `mirrors.toml`
-  declare `refs = ["main", "tags"]`, so `cultural-backup`, `cultural-refactor`,
-  `refactor/qualified-address-restructure` and the `fractality/*` branches exist
-  on no host. If this machine were lost they would go with it. The repository has
-  exactly one tag, so the tags half carries almost nothing.
-- **`CLAUDE.md:191` prescribes the push its own boot lane forbids.** END SESSION
-  step 4 says «Push to `origin/main`»; `spec/boot/90-user.md:13`, `:35` and
-  `PROP-016:15` all name that as *not* the rollout. The reflogs record 130 such
-  pushes (69 origin, 61 github) against the `cargo xtask mirror` path. Two host
-  documents disagree with each other, and one of them is the session contract.
+**And the two owner queues.** Neither is work the boss may start.
 
 ---
 
-## The prompt for the next session {#prompt}
+## What is delegable and what is not {#delegation}
 
-Paste one of these. They are deliberately different because the three steps are
-different kinds of work.
+Everything in this phase went to built-in `opus5` subagents (owner override of
+the fractality default, batch plan §6). The briefs that worked are recoverable
+from the session's own harvest records under `campaigns/packages-2026-09/harvest/d*-*.md`
+— nine of them, each an entry per obligation with its re-verification command.
 
-**For Phase D:**
+**Cut the batch by `closure_route` FIRST.** The first wave was cut by
+`falsifier` instead and 24 of 28 obligations landed on owner routes; the owner
+ordered the lot reverted. That is §6.1 `##ROUTE-BEFORE-FALSIFIER`.
 
-> Начинай **фазу D (Stitching)** кампании PROP-043 wave-2 в
-> `campaigns/packages-2026-09`. Фаза C закрыта: 6847/6847, 601 дрейф — это твой
-> вход.
->
-> **Прочти сначала:** `CONTINUE.md` целиком;
-> `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` §5 `#phase-d`, §4.5
-> (поправки) и §7 LOG с конца — там записано всё, что фаза C нашла и как;
-> `campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md` как образец того, как в этой
-> кампании выглядит план фазы.
->
-> **ПЕРВОЕ ДЕЙСТВИЕ — план, а не правки.** У фазы D нет ни спеки, ни batch-плана,
-> в отличие от C, T и G. Напиши `PHASE-D-BATCH-PLAN.md`: как выглядит запись
-> обязательства, как 601 дрейф группируется в них, как волны loop-until-dry
-> заканчиваются, и что считается сходимостью. Дрейфы бери из `run/cache.json`, а
-> не из отчётов — вердикт с причиной лежит там.
->
-> **Правило wave-2, прочти до начала:** находка, пересекающая границу пакета, —
-> это релизное событие. `core-ai-native` несёт 104 дрейфа, и его прозу копируют
-> четыре языковые семьи: такая находка закрывается не правкой, а опубликованной
-> версией с ре-вендором через `cargo xtask sync-engines`.
->
-> **Эскалация:** пара, не сошедшаяся за две волны, — концептуальный конфликт,
-> и он идёт владельцу. `reality-mismatch` решается через sync-from-code с
-> одобрением владельца на КАЖДЫЙ диф спеки.
->
-> **КАЖДОЕ ЧИСЛО В ОТЧЁТЕ ПРИХОДИТ ИЗ КОМАНДЫ.**
->
-> **АВТОНОМИЯ:** правки, скрипты, cargo, `git commit`, push через `cargo xtask
-> mirror` — сам. Останавливайся только на настоящем смысловом решении владельца.
-> **НЕ ОСТАНАВЛИВАЙСЯ НА ГРАНИЦАХ РАБОТЫ.** **ТОКЕНЫ НЕ ЭКОНОМЬ.**
-
-**For the report:**
-
-> Заполни **§9 REPORT** в `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`,
-> оценивая кампанию против §6 — фальсифицируемых предсказаний, записанных при
-> авторстве плана. Каждое предсказание получает вердикт с числом, полученным
-> командой, а не оценкой. §7 LOG с конца — источник того, что произошло.
-> Мандат владельца записан дословно в §0; отчёт отвечает на него прямо.
-> **КАЖДОЕ ЧИСЛО В ОТЧЁТЕ ПРИХОДИТ ИЗ КОМАНДЫ.**
-
-**For the findings:**
-
-> Разбери три находки, зафиксированные фазой C и намеренно не починенные —
-> они перечислены в `CONTINUE.md` и в §7 LOG за 2026-07-29. Каждая требует
-> решения владельца, а не механической правки: устаревшая лицензионная строка в
-> корневом `README.md` и три в `docs/authoring-*`, `refs` зеркал без веток, и
-> противоречие между `CLAUDE.md:191` и `spec/boot/90-user.md`. Начни с того,
-> что покажи владельцу каждую с измерением и предложи вариант; не правь до ответа.
+**The verdict is never delegated, and neither is routing an anchor out of a
+package** — both are the same class of judgement.
 
 ---
 
-## How delegated evidence works here {#recovery}
+## Instruments, and the three that refuse {#instruments}
 
-Kept because the next phase will delegate too, and this was learned the hard way.
+| script | what it does |
+|---|---|
+| `drift-registry.py` | the registry: 470 drifts → 181 obligations, with route, falsifier, convergence. `--task F-NNN` prints one obligation as a SPEC task's §2 |
+| `summary.py` | verdict breakdown by zone |
+| `merge-verdicts.py` | load-and-merge into `run/cache.json`; `--force` to restate |
+| `verify-evidence.py` / `repair-refs.py` | every ref resolves, or is named / re-pointed |
+| `batch-progress.py` | Phase C's coverage, now historical |
 
-A worker's answer is **not** in its chat reply. The reply is a summary; the
-artefact is a file the worker writes directly into the repository. So: **check the
-disk, not the transcript.** `git status --porcelain campaigns/packages-2026-09`
-shows an untracked table whose worker's message was lost. Commit it as returned,
-unjudged, and judge it later.
+**`merge-verdicts.py` refused four times this session and was right every
+time** — a JSON mixing two clusters, `src` on an ai-native verdict, and three
+anchors that were **citations in backticks rather than definitions**. Trust it
+over your reading.
 
-**Tell every worker to flush one output file per SUBJECT file, the moment that
-file's anchors are complete, and name the exact paths in the brief.** Three W7
-workers ran on identical briefs: two flushed per file and their work was
-judgeable while they were still running; the third held everything in memory and
-after five times its siblings' runtime had written nothing. A worker quiet for
-several times its siblings' runtime is stuck, not thinking — re-commission. If
-the original returns later it costs nothing, because `make-slice.py` filters by
-`--file` and two passes over one package are two tables to choose between.
+Two mechanics that cost real work:
 
-Before reading any table, **verify it**; if the boss has edited a file it cites,
-**repair it**:
-
-```bash
-python campaigns/packages-2026-09/tasks/verify-evidence.py campaigns/packages-2026-09/tasks/evidence/ev-W7c.json
-```
-
-```bash
-python campaigns/packages-2026-09/tasks/repair-refs.py campaigns/packages-2026-09/tasks/evidence/ev-W7c.json --apply
-```
-
-The durable-citation rule got a controlled experiment this phase. Workers are
-told to cite `CLAUDE.md`, `spec/boot/**`, `spec/common/**`, `crates/` — and never
-`CONTINUE.md` or `spec/WAL.md`, which every wind-down rewrites wholesale. **The
-one batch written before that rule carries 116 dead refs today; every batch
-written under it verifies clean.** 174 refs in the evidence base no longer
-resolve and that is where they are. Those verdicts were judged and sealed against
-the text as it stood — it is the trail that rotted, not the judgement.
-
-And the corollary the boss kept forgetting: **the harvest and the campaign plan
-are durable files the BOSS edits.** Editing them broke 17 refs in a table that had
-verified clean. After editing any file an evidence table cites, re-verify and
-repair *every* table.
+- **Never chain `merge-verdicts.py` and `progress seal`.** A refused merge
+  writes nothing and the `&&` still seals — vouching *old* verdicts against
+  *new* text.
+- **Write verdict JSON with the Write tool, or a QUOTED heredoc.** An unquoted
+  one let bash eat every backticked identifier out of the reasons. This rule was
+  already written down and was broken anyway.
 
 ---
 
-## What Phase C found, in one screen
+## Records this phase created {#records}
 
-601 drifts, four recurring shapes:
-
-- **The dangling sibling pointer**, in **seven consecutive W6/W7 packages**. The
-  host has no `spec/flows/` directory, so every boot snippet's `../flows/…` link
-  points a session at nothing. The root-relative variant inside two re-derive
-  prompts is invisible to the campaign's own `\.\./flows/` scan.
-- **A rule with no checker is a wish.** `source-mirrors` ran the experiment on
-  itself: never-`--force` has a unit test and held; never-push-to-a-replica and
-  the ancestry gate have none, and both failed — 130 named-remote pushes and zero
-  `merge-base` calls.
-- **Verbs specified and never built** — managed-blocks' `remove`,
-  qualified-naming's `KindMismatch` (stated three times, implemented zero, its
-  reserved exit code `#[allow(dead_code)]`). Each costs five to six sentences.
-- **Two READMEs over-count their own contents** — `spec-genres` and
-  `tool-design-lessons` say «four pieces of content» over three shipped
-  documents, where 14 of 16 siblings say «three».
-
-**Two shape mismatches await the next `rescan`**, recorded in the LOG so they are
-not misread as change: 60 baseline units were omitted for want of a judged fact
-and **will read as `new`**; 58 verdict keys matched no fact anchor (the per-file
-`_elements` bundles).
+- **`run/state/routing.json`** — 153 anchors examined and deliberately *not*
+  repaired in the package, one entry each with its obligation and why. **Without
+  it the phase cannot converge**: an anchor routed to the host never stops
+  reading `drift`, so the registry could never empty and the gate could not tell
+  «not worked» from «worked, and the work belongs to the host». Written by the
+  boss at review time, never by a worker.
+- **`PHASE-D-BATCH-PLAN.md`** — the phase's contract. §1.2 routes, §3.3
+  demotion, §3.6 which side yields, **§3.7 compliance blindness**, §6.1 the
+  delegation rules bought at full price.
+- **`PHASE-D-RELEASE-QUEUE.md`** — 17 release events in four groups, two needing
+  a product decision before an edit exists to approve.
+- **`PHASE-D-HOST-OBLIGATIONS.md`** — 53 obligations where the rule is sound and
+  the host does not keep it, each taking one of three answers, none of them
+  «soften the package».
+- **`BACKLOG.md` B-001…B-003** — PROP-035 §10 link tables; the `addressable-specs`
+  budget row owed a scope clarification; the Go floor gating a fixture directory
+  named `dirty`.
 
 ---
 
-## The verdict standard {#standard}
+## Rulings still in force {#rulings}
 
-**confirmed** — the host's behaviour or written contract agrees, or it is a
-definition and the thing it defines behaves as defined.
-
-**drift** — the host's own written contract contradicts it, or a measurable rule
-is broken over a double-digit share of its window. **Not adopting a package's
-prescription is not drift.**
-
-**unverifiable** — the evidence class needed to settle it does not exist here.
-Say what would have settled it.
-
-Each fact is judged **on its own sentence**, never on its family. A definition
-that correctly classifies a failure is **confirmed by that failure**.
-
-## Rulings that decided the most, reusable {#judged}
-
-- **A marked exception is not drift.** Where the host writes its exception down —
-  an `@spec/hold` marker, a recorded owner decision, a future-trigger note — the
-  rule is confirmed at N-of-M with the exception named; where the same file breaks
-  a rule nobody marked, that one is drift. This split alone decided four verdicts
-  in `spec-genres`.
-- **Delivery is not compliance.** A rule compiled into the boot lane *is*
-  delivered to every session and may still be kept in 3 of 36 commits.
-- **The measured window.** Archived host instances and no live ones ⇒ the window
-  is the current tree, and the archive proves the practice was once adopted,
-  making absence *drift*. State the window so it can be re-judged.
-- **Do not rule drift on contested evidence.** Where two workers disagreed about
-  revisit triggers, the verdict recorded the conflict and the command that would
-  settle it; a third worker settled it later.
-- **Summary restatements carry their body rule's verdict** (W1 precedent).
-- **An absence must be checked, not asserted** — the campaign's named trap, which
-  caught the harvests four times, twice via a truncated `grep` list read as if it
-  were output.
+- **A package does not yield to a consumer that simply does not comply.** Three
+  routes and never a fourth: the package's own *statement* is wrong → it yields;
+  the rule is sound and the host should keep it → host obligation; the host
+  deliberately does otherwise → **the exception is written down host-side** and
+  the fact is confirmed with the exception named. Softening the package is the
+  *профанация* §0's mandate exists to prevent.
+- **A finding that spans a package boundary is a release event** — closed by a
+  published version and a re-vendor, never by an edit in one consumer.
+- **A closure is an edit AND a re-judge.** An edit without a verdict leaves the
+  cache saying `drift` about text that no longer drifts.
+- **A re-judge that edits nothing produces no spec diff** and therefore needs no
+  owner approval, even on the `sync-from-code` route. Only an edit does.
+- **A phase files findings; it does not fix them.** `RULE-NO-SILENT-REPAIRS`.
+- **The resume boundary exists so the owner can steer.** A pointer to a next
+  step here or in the WAL is a candidate for a report, never authorisation.
 
 ---
 
 ## Repository map
 
-- `crates/` — the Rust workspace: `vibe-core`, `vibe-cli`, `vibe-publish`,
+- `crates/` — the Rust workspace: `vibe-core`, `vibe-cli`, `vibe-spec`
+  (the PROP-035 preprocessor + linker), `vibe-workspace` (boot artifacts),
   `xtask` (`mirror`, `conform`, `sync-engines`).
-- `spec/` — `spec/boot/` is the compiled boot lane; `spec/common/` PROP/FEAT;
-  `spec/terraforms/` campaign plans; `spec/WAL.md` the living checkpoint.
+- `spec/` — `spec/boot/` the compiled boot lane; `spec/common/` and
+  `spec/modules/` PROP/FEAT; `spec/terraforms/` campaign plans; `spec/WAL.md`.
 - `packages/org.vibevm.*/` — the shipped packages; `world/` and `ai-native/` are
   what this campaign judges.
-- `vibedeps/` — installed dependency copies. Source class 3.
+- `discipline/`, `terraform/` — **the host's adoption artefacts. Read §3.7
+  before concluding anything is missing.**
 - `campaigns/packages-2026-09/` — `tasks/` the instruments, `harvest/` the
-  evidence gathering, `run/cache.json` the verdicts, `baseline.json` the artefact
-  the next campaign's `rescan` consumes.
-
-## The instruments
-
-| script | what it does |
-|---|---|
-| `batch-progress.py` | owed vs judged per batch; names unopened files |
-| `summary.py` | verdict breakdown by zone + the self-referential count |
-| `show-rows.py` | reads a worker's table row by row |
-| `verify-evidence.py` | every ref resolves to a real line, or it is named |
-| `repair-refs.py` | re-points refs the boss moved, by single-hit search |
-| `make-slice.py` | builds one file's batch from a table plus a rulings map |
-| `merge-verdicts.py` | load-and-merge into `run/cache.json`; `--force` to restate |
-
-`make-slice.py` and `merge-verdicts.py` both refuse rather than guess, and both
-refusals caught real mistakes. Trust them over your reading. **Write rulings JSON
-with the `Write` tool, never a heredoc** — bash eats backticks and backslashes;
-once it executed them and ran `tools/self-check.sh` in full. One rulings file per
-ONE subject file: make-slice rejects anchors belonging to a neighbour.
+  evidence, `run/cache.json` the verdicts, `run/state/` the registry and routing.
 
 ## Quick start
-
-```bash
-cargo build -p vibe-cli
-```
 
 ```bash
 tools/self-check.sh
@@ -315,43 +209,34 @@ cargo xtask mirror
 ```
 
 `mirror` is the sanctioned push — GitVerse and GitHub, fast-forward only, never
-`--force`.
-
----
-
-## Decisions still in force
-
-- **This campaign delegates to built-in `opus5` subagents, not fractality** — an
-  owner override of the repo-wide default, recorded in the batch plan §6.
-  The verdict is never delegated.
-- **Verdicts live in `run/cache.json`, never in markup.** `verified_at` and
-  `processed_hash` are written only by `vibe progress seal`.
-- **A phase files findings; it does not fix them.**
-- **The resume boundary exists so the owner can steer.** A pointer to a next step
-  in this file or the WAL is a candidate for a report, never authorisation.
+`--force`. *(Note: `CLAUDE.md:191` says «push to origin/main» instead, and
+`spec/boot/90-user.md` both forbids and prescribes that at `:13` and `:34`.
+That contradiction is registered as F-331 and is an open owner question.)*
 
 ---
 
 ## Recent commits
 
 ```
-94e4d25b fix(campaign): that partial table's refs were not clean, and I said they were
-443bad93 chore(campaign): the replacement worker's partial pass, kept as a second opinion
-fac57627 docs(wal,continue): Phase C is closed, and what comes next is a decision
-ef40a1ce docs(campaign): Phase C's exit gate — the summary, the count, and the baseline
-7c674c18 docs(campaign): PHASE C CLOSES — qualified-naming lands the last 190 anchors
-42de8b5a docs(continue): make workers flush per file, because one of them did not
-b4f6cda6 docs(campaign): "word-identical" means the prose agrees, and the lockfile proves it
-92874278 docs(campaign): tool-design-lessons CLOSES at 215, and one lesson drifts in its own codebase
-0f56d4da docs(campaign): the other two harvest sections were checked, not assumed
-4dba52ef docs(wal): W6 closed, W7 alone, and the first honest unverifiables
-f12b570e fix(campaign): the durable-citation rule, vindicated by the batch written before it
-d4565c7f docs(campaign): managed-blocks CLOSES at 198, and the drill asks for line numbers
+f488e711 fix(core-ai-native): a package-scoped search reads every successful adoption as an absence
+23938ce4 fix(ai-native): a quarter of the claimed absences did not survive re-verification
+4206c61b docs(campaign): waves 2-4 in the LOG, and the ratio that redefines the phase
+270f1dc2 fix(packages): the prose-edit tail, and a demotion the host had already disproved
+8b7f240f docs(campaign): what the host owes — the other half of the exit gate
+f7a4b3cf fix(core-ai-native): three appendix claims the appendix can check against itself
+ce5f8d8a fix(world): a Phase C verdict family that read a taxonomy as a priority chain
+820622b8 fix(world): three sentences falsified by a sibling package, not by the consumer
+d7803b97 feat(campaign): the routing record, without which Phase D cannot converge
+89ff6aa4 fix(campaign): five citations pointing at obligation ids that name nothing
+42ec3938 fix(campaign): a registry that forgets what it closed cannot evidence convergence
+2913d238 fix(world): nine sentences a package can falsify without leaving its own tree
+b1d46cec fix(campaign): thirteen verdicts, and the id-carry rule that a partial closure broke
+710f48d0 revert(ai-native): 24 diffs that my own §1.2 says the owner approves, taken back
 ```
 
-`git log --oneline -25` for the rest.
+`git log --oneline -40` for the rest.
 
 ---
 
-**`spec/WAL.md` is the canonical living state.** Where it and this file disagree,
-the WAL wins and this file is stale.
+**`spec/WAL.md` is the canonical living state.** Where it and this file
+disagree, the WAL wins and this file is stale.
