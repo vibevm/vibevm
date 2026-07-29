@@ -1555,7 +1555,7 @@
     "evidence": [
       "terraform/REPORT.md:1  # terraform/REPORT.md — the Discipline terraform, close-out report",
       "terraform/REPORT.md:8  the §6 requirement: what the discipline got wrong feeds v0.2 of every",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3171  ## 9. REPORT {#report}"
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3244  ## 9. REPORT {#report}"
     ],
     "found": "located"
   },
@@ -1823,7 +1823,7 @@
     "marker": "impl/done",
     "evidence": [
       "terraform/REPORT.md:8  the §6 requirement: what the discipline got wrong feeds v0.2 of every",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3171  ## 9. REPORT {#report}",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3244  ## 9. REPORT {#report}",
       "terraform/adopt-v0.3/REPORT.md:1  # terraform/adopt-v0.3/REPORT.md — the Discipline v0.2 adoption, close-out report"
     ],
     "found": "located"
@@ -1966,7 +1966,7 @@
     "evidence": [
       "spec/boot/00-core.md:64  - ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done",
       "spec/boot/00-core.md:11  2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done",
-      "spec/WAL.md:174  ## Done (collapsed — see `git log`)"
+      "spec/WAL.md:183  ## Done (collapsed — see `git log`)"
     ],
     "found": "located"
   },
@@ -1990,7 +1990,7 @@
     "evidence": [
       "CLAUDE.md:178  1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. ...",
       "CLAUDE.md:180  - Where work currently stands (branch, ahead/behind origin, working tree status).",
-      "CONTINUE.md:22  ## TL;DR"
+      "CONTINUE.md:18  ## TL;DR"
     ],
     "found": "located"
   },

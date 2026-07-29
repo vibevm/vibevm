@@ -527,6 +527,8 @@ def main() -> int:
     ap.add_argument("--threshold", type=float, default=0.65)
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--show", default=None, help="print rows of one type")
+    ap.add_argument("--task", default=None,
+                    help="print the SPEC-task §2 table for one obligation id")
     args = ap.parse_args()
 
     root = repo_root()
@@ -537,6 +539,9 @@ def main() -> int:
     vendored = installed_copies(root, {r["file"] for r in rows})
     groups = cluster(rows, args.threshold)
     obligations = build(rows, groups, spent, ledger, vendored)
+
+    if args.task:
+        return emit_task(obligations, args.task)
 
     print("drift verdicts read     : %d" % len(rows))
     print("clusters (obligations)  : %d" % len(obligations))
@@ -605,6 +610,45 @@ def main() -> int:
         p2 = root / ZONE / OUT_MD
         p2.write_text(md, encoding="utf-8")
         print("wrote %s" % p2)
+    return 0
+
+
+def emit_task(obligations: list[dict], oid: str) -> int:
+    """The §2 table of a SPEC task, from the registry rather than by hand.
+
+    The template's row is `| id | from | to | type |`. For a wave-2 obligation
+    **`from` is the package anchor that is false and `to` is what falsifies
+    it** — the host artefact, the code, or the sibling document the evidence
+    names. One row per drifting anchor, so a task's §2 is the list of verdicts
+    its closure must clear.
+    """
+    match = [o for o in obligations if o["id"] == oid]
+    if not match:
+        print("no obligation %s in the registry" % oid)
+        return 1
+    o = match[0]
+    print("**Wave:** %d · **type:** `%s` · **route:** `%s` · %d drift verdicts"
+          % (o["wave"], o["type"], o["closure_route"], o["drift_count"]))
+    if o["release_event"]:
+        print("**RELEASE EVENT** — spans %d packages; closed by a published "
+              "version and `cargo xtask sync-engines`, never by an edit in one "
+              "consumer." % len(o["packages"]))
+    print()
+    print("| id | from | to | type |")
+    print("|---|---|---|---|")
+    tos = [r.split(":", 1)[0] for r in o["evidence_refs"]]
+    subject_files = set(o["files"])
+    tos = sorted({t for t in tos if t not in subject_files}) or sorted(subject_files)
+    to = tos[0] if len(tos) == 1 else "%s (+%d more)" % (tos[0], len(tos) - 1)
+    for a in o["anchors"]:
+        f, anchor = a.rsplit("#", 1)
+        print("| %s | `%s#%s` | `%s` | %s |" % (o["id"], f, anchor, to, o["type"]))
+    print()
+    print("Reason, verbatim from the verdict that opened it:\n")
+    print("> " + o["reason"].replace("\n", "\n> "))
+    if o["reasons"]:
+        print("\nThe other %d verdicts in this obligation carry their own reasons; "
+              "read them in `run/state/obligations.json`." % len(o["reasons"]))
     return 0
 
 
