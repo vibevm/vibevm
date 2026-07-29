@@ -84,8 +84,19 @@ repair in the packages and not in the compiler — and it is also why the repair
   The nineteen `prose-edit` rows read as ordinary boss work and are not: their
   verdicts name the compiled lane explicitly — «the compiled lane keeps
   `../flows/addressable-specs/…`» (F-193), «`STATIC.md:1135`» (F-334),
-  «STATIC.md:1365 keeps the relative link» (F-348). **One approval covers all
-  24, and nothing in the family is boss-closable before it.**
+  «STATIC.md:1365 keeps the relative link» (F-348), «a booting session that
+  follows the link from the compiled lane lands on nothing» (F-145). **One
+  approval covers all 24.**
+
+  **Twenty are wholly in the family; four are partial, and the difference is
+  worth stating rather than rounding.** Of the 54 verdicts these 24 carry, **47
+  sit on a repaired link**. The other 7 belong to four obligations that the join
+  catches by one anchor — `F-136` 10 of 11, `F-245` 1 of 2, `F-087` 1 of 3,
+  `F-173` 1 of 4 — and those off-link anchors are a different defect that closes
+  independently. `F-173` is the clearest case: its opening verdict is about
+  missing access dates, and it enters this family only because
+  `##LAW-DELTAS-NOT-DECREES`' sentence happens to end in a dangling pointer.
+  **So: 47 verdicts blocked on publication, 7 not.**
 - ##A1-THE-EDIT-IS-A-COMMAND **The edit is prepared as a transformation, not as 62 hand edits.**
   `tasks/address-repair.py` computes every replacement, refuses to apply if any
   emitted address does not resolve, and is line-indexed rather than text-wide
