@@ -137,7 +137,17 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
 - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope /
   complete / type over LSP overlays, discipline-enriched, MCP +
   one-shot delivery, mechanics proven by the differential corpus and
-  the bench baseline on `research/go-demo`. @impl/done
+  the bench baseline on `research/go-demo`. *Specified, not built — the
+  oracle, not the proof. All four ops ship as one-shots beside the relay
+  (`Serve` / `Validate` / `Scope` / `Complete` / `Type` / `Bench` in
+  `crates/go-ai-native-tcg/src/main.rs`) and the MCP delivery half ships
+  in the `go-ai-native-mcp` package (`tools_tcg.rs`). Neither proof
+  exists: `research/tcg-bench/` holds a TypeScript corpus and a Rust one
+  and no Go corpus, and its `reports/` hold a TypeScript baseline and a
+  Rust baseline and no Go run — so nothing has been measured on
+  `research/go-demo` and the mechanics are unproven rather than proven.
+  The Rust and TypeScript twins of this line stand: their corpora and
+  baselines are both real.* @spec/done
 - ##STAGE-B-RICHER-DISCIPLINE-ADVICE **Stage B — richer discipline advice:** defined-type constructor
   suggestions at seams, policy-ranked completions, cell-topology
   answers — fields the protocol already carries. @spec/done

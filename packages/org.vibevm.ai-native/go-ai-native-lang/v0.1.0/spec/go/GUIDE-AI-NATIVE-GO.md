@@ -152,7 +152,13 @@ not opt OUT of its culture. This section is the free-lever twin.)* @spec/done
   decode uses `json.Decoder.DisallowUnknownFields` plus explicit validation; boundary
   DTO structs convert explicitly into domain types; absent-vs-zero ambiguity is resolved
   with pointer fields or a validation layer at the boundary, never guessed in cells.
-  Struct tags live on boundary DTOs only (§7). @impl/done
+  Struct tags live on boundary DTOs only (§7). *Specified, not built: nothing
+  enforces this. No conform rule and no floor step inspects boundary decode, and
+  `DisallowUnknownFields` appears in no Go source anywhere in the tree — the rule
+  lives only as prose here, in the core Go projection, and as one inventory item
+  the brownfield skill looks for (`go-ai-native-terraform`, "loose boundary
+  decoding"). Nor is it demonstrated: `research/go-demo`, the one Go consumer,
+  decodes no JSON at all, so the rule is untested there rather than broken.* @spec/done
 
 ## 2. Cells, closure, ownership {#cells}
 
@@ -608,7 +614,15 @@ moves: @impl/done
 - ##SWEEP-CENSUS-REGRESSIONS **Census regressions** (gated packages must hold zero): `init_in_cell`,
   `ambient_call_in_cell`, `naked_go_in_cell`, `error_string_match`,
   `seam_error_missing_req` — restructure beats testify: encode the invariant in a type
-  or constructor rather than recording an excuse. @impl/done
+  or constructor rather than recording an excuse. *Where these live in the
+  shipped tooling: `go-extract` emits the kinds, the `go-unsafe-in-domain`
+  conform rule reports them, and `go-ai-native health` summarises them into the
+  snapshot's `ban_census` block. Two names above are the shipped kinds verbatim
+  (`error_string_match`, `seam_error_missing_req`); the other three are this
+  guide's cell-scoped reading of kinds the extractor names without the suffix —
+  `init_in_cell` is `init_decl`, `ambient_call_in_cell` is `ambient_call`,
+  `naked_go_in_cell` is `naked_go` — because the engine expresses "in a cell" as
+  a scope predicate over `cells_dir` rather than as part of the name.* @impl/done
 - ##SWEEP-FLIP-ONLY-AFTER-DRAIN **Flip-only-after-drain:** a package enters `gated_packages` only at zero findings;
   the collector (`go-ai-native health`) names promotion candidates and ranks the drain
   backlog smallest-gap-first; a flip must never widen a baseline. @impl/done

@@ -44,7 +44,13 @@ recipe-carrying FAILURE, never a skip; outside the stack no obligation
 exists. @impl/done
 
 ##INIT-RESULT-CARRIES-PATH-AND-VERSION The resolved path and the server's reported version land in
-the `init` result. @impl/done
+the `init` result. *Specified, not built — half of it. The version half
+ships: `init_result` emits `gopls_version`
+(`crates/go-ai-native-tcg/src/serve.rs:74-84`), beside `position_encoding`,
+`pull_diagnostics` and `ready`. The path half does not: the path IS resolved —
+`resolve_gopls` (`crates/go-ai-native-tcg-bridge/src/lib.rs:145`) returns it —
+but it is never put into the result. The Rust stack states the same fact and
+fails it the same way.* @spec/done
 
 ## 2. LSP session and capabilities {#session}
 
@@ -75,7 +81,14 @@ results). @impl/done
 PUSHED diagnostics (`textDocument/publishDiagnostics`) and gained pull
 support later than rust-analyzer; which channel the shipped gopls
 grants is pinned by the Phase-7 live chain and recorded in the
-differential corpus. @spec/done
+differential corpus. *Specified, not built — the history is true, the
+recording is not. The channel IS negotiated at run time and carried on the
+capabilities (`pull_diagnostics`,
+`crates/go-ai-native-tcg-bridge/src/client.rs:33`), but nothing records
+which one the shipped gopls granted: `research/tcg-bench/` holds a
+TypeScript corpus (`corpus/`) and a Rust one (`corpus-rust/`) and no Go
+corpus at all, so there is no differential corpus for this to be recorded
+in.* @spec/done
 
 ##BRIDGE-SUPPORTS-BOTH-DIAGNOSTIC-CHANNELS The bridge supports BOTH: prefer the pull channel
 when granted; otherwise collect pushed diagnostics for the target
@@ -157,7 +170,12 @@ on it is spec, not fine print: @impl/done
   the floor's own verdict (`go build` / `go vet` exit + message class)
   through a committed mapping table: type mismatch, undeclared name,
   wrong argument count, unknown field, missing return, unused
-  import/variable. @impl/done
+  import/variable. *Specified, not built: there is no Go corpus and no
+  mapping table. The corpora that exist are
+  `research/tcg-bench/corpus/` (TypeScript, 7 cases) and
+  `research/tcg-bench/corpus-rust/` (Rust, 9 cases); no `corpus-go`
+  exists anywhere in the tree. The six classes named above are a
+  curation nobody has performed yet.* @spec/done
 - ##KNOWN-ASYMMETRIES-ARE-DOCUMENTED-GAP-CASES Known asymmetries are DOCUMENTED-GAP corpus cases, not omissions —
   the standing candidates to probe in Phase 7: diagnostics gated on
   saved-vs-overlay state, `go.mod`-dependent resolution under a pure
@@ -229,8 +247,26 @@ demo-class trees: @impl/done
 ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench harness
 (`go-ai-native-tcg bench`) records distributions per run; the Phase-7
 ledger entry carries the first measured set on `research/go-demo`,
-and a target that moves, moves in a committed REPORT with a reason. @impl/done
+and a target that moves, moves in a committed REPORT with a reason.
+*Specified, not built — the harness, not the ledger entry. The harness
+ships and does record a per-case distribution: `run_bench`
+(`crates/go-ai-native-tcg/src/bench.rs:106`) collects `warm_ms` over three
+warm passes per case. What does not exist is the measured set:
+`research/tcg-bench/reports/` holds `bench-2026-07-07-baseline.json`
+(TypeScript) and `bench-rust-2026-07-07-baseline.json` (Rust) and no Go
+run at all, so nothing has ever been measured on `research/go-demo` and
+there is no committed REPORT for a target to move against.* @spec/done
 
 ##LARGE-WORKSPACE-COLD-INIT-WARNING Large-workspace consumers are warned about the product's 60 s
 first-request ceiling; the relay's eager init at `serve` start spends
-the cold cost as early as possible. @impl/done
+the cold cost as early as possible. *Specified, not built — the eager
+init is real, the 60 s ceiling is not a number this stack has anywhere.
+The relay does spend the cold cost up front: `serve` boots gopls before
+the first host frame (`crates/go-ai-native-tcg/src/serve.rs:235`). A
+large-workspace warning also exists, one document over — the tcg brief's
+`##RISK-COLD-INIT-ON-LARGE-WORKSPACES` — but it is a spec-layer risk
+record, not anything the product emits to a consumer at run time. And the
+60 s figure is supported by nothing: the shipped readiness budget is
+`READINESS_BUDGET = 45 s` (`crates/go-ai-native-tcg/src/lib.rs:32`) and
+this document's own `##TARGET-COLD-INIT` posts `< 15 s`. Three numbers,
+and 60 is not one of them.* @spec/done

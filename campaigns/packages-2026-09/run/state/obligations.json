@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 550,
+ "drift_verdicts": 527,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -2213,65 +2213,6 @@
    "carried": true
   },
   {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#INIT-RESULT-CARRIES-PATH-AND-VERSION",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#DIAGNOSTICS-CHANNEL-HISTORY",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#BENCH-HARNESS-RECORDS-DISTRIBUTIONS",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#LARGE-WORKSPACE-COLD-INIT-WARNING"
-   ],
-   "drift_count": 5,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:33  pub position_encoding: PositionEncoding, pub pull_diagnostics: bool, pub server_version: String, }",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:106  pub fn run_bench(root: &Path, corpus_rel: &str, report_rel: &str) -> Result<()> {",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:2  //! (ORACLE-GO §5, §8): every corpus case runs through the LIVE oracle //! (warm ×3) and through `go build ./...` in...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:77  Bench {",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:232  // The relay owns the session: boot gopls up front so the host's // FIRST frame can be validate/scope/… (client init...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74  fn init_result(oracle: &GoOracle<ChildTransport>) -> serde_json::Value { serde_json::json!({ \"gopls_version\": oracle....",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:156  - ##DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES The differential corpus curates diagnostic classes and pins each to t...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:229  ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench harness (`go-ai-native-tcg bench`) records distributions per run; the...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:234  ##LARGE-WORKSPACE-COLD-INIT-WARNING Large-workspace consumers are warned about the product's 60 s first-request ceili...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:46  ##INIT-RESULT-CARRIES-PATH-AND-VERSION The resolved path and the server's reported version land in the `init` result....",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:74  ##DIAGNOSTICS-CHANNEL-HISTORY **Diagnostics channel, stated honestly.** gopls has historically PUSHED diagnostics (`t..."
-   ],
-   "cites": [],
-   "reason": "**the resolved path never lands in the init result.** `init_result` returns gopls_version, position_encoding, pull_diagnostics and ready — and no path (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74-84). Half the fact holds (the version is there), the other half is absent from the shipped shape",
-   "reasons": [
-    "the historical half is true; the second half is not. The fact says which channel the shipped gopls grants «is pinned by the Phase-7 live chain and **recorded in the differential corpus**» — and **no Go corpus file exists anywhere**: research/tcg-bench/ carries a TypeScript corpus and a Rust one. The capability is negotiated at runtime (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:33 carries `pull_diagnostics`), but nothing records it",
-    "the corpus is language-specific and Go has none: `research/tcg-bench/` carries a TypeScript corpus and a Rust one, and no Go corpus or mapping table exists",
-    "**the ledger entry does not exist.** The harness half holds — `run_bench` records a per-case distribution (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:56,106). The fact then states that «the Phase-7 ledger entry carries the first measured set on research/go-demo»: research/tcg-bench/reports/ holds bench-2026-07-07-baseline.json and bench-rust-2026-07-07-baseline.json and **no Go run**",
-    "**no consumer is warned of anything.** The eager-init half holds (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:232). The first half says large-workspace consumers ARE warned about a 60 s first-request ceiling, and no 60 s constant and no warning string exists in the shipped code or in spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:156  - ##DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES The differential corpus curates diagnostic classes and pins each to t...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 5,
-   "id": "F-160",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -2771,58 +2712,6 @@
    "routed_out": [],
    "owed": 4,
    "id": "F-167",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#TIER-BUILD-TIME",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#TIER-RUNTIME",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:83  ## 5. Registry & flags {#registry-and-flags}",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:27      /// Repo-relative path of the one legal construction site.",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:28      pub registry_file: String,",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:41    (module-level mutable singletons, `declare global`) is forbidden. @impl/done",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:39  ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT … type-constrained decoding cutting compile errors ~74.8% — was measured *on TypeScript* (Mündler et al., PLDI'25; the only language with a real implementation, R2C-005 / DR1-014). @spec/done"
-   ],
-   "cites": [],
-   "reason": "and the fact carries a second break the first pass did not name: **`DR1-014` resolves nowhere** — no `##FINDING-DR1-014` exists in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md, and the id survives only here and in the Rust tcg brief",
-   "reasons": [
-    "the build-time tier — bundler `define`, dead-code elimination, env-gated conditional compilation — has no implementation anywhere: no bundler is configured in the demo consumer, and no crate or tool reads such a definition. The Rust analogue it names (cargo features) is real; its TypeScript twin is not",
-    "the runtime tier's «registry object selects the cell at run time» has no instance: no typed flag registry exists in the stack, in the host, or in the demo consumer",
-    "the registry the fact describes — typed data carrying provenance, birth and sunset per flag — does not exist in any of the three places it could: the stack, the host, or `research/ts-demo/`"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:39  ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT … type-constrained decoding cutting compile errors ~74.8% — was measured *on TypeScript* (Mündler et al., PLDI'25; the only language with a real implementation, R2C-005 / DR1-014). @spec/done",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 4,
-   "id": "F-168",
    "id_source": "minted",
    "carried": true
   },
@@ -3894,59 +3783,6 @@
    "carried": true
   },
   {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#BASELINE-BOUNDARY-VALIDATION",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#EXHAUSTIVENESS-IS-CARRIED-BY-A-LINTER",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#SWEEP-CENSUS-REGRESSIONS"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "campaigns",
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:25  floor: the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:19  - **Boundary validation (parse, don't validate):** JSON decoding is loose by default — missing fields become zero values silently",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:138  // (the one Discipline rule a linter carries entirely — GUIDE §5).",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:152  let mut cmd = crate::tools::path_tool(root, \"exhaustive\");",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/health.rs:141  \"ban_census\": {",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/go.rs:104  \"init_decl\" | \"blank_import\" | \"ambient_call\" | \"naked_go\"",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:79  5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /"
-   ],
-   "cites": [],
-   "reason": "**restated 2026-07-28; the first verdict's REASON was wrong and it was mine.** It read unverifiable on «there is no research/go-demo» — asserted rather than checked. **`research/go-demo/` exists and is a complete Go consumer**: `go.mod`, 15 production `.go` files in the cell layout the guide prescribes (`internal/cells/{batchplanner,naiveplanner}`, `internal/registry`, `internal/seams`, `cmd/reconcile`), `conform.toml` with `cells_dir = \"internal/cells\"`, `specmap.toml`, `specmap.json`, a conform baseline and four `discipline/` files. Measured over its own sources: `DisallowUnknownFields` occurs **zero** times. The fact calls it the MUST decode configuration and the one Go consumer in the tree does not use it",
-   "reasons": [
-    "the linter the fact says carries this entirely is **not installed**, and its floor step fails rather than skipping: «the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest» (harvest/go-ai-native-lang-floor.md). Nothing carries closed-set switches",
-    "the five census names have no producer: no census exists in the stack, the host or the captured runs, so nothing can hold them at zero on gated packages"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:25  floor: the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-184",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -4293,111 +4129,6 @@
    "routed_out": [],
    "owed": 3,
    "id": "F-190",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#CONTRACT-FIRST-ORDERING-WITHIN-AN-ITEM",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#ONE-ERROR-ENUM-PER-LAYER",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#BAN-HIDDEN-CONTROL-FLOW"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:93  ##FORBIDDEN-LEGAL-WITH-REASON Forbidden-by-default constructs (raw `unwrap` in domain logic, inline asm, proc-macro magic, stringly-typed protocols) remain legal *with machinery and a recorded reason*",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md:113  contract-first ordering, lying prose, closed-vocabulary naming). @impl/done",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:35  - ##FINDING-R3-002 **R3-002** — Contract-first ordering: intent before body within every item",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:405    fan-in/fan-out topologies as public surface are hidden control flow (R-021). @impl/done",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs:66      ErrorVariant {",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs:314          \"error-enum-cites-req\"",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs:317          \"errors are contract surface and agent food: the error layer \\",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:39  - `rule-contract-first-ordering` (R3-002) — intent before body."
-   ],
-   "cites": [],
-   "reason": "the ordering is carried by a card (`rule-contract-first-ordering`) that is named and **not authored** — the cards directory holds INDEX plus scaffold-a..i and nothing else. A rule marked implemented whose card does not exist",
-   "reasons": [
-    "the one-enum-per-layer rule holds and is verified elsewhere in this phase (MCP-CORE 34/34). **`#[track_caller]` occurs zero times repo-wide** outside this guide's own line, so the attribute the fact names is nowhere on an error type. re-searched over the wider perimeter that C3a's TypeScript batch established — the host's crates AND `research/rust-demo/`, the discipline's own Rust demonstration project, which carries conform.toml, specmap.toml and all three discipline/registry files. The gap holds on both",
-    "names **R-021** as the enforcing rule, and R-021 does not exist — the same absence C1a recorded against ENGINE-CONFORM's example roster, now cited a second time by a second document"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:93  ##FORBIDDEN-LEGAL-WITH-REASON Forbidden-by-default constructs (raw `unwrap` in domain logic, inline asm, proc-macro magic, stringly-typed protocols) remain legal *with machinery and a recorded reason*",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-191",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#RESOLVED-PATH-AND-VERSION-LAND-IN-INIT",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#STDOUT-CARRIES-LSP-FRAMES-ONLY"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303              .stderr(std::process::Stdio::null())",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:348          let _ = self.child.kill();",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs:53  pub fn read_frame(reader: &mut impl BufRead) -> Result<Option<serde_json::Value>, TcgBridgeError> {",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:356      pub fn shutdown(mut self) -> Result<(), TcgBridgeError> {",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs:116      oracle.shutdown().expect(\"shutdown\");",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76  fn init_result(oracle: &RustOracle<ChildTransport>) -> serde_json::Value {",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:78          \"ra_version\": oracle.capabilities().server_version,"
-   ],
-   "cites": [],
-   "reason": "**the resolved path never lands in the init result.** The version does: `init_result` emits ra_version, position_encoding, pull_diagnostics and quiescent (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76-78). `ra_path` occurs zero times in the package. Half the fact holds and the half it is named for does not — the same shape as the Go twin's INIT-RESULT-CARRIES-PATH-AND-VERSION",
-   "reasons": [
-    "**the no-zombie property is not test-asserted.** The dance is implemented — shutdown at packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:356, kill-on-drop at client.rs:348 — and the live test asserts only that `shutdown()` returned (tests/live_oracle.rs:116). No process-table or surviving-pid check exists anywhere in the package. Reading the test settles this without running it, and the Go twin fails the same way",
-    "**stderr is dropped at the pipe, not drained by a reader.** The fact says rust-analyzer's stderr chatter «is drained and discarded by the reader (surfaced only in bridge debug logging)». The child is spawned with `.stderr(std::process::Stdio::null())` (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303), so nothing reads it and no debug logging can surface it. The conclusion — stdout carries frames only — holds; the mechanism described does not exist"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303              .stderr(std::process::Stdio::null())",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-192",
    "id_source": "minted",
    "carried": true
   },
@@ -5366,55 +5097,6 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-213",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#PRODUCT-LINK-LAYER-SPECIAL-CASES-ONLY-ORACLE-CRASHED"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-mcp",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208              let crashed = matches!(e, TcgBridgeError::OracleCrashed { .. });",
-    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/tools_tcg.rs:2  //! harness, over ONE persistent rust-analyzer session shared by all",
-    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:125  3. ##REG-RESPAWN a dead child (`oracle-crashed`) → ONE transparent respawn attempt,",
-    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:33  - ##TOOLS-NEW-HOME The tools now ship in the per-language",
-    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42  - ##TCG-CRATE-DELETED `vibe-tcg` and the vibe-mcp `tcg_*` adapters are DELETED. @impl/done"
-   ],
-   "cites": [],
-   "reason": "**the client named was deleted.** The fact says one `vibe-tcg` OracleRegistry client drives both relays, pinned by goldens. `vibe-tcg` and the vibe-mcp `tcg_*` adapters are DELETED by the corpus's own record (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42), the tools now ship per-family (:33), and `OracleRegistry` occurs zero times in crates/. The Go sibling ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS is already recorded drift for the same reason",
-   "reasons": [
-    "**the layer described no longer exists.** «The product's link layer special-cases only `oracle-crashed` … verified against the shipped `vibe-tcg`» — and `vibe-tcg` was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). What survives is a server-local special-case inside the per-family MCP crate (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208). The behaviour outlived the layer; the sentence names the layer"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208              let crashed = matches!(e, TcgBridgeError::OracleCrashed { .. });",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-214",
    "id_source": "minted",
    "carried": true
   },
@@ -7853,7 +7535,7 @@
   },
   {
    "type": "missing-support",
-   "rule": "r-nothing-exists",
+   "rule": "r-no-checker",
    "merged_by": [
     "single row"
    ],
@@ -7861,10 +7543,10 @@
     "packages/org.vibevm.ai-native/go-ai-native-lang"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md"
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md"
    ],
    "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#STAGE-A-CONSULTATION-ORACLE"
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#EXHAUSTIVENESS-IS-CARRIED-BY-A-LINTER"
    ],
    "drift_count": 1,
    "cross_package": false,
@@ -7872,23 +7554,25 @@
    "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
+    "campaigns",
     "packages/org.vibevm.ai-native/go-ai-native-lang"
    ],
    "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:30  Serve, /// Validate one file (optionally hypothetical content) and print /// the enriched answer. Exit 1 = an error-g...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:137  - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope / complete / typ..."
+    "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:25  floor: the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:138  // (the one Discipline rule a linter carries entirely — GUIDE §5).",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:152  let mut cmd = crate::tools::path_tool(root, \"exhaustive\");"
    ],
    "cites": [],
-   "reason": "**the proof named does not exist.** Stage A claims mechanics «proven by the differential corpus and the bench baseline on research/go-demo». research/tcg-bench/ carries a TypeScript corpus and a Rust one, its reports directory carries a TypeScript baseline and a Rust one, and there is no Go corpus and no Go baseline. The ops themselves ship (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:30)",
+   "reason": "the linter the fact says carries this entirely is **not installed**, and its floor step fails rather than skipping: «the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest» (harvest/go-ai-native-lang-floor.md). Nothing carries closed-set switches",
    "reasons": [],
    "status": "open",
    "wave": 1,
    "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:137  - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope / complete / typ...",
+   "fact": "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:25  floor: the step's tool did not spawn (program not found) — go install github.com/nishanths/exhaustive/cmd/exhaustive@latest",
    "falsifier": "self",
    "routed_out": [],
    "owed": 1,
-   "id": "F-271",
+   "id": "F-184",
    "id_source": "minted",
    "carried": true
   },
@@ -7972,90 +7656,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-275",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md#SHIPS-SPECMARK-PROC-MACRO"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/Cargo.toml:46  specmark = { package = \"core-ai-native-specmark\", path = \"crates/vendor/core-ai-native-specmark\" }",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md:39  - ##SHIPS-SPECMARK-PROC-MACRO **The specmark proc-macro** (`crates/specmark`) — the inert",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs:101  /// `specmark::scope!(\"<spec-uri>\" [, r = N]);` — module-level inheritance"
-   ],
-   "cites": [],
-   "reason": "`crates/specmark` does not exist in this package or anywhere else; the proc-macro ships as `crates/vendor/core-ai-native-specmark`",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md:39  - ##SHIPS-SPECMARK-PROC-MACRO **The specmark proc-macro** (`crates/specmark`) — the inert",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-277",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#RENAMED-FROM-VIBE-TCG"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "spec"
-   ],
-   "evidence_refs": [
-    "spec/common/PROP-028-package-families.md:136  - ##D13-SUPERSEDED **Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —",
-    "spec/common/PROP-028-package-families.md:141  - ##D13-LANGUAGE-LEADS `conform-rust` becomes `rust-ai-native-conform`, not a suffixed",
-    "spec/common/PROP-028-package-families.md:148  - ##D13-NEUTRAL-OUTSIDE Language-NEUTRAL artifacts stay outside any family stem: vibevm's own generic"
-   ],
-   "cites": [],
-   "reason": "**the crate the name is reserved for was deleted.** The fact says «the bare name `vibe-tcg` belongs solely to vibevm's language-generic product crate». That crate no longer exists: spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42 records `vibe-tcg` and the vibe-mcp `tcg_*` adapters DELETED, and `vibe-tcg` occurs zero times in crates/. A name reserved for nothing. The rename policy it cites — D13 superseded by PROP-028 §2.4 — does resolve (spec/common/PROP-028-package-families.md:136-148)",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "spec/common/PROP-028-package-families.md:136  - ##D13-SUPERSEDED **Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-278",
    "id_source": "minted",
    "carried": true
   },
@@ -8182,47 +7782,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-281",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md#RISK-SUNSET"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:60  - ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) plus full contracts ever make ...",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:45  name = \"typescript-ai-native-tcg\""
-   ],
-   "cites": [],
-   "reason": "the binary named does not exist: `vibe-tcg-ts` survives only in `.vibe/cache/` copies of the superseded v0.2.0 and v0.3.0 slots, and the shipped binary is `typescript-ai-native-tcg`",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:60  - ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) plus full contracts ever make ...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-282",
    "id_source": "minted",
    "carried": true
   },
@@ -11369,6 +10928,86 @@
  ],
  "resolved": [
   {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#INIT-RESULT-CARRIES-PATH-AND-VERSION",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#DIAGNOSTICS-CHANNEL-HISTORY",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#BENCH-HARNESS-RECORDS-DISTRIBUTIONS",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#LARGE-WORKSPACE-COLD-INIT-WARNING"
+   ],
+   "drift_count": 5,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**the resolved path never lands in the init result.** `init_result` returns gopls_version, position_encoding, pull_diagnostics and ready — and no path (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74-84). Half the fact holds (the version is there), the other half is absent from the shipped shape",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:156  - ##DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES The differential corpus curates diagnostic classes and pins each to t...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 5,
+   "id": "F-160",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#TIER-BUILD-TIME",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#TIER-RUNTIME",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE"
+   ],
+   "drift_count": 4,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "and the fact carries a second break the first pass did not name: **`DR1-014` resolves nowhere** — no `##FINDING-DR1-014` exists in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md, and the id survives only here and in the Rust tcg brief",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:39  ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT … type-constrained decoding cutting compile errors ~74.8% — was measured *on TypeScript* (Mündler et al., PLDI'25; the only language with a real implementation, R2C-005 / DR1-014). @spec/done",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 4,
+   "id": "F-168",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -11405,6 +11044,84 @@
    "routed_out": [],
    "owed": 4,
    "id": "F-174",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#CONTRACT-FIRST-ORDERING-WITHIN-AN-ITEM",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#ONE-ERROR-ENUM-PER-LAYER",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#BAN-HIDDEN-CONTROL-FLOW"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "the ordering is carried by a card (`rule-contract-first-ordering`) that is named and **not authored** — the cards directory holds INDEX plus scaffold-a..i and nothing else. A rule marked implemented whose card does not exist",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:93  ##FORBIDDEN-LEGAL-WITH-REASON Forbidden-by-default constructs (raw `unwrap` in domain logic, inline asm, proc-macro magic, stringly-typed protocols) remain legal *with machinery and a recorded reason*",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-191",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#RESOLVED-PATH-AND-VERSION-LAND-IN-INIT",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#STDOUT-CARRIES-LSP-FRAMES-ONLY"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**the resolved path never lands in the init result.** The version does: `init_result` emits ra_version, position_encoding, pull_diagnostics and quiescent (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76-78). `ra_path` occurs zero times in the package. Half the fact holds and the half it is named for does not — the same shape as the Go twin's INIT-RESULT-CARRIES-PATH-AND-VERSION",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:303              .stderr(std::process::Stdio::null())",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-192",
    "id_source": "minted",
    "carried": true
   },
@@ -11484,6 +11201,45 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-209",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#PRODUCT-LINK-LAYER-SPECIAL-CASES-ONLY-ORACLE-CRASHED"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-mcp",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "**the client named was deleted.** The fact says one `vibe-tcg` OracleRegistry client drives both relays, pinned by goldens. `vibe-tcg` and the vibe-mcp `tcg_*` adapters are DELETED by the corpus's own record (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42), the tools now ship per-family (:33), and `OracleRegistry` occurs zero times in crates/. The Go sibling ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS is already recorded drift for the same reason",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:208              let crashed = matches!(e, TcgBridgeError::OracleCrashed { .. });",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-214",
    "id_source": "minted",
    "carried": true
   },
@@ -11815,6 +11571,42 @@
    "carried": true
   },
   {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#STAGE-A-CONSULTATION-ORACLE"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**the proof named does not exist.** Stage A claims mechanics «proven by the differential corpus and the bench baseline on research/go-demo». research/tcg-bench/ carries a TypeScript corpus and a Rust one, its reports directory carries a TypeScript baseline and a Rust one, and there is no Go corpus and no Go baseline. The ops themselves ship (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/main.rs:30)",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:137  - ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope / complete / typ...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-271",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -11918,6 +11710,114 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-276",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md#SHIPS-SPECMARK-PROC-MACRO"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "`crates/specmark` does not exist in this package or anywhere else; the proc-macro ships as `crates/vendor/core-ai-native-specmark`",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md:39  - ##SHIPS-SPECMARK-PROC-MACRO **The specmark proc-macro** (`crates/specmark`) — the inert",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-277",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#RENAMED-FROM-VIBE-TCG"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "spec"
+   ],
+   "cites": [],
+   "reason": "**the crate the name is reserved for was deleted.** The fact says «the bare name `vibe-tcg` belongs solely to vibevm's language-generic product crate». That crate no longer exists: spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42 records `vibe-tcg` and the vibe-mcp `tcg_*` adapters DELETED, and `vibe-tcg` occurs zero times in crates/. A name reserved for nothing. The rename policy it cites — D13 superseded by PROP-028 §2.4 — does resolve (spec/common/PROP-028-package-families.md:136-148)",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "spec/common/PROP-028-package-families.md:136  - ##D13-SUPERSEDED **Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-278",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md#RISK-SUNSET"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "the binary named does not exist: `vibe-tcg-ts` survives only in `.vibe/cache/` copies of the superseded v0.2.0 and v0.3.0 slots, and the shipped binary is `typescript-ai-native-tcg`",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:60  - ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) plus full contracts ever make ...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-282",
    "id_source": "minted",
    "carried": true
   },

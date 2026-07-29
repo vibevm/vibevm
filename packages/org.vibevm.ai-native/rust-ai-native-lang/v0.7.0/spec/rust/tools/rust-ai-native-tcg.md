@@ -6,7 +6,7 @@
 
 ##VERY-FAR-FUTURE-DISPOSITION *VERY-FAR-FUTURE per the owner's standing disposition (2026-07-07): the decode-loop stages below wait on `vibe-llm` and a local inference substrate, exactly like the TypeScript token-level sibling.* @spec/done
 
-##RENAMED-FROM-VIBE-TCG *Renamed `vibe-tcg.md` → `rust-ai-native-tcg.md` (the D13 language-suffix policy, then its PROP-028 §2.4 family-prefix supersession) — the bare name `vibe-tcg` belongs solely to vibevm's language-generic product crate.* @impl/done
+##RENAMED-FROM-VIBE-TCG *Renamed `vibe-tcg.md` → `rust-ai-native-tcg.md` (the D13 language-suffix policy, then its PROP-028 §2.4 family-prefix supersession) — the bare name `vibe-tcg` belongs solely to vibevm's language-generic product crate.* *Specified, not built — the rename happened and the policy resolves; the crate the name is reserved FOR does not exist. This file carries the new name, and the supersession chain it cites is authored (PROP-028 §2.4, `##D13-SUPERSEDED` → `##D13-LANGUAGE-LEADS` → `##D13-NEUTRAL-OUTSIDE`). But `vibe-tcg` was deleted with the whole multiplexed-product topology (PROP-026 in vibe-mcp, `##TCG-CRATE-DELETED`), and vibevm's crate roster carries no `vibe-tcg`: every tcg crate in the tree is per-family (`rust-ai-native-tcg`, `typescript-ai-native-tcg`, `go-ai-native-tcg`). The `vibe-*` stem is still reserved for language-neutral vibevm crates as a POLICY; the specific reservation this sentence asserts is held by nothing.* @spec/done
 
 ##DERIVED-FROM-THE-EVIDENCE *Derived from R2C-005 (type-constrained decoding is per-language manual work; no Rust impl exists), DR2-012/DR1-014 (the 74.8% compile-error reduction in TypeScript), and the constrained-decoding ecosystem scan (SynCode, XGrammar-2, IterGen, Mündler PLDI'25).* @spec/done
 

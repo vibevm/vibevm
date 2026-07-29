@@ -34,7 +34,19 @@ consumer's rust-analyzer. @impl/done
 language-generic product client (`vibe-tcg`'s `OracleRegistry` link)
 drives BOTH relays with the same frames — the parity is enforced at
 the product level by the two live-chain tests, and pinned per-package
-by outer-frame replay goldens. @impl/done
+by outer-frame replay goldens. *Specified, not built — the client named
+is gone; one of the two proofs survives. The `vibe-tcg` registry crate
+was retired with the whole multiplexed-product topology and DELETED
+(PROP-026 in vibe-mcp, `##TOPOLOGY-RETIRED` and `##TCG-CRATE-DELETED`);
+`OracleRegistry` now appears in no `.rs` file anywhere, only in that
+document's own retired-design section and in historical plans under
+`legacy-spec/`. Its posture survives one layer over and per-language, not
+generic: each `mcp`-kind package keeps a server-local shared session
+(`TcgSession`). **The two live-chain tests do exist** —
+`rust-ai-native-mcp/.../tests/live_chain.rs` and its TypeScript sibling —
+but they run per package, not "at the product level", because there is
+no product. The outer-frame replay goldens do not exist at all: no
+golden or snapshot fixture is present in any ai-native package.* @spec/done
 
 ##RESTATES-RATHER-THAN-INCLUDES-THE-TS-TEXT This document restates rather than
 includes the TS text (cross-package spec inclusion is not a mechanism
@@ -145,7 +157,15 @@ renames against the TS table (§1): @impl/done
 (session-grain) and passes every other kind through as a
 recipe-carrying detail — verified against the shipped `vibe-tcg`
 before this protocol was authored, so the renames ride WITHOUT a
-product edit. @impl/done
+product edit. *Specified, not built — the behaviour outlived the layer
+this sentence names. The special-casing is real and still exactly this
+narrow: `crates/rust-ai-native-tcg/src/serve.rs:208` singles out
+`TcgBridgeError::OracleCrashed` and passes every other kind through, and
+the per-family MCP server respawns once on it. But there is no "product
+link layer" to hold it — `vibe-tcg` was deleted (PROP-026 in vibe-mcp,
+`##TCG-CRATE-DELETED`), so nothing was verified against a shipped
+product, and "the renames ride WITHOUT a product edit" is true only
+because no product remains to edit.* @spec/done
 
 ## 5. Compatibility rules {#compat}
 

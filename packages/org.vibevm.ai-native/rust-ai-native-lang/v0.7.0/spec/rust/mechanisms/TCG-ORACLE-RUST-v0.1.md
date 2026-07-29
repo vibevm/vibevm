@@ -42,7 +42,13 @@ rust-ai-native gets the product's not-installed recipe and owes
 nothing. @impl/done
 
 ##RESOLVED-PATH-AND-VERSION-LAND-IN-INIT The resolved path and the server's reported version land in
-the `init` result. @impl/done
+the `init` result. *Specified, not built — half of it. The version half ships:
+`init_result` emits `ra_version` (`crates/rust-ai-native-tcg/src/serve.rs:76-86`),
+beside `position_encoding`, `pull_diagnostics` and `quiescent`. The path half
+does not: the path IS resolved — `resolve_rust_analyzer`
+(`crates/rust-ai-native-tcg-bridge/src/lib.rs:146`) returns it — but it is never
+put into the result, and `ra_path` occurs in this package only as the shape
+`TCG-PROTOCOL-RUST-v0.1.md#OP-INIT` promises, never as a field the code emits.* @spec/done
 
 ## 2. LSP session and capabilities {#session}
 
@@ -194,7 +200,15 @@ session: @impl/done
 ##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY Graceful exit is the LSP
 dance — `shutdown` request, `exit` notification — with kill-on-drop as
 the backstop; the no-zombie property is test-asserted (spike-proven:
-clean exit code 0, no surviving pid). @impl/done
+clean exit code 0, no surviving pid). *Specified, not built — the
+mechanism, not the proof. The dance ships (`shutdown` at
+`crates/rust-ai-native-tcg-bridge/src/oracle.rs:356`) and so does the
+backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
+`client.rs:346-350`). What does not exist is the assertion: the live test
+checks only that `shutdown()` returned (`tests/live_oracle.rs:116`), and no
+exit-code check and no surviving-pid or process-table probe exists in this
+stack's test surface. «Test-asserted» and «spike-proven» describe a spike,
+not a test in the tree.* @spec/done
 
 ##PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING Paths become URIs only after
 verbatim-prefix stripping (`\\?\` breaks child argv and URI builders —
@@ -203,7 +217,13 @@ the standing lesson's fourth home). @impl/done
 ##STDOUT-CARRIES-LSP-FRAMES-ONLY stdout carries LSP frames only;
 rust-analyzer's own stderr chatter is drained and discarded by the
 reader (surfaced only in bridge debug logging), so protocol streams
-stay clean. @impl/done
+stay clean. *Specified, not built — the conclusion holds, the mechanism
+described does not. Protocol streams do stay clean, but not by draining:
+the child is spawned `.stderr(std::process::Stdio::null())`
+(`crates/rust-ai-native-tcg-bridge/src/client.rs:303`, and again at
+`lib.rs:163`), so the OS discards the chatter at the pipe and no reader
+ever sees it. There is no bridge debug logging to surface it in — the
+bridge crate has no logging facility at all.* @spec/done
 
 ## 8. Latency posture {#latency}
 

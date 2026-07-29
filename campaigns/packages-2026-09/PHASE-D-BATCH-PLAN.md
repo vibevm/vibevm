@@ -426,6 +426,20 @@ owner routes and had to be reverted wholesale by owner ruling.*
   earlier and was not read when the work was handed out. Nothing was *closed*
   without approval, because no verdict moved; what landed was the right work in
   the wrong order, and it cost a full revert.
+- ##NEVER-CHAIN-MERGE-AND-SEAL **Never chain `merge-verdicts.py` and
+  `progress seal` in one shell command.** `merge-verdicts.py` refuses as a whole
+  and writes nothing, and a `&&` chain still runs the seal — which then vouches
+  the file's *old* verdicts against its *new* text, which is precisely the
+  staleness `processed_hash` exists to catch. Run the merge, read its output,
+  then seal. This cost nothing in the end only because the merge succeeded on
+  the next attempt against unchanged text.
+- ##CITED-ANCHORS-ARE-NOT-DEFINITIONS **An `##ANCHOR` inside backticks is a
+  citation, not a definition.** A helper that maps changed lines to anchors by
+  scanning for `##NAME` will attribute an edit to an anchor the file merely
+  *quotes* — three times in one batch, twice for host anchors this package cites
+  and once for its own risk id. `merge-verdicts.py` caught all three with «not an
+  addressable anchor of this file», which is its third useful refusal in this
+  phase.
 - ##ABSENCE-NAMES-ITS-PERIMETER **A demotion whose whole basis is an absence
   must name the perimeter it searched, in the record, before the marker moves.**
   Two demotions in the first wave rested on «nothing captures a golden

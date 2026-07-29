@@ -47,3 +47,30 @@ EXIT=1
 ```
 
 **Scope:** every fact under `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/` that this run bears on. The anchor list is not maintained here — a verdict cites this file in its `ev[]`, and the reverse index is derived from the verdict maps at the phase close (PHASE-C-BATCH-PLAN.md §5).
+
+---
+
+**Read this before citing lines 24-26.** *(Annotation added 2026-07-29 by Phase D;
+the captured output above is unaltered.)*
+
+`floor: the step's tool did not spawn (program not found)` is a fact about
+**this machine's PATH at capture time**, not about the package. `staticcheck`
+and `exhaustive` are installed at `C:\opt\gotools`; with that directory on PATH
+the same floor, rooted at the worked pilot, prints the line that certifies
+green:
+
+```console
+$ cd research/go-demo && go-ai-native floor --keep-going
+floor: all green (7 step(s) run, 0 disabled by policy)
+```
+
+Two verdicts rested on those lines as if they were properties of the subject and
+both were wrong — one deleted a true claim about the pilot, one demoted a
+mechanism that ships. **A verdict may cite this run for what it shows about the
+package's own bootstrap state — no `conform.toml`, no `specmap.json`, no Go
+module at the root — and may not cite it for the absence of a tool.**
+
+The remaining five failures ARE properties of the subject, and §2.2 captures
+them on purpose: the package is not a project, so a project-level floor aimed at
+it prints exactly this. See `BACKLOG.md` B-003 for the one genuine defect in the
+run — the floor gating a fixture directory named `dirty`.
