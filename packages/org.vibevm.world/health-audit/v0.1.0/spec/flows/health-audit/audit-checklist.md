@@ -199,7 +199,7 @@ falling out of step. @impl/done
 ##THE-LIST-IS-A-STARTING-SET-NOT-A-CLOSED-ONE This list is a starting set, not a closed one. @impl/done
 
 ##TWO-RULES-GOVERN-THE-LISTS-GROWTH Two rules govern its
-growth, and every run applies both: @impl/done
+growth, each applying when its own condition holds: @impl/done
 
 1. ##GROWTH-RULE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-ROW **A new defect class becomes a permanent row.** When a run finds a
    kind of rot no category named, add it here as a standing sub-item,

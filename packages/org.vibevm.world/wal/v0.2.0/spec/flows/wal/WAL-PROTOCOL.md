@@ -52,8 +52,8 @@ months ago. @spec/done
 ##file-serves-both-processes The file serves both processes in the human-AI system. @impl/done
 
 ##FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY For the
-**agent** it is the only persistent memory: each session starts blank,
-and the WAL is read first. @impl/done
+**agent** it is the canonical persistent memory: each session starts
+blank, and the WAL is read first. @impl/done
 
 ##FOR-THE-HUMAN-IT-IS-THE-SINGLE-MORNING-RE-READ For the **human** it is the single morning
 re-read that synchronises your memory with the project's actual state. @impl/done

@@ -179,11 +179,11 @@ Campaign B opens:   Mandate (owner, dated): "close every §15 deferral
 ```
 
 ##a-real-chain-anonymized A real chain, anonymized: a self-sufficiency campaign closed with
-seven named deferrals; weeks later the owner's commissioning words
-for the follow-up were, verbatim, "take everything listed in the
+six named deferrals; later the owner's commissioning words for the
+follow-up were, in substance, "take everything listed in the
 previous campaign's deferral ledger and plan its implementation" —
-and the new plan's opening table mapped each of the seven to the
-phase that closes it. @spec/done
+and the new plan's opening table mapped each of them to the phase
+that closes it. @spec/done
 
 ##THE-LEDGER-OF-ONE-CAMPAIGN-IS-THE-RAW-MANDATE-OF-THE-NEXT The ledger of one campaign *is* the raw mandate
 of the next; the chain never breaks, and nothing is re-discovered

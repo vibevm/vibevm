@@ -53,8 +53,9 @@ while the project's own initializer scaffolded *broken* projects and a
 test asserted the broken output *as correct*. @spec/done
 
 ##ONLY-A-READER-CATCHES-A-TEST-THAT-ENCODES-THE-WRONG-ANSWER The gate cannot catch a
-test that encodes the wrong answer; only a reader judging the assertion
-against the intent can. @spec/done
+test that encodes the wrong answer; a reader judging the assertion
+against the intent can — and so can a live end-to-end run of the real
+thing, which is what caught the initializer defect above. @spec/done
 
 ##not-more-gate-but-a-different-activity Not more gate — a different activity. @spec/done
 
@@ -156,7 +157,8 @@ perpetually *open*. @impl/done
 
 ##THE-CHECKLIST-IS-NOT-FROZEN The checklist is not frozen. @impl/done
 
-##TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN Two forces reshape it every run: @impl/done
+##TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN Two forces reshape it over time, each when its own
+condition holds: @impl/done
 
 - ##FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY **A new defect class becomes a permanent category.** When a run
   discovers a kind of rot the checklist did not name, that kind is

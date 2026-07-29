@@ -22,7 +22,8 @@ person — can execute with no memory of the planning conversation. @impl/done
 - ##CONTENT-THE-PLAN-FORMAT `spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` — what a
   campaign is, the five artifact roles (PLAN / BASELINE /
   PREDICTIONS / LOG / REPORT), and the canonical fifteen-section
-  plan skeleton, each section with a spec and a worked mini example. @impl/done
+  plan skeleton, each section with a spec and most with a worked
+  mini example. @impl/done
 - ##CONTENT-THE-PHASE-GATES `spec/flows/campaign-plans/phase-gates.md` — Phase 0 spike
   discipline (no commits; a red spike rewrites the affected decision
   before anything lands), phase anatomy, the safe-stop law,
@@ -57,8 +58,9 @@ snippet. @impl/done
 ##THIS-PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-FORMAT This package is the canonical home of the campaign-plan format. @impl/done
 
 ##core-ai-native-defers-from-its-next-release The
-AI-Native Discipline (`flow:core-ai-native`) ships a campaign-form
-document that defers to this package from its next release. @spec/done
+AI-Native Discipline (`flow:core-ai-native`) ships its own
+campaign-form document, `spec/05-CAMPAIGN-FORM.md`, which restates
+part of this format; the two are not yet reconciled. @spec/done
 
 ## Composition {#composition}
 

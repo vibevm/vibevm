@@ -17,8 +17,9 @@ whoever picks up cold. @impl/done
 ##PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-WAL-CONVENTION **This package is the canonical home of the WAL convention.** @impl/done
 
 ##DISCIPLINE-DEFERS-TO-THIS-PACKAGE-FROM-ITS-NEXT-RELEASE The
-AI-Native Discipline (`flow:core-ai-native`) ships a convention
-document that defers to this package from its next release. @spec/done
+AI-Native Discipline (`flow:core-ai-native`) still ships its own WAL
+convention document, marked OPTIONAL but preferred; the deference this
+package expects has not landed in one of its releases yet. @spec/done
 
 ##package-contents-lead The package ships five pieces of content plus a skill: @impl/done
 
@@ -88,7 +89,7 @@ snippet and the skill, but NEVER touches `spec/WAL.md` or `CONTINUE.md`
 ##ideas-are-chapters-two-and-three The underlying ideas — two-process cooperation, files as the IPC
 between human and agent, the memory hierarchy (head → WAL → spec →
 code), WAL as the only memory that survives session boundaries — are
-chapters 2–3 of *AI-native development*, shipped in Russian inside
+chapters 1–3 of *AI-native development*, shipped in Russian inside
 `flow:redbook` at `spec/book/ru/`. Short version: @spec/done
 
 - ##AGENT-SESSION-HAS-NO-PERSISTENT-MEMORY An agent session has no persistent memory. Every morning it wakes
