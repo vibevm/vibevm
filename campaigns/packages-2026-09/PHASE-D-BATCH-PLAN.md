@@ -294,6 +294,47 @@ number that wrong is worse than no number. **Revisit when:** a wave's routing
 record shows one of the three dominating, which would be worth knowing before
 wave 2 plans its own cut.
 
+### 3.7 A package-scoped search reads every successful adoption as an absence {#compliance-blindness}
+
+**The most expensive thing this phase learned, and it invalidates a class of
+Phase C verdict rather than a handful.** Measured on 2026-07-29 over 76
+`build-or-demote` verdicts: **eighteen claimed absences were false**, and
+**seventeen of those were falsified by HOST artefacts** — nine of them in
+`discipline/` or `terraform/`.
+
+That is not a run of bad luck. It is structural:
+
+> **These packages SPECIFY a discipline. The host is the project that ADOPTED
+> it. The artefacts that prove adoption — `discipline/registry/`,
+> `discipline/golden/`, `terraform/`, `specmap.json`, `conform.toml` — live in
+> the CONSUMER, because creating them is what complying means.** A search
+> confined to `packages/` therefore cannot see compliance at all, and reads
+> every successful adoption back as a missing mechanism.
+
+The stakes are not cosmetic. §3.3 closes a `missing-support` by **moving a
+marker**, so each false absence would have written «specified, not built» over a
+mechanism the consumer had already built — a silent lie in the shipped surface,
+authored by the campaign that exists to remove them.
+
+**The rule.** Before any demotion, the perimeter is the whole tree and it is
+named in the record: `packages/**`, `vibedeps/**`, `crates/**`, `xtask/**`,
+`tools/**`, `spec/**`, **`discipline/**`**, **`terraform/**`**, `research/**`,
+`campaigns/**`, `legacy-spec/**`, and the repository root. Search for the
+**thing**, not for the string the verdict used — a mechanism can ship under
+another name, in another language, or as a shell script.
+
+**And the four layers, restated because they are why the perimeter keeps
+biting:** a mechanism's SPEC lives in `core-ai-native`, its ENGINE in that
+package's library crates, its DRIVER in each language stack's CLI, and its
+DEPLOYMENT in the consuming project. A fact can be true at any one of those and
+invisible at the other three.
+
+**Corollary — consistency propagates an error.** The six `BUILD-ORDER` verdicts
+were *restated once to make the family agree*, and the family agreed on a false
+premise: the catalog's order is `terraform/adopt-v0.3/LOG.md`'s phase headings,
+six for six with pairings intact. When a verdict says it was restated for
+consistency, re-verify the whole set, not the row.
+
 ### 3.5 Every judged file already differs from its installed copy {#vendored}
 
 **Measured, not decided.** 212 of the 228 obligations touch a file that is

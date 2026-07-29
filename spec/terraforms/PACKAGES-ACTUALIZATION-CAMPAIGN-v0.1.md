@@ -3375,6 +3375,62 @@ command that would have tested it.
   — 53 obligations where the rule is sound and the host does not keep it, each
   taking one of three answers and none of them «soften the package».
 
+- **2026-07-29 · wave 5 — eighteen claimed absences were false, and seventeen
+  were falsified by the host. This invalidates a class of verdict, not a
+  handful.** The `build-or-demote` route was re-verified rather than executed:
+  76 verdicts examined across `core-ai-native` and the three language stacks,
+  **18 absences did not survive**, and **17 of the 18 were disproved by HOST
+  artefacts** — nine of them in `discipline/` or `terraform/`.
+
+  The cause is structural and is now
+  [§3.7 of the batch plan](../../campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md#compliance-blindness):
+  **these packages specify a discipline, the host is the project that adopted
+  it, and the artefacts that prove adoption live in the consumer because
+  creating them is what complying means.** A search confined to `packages/`
+  cannot see compliance and reads every successful adoption back as a missing
+  mechanism. Since §3.3 closes a `missing-support` by *moving a marker*, each
+  false absence would have written «specified, not built» over a mechanism the
+  consumer had already built — a silent lie in the shipped surface, authored by
+  the campaign that exists to remove them.
+
+  What was actually there: the golden transcripts, the conflict detection, the
+  REPORT and the intent reconciliation (F-151, five facts of six); the
+  LLM-as-proposer loop run end to end with **54 owner-approved proposals** in
+  `terraform/specmap-proposals.json` (F-139); `QUERY-PROPOSE-LINKS` executed
+  with six affirmation commits behind it (F-152); `BAND-3-ON-TRIGGER` live in
+  this repository's own compiled boot lane (F-150); the prediction ledger,
+  complete (F-208, F-262); the specmark proc-macro at
+  `crates/vendor/core-ai-native-specmark` (F-277); the two live-chain tests in
+  both `-mcp` packages (F-214); the Go exhaustiveness linter installed at
+  `C:\opt\gotools` (F-184).
+
+  **And the six `BUILD-ORDER` verdicts, corrected as a set.** They said the
+  catalog's numbered order «appears nowhere outside this document — not in any
+  stack's cards, not in a host crate, not in an xtask task, not in a campaign
+  plan». `terraform/` is none of those categories and is exactly where it is:
+  `terraform/adopt-v0.3/LOG.md` carries it as phase headings, **six for six,
+  position for position, pairings included** — E · F+G · B+C · D · A+H · I
+  pilot-gated — and `##BUILD-ORDER-I`'s own «prototype and measure before» is
+  that «pilot-gated» verbatim. The verdict says in its own words that it was
+  *restated to match its five siblings*, so **consistency propagated the
+  error**. Five of the six sit on F-158, a `sync-from-code` obligation: a
+  re-judge that edits nothing produces no spec diff and therefore needs no owner
+  approval — only an edit would.
+
+  **State at wave 5's close:** corpus **10 832 confirmed / 470 drift / 44
+  unverifiable — 95.5 %**, from 94.3 % at the Phase C gate. By zone: `host`
+  99.9 %, `ai-native` **95.1 %** (was 91.6), `world` **90.9 %** (was 90.0).
+  Registry **181 obligations**, from 228. **317 of 470 verdicts still owe a
+  package repair; 153 are routed out; 60 obligations have nothing left owed.**
+
+  Two operating rules were bought at full price and are recorded in §6.1: an
+  `##ANCHOR` inside backticks is a **citation, not a definition** (three
+  refusals from `merge-verdicts.py`, all correct), and **`merge-verdicts.py` and
+  `progress seal` are never chained** — a refused merge still lets the seal
+  vouch old verdicts against new text. A third was already written down and was
+  broken anyway: verdict JSON generated through an unquoted heredoc lost every
+  backticked identifier to the shell, and had to be rewritten and re-merged.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*

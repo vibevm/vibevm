@@ -459,7 +459,7 @@
     "evidence": [
       "spec/boot/STATIC.md:77  touching the tree. The plan is one document carrying five roles: the",
       "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:218  **Both plans carry all five roles the flow names**, as top-level sections:",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3382  ## 9. REPORT {#report}",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3438  ## 9. REPORT {#report}",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1295  ## 11. REPORT (filled at close-out against §8) {#report}"
     ],
     "src": [
@@ -550,7 +550,7 @@
       "spec/boot/STATIC.md:80  verdict (REPORT). Format:",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1295  ## 11. REPORT (filled at close-out against §8) {#report}",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1297  _Filled 2026-07-26. Scored against §8 as written, not as one would like it to",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3384  *(empty — filled at close-out against §6)*"
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3440  *(empty — filled at close-out against §6)*"
     ],
     "src": [
       1,
@@ -928,7 +928,7 @@
     "evidence": [
       "spec/boot/STATIC.md:124  - Never carry a deferral outside the plan file — the deferrals",
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1293  *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3380  *(empty)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3436  *(empty)*",
       "BACKLOG.md:19  | ##REL-DEFERRALS `campaigns/<id>/deferrals.md` | **one campaign's** tails; dies with the zone | the next campaign's mandate (`campaign-plans` law) |"
     ],
     "src": [
@@ -1269,7 +1269,7 @@
       "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:17  ## 2 — Execution record (EXECUTED 2026-07-15)",
       "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:361  ## 14 — Execution ledger",
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:692  ## 13. Execution ledger (filled by the executing session)",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3384  *(empty — filled at close-out against §6)*"
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3440  *(empty — filled at close-out against §6)*"
     ],
     "src": [
       1,
@@ -1375,8 +1375,8 @@
     "claim": "Section 2, the execution record, is empty at authoring.",
     "evidence": [
       "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:692  ## 13. Execution ledger (filled by the executing session)",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3384  *(empty — filled at close-out against §6)*",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3380  *(empty)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3440  *(empty — filled at close-out against §6)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3436  *(empty)*",
       "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:17  ## 2 — Execution record (EXECUTED 2026-07-15)"
     ],
     "src": [
@@ -2778,7 +2778,7 @@
     "claim": "A deferral lives in the plan file, under its campaign, until a later campaign drains it.",
     "evidence": [
       "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1293  *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*",
-      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3380  *(empty)*",
+      "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3436  *(empty)*",
       "campaigns/progress-2026-08/deferrals.md:1  # Deferrals — campaign `progress-2026-08`",
       "BACKLOG.md:24    disposable.** `ZONE-LIFETIMES` says `run/` is throwaway after close-out and"
     ],
