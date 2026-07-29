@@ -116,6 +116,40 @@ already written from it is the specification of the work.)*
   structural loader is opened, whichever comes first. Either makes the searching
   real rather than hypothetical.
 
+### B-003 — the Go floor gates a directory named `dirty` {#b-003}
+
+| | |
+|---|---|
+| ##B003-ANCHOR **anchor** | none — found in a captured run, not against a marked fact |
+| ##B003-LOCATOR **locator** | `campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:11,31-35`; the gate is `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs` |
+| ##B003-SEVERITY **severity** | P2 |
+| ##B003-DISPOSITION **disposition** | `open` |
+| ##B003-FILED **filed by** | the packages-actualization campaign, Phase D, 2026-07-29 |
+
+- ##B003-WHAT **What it is.** `tools/go-extract/test/fixtures/dirty/` holds
+  deliberately malformed Go — it is the extractor's negative-test input, and its
+  directory is named `dirty`. The floor treats it as source: `gofmt` fails on
+  `…/dirty/internal/cells/plan/plan.go`, and **all five** of the run's `conform`
+  findings are inside that same tree. Two of the six failing steps are this one
+  cause.
+- ##B003-WHY-IT-IS-A-DEFECT **Why it is a defect and not taste.** The host already decided this
+  question the other way for its own tooling: `DEFAULT_EXCLUDES` in
+  `crates/progress-core/src/scope.rs` drops `fixtures` as *not a contract*,
+  always on and not overridable by an explicit include. One project, two answers
+  to «is a fixture source», and the Go floor has neither an exclude list nor the
+  word `fixtures` anywhere in it.
+- ##B003-NOT-P1 **Why P2 and not P1.** ##SEV-GATE-BLINDNESS-IS-P1 covers a gate that
+  reports green because it is not looking. This one is the opposite: it looks at
+  more than it should and reports red. That is noise, and noise in a gate is how
+  a floor stops being read — but it is not a gate that lies.
+- ##B003-DO-NOT-CONFUSE **What it is not.** The other four failures in that run — no Go module at
+  the package root, no `conform.toml`, no `specmap.json`, two absent optional
+  linters — are **not** defects. They are what a project-level floor prints when
+  it is aimed at a package that is not a project, and Phase C's §2.2 decision
+  captures that unmodified output on purpose. The missing-linter step failing
+  rather than skipping is the discipline behaving correctly: it refuses to go
+  green by omission.
+
 ### B-002 — the budget row still binds generated artifacts {#b-002}
 
 | | |
