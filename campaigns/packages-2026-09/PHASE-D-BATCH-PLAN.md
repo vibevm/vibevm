@@ -47,7 +47,7 @@ it is **derived — never hand-edited**. A row carries:
 The SPEC task's §2 table is generated from the row rather than typed:
 
 ```bash
-python campaigns/packages-2026-09/tasks/drift-registry.py --task F-142
+python campaigns/packages-2026-09/tasks/drift-registry.py --task F-145
 ```
 
 **`from` is the package anchor that is false; `to` is what falsifies it** — the
@@ -234,6 +234,17 @@ and wave 2 has been minting into: **F-131 … F-350**, with **8 ids adopted**
 rather than minted because a Phase C verdict already named that family, and 220
 new. The next free id is recorded by the generator, not by a human.
 
+**Ids were unstable for exactly one generation, and the two that moved are
+named here rather than quietly repaired.** The first registry assigned ids
+positionally, by descending cluster size; carrying them across regenerations
+landed one commit later. In that window the two `../flows/…` families moved —
+**F-134 → F-136** (11 verdicts, 7 packages) and **F-142 → F-145** (8 verdicts,
+8 packages) — and the old numbers had already been written into this plan and
+into the campaign's §7 LOG, where they named nothing. Both citations were
+re-pointed on 2026-07-29. Since `carry_ids` landed, every regeneration reports
+`N carried, 0 newly assigned`, which is the check that this cannot recur
+silently.
+
 **Why:** the space is already shared — `run/state/findings.json` carries
 F-068…F-077 and the plan's §7 LOG mints F-078…F-129 in prose. A second id
 scheme would need a mapping, and the mapping would be the third writer for the
@@ -347,7 +358,7 @@ not a closure; it is a new `duplication` obligation, and the registry will mint
 it on the next run.
 
 **The open question this raises, stated rather than answered.** The
-`../flows/…` family (F-134 at 11 verdicts over 7 packages, F-142 at 8 over 8)
+`../flows/…` family (F-136 at 11 verdicts over 7 packages, F-145 at 8 over 8)
 is a compiled-lane defect: the pointer resolves inside the package and inside
 the install slot, and not from `spec/boot/` where a session actually reads it.
 There are two readings — repair fifteen snippets across fifteen packages, or

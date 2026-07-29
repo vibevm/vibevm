@@ -3218,8 +3218,8 @@ command that would have tested it.
   and «the consumer reads the fix» are two different sentences.
 
   **The largest release event is also an open question, and the plan does not
-  answer it.** The `../flows/…` family is F-134 (11 verdicts, 7 packages) and
-  F-142 (8 verdicts, 8 packages): repair fifteen snippets in fifteen packages,
+  answer it.** The `../flows/…` family is F-136 (11 verdicts, 7 packages) and
+  F-145 (8 verdicts, 8 packages): repair fifteen snippets in fifteen packages,
   or repair the boot compiler once so relative links are rewritten on compile.
   The second is a host code change, therefore Phase E's, and it would close both
   at a stroke. It goes to the owner with the release batch.
@@ -3304,7 +3304,7 @@ plan had none. Every line prints a number — none of them is quoted from here.*
 python campaigns/packages-2026-09/tasks/summary.py            # verdicts by zone; the campaign's headline
 python campaigns/packages-2026-09/tasks/batch-progress.py     # what each phase-C batch owes vs wrote
 python campaigns/packages-2026-09/tasks/drift-registry.py     # Phase D: the open obligation registry
-python campaigns/packages-2026-09/tasks/drift-registry.py --task F-142   # one obligation, as a SPEC task's §2
+python campaigns/packages-2026-09/tasks/drift-registry.py --task F-145   # one obligation, as a SPEC task's §2
 bash tools/self-check.sh; echo "EXIT=$?"                      # the gate panel — 0 before anything
 ```
 
