@@ -116,10 +116,13 @@ send a long first message to an LLM. @spec/done
 
 ## The intensity knobs {#knobs}
 
-##EVERY-CONTROL-IS-A-LITERAL-HASHTAG Every control is a literal hashtag — `#` plus the exact token,
-case-insensitive. @impl/done
+##EVERY-CONTROL-IS-A-LITERAL-HASHTAG Every criticality control — `#hot`, `#cold`, `#reboil` and their
+modifiers — is a literal hashtag, `#` plus the exact token, case-insensitive.
+`#superthink` is the documented exception: it ships as its own extension block
+above the criticality one and fires on the bare word too. @impl/done
 
-##BARE-WORDS-NEVER-FIRE-THE-MACHINERY Bare words in prose never fire the machinery. @impl/done
+##BARE-WORDS-NEVER-FIRE-THE-MACHINERY Bare `hot` and `cold` in ordinary prose never fire the criticality
+machinery — the words are generic, and only the `#`-prefixed token triggers. @impl/done
 
 ##DEFAULT-WITH-NO-HASHTAG With
 no hashtag the session runs the default: robust on established facts,
@@ -166,8 +169,9 @@ exploratory on the open frontier. @impl/done
 ## Re-derive for your project {#re-derive}
 
 ##ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED The artifact is read-only, but it is built to be adapted: the
-`<VARIABLES>` and `EXTENSION` blocks are configuration, the `MAIN`
-block is mechanism. @impl/done
+`<VARIABLES>` block and the EXTENSION blocks that describe *you* are
+configuration; `<MAIN>` and `<EXTENSION_CRITICALITY>` are mechanism. The
+re-derive prompt below draws the same line at its step 4. @impl/done
 
 ##re-derive-prompt-lead Hand your assistant this prompt to produce a
 personalized copy: @impl/done

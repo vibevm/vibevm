@@ -182,6 +182,12 @@ cross-machine reuse, and that is a moat for regulated users.
 Maps to §3.1. **Priority:** MEDIUM.
 **Target home:** a future caching spec section, behind an opt-in flag
 so offline-first stays the default. Ratified here: nothing.
+
+## 7. Re-fetch list
+- quarry.example/docs/remote — the remote-cache pitch quoted in §2.1 —
+  accessed 2026-07-01.
+
+**Capture date:** 2026-07-01. **Subject version at capture:** Quarry 3.2.
 ```
 
 ##the-fragment-obeys-all-five-laws-lead The fragment obeys all five laws in miniature: @impl/done
@@ -191,7 +197,8 @@ so offline-first stays the default. Ratified here: nothing.
 - ##MINIATURE-LAW-THREE §4 answering §3 the other way (Law 3), @impl/done
 - ##MINIATURE-LAW-FOUR D1 numbered and
   ratifying nothing (Law 4), @impl/done
-- ##MINIATURE-LAW-FIVE every quote-URL refetchable (Law 5). @impl/done
+- ##MINIATURE-LAW-FIVE a closing re-fetch list carrying the capture date and the
+  subject's version at capture (Law 5). @impl/done
 
 ## Summary {#summary}
 

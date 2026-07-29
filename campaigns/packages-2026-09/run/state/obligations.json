@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 600,
+ "drift_verdicts": 596,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -6195,53 +6195,6 @@
    "carried": true
   },
   {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/discovery-prompt"
-   ],
-   "files": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md#EVERY-CONTROL-IS-A-LITERAL-HASHTAG",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md#ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/discovery-prompt"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases).",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:7  <VARIABLES>",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:70  TRIGGERING (read first): every control below is a hashtag — literal \"#\" + exact token,",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:183  4. Leave <MAIN>, <EXTENSION_CRITICALITY>, and the response grammar",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:184     untouched — they are the mechanism, not the configuration."
-   ],
-   "cites": [],
-   "reason": "DRIFT: the guide widens a rule the artefact deliberately scoped, and the artefact contradicts the widened form. DISCOVERY-PROMPT.md:70 reads «TRIGGERING (read first): every control BELOW is a hashtag — literal \"#\" + exact token, case-insensitive (like #superthink)», and «below» means inside `<EXTENSION_CRITICALITY>`, which runs :63-150. usage.md:119-120 drops «below» and asserts it of EVERY control — in a section (§knobs, :117-145) whose own fourth bullet is `#superthink`. That control lives at :35-51, ABOVE the scope, and DISCOVERY-PROMPT.md:38 fires it on the BARE word: «use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases)». Verified by reading both blocks and their boundaries directly. A description of the artefact that the artefact does not match.",
-   "reasons": [
-    "DRIFT, and the contradicting text is fifteen lines below it in the same file. usage.md:168-170 draws the split as «the `<VARIABLES>` and `EXTENSION` blocks are configuration, the `MAIN` block is mechanism». usage.md:183-184, inside this file's own re-derive prompt, reads «Leave <MAIN>, <EXTENSION_CRITICALITY>, and the response grammar untouched — they are the mechanism, not the configuration». `<EXTENSION_CRITICALITY>` is one of the five EXTENSION blocks (`grep -nE '^<[A-Z_]+>'` on the artefact: VARIABLES 7, EXTENSION_USER_INFO 14, EXTENSION_PREFERRED_LANGUAGE 28, EXTENSION_SUPERTHINK 35, EXTENSION_OPEN_SOURCE_LICENSES 53, EXTENSION_CRITICALITY 63, MAIN 152). One file, two incompatible classifications of the same block, both `@impl/done`. The read-only half of the sentence is separately true and is not what fails. The artefact itself labels no block either way — `grep -n -i 'configuration|mechanism'` returns nothing — so the taxonomy is this file's, and this file breaks it."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
-   "falsifier": "self",
-   "id": "F-229",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "missing-support",
    "rule": "r-no-checker",
    "merged_by": [
@@ -9299,46 +9252,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/comparative-research"
-   ],
-   "files": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md#MINIATURE-LAW-FIVE"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/comparative-research"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:101  ## 7. Re-fetch list {#refetch}",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:156  …quarry.example/docs/caching, accessed 2026-07-01",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:165  …quarry.example/docs/remote, accessed 2026-07-01"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the artefact, confirmed on the URLs. The fragment's two quote attributions do carry URLs and dates, so each quote is individually refetchable — that much the claim earns. What Law 5 actually requires is a closing re-fetch list carrying the subject's version at capture, and the fragment contains no such section. The claim substitutes «every quote-URL refetchable», which is an inference from the attributions rather than the list the law names and this file's own skeleton defines. Source 1 alone: the whole check is the package against itself.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:101  ## 7. Re-fetch list {#refetch}",
-   "falsifier": "self",
-   "id": "F-297",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -9458,45 +9371,6 @@
    "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
    "falsifier": "mixed",
    "id": "F-300",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/discovery-prompt"
-   ],
-   "files": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md#BARE-WORDS-NEVER-FIRE-THE-MACHINERY"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/discovery-prompt"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:72  machinery (the words are generic; only the #-prefixed token triggers). No hashtag → DEFAULT."
-   ],
-   "cites": [],
-   "reason": "DRIFT: same defect, stated more absolutely and therefore more clearly false. usage.md:122 reads «Bare words in prose never fire the machinery», unqualified. The artefact's own version at DISCOVERY-PROMPT.md:71-72 is scoped and its example words are `hot`/`cold`, both defined inside `<EXTENSION_CRITICALITY>` — and the bare word `SUPERTHINK` DOES fire the fourth knob (:38). Judged on its own sentence rather than on its neighbour: the neighbour widens a scope, this one asserts a universal negative that a single documented case refutes.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
-   "falsifier": "self",
-   "id": "F-301",
    "id_source": "minted",
    "carried": true
   },
@@ -11694,19 +11568,54 @@
  ],
  "resolved": [
   {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/discovery-prompt"
+   ],
+   "files": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md#EVERY-CONTROL-IS-A-LITERAL-HASHTAG",
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md#ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/discovery-prompt"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the guide widens a rule the artefact deliberately scoped, and the artefact contradicts the widened form. DISCOVERY-PROMPT.md:70 reads «TRIGGERING (read first): every control BELOW is a hashtag — literal \"#\" + exact token, case-insensitive (like #superthink)», and «below» means inside `<EXTENSION_CRITICALITY>`, which runs :63-150. usage.md:119-120 drops «below» and asserts it of EVERY control — in a section (§knobs, :117-145) whose own fourth bullet is `#superthink`. That control lives at :35-51, ABOVE the scope, and DISCOVERY-PROMPT.md:38 fires it on the BARE word: «use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases)». Verified by reading both blocks and their boundaries directly. A description of the artefact that the artefact does not match.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
+   "falsifier": "self",
+   "id": "F-229",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
     "single row"
    ],
    "packages": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+    "packages/org.vibevm.world/comparative-research"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md"
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md"
    ],
    "anchors": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md#END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE"
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md#MINIATURE-LAW-FIVE"
    ],
    "drift_count": 1,
    "cross_package": false,
@@ -11714,18 +11623,52 @@
    "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang",
-    "vibedeps"
+    "packages/org.vibevm.world/comparative-research"
    ],
    "cites": [],
-   "reason": "the cross-reference misses by one section and by the artifact: §5 of the Sweep Playbook is «What the sweep deliberately does NOT do», the output section is §4, and **no table appears anywhere in that playbook**",
+   "reason": "DRIFT on the artefact, confirmed on the URLs. The fragment's two quote attributions do carry URLs and dates, so each quote is individually refetchable — that much the claim earns. What Law 5 actually requires is a closing re-fetch list carrying the subject's version at capture, and the fragment contains no such section. The claim substitutes «every quote-URL refetchable», which is an inference from the attributions rather than the list the law names and this file's own skeleton defines. Source 1 alone: the whole check is the package against itself.",
    "status": "resolved",
    "wave": 1,
    "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:90  ##END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE End every sweep with the outcome table the Playbook §5 specifies: per tier,",
+   "fact": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:101  ## 7. Re-fetch list {#refetch}",
    "falsifier": "self",
-   "id": "F-283",
-   "id_source": "minted"
+   "id": "F-297",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/discovery-prompt"
+   ],
+   "files": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md#BARE-WORDS-NEVER-FIRE-THE-MACHINERY"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/discovery-prompt"
+   ],
+   "cites": [],
+   "reason": "DRIFT: same defect, stated more absolutely and therefore more clearly false. usage.md:122 reads «Bare words in prose never fire the machinery», unqualified. The artefact's own version at DISCOVERY-PROMPT.md:71-72 is scoped and its example words are `hot`/`cold`, both defined inside `<EXTENSION_CRITICALITY>` — and the bare word `SUPERTHINK` DOES fire the fourth knob (:38). Judged on its own sentence rather than on its neighbour: the neighbour widens a scope, this one asserts a universal negative that a single documented case refutes.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
+   "falsifier": "self",
+   "id": "F-301",
+   "id_source": "minted",
+   "carried": true
   }
  ]
 }

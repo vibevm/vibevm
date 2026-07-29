@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T08:19:55Z",
+  "updated_at": "2026-07-29T08:26:30Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ab38e71262a939e6f18414462bc1e9e9ecb4890a2aec570d5f2816a3faf0f671",
@@ -33386,7 +33386,7 @@
       }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md": {
-      "content_hash": "5f5145933fc1bc2cb94d457ad3f01f22b374e338ec727efa161f932a1ea486f0",
+      "content_hash": "e6b8915bdda5bc8b973b9e71d74ac8623e3d2c74cb3bc9ff2d9d54445437c11a",
       "rollup": {
         "explicit": [
           "spec",
@@ -33408,7 +33408,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "5f5145933fc1bc2cb94d457ad3f01f22b374e338ec727efa161f932a1ea486f0",
+        "processed_hash": "e6b8915bdda5bc8b973b9e71d74ac8623e3d2c74cb3bc9ff2d9d54445437c11a",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -33674,15 +33674,14 @@
             ]
           },
           "MINIATURE-LAW-FIVE": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:156  …quarry.example/docs/caching, accessed 2026-07-01",
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:165  …quarry.example/docs/remote, accessed 2026-07-01",
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:101  ## 7. Re-fetch list {#refetch}",
-              "DRIFT on the artefact, confirmed on the URLs. The fragment's two quote attributions do carry URLs and dates, so each quote is individually refetchable — that much the claim earns. What Law 5 actually requires is a closing re-fetch list carrying the subject's version at capture, and the fragment contains no such section. The claim substitutes «every quote-URL refetchable», which is an inference from the attributions rather than the list the law names and this file's own skeleton defines. Source 1 alone: the whole check is the package against itself."
-            ],
+            "v": "confirmed",
             "src": [
               1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:189  - ##MINIATURE-LAW-FIVE a closing re-fetch list carrying the capture date and the",
+              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md:181  ## 7. Re-fetch list",
+              "CLOSED F-297 (Phase D, wave 1, route a). The worked fragment was introduced as obeying all five laws and obeyed four: Law 5 asks for a closing re-fetch list with the subject's version at capture, and the fragment stopped at 5. Repaired on the STRONGER side - the fragment gained the section its own skeleton defines, quoting the one source it already cites - so the example now demonstrates the law instead of the caption being softened to match a fragment that broke it."
             ]
           },
           "SUM-COPY-THE-SKELETON-WHOLE": {
@@ -33757,8 +33756,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:48:48Z",
-        "verify_batch": "W4"
+        "verified_at": "2026-07-29T08:26:30Z",
+        "verify_batch": "W4 + D1b"
       }
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md": {
@@ -40317,7 +40316,7 @@
       }
     },
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md": {
-      "content_hash": "2d322a4a952aa991ca72d9476c48280f483cb9f16b672ba13aeacfb261101501",
+      "content_hash": "2dfd25b0b7e920a7e89afd5f70b4734e04571fa9ec24192a523a3febf1e496b6",
       "rollup": {
         "explicit": [
           "spec",
@@ -40339,7 +40338,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "2d322a4a952aa991ca72d9476c48280f483cb9f16b672ba13aeacfb261101501",
+        "processed_hash": "2dfd25b0b7e920a7e89afd5f70b4734e04571fa9ec24192a523a3febf1e496b6",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -40824,28 +40823,26 @@
             ]
           },
           "EVERY-CONTROL-IS-A-LITERAL-HASHTAG": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:70  TRIGGERING (read first): every control below is a hashtag — literal \"#\" + exact token,",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases).",
-              "DRIFT: the guide widens a rule the artefact deliberately scoped, and the artefact contradicts the widened form. DISCOVERY-PROMPT.md:70 reads «TRIGGERING (read first): every control BELOW is a hashtag — literal \"#\" + exact token, case-insensitive (like #superthink)», and «below» means inside `<EXTENSION_CRITICALITY>`, which runs :63-150. usage.md:119-120 drops «below» and asserts it of EVERY control — in a section (§knobs, :117-145) whose own fourth bullet is `#superthink`. That control lives at :35-51, ABOVE the scope, and DISCOVERY-PROMPT.md:38 fires it on the BARE word: «use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases)». Verified by reading both blocks and their boundaries directly. A description of the artefact that the artefact does not match."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:119  ##EVERY-CONTROL-IS-A-LITERAL-HASHTAG Every criticality control - #hot, #cold, #reboil and their modifiers - is a literal hashtag",
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:69  TRIGGERING (read first): every control below is a hashtag - literal \"#\" + exact token,",
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases).",
+              "CLOSED F-229 (Phase D, wave 1, route a). The sentence asserted of EVERY control what the artefact scopes to the controls inside <EXTENSION_CRITICALITY> (:62-150), and its own knob list carries #superthink, which ships as a separate extension block at :35-51 and fires on the BARE word by the artefact's own line 38. The sentence now names the criticality controls and states #superthink as the documented exception, matching the artefact rather than widening it."
             ]
           },
           "BARE-WORDS-NEVER-FIRE-THE-MACHINERY": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:72  machinery (the words are generic; only the #-prefixed token triggers). No hashtag → DEFAULT.",
-              "DRIFT: same defect, stated more absolutely and therefore more clearly false. usage.md:122 reads «Bare words in prose never fire the machinery», unqualified. The artefact's own version at DISCOVERY-PROMPT.md:71-72 is scoped and its example words are `hot`/`cold`, both defined inside `<EXTENSION_CRITICALITY>` — and the bare word `SUPERTHINK` DOES fire the fourth knob (:38). Judged on its own sentence rather than on its neighbour: the neighbour widens a scope, this one asserts a universal negative that a single documented case refutes."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:124  ##BARE-WORDS-NEVER-FIRE-THE-MACHINERY Bare `hot` and `cold` in ordinary prose never fire the criticality machinery",
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
+              "CLOSED F-301 (Phase D, wave 1, route a). The sentence asserted a universal negative that the artefact's own SUPERTHINK block refutes; it now carries the artefact's own scope - the generic words hot and cold - word for word."
             ]
           },
           "DEFAULT-WITH-NO-HASHTAG": {
@@ -40958,17 +40955,14 @@
             ]
           },
           "ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:7  <VARIABLES>",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:183  4. Leave <MAIN>, <EXTENSION_CRITICALITY>, and the response grammar",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:184     untouched — they are the mechanism, not the configuration.",
-              "DRIFT, and the contradicting text is fifteen lines below it in the same file. usage.md:168-170 draws the split as «the `<VARIABLES>` and `EXTENSION` blocks are configuration, the `MAIN` block is mechanism». usage.md:183-184, inside this file's own re-derive prompt, reads «Leave <MAIN>, <EXTENSION_CRITICALITY>, and the response grammar untouched — they are the mechanism, not the configuration». `<EXTENSION_CRITICALITY>` is one of the five EXTENSION blocks (`grep -nE '^<[A-Z_]+>'` on the artefact: VARIABLES 7, EXTENSION_USER_INFO 14, EXTENSION_PREFERRED_LANGUAGE 28, EXTENSION_SUPERTHINK 35, EXTENSION_OPEN_SOURCE_LICENSES 53, EXTENSION_CRITICALITY 63, MAIN 152). One file, two incompatible classifications of the same block, both `@impl/done`. The read-only half of the sentence is separately true and is not what fails. The artefact itself labels no block either way — `grep -n -i 'configuration|mechanism'` returns nothing — so the taxonomy is this file's, and this file breaks it."
-            ],
+            "v": "confirmed",
             "src": [
-              1,
-              3
+              1
+            ],
+            "ev": [
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:171  ##ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED The artifact is read-only, but it is built to be adapted",
+              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:185  4. Leave <MAIN>, <EXTENSION_CRITICALITY>, and the response grammar",
+              "CLOSED F-229 (second anchor, Phase D, wave 1, route a). The summary put every EXTENSION block on the configuration side while the file's own re-derive prompt, fifteen lines below, puts <EXTENSION_CRITICALITY> on the mechanism side - and the artefact's text makes the re-derive prompt right, since that block is the pump. The summary now draws the same line and says which neighbour it agrees with."
             ]
           },
           "re-derive-prompt-lead": {
@@ -41071,8 +41065,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:10:37Z",
-        "verify_batch": "W4"
+        "verified_at": "2026-07-29T08:26:30Z",
+        "verify_batch": "W4 + D1b"
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md": {
