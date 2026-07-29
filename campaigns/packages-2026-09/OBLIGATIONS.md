@@ -16,6 +16,8 @@ is what a closure updates._
 | `duplication` | 4 | 6 |
 | **total** | **221** | **582** |
 
+**Convergence.** 480 drift verdicts still owe the PACKAGE a repair; **102 have been examined and routed out** — §3.6 route (b), the rule is sound and the consumer does not keep it, so the host owes the work. 30 obligations have nothing left owed to the package and survive only as host obligations. The record is [`run/state/routing.json`](run/state/routing.json), written by the boss at review time.
+
 | closure route | obligations | drifts | who approves |
 |---|---:|---:|---|
 | `release` | 17 | 59 | **owner**, before publication |

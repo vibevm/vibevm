@@ -35,6 +35,7 @@ from pathlib import Path
 ZONE = "campaigns/packages-2026-09"
 CACHE = "run/cache.json"
 FINDINGS = "run/state/findings.json"
+ROUTING = "run/state/routing.json"
 OUT_JSON = "run/state/obligations.json"
 OUT_MD = "OBLIGATIONS.md"
 
@@ -50,6 +51,7 @@ FID = re.compile(r"\bF-(\d{3})\b")
 
 
 ROOT_HINT: list = []
+ROUTING_MAP: list = []
 
 
 def repo_root() -> Path:
@@ -138,6 +140,24 @@ def installed_copies(root: Path, files: set[str]) -> dict[str, dict]:
         if found:
             out[f] = {"installed": found}
     return out
+
+
+def routing(root: Path) -> dict[str, dict]:
+    """Anchors a wave examined and deliberately did NOT repair in the package.
+
+    §3.6 routes most of this corpus away from the package: the rule is sound and
+    the consumer does not keep it, so the package must not move. Without a
+    machine record of that determination the registry cannot converge — the
+    anchor stays `drift` for ever, the next wave re-derives the same answer, and
+    the exit gate cannot tell «not worked» from «worked, and the work belongs to
+    the host». This file is that record, written by the boss at review time,
+    never by a worker.
+    """
+    p = root / ZONE / ROUTING
+    if not p.exists():
+        return {}
+    doc = json.loads(p.read_text(encoding="utf-8"))
+    return {e["anchor"]: e for e in doc.get("entries", [])}
 
 
 def known_finding_ids(root: Path) -> tuple[dict[str, dict], set[str]]:
@@ -608,10 +628,16 @@ def build(rows, groups, spent: set[str], ledger: dict, vendored: dict):
             }
         )
 
+    routed = ROUTING_MAP[0] if ROUTING_MAP else {}
     for o in obligations:
         o["closure_route"] = closure_route(o)
         o["fact"] = fact_sentence(o)
         o["falsifier"] = falsifier(o)
+        out = [a for a in o["anchors"] if a in routed]
+        o["routed_out"] = out
+        o["owed"] = o["drift_count"] - len(out)
+        if out:
+            o["routed_to"] = sorted({routed[a]["route"] for a in out})
 
     # biggest first: a cluster's size is how many verdicts one closure clears.
     obligations.sort(key=lambda o: (-o["drift_count"], o["packages"], o["type"]))
@@ -655,6 +681,7 @@ def main() -> int:
     rows = load_drifts(root)
     for r in rows:
         r["type"], r["rule"] = classify(normalise(r["reason"]))
+    ROUTING_MAP.append(routing(root))
     ledger, spent = known_finding_ids(root)
     vendored = installed_copies(root, {r["file"] for r in rows})
     groups = cluster(rows, args.threshold)
@@ -700,6 +727,17 @@ def main() -> int:
         sel = [o for o in obligations if o["closure_route"] == r]
         print("%-18s %8d %8d   %s"
               % (r, len(sel), sum(o["drift_count"] for o in sel), who[r]))
+    print()
+    fully = [o for o in obligations if o["owed"] == 0]
+    part = [o for o in obligations if o["routed_out"] and o["owed"]]
+    owed_v = sum(o["owed"] for o in obligations)
+    print("CONVERGENCE - what the exit gate measures")
+    print("  obligations with nothing left owed to the package : %4d" % len(fully))
+    print("  obligations partly routed out                     : %4d" % len(part))
+    print("  drift verdicts still owed a package repair        : %4d of %d"
+          % (owed_v, len(rows)))
+    print("  routed out of the package (route b / owner)       : %4d"
+          % (len(rows) - owed_v))
     print()
     print("WHERE THE FALSIFYING EVIDENCE SITS - the question 'which side is")
     print("wrong' is a judgement, and this settles only the half a script can:")
@@ -808,6 +846,16 @@ def render_md(obligations: list[dict], n_drifts: int, threshold: float) -> str:
                    % (t, len(by_type[t]), sum(o["drift_count"] for o in by_type[t])))
     out.append("| **total** | **%d** | **%d** |\n" % (len(obligations), n_drifts))
 
+    owed = sum(o["owed"] for o in obligations)
+    fully = sum(1 for o in obligations if o["owed"] == 0)
+    out.append("**Convergence.** %d drift verdicts still owe the PACKAGE a repair; "
+               "**%d have been examined and routed out** — §3.6 route (b), the rule "
+               "is sound and the consumer does not keep it, so the host owes the "
+               "work. %d obligations have nothing left owed to the package and "
+               "survive only as host obligations. The record is "
+               "[`run/state/routing.json`](run/state/routing.json), written by the "
+               "boss at review time.\n"
+               % (owed, n_drifts - owed, fully))
     out.append("| closure route | obligations | drifts | who approves |")
     out.append("|---|---:|---:|---|")
     who = {

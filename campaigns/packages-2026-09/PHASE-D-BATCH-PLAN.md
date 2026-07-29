@@ -454,8 +454,22 @@ python campaigns/packages-2026-09/tasks/drift-registry.py --write
 
 **The exit gate, as four checks:**
 
-1. **The registry is empty, or every survivor carries `status: deferred` with an
-   owner ruling recorded** — measured by the generator, not asserted.
+1. **Nothing is left owed to a package** — every drift verdict is either
+   re-judged or recorded in [`run/state/routing.json`](run/state/routing.json)
+   as routed out of the package, and every survivor carries an owner ruling.
+   Measured by the generator's CONVERGENCE block, not asserted.
+
+   **The routing record is the half the phase would not converge without, and
+   it was missing until wave 2 closed.** §3.6 routes most of this corpus away
+   from the package: the rule is sound and the consumer does not keep it. Such
+   an anchor is not repaired and therefore never stops reading `drift` — so
+   without a record of the determination the registry can never empty, the next
+   wave re-derives the same answer, and the gate cannot tell «not worked» from
+   «worked, and the work belongs to the host». Wave 2 examined 110 anchors and
+   moved nine; the other 102 are in that file, one entry each, with the
+   obligation they came from and why. **It is written by the boss at review
+   time, never by a worker** — routing an anchor out of a package is the same
+   class of judgement as a verdict.
 2. **The `<status>` markers of every touched unit are updated in the same edit
    that touched it** (template `RULE-UPDATE-MARKERS`), and
    `vibe progress check` is green over all touched files.

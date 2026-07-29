@@ -1,0 +1,822 @@
+{
+ "schema": 1,
+ "note": "Anchors a wave examined and deliberately did not repair in the package. Written by the boss at review time, never by a worker. An anchor here is not closed — it is owed by the host rather than by the package, and the exit gate counts it separately from work not yet done.",
+ "entries": [
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#A-FUTURE-READER-NEEDS-THIS-FILE-PLUS-GIT-LOG",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#ROW-STATE-EXECUTING",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#THE-LINES-TAIL-IS-REFRESHED-AT-EVERY-LATER-BOUNDARY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#THE-STATUS-LINE-MUST-NEVER-LAG-THE-TREE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#A-SUMMARY-BLOCK-IS-PREPENDED-AT-CLOSE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#EXECUTION-RECORD-THE-PER-PHASE-DELTAS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#RUN-THE-ACCEPTANCE-SCRIPT-BEFORE-WRITING-THE-REPORT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#A-DEFERRAL-LIVES-IN-THE-PLAN-FILE-UNTIL-DRAINED",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-133",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-144",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#STATUS-BLOCK-THE-COLD-START-FLAG",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-144",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-144",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-144",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-144",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md#SUM-THE-PLANS-STANDING-OBLIGATIONS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-144",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md#EVERY-CAMPAIGN-OPENS-WITH-A-PHASE-THAT-PRODUCES-NO-COMMITS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-155",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md#ROW-ELEMENT-COMMIT-SET",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-155",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md#ANY-PHASE-BOUNDARY-IS-A-SAFE-STOP",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-155",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md#RESUME-THE-STATUS-LINE-NAMES-THE-STATE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-155",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md#SUM-PHASE-ZERO-COMMITS-NOTHING",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-155",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md#SUM-ANY-BOUNDARY-IS-A-SAFE-STOP",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-155",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-195",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-195",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#BOUNDARY-REFRESH-THE-STATUS-LINE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-221",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-221",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md#the-status-line-is-the-lifecycle-indicator-lead",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-291",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#EVERY-DOCUMENT-OBEYS-ALL-FIVE-LAWS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#LAW-ONE-THE-DOCUMENT-MUST-STAND-WHEN-ITS-SOURCES-VANISH",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#LAW-ONE-QUOTE-VERBATIM-WITH-AN-ACCESS-DATE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#LAW-ONE-A-FUTURE-READER-RECONSTRUCTS-WITHOUT-FETCHING",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#LAW-TWO-PRESENT-THE-QUOTE-THEN-ANALYZE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#LAW-TWO-QUOTE-THEN-JUDGE-EVERY-TIME",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#LAW-FOUR-FINDINGS-BECOME-NUMBERED-PRIORITIZED-HOMED-DELTAS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#REFETCH-IN-WHAT-ORDER",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-135",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md#A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-156",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md#ROW-VERDICT-REJECT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-156",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md#ROW-VERDICT-DEFER",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-156",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md#AN-ACCEPTED-DELTA-LANDS-AS-A-RECORDED-DECISION",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-156",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md#RECORD-FIELD-WHY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-156",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md#RECORD-FIELD-WHEN-TO-REVISIT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-156",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-QUOTE-FIRST-CRITIQUE-SECOND",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-173",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-DELTAS-NOT-DECREES",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-173",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-THE-RE-FETCH-LIST",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-173",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#NEVER-LET-A-STUDY-SILENTLY-GO-STALE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-173",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md#SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-222",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-295",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md#critiquing-a-paraphrase-is-critiquing-a-straw-man",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-296",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#NOT-A-TO-DO-LIST",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-UPDATED-LINE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-CURRENT-PHASE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-CONSTRAINTS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-IN-PROGRESS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-NEXT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SECTION-SESSION-CONTEXT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#MORE-AUTONOMY-DEMANDS-A-MORE-PRECISE-WAL",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#BUDGET-TARGET",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md#SUM-SIZE-AND-CONSTRAINTS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-137",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md#HOOK-FIRES-IMPLICITLY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-165",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md#REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-165",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md#NEVER-LEAVE-THE-UPDATED-LINE-UNTOUCHED",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-165",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md#SUM-WHEN-THE-HOOK-RUNS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-165",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md#SUM-THE-STEPS-IN-ORDER",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-165",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/README.md#PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-WAL-CONVENTION",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-205",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md#READ-CONTINUE-FIRST-THEN-THE-WAL",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-256",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md#SUM-COLD-START-ORDER",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-256",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md#WAL-IS-WRITTEN-FOR-THE-SAME-PROJECT-RHYTHM",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-257",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md#CONTINUE-IS-OVERWRITTEN-WHOLESALE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-257",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md#RUN-THE-FULL-HOOK-AS-A-HARD-CONTRACT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-349",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md#READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-352",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-141",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-141",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-FIELD-ID",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-141",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-DISP-FILED",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-141",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-141",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-141",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-141",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#A-RUN-MUST-FINISH-THE-INVENTORY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-164",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-WALK-THE-CHECKLIST-BREADTH-FIRST",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-164",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-164",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-164",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#OWES-A-COMPLETE-INVENTORY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-164",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-235",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SEVERITY-P1-BLOCKER",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-310",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/README.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-311",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-312",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md#A-MANUAL-TEST-IS-A-SELF-CONTAINED-MARKDOWN-WALKTHROUGH",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-149",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md#OPEN-IT-FOLLOW-IT-AND-KNOW-PRECISELY-WHICH-STEP-DIVERGED",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-149",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md#MANUAL-TESTS-LIVE-IN-A-DEDICATED-DIRECTORY-AT-THE-REPOSITORY-ROOT",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-149",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md#AN-INDEX-README-IN-THE-DIRECTORY",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-149",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md#KEEP-EACH-FILE-TO-ONE-SCENARIO",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-149",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md#SUM-WHAT-A-MANUAL-TEST-IS",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-149",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md#SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-149",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md#NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-317",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md#NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-318",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md#A-WALKTHROUGH-THAT-BREAKS-ANY-OF-THESE-IS-A-BUG-IN-THE-TEST",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-319",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md#SUM-WHAT-EACH-SECTION-DOES",
+   "route": "host",
+   "wave": 2,
+   "obligation": "F-320",
+   "why": "examined in Phase D wave 2 and ruled §3.6 route (b): the rule is sound and the consumer does not keep it, so the package does not move. The repair, if any, is the host's.",
+   "recorded": "2026-07-29"
+  }
+ ]
+}
