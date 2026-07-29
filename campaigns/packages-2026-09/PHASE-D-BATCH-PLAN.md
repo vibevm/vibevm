@@ -329,6 +329,31 @@ package's library crates, its DRIVER in each language stack's CLI, and its
 DEPLOYMENT in the consuming project. A fact can be true at any one of those and
 invisible at the other three.
 
+**Wave 6's extension, and it runs the opposite way from the rule above.** §3.7
+was written against a search confined to `packages/` that could not see the
+host. Wave 6 found the mirror image: **three verdicts scoped their search to the
+host's `crates/`, and the adopter that falsified them lives inside
+`packages/`.** `packages/org.vibevm.fractality/fractality/v0.1.0/` is not a
+document collection — it is a **second complete project that adopted this
+discipline**, with its own `vibe.toml`, its own `vibedeps/` carrying twenty-odd
+installed flows (`flow-managed-blocks` among them), and its own Cargo workspace.
+`managed-blocks`' `remove` verb — recorded at §7's Phase C close as one of the
+canonical «verbs specified and never built» — is built there, wired to the CLI
+at `crates/fractality-cli/src/harness.rs:350-369`, over a `strip()` whose own
+doc comment says «We create, update, and remove», under a round-trip test named
+`install_into_an_empty_document_then_remove_restores_empty` asserting «a clean
+uninstall leaves no residue».
+
+So the invariant is neither «search the host» nor «search the packages». It is:
+
+> **The perimeter must contain every project that adopted the discipline,
+> wherever that project sits.** This repository holds at least two — the host,
+> and the `fractality` specspace inside `packages/`. A search scoped to either
+> one reads the other's compliance as an absence.
+
+That is the same structural error as §3.7 with the direction reversed, which is
+the argument for stating the invariant rather than the two instances of it.
+
 **Corollary — consistency propagates an error.** The six `BUILD-ORDER` verdicts
 were *restated once to make the family agree*, and the family agreed on a false
 premise: the catalog's order is `terraform/adopt-v0.3/LOG.md`'s phase headings,
