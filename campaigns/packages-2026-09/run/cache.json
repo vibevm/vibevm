@@ -7876,17 +7876,15 @@
             ]
           },
           "PROCEDURES-AS-AGENT-SKILLS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:80  ##PROCEDURES-AS-AGENT-SKILLS Procedures as agent skills: `/go-ai-native-sweep`",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibe.toml:50  name = \"go-ai-native-sweep\"",
-              "crates/vibe-cli/src/cli/skill.rs:31      Install(SkillInstallArgs),",
-              "the two Go skills are **not installed**: `.claude/skills/` carries `rust-ai-native-sweep`, `rust-ai-native-terraform`, `typescript-ai-native-sweep`, `typescript-ai-native-terraform` and `vibevm` — four of the six, and no Go pair. `vibe.lock` carries no `go-ai-native` entry and `vibedeps/` no `stack-go-ai-native-lang` slot"
+              "the sentence describes what the package ships, and the package ships it: spec/skills/go-ai-native-sweep/SKILL.md and spec/skills/go-ai-native-terraform/SKILL.md exist and are declared in the package's own vibe.toml ([[skills]] name = go-ai-native-sweep, :50)",
+              "the prior verdict rested wholly on host DEPLOYMENT state (.claude/skills/, vibe.lock, vibedeps/) — void against a Go sentence per §3.8 (owner ruling 2026-07-31): this host is not a Go consumer and must not be; harvest/d8b-stacks-audience-release-reverify.md #f-187"
             ]
           }
         },
         "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verify_batch": "C6 + D8b"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md": {
@@ -12439,10 +12437,9 @@
           "COMPONENT-THE-PRODUCT-SEAM": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:127  - ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the SAME four `tcg_*` tools; `language: \"go\"`...",
-              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/lib.rs:60  \"tcg_complete\", \"tcg_scope\", \"tcg_type\", \"tcg_validate\",",
-              "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_discipline.rs:19  pub(crate) fn language_mismatch(args: &Value) -> Option<ToolOutput> { let asked = args.get(\"language\").and_then(Value...",
-              "**the host does not dispatch `go`.** The fact says the same four `tcg_*` tools take `language: \"go\"` and dispatch through the lockfile to this slot. The host's PROP-026 accepts `\"typescript\"` and `\"rust\"` and names **`\"go\"` as the example of an unsupported value** (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:71-73 and :169-171). The Go tools ship in their own MCP package, where `language` is a compat parameter that must equal `go` (packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_tcg.rs:268). «The enum-value promise, cashed a second time» has not been cashed"
+              "RESTATED (the recorded 'the host does not dispatch go' ground is struck — §B.1/§3.8; the drift survives on the sentence's own named subject): the topology this row names was retired for EVERY language. PROP-026 ##SUPERSEDED-TOPOLOGY retires the multiplexed server with language as dispatch key; ##TCG-CRATE-DELETED deletes vibe-tcg and the vibe-mcp tcg_* adapters; ##TOOLS-NEW-HOME puts the four tools in the per-language mcp packages of PROP-027",
+              "in the shipped surface `language` is a compat guard that refuses a mismatch, not a dispatch key (go-ai-native-mcp/src/tools_discipline.rs:19-29); 'no new tools' is true (go-ai-native-mcp/src/lib.rs:60-63 mounts the same four), 'no new PROP' is not — PROP-027 is that PROP and this package's own boot snippet cites it (spec/boot/20-stack-go-ai-native-lang.md:60)",
+              "the same document already states the new topology correctly at ##STAGE-A-CONSULTATION-ORACLE (:141-144, 'the MCP delivery half ships in the go-ai-native-mcp package') — nothing here rests on whether this repository consumes Go; harvest d8b #f-189"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -12598,7 +12595,7 @@
           }
         },
         "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a"
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
@@ -12712,10 +12709,8 @@
           "CHECK-THE-PRINTED-POLICY-LINES": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:47  ##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy",
-              "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:29  go-ai-native-conform: NO conform.toml — topology default in force (roots = [\".\"], no cells gate); run `go-ai-native init",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:220              \"\\nfloor: all green ({} step(s) run, {} disabled by policy).\",",
-              "the two strings the sweep tells a reader to look for — `Defaulted` and `DISABLED by policy` — appear in **no shipped string and in no captured run** of any of the three stacks"
+              "RESTATED — half the step quotes a string the tool prints and half quotes one it does not. `DISABLED by policy` is shipped verbatim, this casing, one line per disabled step (go-ai-native-cli/src/floor.rs:66) — that clause is correct and must not be touched; the prior reason ('appears in no shipped string') cited floor.rs:220, the lowercase summary counter, and missed the uppercase form 154 lines above in the same file",
+              "`Defaulted` is a ConfigOrigin enum variant (vendor core-ai-native-conform/src/config.rs:231) and never reaches stderr — on a defaulted policy the tool prints 'go-ai-native-conform: NO conform.toml — topology default in force (roots = [\".\"], no cells gate); run go-ai-native init …' (go-ai-native-conform/src/lib.rs:31-35); drift is real in the first clause only; harvest d8b #f-190"
             ]
           },
           "READ-THE-HEALTH-SUMMARY": {
@@ -12805,11 +12800,10 @@
             ]
           },
           "DRIFT-GOLDEN-TRANSCRIPTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`, `testdata/` goldens): must",
-              "vibedeps/flow-core-ai-native/0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:77  At inventory time, capture golden transcripts for currently-passing observable flows (the `manual-tests/` scenarios + fi",
-              "`capture.sh` exists only at the HOST's `discipline/golden/capture.sh`; **no ai-native package carries a `discipline/` directory at all**, so the re-capture step has no script where the skill puts it"
+              "the anchor names discipline/golden/ and testdata/ goldens as the ADOPTING project's directories — the skill's own frontmatter runs 'on this Go project' and every sibling bullet uses the same consumer-tree prefix (discipline/registry/debt.json, discipline/health/latest-go.json); the package's own terraform skill CREATES discipline/golden/ in an adopting tree (go-ai-native-terraform/SKILL.md:56-58) — §3.7 DEPLOYMENT layer, not a package directory",
+              "the recorded reason does not describe this anchor: it convicts a capture.sh reference the Go sentence does not contain (grep -n captur over the skill: only 're-captured', the practice) — and host absence is void for Go per §3.8; harvest d8b #f-213"
             ]
           },
           "WALK-THE-WISH-RULES": {
@@ -12919,7 +12913,7 @@
           }
         },
         "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verify_batch": "C6 + D8b"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md": {
@@ -14015,17 +14009,15 @@
             ]
           },
           "PROCEDURES-AS-AGENT-SKILLS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md:65  `/rust-ai-native-sweep` (recurring), `/rust-ai-native-terraform` (brownfield",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:50  name = \"rust-ai-native-sweep\"",
-              "crates/vibe-cli/src/cli/skill.rs:31      Install(SkillInstallArgs),",
-              "the two Go skills are **not installed**: `.claude/skills/` carries `rust-ai-native-sweep`, `rust-ai-native-terraform`, `typescript-ai-native-sweep`, `typescript-ai-native-terraform` and `vibevm` — four of the six, and no Go pair. `vibe.lock` carries no `go-ai-native` entry and `vibedeps/` no `stack-go-ai-native-lang` slot"
+              "true on the package bench and on the host bench: the package ships spec/skills/rust-ai-native-sweep/ and rust-ai-native-terraform/ (declared in vibe.toml:50), and the host — a genuine Rust consumer per §3.8 — has both installed (.claude/skills/rust-ai-native-sweep, rust-ai-native-terraform; the prior verdict's own evidence lists them among the four installed)",
+              "harvest/d8b-stacks-audience-release-reverify.md #f-187"
             ]
           }
         },
         "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verify_batch": "C6 + D8b"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md": {
@@ -17931,10 +17923,8 @@
           "COMPONENT-THE-PRODUCT-SEAM": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs:60      \"tcg_complete\",",
-              "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/tools_discipline.rs:22      if asked == \"rust\" {",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:39  - ##LANGUAGE-COMPAT-PARAM `language` survives as a validated",
-              "**the dispatch named was deleted.** «`language: \"rust\"` dispatches through the lockfile to this package's slot artifact» — the vibe-tcg crate and the vibe-mcp `tcg_*` adapters are DELETED (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42), the tools ship in the per-family server (:33), and `language` survives only as a validated compat parameter (:39). The TypeScript twin was recorded drift for the same reason in this same batch, and so was the Go one. «The enum-value promise, cashed» describes a mechanism that was retired"
+              "reason accurate on its substance (the trailing 'and so was the Go one' clause dropped — the Go twin was recorded on a different, since-struck ground): 'language: rust dispatches through the lockfile to this package's slot artifact' names the retired topology — the vibe-tcg crate and the vibe-mcp tcg_* adapters are deleted (PROP-026:10-13), the tools ship in rust-ai-native-mcp (src/lib.rs:60-63), and language is a compat guard (rust-ai-native-mcp/src/tools_discipline.rs:20-30)",
+              "the Rust stack's own boot snippet names the new home: spec/boot/20-stack-rust-ai-native-lang.md:46 'served over MCP by mcp:org.vibevm.ai-native/rust-ai-native-mcp — PROP-027'; harvest d8b #f-189"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -18102,7 +18092,7 @@
           }
         },
         "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5 + C45-rust-review"
+        "verify_batch": "C4+C5 + C45-rust-review + D8b"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
@@ -18216,9 +18206,8 @@
           "CHECK-THE-PRINTED-POLICY-ORIGIN-LINES": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:47  the printed policy-origin lines: a `Defaulted` policy means the project is",
-              "campaigns/packages-2026-09/harvest/rust-ai-native-lang-floor.md:184  conform: NO conform.toml — topology default in force, nothing is gated; run `rust-ai-native init` to write a starting po",
-              "the two strings the sweep tells a reader to look for — `Defaulted` and `DISABLED by policy` — appear in **no shipped string and in no captured run** of any of the three stacks. A diagnostic step keyed on output that is never printed"
+              "RESTATED — this anchor names ONE string, not two: it has no `DISABLED by policy` clause, and could not — the Rust CLI has no floor-disable mechanism (rust-ai-native-cli/src/floor.rs carries no floor_disable; the shared config's floor_disable lives only under [go] and [typescript], vendor config.rs:129 and :173); the prior family-wide reason ('the TWO strings the sweep tells a reader to look for') is false of this anchor on its face",
+              "the `Defaulted` token is a ConfigOrigin enum variant and is never printed — the policy-origin line reads 'conform: NO conform.toml — topology default in force, nothing is gated; run rust-ai-native init …' (rust-ai-native-conform/src/lib.rs:33-36, captured verbatim in the package's own floor run) — the step's guidance is right, the token it names is not matchable in the output; a family-wide edit must NOT push a DISABLED clause onto this correct sentence; harvest d8b #f-190"
             ]
           },
           "READ-THE-HEALTH-SUMMARY": {
@@ -18317,12 +18306,10 @@
             ]
           },
           "DRIFT-GOLDEN-TRANSCRIPTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`): must fail loudly, re-captured",
-              "discipline/golden/capture.sh:2  # discipline/golden/capture.sh — Phase −1 characterization capture",
-              "vibedeps/flow-core-ai-native/0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:77  At inventory time, capture golden transcripts for currently-passing observable flows (the `manual-tests/` scenarios + fi",
-              "`capture.sh` exists only at the HOST's `discipline/golden/capture.sh`; **no ai-native package carries a `discipline/` directory at all**, so the re-capture step has no script where the skill puts it"
+              "discipline/golden/ is the adopting project's directory (§3.7 DEPLOYMENT), and the one real Rust consumer — this host — has it: discipline/golden/capture.sh plus transcript files; the prior verdict quoted capture.sh:2 as evidence of its own absence",
+              "the package's own terraform skill creates the directory in an adopting tree; the sweep sentence is a rule about the consumer's goldens and the consumer keeps it; harvest d8b #f-213"
             ]
           },
           "WALK-THE-WISH-RULES": {
@@ -18432,7 +18419,7 @@
           }
         },
         "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verify_batch": "C6 + D8b"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md": {
@@ -19421,17 +19408,15 @@
             ]
           },
           "PROCEDURES-AS-AGENT-SKILLS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:91  ##PROCEDURES-AS-AGENT-SKILLS Procedures as agent skills: `/typescript-ai-native-sweep` (recurring),",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:50  name = \"typescript-ai-native-sweep\"",
-              ".claude/skills/typescript-ai-native-terraform/SKILL.md:2  name: typescript-ai-native-terraform",
-              "the two Go skills are **not installed**: `.claude/skills/` carries `rust-ai-native-sweep`, `rust-ai-native-terraform`, `typescript-ai-native-sweep`, `typescript-ai-native-terraform` and `vibevm` — four of the six, and no Go pair. `vibe.lock` carries no `go-ai-native` entry and `vibedeps/` no `stack-go-ai-native-lang` slot"
+              "the package ships spec/skills/typescript-ai-native-sweep/ and typescript-ai-native-terraform/ (declared in vibe.toml:50); host install state is void as evidence against a TypeScript stack sentence per §3.8, and here it even agrees — both are installed",
+              "harvest/d8b-stacks-audience-release-reverify.md #f-187"
             ]
           }
         },
         "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6"
+        "verify_batch": "C6 + D8b"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md": {
@@ -20928,10 +20913,8 @@
           "CHECK-THE-PRINTED-POLICY-LINES": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:48  ##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy means",
-              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-floor.md:31  typescript-ai-native-conform: NO conform.toml — topology default in force (roots = [\"src\"], no cells gate); run `typescr",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/config.rs:173      pub floor_disable: Vec<FloorDisable>,",
-              "the two strings the sweep tells a reader to look for — `Defaulted` and `DISABLED by policy` — appear in **no shipped string and in no captured run** of any of the three stacks"
+              "RESTATED — same split as the Go copy: `DISABLED by policy` is shipped verbatim (typescript-ai-native-cli/src/floor.rs:62, inside the floor_disable loop :53-65) and that clause is correct; `Defaulted` is never printed — the line is 'typescript-ai-native-conform: NO conform.toml — topology default in force (roots = [\"src\"], no cells gate); run typescript-ai-native init …' (typescript-ai-native-conform/src/lib.rs:28-32)",
+              "the prior reason cited vendor config.rs:173 pub floor_disable — the field that DRIVES the disabled-print — as evidence the print does not exist; drift is real in the first clause only; harvest d8b #f-190"
             ]
           },
           "READ-THE-HEALTH-SUMMARY": {
@@ -21076,7 +21059,7 @@
           }
         },
         "verified_at": "2026-07-29T08:19:55Z",
-        "verify_batch": "C6 + D1a"
+        "verify_batch": "C6 + D1a + D8b"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md": {
@@ -24164,10 +24147,8 @@
           "COMPONENT-THE-PRODUCT-SEAM": {
             "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:130  - ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the `vibe-tcg` crate — tool",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:10  no schema shape change. **Superseded in topology** (MCP-SOVEREIGNTY wave 6):",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:11  the standalone `vibe-tcg` crate was deleted whole and the tool grammar below",
-              "the `vibe-tcg` crate does not exist, and the corpus records why in its own words: `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:11` says it «was deleted whole», the grammar now served by the per-family MCP servers. The seam this fact names was retired by a decision two documents over"
+              "reason accurate: the row names a host crate that does not exist — vibe-tcg was 'deleted whole' (PROP-026:11), and 'mounted by vibe-mcp as four tcg_* tools' is false (crates/vibe-mcp/src/ carries no tcg adapter; its own skill_template.md:98-101 says the oracle no longer rides this server)",
+              "the row's last clause came TRUE and any correction must keep it: the portability amendment was cashed — all three per-family mcp servers have zero vibe-mcp imports (grep over packages/org.vibevm.ai-native/*-ai-native-mcp/v*/crates/*/Cargo.toml: no output; typescript-ai-native-mcp depends on mcp-core); harvest d8b #f-189"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -24304,7 +24285,7 @@
           }
         },
         "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + D8b"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md": {
