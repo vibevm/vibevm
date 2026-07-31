@@ -15,6 +15,18 @@ python campaigns/packages-2026-09/tasks/drift-registry.py
 **17 obligations · 59 drift verdicts · 25 distinct packages.** Grouped below by
 what the owner actually has to decide, which is not the same as by package.
 
+> **Wave 8 (2026-07-31) re-verified the whole route — the first re-check it
+> ever had — and the ask above is stale: the route is now 10 obligations · 41
+> drifts** (`python campaigns/packages-2026-09/tasks/drift-registry.py`, the
+> authority). Of the 40 verdicts outside the already-verified address family,
+> **13 fell, 3 routed out §3.6(b), 12 were restated on corrected grounds, 12
+> stand**. F-187, F-213, F-240 resolved wholly; F-115, F-186, F-212, F-219
+> left the route (their surviving halves are single-package and re-routed to
+> boss lanes). Per-row wave-8 annotations below; harvests
+> `d8a-stacks-package-own-release-reverify.md`,
+> `d8b-stacks-audience-release-reverify.md`,
+> `d8c-world-compose-release-reverify.md`.
+
 ---
 
 ## A. The address family — one defect, 19 packages {#addresses}
@@ -23,7 +35,7 @@ what the owner actually has to decide, which is not the same as by package.
 |---|---:|---|---|
 | `F-136` | 11 | conflict-protocol, decision-records, git-atomic-commits, health-audit, source-mirrors, sync-from-code, wal | `../flows/<name>/…` in a boot snippet resolves inside the package and to `spec/flows/…` in the compiled lane, which no consumer has |
 | `F-145` | 8 | campaign-plans, comparative-research, dev-runtime-docs, git-attribution-policy, git-autonomy, git-conventional-commits, licensing, sync-from-code | same, on the `sibling-document-pointers` anchor |
-| `F-240` | 2 | licensing, spec-genres | the root-relative variant: a re-derive prompt whose FIRST instruction is «Read `spec/flows/licensing/` end to end» |
+| ~~`F-240`~~ | 2 | licensing, spec-genres | **wave 8: both FELL — the lead was convicted of its fenced neighbour's defect.** Each judged lead asserts only «paste this to your agent» / «map yours onto this frame», and the do-not-copy-verbatim carve-out sits two lines above it; the broken `Read spec/flows/<name>/` path is the fence's first line, and a fence carries no anchor (B-004). Re-measured: **17 packages exactly** ship the shape, 16 with an adjacent carve-out; after re-judgement the leads read 14 confirmed / 0 drift / 3 unjudged. **The fence repair remains a real product decision for the owner — but it changes no verdict on any scope, because no instrument can see inside a fence.** B-004 updated with the corrected counts |
 
 **Decided already** (owner, 2026-07-29): the links take `@spec://` where they are
 pointers and `#embed` where the target belongs in the lane; a generated boot
@@ -148,16 +160,16 @@ family-wide edit would break two working sentences to fix one.
 
 | id | n | stacks | what fails |
 |---|---:|---|---|
-| `F-153` | 6 | go, rust, typescript `-lang` | boot snippet cites `rust/…`, `go/…`, `cards/INDEX.md`; all live under `spec/` |
-| `F-115` | 3 | the three umbrella packages | the front door points at the `-lang` README and `typescript-ai-native-lang` ships **no README.md** |
-| `F-186` | 3 | go, rust `-lang` | the fact cites three evidence ids; `H4` is in **no** register in this repository |
-| `F-187` | 3 | go, rust, typescript `-lang` | ~~the two **Go** skills are not installed~~ — **VOID, see §B.1.** A skills directory holds arbitrary skills for whichever agents *this host* runs; what is installed here says nothing about what a package ships |
-| `F-188` | 3 | go, rust, typescript `-lang` | the printed CLI signature takes five parameters; the shipped verb takes two — **stands**, it is falsifiable inside the package |
-| `F-189` | 3 | go, rust, typescript `-lang` | ~~the host does not dispatch `go`~~ — **VOID, see §B.1.** The host is not a consumer of the Go stack and is not meant to be |
-| `F-190` | 3 | go, rust, typescript `-lang` | **the verdict is half false**: `DISABLED by policy` IS shipped; only `Defaulted` is wrong, and the three sentences are not word-identical |
-| `F-211` | 2 | go, rust `-lang` | `init` prints one parameter and five keys; the shipped op takes none and returns four |
-| `F-212` | 2 | go, rust `-lang` | `gated_packages` → `gated_crates`, and three kind strings are wrong |
-| `F-213` | 2 | go, rust `-lang` | `capture.sh` exists only at the **host's** `discipline/golden/`; no ai-native package carries a `discipline/` at all |
+| `F-153` | 6 | go, rust, typescript `-lang` | boot snippet cites `rust/…`, `go/…`, `cards/INDEX.md`; all live under `spec/` — **wave 8: all six STAND**. Noticed unjudged twins: `##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION` in all three snippets and core's own `10-flow-core-ai-native.md:9-18,38` carry the same defect with no verdict |
+| ~~`F-115`~~ | 3 | the three umbrella packages | **wave 8: go and rust FELL — falsified by the failing verdicts' own evidence lists** (both `-lang` READMEs exist and were cited by path and line 1). The TypeScript half is real — `typescript-ai-native-lang` is the only one of the 42 shipped versions with no `README.md`, never in git history — and its closure is a **build** (write the README) or a repoint. Single-package now; left the route |
+| ~~`F-186`~~ | 3 | go, rust `-lang` | **wave 8: the premise was false about the corpus's own register** — the ATLAS files **four** records under `refines:H4` (:54,:62,:68,:76; one carries the card's gloss verbatim); the H-series is the ledger's *axis field* (30+ refs), never a heading — the string was searched where the thing is a field. go+rust `scaffold-g` FELL; the survivor is `scaffold-i`'s typo'd id `DL1-015` → `DR1-015`, single-package, left the route. **New finding for the owner: H1–H6 is cited ~49× corpus-wide and defined nowhere; the owner is `core-ai-native/v0.8.0/spec/appendix/`** |
+| ~~`F-187`~~ | 3 | go, rust, typescript `-lang` | ~~the two **Go** skills are not installed~~ — **VOID, see §B.1**, and **wave 8 confirms the strike on the package bench: all three FELL** — each package ships the skills its snippet names (`spec/skills/` + `vibe.toml`), and for Rust the host installed them too. Resolved |
+| `F-188` | 3 | go, rust, typescript `-lang` | **stands, restated per stack (wave 8):** the go card prints the **rust** CLI's five-parameter signature (shipped go verb takes two, writes three files — and the recorded «no Example stub» clause is false, the stub IS written); the rust and ts cards cite `vibe codemod rename-seam` — `vibe` has no `codemod` verb, `rename-seam` has zero implementations tree-wide, `ts-morph` is absent from the TS package |
+| `F-189` | 3 | go, rust, typescript `-lang` | ~~the host does not dispatch `go`~~ — **the §B.1 strike was mis-scoped and the drift SURVIVES on the sentence's own named subject** (each row opens «(vibevm, PROP-026)»): the `vibe-tcg` lockfile-dispatch topology is retired for **every** language by PROP-026's own head matter (`##SUPERSEDED-TOPOLOGY`, `##TCG-CRATE-DELETED`); `language` is a compat guard; the Go doc itself states the new topology at `##STAGE-A` seven lines below. See §B.1's wave-8 note. Corrections drafted in `d8b` harvest — **and the three `##three-processes-lead` fenced diagrams carry the same retired topology with no anchor and no verdict (B-004's shape); repair them in the same diff or ship two topologies per document** |
+| `F-190` | 2 | go, typescript `-lang` | **stands, restated (wave 8):** `DISABLED by policy` **IS shipped verbatim** (go `floor.rs:66`, ts `floor.rs:62` — the prior verdict cited the lowercase counter 154 lines below the print); only `Defaulted` is unprintable (an enum variant); and the **rust** copy names one string, not two — rust has no floor-disable mechanism, so a family-wide edit would break a correct sentence (its anchor re-clustered off this row) |
+| `F-211` | 2 | go, rust `-lang` | **stands (wave 8):** go as recorded; rust restated with Rust's own key names — the missing keys are `ra_path` / `toolchain` / `root_files`, not Go's gopls trio |
+| ~~`F-212`~~ | 2 | go, rust `-lang` | **wave 8: rust FELL — falsified by its own evidence list** (the sentence already says `unwrap_domain` … on a gated **crate**, matching shipped `gated_crates`; all four counters ship). The go half survives restated — the collector emits **no per-kind, per-package census at all**, and three of its five names mismatch shipped kinds — single-package now, left the route |
+| ~~`F-213`~~ | 2 | go, rust `-lang` | **wave 8: both FELL — §3.7's textbook case.** `discipline/golden/` in a sweep skill is the *adopting project's* directory (frontmatter «on this Go/Rust project»; sibling bullets use the same prefix); the package's own **terraform** skill creates it; the one real Rust consumer — this host — has `capture.sh` plus transcripts, and the verdict quoted `capture.sh:2` as evidence of absence; the Go anchor never names `capture.sh` at all. Resolved |
 
 ### B.1 Owner ruling, 2026-07-31 — this host is not the test bench for these packages {#stacks-audience}
 
@@ -194,6 +206,21 @@ printed CLI signature against the shipped verb (`F-188`), a bare intra-package
 path (`F-153`), a roster against the package's own contents (`F-115`), an
 evidence id that is in no register (`F-186`). Those need no consumer at all.
 
+> **Wave 8 correction to this section (2026-07-31), and it is a rule about
+> strikes, not about these rows.** An obligation merged by *shared anchor*
+> carries **per-anchor reasons in `run/cache.json`**, and the registry row
+> quotes only one of them. §B.1's strike of `F-189` was scoped by the row's
+> reason — the GO anchor's «the host does not dispatch `go`» — but the rust
+> and typescript verdicts never used that argument: they rest on PROP-026's
+> own `##SUPERSEDED-TOPOLOGY` / `##TCG-CRATE-DELETED`, no consumer involved.
+> So the strike voided the *ground* correctly and the *verdicts* survive on
+> their own grounds — including Go, whose sentence names `(vibevm, PROP-026)`
+> as its subject and describes a topology PROP-026 itself retired for every
+> language. **Before any future strike-by-ruling: check each anchor's own
+> recorded reason, one cache lookup per anchor, never the row's.** The
+> `F-187` strike, checked the same way, holds for all three anchors and the
+> obligation is resolved.
+
 **And the general rule this settles, which reaches past group B.** §3.1's source
 2 — «the host's observed conformance … the host is a living consumer and the
 honest test bench» — was written for `world` flows, where the host really is the
@@ -211,16 +238,13 @@ of the mis-routed batch. The reasoning survives in
 `harvest/d1-go-ai-native-lang-repairs.md` and `harvest/d1-rust-ts-lang-repairs.md`
 and does not need re-deriving.
 
-**Two need a ruling before any edit, not just before publication:**
-
-- **`F-189` — the host does not dispatch `go`.** Three shipped packages claim a
-  capability the consumer names as *not accepted*. Either the host grows `go`
-  dispatch (Phase E work on PROP-026) or the three packages stop claiming it.
-  That is a product decision, not an editorial one.
-- **`F-187` — the two Go skills are not installed.** Same shape one layer down:
-  install them, or the fact stops saying they are there.
-
-The other seven are factual corrections whose only owner gate is publication.
+~~**Two need a ruling before any edit, not just before publication:** `F-189`
+(go dispatch as a product decision), `F-187` (install the Go skills).~~
+**Superseded 2026-07-31 by §B.1 and wave 8:** `F-187` is resolved (the packages
+ship the skills; the host was never the bench), and `F-189` needs **no product
+ruling** — it is a factual correction on PROP-026's own superseded-topology
+record, drafted per stack in the `d8b` harvest. **Everything left in this group
+is a factual correction whose only owner gate is publication.**
 
 ---
 
@@ -228,14 +252,18 @@ The other seven are factual corrections whose only owner gate is publication.
 
 | id | n | packages | what fails |
 |---|---:|---|---|
-| `F-219` | 2 | addressable-specs, campaign-plans | the behaviour is real, the **attribution** is wrong: the rule requiring it lives in `flow:git-conventional-commits`, not `-atomic-commits`. *(The figure has moved: **716** commit bodies cite a `spec://` URI at HEAD, against the 515 recorded when this row was written. The finding does not rest on the count; the count is restated so it is not carried forward stale.)* |
-| `F-220` | 2 | addressable-specs, source-mirrors | the composition is specified on both sides and does not happen in the one consumer |
-| `F-233` | 2 | git-attribution-policy, source-mirrors | a composition whose point is that the choice is recorded as a decision — and in the one consumer that installs both, it is not |
+| ~~`F-219`~~ | 2 | addressable-specs, campaign-plans | **wave 8: the campaign-plans half FELL** — its sentence claims subjects-in-plan / one-idea / ledger-binds-hashes, makes no `spec://`-citation claim (the row's reason was the sibling anchor's), and the live `fractality` adopter keeps the form (8 phases, 3 ledgers, 58 hashes bound); its prior ground was a `legacy-spec/` ratio, voided §3.7. The addressable-specs half **stands restated**: the misattribution is real (`git-atomic-commits`' own boot :22 delegates format to `git-conventional-commits`) — single-package now, left the route. *And the restated «716» was a **unit error**: a LINE count read as a commit count (self-refuting, since a commit count cannot fall from 716 to 579). At HEAD `45cd30b0`: **581 of 2 216 commits**; the command is `git log --grep="spec://" --oneline \| wc -l`* |
+| `F-220` | 2 | addressable-specs, source-mirrors | **wave 8:** the addressable-specs half **ROUTED OUT §3.6(b)** (`routing.json`, wave 8): the composition is sound on both sides and the one consumer fails it — the host WAL's 28 constraint entries carry 0 anchors (and the prior reason's «Next cites paths» tested a section `flow:wal` puts no rule on; the bound section is In-progress, which the host also fails). The source-mirrors half **stands restated on different evidence**: its «wind-down = fan-out» half is *supported* by two host documents (`90-user.md:35`, `PROP-016:59`) against `CLAUDE.md:191` — a host defect, filed **B-009** — and only the «WAL entry notes "fanned out at <checkpoint>"» half drifts (0 hits in any WAL, and `flow:wal`'s eight-section grammar has no slot for it). The which-side (a)/(b) ruling below is still owed for that half |
+| ~~`F-233`~~ | 2 | git-attribution-policy, source-mirrors | **wave 8: both ROUTED OUT §3.6(b)** (`routing.json`, wave 8): the four-field record is the composed flow's own contract, the host does not carry these two choices in it (PROP-016's `##HIST-AUTHORED` is dated with alternatives but has no revisit trigger; the attribution posture has no record at all) — and the prior verdicts' leading search hunted a `spec/decisions/` directory that `##NO-SEPARATE-ADR-DIRECTORY` forbids. Folds into the decision-records host ruling in `PHASE-D-HOST-OBLIGATIONS.md`; the packages do not move |
 
-`F-219` is a pure attribution fix. `F-220` and `F-233` are **§3.6 route (b)
-candidates**: the composition is sound and the consumer does not perform it, so
-the package may not be the side that moves. Both need the which-side ruling
-before an edit exists to approve.
+~~`F-219` is a pure attribution fix. `F-220` and `F-233` are **§3.6 route (b)
+candidates**.~~ **After wave 8, what remains here for the owner:** the
+`F-219` attribution fix (now a single-package boss-route edit reaching the lane
+via the address-family publication), and the **which-side ruling on `F-220`'s
+source-mirrors half** — (a) an over-claimed described practice, repair one
+clause; or (b) a sound-but-unexercised prescription, in which case `flow:wal`
+grows the slot or the host writes the note. Its `@spec/done` marker and §6.1's
+capability rule weigh toward (b).
 
 ---
 
@@ -246,7 +274,10 @@ plus a boot snippet» is five things, four bullets follow, and the fourth bullet
 IS the boot snippet. A count, checkable against the package's own contents —
 **and checked, 2026-07-31: both packages ship exactly three flow documents**
 (`ls …/spec/flows/<name>/*.md` → 3 each), so the sentence is wrong by one on its
-own tree and needs no host observable at all.
+own tree and needs no host observable at all. **Wave 8 re-verified both anchors:
+STAND, and the sibling row lands stronger than recorded** (see the harvest's
+re-measure; the correction remains two words, «four» → «three», gated only by
+publication).
 
 The sibling comparison is restated because its denominator was too small. **25
 world READMEs carry a `##package-contents-lead`**; 17 of them state a number —
@@ -260,20 +291,31 @@ not comparable. So the row is 14 of 17 among packages that count, not 14 of 16.
 
 1. **Group A — publish, and the approval covers more than the three rows say.**
    Measured in §A.1: the `../flows/…` defect exists only in the **compiled
-   lane**, which is generated from `vibedeps/`, so every address obligation —
-   **24 of them across four routes, not the 3 listed here** — closes through
-   publication and none is boss-closable before it. The edit itself is decided
-   and is one verified command
+   lane**, which is generated from `vibedeps/`, so every address obligation
+   closes through publication and none is boss-closable before it. The edit
+   itself is decided and is one verified command
    ([`tasks/address-repair.py`](tasks/address-repair.py): 62 links, 25 packages,
-   62/62 resolve, 0 residual). **One further decision is owed and it is new:**
-   `F-240`'s root-relative variant is recorded in 2 packages and present in
-   **17** (`BACKLOG.md` B-004) — publish the narrow fix and fifteen packages ship
-   the same broken first instruction.
-2. **Group B — two product decisions first** (`F-189` go dispatch, `F-187` the
-   Go skills), then publish the other seven.
-3. **Group C — one which-side ruling** on `F-220` and `F-233`; `F-219` needs
-   only publication.
-4. **Group D — publish.**
+   62/62 resolve, 0 residual). `F-240`'s two recorded verdicts fell in wave 8
+   (the leads were convicted of their fence's defect), so **the decision here is
+   no longer a verdict question at all**: whether to repair the fenced
+   `Read spec/flows/<name>/` first line across the **17** packages that ship it
+   (B-004, counts corrected 2026-07-31) — a product decision on unanchored text
+   that no re-judgement can register either way.
+2. **Group B — no product decisions remain; publish the corrections.**
+   Survivors after wave 8: `F-153` (6), `F-188` (3, per-stack reasons), `F-189`
+   (3, on the superseded-topology ground — repair the three fenced diagrams in
+   the same diff), `F-190` (2, go+ts — the `Defaulted` clause only), `F-211`
+   (2, per-stack key names). Drafted corrections for F-189/F-190 sit in the
+   `d8b` harvest; the owner gate is publication.
+3. **Group C — one which-side ruling remains**: `F-220`'s source-mirrors
+   WAL-entry half, (a) over-claimed practice vs (b) unexercised prescription
+   (the marker and §6.1 weigh toward (b)). `F-233` routed to the host; `F-219`'s
+   survivor is a boss-route edit riding the same publication.
+4. **Group D — publish** («four» → «three», twice).
 
 Nothing here is edited before its ruling. Diffs are prepared, shown, and
 approved per §1.2, which is the order the first wave got wrong and paid for.
+**One new cross-package finding rides with this queue rather than in it:** the
+H1–H6 hypothesis roster is cited ~49 times across the shipped corpus and defined
+nowhere in it; the owner is `core-ai-native/v0.8.0/spec/appendix/`, and the next
+`core-ai-native` publication is the natural vehicle (wave 8, `d8a` harvest).

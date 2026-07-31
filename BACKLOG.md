@@ -211,6 +211,21 @@ already written from it is the specification of the work.)*
   be *run* by a reader, and exactly the content the anchor model cannot see.
   Anywhere a fenced block carries an instruction rather than an illustration, it
   is unverified by construction.
+- ##B004-WAVE8-CORRECTION **Corrected by wave 8's re-measurement (2026-07-31), three ways.**
+  *(i)* The counts above were wrong in both directions: measured at HEAD, the
+  fenced `Read spec/flows/<name>/ …` first line ships in **17 packages
+  exactly**, and after wave 8 re-judged F-240's two leads `confirmed` (each was
+  convicted of the fence's defect while its own do-not-copy-verbatim carve-out
+  sits two lines above — 16 of 17 carry one), the lead anchors read
+  **14 confirmed / 0 drift / 3 unjudged** — not «eleven confirmed», not
+  «fifteen unrecorded». *(ii)* The scope question this entry poses to the owner
+  is cleaner than either option it listed: **repairing all seventeen fences
+  changes no verdict on any scope**, because a fence carries no anchor and no
+  instrument can register the fix — the verdict question is closed and the
+  repair question is a pure product decision. *(iii)* Wave 8 found the shape's
+  second instance in the wild: the three `##three-processes-lead` ASCII
+  diagrams in the `-lang` tools docs draw the retired `vibe-tcg` topology
+  inside fences no anchor covers (`harvest/d8b-stacks-audience-release-reverify.md`).
 
 ### B-005 — `mirror --check` tests equality where the flow specifies ancestry {#b-005}
 
@@ -342,6 +357,33 @@ already written from it is the specification of the work.)*
   declaration on its own initiative is the wrong default even when the edit is
   obviously right. **The fix is `license-file.workspace = true` on line 7, to
   match its twenty-odd siblings.**
+
+### B-009 — the wind-down's push step contradicts the rollout two host documents standardise {#b-009}
+
+| | |
+|---|---|
+| ##B009-ANCHOR **anchor** | falsifies nothing in a package — the contradiction is host-internal. The rule side is `spec/boot/90-user.md` `##CMD-MIRROR` and `spec/common/PROP-016-source-mirrors.md` `##CMD-MIRROR`; the breach side is `CLAUDE.md`'s END SESSION step 4 |
+| ##B009-LOCATOR **locator** | `CLAUDE.md:191` — «Push to `origin/main` — routine per Rule 4» as the wind-down's step 4, where `90-user.md:35` says `cargo xtask mirror` «is the standard rollout, preferred over a bare `git push origin`» and `PROP-016:59` says «This — not `git push origin` — is the standard rollout» |
+| ##B009-SEVERITY **severity** | P2 |
+| ##B009-DISPOSITION **disposition** | `open` |
+| ##B009-FILED **filed by** | the packages-actualization campaign, Phase D, wave 8, 2026-07-31 — surfaced re-verifying F-220's source-mirrors half, where the recorded verdict used `CLAUDE.md:191` to demote a package sentence that the other two host documents support |
+
+- ##B009-WHAT **What it is.** Three host documents state the wind-down rollout and one
+  disagrees with the other two. The wind-down contract in `CLAUDE.md` prescribes
+  the bare named-remote push; the user-owned boot snippet and PROP-016 both name
+  the mirror fan-out the standard rollout and explicitly deprecate the bare push
+  for it. A session following `CLAUDE.md` to the letter rolls out to one host
+  and leaves every other mirror behind — the exact state `PROP-016`'s fan-out
+  exists to prevent.
+- ##B009-WHY-FILED-NOT-FIXED **Why filed and not fixed.** `CLAUDE.md` is the owner-maintained
+  boot contract; its END SESSION section is an owner-authored command
+  specification, and `RULE-NO-SILENT-REPAIRS` binds the phase. The fix is one
+  line — step 4 saying `cargo xtask mirror` (or «push, then fan out») — but
+  which wording the owner wants is the owner's call.
+- ##B009-COST-TODAY **What it costs today.** Every session that ends by the book pushes
+  `origin` only; the mirrors drift until someone runs the fan-out by hand, and
+  `mirror --check`'s equality probe (B-005) then reports the *targets* as
+  drifted — two filed defects compounding into one confusing red panel.
 
 ## P3 — accepted, no action planned {#p3}
 
