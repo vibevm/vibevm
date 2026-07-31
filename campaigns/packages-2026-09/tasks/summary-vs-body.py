@@ -68,21 +68,26 @@ def main() -> int:
                 continue
             if f"{path}#{anchor}" in routed:
                 continue
-            # The signal: a summary drifting over a body that does not.
-            if body_drift == 0:
-                suspects.append((path, anchor, body_conf, body_drift))
+            suspects.append((path, anchor, body_conf, body_drift))
 
-    suspects.sort(key=lambda s: (-s[2], s[0]))
+    # Strongest signal first: the more of the body is confirmed, the harder it is
+    # for its own summary to be drifting on the same measurement.
+    suspects.sort(key=lambda s: (s[3] / max(s[2] + s[3], 1), -s[2]))
 
-    print(f"files with verdicts examined : {checked}")
-    print(f"summary anchors still drifting over a body with ZERO drift : {len(suspects)}")
+    strong = [s for s in suspects if s[3] == 0]
+    print(f"files with verdicts examined                   : {checked}")
+    print(f"summary anchors still reading drift, not routed : {len(suspects)}")
+    print(f"  of which over a body with ZERO drift         : {len(strong)}")
     print()
-    if suspects:
-        print("Each of these is a CANDIDATE, not a finding. Read the summary against the")
-        print("rows it restates: either the body verdicts are wrong, or this one is.")
-        print()
+    print("Each is a CANDIDATE, not a finding. Read the summary against the rows it")
+    print("restates: either those body verdicts are wrong, or this one is. W1's")
+    print("summary-restatement precedent allows a summary to carry a clause its body")
+    print("does not — so a hit is a question, never an answer.")
+    print()
     for path, anchor, conf, drift in suspects:
-        print(f"  ##{anchor}")
+        ratio = drift / max(conf + drift, 1)
+        mark = "!!" if drift == 0 else ("! " if ratio < 0.25 else "  ")
+        print(f"{mark} ##{anchor}")
         print(f"      {path}")
         print(f"      body in this file: {conf} confirmed, {drift} drift")
     return 0
