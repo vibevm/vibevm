@@ -506,6 +506,21 @@ owner routes and had to be reverted wholesale by owner ruling.*
   and once for its own risk id. `merge-verdicts.py` caught all three with «not an
   addressable anchor of this file», which is its third useful refusal in this
   phase.
+- ##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS **A search over this repository finds this campaign's own
+  records, and they are not evidence about the subject.** The campaign writes
+  its findings into `campaigns/**`, into `spec/terraforms/`'s §7 LOG, and into
+  harvest files — all inside the tree it measures. So a grep for the very term a
+  finding is about will match the finding. It has fired three times in two waves:
+  a `revisit` sweep whose 581 raw hits were «almost entirely campaign JSON
+  quoting anchor ids»; a whole-commit grep returning 13 false hits from the
+  verdict cache riding along in the same commit; and a host-live count of the
+  `campaign-plans` sections that showed one hit for **every** form, every one of
+  them inside this campaign's own plan, matching because the LOG entry written
+  the day before quotes those words in prose. **Exclude `campaigns/*/run/**` by
+  default, and when a count over `spec/terraforms/` or `campaigns/` is the
+  evidence, open the hits and confirm they are instances of the form rather than
+  prose about it.** The trap is worst exactly where the campaign has been most
+  thorough, because that is where its own footprint is largest.
 - ##ABSENCE-NAMES-ITS-PERIMETER **A demotion whose whole basis is an absence
   must name the perimeter it searched, in the record, before the marker moves.**
   Two demotions in the first wave rested on «nothing captures a golden
