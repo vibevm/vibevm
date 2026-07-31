@@ -1,38 +1,51 @@
-# The Raid Playbook — Layered Refactoring Sweeps
-**Discipline v0.2 · status: BETA · T1**
+# The Raid Playbook — Layered Refactoring Sweeps {#root}
 
-*The macro-rhythm of the Discipline. Inline triggers (the micro-rhythm) apply cards per-edit where cheap; a RAID applies a set of cards across a whole layer when per-edit triggers cannot keep up — because attention budget is exhausted, or a new card is adopted repo-wide. A raid is itself spec-driven and follows the same gate discipline as the original terraform.*
+<status stage="spec" state="done"/>
 
-## 0. When a raid, not an inline trigger
+##status-line **Discipline v0.2 · status: BETA · T1** @impl/done
 
-Inline (edit-time) handling is always preferred. Escalate to a raid when:
-- a card's trigger is **raid-mode** by nature (e.g. "naming uniformity across a crate" — not worth firing per keystroke, only meaningful in bulk);
-- a **new card is adopted** and must be applied to existing code repo-wide;
-- **debt accumulates** past a threshold (the A6 debt ledger trips a tripwire);
-- the swarm's **attention budget is structurally insufficient** for a class of cross-cutting concern, so it is swept periodically instead of held active.
+##RAID-IS-THE-MACRO-RHYTHM *The macro-rhythm of the Discipline.* @impl/done
 
-## 1. Raid plan skeleton (every raid is authored to this shape)
+##INLINE-PER-EDIT-VERSUS-RAID-PER-LAYER *Inline triggers (the micro-rhythm) apply cards per-edit where cheap; a RAID applies a set of cards across a whole layer when per-edit triggers cannot keep up — because attention budget is exhausted, or a new card is adopted repo-wide.* @impl/done
 
-1. **Scope & freeze.** Which layer(s)/crates are in scope; which surfaces are frozen for the raid's duration. Frozen surfaces may not change except by the raid.
-2. **Card set & order.** The cards to apply, **topologically sorted** by their Band-3 `raid_role.order` dependencies. Example ordering constraint: naming-uniformity (Class B/names) BEFORE contract-extraction (Class C), because contracts cite names; differential-oracle (Class D) wraps every behavior-changing card as a gate.
-3. **Per-layer phases.** The sweep proceeds layer by layer (seams → cells → registry → tests, for Rust), each phase gated green before the next begins. This is the owner's "refactor everything by layers."
-4. **Batch units & checkpoints.** Per-cell or per-crate batches; each batch has a green-gate checkpoint. The raid is **resumable** — a crash or pause never loses progress, and the raid is never one giant diff (R3-013 determinism; phantom-diff avoidance). WAL-backed where the project keeps a WAL (recommended); otherwise the plan-status-line fallback (`06-WAL-CONVENTION.md`, `05-CAMPAIGN-FORM.md` §4).
-5. **Differential safety.** Every card application that changes behavior carries its Class-D oracle. The raid **cannot move behavior silently** — a behavior change without a passing oracle blocks the batch.
-6. **Exit criteria.** All targeted cards' checkers green across scope; the raid's debt ledger at zero; a **raid REPORT** (modeled on the terraform REPORT) listing what the sweep learned — including cards that misfired, false-positive triggers, and routines that overloaded weak readers. The REPORT feeds card revision (cards are beta, revised on pilot evidence only).
+##RAID-IS-ITSELF-SPEC-DRIVEN *A raid is itself spec-driven and follows the same gate discipline as the original terraform.* @impl/done
 
-## 2. Roles in a raid
+## 0. When a raid, not an inline trigger {#when-a-raid}
 
-- **Strong author/orchestrator** — authors the raid plan, sets scope and order, adjudicates review-mode triggers.
-- **Weak swarm** — executes per-batch routines (the Band-3 extract of each card), one batch per agent, meeting only at the merge (R3-013: parallel agents share no state; the merge is the contention point).
-- **The toolchain** — runs checkers per batch (conform tiers, `cargo test -p <cell>`, oracles), emits structured diagnostics (Class F) as the agents' percepts.
+##INLINE-HANDLING-IS-ALWAYS-PREFERRED Inline (edit-time) handling is always preferred. @impl/done
 
-## 3. Relationship to the original terraform
-The first pilot terraform proved the gate-and-phase machinery: phases −1…6, frozen baselines, green gates, a closing REPORT of what the discipline learned about itself. That machinery is now distilled into shipped documents: a raid is the *in-flight* generalization (this playbook — the standing mechanism for applying any card-set across any layer, any time), and `05-CAMPAIGN-FORM.md` is the *paper trail* (plan / baseline / predictions / log / report) every campaign writes so it can be executed cold and resumed at any phase boundary. Adopting the Discipline on an existing codebase follows `mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` and is itself executed as a sequence of raids; the standing between-campaigns counterpart is `04-SWEEP-PLAYBOOK.md`.
+##escalate-to-a-raid-lead Escalate to a raid when: @impl/done
+- ##ESCALATE-TRIGGER-IS-RAID-MODE a card's trigger is **raid-mode** by nature (e.g. "naming uniformity across a crate" — not worth firing per keystroke, only meaningful in bulk); @impl/done
+- ##ESCALATE-NEW-CARD-ADOPTED a **new card is adopted** and must be applied to existing code repo-wide; @impl/done
+- ##ESCALATE-DEBT-PAST-THRESHOLD **debt accumulates** past a threshold (the A6 debt ledger trips a tripwire); @impl/done
+- ##ESCALATE-ATTENTION-BUDGET-INSUFFICIENT the swarm's **attention budget is structurally insufficient** for a class of cross-cutting concern, so it is swept periodically instead of held active. @impl/done
 
-## 4. Cadence
-- **Micro (continuous):** inline triggers in the per-cell loop.
-- **Gate (per-merge):** gate-mode triggers at the cell's verification gate.
-- **Raid (scheduled/on-adoption):** layered sweeps per this playbook.
-- **Review (as-flagged):** review-mode triggers escalated to a stronger reader.
+## 1. Raid plan skeleton (every raid is authored to this shape) {#plan-skeleton}
 
-Together these answer "when do we switch on rethinking and refactoring": continuously where cheap, in planned sweeps where not.
+1. ##SKELETON-SCOPE-AND-FREEZE **Scope & freeze.** Which layer(s)/crates are in scope; which surfaces are frozen for the raid's duration. Frozen surfaces may not change except by the raid. @impl/done
+2. ##SKELETON-CARD-SET-AND-ORDER **Card set & order.** The cards to apply, **topologically sorted** by their Band-3 `raid_role.order` dependencies. Example ordering constraint: naming-uniformity (Class B/names) BEFORE contract-extraction (Class C), because contracts cite names; differential-oracle (Class D) wraps every behavior-changing card as a gate. @impl/done
+3. ##SKELETON-PER-LAYER-PHASES **Per-layer phases.** The sweep proceeds layer by layer (seams → cells → registry → tests, for Rust), each phase gated green before the next begins. This is the owner's "refactor everything by layers." @impl/done
+4. ##SKELETON-BATCH-UNITS-AND-CHECKPOINTS **Batch units & checkpoints.** Per-cell or per-crate batches; each batch has a green-gate checkpoint. The raid is **resumable** — a crash or pause never loses progress, and the raid is never one giant diff (R3-013 determinism; phantom-diff avoidance). WAL-backed where the project keeps a WAL (recommended); otherwise the plan-status-line fallback (`06-WAL-CONVENTION.md`, `05-CAMPAIGN-FORM.md` §4). @impl/done
+5. ##SKELETON-DIFFERENTIAL-SAFETY **Differential safety.** Every card application that changes behavior carries its Class-D oracle. The raid **cannot move behavior silently** — a behavior change without a passing oracle blocks the batch. @impl/done
+6. ##SKELETON-EXIT-CRITERIA **Exit criteria.** All targeted cards' checkers green across scope; the raid's debt ledger at zero; a **raid REPORT** (modeled on the terraform REPORT) listing what the sweep learned — including cards that misfired, false-positive triggers, and routines that overloaded weak readers. The REPORT feeds card revision (cards are beta, revised on pilot evidence only). @impl/done
+
+## 2. Roles in a raid {#roles}
+
+- ##ROLE-STRONG-AUTHOR-ORCHESTRATOR **Strong author/orchestrator** — authors the raid plan, sets scope and order, adjudicates review-mode triggers. @impl/done
+- ##ROLE-WEAK-SWARM **Weak swarm** — executes per-batch routines (the Band-3 extract of each card), one batch per agent, meeting only at the merge (R3-013: parallel agents share no state; the merge is the contention point). @impl/done
+- ##ROLE-TOOLCHAIN **The toolchain** — runs checkers per batch (conform tiers, `cargo test -p <cell>`, oracles), emits structured diagnostics (Class F) as the agents' percepts. @impl/done
+
+## 3. Relationship to the original terraform {#terraform-relationship}
+##first-terraform-proved-the-machinery The first pilot terraform proved the gate-and-phase machinery: phases −1…6, frozen baselines, green gates, a closing REPORT of what the discipline learned about itself. @spec/done
+
+##MACHINERY-DISTILLED-INTO-SHIPPED-DOCUMENTS That machinery is now distilled into shipped documents: a raid is the *in-flight* generalization (this playbook — the standing mechanism for applying any card-set across any layer, any time), and `05-CAMPAIGN-FORM.md` is the *paper trail* (plan / baseline / predictions / log / report) every campaign writes so it can be executed cold and resumed at any phase boundary. @impl/done
+
+##BROWNFIELD-ADOPTION-IS-A-SEQUENCE-OF-RAIDS Adopting the Discipline on an existing codebase follows `mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` and is itself executed as a sequence of raids; the standing between-campaigns counterpart is `04-SWEEP-PLAYBOOK.md`. @impl/done
+
+## 4. Cadence {#raid-cadence}
+- ##CADENCE-MICRO-CONTINUOUS **Micro (continuous):** inline triggers in the per-cell loop. @impl/done
+- ##CADENCE-GATE-PER-MERGE **Gate (per-merge):** gate-mode triggers at the cell's verification gate. @impl/done
+- ##CADENCE-RAID-SCHEDULED **Raid (scheduled/on-adoption):** layered sweeps per this playbook. @impl/done
+- ##CADENCE-REVIEW-AS-FLAGGED **Review (as-flagged):** review-mode triggers escalated to a stronger reader. @impl/done
+
+##answers-when-to-switch-on-refactoring Together these answer "when do we switch on rethinking and refactoring": continuously where cheap, in planned sweeps where not. @impl/done

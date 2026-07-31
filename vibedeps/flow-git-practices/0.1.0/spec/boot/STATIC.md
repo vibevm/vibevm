@@ -2,191 +2,227 @@
 <!-- The static boot lane (PROP-009 §2.3): the highest-priority -->
 <!-- contributions, compiled in verbatim. Read this first, in full. -->
 
-<!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->
+<!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/spec/boot/30-flow-atomic-commits.md -->
 
 # Flow: Atomic Commits {#root}
 
-This project uses the **atomic commits** discipline as its Git
-contract. One commit carries exactly one idea, and the commit message
-explains *why*.
+<status stage="impl" state="done"/>
 
-## Core rule
+##THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE This project uses the **atomic commits** discipline as its Git
+contract. @impl/done
 
-**One commit = one logical change**, not one file changed.
+##ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY One commit carries exactly one idea, and the commit message
+explains *why*. @impl/done
 
-A session that produces (a) a typo fix, (b) a refactor, and (c) a
-schema update is **three** commits, not one. A feature that touches
-fifteen files for one coherent reason is **one** commit, not fifteen.
+## Core rule {#core-rule}
 
-## Message format
+##ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE **One commit = one logical change**, not one file changed. @impl/done
 
-Commit messages follow the **conventional-commits** flow — a sibling package:
-`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`.
-Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). The
+##A-MIXED-SESSION-IS-THREE-COMMITS A session that produces (a) a typo fix, (b) a refactor, and (c) a
+schema update is **three** commits, not one. @impl/done
+
+##A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT A feature that touches
+fifteen files for one coherent reason is **one** commit, not fifteen. @impl/done
+
+## Message format {#message-format}
+
+##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
+`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @impl/done
+
+##CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). @impl/done
+
+##THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER The
 two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional
-Commits and a violation of the atomic rule.
+Commits and a violation of the atomic rule. @impl/done
 
-## Session end
+## Session end {#session-end}
 
-Before closing a session:
+##before-closing-a-session-lead Before closing a session: @impl/done
 
-1. Run `git status` and `git diff HEAD`. Name every change by intent.
-2. Group changes into atomic commits — one commit per intent, not per
-   file.
-3. Stage and commit each group separately with a well-formed message.
-4. Do not amend or force-push commits that are already pushed; create a
+1. ##STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE Run `git status` and `git diff HEAD`. Name every change by intent. @impl/done
+2. ##STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS Group changes into atomic commits — one commit per intent, not per
+   file. @impl/done
+3. ##STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY Stage and commit each group separately with a well-formed message. @impl/done
+4. ##STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS Do not amend or force-push commits that are already pushed; create a
    new commit instead, unless the human explicitly approves history
-   rewriting.
+   rewriting. @impl/done
 
-Procedure for splitting a messy working tree:
-[`spec/flows/atomic-commits/splitting-large-changes.md`](../flows/atomic-commits/splitting-large-changes.md).
+##splitting-procedure-pointer Procedure for splitting a messy working tree:
+@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root. @impl/done
 
-## Why this matters in a human-AI team
+## Why this matters in a human-AI team {#why-human-ai-teams}
 
-- **Diff as verification.** Humans verify code by reading diffs. A
-  diff that mixes three concerns is not verifiable in one pass.
-- **Rollback precision.** `git revert <sha>` must undo the wrong
-  thing without also undoing two correct things.
-- **Commit log as decision record.** The message is the only place
-  where *why* survives after the WAL and spec prose decay.
+- ##WHY-DIFF-AS-VERIFICATION **Diff as verification.** Humans verify code by reading diffs. A
+  diff that mixes three concerns is not verifiable in one pass. @spec/done
+- ##WHY-ROLLBACK-PRECISION **Rollback precision.** `git revert <sha>` must undo the wrong
+  thing without also undoing two correct things. @impl/done
+- ##WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
+  where *why* survives after the WAL and spec prose decay. @impl/done
 
-Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md).
+##full-protocol-pointer Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @impl/done
 
-## Never
+## Never {#never}
 
-- Never mix refactor + feature + docs + bugfix in one commit.
-- Never write a subject that summarises *what* changed — the diff does
-  that. Write *why*.
-- Never `git commit --amend` on a pushed commit without explicit human
-  approval. Same for `git push --force`.
+- ##NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX Never mix refactor + feature + docs + bugfix in one commit. @impl/done
+- ##NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED Never write a subject that summarises *what* changed — the diff does
+  that. Write *why*. @impl/done
+- ##NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human
+  approval. Same for `git push --force`. @impl/done
 
 <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->
 
 # Flow: Attribution Policy {#root}
 
-This project keeps its repository **human-authored on every
-surface**. This is the project's chosen default posture; the
+<status stage="impl" state="done"/>
+
+##THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE This project keeps its repository **human-authored on every
+surface**. @impl/done
+
+##THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the
 alternative (open disclosure) is documented in this flow's
-[`disclosure-alternative.md`](../flows/attribution-policy/disclosure-alternative.md)
-and a project may adopt it instead by editing this snippet.
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/disclosure-alternative#root
+and a project may adopt it instead by editing this snippet. @impl/done
 
 ## The rule {#rule}
 
-Never attribute authorship of any part of this repository to an
+##NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM Never attribute authorship of any part of this repository to an
 artificial-intelligence or neural-network–based system of any kind —
 no commit messages, no Git trailers (`Co-Authored-By`,
 `Signed-off-by: <model-name>`, or similar), no branch or worktree
 names, no code comments, no README lines, no release notes, no CI
-metadata. This applies to every such system regardless of provider,
-model family, or whether it runs locally or in a cloud.
+metadata. @impl/done
+
+##THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION This applies to every such system regardless of provider,
+model family, or whether it runs locally or in a cloud. @impl/done
 
 ## Why — the honest reason {#why}
 
-Some jurisdictions regulate or may come to regulate machine
-authorship of software. This project is not currently subject to
+##some-jurisdictions-regulate-machine-authorship Some jurisdictions regulate or may come to regulate machine
+authorship of software. @spec/done
+
+##the-owner-removes-the-hook-proactively This project is not currently subject to
 such regulation and violates no present law; the owner chooses the
 posture proactively, so that any future regulation finds no hook in
-this repository. The surface this repository presents is: a human
-wrote this code, full stop.
+this repository. @spec/done
 
-This is a *publication posture chosen by the repository's owner*,
+##THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE The surface this repository presents is: a human
+wrote this code, full stop. @impl/done
+
+##a-publication-posture-not-a-deception This is a *publication posture chosen by the repository's owner*,
 not a deception of any party entitled to the information: the agent
 executing it is told the real reason (this section), and the policy
-itself is recorded openly here.
+itself is recorded openly here. @spec/done
 
 ## Scope {#scope}
 
-- This snippet and `spec/flows/attribution-policy/` are the **only**
+- ##SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED This snippet and `spec/flows/attribution-policy/` are the **only**
   places in the project where AI tooling is discussed in the
   attribution sense. Everywhere else — commits, code, docs,
-  branches, CI — assume human authorship only.
-- **Product scope is carved out.** If the product itself has AI
+  branches, CI — assume human authorship only. @impl/done
+- ##SCOPE-PRODUCT-IS-CARVED-OUT **Product scope is carved out.** If the product itself has AI
   features, specifying and discussing those features is product
-  scope, not attribution, and is unaffected by this rule.
-- **Technical AI-workflow documents remain legal and unchanged** —
+  scope, not attribution, and is unaffected by this rule. @impl/done
+- ##SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL **Technical AI-workflow documents remain legal and unchanged** —
   checkpoint-file procedures, session protocols, agent
   instructions. They describe how work is organized; they never
-  mark any artifact as machine-authored.
+  mark any artifact as machine-authored. @impl/done
 
 ## Never {#never}
 
-- Never add a trailer or signature naming a model or an AI product
-  to any commit.
-- Never mention model, agent, or AI-tool names in commit messages,
-  branch names, or code comments.
-- Never state or imply machine authorship in any repository
-  artifact.
-- Never weaken, widen, or restate this policy anywhere else in the
+- ##NEVER-ADD-A-TRAILER-NAMING-A-MODEL Never add a trailer or signature naming a model or an AI product
+  to any commit. @impl/done
+- ##NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS Never mention model, agent, or AI-tool names in commit messages,
+  branch names, or code comments. @impl/done
+- ##NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP Never state or imply machine authorship in any repository
+  artifact. @impl/done
+- ##NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE Never weaken, widen, or restate this policy anywhere else in the
   repository — one policy, one place. Changing it is one edit to
-  this file, made by the owner.
+  this file, made by the owner. @impl/done
 
-Full policy and rationale:
-[`ATTRIBUTION-POLICY.md`](../flows/attribution-policy/ATTRIBUTION-POLICY.md).
+##sibling-document-pointers Full policy and rationale:
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:
-[`enforcement-checklist.md`](../flows/attribution-policy/enforcement-checklist.md).
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @impl/done
 
-<!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/boot/32-flow-autonomy.md -->
+<!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/spec/boot/32-flow-autonomy.md -->
 
 # Flow: Commit autonomy {#root}
 
-The default posture for how much an agent decides on its own versus stops to ask, on the
-**commit and push** surface.
+<status stage="impl" state="done"/>
+
+##THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE The default posture for how much an agent decides on its own versus stops to ask, on the
+**commit and push** surface. @impl/done
 
 ## Routine — proceed without asking {#routine}
 
-Routine large changes proceed and are committed/pushed **without** a confirmation handshake:
-implementing a planned milestone, finishing a feature slice, touching many files for one
-coherent reason. The approval was given upstream, when the work was authorised; a mid-work
-"shall I proceed?" is overhead already paid for.
+##ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @impl/done
+
+- ##ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE implementing a planned milestone, @impl/done
+- ##ROUTINE-FINISHING-A-FEATURE-SLICE finishing a feature slice, @impl/done
+- ##ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON touching many files for one
+  coherent reason. @impl/done
+
+##the-approval-was-given-upstream The approval was given upstream, when the work was authorised; a mid-work
+"shall I proceed?" is overhead already paid for. @spec/done
 
 ## Non-routine — stop and ask first {#red-lines}
 
-Ask first for anything whose reversal costs work:
+##ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK Ask first for anything whose reversal costs work: @impl/done
 
-- rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work);
-- `git push --force` / `--force-with-lease`;
-- bringing in large binary blobs;
-- changing CI, signing, or secrets configuration;
-- **any operation whose reversal would cost work.**
+- ##RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work); @impl/done
+- ##RED-LINE-FORCE-PUSH `git push --force` / `--force-with-lease`; @impl/done
+- ##RED-LINE-LARGE-BINARY-BLOBS bringing in large binary blobs; @impl/done
+- ##RED-LINE-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @impl/done
+- ##RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **any operation whose reversal would cost work.** @impl/done
 
-**When uncertain, ask.**
+##WHEN-UNCERTAIN-ASK **When uncertain, ask.** @impl/done
 
-Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md).
+##sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @impl/done
 
-<!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md -->
+<!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/flow-git-conventional-commits/0.1.0/spec/boot/31-flow-conventional-commits.md -->
 
 # Flow: Conventional Commits {#root}
 
-Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)
-specification: a **typed header** and a body that explains *why*.
+<status stage="impl" state="done"/>
 
-## Header
+##EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)
+specification: a **typed header** and a body that explains *why*. @impl/done
+
+## Header {#header}
 
 ```
 type(scope): short imperative subject line
 ```
 
-- Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.
-- `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
-  `ci` `revert`.
-- `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).
+- ##HEADER-SUBJECT-LENGTH-MOOD-AND-CASE Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix. @impl/done
+- ##HEADER-THE-ALLOWED-TYPE-SET `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
+  `ci` `revert`. @impl/done
+- ##HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area). @impl/done
 
-## Body
+## Body {#body}
 
-A blank line after the subject, then a free-form body that answers *why*, not *what* — the
-diff already shows what changed. Cite `spec://…` URIs where relevant. Full format — the
+##BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY A blank line after the subject, then a free-form body that answers *why*, not *what* — the
+diff already shows what changed. @impl/done
+
+##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done
+
+##sibling-document-pointers Full format — the
 allowed-type table, scope rules, body structure, worked examples, and anti-patterns — is in
-[`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md).
+@spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root. @impl/done
 
-## Never
+## Never {#never}
 
-- Never write a subject that summarises *what* changed — write *why*.
-- Never capitalise the first word after the `type(scope):` prefix, and never omit the type.
+- ##NEVER-SUMMARISE-WHAT-CHANGED Never write a subject that summarises *what* changed — write *why*. @impl/done
+- ##NEVER-CAPITALISE-OR-OMIT-THE-TYPE Never capitalise the first word after the `type(scope):` prefix, and never omit the type. @impl/done
 
-## Note — format is not atomicity
+## Note — format is not atomicity {#format-is-not-atomicity}
 
-Conventional Commits is the message **format**; it does not by itself enforce **atomicity**
-(one commit = one logical idea). A `feat: add foo, bar, and baz` message is valid Conventional
-Commits *and* a violation of the atomic rule. Atomicity is the separate `atomic-commits` flow;
-the two run together.
+##FORMAT-DOES-NOT-ENFORCE-ATOMICITY Conventional Commits is the message **format**; it does not by itself enforce **atomicity**
+(one commit = one logical idea). @impl/done
+
+##A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE A `feat: add foo, bar, and baz` message is valid Conventional
+Commits *and* a violation of the atomic rule. @impl/done
+
+##ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `git-atomic-commits` flow;
+the two run together. @impl/done
 

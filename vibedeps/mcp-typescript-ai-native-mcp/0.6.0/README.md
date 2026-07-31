@@ -1,25 +1,28 @@
-# mcp:org.vibevm.ai-native/typescript-ai-native-mcp
+# mcp:org.vibevm.ai-native/typescript-ai-native-mcp {#root}
 
-The AI-Native TypeScript discipline served over MCP: one stdio binary
+<status stage="doc" state="done" audience="user"/>
+
+##SERVED-OVER-MCP-AS-ONE-STDIO-BINARY The AI-Native TypeScript discipline served over MCP: one stdio binary
 (`typescript-ai-native-mcp`), seventeen tools — the whole
 `typescript-ai-native` command surface (init, the seven-step floor,
 the ts-tsc conform and specmap gates, trace, test-gate, tripwire,
 health, fast-loop, codemod) plus the tcg type oracle (validate / scope
 / complete / type / bench over a persistent LanguageService session —
-tsc's own engine, agreement by construction).
+tsc's own engine, agreement by construction). @impl/done
 
-- **Install:** `vibe install mcp:org.vibevm.ai-native/typescript-ai-native-mcp` —
+- ##INSTALL-PULLS-THE-MATCHING-STACK-AT-THE-EXACT-PIN **Install:** `vibe install mcp:org.vibevm.ai-native/typescript-ai-native-mcp` —
   the exact `=` pin pulls the matching
-  `stack:org.vibevm.ai-native/typescript-ai-native-lang`.
-- **Register:** `vibe mcp install` writes the server into your agent's
+  `stack:org.vibevm.ai-native/typescript-ai-native-lang`. @impl/done
+- ##REGISTER-WRITES-THE-SERVER-INTO-THE-AGENT-CONFIG **Register:** `vibe mcp install` writes the server into your agent's
   config (a vibevm-managed entry; `vibe bin build
-  typescript-ai-native-mcp` compiles the artifact).
-- **Serve:** the agent host launches the binary directly. No vibe in
-  the runtime path.
+  typescript-ai-native-mcp` compiles the artifact). @impl/done
+- ##SERVE-NEEDS-NO-VIBE-IN-THE-RUNTIME-PATH **Serve:** the agent host launches the binary directly. No vibe in
+  the runtime path. @impl/done
 
-The brief (tool inventory, the tool↔CLI parity map, the session and
+##server-brief-pointer The brief (tool inventory, the tool↔CLI parity map, the session and
 capture semantics):
-[`spec/tools/discipline-mcp-typescript.md`](spec/tools/discipline-mcp-typescript.md).
-Prerequisite (inherited from the stack): node ≥ 22.6 and the project's
+[`spec/tools/discipline-mcp-typescript.md`](spec/tools/discipline-mcp-typescript.md). @impl/done
+
+##PREREQUISITE-NODE-AND-THE-PROJECTS-OWN-TYPESCRIPT Prerequisite (inherited from the stack): node ≥ 22.6 and the project's
 own `typescript` devDependency — absent tools hard-fail with the
-install recipe, through MCP as on the CLI.
+install recipe, through MCP as on the CLI. @impl/done

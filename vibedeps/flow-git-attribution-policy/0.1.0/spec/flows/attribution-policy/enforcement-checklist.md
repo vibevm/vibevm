@@ -1,30 +1,38 @@
 # Enforcement checklist {#root}
 
-**Scope of this document.** A policy with no checker is a wish. This
+<status stage="spec" state="done"/>
+
+##A-POLICY-WITH-NO-CHECKER-IS-A-WISH **Scope of this document.** A policy with no checker is a wish. @spec/done
+
+##scope-of-this-document This
 file is the per-surface checklist for the attribution policy, the
 mechanical checks that catch slips before they publish, and the
-drill for when one lands anyway. Written for the concealment posture;
+drill for when one lands anyway. @impl/done
+
+##written-for-concealment-flipped-for-disclosure Written for the concealment posture;
 for disclosure, run the same checks with the polarity flipped (scan
-for *missing* marks instead of present ones).
+for *missing* marks instead of present ones). @impl/done
 
 ## The surfaces {#surfaces}
 
 | Surface | What leaks there | Check |
 |---|---|---|
-| Commit message bodies | "generated with…", tool ads, model names | pre-push scan (below) |
-| Commit trailers | `Co-Authored-By`, `Signed-off-by: <model>` | pre-push scan (below) |
-| Branch / tag names | agent-generated branch names carrying tool names | `git branch -a` eyeball at review; naming convention in the boot file |
-| Code comments | "AI-generated", model names in TODO/FIXME | repo-wide grep, periodically |
-| README / docs / release notes | boilerplate credit lines | part of release checklist |
-| PR titles and descriptions | tool-inserted footers | PR template with an explicit placeholder to overwrite |
-| CI configuration | marketplace actions inserting attribution steps | review any new CI step's output once |
-| Generated-file headers | scaffolding tools stamping their names | check scaffold output the first time a generator is adopted |
+| ##ROW-SURFACE-COMMIT-MESSAGE-BODIES Commit message bodies @spec/done | "generated with…", tool ads, model names @spec/done | pre-push scan (below) @spec/done |
+| ##ROW-SURFACE-COMMIT-TRAILERS Commit trailers @spec/done | `Co-Authored-By`, `Signed-off-by: <model>` @spec/done | pre-push scan (below) @spec/done |
+| ##ROW-SURFACE-BRANCH-AND-TAG-NAMES Branch / tag names @spec/done | agent-generated branch names carrying tool names @spec/done | `git branch -a` eyeball at review; naming convention in the boot file @spec/done |
+| ##ROW-SURFACE-CODE-COMMENTS Code comments @spec/done | "AI-generated", model names in TODO/FIXME @spec/done | repo-wide grep, periodically @spec/done |
+| ##ROW-SURFACE-README-DOCS-RELEASE-NOTES README / docs / release notes @spec/done | boilerplate credit lines @spec/done | part of release checklist @spec/done |
+| ##ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS PR titles and descriptions @spec/done | tool-inserted footers @spec/done | PR template with an explicit placeholder to overwrite @spec/done |
+| ##ROW-SURFACE-CI-CONFIGURATION CI configuration @spec/done | marketplace actions inserting attribution steps @spec/done | review any new CI step's output once @spec/done |
+| ##ROW-SURFACE-GENERATED-FILE-HEADERS Generated-file headers @spec/done | scaffolding tools stamping their names @spec/done | check scaffold output the first time a generator is adopted @spec/done |
 
 ## The pre-push scan {#pre-push}
 
-The two highest-volume surfaces — messages and trailers — are
-mechanically checkable. Run before every push (or wire as a
-`pre-push` hook):
+##MESSAGES-AND-TRAILERS-ARE-MECHANICALLY-CHECKABLE The two highest-volume surfaces — messages and trailers — are
+mechanically checkable. @impl/done
+
+##pre-push-scan-lead Run before every push (or wire as a
+`pre-push` hook): @impl/done
 
 ```sh
 # Scan outgoing commits for attribution marks. Nonzero output = stop.
@@ -33,52 +41,64 @@ git log --format='%H %B' @{u}..HEAD |
   && echo 'ATTRIBUTION MARK FOUND — fix before push' || true
 ```
 
-Adapt the pattern list to the tools your team actually runs — the
-list above is a starting set, not an oracle. A hook that fires on
-your real tools' real phrasing is worth ten generic ones. Note the
+##ADAPT-THE-PATTERN-LIST-TO-YOUR-OWN-TOOLS Adapt the pattern list to the tools your team actually runs — the
+list above is a starting set, not an oracle. @impl/done
+
+##a-real-hook-beats-ten-generic-ones A hook that fires on
+your real tools' real phrasing is worth ten generic ones. @spec/done
+
+##the-scan-covers-all-co-authored-by-trailers Note the
 scan intentionally covers *all* `Co-Authored-By` trailers: under
 this policy human co-authors are rare enough to allowlist by hand,
-and a false positive costs seconds while a false negative publishes.
+and a false positive costs seconds while a false negative publishes. @impl/done
 
 ## Tool configuration beats scanning {#configure}
 
-Scanning catches slips; configuration prevents them. Most coding
+##SCANNING-CATCHES-SLIPS-CONFIGURATION-PREVENTS-THEM Scanning catches slips; configuration prevents them. @impl/done
+
+##most-agents-accept-standing-instructions Most coding
 agents accept standing instructions (a project rules file read at
-session start). Put the policy there — this package's boot snippet
+session start). @spec/done
+
+##PUT-THE-POLICY-IN-THE-AGENTS-STANDING-INSTRUCTIONS Put the policy there — this package's boot snippet
 is exactly that — and the agent stops *producing* the marks, which
-is cheaper than catching them. Where a tool has a hard setting for
-commit trailers, set it once and note it in the project's setup doc.
+is cheaper than catching them. @impl/done
+
+##SET-A-TOOLS-HARD-TRAILER-SETTING-ONCE Where a tool has a hard setting for
+commit trailers, set it once and note it in the project's setup doc. @impl/done
 
 ## The periodic audit line {#audit}
 
-Slow-accumulating surfaces (comments, docs, release notes) are not
-worth a per-push scan. Put one line in the project's periodic audit
-checklist (if you run `flow:health-audit` or similar):
+##SLOW-SURFACES-ARE-NOT-WORTH-A-PER-PUSH-SCAN Slow-accumulating surfaces (comments, docs, release notes) are not
+worth a per-push scan. @impl/done
 
-> Attribution: repo-wide grep for the pattern set; check surfaces
+##periodic-audit-line-lead Put one line in the project's periodic audit
+checklist (if you run `flow:health-audit` or similar): @impl/done
+
+> ##THE-AUDIT-CHECKLIST-LINE Attribution: repo-wide grep for the pattern set; check surfaces
 > added since last audit (new CI steps, new scaffolds, new doc
-> generators).
+> generators). @impl/done
 
 ## When a slip lands {#slip-drill}
 
-1. **Caught before push:** amend or rebase locally. No further
-   action; this is what the scan exists for.
-2. **Caught after push:** do **not** rewrite published history on
-   reflex — the frozen-history rule (`flow:atomic-commits` §pushed)
+1. ##DRILL-CAUGHT-BEFORE-PUSH **Caught before push:** amend or rebase locally. No further
+   action; this is what the scan exists for. @impl/done
+2. ##DRILL-CAUGHT-AFTER-PUSH **Caught after push:** do **not** rewrite published history on
+   reflex — the frozen-history rule (`flow:git-atomic-commits` §pushed)
    wins by default. Record the slip, fix the *source* (the tool or
    template that produced it), and surface to the owner: rewriting
    one commit's metadata out of published history is the owner's
-   call, made knowing who has already pulled.
-3. **Either way:** if the same surface slips twice, the checklist —
-   not the person — is at fault. Add the missing check.
+   call, made knowing who has already pulled. @impl/done
+3. ##DRILL-EITHER-WAY **Either way:** if the same surface slips twice, the checklist —
+   not the person — is at fault. Add the missing check. @impl/done
 
 ## Summary {#summary}
 
-- Eight surfaces; two of them (messages, trailers) get a mechanical
+- ##SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL Eight surfaces; two of them (messages, trailers) get a mechanical
   pre-push scan, the rest ride templates, tool configuration, and
-  the periodic audit.
-- Configure tools not to produce marks; scan as the backstop.
-- Pre-push slips are amended freely; pushed slips default to
+  the periodic audit. @impl/done
+- ##SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP Configure tools not to produce marks; scan as the backstop. @impl/done
+- ##SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS Pre-push slips are amended freely; pushed slips default to
   stand-and-fix-the-source, with history rewrite an owner-level
-  exception.
-- A surface that slips twice earns a new checklist line.
+  exception. @impl/done
+- ##SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE A surface that slips twice earns a new checklist line. @impl/done

@@ -1,116 +1,147 @@
 # Operating Modes Protocol {#root}
 
-**Scope of this document.** This file defines *what* a codeword-
+<status stage="spec" state="done"/>
+
+##scope-of-this-document **Scope of this document.** This file defines *what* a codeword-
 triggered operating mode is, *why* a project wants explicit postures
 instead of one fixed stance, *how* a codeword is shaped so it is
 unambiguous and safe, and the one law every mode obeys — the red
-lines that no codeword can erode. The catalogue of a project's actual
+lines that no codeword can erode. @impl/done
+
+##sibling-document-pointers The catalogue of a project's actual
 codewords lives at the end; this collection ships one worked mode,
-[`mfbt-mode.md`](mfbt-mode.md).
+[`mfbt-mode.md`](mfbt-mode.md). @impl/done
 
 ## What a mode is {#what}
 
-A session has a **default operating posture**: routine work proceeds,
-anything non-routine stops for the owner's confirmation, and the
-agent prefers a clarifying question to an irreversible mistake. That
-default is right for most sessions.
+##a-session-has-a-default-operating-posture-lead A session has a **default operating posture**: @impl/done
 
-It is the *wrong* posture when the owner has already thought a large
+- ##DEFAULT-ROUTINE-WORK-PROCEEDS routine work proceeds, @impl/done
+- ##DEFAULT-NON-ROUTINE-STOPS-FOR-CONFIRMATION
+  anything non-routine stops for the owner's confirmation, @impl/done
+- ##DEFAULT-A-QUESTION-IS-PREFERRED-TO-A-MISTAKE and the
+  agent prefers a clarifying question to an irreversible mistake. @impl/done
+
+##THE-DEFAULT-IS-RIGHT-FOR-MOST-SESSIONS That default is right for most sessions. @impl/done
+
+##THE-DEFAULT-IS-WRONG-FOR-PRE-APPROVED-WORK It is the *wrong* posture when the owner has already thought a large
 body of work through, made the decision, and wants it executed end to
-end. There, every "shall I proceed?" is overhead the owner already
-paid for by approving the activity.
+end. @impl/done
 
-A **codeword** is a short trigger phrase that flips the session into
-an alternate posture for one work cycle. The default is unchanged;
+##the-handshake-is-overhead-already-paid-for There, every "shall I proceed?" is overhead the owner already
+paid for by approving the activity. @spec/done
+
+##A-CODEWORD-FLIPS-THE-SESSION-FOR-ONE-WORK-CYCLE A **codeword** is a short trigger phrase that flips the session into
+an alternate posture for one work cycle. @impl/done
+
+##CODEWORDS-ARE-EXPLICIT-OPT-INS The default is unchanged;
 codewords are explicit opt-ins, recognised when spoken, in force only
-until the work they cover ends. A mode changes *confirmation
-behaviour* — never what is permitted.
+until the work they cover ends. @impl/done
+
+##A-MODE-CHANGES-CONFIRMATION-BEHAVIOUR-NEVER-WHAT-IS-PERMITTED A mode changes *confirmation
+behaviour* — never what is permitted. @impl/done
 
 ## Why codewords rather than a settings flag {#why}
 
-- **Opt-in per work cycle.** The posture shift is scoped to what the
+- ##WHY-OPT-IN-PER-WORK-CYCLE **Opt-in per work cycle.** The posture shift is scoped to what the
   owner is describing right now, not a persistent global that a later
-  session inherits by surprise.
-- **Recognised by intent.** A spoken phrase carries the owner's
-  framing; the agent reads the intent, not a rigid string.
-- **Auditable.** The trigger is visible in the transcript. Anyone
-  reading the session sees exactly when the posture changed and back.
-- **Bounded by law.** Because a codeword only ever relaxes the
+  session inherits by surprise. @impl/done
+- ##WHY-RECOGNISED-BY-INTENT **Recognised by intent.** A spoken phrase carries the owner's
+  framing; the agent reads the intent, not a rigid string. @impl/done
+- ##WHY-AUDITABLE **Auditable.** The trigger is visible in the transcript. Anyone
+  reading the session sees exactly when the posture changed and back. @impl/done
+- ##WHY-BOUNDED-BY-LAW **Bounded by law.** Because a codeword only ever relaxes the
   *routine* handshake, the dangerous handshakes (§red-lines) stay put
   by construction — there is no flag that can be left on to erode
-  them.
+  them. @impl/done
 
 ## The five-part codeword shape {#shape}
 
-Every codeword in a project's catalogue is specified with the same
-five parts, so none is ambiguous and each states its own limits:
+##every-codeword-is-specified-with-the-same-five-parts-lead Every codeword in a project's catalogue is specified with the same
+five parts, so none is ambiguous and each states its own limits: @impl/done
 
 | Part | What it fixes |
 |------|---------------|
-| **1. Trigger phrase** | the words (and recognisable variants) that activate it; case-insensitive; matched by intent |
-| **2. Authoritative description** | the owner's own framing of what the mode is for, recorded verbatim |
-| **3. Operative interpretation** | a numbered list of concrete behavioural rules the agent follows while it is active |
-| **4. Changes / does NOT change** | what confirmation behaviour it relaxes, and an explicit restatement that the red lines survive it |
-| **5. Lifecycle + cadence** | activation, persistence within a session, non-persistence across sessions, the abort words, and the reporting cadence |
+| ##ROW-PART-TRIGGER-PHRASE **1. Trigger phrase** @impl/done | the words (and recognisable variants) that activate it; case-insensitive; matched by intent @impl/done |
+| ##ROW-PART-AUTHORITATIVE-DESCRIPTION **2. Authoritative description** @impl/done | the owner's own framing of what the mode is for, recorded verbatim @impl/done |
+| ##ROW-PART-OPERATIVE-INTERPRETATION **3. Operative interpretation** @impl/done | a numbered list of concrete behavioural rules the agent follows while it is active @impl/done |
+| ##ROW-PART-CHANGES-AND-DOES-NOT-CHANGE **4. Changes / does NOT change** @impl/done | what confirmation behaviour it relaxes, and an explicit restatement that the red lines survive it @impl/done |
+| ##ROW-PART-LIFECYCLE-AND-CADENCE **5. Lifecycle + cadence** @impl/done | activation, persistence within a session, non-persistence across sessions, the abort words, and the reporting cadence @impl/done |
 
-A phrase that does not carry all five parts is not yet a codeword —
-it is a proposal. Do not act on it until the owner has fixed the five.
+##A-PHRASE-MISSING-A-PART-IS-A-PROPOSAL-NOT-A-CODEWORD A phrase that does not carry all five parts is not yet a codeword —
+it is a proposal. @impl/done
+
+##DO-NOT-ACT-UNTIL-THE-OWNER-HAS-FIXED-THE-FIVE Do not act on it until the owner has fixed the five. @impl/done
 
 ## The red-lines law {#red-lines}
 
-This is the invariant the whole practice is built to protect. A small
+##THE-RED-LINES-ARE-THE-INVARIANT-THE-PRACTICE-PROTECTS This is the invariant the whole practice is built to protect. @impl/done
+
+##a-small-set-of-operations-survives-every-mode-lead A small
 set of operations survives **every** mode and always requires the
-owner's explicit confirmation:
+owner's explicit confirmation: @impl/done
 
-- rewriting published history;
-- force-pushing;
-- importing large binary blobs;
-- changing CI, signing, or secrets configuration;
-- **anything whose reversal would cost work.**
+- ##RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history; @impl/done
+- ##RED-LINE-FORCE-PUSHING force-pushing; @impl/done
+- ##RED-LINE-IMPORTING-LARGE-BINARY-BLOBS importing large binary blobs; @impl/done
+- ##RED-LINE-CHANGING-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @impl/done
+- ##RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **anything whose reversal would cost work.** @impl/done
 
-A codeword removes the *"may I proceed with routine work?"*
-handshake. It does **not** remove the *"may I cross an irreversible
-threshold?"* handshake. The two are different questions, and only the
-first is ever waived.
+##A-CODEWORD-REMOVES-THE-ROUTINE-WORK-HANDSHAKE A codeword removes the *"may I proceed with routine work?"*
+handshake. @impl/done
 
-Consequences that follow directly:
+##A-CODEWORD-DOES-NOT-REMOVE-THE-IRREVERSIBLE-THRESHOLD-HANDSHAKE It does **not** remove the *"may I cross an irreversible
+threshold?"* handshake. @impl/done
 
-- No codeword may be defined that relaxes a red line. A proposed mode
-  that would is malformed — refuse it and say why.
-- If work under an active mode cannot land without crossing a red
+##ONLY-THE-FIRST-QUESTION-IS-EVER-WAIVED The two are different questions, and only the
+first is ever waived. @impl/done
+
+##consequences-that-follow-directly-lead Consequences that follow directly: @impl/done
+
+- ##CONSEQUENCE-NO-CODEWORD-MAY-RELAX-A-RED-LINE No codeword may be defined that relaxes a red line. A proposed mode
+  that would is malformed — refuse it and say why. @impl/done
+- ##CONSEQUENCE-THE-MODES-OWN-ESCAPE-HATCH If work under an active mode cannot land without crossing a red
   line, the agent stops at that boundary, reports, and asks. This is
   **not** the interruption the mode forbids — it is the mode's own
-  escape hatch firing.
-- Every other standing invariant of the project (its attribution
+  escape hatch firing. @impl/done
+- ##CONSEQUENCE-EVERY-STANDING-INVARIANT-IS-A-RED-LINE-TOO Every other standing invariant of the project (its attribution
   posture, secrets hygiene, licence constraints, output conventions)
-  is a red line for this purpose too: modes never touch them.
+  is a red line for this purpose too: modes never touch them. @impl/done
 
 ## Reporting cadence {#cadence}
 
-Even with routine confirmations suspended, an active mode still
-reports — as **status, not requests**. "Phase N landed, tests green,
+##AN-ACTIVE-MODE-STILL-REPORTS-AS-STATUS-NOT-REQUESTS Even with routine confirmations suspended, an active mode still
+reports — as **status, not requests**. @impl/done
+
+##the-right-cadence-versus-the-overhead "Phase N landed, tests green,
 moving to N+1" is the right cadence; "Phase N landed — shall I
-proceed?" is the exact overhead the codeword was spoken to remove.
-The owner reads these passively and need not answer.
+proceed?" is the exact overhead the codeword was spoken to remove. @impl/done
+
+##THE-OWNER-READS-THESE-PASSIVELY The owner reads these passively and need not answer. @impl/done
 
 ## The catalogue {#catalogue}
 
-A project keeps its codewords catalogued in one place (this document,
-in a consuming project). Ship the ones the project actually uses;
-recognise a spoken codeword only if it is catalogued, and propose
-adding any new one through the five-part shape before acting on it.
-This collection ships one worked mode as a reference:
+##A-PROJECT-KEEPS-ITS-CODEWORDS-CATALOGUED-IN-ONE-PLACE A project keeps its codewords catalogued in one place (this document,
+in a consuming project). @impl/done
 
-- [`mfbt-mode.md`](mfbt-mode.md) — «move fast and break things»:
-  pre-authorised heads-down execution.
+##SHIP-RECOGNISE-AND-PROPOSE-THROUGH-THE-FIVE-PART-SHAPE Ship the ones the project actually uses;
+recognise a spoken codeword only if it is catalogued, and propose
+adding any new one through the five-part shape before acting on it. @impl/done
+
+##one-worked-mode-lead This collection ships one worked mode as a reference: @impl/done
+
+- ##CATALOGUE-MFBT-MODE [`mfbt-mode.md`](mfbt-mode.md) — «move fast and break things»:
+  pre-authorised heads-down execution. @impl/done
 
 ## Re-derive for your project {#re-derive}
 
-Copy the prompt-task, not the prompt-implementation. Paste this to
-your agent in a fresh session:
+##COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION Copy the prompt-task, not the prompt-implementation. @impl/done
+
+##re-derive-lead Paste this to
+your agent in a fresh session: @impl/done
 
 ```
-Read spec/flows/operating-modes/ end to end. Then define THIS
+Read this flow's documents (your project installed them — typically `vibedeps/flow-operating-modes/<version>/spec/flows/operating-modes/`, check `vibe.lock`) end to end. Then define THIS
 project's operating modes: (1) confirm the default posture and the
 project's exact red-line list — the operations that must survive
 every mode. (2) For each accelerated posture we actually want, write
@@ -123,12 +154,12 @@ not treat any phrase as active until I approve its five parts.
 
 ## Summary {#summary}
 
-- A codeword flips the session into an alternate posture for one work
-  cycle; the default is unchanged and modes are explicit opt-ins.
-- Every codeword is fixed by the five-part shape, or it is a proposal,
-  not a mode.
-- The red lines survive every mode: a codeword waives the routine
-  handshake, never the irreversible-threshold handshake.
-- Report status, not requests, while a mode is active.
-- Catalogue the modes in one place; propose new ones through the five
-  parts before acting.
+- ##SUM-A-CODEWORD-FLIPS-THE-POSTURE-FOR-ONE-WORK-CYCLE A codeword flips the session into an alternate posture for one work
+  cycle; the default is unchanged and modes are explicit opt-ins. @impl/done
+- ##SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL Every codeword is fixed by the five-part shape, or it is a proposal,
+  not a mode. @impl/done
+- ##SUM-THE-RED-LINES-SURVIVE-EVERY-MODE The red lines survive every mode: a codeword waives the routine
+  handshake, never the irreversible-threshold handshake. @impl/done
+- ##SUM-REPORT-STATUS-NOT-REQUESTS Report status, not requests, while a mode is active. @impl/done
+- ##SUM-CATALOGUE-BEFORE-ACTING Catalogue the modes in one place; propose new ones through the five
+  parts before acting. @impl/done

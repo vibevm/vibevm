@@ -13,7 +13,7 @@ min_vibe_version = "0.1.0"
 requires_kinds = []
 
 [boot_snippet]
-source = "boot/31-flow-conventional-commits.md"
+source = "spec/boot/31-flow-conventional-commits.md"
 category = "flow"
 # A non-negotiable commit rule — suggest the inline priority lane (PROP-009 §2.4):
 # its text lands verbatim in INLINE.md, read first, unless a consumer overrides.

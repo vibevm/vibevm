@@ -27,18 +27,126 @@ fn uri_parses_revision_pin() {
 #[test]
 fn uri_rejections() {
     for bad in [
-        "http://x/y#a",         // wrong scheme
-        "spec://vibevm#a",      // no doc-path
-        "spec://vibevm/x",      // no fragment
-        "spec://vibevm/x#A-b",  // uppercase anchor
-        "spec://vibevm/x#a b",  // whitespace
-        "spec://vibevm/x#a~rx", // non-integer pin
-        "spec://vibevm/x#a~r0", // r0
-        "spec://vibevm/x#a#b",  // two fragments
-        "spec://vibevm/x#-a",   // leading dash
-        "spec://vibevm/x#a-",   // trailing dash
+        "http://x/y#a",           // wrong scheme
+        "spec://vibevm#a",        // no doc-path
+        "spec://vibevm/x",        // no fragment
+        "spec://vibevm/x#",       // empty anchor
+        "spec://vibevm/x#a b",    // whitespace
+        "spec://vibevm/x#a~rx",   // non-integer pin
+        "spec://vibevm/x#a~r0",   // r0
+        "spec://vibevm/x#a#b",    // two fragments
+        "spec://vibevm/x#-a",     // leading dash
+        "spec://vibevm/x#_lead",  // leading underscore: the head must be a letter
+        "spec://vibevm/x#9lives", // digit head, likewise
+        "spec://vibevm/x#a.b",    // `.` is not an id character
     ] {
         assert!(parse_spec_uri(bad).is_err(), "should reject `{bad}`");
+    }
+}
+
+/// A normative `UPPER-SLUG` fact is addressable as a URI — the sentence
+/// `##FACT-ID-GRAMMAR` already states, now implemented. `#A-b` moved here
+/// from the rejection set above: the owner ruled the behaviour changes.
+#[test]
+fn uri_accepts_an_upper_fact_anchor() {
+    let u = parse_spec_uri("spec://vibevm/x#A-b").unwrap();
+    assert_eq!(u.anchor, "A-b");
+    assert_eq!(u.pinned_r, None);
+    assert_eq!(u.without_pin(), "spec://vibevm/x#A-b");
+
+    // The revision pin composes with it unchanged.
+    let p = parse_spec_uri("spec://vibevm/x#A-b~r2").unwrap();
+    assert_eq!(p.anchor, "A-b");
+    assert_eq!(p.pinned_r, Some(2));
+    assert_eq!(p.without_pin(), "spec://vibevm/x#A-b");
+
+    // A real minted fact id, underscores and all.
+    let f =
+        parse_spec_uri("spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#R_040").unwrap();
+    assert_eq!(f.anchor, "R_040");
+
+    // The id grammar constrains only the head character, so a dash may sit
+    // anywhere after it — `#a-` is a URI the kebab law would have refused.
+    // Only the head rule still bites.
+    assert!(parse_spec_uri("spec://vibevm/x#a-").is_ok());
+    assert!(parse_spec_uri("spec://vibevm/x#-a").is_err());
+}
+
+/// Every string a document may mint a name from, with the one verdict both
+/// validators owe it. `is_valid_anchor` delegates to `is_valid_fact_id`, so
+/// the table is shared rather than doubled: two lists would let the two laws
+/// drift the moment one list was edited and the other was not.
+const ID_TABLE: &[(&str, bool)] = &[
+    // The kebab register — a heading anchor's house style, still legal.
+    ("req-conditional-fixpoint", true),
+    ("my-fact", true),
+    ("root", true),
+    ("a1", true),
+    ("a", true),
+    // The id register — legal for a heading anchor since DRIFT-034.
+    ("FACT-A", true),
+    ("A-b", true),
+    ("Mixed-Case", true),
+    ("Some_Anchor", true),
+    ("R_040", true),
+    ("Z9", true),
+    ("x-y_z-1", true),
+    // Only the head rule bites: a trailing dash is fine, a leading one is not.
+    ("a-", true),
+    ("-leading", false),
+    ("_lead", false),
+    // A digit head — the one direction the widening *narrowed*.
+    ("9lives", false),
+    // Outside the charset entirely.
+    ("has space", false),
+    ("a!", false),
+    ("a.b", false),
+    ("café", false),
+    ("", false),
+];
+
+/// A heading anchor and a `##<ID>` fact name the same address space, so the
+/// two validators must not merely happen to agree — one calls the other. The
+/// shared table is the assertion that they do.
+#[test]
+fn the_two_validators_agree_on_every_input() {
+    for &(s, want) in ID_TABLE {
+        assert_eq!(is_valid_fact_id(s), want, "is_valid_fact_id(`{s}`)");
+        assert_eq!(
+            is_valid_anchor(s),
+            is_valid_fact_id(s),
+            "the two laws disagree on `{s}` — `is_valid_anchor` must delegate"
+        );
+    }
+    // A URI's anchor position takes the same law, so an accepted id is an
+    // addressable one.
+    for &(s, want) in ID_TABLE {
+        assert_eq!(
+            parse_spec_uri(&format!("spec://vibevm/x#{s}")).is_ok(),
+            want,
+            "URI anchor `{s}`"
+        );
+    }
+}
+
+/// The widening is not purely additive, and the asymmetry is the part a
+/// future reader will not guess. Kebab admitted a digit head; the id grammar
+/// requires a letter. Pinned in **both** directions so neither drifts back.
+#[test]
+fn a_digit_head_is_the_one_thing_the_widening_took_away() {
+    // Rejected now, accepted under the kebab law.
+    for was_kebab in ["9lives", "2026-07-07", "1", "0-a"] {
+        assert!(
+            !is_valid_anchor(was_kebab),
+            "`{was_kebab}` is digit-headed and no longer an anchor"
+        );
+    }
+    // Accepted now, rejected under the kebab law — the other direction.
+    for now_legal in ["Some_Anchor", "a-", "FACT-A", "R_040"] {
+        assert!(
+            is_valid_anchor(now_legal),
+            "`{now_legal}` is a legal id and so a legal anchor"
+        );
     }
 }
 
@@ -139,29 +247,8 @@ fn spec_args_rejects_zero_revision_and_empty_reason() {
     assert!(err.to_string().contains("must not be empty"), "{err}");
 }
 
-#[test]
-fn fact_id_grammar_is_wider_than_the_heading_anchor_law() {
-    // `[A-Za-z][A-Za-z0-9_-]*`: a letter head, then letters/digits/`-`/`_`.
-    for ok in ["FACT-A", "my-fact", "R_040", "a", "Z9", "x-y_z-1"] {
-        assert!(is_valid_fact_id(ok), "should accept `{ok}`");
-    }
-    // Non-letter head, whitespace, punctuation, or empty are rejected.
-    for bad in [
-        "",
-        "9lives",
-        "-lead",
-        "_lead",
-        "has space",
-        "a!",
-        "a.b",
-        "café",
-    ] {
-        assert!(!is_valid_fact_id(bad), "should reject `{bad}`");
-    }
-    // The two grammars share one address space but not one shape: every
-    // heading anchor is a valid fact id, never the reverse.
-    assert!(is_valid_fact_id("req-conditional-fixpoint"));
-    assert!(is_valid_anchor("req-conditional-fixpoint"));
-    assert!(is_valid_fact_id("FACT-A"));
-    assert!(!is_valid_anchor("FACT-A"));
-}
+// The former `fact_id_grammar_is_wider_than_the_heading_anchor_law` lived
+// here with its own accept/reject lists. It is gone, not moved: its premise
+// (a fact id is wider than an anchor) stopped being true, and its two lists
+// were a second copy of the input set. `ID_TABLE` above carries every string
+// it asserted, once.

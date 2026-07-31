@@ -1,30 +1,32 @@
-# `flow:autonomy` — routine proceeds, red lines stop and ask
+# `flow:git-autonomy` — routine proceeds, red lines stop and ask {#root}
 
-A vibevm `flow` package that installs the **commit/push autonomy** posture: routine, authorised
+<status stage="doc" state="done" audience="user"/>
+
+##PACKAGE-INSTALLS-THE-COMMIT-PUSH-AUTONOMY-POSTURE A vibevm `flow` package that installs the **commit/push autonomy** posture: routine, authorised
 large changes proceed and are committed/pushed without a confirmation handshake, while a fixed
-set of non-routine, hard-to-reverse operations always stops and asks a human first.
+set of non-routine, hard-to-reverse operations always stops and asks a human first. @impl/done
 
-The red-line set — rewriting published history, force-push, large binary blobs, CI / signing /
+##THE-RED-LINE-SET-IS-NEVER-SUSPENDED The red-line set — rewriting published history, force-push, large binary blobs, CI / signing /
 secrets configuration, and the catch-all *anything whose reversal would cost work* — is never
 suspended, not even by a heads-down "move fast" posture: a mode may remove the "may I proceed
-with routine work?" handshake, never the "may I cross an irreversible threshold?" one.
+with routine work?" handshake, never the "may I cross an irreversible threshold?" one. @impl/done
 
-This package ships:
+##package-contents-lead This package ships: @impl/done
 
-- `spec/flows/autonomy/AUTONOMY-PROTOCOL.md` — the routine-vs-red-line line, why the red lines
-  survive every mode, and how to re-derive your own red-line set.
-- `spec/boot/32-flow-autonomy.md` — the boot snippet loaded at session start.
+- ##CONTENT-THE-FULL-PROTOCOL `spec/flows/autonomy/AUTONOMY-PROTOCOL.md` — the routine-vs-red-line line, why the red lines
+  survive every mode, and how to re-derive your own red-line set. @impl/done
+- ##CONTENT-THE-BOOT-SNIPPET `spec/boot/32-flow-autonomy.md` — the boot snippet loaded at session start. @impl/done
 
-## Install
+## Install {#install}
 
 ```bash
-vibe install flow:autonomy
+vibe install flow:git-autonomy
 ```
 
-## Composition
+## Composition {#composition}
 
-- A member of the `flow:git-practices` family (the commit-and-push discipline).
+- ##COMPOSES-THE-GIT-PRACTICES-FAMILY A member of the `flow:git-practices` family (the commit-and-push discipline). @impl/done
 
-## License
+## License {#license}
 
-UPL-1.0 — see `LICENSE`.
+##license-line UPL-1.0 — see `LICENSE`. @impl/done

@@ -7,7 +7,7 @@
 # `when = "os:<name>"`, read the file only if the session's operating
 # system is <name> (windows / macos / linux), and skip it otherwise.
 
-# vibe:fp d030e466463ebbb345ca227cc0337ad81c5613b609e2b39447baaf34b0627901
+# vibe:fp b80c1e34525b9f90ca166f821e307a3f1a5107a975cedcdab33ba06ec7d43c74
 
 schema = 1
 static = "spec/boot/STATIC.md"
