@@ -30,7 +30,7 @@
 
 ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; this is the prime pilot (R4) question. If false, restrict the weakest tier to fixed-parameter invocations only. *Sunset:* if language/tooling makes the change trivial, the codemod retires. @spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives Rust failure) + DL1-015 (constraints lift weak models). NOT in the follow-up. Class: theory. Tag: **[E-hyp]**. @spec/done
+##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives Rust failure) + DR1-015 (constraints lift weak models). NOT in the follow-up. Class: theory. Tag: **[E-hyp]**. @spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 

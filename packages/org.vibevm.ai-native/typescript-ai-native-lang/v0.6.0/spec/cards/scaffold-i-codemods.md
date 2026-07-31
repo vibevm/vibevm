@@ -30,7 +30,7 @@
 
 ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; this is the prime pilot question. If false, restrict the weakest tier to fixed-parameter invocations only. Unlike Rust, the tooling-immaturity risk does NOT apply here — `ts-morph`/`jscodeshift` are production-grade; only the parameterization question remains open. *Sunset:* if language/tooling makes the change trivial, the codemod retires. @spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives failure) + DL1-015 (constraints lift weak models). The mature ecosystem is the one place TypeScript moves the [E-hyp] tag toward feasibility (the *build* half is solved; the *use*/parameterization half is the open question). Class: theory. Tag: **[E-hyp]**. @spec/done
+##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives failure) + DR1-015 (constraints lift weak models). The mature ecosystem is the one place TypeScript moves the [E-hyp] tag toward feasibility (the *build* half is solved; the *use*/parameterization half is the open question). Class: theory. Tag: **[E-hyp]**. @spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 

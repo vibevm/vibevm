@@ -76,11 +76,17 @@ work-list; its git diff is the trend). @impl/done
 4. ##RATCHET-ORPHAN-BACKLOG **orphan backlog** — untagged exported identifiers the ratchet will
    block on: tag the item (`//spec:implements …`), `//spec:scope` its
    package (doc.go), or unexport it. @impl/done
-5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /
-   `naked_go_in_cell` / `error_string_match` / `seam_error_missing_req`
-   non-zero on a gated package) — drain immediately; restructure beats
-   testify. On an ungated package they are the adoption backlog: **flip a
-   package into `gated_packages` only after it drains to zero.** @impl/done
+5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** — `go-ai-native health`'s printed
+   `ban census {N} reasoned / {M} unreasoned` (and `ban_census` in the
+   snapshot): every `go_unsafe` fact without a `//spec:deviates` reason
+   counts unreasoned. The kinds behind the count are `init_decl`,
+   `blank_import`, `ambient_call`, `naked_go`, `error_string_match` and
+   `seam_error_missing_req`; the collector reports one project-wide total,
+   **not** a per-kind or per-package split, so compare the figure against
+   the previous run rather than expecting a breakdown. Drain immediately;
+   restructure beats testify. Outside the gate they are the adoption
+   backlog: **flip a package into `gated_crates` only after it drains to
+   zero.** @impl/done
 
 ## Tier 2 — drift (weekly) {#tier-two}
 
