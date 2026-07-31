@@ -93,8 +93,9 @@ usable as a decision archive. @impl/done
 ##A-WORKING-TREE-WITH-MIXED-CONCERNS-MUST-BE-SPLIT A working tree with mixed concerns must be split. @impl/done
 
 ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is
-mechanical: can the commit body be written without using the word
-"also"? @impl/done
+one question: can the commit body be written without using the word
+"also"? The word is the trigger; whether an "also" names a second
+intent or is mere prose is the reader's call. @impl/done
 
 ##IF-NO-SPLIT If no, split. @impl/done
 
@@ -215,7 +216,7 @@ before continuing.
 ## Summary {#summary}
 
 - ##SUM-ONE-COMMIT-ONE-IDEA One commit, one idea. Not one file. @impl/done
-- ##SUM-THE-NO-ALSO-TEST The "no 'also' in the body" test catches violations mechanically. @impl/done
+- ##SUM-THE-NO-ALSO-TEST The "no 'also' in the body" test screens for violations; whether an "also" names a second intent is the reader's call. @impl/done
 - ##SUM-WHAT-SEPARATES-AND-WHAT-COMBINES Refactor vs feature: always separate. Tests with their impl:
   usually together. Format vs substance: always separate. @impl/done
 - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human
