@@ -2214,3 +2214,159 @@ correction prepared** — as part of the three-stack family, and with the
 `validate` half kept.
 
 ---
+
+# Tally
+
+## The sixteen, by outcome
+
+| id | package | anchors | outcome |
+|---|---|---:|---|
+| `F-140` | typescript-ai-native-lang | 10 | **FALSE ×10** — the verdict is one tool-count over `research/ts-demo` |
+| `F-154` | rust-ai-native-lang | 6 | MIXED — 5 SURVIVES (3 rust-only), 1 FALSE PREMISE, DIFFERENT DEFECT |
+| `F-161` | typescript-ai-native-lang | 5 | MIXED — 3 SURVIVES, 1 **FALSE**, 1 SURVIVES — ROUTE (b) |
+| `F-166` | go-ai-native-lang | 4 | MIXED — 2 SURVIVES, 2 **FALSE** |
+| `F-167` | go-ai-native-lang | 4 | SURVIVES ×4 (1 go-only, 2 family-wide) |
+| `F-185` | go-ai-native-lang | 3 | SURVIVES ×3 — one worse than the verdict says |
+| `F-210` | go-ai-native-lang | 2 | SURVIVES ×2 — the first on a **restated** ground |
+| `F-215` | rust-ai-native-lang | 2 | MIXED — 1 SURVIVES (all three stacks), 1 FALSE PREMISE, DIFFERENT DEFECT |
+| `F-216` | rust-ai-native-lang | 2 | SURVIVES ×2 — both rust-only |
+| `F-270` | go-ai-native-lang | 1 | SURVIVES — the rust twin is identical and `confirmed` |
+| `F-273` | go-ai-native-lang | 1 | SURVIVES — the package's own README is the correct side |
+| `F-275` | rust-ai-native-lang | 1 | SURVIVES — **RUST ONLY**; both siblings correct |
+| `F-279` | rust-ai-native-lang | 1 | SURVIVES — a stale schema path and a pre-rename crate name |
+| `F-280` | rust-ai-native-lang | 1 | SURVIVES — the ts copy is the same defect, judged `confirmed` |
+| `F-281` | rust-ai-native-lang | 1 | SURVIVES — 6 copies, 3 of them `confirmed` |
+| `F-284` | typescript-ai-native-lang | 1 | SURVIVES — third member of the `complete`-target family |
+
+**45 anchors, all 45 examined. Route check: all sixteen `sync-from-code`; none
+out of route. No package file was edited, no verdict JSON written, no `git`
+command that writes was run.**
+
+## The two counts the brief asks for
+
+**Verdicts that turned out FALSE — the description is right and the anchor should
+be re-judged `confirmed` with no edit and no owner approval: 13 of 45.**
+
+| anchor | obligation | why it fell |
+|---|---|---|
+| `GUIDE-AI-NATIVE-TYPESCRIPT#SCAFFOLD-E-PER-CELL-FAST-LOOP` | F-140 | ruling ①: the whole verdict is a tool-count over `research/ts-demo` |
+| `…#SCAFFOLD-G-EXECUTABLE-EXAMPLES` | F-140 | same reason, same verdict text |
+| `…#SCAFFOLD-I-CODEMODS` | F-140 | " |
+| `…#EXHAUSTIVENESS-OVER-E-IS-ENFORCED` | F-140 | " |
+| `…#RULE-BEHAVIORAL-CLAIMS-ARE-MACHINE-CHECKED` | F-140 | " |
+| `…#REPLACEMENT-SHIPS-A-DIFFERENTIAL-ORACLE` | F-140 | " |
+| `…#CHARACTERIZATION-GOLDENS-PIN-LEGACY-BEHAVIOR` | F-140 | " |
+| `…#MATRIX-TOOLING` | F-140 | " |
+| `…#TYPE-LEVEL-TEST-TOOLING` | F-140 | " |
+| `…#RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS` | F-140 | " |
+| `GUIDE-AI-NATIVE-TYPESCRIPT#TSCONFIG-DEFECT-CATCHERS` | F-161 | ruling ①: one read of `research/ts-demo/tsconfig.json` |
+| `GUIDE-AI-NATIVE-GO#BASELINE-RACE-DETECTOR-GATES-TESTS` | F-166 | both grounds void — a package-rooted floor capture, and host non-configuration |
+| `GUIDE-AI-NATIVE-GO#RELEASE-MAP-IS-FREE` | F-166 | «no Go binary in this tree» is host evidence; the mechanism demonstrably works |
+
+**Eleven of the thirteen fall to the owner ruling; two would have fallen anyway**
+— `##RELEASE-MAP-IS-FREE` is a Go-toolchain property demonstrated with
+`go version -m`, and `##BASELINE-…`'s floor evidence is a capture artefact this
+campaign has now paid for three times.
+
+**Anchors that survive in one stack while a sibling copy is correct as written:
+8 of 45** — the release queue's warning, met eight times:
+
+| anchor | survives in | correct as written in |
+|---|---|---|
+| `GUIDE-AI-NATIVE-RUST#NAMES-ARE-TOKEN-PROGRAMS` | **rust only** | go (`{Batch}{Planner}` is the Go convention), typescript (clause absent) |
+| `GUIDE-AI-NATIVE-RUST#POSITION-IS-A-RESOURCE` | rust (+ ts, unjudged) | **go** — claims only the length half |
+| `GUIDE-AI-NATIVE-RUST#SCAFFOLD-B-TYPED-BUILDERS` | **rust only** | go — a different, correct claim about defined types |
+| `GUIDE-AI-NATIVE-RUST#SCAFFOLD-F-STRUCTURED-DIAGNOSTICS` | rust (+ ts, unjudged) | **go** — names no custom linter |
+| `scaffold-d-differential-oracle.md#card-is-beta` | **rust only** | go, typescript — neither gate mounts `cell-has-oracle` |
+| `TCG-ORACLE-GO-v0.1.md#RESOLUTION-GOPLS-ON-PATH` | **go only** | rust — its §1 matches its resolver exactly; ts has no list |
+| `rust-ai-native-tcg.md#DERIVED-FROM-THE-EVIDENCE` | **rust only** | typescript — already carries D5's F-168 dead-id clause |
+| `rust-ai-native-tcg.md#RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL` | **rust only** | go, typescript — both briefs say «DELIBERATELY HELD AT STUB DEPTH» |
+
+**Six of the eight are Rust-only and one is Go-only** — so the release queue's
+«a Go-specific truth stated family-wide» is the *minority* shape in this batch.
+The dominant shape is the reverse: a **Rust**-specific falsehood in a sentence
+whose Go and TypeScript copies are right, because Rust is the stack this
+repository actually consumes and therefore the stack whose sentences were written
+against the most machinery.
+
+## The finding that is not in either count: one fact, several verdicts
+
+**Seven families carry one defect across two or three stacks and were judged
+differently in each.** In every case the copies not in this batch are `confirmed`
+or `unverifiable`, so a correction applied to the batch's copy alone would leave
+the family shipping two answers:
+
+| the fact | drift (this batch) | judged otherwise |
+|---|---|---|
+| replay goldens pin the OUTER hop | rust `TCG-PROTOCOL-RUST#REPLAY-GOLDENS-…`, go `TCG-PROTOCOL-GO#…` | ts `TCG-PROTOCOL-v0.1.md:151 ##REPLAY-GOLDENS-PIN-BOTH-SIDES` → **`confirmed`** |
+| the no-zombie property is asserted | rust `vibe-agentic-tcg-rust#RISK-WINDOWS-CHILD-LIFECYCLE`, go `TCG-ORACLE-GO#GRACEFUL-EXIT-…` (+ rust `TCG-ORACLE-RUST#…`, demoted in D5) | go `vibe-agentic-tcg-go#RISK-WINDOWS-CHILD-LIFECYCLE`, ts `vibe-agentic-tcg-ts#…`, ts `TCG-ORACLE-v0.1#SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT` → **all three `confirmed`** |
+| overlay versions never reset | go `TCG-ORACLE-GO#OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET` | rust `TCG-ORACLE-RUST:118 ##OVERLAY-RULE-VERSIONS-NEVER-REPEAT` → **`confirmed`**, same code |
+| the floor gloss | go `vibe-agentic-tcg-go#FLOOR-REMAINS-THE-TRUTH` | rust `vibe-agentic-tcg-rust:48` → **`confirmed`**, and further off (`cargo check` is not a step) |
+| a middle-third comment check | rust `GUIDE-AI-NATIVE-RUST#POSITION-IS-A-RESOURCE` | ts `GUIDE-AI-NATIVE-TYPESCRIPT:128` → **`confirmed`**, same conjunction |
+| custom lint rules cite the REQ | rust `GUIDE-AI-NATIVE-RUST#SCAFFOLD-F-…` | ts `GUIDE-AI-NATIVE-TYPESCRIPT:141` → **`confirmed`** |
+| `R-060` | rust `GUIDE-AI-NATIVE-RUST#DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL` | ts `GUIDE-AI-NATIVE-TYPESCRIPT:231 ##MATRIX-IS-AUTHORED-DATA` → **`unverifiable`** |
+
+**None of the `confirmed` copies was touched** — §3.1 closes an obligation by
+editing *and re-judging every anchor in its list*, and an anchor no verdict covers
+cannot be re-judged. They are named here so the boss can decide whether each
+family is re-judged together or corrected only where a verdict exists.
+
+## Corrections to earlier campaign records that this pass produced
+
+1. **D5's F-168 note on `FlagSites` is package-scoped and wrong repo-wide.** It
+   records that the rule «is constructed **only in the engine's own tests**» in
+   any stack or `mcp` package. The **Rust** gate mounts it —
+   `out.push(Box::new(rules::FlagSites { … }))` at
+   `rust-ai-native-conform/src/lib.rs:59`, activated by `registry_file` +
+   `registry_gated_crate`. So `R-001` is a TypeScript-and-Go gap, not a
+   family-wide one, and the two Rust twins D5 flagged as «knowingly
+   half-demoted» may be correct as written.
+2. **`harvest/go-ai-native-lang-floor.md` is a package-rooted capture** and its
+   failures are a fact about the cwd, not the mechanism. Its own header says so.
+   Two verdicts in this batch rested on it; one of them (`##BASELINE-RACE-…`)
+   falls entirely.
+3. **D5's F-168 demotion clauses now live in the shipped TypeScript guide on a
+   bench the ruling voids** — `##FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE`
+   (`:175`) and the two `##TIER-*` clauses cite `research/ts-demo`'s
+   devDependency list and file count as evidence about a package this host does
+   not adopt. Published prose, another obligation's, recorded and not touched.
+4. **F-190's release-queue note («the verdict is half false») has a sibling
+   shape here**: `##TARGET-WARM-VALIDATE-AND-COMPLETE` (F-284) is likewise half
+   true — its `validate` clause is measured and met at 19.3 ms against a posted
+   150 ms — so its correction must split the sentence rather than demote it.
+
+## What a Phase-E build would close, cheapest first
+
+1. **A `complete`-latency field in the three bench harnesses** re-judges three
+   anchors in three packages (F-215, F-167, F-284) — the same two lines each,
+   beside the `validate` percentile that already exists.
+2. **One no-zombie assertion per bridge** re-judges up to six anchors across the
+   three stacks (F-281, F-167, and the three `confirmed` copies). The technique is
+   already proven in this repository at
+   `packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-pod/tests/loopback.rs:288-299`.
+3. **One outer-frame replay test per stack** (`run_serve` over recorded
+   `{proto, id, op, params}` frames) re-judges F-280, F-210 and the TypeScript
+   copy.
+4. **`R-021`, `R-060`, `R-001` and `T-lex`** — four rule/tier ids cited across the
+   corpus with no card, no ATLAS entry, or (for `R-001`) no mount on two of three
+   languages. Author them or stop citing them.
+5. **`DR1-014`** — one dead evidence id, now in one package rather than two
+   (F-216; the TypeScript copy already carries its clause).
+
+## Verification
+
+```
+$ git status --porcelain -- packages/ crates/ research/ spec/ discipline/ terraform/
+(no output)
+```
+
+**No package file, no host source file and no campaign state file was modified.**
+The only file this task wrote is this one. Two commands were run against a
+consumer tree — `go-ai-native floor` (read-only) and one `go build` whose output
+went to the session scratchpad, never into the repository — and both left the
+tree clean.
+
+**Measurement window.** The batch opened at HEAD `9f79acf1` and closed at
+`b61eb191`; six commits landed in between, all of them campaign documents.
+`git diff --stat 9f79acf1..b61eb191 -- packages/ crates/ research/ spec/ discipline/ terraform/`
+is empty, so no measurement above straddles a change to its subject.

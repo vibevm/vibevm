@@ -1417,6 +1417,278 @@
    "obligation": "F-307",
    "why": "the package states the policy in exactly one place - it installs one boot snippet - and the CONSUMER'S COMPILER emits it twice, at spec/boot/STATIC.md:421 and :615 from the identical source path. Systemic rather than local: 31 static contributions resolve to 27 distinct sources, and all four duplicates are the git-* family, reached both directly and through the git-practices umbrella. The package is not the side that yields; the duplication is a host build defect, filed as BACKLOG.md B-006. The clause 'plus this flow's documents' is not a defect at all - an installed flow's documents live in the install slot, which is where they are.",
    "recorded": "2026-07-29"
+  },
+  {
+   "anchor": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-132",
+   "why": "wave 7 re-verified this obligation on the widened perimeter and the rule survives as sound while the consumer does not keep it. Detail, with the commands and the per-anchor reasoning, is in the harvest record named here. See campaigns/packages-2026-09/harvest/d7a-core-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-217",
+   "why": "wave 7 re-verification: the rule is sound and this consumer does not keep it. Several of this family's neighbours were re-judged confirmed in the same pass, so the anchors left here are the residue that genuinely measures consumer behaviour rather than a false premise. See campaigns/packages-2026-09/harvest/d7b-addressing-naming-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#EVERY-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-218",
+   "why": "wave 7 re-verification: the rule is sound and this consumer does not keep it. Several of this family's neighbours were re-judged confirmed in the same pass, so the anchors left here are the residue that genuinely measures consumer behaviour rather than a false premise. See campaigns/packages-2026-09/harvest/d7b-addressing-naming-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#NEVER-DUPLICATE-A-NORMATIVE-VALUE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-217",
+   "why": "wave 7 re-verification: the rule is sound and this consumer does not keep it. Several of this family's neighbours were re-judged confirmed in the same pass, so the anchors left here are the residue that genuinely measures consumer behaviour rather than a false premise. See campaigns/packages-2026-09/harvest/d7b-addressing-naming-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#ROW-FORM-KIND-AND-NAME",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-178",
+   "why": "wave 7 re-verification: the rule is sound and this consumer does not keep it. Several of this family's neighbours were re-judged confirmed in the same pass, so the anchors left here are the residue that genuinely measures consumer behaviour rather than a false premise. See campaigns/packages-2026-09/harvest/d7b-addressing-naming-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#ROW-HOME-FEATURE-SCOPE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-147",
+   "why": "wave 7 re-verification: the rule is sound and this consumer does not keep it. Several of this family's neighbours were re-judged confirmed in the same pass, so the anchors left here are the residue that genuinely measures consumer behaviour rather than a false premise. See campaigns/packages-2026-09/harvest/d7b-addressing-naming-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#RULE-THE-CLI-ACCEPTS-ALL-FORMS",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-178",
+   "why": "wave 7 re-verification: the rule is sound and this consumer does not keep it. Several of this family's neighbours were re-judged confirmed in the same pass, so the anchors left here are the residue that genuinely measures consumer behaviour rather than a false premise. See campaigns/packages-2026-09/harvest/d7b-addressing-naming-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#SUM-ONE-FACT-ONE-ANCHOR",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-218",
+   "why": "wave 7 re-verification: the rule is sound and this consumer does not keep it. Several of this family's neighbours were re-judged confirmed in the same pass, so the anchors left here are the residue that genuinely measures consumer behaviour rather than a false premise. See campaigns/packages-2026-09/harvest/d7b-addressing-naming-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md#CONVERSION-ON-FIRST-RUN-CONVERT-AND-PRINT-ONE-LINE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-143",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-148",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md#PIN-EVERY-CASE-WITH-A-FIXTURE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-143",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md#ROW-FIXTURE-DUPLICATED-CLOSER",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-143",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md#ROW-FIXTURE-NESTED",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-143",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ROW-REPORT-WHAT-I-FOUND",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-148",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#SUM-MALFORMED-GOES-TO-THE-DRILL",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-148",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md#the-two-invariants-to-preserve-when-you-port-it",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-181",
+   "why": "wave 7 re-verification: the package states a standard and the consumer's implementation is what fails it. Where the package ships its own reference implementation, that script is a witness the host's port must be audited against, not the other way round. See campaigns/packages-2026-09/harvest/d7c-blocks-mirrors-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-MECHANICS-FIVE-RULES-NONE-OPTIONAL",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-157",
+   "why": "wave 7 re-verification: a norm this consumer does not keep, re-measured at HEAD rather than carried from the opening verdict. The figures in the harvest supersede the recorded ones. See campaigns/packages-2026-09/harvest/d7e-git-tooling-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#SUM-S5-DURABLE-ENV-EDITS",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-157",
+   "why": "wave 7 re-verification: a norm this consumer does not keep, re-measured at HEAD rather than carried from the opening verdict. The figures in the harvest supersede the recorded ones. See campaigns/packages-2026-09/harvest/d7e-git-tooling-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-157",
+   "why": "wave 7 re-verification: a norm this consumer does not keep, re-measured at HEAD rather than carried from the opening verdict. The figures in the harvest supersede the recorded ones. See campaigns/packages-2026-09/harvest/d7e-git-tooling-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md#HEADER-TARGET-LENGTH-AND-HARD-LIMIT",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-308",
+   "why": "wave 7 re-verification: a norm this consumer does not keep, re-measured at HEAD rather than carried from the opening verdict. The figures in the harvest supersede the recorded ones. See campaigns/packages-2026-09/harvest/d7e-git-tooling-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md#NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-087",
+   "why": "wave 7 re-verification: a norm this consumer does not keep, re-measured at HEAD rather than carried from the opening verdict. The figures in the harvest supersede the recorded ones. See campaigns/packages-2026-09/harvest/d7e-git-tooling-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md#SUM-SWITCHING-IS-FORWARD-ONLY",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-232",
+   "why": "wave 7 re-verification: a norm this consumer does not keep, re-measured at HEAD rather than carried from the opening verdict. The figures in the harvest supersede the recorded ones. See campaigns/packages-2026-09/harvest/d7e-git-tooling-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md#CONTENT-THE-BOOT-SNIPPET",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-199",
+   "why": "wave 7 re-verification: a norm this consumer does not keep, re-measured at HEAD rather than carried from the opening verdict. The figures in the harvest supersede the recorded ones. See campaigns/packages-2026-09/harvest/d7e-git-tooling-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md#A-CHANGE-TO-ONE-IS-A-CHANGE-TO-ALL-IN-A-SINGLE-COMMIT",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-239",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-097",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md#GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-203",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md#GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-203",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-097",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-227",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-227",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md#SUM-KEEP-EVERY-STATEMENT-IN-SYNC",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-236",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md#THESE-MUST-NEVER-DISAGREE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-236",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-097",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md#the-check-runs-on-every-action-lead",
+   "route": "host",
+   "wave": 7,
+   "obligation": "F-330",
+   "why": "wave 7 re-verification: a prescription the consumer does not keep, and in several cases the perimeter WIDENED rather than fell - the fractality specspace installs the same flow and fails the same rule, so it is a second consumer's debt, not a false sentence. See campaigns/packages-2026-09/harvest/d7f-tail-sync-reverify.md.",
+   "recorded": "2026-07-31"
   }
  ]
 }

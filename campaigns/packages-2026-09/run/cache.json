@@ -9891,12 +9891,10 @@
             ]
           },
           "BASELINE-RACE-DETECTOR-GATES-TESTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:130  cmd.args([\"test\", \"./...\"]);",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/fast_loop.rs:87  cmd.args([\"test\", &format!(\"./{cells_dir}/{cell}/...\"), \"-json\"]);",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:40  `go` with cell-outliving lifetime is banned; `go test -race` gates",
-              "the floor's test step is `go test ./...` with no `-race`, and it fails outright — the package root is a Cargo workspace, not a Go module, so `./...` resolves to nothing (harvest/go-ai-native-lang-floor.md). The MUST configuration is neither configured nor reachable"
+              "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md  the capture is package-rooted and its `tool did not spawn` lines are a PATH fact of the capturing machine, annotated as such in wave 5",
+              "re-judged in wave 7. The verdict rests on a package-rooted floor capture PLUS this host not configuring the race detector - the first is void as a verdict on a project, the second is void under §3.8 because this host is not the Go stack's consumer."
             ]
           },
           "BASELINE-SUPPRESSION-POLICY": {
@@ -10208,10 +10206,10 @@
             ]
           },
           "RELEASE-MAP-IS-FREE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:100  - **Release map for free:** every Go binary carries `runtime/debug.ReadBuildInfo` — VCS revision, dirty flag, module versions",
-              "no Go binary is built anywhere in this tree — the only Go is a `go run` sidecar source — so `runtime/debug.ReadBuildInfo` embeds nothing and the A1 chain the fact says comes free has no artifact to come from"
+              "`go version -m` on a built binary prints vcs.revision, vcs.modified and the module versions - the release map the fact calls free is a property of the Go toolchain, demonstrable without this repository adopting anything",
+              "re-judged in wave 7. This one would have fallen on its own merits even without the owner ruling: the claim is about what Go gives you for nothing, and it does."
             ]
           },
           "kind-line-registry": {
@@ -10728,7 +10726,7 @@
           }
         },
         "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + D5a + D6"
+        "verify_batch": "C3 + D5a + D6 + D7"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
@@ -16130,12 +16128,10 @@
             ]
           },
           "PROSE-NEAR-CODE-IS-CHECKED-OR-TRUST-LABELED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs:44          \"seam-has-doctest\"",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:76    _theory · high · refines:H4_ — Models condition on in-repo text with high trust ... labeled verified/unverified/aspirational",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs:53              Verb::Documents => \"documents\",",
-              "`#[spec(documents)]` edges occur **zero times** in the host's crates, which carry 120 files of `#[spec(implements=…)]`. The documents edge is in the model and is used by nothing. re-searched over the wider perimeter that C3a's TypeScript batch established — the host's crates AND `research/rust-demo/`, the discipline's own Rust demonstration project, which carries conform.toml, specmap.toml and all three discipline/registry files. The gap holds on both"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs:174-192  the mounted `pub-doctest` rule consumes the #[spec(documents)] edge",
+              "re-judged in wave 7, and this is the Rust stack where §3.8's exception applies and host evidence DOES count - so it was checked on its merits rather than dismissed. The mechanism is live: the edge the fact describes is consumed by a mounted gate rule, and the verdict would have printed `unbuilt` over it."
             ]
           },
           "MISLEADING-LOG-STRINGS-COUNT-TOO": {
@@ -16405,7 +16401,7 @@
           }
         },
         "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + D5a"
+        "verify_batch": "C3 + D5a + D7"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
@@ -21743,10 +21739,10 @@
             ]
           },
           "TSCONFIG-DEFECT-CATCHERS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:90  - ##TSCONFIG-DEFECT-CATCHERS **Defect-catchers:** `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, ...",
-              "five flags named as defect-catchers and marked @impl/done, and the discipline's own demonstration project sets **none** of them: `research/ts-demo/tsconfig.json` carries the four mandatory beyond-strict flags and neither `noUnusedLocals`, `noUnusedParameters` nor `noFallthroughCasesInSwitch`. Nothing else enforces them either"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7. The verdict rests on ONE read of research/ts-demo's tsconfig. That demo is not this package's audience, and the anchor states which compiler options a consuming project should set."
             ]
           },
           "TSCONFIG-ERASABLE-SYNTAX-ONLY": {
@@ -21978,12 +21974,10 @@
             ]
           },
           "SCAFFOLD-E-PER-CELL-FAST-LOOP": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/main.rs:96          #[arg(long, default_value_t = 60)]",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/fast_loop.rs:10  //! `tsc` has no per-cell project mode without project references, so",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:14  | `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | shipped (`typescript-ai-native fast-loop`; the ts ...",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31: the ai-native-lang packages are built first and foremost for EXTERNAL CONSUMERS; typescript is not an adopted stack in this repository and is not meant to be",
+              "re-judged in wave 7 under §3.8. One tool-count taken over research/ts-demo was applied identically to all ten anchors of this obligation. The anchors describe npm tooling and rules FOR CONSUMERS and never claim this repository uses anything, so a count of what this repository runs cannot falsify them."
             ]
           },
           "SCAFFOLD-F-STRUCTURED-DIAGNOSTICS": {
@@ -21996,12 +21990,10 @@
             ]
           },
           "SCAFFOLD-G-EXECUTABLE-EXAMPLES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-g-doctests.md:11  ##INTENT Intent: Ship one type-checked, runnable example per public seam ... because it must type-check (Twoslash) and/or run.",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:414          has_doc_example: /```|@example/.test(docText.slice(0, 2000)),",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:16  | `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | specified (the health collector counts export `@ex ...",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: same single tool-count over the wrong consumer, applied verbatim to this anchor."
             ]
           },
           "SCAFFOLD-H-LOCAL-SIMULATORS": {
@@ -22013,12 +22005,10 @@
             ]
           },
           "SCAFFOLD-I-CODEMODS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`ts-morph`/`jscodeshift` AST rewrite, or typed ESLint autofix) ...",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/codemod.rs:1  //! `typescript-ai-native codemod add-cell` — the scaffold-I frame:",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:18  | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`typescript-ai-native co ...",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: same single tool-count over the wrong consumer."
             ]
           },
           "THROW-IS-UNTYPED": {
@@ -22045,11 +22035,10 @@
             ]
           },
           "EXHAUSTIVENESS-OVER-E-IS-ENFORCED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:43    3. Close unions; assert exhaustiveness with `satisfies` / `assertNever` in the default branch.",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md:77  - **Exhaustiveness:** closed sets are discriminated unions with compiler-checked exhaustive `switch` (`assertNever` in `default` ...)",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: the rule is stated for an adopting project; this repository is not one for TypeScript."
             ]
           },
           "THROW-IS-FOR-UNRECOVERABLE-DEFECTS": {
@@ -22277,11 +22266,10 @@
             ]
           },
           "RULE-BEHAVIORAL-CLAIMS-ARE-MACHINE-CHECKED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:414          has_doc_example: /```|@example/.test(docText.slice(0, 2000)),",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/health.rs:74                          if *has_doc_example {",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7 on the same ground: a rule addressed to a consumer, measured against a non-consumer."
             ]
           },
           "MISLEADING-STRINGS-COUNT-TOO": {
@@ -22300,20 +22288,17 @@
             ]
           },
           "REPLACEMENT-SHIPS-A-DIFFERENTIAL-ORACLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:31  ##MOTIVATION **Motivation:** ... With a differential oracle — `fast-check` feeding identical generated inputs to `oldParse` and `newParse` ...",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap-scan/src/lib.rs:29          \"verifies\" => Some(EdgeVerb::Verifies),",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | specified (pilot) |",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: same tool-count, same wrong consumer."
             ]
           },
           "CHARACTERIZATION-GOLDENS-PIN-LEGACY-BEHAVIOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:34  - ##PARTICIPANT-SUBJECT-OLD *Subject-old* — the prior implementation (kept temporarily as `oldParse`, or captured as `vitest` snapshots).",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md:57  6. ##INVENTORY-CHARACTERIZE **Characterize** currently-passing observable behavior (golden",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: same tool-count, same wrong consumer."
             ]
           },
           "CHARACTERIZATION-ENSHRINES-BUGS-TOO": {
@@ -22340,10 +22325,10 @@
             ]
           },
           "MATRIX-TOOLING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:33  - **`fast-check`** — property/differential oracles (D); `vitest` snapshots for characterization.",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: the anchor names tooling a consumer adopts, not tooling this repository runs."
             ]
           },
           "MATRIX-IS-AUTHORED-DATA": {
@@ -22362,19 +22347,17 @@
             ]
           },
           "TYPE-LEVEL-TEST-TOOLING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md:45    5. Confirm the previously-wrong call no longer type-checks (add a `tsd`/`expectTypeOf` or `@ts-expect-error` compile-fail test).",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:241  const SUPPRESSION = /@ts-(expect-error|ignore)(?:\\s*--\\s*(\\S[^\\n*]*))?/;",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: same ground."
             ]
           },
           "RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:57    canonical use, and public generic/branded/union surfaces carry a",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:58    type-level test (`expectTypeOf`/`tsd`). Replacing a non-trivial cell",
-              "**restated 2026-07-28, and the first verdict was mine to get wrong.** It was confirmed on a count of the named tooling in `research/ts-demo/` that had not excluded `node_modules`, `.vibe/cache/` or `vibedeps/` — so it counted the demo's DEPENDENCIES and a cache of older package versions as the demo's own practice. Measured over the demo's own sources only, **every one of the named tools returns zero**: vitest, fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever. Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`, `typescript`, `typescript-eslint` and its test script is literally `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`. The tsconfig half of the demo evidence stands — all four mandatory beyond-strict flags are set, read by parsing the file rather than grepping it — and the tooling half does not"
+              "owner ruling 2026-07-31, §3.8 of the batch plan",
+              "re-judged in wave 7: same ground. Ten anchors, one measurement, and the measurement was of a project that is not this package's audience."
             ]
           },
           "type-level-testing-is-additive-over-rust": {
@@ -22657,7 +22640,7 @@
           }
         },
         "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + C45-cross-language + D5a"
+        "verify_batch": "C3 + C45-cross-language + D5a + D7"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {

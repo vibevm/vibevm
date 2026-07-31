@@ -3546,6 +3546,81 @@ command that would have tested it.
   path and `confirmed` where one read the prompt's shape. Filed as `BACKLOG.md`
   B-004. Publishing the two-package fix alone is what §4.5 calls not a closure.
 
+- **2026-07-31 · wave 7 — the whole `sync-from-code` route re-verified without a
+  single edit, and a third of it did not survive.** The route is the owner's:
+  he approves every spec diff. But **a re-verdict that edits nothing produces no
+  spec diff and therefore needs no approval**, so the route was run as a
+  re-verification pass with a no-edit rule at the top of all six briefs.
+  **The instrument confirms it held**: across three merges, 19 files, **0 sealed,
+  0 refused, 19 already current** — the verdicts moved and not a byte of text
+  did.
+
+  **Of 171 verdicts examined, 47 were re-judged `confirmed` and 34 more anchors
+  routed out.** By batch, the false count: `core-ai-native` 9/38,
+  `addressable-specs`+`qualified-naming` 11/25, `managed-blocks`+`source-mirrors`
+  12/30, the three stacks 13/45, the git family+`tool-design-lessons` 4/17, the
+  tail 3/16.
+
+  **The dominant cause is not mis-measurement, and that is the phase's second
+  structural finding.** It is **a real defect convicting the wrong sentence** —
+  now §6.1 `##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE`. One batch found the
+  same fact, measured once, confirming one anchor and drifting another **ten
+  times over**, the drifting one almost always the summary whose own body rows
+  are confirmed; another found **all three** of its false verdicts to be a
+  sentence convicted of its neighbour's defect. The shape is mechanically
+  detectable and now is: `tasks/summary-vs-body.py` lists every `##SUM-…` still
+  drifting over a body that is not, and returns **17 candidates** at ratios of
+  67 confirmed to 1 drift, 58 to 1, 45 to 2.
+
+  **Three further named rules, each paid for.** `##READ-FURTHER-BEFORE-SEARCHING-WIDER`
+  — three of one batch's four false verdicts were settled by reading the subject
+  document further and searching nowhere at all, the sharpest being a fact
+  convicted on evidence its own document exempts **twelve lines above**.
+  `##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS` — a host-live count showed one hit
+  for *every* form, all of them inside this campaign's own plan, matching because
+  the LOG entry written the day before quotes those words in prose; and the
+  campaign **moves its own measurements**, a commit-subject breach shifting 1.2
+  points inside one batch on six commits of our own bookkeeping. And §3.7 gained
+  **a third address**: `core-ai-native` is simultaneously SPEC and ENGINE, a
+  workspace of five crates vendored into six siblings, and **six of that batch's
+  nine falls came from scoping the search to «the crate»** — the cheapest being
+  a run-twice-diff test reported missing that sits in the very file the verdict
+  cited, twelve lines below the line it quoted.
+
+  **Owner ruling mid-wave, and it voided a class rather than a row —
+  §3.8.** The `ai-native-lang` packages are built **first and foremost for
+  external consumers**; `go` is a prototype specification deliberately unused
+  here and not to be used here; **`rust` is the exception**, because part of
+  VibeVM itself is written in AI-Native Rust. So §3.1's source 2 — «the host is
+  a living consumer and the honest test bench» — does not transfer to a package
+  whose audience is external, and **eleven of the stacks batch's thirteen falls
+  are that ruling applied**, ten of them one tool-count over `research/ts-demo`
+  pasted across ten anchors that describe tooling *for consumers*. Two findings
+  filed earlier the same day were struck by it, both wrong: Go skills absent from
+  the host's skill directories, and `PROP-026` designating `"go"` unsupported —
+  which is a correct statement about the host's own dispatch, not a contract with
+  a package serving somebody else. `legacy-spec/**` was excluded from the
+  perimeter by the same ruling.
+
+  **And the wave found the phase's own unfinished repair.** Wave 6's correction
+  to `##CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT` did not
+  propagate to its own summary **sixty-five lines below in the same file**, which
+  still says `Implements:` markers plus `Test:` lines form a bidirectional graph
+  — and `grep -rc '^Test: ' spec/` returns **0**. A `duplication` defect authored
+  by the phase that exists to remove them, found by a delegated worker
+  re-verifying the boss's output, and filed rather than fixed because the fix is
+  an edit on this very route. It is group D of the new
+  [`PHASE-D-SYNC-QUEUE.md`](../../campaigns/packages-2026-09/PHASE-D-SYNC-QUEUE.md),
+  which §4 required and which did not exist until this wave produced diffs
+  needing somewhere to live.
+
+  **State at wave 7's close:** corpus **10 911 confirmed / 391 drift / 44
+  unverifiable — 96.2 %**, from 94.3 % at the Phase C gate. Registry **165
+  obligations**, at 2.4 drifts each. **180 of 391 verdicts still owe a package
+  repair; 211 are routed out; 90 obligations have nothing left owed.**
+  `sync-from-code` falls from 51 / 171 to **43 / 121** without one owner approval
+  being spent.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
