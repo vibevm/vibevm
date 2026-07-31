@@ -6,16 +6,16 @@
 
 ##corpus-lives-here-lead The language-neutral corpus lives in this package: @impl/done
 
-- ##CORPUS-GUIDING-LAYER the guiding layer (`00-MANIFESTO.md`,
-  `01-PATTERN-CARD-FORMAT.md`, `02-EXECUTABLE-SCAFFOLDS.md`), @impl/done
-- ##CORPUS-OPERATING-PLAYBOOKS the operating playbooks (`03-RAID-PLAYBOOK.md`
-  campaigns, `04-SWEEP-PLAYBOOK.md` the standing sweep, `05-CAMPAIGN-FORM.md`
-  the campaign paper trail, `06-WAL-CONVENTION.md` session-durable state —
+- ##CORPUS-GUIDING-LAYER the guiding layer (`spec/00-MANIFESTO.md`,
+  `spec/01-PATTERN-CARD-FORMAT.md`, `spec/02-EXECUTABLE-SCAFFOLDS.md`), @impl/done
+- ##CORPUS-OPERATING-PLAYBOOKS the operating playbooks (`spec/03-RAID-PLAYBOOK.md`
+  campaigns, `spec/04-SWEEP-PLAYBOOK.md` the standing sweep, `spec/05-CAMPAIGN-FORM.md`
+  the campaign paper trail, `spec/06-WAL-CONVENTION.md` session-durable state —
   optional but preferred), @impl/done
-- ##CORPUS-MECHANISM-SPECS the mechanism specs under `mechanisms/`
+- ##CORPUS-MECHANISM-SPECS the mechanism specs under `spec/mechanisms/`
   (ENGINE-CONFORM, PROP-014 specmap, BROWNFIELD-PROTOCOL, LEDGER-INTENT — the
   units `spec://org.vibevm.ai-native/core-ai-native/…` tags cite), @impl/done
-- ##CORPUS-APPENDIX and `appendix/`. @impl/done
+- ##CORPUS-APPENDIX and `spec/appendix/`. @impl/done
 
 ##CARDS-AND-CHECKERS-PER-STACK The concrete per-language `cards/` and the
 runnable checkers ship in each language stack, not here. @impl/done
@@ -35,7 +35,7 @@ own delivery rule is minimal sufficiency: @impl/done
 2. ##LAW-EXPLANATION-IS-RUNNABLE-CAPITAL **Explanation capital must be runnable capital.** Prose that could
    be a checker, doctest, or typed API is a WISH until it becomes one. @impl/done
 
-##CARD-REGISTRY Card registry: the active language stack's `cards/INDEX.md` (trigger →
+##CARD-REGISTRY Card registry: the active language stack's `spec/cards/INDEX.md` (trigger →
 card; the nine executable scaffolds A–I in their per-language shape). @impl/done
 
 ##CROSS-CUTTING-SWEEPS Cross-cutting sweeps follow `03-RAID-PLAYBOOK.md`. @impl/done

@@ -3,17 +3,17 @@
 <status stage="impl" state="done"/>
 
 ##RUST-CODE-FOLLOWS-THE-RUST-GUIDE Rust code in this project follows the AI-Native Rust guide
-(`rust/GUIDE-AI-NATIVE-RUST.md` in this package). @impl/done
+(`spec/rust/GUIDE-AI-NATIVE-RUST.md` in this package). @impl/done
 
 ##READ-THE-GUIDE-FOR-STRUCTURE Read the guide when
 authoring or reviewing structure; per-edit work needs only the card
 whose trigger fires. @impl/done
 
-##CARD-REGISTRY-FOR-RUST Card registry for Rust: `cards/INDEX.md` in this package (trigger → card;
+##CARD-REGISTRY-FOR-RUST Card registry for Rust: `spec/cards/INDEX.md` in this package (trigger → card;
 the nine executable scaffolds A–I in their Rust shape). @impl/done
 
 ##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION This stack ships
-its own `cards/` projection — the weak-reader runtime surface for a `.rs`
+its own `spec/cards/` projection — the weak-reader runtime surface for a `.rs`
 edit is a Rust card's Band-3 ops block, never another language's. @impl/done
 
 ##standing-rules-lead Standing rules at the surface level: @impl/done

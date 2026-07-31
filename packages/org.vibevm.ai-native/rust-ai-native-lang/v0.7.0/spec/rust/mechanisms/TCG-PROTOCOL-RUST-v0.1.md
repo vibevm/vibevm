@@ -66,13 +66,15 @@ units through the line's text. @impl/done
 ##PATHS-ARE-PROJECT-ROOT-RELATIVE Paths are project-root-relative with
 forward slashes. @impl/done
 
-- ##OP-INIT **`init`** `{root}` → `{ra_version, ra_path, toolchain, root_files,
-  quiescent}` — resolves and spawns the analyzer (ORACLE-RUST §1),
-  negotiates capabilities (§2), applies §3 config, waits for
-  quiescence bounded by a deadline. Re-`init` on a live session
-  restarts the child; overlays are cleared. The relay self-inits at
-  `serve` start, so a host's first frame may be any op (client init
-  frames remain re-init). @impl/done
+- ##OP-INIT **`init`** `{}` → `{ra_version, position_encoding,
+  pull_diagnostics, quiescent}` — resolves and spawns the analyzer
+  (ORACLE-RUST §1), negotiates capabilities (§2), applies §3 config,
+  waits for quiescence bounded by a deadline. Re-`init` on a live
+  session restarts the child; overlays are cleared. The relay
+  self-inits at `serve` start, so a host's first frame may be any op
+  (client init frames remain re-init). The relay serves ONE project,
+  so `init` takes no parameters — the root is `run_serve`'s own
+  canonicalized process root. @impl/done
 - ##OP-UPDATE **`update`** `{file, content | null}` → `{version}` — set/replace an
   overlay (`didOpen`/`didChange`, monotonic version) or clear it
   (`didClose`). @impl/done

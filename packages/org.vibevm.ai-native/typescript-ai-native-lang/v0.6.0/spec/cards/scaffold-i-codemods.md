@@ -16,7 +16,7 @@
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the barrel re-export + the discriminated error union" desynchronizes them. `vibe codemod rename-seam --from X --to Y`, built on `ts-morph`, performs the change atomically and verifiably; the agent fills two parameters instead of coordinating seven edits. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @spec/done
+##MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the barrel re-export + the discriminated error union" desynchronizes them. A `codemod rename-seam --from X --to Y` over TypeScript's mature AST tooling **would** perform the change atomically and verifiably, the agent filling two parameters instead of coordinating seven edits — that operation is specified and not yet built. The shipped codemod surface today is one verb, `typescript-ai-native codemod add-cell --cell <cell> --spec-uri <uri>`, which writes the seam module and its `node:test` smoke test atomically and rolls back on failure. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @spec/done
 
 ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`ts-morph`/`jscodeshift` AST rewrite, or typed ESLint autofix) · *Parameters* (the small named inputs) · *Atomic application* (all-or-nothing) · *Post-check* (`tsc` + `vitest` green). @impl/done
 

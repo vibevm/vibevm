@@ -16,7 +16,7 @@
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent asked to "add a planner variant" must create the cell package, the conformance assertion, the directive tags, the registry arm, and the Example stub — five files in lockstep. `go-ai-native codemod add-cell <pkg> <cell> <seam> <variant> <spec-uri>` performs the change atomically and verifiably; the agent fills five parameters instead of coordinating five files. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @spec/done
+##MOTIVATION Motivation: A weak agent asked to "add a planner variant" must create the cell package, the conformance assertion, the directive tags, the registry arm, and the Example stub — five artefacts in lockstep. `go-ai-native codemod add-cell --cell <cell> --spec-uri <uri>` collapses the scaffolding half into two parameters: it writes `doc.go` with its `//spec:scope` directive, the cell source with its `New` constructor, and a smoke test carrying an executed `Example` — atomically, post-checked by the new package's own `go test`, rolled back on failure. The seam-conformance assertion and the registry arm stay the author's. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @spec/done
 
 ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`gofmt -r` for pattern rewrites; a `go/ast`+`go/format` program or the shipped CLI verb for structural ones) · *Parameters* (the small named inputs) · *Atomic application* (all-or-nothing) · *Post-check* (`go build` + per-package `go test` green). @impl/done
 

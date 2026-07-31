@@ -97,9 +97,9 @@ library): @impl/done
 
 ```
 agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
-   │         language:"go")──▶ vibe mcp serve
-   │                           (vibe-tcg registry: lazy spawn,
-   │                            slot dispatch, consent)
+   │         language:"go")──▶ go-ai-native-mcp serve
+   │                           (this family's own MCP server —
+   │                            PROP-027; language is a compat guard)
    └─or one-shot─▶ vibe bin exec go-ai-native-tcg -- <op> ──▶ go-ai-native-tcg
                                             (TCG-PROTOCOL-GO frames up;
                                              enrichment in-process:
@@ -124,10 +124,15 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
   self-inits with the project's conform.toml topology so a host's first
   frame can be `validate`) + one-shot ops + `bench` (the corpus/latency
   harness). @impl/done
-- ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the SAME four `tcg_*` tools;
-  `language: "go"` dispatches through the lockfile to this package's
-  slot artifact. No new tools, no new PROP — the enum-value promise,
-  cashed a second time. @impl/done
+- ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-027; PROP-026 §2 keeps the
+  grammar): the SAME four `tcg_*` tools, served by this family's own standalone
+  MCP package `mcp:org.vibevm.ai-native/go-ai-native-mcp` — no new tools, and
+  `language` survives only as a validated compat parameter that refuses a
+  mismatch with the recipe naming the right server. The multiplexed
+  `vibe mcp serve` + `vibe-tcg` slot-dispatch topology this row described was
+  retired whole (PROP-026 ##SUPERSEDED-TOPOLOGY, ##TCG-CRATE-DELETED); the
+  enum-value promise re-reads as «a new language is a new mcp package shipping
+  the SAME tool grammar» (##ENUM-BET-REREAD). @impl/done
 - ##COMPONENT-DETERMINISM-AND-AUDITABILITY **Determinism and auditability:** given (project state, overlay set,
   policy, gopls version), answers are deterministic modulo gopls's own
   analysis; enriched findings cite `spec://` REQs; nothing samples. @impl/done

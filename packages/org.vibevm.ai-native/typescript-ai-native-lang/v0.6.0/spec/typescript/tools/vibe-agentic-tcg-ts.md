@@ -97,10 +97,10 @@ red floor iterations rare; the floor's job is unchanged: to be the truth. @impl/
 the layer below cannot: @impl/done
 
 ```
-agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type)──▶ vibe mcp serve
-   │                                                    (vibe-tcg registry:
-   │                                                     lazy spawn, slot
-   │                                                     dispatch, consent)
+agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type)──▶ typescript-ai-native-mcp serve
+   │                                                    (this family's own
+   │                                                     MCP server — PROP-027;
+   │                                                     language compat guard)
    └─or one-shot─▶ vibe bin exec typescript-ai-native-tcg -- <op> ──▶ typescript-ai-native-tcg
                                                         (discipline
                                                          enrichment: conform
@@ -127,12 +127,15 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type)──▶ vibe mcp
   the package's 4th `[[binary]]`): `serve` (the enriching relay an MCP
   host drives) + one-shot ops + `bench` (the battery's latency/agreement
   harness). @impl/done
-- ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the `vibe-tcg` crate — tool
-  schemas, registry, slot dispatch via the PROP-025 model — mounted by
-  vibe-mcp as four `tcg_*` tools with a `language` parameter
-  (`"typescript"` today; the Rust twin adds a value, not new tools).
-  Deliberately liftable into a standalone MCP server (zero vibe-mcp
-  imports) — the owner's portability amendment. @impl/done
+- ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-027; PROP-026 §2 keeps the
+  grammar normative): the same four `tcg_*` tools, served by this family's own
+  standalone MCP package `mcp:org.vibevm.ai-native/typescript-ai-native-mcp` with
+  `language` as a validated compat parameter (a mismatch refuses with the recipe
+  naming the right server). The `vibe-tcg` registry crate and the vibe-mcp
+  `tcg_*` adapters this row described were deleted whole
+  (PROP-026 ##TCG-CRATE-DELETED) — **the owner's portability amendment was
+  cashed**, not deferred: `typescript-ai-native-mcp` depends on `mcp-core` and
+  has zero vibe-mcp imports. @impl/done
 - ##COMPONENT-DETERMINISM-AND-AUDITABILITY **Determinism and auditability:** given (project state, overlay set,
   policy), every answer is deterministic; enriched findings cite
   `spec://` REQs Class-F style; nothing here samples anything. @impl/done

@@ -16,7 +16,7 @@
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the registry + the error enum" desynchronizes them. `vibe codemod rename-seam --from X --to Y` performs the change atomically and verifiably; the agent fills two parameters instead of coordinating seven edits. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @spec/done
+##MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the registry + the error enum" desynchronizes them. A `codemod rename-seam --from X --to Y` **would** perform the change atomically and verifiably, the agent filling two parameters instead of coordinating seven edits — that operation is specified and not yet built. The shipped codemod surface today is one verb, `rust-ai-native codemod add-cell --crate-dir <dir> --cell <cell> --seam <seam> --variant <variant> --spec-uri <uri>`, which scaffolds a cell atomically and rolls back on failure. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @spec/done
 
 ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`syn`-based AST rewrite or cargo-integrated operation) · *Parameters* (the small named inputs) · *Atomic application* (all-or-nothing) · *Post-check* (compiles + tests green). @impl/done
 

@@ -19,7 +19,7 @@ catalog, not a protocol: there is no single procedure to follow, just
 fourteen laws with the failures that earned them and three maxims that
 sit above them. @impl/done
 
-##package-contents-lead This package ships four pieces of content plus a boot snippet: @impl/done
+##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done
 
 - ##CONTENT-THE-CATALOG-INDEX `spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md` — the catalog:
   what the lessons are, the index table (lesson id → one-line law →

@@ -29,7 +29,7 @@ contracts PROP / FEAT — that is a naming choice this collection
 carries from its origin, and you can rename it for your project; the
 taxonomy is what matters, not the labels. @spec/done
 
-##package-contents-lead This package ships four pieces of content plus a boot snippet: @impl/done
+##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done
 
 - ##CONTENT-THE-PROTOCOL `spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md` — the taxonomy:
   why genres exist, the full genre table (charter, mutability,

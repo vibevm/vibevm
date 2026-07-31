@@ -4,17 +4,17 @@
 
 ##TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE TypeScript code in this
 project follows the AI-Native TypeScript guide
-(`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` in this package). @impl/done
+(`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` in this package). @impl/done
 
 ##READ-THE-GUIDE-FOR-STRUCTURE Read the
 guide when authoring or reviewing structure; per-edit work needs only
 the card whose trigger fires. @impl/done
 
-##CARD-REGISTRY-FOR-TYPESCRIPT Card registry for TypeScript: `cards/INDEX.md` in this package (trigger →
+##CARD-REGISTRY-FOR-TYPESCRIPT Card registry for TypeScript: `spec/cards/INDEX.md` in this package (trigger →
 card; the nine executable scaffolds A–I in their TypeScript shape). @impl/done
 
 ##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION This
-stack ships its own `cards/` projection — the weak-reader runtime surface
+stack ships its own `spec/cards/` projection — the weak-reader runtime surface
 for `.ts` edits is a TypeScript card's Band-3 ops block, never the Rust
 one. @impl/done
 
