@@ -97,4 +97,4 @@ epoch = H( dependency lockfiles (Cargo.lock, vibe.lock)
 
 ---
 
-##UNEXERCISED-POLICY-IS-REMOVED-NOT-CARRIED *Any query kind, key field, or policy here not exercised by Playbook Phase 5 is removed from this document rather than carried as aspiration.* @impl/done
+##UNEXERCISED-POLICY-IS-REMOVED-NOT-CARRIED *Any query kind, key field, or policy here not exercised by Playbook Phase 5 is either removed from this document or annotated in place as **specified, not built** — never carried as unmarked aspiration.* @impl/done

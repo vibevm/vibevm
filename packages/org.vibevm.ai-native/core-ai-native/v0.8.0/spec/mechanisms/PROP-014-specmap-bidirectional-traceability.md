@@ -422,4 +422,4 @@ crates/vibe-resolver and the proposals file.
 
 ##RATIFICATION-HAPPENS-THROUGH-PR-REVIEW *Ratification — and the `specmark`/xtask implementation start — happens through PR review against this document.* @impl/done
 
-##UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC *Any mechanism specified here that is not exercised by the end of Phase 2 is removed from the spec rather than carried as aspirational documentation.* @impl/done
+##UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC *Any mechanism specified here that is not exercised by the end of Phase 2 is either removed from the spec or annotated in place as **specified, not built** — never carried as unmarked aspiration.* @impl/done

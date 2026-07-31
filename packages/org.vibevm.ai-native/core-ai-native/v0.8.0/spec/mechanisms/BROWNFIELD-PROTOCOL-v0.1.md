@@ -149,4 +149,4 @@
 
 ---
 
-##UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED *Any registry field, status, or policy here not exercised by Playbook (v0.2) Phase 2 is removed rather than carried as aspiration — yes, the brownfield document eats its own rule.* @impl/done
+##UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED *Any registry field, status, or policy here not exercised by Playbook (v0.2) Phase 2 is either removed or annotated in place as **specified, not built** — never carried as unmarked aspiration; yes, the brownfield document eats its own rule.* @impl/done
