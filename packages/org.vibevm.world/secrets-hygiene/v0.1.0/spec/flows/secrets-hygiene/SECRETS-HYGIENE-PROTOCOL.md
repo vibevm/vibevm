@@ -207,7 +207,7 @@ attacker can spend using it. @spec/done
 your agent in a fresh session: @impl/done
 
 ```
-Read spec/flows/secrets-hygiene/ end to end. Then map it onto THIS
+Read this flow's documents (your project installed them — typically `vibedeps/flow-secrets-hygiene/<version>/spec/flows/secrets-hygiene/`, check `vibe.lock`) end to end. Then map it onto THIS
 project: (1) enumerate every credential the tooling handles — tokens,
 keys, passwords — and its source (env var / file / flag); (2) name
 the ONE sanctioned at-rest location for each and confirm nothing else

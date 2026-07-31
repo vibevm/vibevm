@@ -42,7 +42,7 @@ dependency on licence grounds regardless of how good it is. @impl/done
 ##THE-DRAFT-EULA-SKILL-DRAFTS-OR-REVIEWS-THE-POSTURE The `draft-eula` skill drafts or reviews the posture. @impl/done
 
 ##sibling-document-pointers Full detail:
-[`LICENSING-PROTOCOL.md`](../flows/licensing/LICENSING-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/licensing/flows/licensing/LICENSING-PROTOCOL#root. @impl/done
 
 ## Never {#never}
 

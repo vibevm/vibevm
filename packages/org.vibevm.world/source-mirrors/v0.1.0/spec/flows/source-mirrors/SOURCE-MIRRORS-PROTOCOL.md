@@ -162,7 +162,7 @@ workflow. @spec/done
 and let the agent derive the setup your project actually needs: @impl/done
 
 ```
-Read spec/flows/source-mirrors/ in full, then adapt it to this project:
+Read this flow's documents (your project installed them — typically `vibedeps/flow-source-mirrors/<version>/spec/flows/source-mirrors/`, check `vibe.lock`) in full, then adapt it to this project:
 1. List every git host this source must live on, and for each: is it a
    push target (we push to it) or self-mirroring (it pulls itself)?
 2. Name the single mainline — the one local tree that is the merge

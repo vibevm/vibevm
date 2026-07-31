@@ -42,7 +42,7 @@ Commits and a violation of the atomic rule. @impl/done
    rewriting. @impl/done
 
 ##splitting-procedure-pointer Procedure for splitting a messy working tree:
-[`spec/flows/atomic-commits/splitting-large-changes.md`](../flows/atomic-commits/splitting-large-changes.md). @impl/done
+@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root. @impl/done
 
 ## Why this matters in a human-AI team {#why-human-ai-teams}
 
@@ -53,7 +53,7 @@ Commits and a violation of the atomic rule. @impl/done
 - ##WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
   where *why* survives after the WAL and spec prose decay. @impl/done
 
-##full-protocol-pointer Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md). @impl/done
+##full-protocol-pointer Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @impl/done
 
 ## Never {#never}
 

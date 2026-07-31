@@ -15,7 +15,7 @@ commit**. @impl/done
 ##NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED Never ship a setup change with the doc update deferred — deferral is
 exactly where the drift these files exist to prevent lives. @impl/done
 
-##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done
+##sibling-document-pointers Full protocol: @spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#root. @impl/done
 
 ## Never {#never}
 

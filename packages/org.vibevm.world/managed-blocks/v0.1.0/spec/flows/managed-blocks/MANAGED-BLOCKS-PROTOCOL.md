@@ -269,7 +269,7 @@ body into the first tool's region — silent mutual corruption. @impl/done
 your agent the task, not a copied template: @impl/done
 
 ```
-Read spec/flows/managed-blocks/ end to end. Then design the managed
+Read this flow's documents (your project installed them — typically `vibedeps/flow-managed-blocks/<version>/spec/flows/managed-blocks/`, check `vibe.lock`) end to end. Then design the managed
 block for THIS tool:
 1. Name the host files we write into and who else writes to each
    (the user by hand? other tools?).

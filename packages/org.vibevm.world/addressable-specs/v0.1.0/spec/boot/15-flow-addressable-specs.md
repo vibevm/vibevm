@@ -50,12 +50,12 @@ invariant the reader statistically skipped. @spec/done
 
 - ##POINTER-THE-PROTOCOL Why addressability is IPC requirement #1, the URI scheme, the
   token economics:
-  [`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md`](../flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md) @impl/done
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root @impl/done
 - ##POINTER-THE-AUTHORING-RULES Unit of meaning, normativity marking, deviations, size budgets,
   anchor stability:
-  [`spec/flows/addressable-specs/authoring-rules.md`](../flows/addressable-specs/authoring-rules.md) @impl/done
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root @impl/done
 - ##POINTER-THE-SPEC-TREE-LAYOUT PROP vs FEAT, what goes where, the `.human/` buffer:
-  [`spec/flows/addressable-specs/spec-tree-layout.md`](../flows/addressable-specs/spec-tree-layout.md) @impl/done
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root @impl/done
 
 ## Never {#never}
 

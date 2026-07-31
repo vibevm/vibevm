@@ -7,7 +7,7 @@ distributable user-level prompt that reshapes an LLM session into
 structured co-inquiry. @impl/done
 
 ##ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY The artifact lives at
-[`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`](../flows/discovery-prompt/DISCOVERY-PROMPT.md). @impl/done
+@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/DISCOVERY-PROMPT#root. @impl/done
 
 ##ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS It is a **payload for a fresh session**, not standing instructions —
 do not load it into context outside an explicit deployment request. @impl/done
@@ -21,7 +21,7 @@ and paste the whole text as the first message of a fresh
 conversation. @impl/done
 
 ##deployment-walkthrough-pointer Deployment steps and a piece-by-piece walkthrough:
-[`spec/flows/discovery-prompt/usage.md`](../flows/discovery-prompt/usage.md). @impl/done
+@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#root. @impl/done
 
 ## What it does {#what}
 
@@ -40,6 +40,6 @@ failure. @impl/done
 - ##NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION Never mix the discovery grammar into a coding session uninvited —
   its overhead pays off only when the answer space is genuinely open. @impl/done
 - ##NEVER-EDIT-THE-ARTIFACT-IN-PLACE Never edit the artifact in place; adapt a copy via the re-derive
-  prompt in [`usage.md` §re-derive](../flows/discovery-prompt/usage.md#re-derive). @impl/done
+  prompt in @spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#re-derive. @impl/done
 - ##NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES Never treat the confidence numbers as guarantees — they are
   calibration aids, not measurements. @impl/done

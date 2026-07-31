@@ -149,7 +149,7 @@ the repository where this topic is discussed.
 your agent in a fresh session: @impl/done
 
 ```
-Read spec/flows/attribution-policy/ end to end — both postures.
+Read this flow's documents (your project installed them — typically `vibedeps/flow-attribution-policy/<version>/spec/flows/attribution-policy/`, check `vibe.lock`) end to end — both postures.
 Then determine for THIS project: (1) does any law or regulation
 applicable to the owner require AI-involvement disclosure? (2) do
 our organization, upstream projects, or target registries require

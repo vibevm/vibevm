@@ -230,7 +230,7 @@ replacing the process. @spec/done
 the agent re-derive the checklist this project actually needs: @impl/done
 
 ```
-Read spec/flows/health-audit/ in full, then adapt the audit to this
+Read this flow's documents (your project installed them — typically `vibedeps/flow-health-audit/<version>/spec/flows/health-audit/`, check `vibe.lock`) in full, then adapt the audit to this
 project:
 1. Name this project's per-commit gate exactly — the commands that
    must be green before a commit lands (tests, linter, CI jobs).

@@ -177,7 +177,7 @@ line, `serde = "1"` in the manifest. @spec/done
 the agent derive the namespace your ecosystem actually needs: @impl/done
 
 ```
-Read spec/flows/qualified-naming/ in full, then design the namespace
+Read this flow's documents (your project installed them — typically `vibedeps/flow-qualified-naming/<version>/spec/flows/qualified-naming/`, check `vibe.lock`) in full, then design the namespace
 for THIS ecosystem:
 1. Name the artifacts it distributes (packages, plugins, extensions)
    and who owns each — the owner set is your group set.

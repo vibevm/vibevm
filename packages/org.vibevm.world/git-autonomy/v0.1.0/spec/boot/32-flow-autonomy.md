@@ -29,4 +29,4 @@
 
 ##WHEN-UNCERTAIN-ASK **When uncertain, ask.** @impl/done
 
-##sibling-document-pointers Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md). @impl/done
+##sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @impl/done

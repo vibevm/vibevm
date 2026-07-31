@@ -121,7 +121,7 @@ it is used. @impl/done
 let the agent enumerate the surfaces this project actually has: @impl/done
 
 ```
-Read spec/flows/manual-tests/ in full, then adapt the tier to this
+Read this flow's documents (your project installed them — typically `vibedeps/flow-manual-tests/<version>/spec/flows/manual-tests/`, check `vibe.lock`) in full, then adapt the tier to this
 project:
 1. List every integration surface the automated suite fakes, mocks,
    or skips — real auth, the per-user state directory, remote I/O,

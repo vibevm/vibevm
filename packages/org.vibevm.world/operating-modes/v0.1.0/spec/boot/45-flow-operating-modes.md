@@ -25,7 +25,7 @@ confirmation. @impl/done
 ## Codewords {#codewords}
 
 ##codeword-catalogue-pointer The project's codewords are catalogued in
-[`OPERATING-MODES-PROTOCOL.md`](../flows/operating-modes/OPERATING-MODES-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/operating-modes/flows/operating-modes/OPERATING-MODES-PROTOCOL#root. @impl/done
 
 ##RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING
 Recognise a codeword by intent, not exact wording. When one fires: @impl/done
@@ -36,7 +36,7 @@ Recognise a codeword by intent, not exact wording. When one fires: @impl/done
    **never** persists into a new session uninvoked. @impl/done
 
 ##worked-mode-pointer The catalogue ships one worked mode:
-[`mfbt-mode.md`](../flows/operating-modes/mfbt-mode.md) — heads-down
+@spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root — heads-down
 pre-authorised execution («move fast and break things»). @impl/done
 
 ## The red-lines law {#red-lines}

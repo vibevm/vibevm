@@ -25,7 +25,7 @@ it may change, and what authority it carries. @impl/done
 | ##ROW-GENRE-THE-CHECKPOINT The checkpoint @impl/done | Where work stands right now @impl/done | state, not truth @impl/done |
 
 ##full-charters-pointer Full charters, mutability rules, and conflict authority:
-[`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md`](../flows/spec-genres/SPEC-GENRES-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#root. @impl/done
 
 ## Core rule {#core-rule}
 
@@ -39,10 +39,10 @@ it may change, and what authority it carries. @impl/done
    reader entering from either side finds the other. @impl/done
 
 ##routing-table-pointer Routing table for new material:
-[`spec/flows/spec-genres/when-to-write-what.md`](../flows/spec-genres/when-to-write-what.md). @impl/done
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/when-to-write-what#root. @impl/done
 
 ##design-docs-pointer The contract/lore split in practice:
-[`spec/flows/spec-genres/design-docs.md`](../flows/spec-genres/design-docs.md). @impl/done
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/design-docs#root. @impl/done
 
 ## Why this matters in a human-AI team {#why}
 

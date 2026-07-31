@@ -26,7 +26,7 @@ replaces it. @impl/done
   become a manual test, so the next session can replay them exactly. @impl/done
 
 ##sibling-document-pointers The format, authoring rules, and copy-ready skeleton live under
-[`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root. @impl/done
 
 ## Agent pre-runs, human signs off {#roles}
 

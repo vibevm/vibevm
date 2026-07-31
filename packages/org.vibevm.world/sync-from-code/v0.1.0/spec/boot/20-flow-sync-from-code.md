@@ -41,7 +41,7 @@ caused the drift. @impl/done
 4. ##STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT On approval, apply + commit (`docs(spec): sync <section> with code`).
    On reject, either revert the code or redraft the proposal. @impl/done
 
-##full-protocol-pointer Full protocol: [`spec/flows/sync-from-code/SYNC-PROTOCOL.md`](../flows/sync-from-code/SYNC-PROTOCOL.md). @impl/done
+##full-protocol-pointer Full protocol: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root. @impl/done
 
 ## Never {#never}
 
@@ -53,5 +53,5 @@ caused the drift. @impl/done
 - ##NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES Never batch two unrelated code changes into one spec edit. One intent
   per sync run. @impl/done
 
-##sibling-document-pointers Decision table for whether to run: [`spec/flows/sync-from-code/when-to-apply.md`](../flows/sync-from-code/when-to-apply.md).
-Human review checklist: [`spec/flows/sync-from-code/review-workflow.md`](../flows/sync-from-code/review-workflow.md). @impl/done
+##sibling-document-pointers Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
+Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root. @impl/done

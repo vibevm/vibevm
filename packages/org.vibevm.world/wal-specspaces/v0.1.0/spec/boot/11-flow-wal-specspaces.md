@@ -75,4 +75,4 @@ updated only when host files actually changed in the session. @impl/done
 report, stop. @impl/done
 
 ##sibling-document-pointers Full protocol:
-[`spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md`](../flows/wal-specspaces/SPECSPACES-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root. @impl/done

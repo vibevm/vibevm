@@ -185,7 +185,7 @@ understanding whole, whose shape will inform decisions more than once. @impl/don
 let the agent produce the study your project actually needs: @impl/done
 
 ```
-Read spec/flows/comparative-research/ in full, then run one study:
+Read this flow's documents (your project installed them — typically `vibedeps/flow-comparative-research/<version>/spec/flows/comparative-research/`, check `vibe.lock`) in full, then run one study:
 1. Name the external system to study and why now (building nearby /
    they shipped something / a recurring "why not do what X does").
 2. Fetch its primary sources — docs, pitch, changelog — and record

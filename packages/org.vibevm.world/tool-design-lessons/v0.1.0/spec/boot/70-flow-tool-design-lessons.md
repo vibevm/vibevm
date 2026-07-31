@@ -21,12 +21,12 @@ rationale is why it is not negotiable. @impl/done
 
 - ##POINTER-SELF-UPDATING-TOOLS Self-updating tools — activation, instances, identity, environment
   edits, removal:
-  [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md). @impl/done
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/self-updating-tools#root. @impl/done
 - ##POINTER-PACKAGING-LESSONS Packaging — what ships, what identity is, the bootstrap:
-  [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md). @impl/done
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/packaging-lessons#root. @impl/done
 
 ##index-and-maxims-pointer The index and the cross-cutting maxims:
-[`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md). @impl/done
+@spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/TOOL-DESIGN-LESSONS#root. @impl/done
 
 ## Never {#never}
 

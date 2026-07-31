@@ -224,7 +224,7 @@ open decision the human owes, or a removal someone forgot. @impl/done
 by handing your agent the task, not a copied template: @impl/done
 
 ```
-Read spec/flows/conflict-protocol/ end to end. Then adapt the
+Read this flow's documents (your project installed them — typically `vibedeps/flow-conflict-protocol/<version>/spec/flows/conflict-protocol/`, check `vibe.lock`) end to end. Then adapt the
 practice to this project:
 1. Name the writers: which humans and which agents edit the spec
    tree, the tests, and the code.

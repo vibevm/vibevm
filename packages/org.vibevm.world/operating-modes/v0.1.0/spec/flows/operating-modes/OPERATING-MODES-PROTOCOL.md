@@ -141,7 +141,7 @@ adding any new one through the five-part shape before acting on it. @impl/done
 your agent in a fresh session: @impl/done
 
 ```
-Read spec/flows/operating-modes/ end to end. Then define THIS
+Read this flow's documents (your project installed them — typically `vibedeps/flow-operating-modes/<version>/spec/flows/operating-modes/`, check `vibe.lock`) end to end. Then define THIS
 project's operating modes: (1) confirm the default posture and the
 project's exact red-line list — the operations that must survive
 every mode. (2) For each accelerated posture we actually want, write

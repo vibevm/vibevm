@@ -147,7 +147,7 @@ was published. @spec/done
 your agent in a fresh session: @impl/done
 
 ```
-Read spec/flows/licensing/ end to end. Then establish THIS project's
+Read this flow's documents (your project installed them — typically `vibedeps/flow-licensing/<version>/spec/flows/licensing/`, check `vibe.lock`) end to end. Then establish THIS project's
 licensing posture: (1) which posture does the owner want for the
 product — permissive, proprietary, or the placeholder with relicense
 intent? Draft the LICENSE.md accordingly. (2) State the

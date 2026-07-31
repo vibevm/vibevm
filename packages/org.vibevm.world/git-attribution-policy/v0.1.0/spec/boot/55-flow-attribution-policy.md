@@ -7,7 +7,7 @@ surface**. @impl/done
 
 ##THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the
 alternative (open disclosure) is documented in this flow's
-[`disclosure-alternative.md`](../flows/attribution-policy/disclosure-alternative.md)
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/disclosure-alternative#root
 and a project may adopt it instead by editing this snippet. @impl/done
 
 ## The rule {#rule}
@@ -67,6 +67,6 @@ itself is recorded openly here. @spec/done
   this file, made by the owner. @impl/done
 
 ##sibling-document-pointers Full policy and rationale:
-[`ATTRIBUTION-POLICY.md`](../flows/attribution-policy/ATTRIBUTION-POLICY.md).
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:
-[`enforcement-checklist.md`](../flows/attribution-policy/enforcement-checklist.md). @impl/done
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @impl/done

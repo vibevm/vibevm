@@ -77,6 +77,6 @@ may have been seen. @impl/done
 - ##ON-SUSPECTED-EXPOSURE-ROTATE-FIRST On any suspected exposure: rotate first, investigate second. @impl/done
 
 ##sibling-document-pointers Full protocol:
-[`SECRETS-HYGIENE-PROTOCOL.md`](../flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md).
-Scope rules: [`scope-discipline.md`](../flows/secrets-hygiene/scope-discipline.md).
-Install-time code: [`third-party-code-consent.md`](../flows/secrets-hygiene/third-party-code-consent.md). @impl/done
+@spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#root.
+Scope rules: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/scope-discipline#root.
+Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/third-party-code-consent#root. @impl/done

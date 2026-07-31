@@ -12,7 +12,7 @@ as a two-way gap analysis, closing with numbered roadmap deltas. @impl/done
 
 ##sibling-document-pointers
 Genre law:
-[`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`](../flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/comparative-research/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL#root. @impl/done
 
 ## When to reach for it {#when}
 
@@ -20,7 +20,7 @@ Genre law:
 external system — "what does X actually do?", "should we copy
 X's feature?", "audit that space before we build" — start from
 the skeleton in
-[`spec/flows/comparative-research/research-template.md`](../flows/comparative-research/research-template.md)
+@spec://org.vibevm.world/comparative-research/flows/comparative-research/research-template#root
 and hold the laws: @impl/done
 
 - ##LAW-QUOTE-FIRST-CRITIQUE-SECOND **Quote first, critique second.** The subject speaks in its own
@@ -32,7 +32,7 @@ and hold the laws: @impl/done
   proposals, each with a priority and a target home in the spec
   tree. The study never ratifies its own proposals; acceptance
   happens downstream, per
-  [`from-research-to-roadmap.md`](../flows/comparative-research/from-research-to-roadmap.md). @impl/done
+  @spec://org.vibevm.world/comparative-research/flows/comparative-research/from-research-to-roadmap#root. @impl/done
 - ##LAW-THE-RE-FETCH-LIST **Re-fetch list.** Every source URL with access date, plus the
   subject's version at capture, so the study can be refreshed
   instead of rewritten. @impl/done

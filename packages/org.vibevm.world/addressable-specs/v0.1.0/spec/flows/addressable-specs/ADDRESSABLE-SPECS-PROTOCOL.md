@@ -257,7 +257,7 @@ not the prompt-implementation. @impl/done
 ##re-derive-prompt-lead Paste this and review the plan: @impl/done
 
 ```
-Read spec/flows/addressable-specs/ in this repository — all three
+Read this flow's documents (your project installed them — typically `vibedeps/flow-addressable-specs/<version>/spec/flows/addressable-specs/`, check `vibe.lock`) in this repository — all three
 documents. Adapt the addressable-specs practice to this concrete
 project:
 1. Propose the URI scheme instance: module names (reverse-DNS if

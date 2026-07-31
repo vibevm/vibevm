@@ -34,7 +34,7 @@ carry it: @impl/done
 ## At the end of every session {#session-end}
 
 6. ##REWRITE-THE-WAL-NEVER-APPEND-TO-IT Rewrite `spec/WAL.md` per the protocol in
-   [`spec/flows/wal/session-end-hook.md`](../flows/wal/session-end-hook.md).
+   @spec://org.vibevm.world/wal/flows/wal/session-end-hook#root.
    Rewrite, not append — the WAL must reflect the **current** state,
    not the history. History lives in `git log` and in milestone commit
    messages; the WAL is a checkpoint, not a journal. @impl/done
@@ -45,7 +45,7 @@ carry it: @impl/done
    `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the
    intent, not the exact wording). A wind-down invokes the full
    session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per
-   [`spec/flows/wal/cold-resume.md`](../flows/wal/cold-resume.md). @impl/done
+   @spec://org.vibevm.world/wal/flows/wal/cold-resume#root. @impl/done
 8. ##RECOGNISE-THE-RESUME-PHRASES Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE
    CONTEXT`. Restore context, verify the repository state empirically,
    emit a status report — then **stop and wait for direction**. A
@@ -59,4 +59,4 @@ carry it: @impl/done
   state — the package never creates, deletes, or overwrites them as
   part of install or uninstall. @impl/done
 
-##full-protocol-pointer Full protocol: [`spec/flows/wal/WAL-PROTOCOL.md`](../flows/wal/WAL-PROTOCOL.md). @impl/done
+##full-protocol-pointer Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root. @impl/done

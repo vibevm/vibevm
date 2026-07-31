@@ -30,7 +30,7 @@ gets a **four-field record at the spec anchor that governs the value**: @impl/do
 an edit plus a changelog line; history lives in git. @impl/done
 
 ##full-protocol-pointer Full protocol:
-[`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root. @impl/done
 
 ## In session {#in-session}
 
@@ -46,10 +46,10 @@ an edit plus a changelog line; history lives in git. @impl/done
    …" / "the trigger has not fired, but …"). @impl/done
 
 ##template-and-examples-pointer Copy-ready template and worked examples:
-[`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md). @impl/done
+@spec://org.vibevm.world/decision-records/flows/decision-records/record-template#root. @impl/done
 
 ##trigger-design-pointer Trigger design and the periodic sweep:
-[`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md). @impl/done
+@spec://org.vibevm.world/decision-records/flows/decision-records/revisit-triggers#root. @impl/done
 
 ## Why this matters in a human-AI team {#why}
 

@@ -177,7 +177,7 @@ re-derive prompt below draws the same line at its step 4. @impl/done
 personalized copy: @impl/done
 
 ```
-Read spec/flows/discovery-prompt/DISCOVERY-PROMPT.md in full. Produce
+Read this flow's documents (your project installed them — typically `vibedeps/flow-discovery-prompt/<version>/spec/flows/discovery-prompt/`, check `vibe.lock`) DISCOVERY-PROMPT.md in full. Produce
 an adapted copy for me — do not edit the original file.
 1. In <VARIABLES>, set LLM to the model I actually talk to.
 2. Rewrite <EXTENSION_USER_INFO> for me: name, background, current

@@ -165,7 +165,7 @@ that is what the revisit discipline (flow:decision-records) is for. @impl/done
 your agent in a fresh session: @impl/done
 
 ```
-Read spec/flows/two-process-model/ end to end. Then look at THIS
+Read this flow's documents (your project installed them — typically `vibedeps/flow-two-process-model/<version>/spec/flows/two-process-model/`, check `vibe.lock`) end to end. Then look at THIS
 project: its criticality, team size, test maturity, and how capable
 the models we use actually are. Produce a one-page project-specific
 responsibility split: which decisions are human-only here, which

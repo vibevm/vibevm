@@ -36,7 +36,7 @@ the work it is structurally good at. @impl/done
 2. ##CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY **Files are the only shared memory.** Nothing said in a session
    survives it. Whatever must survive goes into the repository. Specs
    are not documentation — they are the inter-process channel; see
-   [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md). @impl/done
+   @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @impl/done
 3. ##CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES **Precise tasks beat broad ones.** A task that cites the exact
    spec section costs twenty tokens to act on; "finish the module"
    costs a re-derivation of the whole context and invites drift. @impl/done
@@ -56,8 +56,8 @@ the work it is structurally good at. @impl/done
 - ##NEVER-TREAT-THE-HUMAN-AS-A-GENERATOR-OR-THE-AI-AS-AN-ORACLE Never treat the human as a code generator or the AI as an oracle:
   wrong process, wrong work. @impl/done
 
-##full-model-pointer Full model: [`TWO-PROCESS-MODEL.md`](../flows/two-process-model/TWO-PROCESS-MODEL.md). @impl/done
+##full-model-pointer Full model: @spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root. @impl/done
 
-##responsibility-table-pointer Responsibility table: [`cognitive-load-split.md`](../flows/two-process-model/cognitive-load-split.md). @impl/done
+##responsibility-table-pointer Responsibility table: @spec://org.vibevm.world/two-process-model/flows/two-process-model/cognitive-load-split#root. @impl/done
 
-##file-channel-pointer The file channel: [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md). @impl/done
+##file-channel-pointer The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @impl/done

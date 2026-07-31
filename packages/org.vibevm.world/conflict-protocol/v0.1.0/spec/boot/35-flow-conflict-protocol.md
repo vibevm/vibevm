@@ -27,7 +27,7 @@ Human  >  Spec  >  Tests  >  Code  >  WAL
   when it disagrees with anything above it, it is stale. @impl/done
 
 ##full-protocol-pointer Full protocol:
-[`spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md`](../flows/conflict-protocol/CONFLICT-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/CONFLICT-PROTOCOL#root. @impl/done
 
 ## The REVIEW contract {#review}
 
@@ -59,7 +59,7 @@ mark it with a REVIEW, proceed, and flag it in the report. @impl/done
 silently invent semantic behavior. @impl/done
 
 ##full-ladder-pointer Full ladder:
-[`spec/flows/conflict-protocol/uncertainty-protocol.md`](../flows/conflict-protocol/uncertainty-protocol.md). @impl/done
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/uncertainty-protocol#root. @impl/done
 
 ## Never {#never}
 
@@ -71,4 +71,4 @@ silently invent semantic behavior. @impl/done
   and proceed conservatively. @impl/done
 
 ##recovery-drills-pointer Recovery drills for when the protocol has already been broken:
-[`spec/flows/conflict-protocol/failure-modes.md`](../flows/conflict-protocol/failure-modes.md). @impl/done
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root. @impl/done

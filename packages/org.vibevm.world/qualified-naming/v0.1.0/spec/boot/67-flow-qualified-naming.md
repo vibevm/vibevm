@@ -14,7 +14,7 @@ uses one. @impl/done
 
 ##READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED When you design any user-facing namespace — a package registry, a
 plugin id scheme, an artifact coordinate, an extension marketplace —
-read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)
+read @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL#root
 **before the first name is minted**. @impl/done
 
 ##retrofitting-a-group-is-a-migration Retrofitting a group onto a
@@ -33,9 +33,9 @@ shipped flat namespace is a migration; getting it right first is free. @spec/don
   version contradiction) are distinct failures with distinct
   machine-readable identities. @impl/done
 
-##grammar-and-forms-pointer Grammar and forms: [`ref-grammar.md`](../flows/qualified-naming/ref-grammar.md). @impl/done
+##grammar-and-forms-pointer Grammar and forms: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/ref-grammar#root. @impl/done
 
-##fork-by-fork-rationale-pointer Fork-by-fork rationale: [`naming-forks.md`](../flows/qualified-naming/naming-forks.md). @impl/done
+##fork-by-fork-rationale-pointer Fork-by-fork rationale: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/naming-forks#root. @impl/done
 
 ## Never {#never}
 

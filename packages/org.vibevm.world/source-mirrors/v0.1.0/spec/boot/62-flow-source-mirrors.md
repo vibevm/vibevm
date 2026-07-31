@@ -22,13 +22,13 @@ project's **fan-out** procedure, which is fast-forward-only and never
 uses `--force`. @impl/done
 
 ##full-protocol-pointer Full protocol:
-[`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md`](../flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md). @impl/done
+@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL#root. @impl/done
 
 ##fanout-mechanics-pointer Fan-out mechanics and the reference script:
-[`spec/flows/source-mirrors/fanout-mechanics.md`](../flows/source-mirrors/fanout-mechanics.md). @impl/done
+@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root. @impl/done
 
 ##maintainers-day-pointer The maintainer's day:
-[`spec/flows/source-mirrors/daily-loop.md`](../flows/source-mirrors/daily-loop.md). @impl/done
+@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root. @impl/done
 
 ## In session {#in-session}
 

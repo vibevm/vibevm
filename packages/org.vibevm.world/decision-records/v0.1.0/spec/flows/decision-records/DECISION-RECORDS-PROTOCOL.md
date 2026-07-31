@@ -205,7 +205,7 @@ reading nothing else; each line points back at the full reasoning. @spec/done
 let the agent re-derive the records the project actually needs: @impl/done
 
 ```
-Read spec/flows/decision-records/ in full, then adapt the practice
+Read this flow's documents (your project installed them — typically `vibedeps/flow-decision-records/<version>/spec/flows/decision-records/`, check `vibe.lock`) in full, then adapt the practice
 to this project:
 1. Inventory where design decisions currently live here (spec tree,
    ADR directory, wiki exports, README sections, commit messages).

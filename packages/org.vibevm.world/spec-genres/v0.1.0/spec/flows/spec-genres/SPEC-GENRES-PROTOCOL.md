@@ -177,7 +177,7 @@ named or not. @impl/done
 frame: @impl/done
 
 ```
-Read spec/flows/spec-genres/ in full, then adapt it to this project:
+Read this flow's documents (your project installed them — typically `vibedeps/flow-spec-genres/<version>/spec/flows/spec-genres/`, check `vibe.lock`) in full, then adapt it to this project:
 1. Inventory every kind of document this repo already holds (specs,
    ADRs, RFCs, design docs, wikis, READMEs, runbooks, planning docs,
    status files). Group them by the genre they actually play.

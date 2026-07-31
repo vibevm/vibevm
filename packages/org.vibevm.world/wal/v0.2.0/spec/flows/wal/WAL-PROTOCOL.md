@@ -237,7 +237,7 @@ keeps re-deriving its own state has received the signal to adopt. @spec/done
 review its drafts: @impl/done
 
 ```text
-Read spec/flows/wal/WAL-PROTOCOL.md end to end, then adapt the WAL
+Read this flow's documents (your project installed them — typically `vibedeps/flow-wal/<version>/spec/flows/wal/`, check `vibe.lock`) WAL-PROTOCOL.md end to end, then adapt the WAL
 discipline to this repository:
 1. Draft spec/WAL.md with the required sections and a fresh
    _Updated: line, filled from the actual tree, not from guesses.

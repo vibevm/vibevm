@@ -25,7 +25,7 @@ diff already shows what changed. @impl/done
 
 ##sibling-document-pointers Full format — the
 allowed-type table, scope rules, body structure, worked examples, and anti-patterns — is in
-[`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md). @impl/done
+@spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root. @impl/done
 
 ## Never {#never}
 

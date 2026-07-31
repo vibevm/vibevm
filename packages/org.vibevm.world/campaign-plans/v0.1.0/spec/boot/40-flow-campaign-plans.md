@@ -24,7 +24,7 @@ touching the tree. @impl/done
   verdict (REPORT). @impl/done
 
 ##format-pointer Format:
-[`../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md`](../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md). @impl/done
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT#root. @impl/done
 
 ## The plan runs cold {#cold}
 
@@ -55,9 +55,9 @@ green, and any phase boundary is a safe stop; the plan plus its
 execution ledger are the resume pointer. @impl/done
 
 ##sibling-document-pointers Mechanics:
-[`../flows/campaign-plans/phase-gates.md`](../flows/campaign-plans/phase-gates.md);
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/phase-gates#root;
 the record half:
-[`../flows/campaign-plans/execution-ledger.md`](../flows/campaign-plans/execution-ledger.md). @impl/done
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/execution-ledger#root. @impl/done
 
 ## At every phase boundary {#boundary}
 

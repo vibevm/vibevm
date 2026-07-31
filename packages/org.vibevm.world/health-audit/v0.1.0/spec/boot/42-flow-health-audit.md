@@ -46,11 +46,11 @@ walks it against the repository, and drafts the `AUDIT.md` section for
 your approval. @impl/done
 
 ##flow-document-pointers Full protocol:
-[`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);
+@spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root;
 the categories to walk:
-[`../flows/health-audit/audit-checklist.md`](../flows/health-audit/audit-checklist.md);
+@spec://org.vibevm.world/health-audit/flows/health-audit/audit-checklist#root;
 the run procedure:
-[`../flows/health-audit/running-an-audit.md`](../flows/health-audit/running-an-audit.md). @impl/done
+@spec://org.vibevm.world/health-audit/flows/health-audit/running-an-audit#root. @impl/done
 
 ## Never {#never}
 

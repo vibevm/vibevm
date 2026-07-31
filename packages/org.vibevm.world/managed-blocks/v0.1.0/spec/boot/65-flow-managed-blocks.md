@@ -18,7 +18,7 @@ Own exactly one delimited block; never touch a byte outside it.
 
 ##READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a
 file the tool does not fully own, read
-[`MANAGED-BLOCKS-PROTOCOL.md`](../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md)
+@spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root
 first: marker design, the absent / present / malformed state
 machine, the three verbs (create / update / remove), plan-time
 classification. @impl/done
@@ -26,11 +26,11 @@ classification. @impl/done
 ##shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a
 smart detector, auto-repair, "just regenerate the file" — are
 already catalogued with their failure modes in
-[`rejected-designs.md`](../flows/managed-blocks/rejected-designs.md). @impl/done
+@spec://org.vibevm.world/managed-blocks/flows/managed-blocks/rejected-designs#root. @impl/done
 
 ##adoption-guide-pointer Migrating an existing overwriting tool, the fixture table for the
 state machine, and what belongs inside the block:
-[`adoption-guide.md`](../flows/managed-blocks/adoption-guide.md). @impl/done
+@spec://org.vibevm.world/managed-blocks/flows/managed-blocks/adoption-guide#root. @impl/done
 
 ## Never {#never}
 
