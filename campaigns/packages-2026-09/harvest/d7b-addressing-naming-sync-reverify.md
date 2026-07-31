@@ -370,7 +370,8 @@ restates the three above and inherits their disposition.
 **Anchors:** 5 of 5, each with its own outcome —
 `##EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE` → **FALSE**;
 `##SUM-THE-CHANGELOG-LINE` → **FALSE**;
-`##A-MOVED-UNIT-LEAVES-A-TOMBSTONE` → **FALSE** (2 of 2 moves are tombstoned);
+`##A-MOVED-UNIT-LEAVES-A-TOMBSTONE` → **FALSE** (the move the verdict calls bare
+carries three pointers to the new address inside `spec/` alone);
 `##RECORD-THE-TEST-NAME-IN-THE-UNIT` → **FALSE PREMISE, DIFFERENT DEFECT**;
 `##SUM-EVERY-CONTRACT-IMPLIES-A-TEST` → **FALSE PREMISE, DIFFERENT DEFECT**.
 **Perimeter searched:** the standing perimeter, for `^Test:` · `## Changelog` ·
@@ -378,7 +379,10 @@ restates the three above and inherits their disposition.
 `#[verifies(` · `specmark::scope!` · `// Implements: spec://`, plus a full read of
 `crates/progress-core/src/evidence.rs`,
 `vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs`
-and `legacy-spec/discipline/README.md`. `refs/**` reported separately.
+and — flagged, since the 2026-07-31 ruling excludes its lane —
+`legacy-spec/discipline/README.md`, read only to establish what stands at the old
+address of a relocation, never as evidence of practice. `refs/**` reported
+separately.
 
 **The verdicts' own commands, re-run — both reproduce, and both are the wrong
 question:**
@@ -465,9 +469,29 @@ PROP-014 moved from `spec/discipline/` into the core-ai-native package and
 PROP-029's addressing principle moved out of its former home, and neither old
 location carries a `<!-- RETIRED` line.»*
 
-**Move 1 — PROP-014 out of `spec/discipline/`.** The old location carries a
+**Move 2 first, because it is the half that settles the verdict and sits entirely
+inside the live perimeter.** The old document keeps a unit *at the old address*
+whose whole content is a pointer to the new one:
+
+```console
+$ sed -n '20p' spec/common/PROP-029-fully-qualified-addresses.md | cut -c1-260
+##joiner-why Why the full coordinate is a self-contained global symbol, and why the group↔name joiner is a character in **neither** the group nor the name (so an algorithm splits the boundary deterministically — a dotted `<group>.<name>` would hide it), is the addressable-specs `#modules` unit.
+```
+
+plus `spec/common/PROP-029-fully-qualified-addresses.md:5` `##status-line`, which
+gives the new address in full —
+`spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#modules`
+— and `:50` `##CHANGELOG-EXTRACTED`, the dated line recording the move and what
+stayed behind. **Three artefacts at the old address, all pointing at the new one,
+all in `spec/`.** The verdict's claim is *«DRIFT at **2 of 2**. **Both** host
+moves left the old address bare»*, and this one is not bare, so the verdict does
+not survive as stated on evidence no ruling touches.
+
+**Move 1 — PROP-014 out of `spec/discipline/` — and here the 2026-07-31 ruling
+matters, so it is flagged rather than leaned on.** The old location carries a
 relocation tombstone for all four moved mechanisms, with the new address of each
-and a 1:1 anchor mapping:
+and a 1:1 anchor mapping — but that old location is now `legacy-spec/discipline/`,
+which the owner has just excluded from the perimeter:
 
 ```console
 $ sed -n '1,8p;25,28p' legacy-spec/discipline/README.md
@@ -486,28 +510,25 @@ Historical note: vibevm-hosted URIs of the form
 ```
 
 A table at `:10-16` gives the new `spec://` address for each of the four
-mechanisms and the crate that implements it. **That is a tombstone at the old
+mechanisms and the crate that implements it. That is a tombstone at the old
 address pointing at the new one — at *anchor* granularity, for a whole directory
-in one record**, which is strictly more than the per-unit form the anchor asks
-for. And it works: `grep -rn 'spec://vibevm/discipline'` over the live tree
-returns **zero** hits in `crates/`, `xtask/`, `spec/` or `packages/` — every hit
-is in `legacy-spec/` or `terraform/adopt-v0.3/LOG.md`, i.e. in the historical
-record the README says was deliberately not rewritten.
+in one record — which is strictly more than the per-unit form the anchor asks
+for. **How much weight it may bear is the owner's to say**: the ruling's stated
+rationale is that the archive is not evidence *of practice*, and this is not a
+practice claim but the artefact physically standing at the old address. Stated
+both ways so the reading is the owner's:
 
-**Move 2 — PROP-029's addressing principle.** The old document keeps a unit *at
-the old address* whose whole content is a pointer to the new one:
+- counting it, the moves are **2 of 2 tombstoned** and the verdict is false twice;
+- discounting it, the moves are **1 of 2** — and the verdict, which asserts *both*
+  are bare, is still false, with a single un-tombstoned move left over. That
+  residue is a host observation about one relocation, not a defect in a package
+  sentence that four other adopters could keep or break independently.
 
-```console
-$ sed -n '20p' spec/common/PROP-029-fully-qualified-addresses.md | cut -c1-260
-##joiner-why Why the full coordinate is a self-contained global symbol, and why the group↔name joiner is a character in **neither** the group nor the name (so an algorithm splits the boundary deterministically — a dotted `<group>.<name>` would hide it), is the addressable-specs `#modules` unit.
-```
-
-plus `:5` `##status-line`, which gives the new address in full —
-`spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#modules`
-— and `:50` `##CHANGELOG-EXTRACTED`, the dated line recording the move and what
-stayed behind. Three artefacts at the old address, all pointing at the new one.
-**2 of 2 tombstoned**, in substance if not in the sibling anchor's HTML-comment
-syntax.
+Either way the practical consequence is nil, and it is measurable: the old
+address does not dangle. `grep -rn 'spec://vibevm/discipline'` returns **zero**
+hits anywhere in `crates/`, `xtask/`, `spec/` or `packages/` — every citer was
+rewritten, which is the continuity the tombstone exists to provide, obtained by
+the more expensive route the verdict itself names.
 
 ### `##RECORD-THE-TEST-NAME-IN-THE-UNIT` and `##SUM-EVERY-CONTRACT-IMPLIES-A-TEST` — FALSE PREMISE, DIFFERENT DEFECT; the package amended this exact question one document over and did not bring these two along
 
@@ -623,8 +644,11 @@ a one-word host rename, not a package edit.
 `##EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE` → **re-judge confirmed**; 15 of 42
 PROPs carry a per-document dated change record, 33 entries, in the prescribed
 form under the heading `Version history`.
-`##A-MOVED-UNIT-LEAVES-A-TOMBSTONE` → **re-judge confirmed**; both named moves
-carry a tombstone at the old address, one of them mapping every anchor 1:1.
+`##A-MOVED-UNIT-LEAVES-A-TOMBSTONE` → **re-judge confirmed**; the verdict asserts
+both moves left the old address bare, and PROP-029's carries three pointers to the
+new one inside `spec/`. The PROP-014 half is tombstoned too, in a lane the owner
+has just excluded — flagged above, and it does not change the recommendation,
+because one refuted half already falsifies a «2 of 2».
 `##SUM-EVERY-CONTRACT-IMPLIES-A-TEST` → **drift stands, correction prepared**; the
 first clause is mechanically enforced at `evidence.rs:60-64`, the second needs the
 wave-6 amendment carried across.
@@ -1083,12 +1107,13 @@ evidence. So this anchor carries a third copy of one finding under a rule it doe
 not fit, and the host obligation it would generate is the same one.
 
 **Searched for the failure the anchor actually names, and it did not turn up.** No
-anchor in the perimeter carries evidence of having been repurposed: the two
-recorded unit moves (F-162) both kept their anchors — `legacy-spec/discipline/README.md:25`
-states the mapping is 1:1 with *«anchors unchanged»* — and
+anchor in the live perimeter carries evidence of having been repurposed. The
+PROP-014 relocation kept every anchor — checkable without the archive, since the
+shipped unit still carries them:
 `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:80`
-carries the same law on the shipped side (*«Anchors are immutable once published
-and never reused»*). The host's `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:44`
+carries the law itself on the shipped side (*«Anchors are immutable once published
+and never reused»*), and no `spec://vibevm/discipline/…` address survives anywhere
+in `crates/`, `xtask/`, `spec/` or `packages/` to be silently re-pointed. The host's `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:44`
 `##RETIRED-SECTIONS-KEPT` is the practice working: §3–§5 describe a retired
 topology and **stay** rather than having their anchors recycled.
 
@@ -1402,9 +1427,9 @@ were reachable from where the verdict already stood.
    is the clean case: `grep '## Changelog' spec/` returns 1, and the practice is
    alive in **15 of 42 PROPs with 33 dated entries**, under the heading
    `## Version history`. The tombstone verdict is the same error against a sibling
-   anchor's string: it searched `<!-- RETIRED` and both moves are tombstoned, one
-   of them by a whole-directory record mapping every anchor 1:1
-   (`legacy-spec/discipline/README.md:25`).
+   anchor's string: it searched `<!-- RETIRED`, the anchor it convicts prescribes
+   no such syntax, and the move it calls bare carries three pointers to the new
+   address inside `spec/` alone.
 2. **Reading the rest of the document — 3 verdicts.** *«The third form the row
    omits»* is defined 68 lines below the row, in a MUST
    (`ADDRESSABLE-SPECS-PROTOCOL.md:148`). *«The scheme has no place for

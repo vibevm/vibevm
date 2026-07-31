@@ -361,6 +361,26 @@ So the invariant is neither «search the host» nor «search the packages». It 
 That is the same structural error as §3.7 with the direction reversed, which is
 the argument for stating the invariant rather than the two instances of it.
 
+**Wave 7 found the third address, and it is inside the subject package.**
+`core-ai-native` is not a document collection either: it is **simultaneously the
+SPEC and the ENGINE** — a Cargo workspace of five crates, vendored into six
+sibling packages, driven by three CLIs and three MCP servers. Eight of its
+verdicts scoped their search to «the crate» or to «the host's `crates/`», and
+**six of that batch's nine false verdicts came from that single move.** The
+sharpest is the cheapest to have avoided: a run-twice-diff test reported missing
+is `sarif_is_byte_stable`, in the very crate the verdict searched, in the very
+file it cited as evidence, **twelve lines below the line it quoted**.
+
+**So the general form, which the three instances now support:**
+
+> **A perimeter is defined by where the mechanism can live, not by a directory
+> name.** «The crate» is not one place when a package ships five of them and
+> six siblings vendor copies. «The host» is not one project when a specspace
+> inside `packages/` adopted the same discipline. «The package» is not the
+> subject when the artefacts that prove adoption are created by the consumer.
+> Before searching, write down what the mechanism *would look like* at each of
+> the four layers — SPEC, ENGINE, DRIVER, DEPLOYMENT — and search for that.
+
 **Corollary — consistency propagates an error.** The six `BUILD-ORDER` verdicts
 were *restated once to make the family agree*, and the family agreed on a false
 premise: the catalog's order is `terraform/adopt-v0.3/LOG.md`'s phase headings,

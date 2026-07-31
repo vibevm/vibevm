@@ -1171,3 +1171,709 @@ Declared test matrices, never 2^n. @spec/done`
 - `##DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL` → **drift stands, correction prepared.**
 
 ---
+
+# The Go stack — judged under the [owner ruling](#ruling)
+
+_Every entry below states which bench each finding rests on. **`research/go-demo`,
+the host's `crates/`, `.claude/skills/` and `legacy-spec/**` are not evidence
+about `go-ai-native-lang`.** The legitimate bench is the package's own tree and
+its own tests — principally `tools/go-extract/test/fixtures/{clean,dirty}/`
+(each with its own `conform.toml`, `specmap.json`, cells and registry), the
+fifteen `crates/**` test modules, and the package's own guides, cards and
+`vibe.toml`._
+
+---
+
+## F-166 — two of the four convictions are host-bench artefacts and fall; the other two survive on the package's own fixtures
+
+**Outcome:** MIXED — 2 SURVIVES · 2 **FALSE**
+**Anchors:** 4 of 4, all in `go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md`
+
+| anchor | line | outcome | why |
+|---|---:|---|---|
+| `##BASELINE-RACE-DETECTOR-GATES-TESTS` | 139 | **FALSE** | both grounds void: a package-rooted capture artefact + host non-configuration |
+| `##CONFORMANCE-IS-MADE-LOUD` | 191 | SURVIVES | the package's own extractor, gate and **clean fixture** |
+| `##RELEASE-MAP-IS-FREE` | 357 | **FALSE** | «no Go binary in this tree» is host evidence — and the mechanism demonstrably works |
+| `##TWO-TIERS-NEVER-CONFUSED` | 381 | SURVIVES | no tier machinery in the package's own engine |
+
+**Perimeter searched:** the package's own tree in full —
+`crates/**` (including `crates/vendor/core-ai-native-conform`),
+`tools/go-extract/**` with both fixtures, `spec/**`, `vibe.toml`, `README.md` —
+for `-race`, `var _ ` conformance assertions, `//go:build`, and
+`Tier` / `"tier"` / `T-lex`. Host artefacts are reported **only as
+corroboration** and are marked as such.
+
+### `##BASELINE-RACE-DETECTOR-GATES-TESTS` (`:139`) → **FALSE**
+
+The verdict: «the floor's test step is `go test ./...` with no `-race`, **and it
+fails outright** — the package root is a Cargo workspace, not a Go module, so
+`./...` resolves to nothing (`harvest/go-ai-native-lang-floor.md`). The MUST
+configuration is **neither configured nor reachable**.»
+
+**Both grounds are void, for two independent reasons.**
+
+*(a) «it fails outright» is a capture artefact.* The harvest names its own cwd:
+
+```
+$ head -3 campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md
+_Captured 2026-07-28 against `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`._
+$ go vet ./...
+pattern ./...: directory prefix . does not contain main module or its selected dependencies
+```
+
+That directory is a **Cargo** workspace. Running a Go floor there and recording
+the result as the mechanism's behaviour is the third instance of the trap §6.1
+records as «a package-rooted floor run read as a pilot's chain». *(Corroboration
+only, not a ground under the ruling: pointed at a real Go module the same binary
+reports `floor: all green (7 step(s) run, 0 disabled by policy)`, EXIT=0 — the
+full transcript is under F-273 below.)*
+
+*(b) «neither configured» is host evidence, and the ruling voids it.* Whether
+this repository configures `go test -race` says nothing about a package this
+repository deliberately does not adopt.
+
+**And the anchor does not claim what the verdict tests it against.** It reads:
+«**The race detector gates tests:** `go test -race` is the MUST configuration
+**for any package that starts a goroutine**; findings are failures, not
+warnings.» That is a rule addressed to a *consuming* Go package. It does not say
+the shipped floor adds the flag, and no external consumer's conformance is
+observable from here.
+
+**On the legitimate bench, one weaker observation remains, and it is offered as
+an observation rather than as the verdict's defect.** The string `-race` occurs
+**nowhere** in the package (`grep -rn "race"` over the package returns only
+substring hits on `trace` / `traceability`), so the floor the package ships does
+not itself enforce the MUST it states — and the package's own dirty fixture does
+start a goroutine (`tools/go-extract/test/fixtures/dirty/internal/cells/plan/plan.go`:
+`go func() { _ = home }()   // naked_go`), caught there as the `naked_go` census
+kind rather than race-tested. Whether a guide rule for consumers must be
+enforced by the shipped floor is a design question, not a drift finding, and it
+is the boss's to take.
+
+**Per stack:** Go-specific by construction — Rust has no race detector and the
+TypeScript floor has no analogue.
+
+**Proposed correction (NOT APPLIED):** **none.** The description is a rule and it
+is stated correctly. If the boss wants the observation recorded, it belongs as a
+Phase-E item («add `-race` to the Go floor's test step»), not as a spec diff.
+
+**Recommendation:** `##BASELINE-RACE-DETECTOR-GATES-TESTS` → **re-judge
+`confirmed`.** No edit, no diff, no owner approval.
+
+### `##CONFORMANCE-IS-MADE-LOUD` (`:191`) → SURVIVES
+
+«every cell carries the compile-time assertion, **and conform checks its presence
+(T-syn)**.» The second clause fails on the package's own bench, three ways:
+
+*(a) the gate mounts three rules and none of them is it:*
+
+```
+$ grep -n "out.push(Box::new" .../crates/go-ai-native-conform/src/lib.rs
+53:    out.push(Box::new(rules::GoUnsafeInDomain::new(config.go.cells_dir.as_deref())));
+57:        out.push(Box::new(rules::GoCellIsolation::new(cells_dir)));
+59:    out.push(Box::new(rules::FileLength { max_lines: config.max_file_lines }));
+```
+
+*(b) the extractor discards the construct before conform can ever see it:*
+
+```
+$ sed -n '458,466p' .../tools/go-extract/extract.go
+			for _, name := range s.Names {
+				if name.Name == "_" {
+					continue // conformance assertions et al.
+				}
+```
+
+A `var _ Seam = (*Impl)(nil)` declaration is `_`-named by construction, so no
+fact is produced for it. A presence rule could not be mounted without changing
+the extractor first.
+
+*(c) — and this is the decisive one — the package's own CLEAN fixture omits the
+assertion.* That fixture is the package's own model of a compliant cell («the
+clean fixture: a well-formed cell under the discipline», `greet.go:1-3`; its
+policy comment reads «same topology as dirty, **zero findings**»):
+
+```
+$ grep -rn "var _ " .../tools/go-extract/test/fixtures/
+(no output)
+```
+
+So on the only bench the ruling admits, the package's own exemplar of «every cell
+carries the compile-time assertion» does not carry it, and nothing would notice.
+
+**Proposed correction (NOT APPLIED):** keep the prescription; strike or qualify
+«and conform checks its presence (T-syn)», naming `extract.go:460-462` as the
+reason a checker cannot be mounted without an extractor change. `@spec/done`.
+
+### `##RELEASE-MAP-IS-FREE` (`:357`) → **FALSE — the description is right**
+
+The verdict: «**no Go binary is built anywhere in this tree** — the only Go is a
+`go run` sidecar source — so `runtime/debug.ReadBuildInfo` embeds nothing and the
+A1 chain the fact says comes free has no artifact to come from.»
+
+**«anywhere in this tree» is the wrong tree.** Under the ruling, whether *this*
+repository builds a Go binary is not evidence about a package built for external
+consumers — and the anchor is in any case a statement about the **Go toolchain**,
+not about any repository: «Every Go binary embeds `runtime/debug.ReadBuildInfo`
+(VCS revision, dirty flag, module versions), readable from the artifact (`go
+version -m`).»
+
+*Corroboration, offered because a toolchain claim is cheap to demonstrate and
+expensive to argue about — output written to the scratchpad, never into the
+repo:*
+
+```
+$ go build -o <scratchpad>/reconcile.exe ./cmd/reconcile      # from a Go module
+BUILD OK
+$ go version -m <scratchpad>/reconcile.exe
+… reconcile.exe: go1.26.5
+	path	reconcile-demo/cmd/reconcile
+	mod	reconcile-demo	(devel)
+	build	vcs=git
+	build	vcs.revision=b61eb191993ebb7b4531a9e2b70d7a43875ace67
+	build	vcs.time=2026-07-31T10:47:17Z
+	build	vcs.modified=true
+```
+
+**VCS revision · dirty flag · module versions · read with `go version -m`** —
+the sentence's four items, in the order it lists them, from the exact command it
+names. The release map is free because the Go toolchain makes it free; no
+consumer of this package has to do anything for the claim to hold.
+
+The one clause not demonstrated is the tail of the A1 chain
+(*binary → build info → specmap@commit → REQ*): no shipped tool joins
+`vcs.revision` to `specmap.json`. But the sentence says that chain «needs zero
+extra machinery», which is a statement about what is *not* required — and it
+does not claim a tool exists.
+
+**Proposed correction (NOT APPLIED):** none — correct as written.
+
+**Recommendation:** `##RELEASE-MAP-IS-FREE` → **re-judge `confirmed`.**
+
+### `##TWO-TIERS-NEVER-CONFUSED` (`:381`) → SURVIVES
+
+«build tags (`//go:build`) … are confined to registry/adapter files, never inside
+cell bodies **(T-lex)**; runtime flags … read once into a config struct in `main`
+and passed down.» The norm is fine and unfalsifiable from here — no external
+consumer is visible. **What fails on the package's own bench is the parenthetical
+`(T-lex)`, which names a tier the engine does not have:**
+
+```
+$ grep -rniE "\bTier\b|\"tier\"|T-lex|build_tag|go:build" --include=*.rs .../go-ai-native-lang/v0.1.0/crates/
+(no output)
+```
+
+Repo-wide, the tier vocabulary survives only as doc-comment prose — `T-syn` at
+`core-ai-native-conform/src/facts.rs:157` — and **`T-lex` appears in no source
+file at all**. The package's own fixtures use no build tags either
+(`grep -rn "go:build" tools/go-extract/test/fixtures/` → no output), so the
+package ships no demonstration of the confinement it prescribes.
+
+**Note the scope this leaves.** The verdict's own framing («the two tiers rest on
+the tier vocabulary C1a found unbuilt … so «T-lex» names nothing that exists») is
+the surviving half and is package-internal. Everything the verdict might have
+inferred from `research/go-demo`'s flag handling is void and is not used.
+
+**Proposed correction (NOT APPLIED):** keep the norm; drop or qualify `(T-lex)`.
+Same class as `R-021` / `R-060` / `R-001`-without-an-ATLAS-entry — a tier label
+cited as if it named a shipped check.
+
+**Recommendation per anchor:** `##BASELINE-RACE-DETECTOR-GATES-TESTS` →
+**re-judge `confirmed`** · `##CONFORMANCE-IS-MADE-LOUD` → drift stands,
+correction prepared · `##RELEASE-MAP-IS-FREE` → **re-judge `confirmed`** ·
+`##TWO-TIERS-NEVER-CONFUSED` → drift stands, correction prepared.
+
+---
+
+## F-167 — four Go oracle facts, all four surviving on the package's own tree and tests
+
+**Outcome:** SURVIVES ×4 — 1 **GO ONLY**, 2 family-wide (reported under F-215 and
+F-281), 1 package-internal. **The ruling changes none of them**, because every
+ground here is the package's own code, its own spec, or its own tests.
+
+| anchor | line | outcome | bench |
+|---|---:|---|---|
+| `##QUANTITIES-ARE-CAMPAIGN-MEASURED` | 17 | SURVIVES | the package's own tree ships no measurement |
+| `##RESOLUTION-GOPLS-ON-PATH` | 34 | SURVIVES — **GO ONLY** | the package's own resolver vs its own §1 |
+| `##GRACEFUL-EXIT-IS-THE-LSP-DANCE` | 201 | SURVIVES | the package's own tests |
+| `##TARGET-COMPLETE` | 243 | SURVIVES | the package's own `bench.rs` |
+
+**The verdict's own command, re-run:** none quoted. Cited files (`bench.rs:1`,
+`go-ai-native-tcg-bridge/src/lib.rs:155`, `oracle.rs:360`, `client.rs:357`,
+`tests/live_oracle.rs:3`) were all read.
+
+### `##QUANTITIES-ARE-CAMPAIGN-MEASURED` (`:17`) → SURVIVES
+
+«Where the sibling Rust mechanism cites measured spike facts, this one names the
+same quantities as campaign-measured: **the Phase-7 live chain and the bench
+harness record them**; a target moves only with a committed REPORT reason.»
+
+This is a claim about the package's own development record, not about a
+consumer's conformance, so it is inside the ruling's bench. **The package ships
+the instrument and no measurement.** `run_bench` is parameterised on a
+consumer-supplied corpus and report path — `Cmd::Bench { corpus, report }`
+(`crates/go-ai-native-tcg/src/main.rs:77-84`) →
+`run_bench(&root, &corpus, &report)` (`bench.rs:106`) — and the package carries
+no corpus, no report and no ledger entry of its own:
+
+```
+$ find .../go-ai-native-lang/v0.1.0 -not -path "*/target/*" \( -iname "*corpus*" -o -iname "*baseline*" \)
+.../crates/go-ai-native-tcg/src/bench.rs                       # the harness
+.../crates/vendor/core-ai-native-conform/src/baseline.rs       # the conform ratchet, a different artefact
+```
+
+The document's own §8 confirms it from the other side: where the Rust mechanism
+carries five `##SPIKE-*` anchors with measured numbers
+(`TCG-ORACLE-RUST-v0.1.md:238-244`: «init handshake ~10 ms», «init-to-quiescent
+14.7 s cache-COLD … 2.5 s warm», «completion ~19 ms at 118 entries»), the Go
+document carries **no spike section at all** — it jumps from
+`##TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED` (`:236`) straight to
+`##posted-targets-lead` (`:239`). So the sentence says the quantities are
+recorded while its own document records none.
+
+*(Corroboration, explicitly not a ground under the ruling: the host's
+`research/tcg-bench/` carries two corpora and two baselines — TypeScript, 7
+cases, and Rust, 9 — with no `corpus-go`, no Go report and no Go entry among the
+three `REPORT-2026-07-07-*.md`.)*
+
+**Proposed correction (NOT APPLIED):** «…names the same quantities as
+campaign-measured — *the bench harness (`go-ai-native-tcg bench`) is the
+instrument; no Go corpus or baseline has yet been taken, so the figures below are
+posted targets rather than measured ones*; a target moves only with a committed
+REPORT reason.» `@spec/done`.
+
+### `##RESOLUTION-GOPLS-ON-PATH` (`:34`) → SURVIVES — **GO ONLY**
+
+Entirely package-internal: the spec's own ordered list against the package's own
+resolver. §1 lists four steps and this anchor is step 1:
+
+```
+$ sed -n '30,38p' .../spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md
+##resolution-order-lead Resolution order, run from the project root … :
+1. ##RESOLUTION-GOPLS-ON-PATH `gopls` on PATH; @impl/done
+2. ##RESOLUTION-GOBIN `$GOBIN/gopls`, then `$(go env GOBIN)/gopls`; @impl/done
+3. ##RESOLUTION-GOPATH-BIN `$(go env GOPATH)/bin/gopls`; @impl/done
+4. ##RESOLUTION-HARD-FAILURE hard failure … `go install golang.org/x/tools/gopls@latest`.
+```
+
+The shipped resolver runs five, and the first **hard-fails without ever probing
+PATH**:
+
+```
+$ sed -n '139,155p' .../crates/go-ai-native-tcg-bridge/src/lib.rs
+/// Resolve the CONSUMER's gopls (ORACLE-GO §1): the env override, then
+/// PATH, then `$GOBIN`, then `$(go env GOPATH)/bin`, then the
+/// recipe-carrying refusal. …
+#[spec(implements = "spec://go-ai-native-lang/go/mechanisms/TCG-ORACLE-GO-v0.1#resolution")]
+pub fn resolve_gopls(root: &Path) -> Result<PathBuf, TcgBridgeError> {
+    if let Ok(overridden) = std::env::var(GOPLS_ENV_OVERRIDE) {
+        let p = PathBuf::from(&overridden);
+        if p.is_file() { return Ok(verbatim_free(&p)); }
+        return Err(TcgBridgeError::GoplsMissing {
+            detail: format!("{GOPLS_ENV_OVERRIDE}={overridden} is not a file"),
+        });
+    }
+    // PATH: probe the bare name.
+```
+
+**This matters to an external consumer directly**, which is the ruling's own
+standard: a client whose `GO_AI_NATIVE_GOPLS` is stale gets a hard refusal from a
+tool whose published resolution order says PATH is tried first. And the
+`#[spec(implements = …#resolution)]` edge makes the traceability graph record
+agreement where the two texts disagree.
+
+**Per stack — the Rust copy is exactly right, which is why this must not be
+edited family-wide.** Rust's §1 is three steps —
+`##RESOLUTION-RUSTUP-WHICH` (`:32`), `##RESOLUTION-PATH` (`:33`),
+`##RESOLUTION-HARD-FAILURE` (`:34`) — and `resolve_rust_analyzer`
+(`rust-ai-native-tcg-bridge/src/lib.rs:137-158`) does precisely that, in that
+order, **with no env override**. TypeScript has no ordered list at all, only
+`##RESOLUTION-FAILURE-IS-A-RECIPE-CARRYING-ERROR` (`TCG-ORACLE-v0.1.md:47`).
+
+**Proposed correction (NOT APPLIED):** Go only, an insertion rather than a
+rewrite — fold the override into step 1's text, or mint a step 0 mirroring the
+resolver's own doc comment («the env override, then PATH, then `$GOBIN`, …»),
+noting that PATH is **not** probed when the override is set and is not a file.
+*(Minting a new `##ANCHOR` is a `RULE-ANCHORS-IMMUTABLE` question and is the
+boss's.)* rust → **none — correct as written.** typescript → **none.**
+
+### `##GRACEFUL-EXIT-IS-THE-LSP-DANCE` (`:201`) → SURVIVES (family-wide)
+
+«the no-zombie property **is test-asserted**». The dance and the backstop ship
+(`oracle.rs:360` `shutdown`, `client.rs:357` `impl Drop … kill(); wait()`); the
+assertion does not, in this package's tests or in any other. The full sweep —
+including the `packages/org.vibevm.fractality/**` widening and the finding that
+the only real process-table assertion in the repository belongs to fractality's
+own pod/worker pair and therefore does not rescue this anchor — is under
+**F-281** and is not repeated. **Six copies of this claim exist across the three
+stacks and three are judged `confirmed`;** the table is in F-281. Every leg of
+that evidence is a package's own test, so the ruling does not touch it.
+
+### `##TARGET-COMPLETE` (`:243`) → SURVIVES (family-wide)
+
+The Go harness records per-case `warm_ms`, computes **no percentile of any kind**,
+and the word `complete` appears zero times in it. Full evidence, and the
+identical Rust and TypeScript findings — all three on each package's **own**
+`bench.rs` — are under **F-215**.
+
+**Recommendation per anchor:** `##QUANTITIES-ARE-CAMPAIGN-MEASURED` → drift
+stands, correction prepared · `##RESOLUTION-GOPLS-ON-PATH` → **drift stands,
+correction prepared — GO ONLY** · `##GRACEFUL-EXIT-IS-THE-LSP-DANCE` → drift
+stands, correction prepared **as part of the six-copy family** ·
+`##TARGET-COMPLETE` → drift stands, correction prepared **as part of the
+three-stack family**.
+
+---
+
+## F-185 — three Go conform-frontend facts; all three survive on the package's own config type and its own fixtures, and the third is worse than the verdict says
+
+**Outcome:** SURVIVES ×3. No parallel corpus — the Rust and TypeScript
+`conform-frontend-*` briefs make none of these claims. **The ruling changes
+nothing**: every ground is the package's own `GoConfig`, its own engine, its own
+fixtures' `conform.toml`, or its own rule roster.
+**Anchors:** 3 of 3, all in `go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md`
+- `##RULE-SEAM-ERROR-CONTRACT` (`:41`) → SURVIVES
+- `##CONFORM-TOML-GAINS-A-GO-SECTION` (`:107`) → SURVIVES
+- `##EVERY-PACKAGE-GATED-OR-EXEMPT` (`:114`) → SURVIVES — **and on a second ground the verdict does not name**
+
+**Per stack:** none.
+`grep -rn "gated-or-exempt\|gated_packages\|EVERY-.*GATED\|seam-error-cites-req"`
+over `typescript-…/spec/typescript/tools/conform-frontend-typescript.md` and the
+Rust stack's `spec/rust/tools/*.md` returns nothing.
+
+### `##RULE-SEAM-ERROR-CONTRACT` → SURVIVES
+
+The brief lists «the seam-error contract (`seam-error-cites-req` — a seam's
+closed error set carries its REQ URI, guide §5)» among the frontend's **rules**.
+That id is nothing:
+
+```
+$ grep -rn "seam-error-cites-req" --include=*.rs --include=*.toml --include=*.json packages crates research
+(no output)
+```
+
+What ships is a census **kind** inside `go-unsafe-in-domain`
+(`crates/vendor/core-ai-native-conform/src/rules/go.rs:145-149`,
+`"seam_error_missing_req" if !in_test => …`), emitted by
+`tools/go-extract/extract.go:534`. **The package's own two fixtures are the
+proof, and they are the ruling's bench exactly:** the dirty fixture's error type
+omits the field on purpose —
+
+```
+$ sed -n '17,21p' .../tools/go-extract/test/fixtures/dirty/internal/cells/plan/plan.go
+// PlanError lacks a Spec field on purpose (seam_error_missing_req).
+type PlanError struct { Code int; Err error }
+```
+
+— and the clean fixture's carries it and renders the REQ —
+
+```
+$ sed -n '15,25p' .../tools/go-extract/test/fixtures/clean/internal/cells/greet/greet.go
+// GreetError is the seam's closed failure set.
+type GreetError struct { Code int; Spec string; Err error }
+func (e *GreetError) Error() string {
+	return fmt.Sprintf("greet: %d: violates REQ %s", e.Code, e.Spec)
+}
+```
+
+So the mechanism is real and is exercised by the package's own tests **under the
+name `seam_error_missing_req`**. The brief names it as a rule that does not
+exist, borrowing the **Rust** pattern — `error-enum-cites-req`
+(`diagnostics.rs:314`) and `error-message-cites-req` (`:235`) are real rule ids
+*there*.
+
+**Proposed correction (NOT APPLIED):** «the seam-error contract (shipped as the
+census kind `seam_error_missing_req` inside `go-unsafe-in-domain`, not as a rule
+of its own — guide §5)».
+
+### `##CONFORM-TOML-GAINS-A-GO-SECTION` → SURVIVES
+
+The brief documents `[go]` as carrying «`roots` … `cells_dir` … `seams_pkg` …
+`registry_pkg` … **`gated_packages` / `[[exempt]]`** … **and the file budget**».
+`GoConfig` is `deny_unknown_fields` with six keys, none of them those three:
+
+```
+$ sed -n '104,131p' .../crates/vendor/core-ai-native-conform/src/config.rs
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct GoConfig {
+    pub roots: Vec<String>,
+    pub exclude_substrings: Vec<String>,
+    pub cells_dir: Option<String>,
+    pub seams_pkg: Option<String>,
+    pub registry_pkg: Option<String>,
+    pub floor_disable: Vec<FloorDisable>,
+}
+```
+
+`gated_packages` occurs zero times repo-wide in any `.rs` or `.toml`. Because the
+struct is `deny_unknown_fields`, **an external consumer who writes the section as
+documented gets a hard config error**, not an ignored key — which is precisely
+the class of defect the ruling says matters most, since we cannot see that
+consumer fail.
+
+**The package's own fixtures write only the declared keys**, which is the bench's
+own answer:
+
+```
+$ cat .../tools/go-extract/test/fixtures/clean/conform.toml
+# The clean fixture's policy — same topology as dirty, zero findings.
+roots = []
+
+[go]
+roots = ["."]
+cells_dir = "internal/cells"
+```
+
+Note also that `max_file_lines` is a **root-table** key, not a `[go]` one — so
+«and the file budget» is misplaced as well as the other two being absent, which
+the verdict does not separate out.
+
+**Proposed correction (NOT APPLIED):** list the six real keys, add
+`exclude_substrings` and `floor_disable` which the brief omits, and move the file
+budget to the root table: «…the file budget is the root table's
+`max_file_lines`, shared with the other stacks. There is no `[go]`-scoped gating
+list — `gated_crates` / `[[exempt]]` are root-table keys and drive the Rust gate
+only.»
+
+### `##EVERY-PACKAGE-GATED-OR-EXEMPT` → SURVIVES, **and the verdict understates it**
+
+The verdict says only that «the invariant is stated over `gated_packages` and the
+shipped config field is `gated_crates`» — a naming slip. **The invariant is real,
+and it never runs on a Go check**, which is the larger half.
+
+It exists, with a test:
+
+```
+$ sed -n '259,266p' .../crates/vendor/core-ai-native-conform/src/config.rs
+    /// The gated-or-exempt tree invariant: every crate on disk under this
+    /// policy's roots is classified exactly once — gated or
+    /// exempt-with-a-reason, never both and never neither … 
+    pub fn validate_against_tree(&self, root: &Path) -> Result<()> {
+```
+
+Its only callers are **Rust**:
+
+```
+$ grep -rn "validate_against_tree" --include=*.rs packages crates research \
+  | grep -v "/target/" | grep -v "\.vibe/cache" | grep -v "conform/src/config.rs"
+.../rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:119
+.../rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:188
+.../rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/init.rs:335,375   (tests)
+.../rust-ai-native-mcp/v0.7.0/…                                                (the twin package)
+```
+
+`go-ai-native-conform` never calls it, and neither does
+`typescript-ai-native-conform` (in that package the symbol appears only in the
+vendored engine's own definition and unit tests). It also reads
+`self.gated_crates`, `self.exempt` and `self.roots` — root-table, crate-shaped
+fields — and the package's own fixtures set `roots = []`, so there is nothing for
+it to classify even in principle.
+
+So the anchor is wrong three ways: the unit is a crate, not a package; it is not
+enforced «on every check» for Go at all; and «exactly as for the sibling stacks»
+is true of **one** sibling, not two.
+
+**Proposed correction (NOT APPLIED):**
+
+```
+##EVERY-PACKAGE-GATED-OR-EXEMPT The gated-or-exempt tree invariant
+(`Config::validate_against_tree`) is a CRATE invariant over the root table's
+`gated_crates` / `[[exempt]]`, enforced on every **Rust** check
+(`rust-ai-native-conform`). The Go frontend does not invoke it and there is no
+`[go]`-scoped equivalent — a Go package enters the gate through the census
+baseline, not through a gating list. @spec/done
+```
+
+**Recommendation per anchor:** all three → **drift stands, correction prepared**;
+`##EVERY-PACKAGE-GATED-OR-EXEMPT`'s prepared text must go beyond the verdict's
+naming slip or the diff will fix a word and leave the false claim standing.
+
+---
+
+## F-210 — the product client is gone (re-grounded), and «both hops» is one hop
+
+**Outcome:** SURVIVES ×2. The ruling **voids the first verdict's stated ground**
+but not its conclusion, which re-verifies on the packages' own trees.
+**Anchors:** 2 of 2, both in `go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md`
+- `##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS` (`:34`) → SURVIVES, **on a restated ground**
+- `##REPLAY-GOLDENS-PIN-BOTH-HOPS` (`:158`) → SURVIVES
+
+### `##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS` → SURVIVES, ground restated
+
+The verdict's whole text is «the named artifact **was not located on the wide
+perimeter, which includes research/go-demo, the real Go consumer**» — a bare
+not-found resting explicitly on the host demo, which the ruling voids twice over
+(host evidence, and `research/go-demo` is not «the real Go consumer» for a
+package built for external clients).
+
+**The conclusion survives on a ground the ruling admits**, because the artefact
+the sentence names is a **vibevm crate**, not a consumer's: «One language-generic
+product client (`vibe-tcg`'s `OracleRegistry` link) drives all three relays». Its
+existence is a fact about our own shipped surface:
+
+```
+$ grep -rn "OracleRegistry\|oracle_registry" --include=*.rs --include=*.go --include=*.ts . \
+  | grep -v "/target/" | grep -v "^./refs/"
+(no output)
+```
+
+Zero source files of any language, in any package. The crate was retired with the
+whole multiplexed-product topology —
+`spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md` `##TOPOLOGY-RETIRED` and
+`##TCG-CRATE-DELETED` (`:42`) — and D5's F-214 recorded the same for the Rust
+twin, whose demotion clause is live at
+`TCG-PROTOCOL-RUST-v0.1.md#ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS`.
+
+**Per stack, and one difference that must reach whoever writes the diff.** The Go
+sentence says «drives **all three** relays» where Rust says «drives **BOTH**
+relays», so the two are not word-identical and no shared replacement fits both.
+More importantly, **D5's Rust clause credits «one of the two proofs» — the two
+`live_chain.rs` tests in `rust-ai-native-mcp` and `typescript-ai-native-mcp`.
+There is no Go `live_chain.rs`**: `go-ai-native-mcp/crates/go-ai-native-mcp/tests/`
+carries `server_replay.rs` only. So for Go *neither* named proof exists and the
+honest clause is shorter and stricter than its sibling's. The surviving posture
+is the same one layer over — `pub struct TcgSession`
+(`go-ai-native-mcp/crates/go-ai-native-mcp/src/tools_tcg.rs:32`).
+
+### `##REPLAY-GOLDENS-PIN-BOTH-HOPS` → SURVIVES
+
+Package-own throughout, so the ruling does not touch it. The inner hop is real
+(`crates/go-ai-native-tcg-bridge/src/client/tests.rs:14 pub(crate) struct Script`;
+the unit suite is gopls-free per `lib.rs:5`). The outer hop — defined by this
+document as `host ⇄ go-ai-native-tcg serve`
+(`:12-16 ##DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR`) — is pinned by nothing: its
+entry point `run_serve` (`serve.rs:227`) is called from `main.rs` alone, no test
+in any of the three stacks constructs a `{proto, id, op, params}` frame, and no
+recorded stream is checked into any of them. Full evidence under **F-280**.
+
+**Proposed corrections (NOT APPLIED):** for the first, mirror D5's F-214 clause
+in structure and **not** in text — credit `TcgSession`, name PROP-026's two
+anchors for the deletion, and state that on the Go side *neither* pinning
+mechanism exists. For the second, the Go transcription of F-280's clause: keep
+the inner-hop half, say the outer shape is unpinned.
+
+**Recommendation per anchor:** both → **drift stands, correction prepared.** The
+first must carry a **restated reason** — the verdict's own ground is void under
+the ruling even though its conclusion holds.
+
+---
+
+## F-270 — the counter does reset, the package's own test says so in its name, and the Rust twin says the same thing and was judged `confirmed`
+
+**Outcome:** SURVIVES — package-internal throughout; the ruling does not touch it.
+**Anchors:** 1 of 1 —
+`go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET` (`:123`)
+
+The anchor: «versions never repeat **or reset** within a session (a monotonic
+counter per document, never derived from content)». The counter is per-entry in a
+map, and clearing an overlay removes the entry:
+
+```
+$ sed -n '181,195p' .../crates/go-ai-native-tcg-bridge/src/oracle.rs
+    /// `update {file, content|null}` → set/clear an overlay.
+    pub fn update(&mut self, rel: &str, content: Option<String>) -> Result<u64, TcgBridgeError> {
+        match content {
+            Some(text) => self.open_or_update(rel, text),
+            None => {
+                if self.docs.remove(rel).is_some() { … "textDocument/didClose" … }
+                Ok(0)
+            }
+        }
+    }
+```
+
+`open_or_update` bumps only on the `Some(doc)` arm of `self.docs.get_mut(rel)`
+(`oracle.rs:141-145`); after a `remove`, the next open takes the `None` arm and
+starts at 1. **The package's own test states the behaviour in its name** — which
+is the ruling's bench at its most direct:
+
+```
+$ sed -n '29,30p' .../crates/go-ai-native-tcg-bridge/src/oracle/tests.rs
+fn overlay_versions_are_monotonic_and_close_resets() {
+```
+
+Implementation and test agree with each other and disagree with the spec line —
+which is why this is a `contradiction` with `falsifier: self` rather than a
+`reality-mismatch`, and why no consumer, host or external, is needed to settle it.
+
+**Per stack — the third inconsistently-judged family in the batch.**
+`rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md:118`
+`##OVERLAY-RULE-VERSIONS-NEVER-REPEAT` carries **the same sentence** over **the
+same code** (`rust-ai-native-tcg-bridge/src/oracle.rs:184` has the identical
+`if self.docs.remove(rel).is_some()`) and is judged **`confirmed`**. The
+TypeScript bridge has no `docs.remove` equivalent and no matching anchor.
+
+**Proposed correction (NOT APPLIED)** — Go, and the identical text for Rust after
+its anchor is re-judged:
+
+```
+- ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat within an
+  overlay's lifetime (a monotonic counter per open document, never derived from
+  content); clearing an overlay (`update {content: null}`) closes the document
+  and a later reopen starts again at 1 —
+  `crates/go-ai-native-tcg-bridge/src/oracle.rs:186-193`, and the bridge's own
+  `overlay_versions_are_monotonic_and_close_resets` test; @impl/done
+```
+
+**Recommendation:** **drift stands, correction prepared** — and the Rust twin
+needs a re-judgement in the same pass, or the family ships two answers to one
+question.
+
+---
+
+## F-273 — the floor gloss names four steps and a `build` that does not exist; the package's own README gets it right, and the Rust copy is worse and judged `confirmed`
+
+**Outcome:** SURVIVES — package-internal throughout: a shipped constant against a
+sentence about it, corroborated by the package's own README.
+**Anchors:** 1 of 1 —
+`go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#FLOOR-REMAINS-THE-TRUTH` (`:48`)
+
+The anchor: «The floor (`go-ai-native floor` → **gofmt/vet/build/test**) remains
+the truth, verbatim.» The shipped step list is seven long and carries no `build`:
+
+```
+$ sed -n '28,36p' .../crates/go-ai-native-cli/src/floor.rs
+const STEPS: &[&str] = &[ "gofmt", "vet", "tests", "staticcheck", "conform", "specmap", "test-gate" ];
+```
+
+The compile rides inside `go test ./...` (`floor.rs:127-129`); there is no
+separate build verb. **The package's own README is the correct side of the
+contradiction**, and makes the correction a transcription rather than a
+judgement:
+
+```
+$ sed -n '20,24p' .../go-ai-native-lang/v0.1.0/README.md
+  - ##SHIPS-GO-AI-NATIVE-UMBRELLA `go-ai-native` — … `floor` (the seven-step
+    verification floor: gofmt → vet → tests → staticcheck+exhaustive → conform →
+    specmap → test-gate), …
+```
+
+*(Corroboration, not a ground: run against a real Go module the binary prints
+`floor: all green (7 step(s) run, 0 disabled by policy)`, EXIT=0, with
+`staticcheck ./... && exhaustive ./...`, `go-ai-native-conform check`,
+`go-ai-native-specmap --check` and `test-gate` each printing their own header —
+so the seven steps are not merely declared in a constant, they execute.)*
+
+An external consumer told the floor is «gofmt/vet/build/test» will not look for
+the three discipline steps that actually decide its verdict — which is the whole
+point of the sentence.
+
+**Per stack — the Rust copy is the same defect and further off.**
+`rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md:48` reads
+«The floor (`rust-ai-native floor` → **cargo check**) remains the truth», and the
+Rust floor's shipped steps are `cargo fmt --all --check` (`floor.rs:57`),
+`cargo test --workspace` (`:64`), `clippy` (`:78,87`), `conform check` (`:92`),
+`specmap --check` (`:99`), `test-gate` (`:111`) and `fast-loop` (`:125`) —
+**seven steps, and `cargo check` is not among them.** That anchor is judged
+**`confirmed`**. No TypeScript copy exists.
+
+**Proposed correction (NOT APPLIED):** go `:48` → name the seven steps
+(gofmt · vet · tests · staticcheck+exhaustive · conform · specmap · test-gate)
+and note that the compile rides inside `go test ./...`. rust `:48` → the parallel
+seven-step list, **after that anchor is re-judged.**
+
+**Recommendation:** **drift stands, correction prepared** — a transcription from
+the package's own README.
+
+---
