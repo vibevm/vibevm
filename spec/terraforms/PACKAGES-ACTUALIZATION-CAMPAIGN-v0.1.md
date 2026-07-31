@@ -3729,6 +3729,36 @@ command that would have tested it.
   behind the same gate, one which-side ruling (F-220's WAL-entry half), and
   B-004's seventeen-fence product decision.
 
+- **2026-07-31 · the four D9 rulings, executed the same session — and the
+  verdict-first rule for false confirms pays off twice.** The owner ruled in
+  session (verbatim in the D9 harvest's `#rulings`): F-188-rust ships
+  self-contained without the PROP-031 citation (release batch); F-219 takes
+  option B (the F-253 wording, landed a second time); F-115 takes option (a) —
+  the TypeScript stack gained its front-door README, the only one of 42
+  shipped versions without one, tree-verified, arriving unjudged for the next
+  mirror pass; F-245 takes §3.6(a) with the owner's own sentence, and **no
+  Phase E `when`-vocabulary task is filed** — a while-shaping-identifiers
+  condition is not decidable at boot time, recorded so Phase E does not
+  inherit an unimplementable ask. The three prose-edit rulings were applied
+  and closed the same session, alongside the boss-route residues F-186,
+  F-212-go and F-132 (+ its ts twin): merges 2+6+1 verdicts, **0 refusals**;
+  seal 5+1 sealed / 3 already current.
+
+  **The riders' boundary held by one cache lookup each** — the wave-8 rule
+  applied in its first live test. `conform-frontend-go.md` belongs to open
+  F-185 on `sync-from-code` and was not touched. The two false confirms (the
+  ts card's `DL1-015`, the Go GUIDE's `gated_packages`) were re-judged `drift`
+  FIRST and minted by the registry: the ts one clustered to F-132 (prose-edit)
+  and closed under it the same session; the GUIDE one clustered to **F-166 on
+  the owner's sync route**, so its two-word swap now waits in the sync queue's
+  group C **instead of landing as an unapproved diff** — the repair went
+  through the measurement, and the measurement routed half of it to the owner.
+
+  **State:** registry **153 obligations / 361 drifts**, 75 resolved to
+  history; corpus **10 941 / 361 / 44 — 96.4 %**. The release batch carries
+  **no open design choice** — every remaining correction is drafted final
+  (d8b + d9), and the owner's queue is the whole remainder.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
