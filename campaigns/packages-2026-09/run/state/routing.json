@@ -1713,6 +1713,14 @@
       "obligation": "F-233",
       "why": "wave 8 release re-verification, boss ruling: §3.6(b) — the host-set and single-writer choices are not carried in the composed flow's four-field form: PROP-016 ##HIST-AUTHORED is a dated owner decision with alternatives but no revisit trigger, and the host's four live four-field records are elsewhere (PROP-036, PROP-043). Rule sound, consumer's debt; the package does not move. Folds into the decision-records host ruling in PHASE-D-HOST-OBLIGATIONS.md. See harvest/d8c-world-compose-release-reverify.md.",
       "recorded": "2026-07-31"
+    },
+    {
+      "anchor": "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md#COMPOSES-WAL",
+      "route": "host",
+      "wave": 9,
+      "obligation": "F-220",
+      "why": "owner ruling 2026-07-31 ('3 - согласен', accepting the wave-8 recommendation): reading (b) — the WAL-entry half ('the WAL entry notes fanned out at <checkpoint>') is a sound-but-unexercised prescription under the @spec/done marker and §6.1's capability rule; the package does not move. The host obligation: either flow:wal grows the slot for a fan-out note in its eight-section grammar, or the host's wind-down writes the note — folds into the wal host ruling in PHASE-D-HOST-OBLIGATIONS.md. The fan-out-as-wind-down half was already vindicated by 90-user.md:35 and PROP-016:59 (and B-009's fix now makes CLAUDE.md agree). See harvest/d8c-world-compose-release-reverify.md #f-220.",
+      "recorded": "2026-07-31"
     }
   ]
 }

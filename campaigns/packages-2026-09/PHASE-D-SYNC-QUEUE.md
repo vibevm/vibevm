@@ -64,6 +64,17 @@ does both. The 23 corrections in group B are **all written in the form group A
 currently forbids**; approving them under answer (1) would be approving text the
 same package prohibits.
 
+> **ANSWERED — owner ruling 2026-07-31: answer (2), legalise the form.** The
+> annotate-in-place convention Phase D has been landing since wave 5 is the
+> sanctioned way a document carries an unexercised claim, and the closing rules
+> are amended to say so. Applied the same session as d7a's option (ii), each
+> document's own phase-trigger preserved: the three closing rules now read «is
+> either removed or annotated in place as **specified, not built** — never
+> carried as unmarked aspiration», and `##ENTRY-CARRIES-FOUR-PARTS` names C-7's
+> deliberate unresolvedness and the BETA status it drove. All four F-121
+> anchors re-judged `confirmed`. **Group B is unblocked** — its 23 corrections
+> are now in the sanctioned form and await per-batch presentation per §1.2.
+
 ---
 
 ## B. Annotate-in-place corrections — 23, and they wait on A {#annotations}

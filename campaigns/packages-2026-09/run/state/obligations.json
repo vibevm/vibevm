@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 361,
+ "drift_verdicts": 357,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -1598,67 +1598,6 @@
    ],
    "id": "F-165",
    "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "cites F-121"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md#ENTRY-CARRIES-FOUR-PARTS",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md#UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md#UNEXERCISED-POLICY-IS-REMOVED-NOT-CARRIED",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:39  #[serde(default, deny_unknown_fields)]",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:1  //! The intent ledger, local slice (LEDGER-INTENT v0.1; PLAYBOOK",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:22  //! Orphans are computed at gate time and deliberately not serialised",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:23  /// One `tests-baseline.json` entry (extra fields tolerated).",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:11  ##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:13  ## C-1 — \"AI-native = stricter/more meta\" (H1) vs \"engineered dialects underperform\" (H5) {#c-1-stricter-vs-in-distri...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:43  ## C-7 — Unresolved / open (honest) {#c-7-unresolved-open}"
-   ],
-   "cites": [
-    "F-121"
-   ],
-   "reason": "the format law is broken by an entry of this very map: **C-7 carries no side/resolution triple**. A four-part entry format stated in a document that holds a three-part entry is the same shape as F-121 — a rule falsified by the artifact that carries it",
-   "reasons": [
-    "the THIRD instance of the same self-falsifying closing rule (F-121, after ENGINE-CONFORM and LEDGER-INTENT). It says any field, status or policy not exercised by Playbook v0.2 Phase 2 is removed, marks itself @impl/done, and is contradicted above it by the close-quota, the adjudication outcomes, the golden transcripts, the REPORT exit numbers and the disputed-status detection — none of which exist. Nothing enforces it",
-    "the same self-falsification as ENGINE-CONFORM's closing fact (F-121), in a second document. It says anything not exercised by Playbook Phase 5 is deleted rather than carried as aspiration, marks itself @impl/done, and is contradicted above it by GC with a pin set, release-slice export, signing, classify.legacy_unit, propose.links, prompt_rev, a model id and cost telemetry — none of which exist. Nothing enforces it either",
-    "the FOURTH instance of the same self-falsifying closing rule (F-121, after ENGINE-CONFORM, LEDGER-INTENT and BROWNFIELD). It says any mechanism unexercised by end of Phase 2 is removed rather than carried aspirationally, marks itself @impl/done, and is contradicted above it by the runtime channel, the profiles, the signing, the proposal pool, the `decides` verb, the multiplicity lint and the redacted profile. Nothing enforces it"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:11  ##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 4,
-   "id": "F-121",
-   "id_source": "adopted (plan LOG)",
    "carried": true
   },
   {
@@ -3338,9 +3277,10 @@
    "fact": "",
    "falsifier": "self",
    "routed_out": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md#COMPOSES-WAL"
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md#COMPOSES-WAL",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md#COMPOSES-WAL"
    ],
-   "owed": 1,
+   "owed": 0,
    "routed_to": [
     "host"
    ],
@@ -8615,6 +8555,50 @@
    "routed_out": [],
    "owed": 3,
    "id": "F-120",
+   "id_source": "adopted (plan LOG)",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "cites F-121"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md#ENTRY-CARRIES-FOUR-PARTS",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md#UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md#UNEXERCISED-POLICY-IS-REMOVED-NOT-CARRIED",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC"
+   ],
+   "drift_count": 4,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "cites": [
+    "F-121"
+   ],
+   "reason": "the format law is broken by an entry of this very map: **C-7 carries no side/resolution triple**. A four-part entry format stated in a document that holds a three-part entry is the same shape as F-121 — a rule falsified by the artifact that carries it",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:11  ##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 4,
+   "id": "F-121",
    "id_source": "adopted (plan LOG)",
    "carried": true
   },

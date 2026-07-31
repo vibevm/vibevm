@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-31T15:33:42Z",
+  "updated_at": "2026-07-31T15:54:43Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -4063,7 +4063,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
-      "content_hash": "115fb5bff2dc49c4c02181a781b1f53199a139adf46c0787850c1413981cfe77",
+      "content_hash": "3fc38a8663355577ae9a76804dda5a2e10209292fceb5cf0a4999f175049a292",
       "rollup": {
         "explicit": [
           "spec",
@@ -4085,7 +4085,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "115fb5bff2dc49c4c02181a781b1f53199a139adf46c0787850c1413981cfe77",
+        "processed_hash": "3fc38a8663355577ae9a76804dda5a2e10209292fceb5cf0a4999f175049a292",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4114,12 +4114,9 @@
             ]
           },
           "ENTRY-CARRIES-FOUR-PARTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:11  ##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:13  ## C-1 — \"AI-native = stricter/more meta\" (H1) vs \"engineered dialects underperform\" (H5) {#c-1-stricter-vs-in-distri...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:43  ## C-7 — Unresolved / open (honest) {#c-7-unresolved-open}",
-              "the format law is broken by an entry of this very map: **C-7 carries no side/resolution triple**. A four-part entry format stated in a document that holds a three-part entry is the same shape as F-121 — a rule falsified by the artifact that carries it"
+              "closed by d7a's drafted correction under the same ruling: the format rule now quantifies over resolved entries and names C-7's deliberate unresolvedness with the fourth part it drove — the package's BETA status (##open-items-are-why-the-package-is-beta, :48); C-1…C-6 carry their side/side/resolution/decision quadruple as before (the 48-line file re-read in full at wave 7)"
             ]
           },
           "c-1-side-a": {
@@ -4314,8 +4311,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T17:36:21Z",
-        "verify_batch": "C2 + D3c + D5b"
+        "verified_at": "2026-07-31T15:54:43Z",
+        "verify_batch": "C2 + D3c + D5b + D10-groupA"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
@@ -4488,7 +4485,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md": {
-      "content_hash": "0de12e84e6ff06f150d34ae87938fe46ececf24983800cf94858257cfb821580",
+      "content_hash": "5518bab664216e79ab250d9a7c94eadc459cefd9f336e287a55d602fcb1aaa4d",
       "rollup": {
         "explicit": [
           "spec",
@@ -4510,7 +4507,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0de12e84e6ff06f150d34ae87938fe46ececf24983800cf94858257cfb821580",
+        "processed_hash": "5518bab664216e79ab250d9a7c94eadc459cefd9f336e287a55d602fcb1aaa4d",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5002,16 +4999,14 @@
             ]
           },
           "UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/testgate.rs:23  /// One `tests-baseline.json` entry (extra fields tolerated).",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/config.rs:39  #[serde(default, deny_unknown_fields)]",
-              "the THIRD instance of the same self-falsifying closing rule (F-121, after ENGINE-CONFORM and LEDGER-INTENT). It says any field, status or policy not exercised by Playbook v0.2 Phase 2 is removed, marks itself @impl/done, and is contradicted above it by the close-quota, the adjudication outcomes, the golden transcripts, the REPORT exit numbers and the disputed-status detection — none of which exist. Nothing enforces it"
+              "closed by the owner-ruled group-A answer (2), 2026-07-31 (sync-queue #closing-rules): the rule now sanctions the annotate-in-place form — 'is either removed or annotated in place as specified, not built — never carried as unmarked aspiration' — which is the practice the document itself keeps (its one 'Specified, not built' passage at :132); the marker @impl/done is honest of the amended rule; d7a #f-121 option (ii), each document's own phase trigger preserved"
             ]
           }
         },
-        "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C1 + D4a + D5b + D7"
+        "verified_at": "2026-07-31T15:54:43Z",
+        "verify_batch": "C1 + D4a + D5b + D7 + D10-groupA"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
@@ -5383,7 +5378,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
-      "content_hash": "c31df0cf731cb9ede355b82a0c0f1ef73df2b86e2cb40640b6e4bcf89afa5a8a",
+      "content_hash": "1ad512c96d0c33368c5a09cd7249d2ae16e7bc8c1643b0af2879f8da721be676",
       "rollup": {
         "explicit": [
           "spec",
@@ -5405,7 +5400,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c31df0cf731cb9ede355b82a0c0f1ef73df2b86e2cb40640b6e4bcf89afa5a8a",
+        "processed_hash": "1ad512c96d0c33368c5a09cd7249d2ae16e7bc8c1643b0af2879f8da721be676",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5735,16 +5730,14 @@
             ]
           },
           "UNEXERCISED-POLICY-IS-REMOVED-NOT-CARRIED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:1  //! The intent ledger, local slice (LEDGER-INTENT v0.1; PLAYBOOK",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:7  //! One query kind ships: `explain.item` — the prose render behind",
-              "the same self-falsification as ENGINE-CONFORM's closing fact (F-121), in a second document. It says anything not exercised by Playbook Phase 5 is deleted rather than carried as aspiration, marks itself @impl/done, and is contradicted above it by GC with a pin set, release-slice export, signing, classify.legacy_unit, propose.links, prompt_rev, a model id and cost telemetry — none of which exist. Nothing enforces it either"
+              "closed by the owner-ruled group-A answer (2), 2026-07-31: the amended rule sanctions the three 'Specified, not built' annotations this document carries (:38, :57, :78 area) instead of being falsified by them; d7a #f-121 option (ii)"
             ]
           }
         },
-        "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C1 + D5b"
+        "verified_at": "2026-07-31T15:54:43Z",
+        "verify_batch": "C1 + D5b + D10-groupA"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md": {
@@ -6056,7 +6049,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "884d98b767ddc31401e33b41e65290593df8f3e8c7ff5a340b2ca366fc12e6a1",
+      "content_hash": "3a055cf0d1335eec8028679c33394b9748df24d1f6de9ae175d2c0b91fe84c45",
       "rollup": {
         "explicit": [
           "spec",
@@ -6078,7 +6071,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "884d98b767ddc31401e33b41e65290593df8f3e8c7ff5a340b2ca366fc12e6a1",
+        "processed_hash": "3a055cf0d1335eec8028679c33394b9748df24d1f6de9ae175d2c0b91fe84c45",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -7398,17 +7391,14 @@
             ]
           },
           "UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:22  //! Orphans are computed at gate time and deliberately not serialised",
-              "the FOURTH instance of the same self-falsifying closing rule (F-121, after ENGINE-CONFORM, LEDGER-INTENT and BROWNFIELD). It says any mechanism unexercised by end of Phase 2 is removed rather than carried aspirationally, marks itself @impl/done, and is contradicted above it by the runtime channel, the profiles, the signing, the proposal pool, the `decides` verb, the multiplicity lint and the redacted profile. Nothing enforces it"
+              "closed by the owner-ruled group-A answer (2), 2026-07-31, in d7a's exact drafted wording: the five 'Specified, not built' passages this document carries are now the rule's sanctioned second arm rather than nine standing falsifications; d7a #f-121 option (ii)"
             ]
           }
         },
-        "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C1 + D5b + D7"
+        "verified_at": "2026-07-31T15:54:43Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
