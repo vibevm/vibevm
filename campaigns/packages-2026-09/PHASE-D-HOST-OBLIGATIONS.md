@@ -75,6 +75,35 @@ commit maps 3 / 0, safe stop 12 / 0, Phase 0 five archived and none live. **This
 is adopt-then-drop, not non-adoption**, which is what makes it drift at all —
 and it is therefore one ruling, not twenty-nine.
 
+> **Re-measured 2026-07-31 over the whole tree, and the characterisation needs
+> one correction that changes the ruling.** The ratios above were taken over
+> `spec/terraforms/` and `legacy-spec/` — the same perimeter wave 6 proved blind,
+> because it omits the `fractality` specspace, a **second project that adopted
+> this flow** and boots it at slot 40 of its own generated `spec/boot/INDEX.md`.
+> Counted by file across archived · host-live · fractality:
+>
+> | form | `legacy-spec/` | host live plans | `fractality` plans |
+> |---|---:|---:|---:|
+> | commit map | 4 | 0 | **3** |
+> | safe stop | 12 | 0 | **3** |
+> | whole-campaign acceptance | 9 | 0 | **2** |
+> | non-goals | 9 | 0 | **3** |
+> | risks | 16 | 0 | **3** |
+> | Phase 0 | 16 | 0 | **2** |
+>
+> **The practice is not abandoned; the host's own two plans are the outlier.**
+> That flips the ruling this section asks for. «Adopt-then-drop» invites «then
+> let us formally drop it». «Live in the sibling project, absent in the host's
+> two plans» invites the opposite — bring the host's plans into line — and it is
+> the reading the measurement supports.
+>
+> *One trap, recorded because it nearly landed in this table.* A naive count
+> shows one host-live hit for every form. Every one of them is inside
+> `PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` — this campaign's own plan — and
+> matches only because the §7 LOG entry written the day before **quotes these
+> words in prose**. They are not sections. The host-live column is 0, and the
+> campaign nearly measured its own footprint as evidence about its subject.
+
 **`wal` at 22 and `health-audit` at 16 are the same genre**: flows whose subject
 is the host's own practice, measured against the host's own artefacts. Their
 rulings are about what the host will actually keep doing, not about wording.
