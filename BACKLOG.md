@@ -365,7 +365,7 @@ already written from it is the specification of the work.)*
 | ##B009-ANCHOR **anchor** | falsifies nothing in a package — the contradiction is host-internal. The rule side is `spec/boot/90-user.md` `##CMD-MIRROR` and `spec/common/PROP-016-source-mirrors.md` `##CMD-MIRROR`; the breach side is `CLAUDE.md`'s END SESSION step 4 |
 | ##B009-LOCATOR **locator** | `CLAUDE.md:191` — «Push to `origin/main` — routine per Rule 4» as the wind-down's step 4, where `90-user.md:35` says `cargo xtask mirror` «is the standard rollout, preferred over a bare `git push origin`» and `PROP-016:59` says «This — not `git push origin` — is the standard rollout» |
 | ##B009-SEVERITY **severity** | P2 |
-| ##B009-DISPOSITION **disposition** | `open` |
+| ##B009-DISPOSITION **disposition** | `done` — owner ruling 2026-07-31 («сделай»): step 4 of the wind-down in all three instruction files now names `cargo xtask mirror` as the standard rollout, with the bare push demoted to fallback and the escape hatch preserved |
 | ##B009-FILED **filed by** | the packages-actualization campaign, Phase D, wave 8, 2026-07-31 — surfaced re-verifying F-220's source-mirrors half, where the recorded verdict used `CLAUDE.md:191` to demote a package sentence that the other two host documents support |
 
 - ##B009-WHAT **What it is.** Three host documents state the wind-down rollout and one
