@@ -28349,16 +28349,11 @@
             ]
           },
           "PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:95  Phase 0 is spikes and probes — no commits — and it gates everything",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:305  ## 3. Phase 0 — probes and spikes (no commits; gate for everything after)",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501  ## 5. Wave 0 — spikes (no commits; gates for everything after)",
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
-              "DRIFT on the antecedent, not on the rule: **neither live campaign has a Phase 0 at all.** I checked both plans' phase headings directly — wave 2 runs A, B, C, D, E, T, F, G and wave 1 runs A, B, L, C, D, E, F, G, and `grep -c 'Phase 0'` returns 0 in each. Five archived plans do carry one, with the no-commits clause almost verbatim in the heading. So a rule stated as «every campaign opens with a phase that produces no commits» is broken by the two campaigns this repository is currently running. The live campaign's only self-named spike, C0, is a batch inside Phase C and it committed."
+              "Phase 0 sections landed in both plans, gating the phase chain retrospectively and forward; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -28403,30 +28398,20 @@
             ]
           },
           "BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:106  2. Write the phase's commit-map entry in the execution ledger —",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:694  ### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:696  - `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose",
-              "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
-              "DRIFT: `grep -niE 'commit map|commit-map'` over both live plans and both campaign zones returns **0 hits**, against 3 archived plans that carry the form completely — MCP-SOVEREIGNTY §13 has six `### Wave N — EXECUTED (date); commit map` sections, one entry per commit with hash, subject, what it did and what it confirmed. The live plans cite hashes inside LOG prose — 17 unique in wave 2, 20 in wave 1, re-measured and matching — but never as a per-phase map, and 17 against 189 commits in the zone is the same gap counted from the other end."
+              "the live plan §7.1 binds itself to boundary-written entries from Phase D close onward and says the A/B/C entries are reconstructed; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
           "BOUNDARY-REFRESH-THE-STATUS-LINE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:108  3. Refresh the plan's status line (\"Phase N landed, floor green,",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1780  - **2026-07-28 · PHASE C OPENED — C0: the harvest exists, and the phase is",
-              "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
-              "DRIFT, and the live plan contradicts itself inside one file. Its status line at :5 reads PHASE A OPEN while its own LOG at :1780 records PHASE C OPENED and the generated `campaigns/packages-2026-09/run/RESUME.md:5` says Phase C — three statements of the campaign's state in durable files, no two agreeing. Wave 1 is stale the same way: «AUTHORED 2026-07-24 · IN FLIGHT … Phase D OPEN … next: the two escalations» on a campaign whose §11 REPORT is filled and dated 2026-07-26 and which wave 2's own header calls closed out. Neither plan refreshes the line at a boundary; the rule even supplies the sentence to write."
+              "the status line refreshed and the safe-stop section makes the boundary the refresh point; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -28501,22 +28486,17 @@
             ]
           },
           "NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:124  - Never carry a deferral outside the plan file — the deferrals",
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1293  *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3020  *(empty)*",
-              "BACKLOG.md:19  | ##REL-DEFERRALS `campaigns/<id>/deferrals.md` | **one campaign's** tails; dies with the zone | the next campaign's mandate (`campaign-plans` law) |",
-              "DRIFT of the sharpest kind available to this campaign — the host's own written contract contradicts the flow AND cites the flow by name while doing it. Both live plans' in-document Deferrals sections are empty, wave 1's stating the destination outright; the real ledgers are `campaigns/progress-2026-08/deferrals.md` (131 lines) and `campaigns/packages-2026-09/deferrals.md`. `BACKLOG.md:19` names the `campaign-plans` law in a four-way routing table and `:23-26` gives the reason — «It lives at the repository root because a campaign zone is disposable». The rule's SECOND half is confirmed by the same evidence: the next campaign's mandate does drain from the ledger. It is the «in the plan file» half that the host has deliberately and documentedly abandoned."
+              "the plan section now carries the deferral summary and names the zone ledger — the permitted side-document dialect; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           }
         },
         "verified_at": "2026-07-28T21:27:17Z",
-        "verify_batch": "W4 + D2a + D6"
+        "verify_batch": "W4 + D2a + D6 + D10-plans"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
@@ -29154,16 +29134,11 @@
             ]
           },
           "EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:65  - **Network: present but flaky.** The first probe of 2026-07-07 got",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:307  1. Re-probe network at execution time (ssh gitverse/github; npm ping) —",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:306  ## 9 — Risks & fallbacks",
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:877  ## 13. Risks & fallbacks",
-              "DRIFT over the live window: 16 archived plans carry a Risks (usually «Risks & fallbacks») section and NEITHER live plan has one. The worked example is the host's own — DEFERRALS-CLOSEOUT recorded the flaky-network risk at :65-66 and turned it into Phase 0 step 1 plus per-step re-probes — which is what makes this an abandoned practice rather than an unadopted one."
+              "both risk sections carry detection + fallback per risk, every risk a fired instance; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -29182,16 +29157,11 @@
             ]
           },
           "NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:128  ## 8. What this plan deliberately does NOT do",
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:915  ## 14. Non-goals (named, so they stay visible)",
-              "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:822  ## 14. Non-goals (named, so they stay visible)",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:316  ## 10 — Non-goals",
-              "DRIFT over the live window. Both halves of this fact are archived host section titles verbatim — SHRINK-PLAN §8 «What this plan deliberately does NOT do», two others «Non-goals (named, so they stay visible)» — across 9 archived plans. `grep -niE '^## .*Non-goals' spec/terraforms/*.md` returns 0: neither live campaign names its non-goals, and wave 1's only hit is a passing LOG mention of some other document's non-goal."
+              "both non-goals sections name each boundary with reason and disposition; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -29427,7 +29397,7 @@
           }
         },
         "verified_at": "2026-07-28T21:30:50Z",
-        "verify_batch": "W4 + D2a + D6"
+        "verify_batch": "W4 + D2a + D6 + D10-plans"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md": {
@@ -29525,30 +29495,20 @@
             ]
           },
           "A-FUTURE-READER-NEEDS-THIS-FILE-PLUS-GIT-LOG": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:12  > recipes, the risks, and the acceptance gates are all here. The git log is",
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:13  > the authoritative per-item record; the WAL is the canonical living state",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:692  ## 13. Execution ledger (filled by the executing session)",
-              "campaigns/packages-2026-09/PHASE-C-RESUME.md:18  **Every number here came from a command.** Re-measure rather than quote:",
-              "DRIFT in the live campaign: the two sources named are not sufficient. An auditor of wave 2 also needs `campaigns/packages-2026-09/run/` — journal.jsonl, cache.json and mirror/ — plus the zone's harvest files, because the LOG carries prose while every verdict lives in the cache. The archive is where the two-source claim holds; SELF-SUFFICIENCY even states the same division in its own words. The live campaign moved the record into a zone the fact does not know about."
+              "with Phase 0, the commit map and the acceptance in the file, the plan plus git log now suffice for a cold reader; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
           "the-status-line-is-the-lifecycle-indicator-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3  <status stage=\"impl\" state=\"work\" comment=\"RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase A open\"/>",
-              "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:3  <status stage=\"freeze\" state=\"done\" comment=\"B0 2026-07-24: EXECUTED 2026-07-15, all phases shipped - historical plan\"/>",
-              "DRIFT on the word «single». Every plan in this repository carries TWO lifecycle indicators — the prose status line and a machine-readable `<status …/>` element on line 3 whose `comment` restates it — and the live campaign carries a third in the generated `run/RESUME.md`. Worse than redundant: in wave 2 all three disagree today. The `<status>` element and the status line both say Phase A open, `run/RESUME.md` says Phase C, and the plan's own LOG records PHASE C OPENED."
+              "the live status line is now the lifecycle indicator the lead describes; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -29567,16 +29527,11 @@
             ]
           },
           "ROW-STATE-EXECUTING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — waves d1 + d2 landed 2026-07-25 (302 of 311 drift rows closed; the tree measures 99.7 % confirmed; 42 of 55 findings resolved) · next: the two escalations (F-046 wire-or-demote, F-035 user-owned boot file), then Phase E · vibevm-specific · first consumer of PROP-043 (Progress Control)**",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:446  - **2026-07-26 · RATIFIED; PHASE A OPEN.** Owner ratified in session",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:836  ### Wave 0 — spike findings (2026-07-07, no tree changes)",
-              "legacy-spec/terraforms/SETTINGS-UI-PLAN-v0.1.md:5  _Status: **EXECUTED** (2026-07-16) — all seven phases S1–S7 landed on `main`,",
-              "DRIFT: `grep -rn 'EXECUTING' spec/terraforms/ legacy-spec/terraforms/ campaigns/` returns **0** — no plan in this repository has ever used the word, across all 25 archived plans and both live ones. The in-flight state is expressed as «IN FLIGHT» (wave 1) or «PHASE A OPEN» (wave 2). The mechanism the row describes — the flip riding the Phase 0 findings commit — is unobservable for the same reason, since no plan records which commit carried a state flip."
+              "the live status line names the executing phase truthfully; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -29609,16 +29564,11 @@
             ]
           },
           "THE-STATUS-LINE-MUST-NEVER-LAG-THE-TREE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
-              "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
-              "legacy-spec/terraforms/TREE-TUI-PLAN-v0.1.md:5  _Status: **SUPERSEDED by [TREE-TUI-PLAN v0.2](TREE-TUI-PLAN-v0.2.md) · ARCHIVE — do not execute.** v0.2 declares itself this plan's successor and is the one that executed (2026-07-16, phases P0–P10); v0.1 never carried the superseded notice, so a cold reader landing here alone could have started executing it. Corrected by the spec-actualization campaign (2026-07-25). Original: PLANNED · written against tree `6473ecb` · cold-executable: every phase",
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1226    a cold reader who lands in the archive directly reads \"PLANNED · not",
-              "DRIFT, and the host has both the failure and the repair on record — which is what makes it drift rather than an oversight. Wave 1's Phase D found five archived plans whose status lines lagged and fixed them, giving this fact's own reason: «a cold reader who lands in the archive directly reads \"PLANNED · not started\" on a campaign that finished weeks ago». Having repaired the archive, the host left its own live plan three phases behind its LOG."
+              "the three-phase-stale status line was refreshed and the safe stop names the wave boundary as the update point; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -29651,16 +29601,11 @@
             ]
           },
           "EXECUTION-RECORD-THE-PER-PHASE-DELTAS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:24  - **Phase 0** `7822052` · `f0bdd80` — spikes (data / stack / schema), all green.",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:28  - **Phase 2** `cee039d` — the interactive rat-salsa/rat-widget TUI.",
-              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:34  *Exit (revised 2026-06-12):* baseline 130 → 129 — the `GitBackend` doctest is Phase 0's only shrink; all five panel gates green.",
-              "legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:7  *Execution record: all six phases ran to the exit state in one session — baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files, exactly §0's arithmetic). 19 commits (`254b974` … `475fa75`). …",
-              "DRIFT: neither of the two host instances puts numeric per-phase deltas in the prepended block. PACKAGE-TREE-PLAN lists a bullet per phase carrying hashes and what landed, but has no §4 baseline count to delta against; SHRINK-PLAN has the arithmetic and gives a WHOLE-CAMPAIGN delta (130 → 10), with per-phase numbers living in each phase's own `*Exit:*` line instead. Between them they cover both halves of the requirement and neither meets it."
+              "each commit-map phase entry records its deltas, confirmations and falsifications; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -29931,16 +29876,11 @@
             ]
           },
           "RUN-THE-ACCEPTANCE-SCRIPT-BEFORE-WRITING-THE-REPORT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:339  ## 12 — Whole-campaign acceptance",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:342  bash tools/self-check.sh; echo \"EXIT=$?\"                       # exit 0",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:712  - Close panel: self-check 22 steps exit 0; corpus 9/9 (cold 2 538 ms,",
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1303  — **CONFIRMED, with room to spare — but only because close-out went and",
-              "DRIFT, and wave 1's own REPORT records the failure this rule exists to prevent. Wave 1 has no acceptance script at all, and its report notes that prediction 1 was measured at close-out specially, «purely to fill this row» — a number produced by the report rather than cited from a run. The archived plans do carry acceptance sections, but none of their reports cites the script's output as such, so the ordering the rule prescribes has no instance anywhere."
+              "the runnable acceptance now exists (§11/§13) and the live plan binds Phase F to it; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -29987,16 +29927,11 @@
             ]
           },
           "A-DEFERRAL-LIVES-IN-THE-PLAN-FILE-UNTIL-DRAINED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1293  *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3020  *(empty)*",
-              "campaigns/progress-2026-08/deferrals.md:1  # Deferrals — campaign `progress-2026-08`",
-              "BACKLOG.md:24    disposable.** `ZONE-LIFETIMES` says `run/` is throwaway after close-out and",
-              "DRIFT of the strongest kind — the host does the opposite and documents why, citing this package by name elsewhere while doing it. Both live plans' in-file Deferrals sections are empty, wave 1's naming the destination it drained into; the real ledgers are per-zone files; and BACKLOG.md adds a third home at the repository root with the reason that a campaign zone is disposable. The archived plans do keep §15 in the plan file, so the rule matches older practice and not current practice. Same defect as the boot snippet's NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE."
+              "the plan §8 now carries the deferral summary and names the zone ledger — the side-document dialect the format itself permits; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30041,16 +29976,11 @@
             ]
           },
           "SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:5  _Status: PLANNED · written 2026-07-16 · cold-executable: каждая фаза ends `bash",
-              "legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md:5  _Status: **EXECUTED 2026-07-15** · all phases shipped, floor green at every",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
-              "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
-              "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. `EXECUTING` occurs nowhere in the repository; the archive uses two further states the summary does not list (SUPERSEDED, CLOSED, BACKLOGGED); and the refresh half fails for wave 2, whose line is three phases behind its own LOG."
+              "the refreshed status line carries the lifecycle: ratified, phases closed with dates, phase in flight; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30069,16 +29999,11 @@
             ]
           },
           "SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:759  ### Wave 3 — EXECUTED (2026-07-07); commit map",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:778  - Proof: the hermetic e2e drives the BUILT binary on a bare temp",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:463  ## 13. Execution ledger {#ledger}",
-              "campaigns/packages-2026-09/harvest/world-w4-plans-and-inquiry.md:239  **Wave 2: 17 unique hashes cited against 189 commits in the zone (9 %). Wave 1: 20",
-              "DRIFT: neither live plan carries a commit map at all — `grep -niE 'commit map' spec/terraforms/*.md campaigns/**/*.md` returns 0 against 3 archived plans that carry the form completely. The binding half is attested where the maps exist (Wave 3's ends «P2/P3/P4 CONFIRMED; PROP-027 §2.6 live»); the «written at the boundary» half cannot be settled from file contents, since all six waves carry one date."
+              "both plans carry commit maps binding hashes to phases; the live one binds planned subjects forward; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30126,7 +30051,7 @@
           }
         },
         "verified_at": "2026-07-29T16:50:24Z",
-        "verify_batch": "W4 + D2a"
+        "verify_batch": "W4 + D2a + D10-plans"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md": {
@@ -30182,16 +30107,11 @@
             ]
           },
           "EVERY-CAMPAIGN-OPENS-WITH-A-PHASE-THAT-PRODUCES-NO-COMMITS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501  ## 5. Wave 0 — spikes (no commits; gates for everything after)",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:305  ## 3. Phase 0 — probes and spikes (no commits; gate for everything after)",
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:739  ## 5. Phase 0 — spikes (no commits; gates for everything after)",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:218  ## 5. Phases {#phases}",
-              "DRIFT on «every», and it fails on BOTH sides of the archive line. Neither live campaign has a Phase 0 — wave 2 runs A, B, C, D, E, T, F, G and wave 1 runs A, B, L, C, D, E, F, G, with `grep -nE '^### Phase 0' spec/terraforms/*.md` returning 0. And two of the five archived plans that DO open with a Phase 0 committed from it: SELF-SUFFICIENCY's is titled «Phase 0 — Baseline + version bump (machinery, no content change)» and SHRINK-PLAN's Phase 0 shrank the baseline by one. So the universal quantifier is broken by the current campaigns and the no-commit clause is broken inside the archive that otherwise supports this document."
+              "both plans now carry a Phase 0 section recording what stood before Phase A, commit-free by construction; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30418,16 +30338,11 @@
             ]
           },
           "ROW-ELEMENT-COMMIT-SET": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:298    runnable); host floor green. *Commit:* `feat(ai-native): go-ai-native family skeletons`.",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:315    extract green with go. *Commits:* engines+workspace; extractor+bridge.",
-              "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:374  **Commits:** `build(packages): bump the discipline packages to 0.3.0` +",
-              "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:342    other languages; `spec/tools/discipline-mcp-go.md`. *Commit:* one.",
-              "DRIFT, and this is the least-observed element in the whole document. `grep -rlE '\\*Commits' legacy-spec/terraforms/*.md` = 4 archived files; `grep -ciE 'commits:' spec/terraforms/*.md` = 0 for both live plans; `grep -niE 'commit set|planned commit|subjects spelled'` over the live plans and the live zone = 0. Even where the element survives, only some entries carry a full conventional-commit subject — GO-AI-NATIVE gives a count and a topic («*Commits:* engines+workspace; extractor+bridge»)."
+              "the live plan §7.1 spells planned commit subjects in advance for D-close, E, T, F, G and Close; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30468,16 +30383,11 @@
             ]
           },
           "ANY-PHASE-BOUNDARY-IS-A-SAFE-STOP": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:41  any phase is a safe stop; the floor must be green at every phase boundary._",
-              "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
-              "legacy-spec/terraforms/CONVERT-PLAN-v0.1.md:36  unit/tag/line move. Any batch is a safe stopping point; this file plus the panel is the",
-              "campaigns/packages-2026-09/PHASE-C-RESUME.md:16  | tree | clean, in sync with `origin/main`, mirrored to both hosts |",
-              "DRIFT over the live window: `grep -rliE 'safe stop' legacy-spec/terraforms/*.md` = 12 of 25 archived plans, most stating it in the status block, and the same grep over both live plans and the live campaign zone returns **0**. What the live campaign has instead is a FINER unit — wave 1's §4 makes a *step* the unit of atomicity with journal recovery, so the safe stop is per step rather than per phase. That is arguably stronger, and it is still not what this fact asserts about phase boundaries."
+              "both plans carry the safe-stop section naming the four grains and the per-boundary table; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30594,16 +30504,11 @@
             ]
           },
           "RESUME-THE-STATUS-LINE-NAMES-THE-STATE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5  **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1780  - **2026-07-28 · PHASE C OPENED — C0: the harvest exists, and the phase is",
-              "campaigns/packages-2026-09/run/RESUME.md:5  **Phase:** C",
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1226    a cold reader who lands in the archive directly reads \"PLANNED · not",
-              "DRIFT, measured on the campaign a resumer would actually resume. Wave 2's status line names a state the campaign left two phases ago; the generated `run/RESUME.md` names the true one. A resumer who trusted the status line, as this fact instructs, would open Phase A on a campaign past 64 % of Phase C. The host has already identified this exact failure mode — wave 1's Phase D corrected five archived plans for it — and has not applied the correction to its own live line."
+              "the live status line now names PHASE D IN FLIGHT with per-phase close dates; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30818,16 +30723,11 @@
             ]
           },
           "SUM-PHASE-ZERO-COMMITS-NOTHING": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:349  ## 5. Phase 0 — spikes (no commits; a red spike rewrites the decision here first)",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:836  ### Wave 0 — spike findings (2026-07-07, no tree changes)",
-              "legacy-spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md:118  Crate disposition (corrected by the Phase 0 topology spike): the FOUR",
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:170  ### C0 — spike: the harvest, and a control on the mechanism {#c0}",
-              "DRIFT, carrying the verdict of the rule it summarises. Neither live campaign has a Phase 0, and two of the five archived ones committed from theirs. The red-spike half of this summary IS confirmed separately and richly — two archived plans record a decision rewritten in place by a Phase 0 finding before the affected wave was authored — but a summary that states both as holding is drift on the first."
+              "the Phase 0 sections are retrospective records of the pre-commit state, in both plans; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30843,16 +30743,11 @@
             ]
           },
           "SUM-ANY-BOUNDARY-IS-A-SAFE-STOP": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:41  any phase is a safe stop; the floor must be green at every phase boundary._",
-              "legacy-spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md:219  Each phase ends floor-green; each is a safe stop.",
-              "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1287    tree conform-red for twenty minutes. **The floor ends the phase green with",
-              "legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:712  - Close panel: self-check 22 steps exit 0; corpus 9/9 (cold 2 538 ms,",
-              "DRIFT, same measurement as the law it summarises: declared in 12 of 25 archived plans and in neither live plan. The floor half is separately sound — the rule was enforced once against a real red in wave 1's LOG, where a commit left the tree conform-red for twenty minutes and the phase closed only once the floor was green with the override route explicitly refused."
+              "the safe-stop sections instantiate the summary claim in both plans; the host's two plans came into line 2026-07-31 under the owner's ruling ('4 - сделай'): six flow forms landed in each (Phase 0, safe stop, non-goals, risks, commit map, runnable acceptance), the live status line refreshed to PHASE D IN FLIGHT, §8 names the zone deferrals ledger; harvest d10-campaign-plans-forms.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -30900,7 +30795,7 @@
           }
         },
         "verified_at": "2026-07-28T21:35:13Z",
-        "verify_batch": "W4 + D6"
+        "verify_batch": "W4 + D6 + D10-plans"
       }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/README.md": {

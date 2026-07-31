@@ -319,6 +319,21 @@ already written from it is the specification of the work.)*
   **157 → 7**; the `fractality` specspace **34 → 14**; this campaign's own
   records **15 → 8**. The practice is adopted at roughly **41 %** in the sibling
   project and **4.6 %** in the host's PROP/FEAT tree. Counted 2026-07-31.
+- ##B007-CENSUS-CORRECTION **The sibling-adoption premise is withdrawn — corrected the same day
+  by the D10 proposal pass.** The fractality «14 complete records» are, by file,
+  **8 files carrying all four fields, all 8 vendored copies of the
+  `decision-records` flow's own template, protocol, boot snippet and worked
+  examples** (under `*/vibedeps/flow-decision-records/` and
+  `flow-comparative-research/`, ×2 vendoring packages) — **0 authored**; the
+  specspace's own authored decision blocks are 9, in a three-label dialect,
+  none complete. So the honest comparison is «nobody authors the four-field
+  form anywhere except this campaign's own plans», and the question is again
+  *whether to adopt*, not «why is the PROP tree the outlier». Full measurement
+  and the four costed options:
+  `campaigns/packages-2026-09/harvest/d10-adr-genre-proposal.md`; the
+  campaign's recommendation there is **B + A′** (four-field inside the owning
+  section, forward-only, backfill only `spec/common/`, close `spec/decisions/`
+  explicitly in the genre table).
 - ##B007-WHY-IT-IS-A-QUESTION-NOT-A-TASK **Why it is a question and not a task.** «Add the missing fields to
   153 sections» is the wrong shape twice over. Most of those decisions are not
   reopenable, so a revisit condition on them would be ceremony; and the four-field
@@ -384,6 +399,28 @@ already written from it is the specification of the work.)*
   `origin` only; the mirrors drift until someone runs the fan-out by hand, and
   `mirror --check`'s equality probe (B-005) then reports the *targets* as
   drifted — two filed defects compounding into one confusing red panel.
+
+### B-010 — a check verb that writes, and a `--campaign` flag that selects state rather than scope {#b-010}
+
+| | |
+|---|---|
+| ##B010-ANCHOR **anchor** | none — found by a delegated run, not against a marked fact; the nearest law is `tool-design-lessons`' read-verbs-do-not-mutate genre |
+| ##B010-LOCATOR **locator** | `vibe progress check --exhaustive --campaign <zone>` — rewrites the named zone's `run/cache.json` / `state/campaign.json` / `state/corpus.json` (observed: +4 962 lines in the closed wave-1 zone's cache, plus a re-scope of the live zone's corpus), because `--campaign` selects the **state zone to write**, not the perimeter to read |
+| ##B010-SEVERITY **severity** | P2 |
+| ##B010-DISPOSITION **disposition** | `open` |
+| ##B010-FILED **filed by** | the packages-actualization campaign, D10 pass, 2026-07-31 — a drafting worker pointed the check at the closed `progress-2026-08` zone expecting a read; the boss restored all six files from HEAD, loss-free |
+
+- ##B010-WHY-IT-BITES **Why it bites.** A verb named `check` reads as read-only, and the flag
+  named `--campaign` reads as «over this campaign's perimeter»; together they
+  silently rewrite a **closed** campaign's frozen state. `ZONE-LIFETIMES` calls
+  a closed zone's `run/` throwaway, so nothing broke here — but the same
+  combination pointed at a **live** zone during another session's merge window
+  would race its cache.
+- ##B010-THE-FIX-SHAPE **The fix shape, for Phase E.** Either `check` becomes read-only
+  (scan state moves behind an explicit `--write-state`), or its help says in the
+  first line that it warms the zone's cache; and `--campaign`'s help says it
+  selects the state zone. One of the two — a check that quietly writes is how a
+  frozen zone stops being frozen.
 
 ## P3 — accepted, no action planned {#p3}
 

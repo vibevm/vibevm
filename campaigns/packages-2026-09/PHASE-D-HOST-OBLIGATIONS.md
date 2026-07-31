@@ -167,13 +167,19 @@ host adopts the practice* before anyone writes a hundred-odd records.
 > | `campaigns/` — *this campaign's own records* | 15 | **8** |
 > | **the `fractality` specspace** | 34 | **14** |
 >
-> **The practice is adopted, and adopted well, in the sibling project: 14 of 34,
-> about 41 %,** against roughly 4.6 % in the host's PROP/FEAT tree. It is also
-> the form this campaign itself writes — every `Decision` / `Why` / `Considered
-> and rejected` / `Revisit when` block in the batch plan is one. So the honest
-> statement is not «the host does not do this». It is: **the host does it
-> wherever it plans work, and does not do it in the document genre where the
-> reopenable choices actually live.**
+> ~~**The practice is adopted, and adopted well, in the sibling project: 14 of 34,
+> about 41 %,**~~ **— withdrawn 2026-07-31 by the D10 proposal pass:** the
+> fractality «complete records» are all **vendored copies of the
+> `decision-records` flow's own template, protocol and worked examples** (by
+> file: 8 carriers of the four fields, 8 vendored, 0 authored; the specspace's
+> own authored blocks are 9, three-label dialect, none complete). What survives:
+> the form is authored **only by this campaign's own plans** — every `Decision`
+> / `Why` / `Considered and rejected` / `Revisit when` block in the batch plan
+> is one — so the honest statement is: **nobody in this tree authors the
+> four-field form except where this campaign plans work**, and the ruling this
+> section asks for is again *whether the host adopts the practice*. The costed
+> options and the campaign's recommendation (**B + A′**) are in
+> [`harvest/d10-adr-genre-proposal.md`](harvest/d10-adr-genre-proposal.md).
 >
 > That is a smaller and better-posed decision than «adopt a practice». It asks
 > which PROP/FEAT decisions are genuinely reopenable — almost certainly far
