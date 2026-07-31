@@ -7,7 +7,8 @@ designers* — anyone defining a namespace for packages, plugins,
 extensions, or artifacts. @impl/done
 
 ##IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE It is a design discipline, not a runtime
-rule: read it once while shaping identifiers, not on every session. @impl/done
+rule: it binds the moment an identifier is minted, not every edit that
+uses one. @impl/done
 
 ## When this applies {#when}
 

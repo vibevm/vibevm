@@ -61,8 +61,11 @@ boot snippet. @impl/done
 - ##COMPOSES-TWO-PROCESS-MODEL `flow:two-process-model` — establishes the four IPC requirements
   on shared files; addressability is the first of them, and this
   package is its full elaboration. @impl/done
-- ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — commit bodies cite `spec://` URIs; this
-  package defines what those URIs resolve to. @impl/done
+- ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — one commit, one logical idea, so a spec
+  change and the code that satisfies it land as one citable unit. The
+  rule that commit bodies cite `spec://` URIs is the sibling
+  `flow:git-conventional-commits`', which owns the message *format*;
+  this package defines what those URIs resolve to. @impl/done
 - ##COMPOSES-CONFLICT-PROTOCOL `flow:conflict-protocol` — corrections and REVIEW markers cite the
   violated anchor rather than paraphrasing it. @impl/done
 - ##COMPOSES-WAL `flow:wal` — WAL Constraints and next-step pointers cite anchors,
