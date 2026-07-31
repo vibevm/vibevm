@@ -2,7 +2,7 @@
 
 <status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase A open"/>
 
-**status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
+**status: RATIFIED 2026-07-26 · PHASE D IN FLIGHT (A+B closed 2026-07-27, C closed 2026-07-29; status refreshed 2026-07-31) · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -215,7 +215,149 @@ and A1 and A4 change phases that follow, so read them before opening C.**
   checkpoint cheaply — a crash or a long gap should cost O(delta), which is the
   entire argument §7.5 makes for keeping the artifact at all.
 
+## 4.6 Safe stop — where this campaign can halt losing nothing {#safe-stop}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##ANY-PHASE-BOUNDARY-IS-A-SAFE-STOP` asks every plan to
+say where it can be put down, and this plan said it nowhere. Unlike the
+retrospective sections of wave 1's plan, **this one is forward-binding**: a
+session that stops anywhere not named here has left work in a state the next
+session has to reconstruct.*
+
+**Four grains, from finest to coarsest, and all four hold.**
+
+1. **The step** — mark-file, verify-unit, close-obligation, execute-task —
+   journalled `step-start` before and `step-done` after, per wave 1's §4, which
+   this campaign inherits unchanged. Step closed ⇒ its edits stand; step open ⇒
+   `git restore` its files and redo it. **Maximum loss on any crash: one step.**
+2. **The obligation closure** (Phase D's own unit). A closure is *edit the
+   document* **and** *re-judge every anchor in its `anchors` list* through
+   `merge-verdicts.py --force`, then `vibe progress seal`. Done in that order,
+   the registry regenerates from the cache and shrinks by exactly that many
+   rows, and stopping between closures loses nothing — `drift-registry.py` reads
+   the true remainder whatever a session remembered.
+3. **The wave** (d1 … d9). The reviewable unit: a wave ends when every document
+   with an open incoming obligation has been through a SPEC task, the registry
+   is regenerated with `--write`, and the LOG entry is written **at the
+   boundary**. This is the natural place to hand the campaign to a fresh
+   session.
+4. **The phase boundary.** The full gate panel green — `bash tools/self-check.sh`
+   → 0 — **and** `progress check --exhaustive` at 0 over **both** corpora,
+   because wave 2 does not un-measure wave 1 and the two share one gate.
+
+**What a stop at each phase boundary leaves:**
+
+| Stopped after | The tree holds | What is owed |
+|---|---|---|
+| **A** | the widened scope, the campaign zone, three pilot packages marked, and the caret fix that made fact-grain edges exist (1 041 → 5 267 units, 0 → 65 fact-targeting edges) | nothing judged; nothing published |
+| **B** | markers only, over 308 files. **No semantic edits by the phase's own law** — a semantic problem found became a finding, not a diff | nothing; the pass is purely additive |
+| **C** | **11 346 verdicts, zero owed**, each backed by evidence resolving to a real line in a real file; `baseline.json` written | nothing — Phase C edits no document; a verdict lives in the cache |
+| **D** | every drift verdict re-judged or recorded in `run/state/routing.json` as routed out of the package; every survivor carrying an owner ruling | the owner's queue — release, sync-from-code and which-side rulings, named in `PHASE-D-HOST-OBLIGATIONS.md` |
+| **T, F, G** | not yet reached | — |
+
+**Five things that are NOT safe stops.** Each fired at least once, and each is
+listed with the instance rather than as a caution:
+
+- **A closure that edited the document and did not re-judge its anchors.** The
+  registry then reads the obligation as open while the defect is gone, and the
+  next wave re-derives an answer that already exists. *Fired 2026-07-31:* the
+  registry snapshot on disk was **two waves stale and read as open work**
+  (`f2b11b0a`). *The rule that follows:* the registry is generated, never
+  hand-edited; the file is a cache and the command is the number.
+- **A batch whose verdicts are merged but not sealed.** `merge-verdicts.py`
+  refuses to restate a verdict without `--force` by design, and that refusal has
+  already caught real mistakes — a session that stops before sealing leaves the
+  refusal armed against its own successor.
+- **A closure that changed a document's anchor set without running
+  `vibe progress mirror` first.** `merge-verdicts.py`'s `addressable()` reads
+  `run/mirror/` and will refuse anchors the mirror has not seen.
+- **A false `confirmed` "repaired" by editing the document.** The verdict-first
+  rule: re-judge it **`drift` first**, let the registry mint the obligation and
+  assign its route, and only then close it. *First live test, 2026-07-31,* and
+  it paid immediately: the Go GUIDE's `gated_packages` clustered to F-166 on
+  **the owner's sync route**, so its two-word swap now waits in the sync queue
+  instead of having landed as an unapproved diff. *Editing first and judging
+  afterwards is how a boss-route edit lands on an owner-route anchor.*
+- **A wind-down that rewrites the files a finished batch cites.** *Fired
+  2026-07-28:* W2's four evidence tables were verified clean at 3 unresolvable
+  and re-read **65** at the next session's open — `CONTINUE.md` was overwritten
+  wholesale and `spec/WAL.md`'s `_Updated:` line rewritten *after* the tables
+  were returned and committed. Not one of the 62 was a fiction, and nobody was
+  left who could re-anchor them. **The durable-citation rule exists for exactly
+  this**, and the controlled experiment is on record: the one batch written
+  before the rule carries 116 dead refs today, and every batch written under it
+  verifies clean.
+
+**Where autonomy ends, so a stop is never a guess** (from the Phase D batch
+plan §5, unchanged): a `reality-mismatch` closed through sync-from-code needs
+**the owner's approval on each spec diff**; a release event goes to the owner
+**before publication**; and Rule 4's red lines bind identically whether the boss
+does the work or delegates it. **A finding is not a reason to stop** — it opens
+an obligation and the wave continues.
+
 ## 5. Phases {#phases}
+
+### Phase 0 — what stood before Phase A (recorded retrospectively) {#phase-zero}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER`
+asks every campaign to open with a no-commit phase, and this one had none.
+**No Phase 0 ran.** Written after Phase C closed, so it is a record — of what
+stood before Phase A, of what did Phase 0's job under another name, and of the
+one thing a real Phase 0 would have spiked that nobody did.*
+
+**The tree before Phase A** (§1's baseline, verified 2026-07-25): **37 packages,
+294 `.md` files, 28 733 lines** across two namespaces — `org.vibevm.world` 27
+packages / 154 files / 17 104 lines, prompt-only, no crates; `org.vibevm.ai-native`
+10 / 140 / 11 629, seven of them carrying `crates/`. **Marker state: zero** —
+`grep -rl "<status " packages/` returned nothing, so wave 2 started from nothing
+exactly as wave 1 did. The wave-1 machinery already existed and was proven on 58
+files and 4 486 units; `progress.toml` was scoped to the host tree alone. Largest
+single package: `core-ai-native` at 56 files, bigger than a third of the host
+corpus on its own.
+
+**What did Phase 0's job.** Phase A step 1, and it behaved as the law asks —
+three of §1's own numbers fell before Phase B committed a marker, and all three
+were corrected **in place** rather than noted for later:
+
+| §1 said | measured at A step 1 | why |
+|---|---|---|
+| 294 files | **286 observable** | eight extractor test fixtures, dropped by `DEFAULT_EXCLUDES` — correctly, since one of each pair is deliberately malformed and marking it would be marking a lie |
+| 247 `specmark::scope!` sites | **703** (781 with the superseded slot) | 247 was the **rust family alone**; the join target Phase C verifies against is ~3× what the plan budgeted for, and Phase C's cost scales with it |
+| eight packages carry `crates/` | **seven** | `core-ai-native` plus the `-lang` and `-mcp` member of each of the three language families; the three bare umbrellas carry none, which is what makes them the aggregator genre |
+
+Observed total at A step 1: **344 files** (58 host + 286 packages), **13 916
+facts**, of which **8 997 unmarked**; `progress check` **0** across both corpora.
+*A plan's own numbers are the first thing a campaign about unmeasured numbers
+should re-measure*, and this one did — one phase late, but before anything
+landed.
+
+**The one spike that was owed and never run.** §5-A step 2 was written as a
+release: *"Re-mint `rust-ai-native-lang` (and its typescript / go siblings) at
+v0.8.0 … publish, bump the host lockfile"*, and §6's prediction 4 named it **the
+single longest-lead item** in the campaign. It was not a release. **The blocker
+was a caret**: all three `-lang` stacks required `core-ai-native '^0.7'`, and on
+a 0.x version that caret means `>=0.7.0 <0.8.0` — it excluded the very version
+everything needed, which is why the lockfile pinned 0.7.0. The fix was three
+pins to `^0.8`, three `sync-engines.toml` source roots to v0.8.0, and a
+re-vendor: **no new version slot and no publication.** Measured before and
+after: **1 041 → 5 267 spec units; fact-targeting edges 0 → 65; unresolved
+77 → 12**, because 65 of those "dangling" edges were correct code tags the
+unit-grain engine could not see.
+
+*One command in a Phase 0 would have found the caret*, and prediction 4 would
+then have been posed against the real work instead of against a release that
+never had to happen. The residue is recorded in §5-A step 2 and is still the
+owner's: whether the `-lang` slots should eventually be re-minted so a v0.7.0
+slot stops carrying 0.8.0 engines.
+
+**The corpus kept moving after Phase B opened**, which a Phase 0 would also have
+settled: **344 → 308** (DRIFT-024 removed 33 `LICENSE.md` by a file-name default
+and three derived `cards/INDEX.md` indexes) **→ 259 at Phase C's gate**, as the
+superseded version slots, the legacy language projections, the book and the
+discovery prompt each left on their own owner ruling and their own reason. Every
+removal is defensible and every one was decided mid-flight; the phase that
+exists to settle a denominator before anyone counts against it is Phase 0.
 
 ### Phase A — Scope and the fact-grain prerequisite {#phase-a}
 
@@ -440,6 +582,133 @@ command that would have tested it.
    compared one spec document with another carrying the same error.
    **Tested by:** Phase D's exit gate re-reading every `Shipped:` claim it
    authored against the code, not against the claim.
+
+## 6.5 Non-goals (named, with disposition) {#non-goals}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE` asks a plan
+to name what it deliberately does not do, and this plan named it nowhere. Every
+line below is a boundary this campaign is holding **today** — most of them owner
+rulings recorded in §7 — and each carries its reason and its disposition per
+`##EVERY-NON-GOAL-CARRIES-A-REASON-AND-A-DISPOSITION`. Wave 1's lesson is why
+this is worth the page: the two boundaries it held without ever naming (the
+judgment axis, the doc trees) are exactly the two that cost it a phase.*
+
+- **Does NOT re-measure wave 1.** *Reason:* the host's 58 files stay in scope
+  and their verdicts stand; the two corpora share one `progress check` gate that
+  must stay at 0. *Disposition:* settled; §4's scope config.
+- **Does NOT touch `packages/org.vibevm.fractality/**`.** *Reason:* its own
+  specspace, own boot contract, own WAL. *Disposition:* held by the owner —
+  **with a consequence this campaign has already paid.** Wave 6 proved the
+  perimeter blind to a **second adopter of the discipline living inside
+  `packages/`**, and half that wave's claimed absences were blind to it. The
+  exclusion stands; the rule that now stands with it is that a claimed absence
+  is measured over the whole tree before it becomes an obligation.
+- **Does NOT mark `vibedeps/**`.** *Reason:* regenerated consumer copies of the
+  same packages — marking a copy is marking nothing. *Disposition:* rejected
+  outright.
+- **Does NOT verify superseded version slots.** *Reason:* §3.3 — a superseded
+  slot is marked, never verified; verifying frozen history costs what a live
+  contract costs and buys nothing. *Disposition:* rejected; `core-ai-native`
+  v0.7.0 and `redbook` v0.1.0 left the corpus by exclusion because
+  `--exhaustive` cannot express "marked, never verified" (33 files, 1 908 facts
+  — 23 % of Phase B's whole workload, on text nothing resolves to).
+- **Does NOT admit the book, the legacy language projections, or the discovery
+  prompt.** *Reason, and it is the same reason three times and is **not** size:*
+  every marker earns a verdict, and `confirmed` has no meaning applied to a
+  paragraph of philosophical prose, to a frozen guide nothing cites, or to a
+  line of a prompt addressed to another model. *Disposition:* owner rulings
+  F-091 («исключи spec/book/**»), F-080 («legacy-projections — это замороженная
+  история») and F-096. **The line this draws:** every document that makes a
+  claim *about* the artifact stays observed — README, boot snippet, `usage.md`;
+  only the payload leaves, and it leaves because it asserts nothing this project
+  could be wrong about.
+- **Does NOT soften a package to close an obligation.** *Reason:* it is the one
+  answer §3.6 forbids and precisely the *профанация* §0's mandate names — the
+  credibility loop cannot be closed by lowering the bar it measures.
+  *Disposition:* rejected outright; and mechanically enforced, since a closure
+  that does not move the registry did not happen.
+- **Does NOT publish.** *Reason:* Rule 4 red line. *Disposition:* the release
+  route's obligations wait for the owner, before publication, every time.
+- **Does NOT use fractality.** *Reason:* the wave-1 owner decision carries over.
+  *Disposition:* held by the owner, **with one recorded exception** — Phase T's
+  swarm of the running harness's own subagents, ruled by the owner 2026-07-26
+  and recorded rather than assumed.
+- **Does NOT re-mint the `-lang` version slots.** *Reason:* called off at Phase A
+  step 2 — the blocker was a caret, not a release, and the fix needed no new
+  slot and no publication. *Disposition:* still outstanding and still the
+  owner's; §5-A step 2 keeps the diagnosis for the day it is taken up, including
+  the three things that must be settled first (publication is a Rule 4 red line;
+  the host resolves these packages from a second, stale working copy; the
+  network registries 401 on this machine).
+
+## 6.6 Risks and fallbacks {#risks}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B`
+asks every plan to name its risks with a detection signal and a plan B, and this
+plan named none. Every risk below has **already fired at least once** in this
+campaign — which is what makes each detection signal real rather than
+aspirational — and every one is still live for the phases that remain.
+`##A-RISK-WITHOUT-A-FALLBACK-IS-A-WISH`.*
+
+- **R1 — the campaign is inside its own corpus.** This campaign writes findings
+  into `campaigns/**`, into this file's §7 LOG and into harvest files — all
+  inside the tree it measures — so a grep for the very term a finding is about
+  matches the finding. *Fired three times in two waves*, most sharply as a
+  host-live count of `campaign-plans` sections that showed one hit for **every**
+  form, every hit inside this plan, matching only because the LOG entry written
+  the day before quoted those words in prose. *Detection:* every count over
+  `spec/terraforms/` or `campaigns/` names its perimeter in the sentence that
+  reports it. *Fallback:* exclude `campaigns/*/run/**` by default and report both
+  numbers — with and without the campaign's own records.
+- **R2 — a package-scoped search reads every successful adoption as an
+  absence.** *Fired:* wave 5, where **18 claimed absences were false and 17
+  fell**; and again in wave 6's mirror image, where the perimeter omitted a
+  second adopter of the discipline. *Detection:* §3.7 and its mirror; every
+  claimed absence is re-verified over the whole tree before it becomes an
+  obligation. *Fallback:* the re-verification is the wave, not an add-on to it —
+  a wave that only closes obligations and never re-tests its own premises is
+  half a wave.
+- **R3 — a false `confirmed` cannot be repaired by editing the document.**
+  Editing first and judging afterwards produces a diff on an anchor whose route
+  may be the owner's. *Detection:* the verdict-first rule — re-judge `drift`
+  first, let the registry mint the obligation and assign its route. *Fallback,
+  proven in its first live test on 2026-07-31:* the Go GUIDE's `gated_packages`
+  clustered to F-166 on the owner's sync route and now waits in the sync queue
+  **instead of landing as an unapproved diff**.
+- **R4 — the exit gate depends on rulings only the owner can give.** Measured at
+  HEAD `fffcb494`: **210 of 357 drift verdicts are routed out of the package**
+  (route b / owner) and only 147 still owe a package repair; the release route
+  alone is 10 obligations over 41 drifts and cannot close without a publication,
+  which is a Rule 4 red line. *Detection:* `tasks/drift-registry.py`'s route
+  table and CONVERGENCE block. *Fallback:*
+  [`campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md`](../../campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md)
+  — the survivors become **owner-ruled deferrals rather than silence**, which is
+  the only reading of the exit gate that is not a stall.
+- **R5 — a generated artifact quoted from disk goes stale and reads as open
+  work.** *Fired 2026-07-31:* the registry snapshot on disk was two waves stale.
+  *Detection:* the registry regenerates from the verdict cache; a figure that
+  disagrees with `drift-registry.py` is the file's fault, never the cache's.
+  *Fallback:* regenerate before quoting — the generated file is a cache and the
+  command is the number.
+- **R6 — the address family cannot close by editing a package.** It needs a
+  publication; the host resolves these packages from a **second, stale working
+  copy**; and the network registries 401 on this machine. *Detection:* recorded
+  at wave 6 — no address obligation closes without publication, on any route.
+  *Fallback:* a local repoint plus a lockfile bump very likely avoids publishing
+  altogether, since publication is only needed for external consumers — and that
+  is the owner's call, not the executor's.
+- **R7 — softening a package to close an obligation.** The failure mode with no
+  natural detector, because it looks exactly like progress. *Detection,
+  mechanical:* a closure re-judges its anchors through `merge-verdicts.py
+  --force` and the registry shrinks by exactly that many rows, so **a closure
+  that does not move the registry did not happen** — and `summary.py`'s drift
+  count must fall by exactly the number of verdicts the wave's obligations
+  carried, with the arithmetic shown. *Fallback:* §3.6's three legitimate
+  answers (the host adopts, the host records a deliberate exception, the
+  obligation is deferred with the reason on record) — and "edit the package
+  until the finding goes away" is not among them.
 
 ## 7. LOG {#log}
 
@@ -3759,9 +4028,168 @@ command that would have tested it.
   **no open design choice** — every remaining correction is drafted final
   (d8b + d9), and the owner's queue is the whole remainder.
 
+- **2026-07-31 · D10 — the host adopts the campaign-plans practice, and the
+  ADR census premise is withdrawn by its own proposal.** Under the owner's
+  «сделай»: **both plans gained the six flow forms** (Phase 0 · safe stop ·
+  non-goals · risks · commit map · runnable acceptance — 12 blocks, 878 lines,
+  drafted by a delegated pass and boss-reviewed with the commit-map hashes
+  sampled against `git log`), the live status line was refreshed from the
+  three-phases-stale «PHASE A OPEN», and §8 now names the zone deferrals
+  ledger it had contradicted. **21 of the 29 routed `campaign-plans` anchors
+  re-judged `confirmed`** — the worked `##COLD-A-LITERAL-QUICK-START-BLOCK`
+  precedent at scale: the rule sound, the host now keeping it, no package
+  edit. The 8 held back are honest: two at-close triggers, two status-block
+  rows, the ledger-honesty pair, the standing-obligations summary, and
+  «counts that reconcile» — blocked by the acceptance's own catch that
+  `progress check` sees 260 files where `summary.py` sums 259. Registry
+  **148 obligations / 336 drifts**; corpus **10 966 / 336 / 44 — 96.7 %**.
+
+  **The B-007 proposal landed and withdrew the census's premise.** The
+  fractality «14 complete records, ~41 % adoption» are — by file — **8
+  carriers, all 8 vendored copies of the `decision-records` flow's own
+  template, protocol and worked examples; 0 authored** (the specspace's own
+  blocks: 9, three-label dialect, none complete). So nobody in this tree
+  authors the four-field form except this campaign's own plans, the question
+  is again *whether to adopt*, and the costed options with the campaign's
+  recommendation (**B + A′**: four-field inside the owning section,
+  forward-only, backfill `spec/common/` only, `spec/decisions/` closed
+  explicitly) are in `harvest/d10-adr-genre-proposal.md` for the owner.
+
+  **Two instrument findings, both filed.** `vibe progress check --exhaustive
+  --campaign <zone>` **writes** the named zone's scan state — a delegated
+  pass pointed it at the closed wave-1 zone and rewrote six state files
+  (+4 962 lines in its cache), restored loss-free from HEAD; filed **B-010**
+  (a check verb that writes, and a `--campaign` flag that selects state
+  rather than scope). And `merge-verdicts.py` issued its fourth useful
+  refusal class: 11 anchors filed under intuited documents were rejected
+  with «not an addressable anchor of this file» — the slice was rebuilt from
+  `routing.json`'s true paths and merged 21/21.
+
+### 7.1 Commit map — hashes bound to phases {#commit-map}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##EACH-EXECUTED-PHASE-GETS-A-LEDGER-SECTION` and
+`##THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS` ask each phase for a commit
+map, and this plan carried none — §7 above records what happened, at length, and
+binds it to no hash. The A/B/C entries are reconstructed at Phase D and say so;
+`##THE-MAP-IS-WRITTEN-AT-THE-BOUNDARY-NOT-AT-CLOSE` is the rule they miss, and
+**from Phase D's close onward this section is written at the boundary**, which
+is the whole reason it exists rather than waiting for close-out.*
+
+**Deviation from `##ONE-ENTRY-PER-COMMIT`, stated rather than silent:** 336
+commits is past the grain where one entry per commit informs anyone. Each phase
+gets its range, its count, its landmark commits and its verdict; the perimeter
+command gives the rest.
+
+**Perimeter, so the counts are reproducible.** Measured at HEAD `fffcb494`:
+
+    git log --reverse --format='%h %ad %s' --date=short -- \
+      campaigns/packages-2026-09 spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md
+
+**336 commits**, `3aa8295e` (plan authored, 2026-07-25) → `fffcb494`
+(2026-07-31), the campaign still open. Over the same span the repository as a
+whole took **462** commits (`git rev-list --count 3aa8295e^..HEAD`), so roughly
+**seven commits in ten in this repository since 2026-07-25 are this campaign's**.
+
+#### Phase A and Phase B — EXECUTED 2026-07-26/27; 124 commits {#cm-ab}
+
+Preceded by three plan commits: `3aa8295e` author wave 2 · `f723e430` reviewed
+against what wave 1 cost · `6ad264da` ratified with all six §4.5 amendments.
+
+`6ad264da`..`fc731127`. **A and B are not separable in this chain, and drawing a
+cut would be a fiction**: A's step 2 was deferred by owner ruling («не
+перевыпускай пакет, сделаем это потом») and closed later by the version sweep,
+so the two phases overlap by construction. Landmarks: `30728dd7` wave 2 opens,
+the packages join the observed tree · `27336263` the engine re-mint is deferred
+· `3c87cd11` the pilot confirms prediction 2 · `b3ada517` the pilot marks the
+aggregator · `fc1782d8` one live zone, wave 2 takes the host corpus's verdicts ·
+`56172a8f` Phase B closes at zero · `fc731127` the phase boundary's baseline.
+
+*Confirmed:* **prediction 2** — the aggregator genre needed a grammar amendment,
+and the pilot fired it early exactly as §6 said it would. *Falsified in place:*
+three of §1's own numbers (294 → 286 observable, 247 → 703 specmark sites,
+eight → seven crate-bearing packages). *Falsified about itself:* §5-A step 2's
+premise — the blocker was a caret, not a release. *Gate at the boundary:*
+`progress check` 0 across both corpora; `baseline.json` written per **A6**.
+
+#### Phase C — EXECUTED 2026-07-28/29; 146 commits {#cm-c}
+
+`fc731127`..`ef40a1ce`. Opens `0dd240bd` (a kick-off that says what Phase C is
+not) and `0acc448f` (the batch plan); `c9ae2066` gives the zone the journal it
+had run a phase without; `a90cc387` C0. `ai-native` cluster: `38f9816c` C1 ·
+`76c6a142` C2 · `6702441a` C3 · `106e09c5` C6 · `bf679a1c` C7 · `6d82b5cf` the
+cluster closes at 80 of 80 files. `world` cluster: `d0d17e9e` W1 407 ·
+`582f603e` W2 692 · `c75f4216` W3 615 · `0f4d9c94` W4 564 · `0d20fffc` W5 697 ·
+`a6436a80` W6 572 · `7c674c18` **PHASE C CLOSES** (W7 603 + qualified-naming's
+last 190 anchors) · `ef40a1ce` the exit gate — summary, count, baseline.
+
+*Measured:* **10 700 confirmed / 601 drift / 45 unverifiable = 11 346, 94.3 %**
+— by zone, `host` 99.9 %, `ai-native` 91.6 %, `world` 90.0 %. **6 847 / 6 847
+anchors, zero owed.** *Falsified:* **prediction 1** — `world` was predicted to
+measure *higher* than `ai-native` and measured **lower** (90.0 % against 91.6 %),
+and the plan said in advance that an inversion would be worth a finding of its
+own. *Confirmed by amendment:* **A2**'s self-referential count is real and small
+— 248 of the world zone's 4 150 verdicts rest on source 1 alone, **6.0 %**.
+*Method that made it hold:* the per-file slice as the unit of work, and two
+instruments that refuse rather than guess (`make-slice.py`, `merge-verdicts.py`).
+
+#### Phase D — IN FLIGHT since 2026-07-29; 63 commits so far {#cm-d}
+
+`ef40a1ce`..HEAD `fffcb494`. Opens `6072033a` (601 drifts become 228
+obligations, by a script that says how) and `33bd5b1e`. Landmarks: `d7803b97`
+the routing record, without which the phase cannot converge · `8b7f240f` what
+the host owes — the other half of the exit gate · `4206c61b` waves 2–4 ·
+`b0a8b0d4` wave 5 and §3.7 · `1c1a3865` wave 6 · `3dab12a3` wave 7 closes ·
+`3c14d6af` wave 8 · `91ebf1fd` the D9 rulings · `fffcb494` the rulings of
+2026-07-31 and the publication runbook.
+
+*Falsified at the opening, and it killed the obvious plan:* drifts were expected
+to cluster by reason text; measured, only **16 texts repeat at all over 54
+rows** and text-only clustering returns 552 groups for 601 rows — a reduction of
+1.1×. What groups them is the **subject**: one document, one kind of defect, one
+edit pass. *Falsified mid-phase, twice:* wave 5 found 18 claimed absences false;
+wave 6 found the perimeter blind to a second adopter inside `packages/`.
+*State at HEAD:* corpus **10 945 / 357 / 44 = 11 346, 96.5 %**, up from 94.3 %
+at the Phase C gate; registry **152 obligations / 357 drifts**; **210 of 357
+routed out, 147 still owed a package repair, 91 obligations with nothing left
+owed**. Reproduce with `tasks/summary.py` and `tasks/drift-registry.py`; both
+supersede every figure written here.
+
+#### Phases D-close, E, T, F, G — PLANNED; subjects spelled in advance {#cm-planned}
+
+*Not yet executed. These are the planned commit sets; the ledger binds real
+hashes to them as each phase lands, and any drift between the two is itself a
+recorded finding.*
+
+- **D close** — `feat(campaign): the routing record closes, and every survivor
+  carries an owner ruling` · `docs(campaign): phase D closes — the remainder,
+  and who owns each row` · `chore(campaign): the phase boundary's baseline`.
+- **E** — one `fix(<package>): <the drift the task closes>` per DRIFT task, each
+  whose fix touches a package's crates followed by
+  `chore(ai-native): sync-engines vendors the fix forward to every family
+  member` — the wave-2-specific obligation, or the fix ships to one consumer and
+  not the others.
+- **T** — one `test(<package>): three kinds per assertion for <cell>` per
+  packet, each packet exhibiting one test red · `docs(campaign): phase T closes
+  — measured coverage per testable assertion`.
+- **F** — `docs(campaign): the credibility report — does the discipline hold
+  itself to its own rule`. One commit, one document, and a green host floor is
+  not an answer to that question and may not be cited as one.
+- **G** — `refactor(docs): docs/ moves to docs-legacy/ under the legacy-spec
+  rule` · `feat(doc): the documentation package — cites a spec unit, never
+  restates it` · `docs(campaign): phase G closes — the two guides, and the row
+  spec-genres gained`.
+- **Close** — `docs(campaign): wave 2 closes — the REPORT against §6's six
+  predictions`.
+
 ## 8. Deferrals {#deferrals}
 
-*(empty)*
+The zone file [`campaigns/packages-2026-09/deferrals.md`](../../campaigns/packages-2026-09/deferrals.md)
+is the ledger — this section said *(empty)* while that file carried the engine
+re-mint's full record, and the D10 pass caught the disagreement (2026-07-31).
+One entry today: the `-lang` version-slot re-mint, deferred by owner ruling
+2026-07-26 and resolved locally by `vibe update --all` — kept there with the
+three conditions that bind if a real re-mint is ever taken up.
 
 ## 9. REPORT {#report}
 
@@ -3786,3 +4214,86 @@ for the phase in flight, and §7's LOG **from the end** for what the last sessio
 did. The registry is generated, never hand-edited: a closure edits the document,
 re-judges its anchors through `tasks/merge-verdicts.py --force`, seals with
 `vibe progress seal`, and the registry shrinks by exactly that many rows.
+
+## 11. Whole-campaign acceptance {#acceptance}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE`
+asks every campaign for a runnable script asserting its end state — run on a
+green floor at close, cited by the report — and this plan had none. **The
+mandate already states the criterion in words**: «this campaign is successful
+when the discipline can be shown to hold itself to its own rule». This section
+turns that sentence into commands. Steps 1–4 run today and their output is
+shown; steps 5–8 assert phases not yet executed and are written now, before
+execution, so they cannot be quietly relaxed to fit what lands.*
+
+    # 0 — the gate panel, on a green floor at close
+    bash tools/self-check.sh; echo "EXIT=$?"                          # 0
+
+    # 1 — every observed paragraph carries a marker, over BOTH corpora
+    ./target/debug/vibe.exe progress check --exhaustive \
+      --campaign campaigns/packages-2026-09
+    #   → progress check: clean (260 files, 0 warning(s))   EXIT=0
+
+    # 2 — the measured actuality, per namespace and not only in total
+    python campaigns/packages-2026-09/tasks/summary.py
+    #   → host 4496/0/3 99.9 % · ai-native 2606/72/19 96.6 %
+    #     world 3843/285/22 92.6 % (src=[1] 267, 6.4 % self-referential)
+    #     ALL  10945 / 357 / 44 = 11346, 96.5 %
+
+    # 3 — Phase D convergence, measured by the generator, never asserted
+    python campaigns/packages-2026-09/tasks/drift-registry.py
+    #   at close this must read: "drift verdicts still owed a package repair: 0"
+    #   — or every survivor carries an owner ruling in PHASE-D-HOST-OBLIGATIONS.md
+    test -s campaigns/packages-2026-09/run/state/routing.json          # the routing record
+
+    # 4 — the recurrence artifact, written at every phase close (A6)
+    test -s campaigns/packages-2026-09/baseline.json; echo "EXIT=$?"   # 0
+
+    # 5 — Phase T: coverage measured, not claimed
+    #     per-packet gate: PHASE-T-SPEC.md §10; campaign-level assertion:
+    #     every in-scope testable assertion carries >=3 tests of DISTINCT KINDS
+    #     (canonical, boundary, negative) and every packet exhibited one red.
+
+    # 6 — Phase F: the credibility report exists and answers PER PRACTICE
+    #     A green host floor is not an answer to this question and may not be
+    #     cited as one.
+
+    # 7 — Phase G: docs/ is gone, the doc package exists, and it cites
+    test ! -d docs && test -d docs-legacy
+    test -d packages/org.vibevm.doc/doc
+    #     and the law that makes it worth anything: documentation cites a spec
+    #     unit and never restates it; links run one way, docs -> spec.
+
+    # 8 — nothing evaporates
+    #     §9 REPORT carries a verdict on each of §6's six predictions, and
+    #     campaigns/packages-2026-09/deferrals.md names every leftover with an
+    #     owner and a disposition.
+
+**Three things this acceptance deliberately does not let the campaign do.**
+
+- **It does not let a green floor answer the mandate.** §5-F says so and step 6
+  repeats it, because that substitution is the exact shape of the *профанация*
+  §0 names: the host's gates are supplied *by* these packages, so citing them as
+  evidence about the packages is the argument closing on itself.
+- **It does not let the drift count reach zero by softening a package.** Step 3
+  reads the generator's CONVERGENCE block, which counts verdicts re-judged and
+  verdicts **routed out with a recorded determination** — two different numbers,
+  neither of which moves when a document is edited to agree with itself.
+- **It does not accept a total in place of a per-namespace figure.** Step 2
+  prints all three zones, because prediction 1 is a comparison between two of
+  them and a single aggregate would make it unscoreable.
+
+**Two gaps this block surfaces rather than papers over**, and both are the
+boss's to settle before it lands:
+
+- **Phase F's document has no path.** §5-F describes the report and names no
+  file, so step 6 cannot be a `test -s`. Naming it — the way `PHASE-T-SPEC.md`
+  and `PHASE-G-SPEC.md` are named from §5 — is a one-line edit and it turns the
+  campaign's own headline deliverable from prose into an assertion.
+- **The two commands disagree by one file.** `progress check` reports **260**
+  observed files; `summary.py` sums **259** with verdicts (58 + 80 + 121). One
+  file is observed and carries no verdict row, or the two count differently. It
+  is one file out of 260 and it is not a defect on its face — but an acceptance
+  script whose two steps disagree should reconcile the difference rather than
+  quote whichever number is convenient.

@@ -96,10 +96,115 @@ closed campaign may be archived or deleted; the other four entries persist.
 5. git = second echelon: batch commits make the worst disk-loss cost one
    batch, never the campaign.
 
+## 4.5 Safe stop — where wave 1 could halt losing nothing (recorded retrospectively) {#safe-stop}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##ANY-PHASE-BOUNDARY-IS-A-SAFE-STOP` asks every plan to
+say where it can be put down, and this plan said it nowhere. Written after the
+campaign closed, so it is a record of where the stops actually were — not a
+promise made in advance.*
+
+**This campaign ran on a finer grain than the law asks for.** The flow's unit is
+the phase boundary; §4's unit is the **step** — mark-file, verify-unit,
+close-obligation, execute-task — with `step-start` journalled before the work
+and `step-done` after, so the maximum loss on any crash is one step. That is
+strictly stronger, and it is why no session of this campaign ever needed the
+phase-level guarantee to recover. Both grains held; both are stated here because
+a stranger reading only §4 would think the campaign could be stopped anywhere,
+and a stranger reading only the flow would think it could be stopped only six
+times.
+
+**What a stop at each boundary would have left, so «losing nothing» is a
+statement and not a slogan:**
+
+| Stopped after | The tree holds | What is owed |
+|---|---|---|
+| **A** | the `progress-core` crate, the `vibe progress` adapter, an empty campaign zone, the dashboard, and 46 pilot markers | nothing — the spec corpus is untouched |
+| **B** | markers only, over 58 files / 4 880 facts / 4 944 markers, `check --exhaustive` at 0 | nothing — Phase B makes **no semantic edits** by its own law, and the legacy `**Status:**` lines were kept rather than deleted, so the pass is purely additive |
+| **L** | the four legacy directories relocated to root `legacy-spec/`, every gate-binding inbound reference repointed | nothing — two of the four had zero corpus inbound to begin with |
+| **C** | verdicts in the cache: 4 944 / 4 944 markers judged, 4 455 units at **93.0 %** | nothing — Phase C edits no document; a verdict lives in the cache, never in the markup |
+| **D** | 302 of 311 drift rows closed; the tree at **99.7 %** | nine ledger rows, each named |
+| **E** | the task queue drained: **4 486 confirmed / 1 drift / 3 unverifiable of 4 490 — 99.9 %** | one drift row that cannot close in this repository, and it is in `deferrals.md` with the reason |
+
+**The one boundary where the floor was not green, recorded rather than
+smoothed.** The Phase C close `self-check` went **red** on
+`cli_pkg_cycle::install_from_git_registry`. Root-caused and proven in-session: a
+`~/.vibe/registry.toml` had appeared on the machine that day, and the test
+isolates `VIBE_REGISTRY_CACHE` but **not the settings chokepoint**, so the
+global registries merged into the "hermetic" resolver and minted a second cache
+bucket; with `VIBE_SETTINGS` pointed at an empty directory the same test passes.
+The campaign's own gate (`progress check`) stayed **0** and the phase's commits
+were docs-only and unrelated. Ledgered as **F-055** and fixed in Phase E — after
+which *«the floor ends the phase green with no `VIBE_SETTINGS` override»*, F-055
+genuinely fixed rather than worked around.
+`##A-PHASE-THAT-LEAVES-THE-FLOOR-RED-IS-STILL-OPEN` is the rule this brushes,
+and the only reading under which C could close is the one the ledger states: the
+red was outside the phase's own diff, and it was proven so rather than assumed.
+
+**Two things that are NOT safe stops**, both learned at cost:
+
+- **A batch whose files are written and whose journal step is still open.** §4's
+  recovery rule is not advisory — step open ⇒ `git restore` its files and redo
+  the step. Steps are idempotent by construction precisely so this is cheap.
+- **Delegated work committed on a filled-in task journal rather than on the
+  completion notification.** Executors write the ledger as they go, so
+  committing on it captures an intermediate state; doing so once left the tree
+  conform-red for twenty minutes. Now a WAL Constraint, together with its
+  sibling: **a gate never seen to go red is not known to work.**
+
 ## 5. Phases {#phases}
 
 Each phase: entry condition → steps → exit gate (+ prediction, per the
 campaign-plan discipline). Every session inside any phase obeys §4.
+
+### Phase 0 — what stood before Phase A (recorded retrospectively) {#phase-zero}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS`
+asks every campaign to open with a phase that produces no commits, and this
+plan had none. **No Phase 0 ran.** This section records what stood before Phase
+A, what did Phase 0's job under another name, and what a real Phase 0 would
+have caught earlier — written after the fact and labelled as such, not
+back-dated into the planning prose.*
+
+**The tree before Phase A** (§1's own baseline, verified 2026-07-24, restated
+here because a Phase 0 is where a reader looks for it): Progress Control did
+not exist — no `progress-core` crate, no `vibe progress` adapter, no
+`campaigns/` zone, no dashboard — and `<status` appeared nowhere in the tree
+except PROP-043's own dogfood markers. Host `spec/`: **91 `.md` files, 26 699
+lines**. Free-form `**Status:**` lines to convert: **~55**. specmap: index live,
+**34 gated orphans** in `vibe-spec`, pre-existing. Three inline grammars the new
+markup had to avoid colliding with: `@spec://` (~17 uses), `#use` / `#embed` /
+`#source`, and `<!-- REVIEW: -->`.
+
+**What did Phase 0's job.** Phase A step 5 — the pilot — is a Phase 0 wearing a
+scaffolding phase's clothes, and it behaved exactly as the law asks: three
+documents of different genres hand-marked, **46/46 paragraphs**, one real drift
+caught (`spec/design/README`'s index was incomplete), and one placement
+ambiguity found (a document with no preamble under its H1) that **amended
+PROP-043 §3.8 in place, before Phase B committed a single marker** — the
+`##RULE-PHASE-ZERO-GATES-EVERYTHING-AFTER` shape, executed under a different
+name. It landed in `ac97f26c`. One finding arrived outside every prediction: a
+live power cut during the phase exposed a missing fsync-before-rename in
+`write_atomic`, fixed with a tolerant cache load plus tests.
+
+**What a Phase 0 would have re-measured, and did not.** Both of §1's headline
+numbers were wrong, and both were corrected only *after* Phase B had opened —
+`##PHASE-ZERO-RE-MEASURE-THE-NUMBERS` is the rule they miss:
+
+| §1 said | `scan` / B0 measured | why |
+|---|---|---|
+| 91 files | **97** | six progress-control documents were authored after the baseline froze |
+| ~55 status lines | **73** | the estimate missed the `**status:` and `**Status.**` variants |
+
+Neither cost anything, because both moved in the harmless direction. The scope
+itself then moved twice more on owner rulings — `8901cd05` dropped
+terraforms/research/neworder, `1c48019a` dropped spec/discipline — so the
+observed corpus ran **97 → 94 → 59 → 58** and the plan's own §1 denominator was
+never the one the campaign executed against. *A baseline that is not re-measured
+at the phase boundary is a number the report will have to apologise for.* Wave
+2 inherited the lesson and re-measured its own §1 at Phase A step 1, where three
+of its figures fell.
 
 ### Phase A — Scaffold {#phase-a}
 
@@ -335,6 +440,124 @@ read-only, no auth.
 5. ≥80 % of DRIFT tasks land without a returned round-trip.
 6. The month budget holds: A ≈ days, B ≈ 1–1.5 weeks, C ≈ 1 week, D ≈ 3–5
    days, E ≈ open-ended by queue, F+G ≈ 1 week overlapping E.
+
+## 8.5 Non-goals (named retrospectively) {#non-goals}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE` asks a plan
+to name what it deliberately does not do, and this plan named it nowhere. Every
+line below was a real boundary the campaign held — most of them owner rulings
+recorded in §9 — but none was written down as a non-goal at authoring time, and
+the two that ended up costing something (the judgment axis, the doc trees) are
+exactly the two that were never named. Reason and disposition on each, per
+`##EVERY-NON-GOAL-CARRIES-A-REASON-AND-A-DISPOSITION`.*
+
+- **Does NOT extend to `packages/**`.** *Reason:* one corpus at a time; the
+  method had to be proven before it was scaled. *Disposition:* **wave 2**,
+  [`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md).
+- **Does NOT touch `packages/org.vibevm.fractality/**`.** *Reason:* its own
+  specspace, own boot contract, own WAL; the mandate excluded it in as many
+  words («the fractality specspace excluded until the owner says otherwise»).
+  *Disposition:* held by the owner. *(Recorded 2026-07-31, because it turned out
+  to matter: that specspace is a **second adopter** of several flows this
+  programme measures, and a perimeter blind to it reads adoption as absence.)*
+- **Does NOT mark or verify the relocated legacy directories.** *Reason:* Phase
+  L moved terraforms / research / neworder / discipline to root `legacy-spec/`
+  as historical records, not living contracts. *Disposition:* rejected outright
+  — and reinforced by the owner's ruling of 2026-07-31 that `legacy-spec/**` is
+  not evidence of practice in either direction.
+- **Does NOT mark generated artifacts.** `spec/boot/STATIC.md`,
+  `spec/boot/INDEX.md` and `spec/WAL.md` in session form. *Reason:* markup
+  written into a generated file dies at the next `vibe install` or wind-down.
+  *Disposition:* rejected; owner rulings 2026-07-24. The *authored* boot
+  snippets (`00-core`, `90-user`) stay observed via `spec/boot/[0-9]*.md`.
+- **Does NOT edit `spec/boot/90-user.md`.** *Reason:* user-owned;
+  `00-core`'s `NOTOUCH-90-USER` forbids it to every session. *Disposition:*
+  deferred **to the owner, not to a campaign** — F-063's half was handed over in
+  full rather than edited, and closed 2026-07-26 when the owner lifted the bar.
+- **Does NOT decide what should *happen* to a fact.** Phase B marked what 4 917
+  facts **are**; nothing in any phase asked what should be **done** about them.
+  *Reason:* none was given at authoring time — this is the non-goal the campaign
+  held without ever choosing it, which is why §5-F's three views came out empty
+  (`freeze/plan` 0, `action="rework"` 0, `stage="idea"` 0). *Disposition:*
+  deferred to wave 2 as amendment **A3(i)**, the judgment-marking pass.
+- **Does NOT write the two documentation trees.** User Guide and Package Author
+  Guide. *Reason:* Phase G's definition demands harvest cards and captured runs
+  as input, and Phase C skipped the step that produces them. *Disposition:*
+  deferred to wave 2 as amendment **A3(ii)** — the Package Author Guide in
+  particular, since `packages/` is the corpus it documents.
+- **Does NOT use fractality.** *Reason:* the owner's decision, verbatim in §0,
+  deliberately overriding the standing delegation-first default for this
+  campaign's duration — «Я хочу чтобы Fable сделала максимум высокоуровневых
+  задач». *Disposition:* held by the owner; do not "optimize" it back.
+
+## 8.6 Risks and fallbacks (recorded retrospectively) {#risks}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B`
+asks every plan to name its risks with a detection signal and a plan B, and
+this plan named none. **A risk register written after the campaign is a list of
+what happened, not of what was feared**, and it is labelled as such: each row
+below fired, and each says what detected it — including the four whose honest
+answer is «nothing detected it; the next phase tripped over it». The
+`fired-and-undetected` column is the useful part of a retrospective register,
+because it is the part wave 2 turned into amendments.*
+
+- **R1 — a verdict whose evidence is another spec document.** *Fired:* F-063.
+  Five token-precedence anchors in PROP-002 were sealed `confirmed` on the
+  evidence «token loader 3-source order matches 90-user boot facts» — another
+  spec file, carrying the identical error, in a security-relevant place.
+  *Detection that existed:* **none.** Phase C's exit gate checked only that
+  every marker carried a verdict, never what the verdict rested on. *Fallback
+  taken:* wave 2's amendment **A2** — every verdict names which source class it
+  rests on, and one resting on the package's own artifacts alone is counted as
+  self-referential rather than as independent confirmation.
+- **R2 — the campaign's own corrections introduce drift.** *Fired:* F-065.
+  Phase D authored a `Shipped:` line claiming a `Baseline::store` that had never
+  been built, and the verification pass then confirmed the row on it.
+  *Detection that existed:* **none** — nothing predicted that stitching could
+  add false claims. *Fallback taken:* wave 2's **prediction 6**, which makes
+  «zero new false claims, zero of them confirmed» falsifiable, with wave 1's
+  answer on record as 1 and 1.
+- **R3 — a phase whose exit gate does not check its own steps.** *Fired:* Phase
+  C listed «harvest cards written while knowledge is hot» among its steps and
+  gated only on «100 % of markers carry verdicts». The step was skipped, it cost
+  nothing at the time, and Phase G arrived to consume an empty directory.
+  *Detection:* the downstream phase, three days late. *Fallback taken:* wave 2's
+  amendment **A1** — every exit gate enumerates that phase's own steps.
+- **R4 — a prediction no step forces you to run.** *Fired:* prediction 1. No
+  step of the plan required a `weave`, so the claim sat untested for the whole
+  campaign and was measured at close-out purely to fill the report row. *Plan B
+  taken:* wave 2's amendment **A5** — every prediction names the step that tests
+  it, or says outright that it is scored at close-out on purpose.
+- **R5 — a state projection nothing refreshes drifts silently.** *Fired:*
+  `tasks.json` sat 18 tasks stale and the dashboard read five tasks for a week;
+  `findings.json` survived only because it was maintained by hand all campaign.
+  *Detection:* none — a projection nothing refreshes and nothing checks has no
+  signal by construction. *Fallback:* the numbers of record are the ones a
+  command prints, never the ones a projection holds.
+- **R6 — a gate never seen to go red is not known to work.** *Fired:* twice,
+  favourably — two executors ran positive controls before trusting a green
+  result, and were right to. *Fallback:* now a standing WAL Constraint.
+- **R7 — session death, budget exhaustion, power loss mid-corpus.** *The one
+  risk this plan did carry a fallback for*, in §4, and it held: journal
+  `step-start` / `step-done`, torn tail discarded, maximum loss one step.
+  *Fired:* a **live power cut during Phase A**, which additionally exposed a
+  missing fsync-before-rename in `write_atomic` — fixed with a tolerant cache
+  load plus tests. *Verdict:* the crash-safety law is the one part of this plan
+  that was written in advance and needed no amendment.
+- **R8 — an un-isolated test reaches real user state.** *Fired:* F-057, filed as
+  a stray cache directory and found to be a credential-precedence leg —
+  `vibe search` resolves a GitHub token through four legs and the fourth is a
+  file in the settings directory the test could not reach, so an un-isolated run
+  attached the real publish token to its outbound request. *Detection:*
+  accidental, on the third pass — F-055, F-056 and F-057 were **one forgotten
+  discipline caught three times by accident**. *Measured, not inferred:* against
+  a loopback listener recording header names and lengths only, **47 bytes of
+  `Authorization` before the fix, none after**; exactly one test reaches that
+  path and it points `api_base` at 127.0.0.1, so the investigation closed with
+  no rotation needed. *Fallback taken:* DRIFT-020 converts the discipline into a
+  gate.
 
 ## 9. LOG (execution ledger — append per batch/wave/phase) {#log}
 
@@ -1288,6 +1511,141 @@ read-only, no auth.
   no `VIBE_SETTINGS` override** — F-055 genuinely fixed rather than worked
   around, verified again at this session's open.
 
+### 9.1 Commit map — hashes bound to phases (recorded retrospectively) {#commit-map}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##EACH-EXECUTED-PHASE-GETS-A-LEDGER-SECTION` and
+`##THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS` ask each executed phase for
+a commit map, and this plan carried none — the §9 LOG above records what
+happened, richly, and never binds it to hashes. **The flow also says the map is
+written at the boundary, not reconstructed at close
+(`##THE-MAP-IS-WRITTEN-AT-THE-BOUNDARY-NOT-AT-CLOSE`), and this one was
+reconstructed.** That is a real weakness of this table and the reason it is
+per-phase rather than per-commit: reconstruction can bind a hash to a phase
+honestly, and cannot recover what each individual commit confirmed at the
+moment it landed. The confirm/falsify column below is therefore per phase, cited
+to the LOG entry that recorded it while it was fresh.*
+
+**Deviation from `##ONE-ENTRY-PER-COMMIT`, stated rather than silent:** 139
+commits is past the grain where one entry per commit informs anyone. Each phase
+gets its range, its count, its landmark commits and its verdict; `git log` over
+the perimeter below gives the rest.
+
+**Perimeter, so the counts are reproducible.** Measured at HEAD `fffcb494`:
+
+    git log --reverse --format='%h %ad %s' --date=short -- \
+      campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md
+
+**139 commits**, `b1276c39` (plan authored, 2026-07-24) → `f5248dae`
+(2026-07-29). The zone catches the work commits as well as the bookkeeping ones
+because §3 rides the journal in the same commit as the edits it describes; the
+four Phase A commits that predate the zone are named individually below.
+
+**Campaign commit range:** `b1276c39` … `56cccca8` (close, 2026-07-26), plus one
+post-close amendment, `f5248dae`.
+
+#### Phase A — EXECUTED 2026-07-24; 8 commits {#cm-a}
+
+`9446a2cb` introduce progress-control markup contract (PROP-043) · `b1276c39`
+author the spec-actualization campaign plan v0.1 · `edd487ba` WAL checkpoint,
+scaffold phase begins · `8b181522` progress-core crate + the `vibe progress`
+adapter · `38855c00` campaign zone + the read-only dashboard · `ac97f26c` pilot
+markup of three genres + PROP-043 ratification and pilot amendments ·
+`9a69b6f6` WAL checkpoint, scaffold closed · `60100f87` ledger Phase A close-out
++ the B0 conversion ruling.
+
+*Confirmed:* the §5-A prediction — the pilot exposed placement ambiguities and
+they amended PROP-043 §3.8 before Phase B, exactly as predicted. *Found outside
+every prediction:* a live power cut exposed a missing fsync-before-rename in
+`write_atomic`. *Range in perimeter:* `b1276c39`..`60100f87` = 4 (the other four
+predate the campaign zone).
+
+#### Phase B — EXECUTED 2026-07-24/25; 60 commits {#cm-b}
+
+`60100f87`..`a1bb2111`. Opens `8d5ccc82` (the wave-1 scope config, the
+campaign's first journal step); closes `a1bb2111` (boundary — exit gate green,
+corpus fully marked). Landmarks: `2c98a1e6` B0, the 73-line status conversion ·
+`91274c89` B1, paragraph-exhaustive markup of `spec/common` · `6714876e` the
+fact-grain re-pilot · `508bbdb9` DRIFT-004, fact anchors become addressable spec
+units · `5c89839b` DRIFT-005, fact inheritance end to end · `7d9dd964` B2 batch
+26, the corpus is fully marked. Two scope rulings landed inside the phase:
+`8901cd05` and `1c48019a`. One owner amendment was recorded here and executed
+later: `c0147947`, Phase L.
+
+*Confirmed:* the exhaustive counter caught genuinely skipped paragraphs review
+alone would have missed — the wrapped prose line whose continuation opens `+ `
+parses as a phantom list item, caught twice in PROP-019 instantly. *Falsified in
+place:* §1's ~55 status lines (73 actual) and 91 files (97 scanned). *Gate at
+the boundary:* `check --exhaustive` clean over 58 files / 4 880 facts / 4 944
+markers, 0 errors 0 warnings; `self-check` all green, real exit 0.
+
+#### Phase L — EXECUTED 2026-07-25; 7 commits {#cm-l}
+
+`a1bb2111`..`15c5bb30`. `62406fe0` resolves the plan-file review point (the plan
+stays put) · `83346e78` `f8f347d8` `9514e8fb` `1ec6a27c` batches 1–4 ·
+`70f3cbdd` the legacy dirs leave the spec tree · `15c5bb30` closed.
+
+*Confirmed:* the L2 verdict — every cited fact was already corpus-resident, so
+the relocation cost the corpus nothing. `spec/neworder` and `spec/discipline`
+had **zero** corpus inbound.
+
+#### Phase C — EXECUTED 2026-07-25; 18 commits {#cm-c}
+
+`15c5bb30`..`242085d4`. Opens `bb337e90`; batches `5c5e1058` c1 · `3570cf2b` c2
+· `f2beeff4` c3a · `49d67c39` c3b · `3d237c7d` c3c · `f82582f7` LOG · `9baa7fa6`
+c3d · `baffe617` c4a · `09327502` c4b · `7392fbdd` c4c · `c325d333` c4d1 ·
+`dcfa6301` c4d2 · `74025dd9` c4e · `727f6840` c4f1 · `5aa5ba86` c4f2; closes
+`ddf7c0ca` (c4f3 + exit gate). `242085d4` records the post-gate red floor and
+its root cause (F-055).
+
+*Confirmed, mirrored:* the §5-C prediction — drift does concentrate around
+Status lines, but in the **inverse** polarity, headers promising *less* than the
+tree delivers. *Measured:* **4 455 units judged — 4 141 confirmed / 311 drift /
+3 unverifiable = 93.0 % / 7.0 % / 0.07 %**, the first measured actuality level
+of the spec tree; 58/58 files carry campaign maps, 4 944 / 4 944 markers carry
+verdicts. *Silently skipped, and it cost Phase G:* the harvest-card step.
+
+#### Phase D — EXECUTED 2026-07-25/26; 4 commits {#cm-d}
+
+`242085d4`..`f6c17f92`. `a1847b0d` opens (wave d1 — 212 of 311 rows in one
+sweep) · `3a6370bc` wave d2, the ledger empties to nine · `0064fd4a` the parity
+row that needed no ruling · `f6c17f92` d2g/d2h.
+
+*Confirmed:* prediction 4 — convergence in **two** waves against a ≤3 bound, and
+exactly two owner escalations against a ≤2 bound. *Falsified by the next phase:*
+this phase authored the `Shipped:` line for a `Baseline::store` that had never
+been built (F-065). *Mechanics worth the record:* 191 of the wave-d1 rows were
+scripted off the C-phase verdict map, dry-run first — no model touched them.
+
+#### Phase E and close-out — EXECUTED 2026-07-25/26; 45 commits {#cm-e}
+
+`f6c17f92`..`56cccca8`. **E and the close-out interleave and are not separable
+in the chain** — both ran on 2026-07-26 in the same sessions, and saying so is
+more honest than drawing a cut. Phase E opens `2ef9d854`; DRIFT-006…022 were
+opened, fourteen executed, DRIFT-015 superseded before it ran, DRIFT-020 and
+-022 left queued. Close-out landmarks: `cc3109ef` the ledger regains the entries
+D and E never wrote · `bfdbd7f5` F-065, nothing can write the baseline the
+recurrence reads · `9f7459bd` `deferrals.md` · `fa74b775` the six predictions
+scored · `eae60b3d` F and G deferred with the measurement that says why ·
+`db7186ef` the baseline gains a writer · `d3482dd7` `baseline.json` ·
+`1ea4815c` F-063 closes · `56cccca8` WAL session-end. One commit here belongs to
+the *next* campaign: `07a38e1a`, the fact-grain specmap engine — wave 2's Phase
+A step 2, which is what closes wave 1's single surviving drift row.
+
+*Measured at close:* **4 486 confirmed / 1 drift / 3 unverifiable of 4 490 —
+99.9 %**; findings 61 of 64 resolved. *Verdicts:* predictions 1–5 CONFIRMED,
+prediction 6 FALSIFIED in the favourable direction — a month of plan executed in
+three days, and the honest reading is that the estimate measured human-paced
+reading while the work was delegated batch execution.
+
+#### After close — 1 commit {#cm-post}
+
+`f5248dae` (2026-07-29) — `docs(terraforms): the plans running this campaign
+were the ones breaking its rule`. The previous `flow:campaign-plans` form to
+land under an owner ruling: §12's literal quick-start block. This section is the
+second such landing, and the ledger records both so the pattern is visible
+rather than incidental.
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
@@ -1435,3 +1793,66 @@ The campaign's own claims live in §11 REPORT, scored against §8's predictions;
 — the packages, the sibling corpus — is
 [`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md),
 and its own quick-start is that plan's §10.
+
+## 13. Whole-campaign acceptance (recorded retrospectively) {#acceptance}
+
+*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE`
+asks every campaign for a runnable script asserting its end state, run on a
+green floor at close and cited by the report, and this plan had none — §11's
+REPORT scored the predictions without one. The script below was written after
+the fact and **its numbers were re-measured at HEAD `fffcb494` on 2026-07-31**,
+not copied from the close-out. Where the two differ, both are shown: a closed
+campaign whose end state has since improved should say so rather than freeze a
+figure.*
+
+    # 1 — the gate panel. Not re-run in the pass that authored this block;
+    #     it is a multi-minute build gate and running it is the executing
+    #     session's job, not the drafter's.
+    bash tools/self-check.sh; echo "EXIT=$?"                    # 0
+
+    # 2 — every observed paragraph carries a marker
+    ./target/debug/vibe.exe progress check --exhaustive \
+      --campaign campaigns/progress-2026-08                     # clean, 0 warnings
+    #   → progress check: clean (260 files, 0 warning(s))   EXIT=0
+    #   NOTE: the check covers the whole progress.toml scope, not just this
+    #   campaign's 58 files — --campaign selects the state zone, not the
+    #   perimeter. Wave 2 shares this gate by design and it must stay at 0.
+
+    # 3 — the host corpus's measured actuality: the campaign's headline
+    python campaigns/packages-2026-09/tasks/summary.py | grep '^  host'
+    #   → host (58 files)  confi 4496  drift 0  unver 3  total 4499  99.9 %
+
+    # 4 — nothing evaporated: every leftover is a commit or a named deferral
+    grep -c '^- ' campaigns/progress-2026-08/deferrals.md       # 13, each owned
+
+    # 5 — the recurrence artifact exists, so the next run costs O(delta)
+    test -s campaigns/progress-2026-08/baseline.json; echo "EXIT=$?"   # 0
+
+**What the acceptance shows, and the one thing it cannot.**
+
+- **The end state is better than the close recorded.** At close-out
+  (2026-07-26) the ledger read **4 486 confirmed / 1 drift / 3 unverifiable of
+  4 490 — 99.9 %**. Today it reads **4 496 / 0 / 3 of 4 499 — 99.9 %**. The
+  single surviving drift row, `FACT-GRAIN-EVIDENCE`, closed exactly where
+  `deferrals.md` said it would and nowhere else: wave 2's Phase A step 2,
+  commit `07a38e1a`. The denominator moved by nine as later work minted anchors
+  in host files. *A deferral that closes where its own reasoning said it would
+  is the strongest evidence the deferrals ledger is doing its job.*
+- **Three units stay `unverifiable` and always will here.** They are
+  network-bound GitVerse legacy-registry claims; `unverifiable` was chosen over
+  "probably fine" and the choice is the point.
+- **What this script cannot assert is the mandate.** The owner asked to
+  *actualize all the specifications*; the script proves the corpus is marked,
+  judged and drift-free, and proves nothing about whether the resulting
+  documents are **useful**. §11's `{#report-gaps}` is where that gap is stated:
+  the campaign marked what 4 917 facts *are* and never what should *happen* to
+  them, so every forward-looking view came out empty. **An acceptance script
+  that passes on an empty view is telling you the view was not part of the
+  contract.**
+- **Step 3 is served by a tool that lives in the next campaign's zone.** Wave 1
+  shipped no summary tool; the number above is printed by
+  `campaigns/packages-2026-09/tasks/summary.py`, which reads the shared verdict
+  cache. That is a finding, not a convenience: a closed campaign whose headline
+  can only be reproduced by its successor's tooling is one re-run away from
+  being unmeasurable.
