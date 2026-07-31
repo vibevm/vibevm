@@ -146,3 +146,35 @@ stops — 4 of 122 go further. That is not a wording problem in the flow and it 
 not a small task; it is the single largest piece of work this phase has
 surfaced, and it belongs on the owner's desk as a decision about *whether the
 host adopts the practice* before anyone writes a hundred-odd records.
+
+> **Re-measured 2026-07-31 over the whole tree, and this reframes the question
+> from «whether to adopt» to «why the PROP tree is the outlier».** Counting
+> sections that carry a bolded `Decision` label, against those carrying all four
+> fields (`Decision` · `Why` · `Considered and rejected` · `Revisit when` /
+> `When to revisit`):
+>
+> | perimeter | Decision-labelled | all four |
+> |---|---:|---:|
+> | `spec/common` + `spec/modules` — the perimeter above | 153 | **4** |
+> | all of `spec/` | 157 | **7** |
+> | `campaigns/` — *this campaign's own records* | 15 | **8** |
+> | **the `fractality` specspace** | 34 | **14** |
+>
+> **The practice is adopted, and adopted well, in the sibling project: 14 of 34,
+> about 41 %,** against roughly 4.6 % in the host's PROP/FEAT tree. It is also
+> the form this campaign itself writes — every `Decision` / `Why` / `Considered
+> and rejected` / `Revisit when` block in the batch plan is one. So the honest
+> statement is not «the host does not do this». It is: **the host does it
+> wherever it plans work, and does not do it in the document genre where the
+> reopenable choices actually live.**
+>
+> That is a smaller and better-posed decision than «adopt a practice». It asks
+> which PROP/FEAT decisions are genuinely reopenable — almost certainly far
+> fewer than 153 — and whether the four-field form is owed to those rather than
+> to every bolded `Decision` line.
+>
+> *Counted under [`##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS`](PHASE-D-BATCH-PLAN.md#delegation-lessons):
+> 8 of the complete records are this campaign's own, which is why the
+> `campaigns/` row is broken out rather than folded into a host-wide total. A
+> figure that silently included them would have reported the host's adoption as
+> half again what it is.*
