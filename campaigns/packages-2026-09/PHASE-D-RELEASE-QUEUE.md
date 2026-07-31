@@ -173,7 +173,7 @@ The other seven are factual corrections whose only owner gate is publication.
 
 | id | n | packages | what fails |
 |---|---:|---|---|
-| `F-219` | 2 | addressable-specs, campaign-plans | the behaviour is real, the **attribution** is wrong: 515 commits cite a `spec://` URI, but the rule requiring it lives in `flow:git-conventional-commits`, not `-atomic-commits` |
+| `F-219` | 2 | addressable-specs, campaign-plans | the behaviour is real, the **attribution** is wrong: the rule requiring it lives in `flow:git-conventional-commits`, not `-atomic-commits`. *(The figure has moved: **716** commit bodies cite a `spec://` URI at HEAD, against the 515 recorded when this row was written. The finding does not rest on the count; the count is restated so it is not carried forward stale.)* |
 | `F-220` | 2 | addressable-specs, source-mirrors | the composition is specified on both sides and does not happen in the one consumer |
 | `F-233` | 2 | git-attribution-policy, source-mirrors | a composition whose point is that the choice is recorded as a decision — and in the one consumer that installs both, it is not |
 
@@ -188,8 +188,16 @@ before an edit exists to approve.
 
 `F-251` (2 verdicts, spec-genres + tool-design-lessons): «four pieces of content
 plus a boot snippet» is five things, four bullets follow, and the fourth bullet
-IS the boot snippet. 14 of 16 sibling packages say «three». A count, checkable
-against the package's own contents.
+IS the boot snippet. A count, checkable against the package's own contents —
+**and checked, 2026-07-31: both packages ship exactly three flow documents**
+(`ls …/spec/flows/<name>/*.md` → 3 each), so the sentence is wrong by one on its
+own tree and needs no host observable at all.
+
+The sibling comparison is restated because its denominator was too small. **25
+world READMEs carry a `##package-contents-lead`**; 17 of them state a number —
+**14 say «three», 2 say «four» (these two), 1 says «five»** — and the remaining
+8 use a different sentence shape («This package ships:», «What ships:») and are
+not comparable. So the row is 14 of 17 among packages that count, not 14 of 16.
 
 ---
 
