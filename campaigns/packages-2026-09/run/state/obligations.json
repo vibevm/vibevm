@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 366,
+ "drift_verdicts": 361,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -2410,6 +2410,61 @@
     "packages/org.vibevm.ai-native/go-ai-native-lang"
    ],
    "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#CONFORMANCE-IS-MADE-LOUD",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#TWO-TIERS-NEVER-CONFUSED",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#SWEEP-FLIP-ONLY-AFTER-DRAIN"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "research"
+   ],
+   "evidence_refs": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:67  - **Two tiers, never confused:** build tags (`//go:build`) answer *\"is the code in the binary\"* ... confined to registry/adapter files",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:462  continue // conformance assertions et al.",
+    "research/go-demo/cmd/reconcile/main.go:17  cfg := registry.Config{Planner: registry.PlannerNaive}",
+    "research/go-demo/internal/cells/batchplanner/planner.go:14  var _ seams.Planner = (*BatchPlanner)(nil) // silent conformance made loud",
+    "research/go-demo/internal/registry/registry.go:26  type Config struct {"
+   ],
+   "cites": [
+    "F-185",
+    "F-212"
+   ],
+   "reason": "the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (build_rules, lib.rs:53-60) — and none of them checks for the compile-time assertion this fact says conform checks the presence of",
+   "reasons": [
+    "the two tiers rest on the tier vocabulary C1a found unbuilt — there is no `Tier` type, no `tier` field and no escalation anywhere in the conform engine, so «T-lex» names nothing that exists",
+    "the prior confirm cited go-ai-native-sweep/SKILL.md:83's gated_packages line as support — a line that was itself drift (F-212) and is now corrected to gated_crates, so the confirm's evidence no longer says what it cited; §6.1's neighbouring-verdicts check, run in reverse; the conform-frontend-go.md:110 sibling stays with open F-185 on the sync route and is NOT touched; harvest d9 #rulings"
+   ],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-166",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md"
    ],
    "anchors": [
@@ -2901,56 +2956,6 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-206",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#CONFORMANCE-IS-MADE-LOUD",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#TWO-TIERS-NEVER-CONFUSED"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "research"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:67  - **Two tiers, never confused:** build tags (`//go:build`) answer *\"is the code in the binary\"* ... confined to registry/adapter files",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:462  continue // conformance assertions et al.",
-    "research/go-demo/cmd/reconcile/main.go:17  cfg := registry.Config{Planner: registry.PlannerNaive}",
-    "research/go-demo/internal/cells/batchplanner/planner.go:14  var _ seams.Planner = (*BatchPlanner)(nil) // silent conformance made loud",
-    "research/go-demo/internal/registry/registry.go:26  type Config struct {"
-   ],
-   "cites": [],
-   "reason": "the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (build_rules, lib.rs:53-60) — and none of them checks for the compile-time assertion this fact says conform checks the presence of",
-   "reasons": [
-    "the two tiers rest on the tier vocabulary C1a found unbuilt — there is no `Tier` type, no `tier` field and no escalation anywhere in the conform engine, so «T-lex» names nothing that exists"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-166",
    "id_source": "minted",
    "carried": true
   },
@@ -4154,54 +4159,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/qualified-naming"
-   ],
-   "files": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#fork-by-fork-rationale-pointer"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/qualified-naming",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md:19  ##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE This is a design-time",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:9  ##four-forks Four forks: flat versus grouped, enforce versus recommend, where short",
-    "spec/boot/STATIC.md:1008  rule: read it once while shaping identifiers, not on every session.",
-    "spec/boot/STATIC.md:1032  Fork-by-fork rationale: [`naming-forks.md`](../flows/qualified-naming/naming-forks.md)."
-   ],
-   "cites": [],
-   "reason": "DRIFT, self-defeating by construction, and the package's own manifest is where the fix was available. This sentence says the practice need not be read every session; it sits inside `spec/boot/STATIC.md`, the static lane `CLAUDE.md` instructs every session to read «first and in full», so it IS read every session. Making it true required routing the snippet through a conditional or dynamic entry — PROP-009's loading model supports exactly that — and this package's `[boot_snippet]` declares no `when` condition, so it compiles unconditionally like everything else. The provenance marker is at `spec/boot/STATIC.md:1001`. Ruled the same way as its README twin `##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE`.",
-   "reasons": [
-    "DRIFT, third of three. The target exists and carries four forks each with a `##CHOSEN-*` resolution, so the content is as promised; the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md:19  ##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE This is a design-time",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-245",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "relocation",
    "rule": "r-dangling-flows",
    "merged_by": [
@@ -5060,42 +5017,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#RATCHET-CENSUS-REGRESSIONS"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "RESTATED — the real gap is deeper than wrong names: the go collector emits no per-kind, per-package census at all, so the step's five names have no output to match; where names can be checked against shipped kind strings, three are wrong (init_in_cell/ambient_call_in_cell/naked_go_in_cell vs shipped init_decl/ambient_call/naked_go) and two ship (error_string_match — vendor rules/go.rs:130 — and seam_error_missing_req); the recorded 'gated_packages' clause convicts a config key the sentence does not name — its 'on a gated package' is prose; harvest d8a #f-212",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-212",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -5190,42 +5111,6 @@
     "packages/org.vibevm.ai-native/rust-ai-native-lang"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md#EVIDENCE-AND-TRANSFER-STRENGTH"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "RESTATED — this anchor's defect is not H4: it cites the evidence id DL1-015, and the ATLAS files that record as DR1-015 (a typo'd register id, one letter off); the obligation's recorded H4 reason does not describe this sentence; drift real, one-character repair on the release route; harvest d8a #f-186",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-186",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
    ],
    "anchors": [
@@ -5297,77 +5182,6 @@
    "owed": 1,
    "id": "F-281",
    "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-ORIGIN-LINES"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "the `Defaulted` token is a ConfigOrigin enum variant and is never printed — the policy-origin line reads 'conform: NO conform.toml — topology default in force, nothing is gated; run rust-ai-native init …' (rust-ai-native-conform/src/lib.rs:33-36, captured verbatim in the package's own floor run) — the step's guidance is right, the token it names is not matchable in the output; a family-wide edit must NOT push a DISABLED clause onto this correct sentence; harvest d8b #f-190",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-132",
-   "id_source": "minted"
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/typescript-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md#AGG-FRONT-DOOR"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "the closure is a BUILD (write the -lang README) or a repoint, not a demotion of this sentence; release-route repair; harvest d8a #f-115",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-115",
-   "id_source": "adopted (plan LOG)",
    "carried": true
   },
   {
@@ -5547,42 +5361,6 @@
     "host"
    ],
    "id": "F-288",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md#COMPOSES-ATOMIC-COMMITS"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "the practice itself is real and re-measured: 581 of 2 216 commits cite a spec:// URI at HEAD 45cd30b0 (git log --grep=spec:// --oneline | wc -l) [2]; the queue's restated '716' was a LINE count (735 lines via git log --format=%B | grep -c at the same HEAD) mistaken for a commit count — a commit count cannot fall, so 716 was self-refuting against the earlier 515/579; harvest d8c #f-219",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-219",
    "id_source": "minted",
    "carried": true
   },
@@ -7394,6 +7172,49 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/qualified-naming"
+   ],
+   "files": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#fork-by-fork-rationale-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/qualified-naming",
+    "spec"
+   ],
+   "evidence_refs": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:9  ##four-forks Four forks: flat versus grouped, enforce versus recommend, where short",
+    "spec/boot/STATIC.md:1032  Fork-by-fork rationale: [`naming-forks.md`](../flows/qualified-naming/naming-forks.md)."
+   ],
+   "cites": [],
+   "reason": "DRIFT, third of three. The target exists and carries four forks each with a `##CHOSEN-*` resolution, so the content is as promised; the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings.",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-245",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -8722,6 +8543,40 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/typescript-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md#AGG-FRONT-DOOR"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "the closure is a BUILD (write the -lang README) or a repoint, not a demotion of this sentence; release-route repair; harvest d8a #f-115",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-115",
+   "id_source": "adopted (plan LOG)",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
     "cites F-120",
     "reason-text j=1.00"
    ],
@@ -9613,6 +9468,40 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md#EVIDENCE-AND-TRANSFER-STRENGTH"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "RESTATED — this anchor's defect is not H4: it cites the evidence id DL1-015, and the ATLAS files that record as DR1-015 (a typo'd register id, one letter off); the obligation's recorded H4 reason does not describe this sentence; drift real, one-character repair on the release route; harvest d8a #f-186",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-186",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -9898,6 +9787,40 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#RATCHET-CENSUS-REGRESSIONS"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "RESTATED — the real gap is deeper than wrong names: the go collector emits no per-kind, per-package census at all, so the step's five names have no output to match; where names can be checked against shipped kind strings, three are wrong (init_in_cell/ambient_call_in_cell/naked_go_in_cell vs shipped init_decl/ambient_call/naked_go) and two ship (error_string_match — vendor rules/go.rs:130 — and seam_error_missing_req); the recorded 'gated_packages' clause convicts a config key the sentence does not name — its 'on a gated package' is prose; harvest d8a #f-212",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-212",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
     "reason-text j=1.00"
    ],
    "packages": [
@@ -9972,6 +9895,40 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-214",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md#COMPOSES-ATOMIC-COMMITS"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "the practice itself is real and re-measured: 581 of 2 216 commits cite a spec:// URI at HEAD 45cd30b0 (git log --grep=spec:// --oneline | wc -l) [2]; the queue's restated '716' was a LINE count (735 lines via git log --format=%B | grep -c at the same HEAD) mistaken for a commit count — a commit count cannot fall, so 716 was self-refuting against the earlier 515/579; harvest d8c #f-219",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-219",
    "id_source": "minted",
    "carried": true
   },

@@ -1604,6 +1604,46 @@ the package moves, (a) or (b). **Nothing is decided here.**
 
 ---
 
+## Rulings received — 2026-07-31, owner, in session {#rulings}
+
+The four design choices were put to the owner with recommendations and all four
+were ruled, verbatim: «1. F-188-rust - вариант ii  2 - B  3 - a  4. §3.6(a) +
+вариант (b) "It is a design discipline, not a runtime rule: it binds the moment
+an identifier is minted, not every edit that uses one"».
+
+- **F-188-rust → (ii), no PROP-031 citation.** The §3b draft is FINAL as
+  written; the d8a citation suggestion is declined (nonexistent anchor; would be
+  the first live host pointer in an `ai-native` card, against §3.8's audience).
+  Release route — the text lands with the publication batch.
+- **F-219 → option B.** The two-flow row drawing the format/atomicity line,
+  modelled on F-253's landed wording. Options A and C declined. Prose-edit
+  route after wave-8 re-clustering — **applied and closed this session.**
+- **F-115 → option (a).** The missing `typescript-ai-native-lang/v0.6.0/README.md`
+  is written from the §8 draft (every claim tree-verified); the umbrella
+  sentence needs no edit and re-judges `confirmed`. Option (b) declined.
+  Prose-edit route — **applied and closed this session.** The new file arrives
+  unjudged and enters the corpus at the next mirror pass, by design.
+- **F-245 → §3.6(a) + option (b)**, with the owner supplying the exact
+  sentence: «It is a design discipline, not a runtime rule: it binds the moment
+  an identifier is minted, not every edit that uses one.» The which-side
+  determination is (a) — the read-once promise is unsatisfiable in the shipped
+  loading model (`when` is OS-only by parser; a dynamic entry without `when` is
+  still read unconditionally), so the package's sentence was wrong about the
+  world as shipped, and no Phase E `when`-vocabulary task is filed: a
+  «while shaping identifiers» condition is not decidable at boot time, which is
+  worth this record so Phase E does not inherit an unimplementable ask.
+  Prose-edit route — **applied and closed this session.**
+
+**The riders' boundary, checked before touching anything.** The two
+`gated_packages` siblings split by route: `conform-frontend-go.md`'s two
+anchors belong to **open F-185 on `sync-from-code`** — its diff is the owner's
+queue's, NOT touched here. `GUIDE-AI-NATIVE-GO.md:626 ##SWEEP-FLIP-ONLY-AFTER-DRAIN`
+and the F-186 TypeScript twin (`scaffold-i-codemods.md:33`, `DL1-015`) are
+**false confirms with no obligation** — treated verdict-first: re-judged
+`drift` with measured reasons, minted by the registry, then closed under their
+own obligations in the same session, so the repair passes through the
+measurement instead of around it.
+
 ## The batch in one screen {#summary}
 
 | # | item | anchors | diff size | design choice owed |

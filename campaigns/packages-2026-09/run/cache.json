@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-31T14:24:24Z",
+  "updated_at": "2026-07-31T15:33:42Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -10708,17 +10708,15 @@
             ]
           },
           "SWEEP-FLIP-ONLY-AFTER-DRAIN": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:83  package into `gated_packages` only after it drains to zero.** @impl/done",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/health.rs:161  eprintln!(",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:110  `registry_pkg` (default `internal/registry`), `gated_packages` /",
-              "**restated 2026-07-28; the first verdict's REASON was wrong and it was mine.** It read unverifiable on «there is no research/go-demo» — asserted rather than checked. **`research/go-demo/` exists and is a complete Go consumer**: `go.mod`, 15 production `.go` files in the cell layout the guide prescribes (`internal/cells/{batchplanner,naiveplanner}`, `internal/registry`, `internal/seams`, `cmd/reconcile`), `conform.toml` with `cells_dir = \"internal/cells\"`, `specmap.toml`, `specmap.json`, a conform baseline and four `discipline/` files. Measured over its own sources: `discipline/registry/tests-baseline.json` exists and carries **0 entries** — a package that entered the gated set at zero findings, which is the rule stated"
+              "a false confirm, re-judged verdict-first (D9 rulings, 2026-07-31): the sentence tells adopters a package enters `gated_packages` — a key that exists in three documents and zero code; the shipped gating key is the shared top-level gated_crates (vendor core-ai-native-conform/src/config.rs:44), and GoConfig (config.rs:106-140) carries no gating key of its own",
+              "the prior confirm cited go-ai-native-sweep/SKILL.md:83's gated_packages line as support — a line that was itself drift (F-212) and is now corrected to gated_crates, so the confirm's evidence no longer says what it cited; §6.1's neighbouring-verdicts check, run in reverse; the conform-frontend-go.md:110 sibling stays with open F-185 on the sync route and is NOT touched; harvest d9 #rulings"
             ]
           }
         },
         "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + D5a + D6 + D7"
+        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
@@ -12593,7 +12591,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
-      "content_hash": "7d3c1f614cc7e78c5c2a89f419e84a9b36396e1db853010dad4aaeeefcdb9ae6",
+      "content_hash": "c6e5f8166af51086a1a662acd9fe5651d3a596ee8f463e18940771a9ad892bb3",
       "rollup": {
         "explicit": [
           "impl",
@@ -12615,7 +12613,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "7d3c1f614cc7e78c5c2a89f419e84a9b36396e1db853010dad4aaeeefcdb9ae6",
+        "processed_hash": "c6e5f8166af51086a1a662acd9fe5651d3a596ee8f463e18940771a9ad892bb3",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -12761,9 +12759,10 @@
             ]
           },
           "RATCHET-CENSUS-REGRESSIONS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — the real gap is deeper than wrong names: the go collector emits no per-kind, per-package census at all, so the step's five names have no output to match; where names can be checked against shipped kind strings, three are wrong (init_in_cell/ambient_call_in_cell/naked_go_in_cell vs shipped init_decl/ambient_call/naked_go) and two ship (error_string_match — vendor rules/go.rs:130 — and seam_error_missing_req); the recorded 'gated_packages' clause convicts a config key the sentence does not name — its 'on a gated package' is prose; harvest d8a #f-212"
+              "closed by the D9 §7 correction (2026-07-31): the step now names only what the shipped output and config carry — the printed 'ban census {N} reasoned / {M} unreasoned' line (go-ai-native-cli/src/health.rs:161-174, captured verbatim in the package's own health run), the six shipped kinds (init_decl, blank_import, ambient_call, naked_go, error_string_match, seam_error_missing_req — all present as strings in the package's crates and tools/go-extract), the fact the collector reports one project-wide total and no per-kind/per-package split, and the real gating key gated_crates (vendor core-ai-native-conform/src/config.rs:44)",
+              "harvest d9 #f-212"
             ]
           },
           "DRIFT-TRIPWIRE": {
@@ -12903,8 +12902,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6 + D8b + D8a"
+        "verified_at": "2026-07-31T15:32:52Z",
+        "verify_batch": "C6 + D8b + D8a + D9-boss-a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md": {
@@ -15438,7 +15437,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "eb77613d3842a5571c1f6ab3a4b4d21999b3bcd0a9311d7006b060b76d374be1",
+      "content_hash": "61ef40e00060efbfda7b2c5557a4c205ef8d1250dfe5bb48cdfac4cfe33507f6",
       "rollup": {
         "explicit": [
           "spec",
@@ -15460,7 +15459,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "eb77613d3842a5571c1f6ab3a4b4d21999b3bcd0a9311d7006b060b76d374be1",
+        "processed_hash": "61ef40e00060efbfda7b2c5557a4c205ef8d1250dfe5bb48cdfac4cfe33507f6",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15564,14 +15563,14 @@
             ]
           },
           "EVIDENCE-AND-TRANSFER-STRENGTH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — this anchor's defect is not H4: it cites the evidence id DL1-015, and the ATLAS files that record as DR1-015 (a typo'd register id, one letter off); the obligation's recorded H4 reason does not describe this sentence; drift real, one-character repair on the release route; harvest d8a #f-186"
+              "closed by the one-character correction (2026-07-31): the evidence line now cites DR1-015, which resolves — core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181 ##FINDING-DR1-015 'Constrained decoding helps weak models most' — exactly the gloss the card attaches; the DL1-015 id it carried resolved nowhere; harvest d9 #f-186"
             ]
           }
         },
-        "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D8a"
+        "verified_at": "2026-07-31T15:32:52Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D8a + D9-boss-a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
@@ -18073,7 +18072,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
-      "content_hash": "311723053c462cff642eb84ec6f59feb03c8bd32ebce09a9d070c457843aa15f",
+      "content_hash": "6746d59a193a64405d109a6a15e3b306d14e1c6b9f573f939b8076b75d2e15f8",
       "rollup": {
         "explicit": [
           "impl",
@@ -18095,7 +18094,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "311723053c462cff642eb84ec6f59feb03c8bd32ebce09a9d070c457843aa15f",
+        "processed_hash": "6746d59a193a64405d109a6a15e3b306d14e1c6b9f573f939b8076b75d2e15f8",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -18181,10 +18180,10 @@
             ]
           },
           "CHECK-THE-PRINTED-POLICY-ORIGIN-LINES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — this anchor names ONE string, not two: it has no `DISABLED by policy` clause, and could not — the Rust CLI has no floor-disable mechanism (rust-ai-native-cli/src/floor.rs carries no floor_disable; the shared config's floor_disable lives only under [go] and [typescript], vendor config.rs:129 and :173); the prior family-wide reason ('the TWO strings the sweep tells a reader to look for') is false of this anchor on its face",
-              "the `Defaulted` token is a ConfigOrigin enum variant and is never printed — the policy-origin line reads 'conform: NO conform.toml — topology default in force, nothing is gated; run rust-ai-native init …' (rust-ai-native-conform/src/lib.rs:33-36, captured verbatim in the package's own floor run) — the step's guidance is right, the token it names is not matchable in the output; a family-wide edit must NOT push a DISABLED clause onto this correct sentence; harvest d8b #f-190"
+              "closed by the d8b-drafted correction (2026-07-31): the step now quotes the line the tool actually prints — 'conform: NO conform.toml — topology default in force, nothing is gated' (rust-ai-native-conform/src/lib.rs:33-36, captured verbatim in the package's own floor run) — instead of the Defaulted enum variant that never reaches stderr; the step's guidance (a green on a defaulted policy is vacuous) is unchanged and correct, and no DISABLED-by-policy clause was added — the Rust CLI has no floor-disable mechanism",
+              "harvest d8b #f-190, applied under the F-132 obligation on the prose-edit route"
             ]
           },
           "READ-THE-HEALTH-SUMMARY": {
@@ -18392,8 +18391,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6 + D8b + D8a"
+        "verified_at": "2026-07-31T15:32:52Z",
+        "verify_batch": "C6 + D8b + D8a + D9-boss-a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md": {
@@ -20652,7 +20651,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "521cd376746f3d6f2ff493a10cba6f436c40293bbe2df65dd57dd49abbeb4a72",
+      "content_hash": "d6f241d516b2274666d5ad3a0c1150d134e33084f06499c6aecb71e6952b27b8",
       "rollup": {
         "explicit": [
           "spec",
@@ -20674,7 +20673,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "521cd376746f3d6f2ff493a10cba6f436c40293bbe2df65dd57dd49abbeb4a72",
+        "processed_hash": "d6f241d516b2274666d5ad3a0c1150d134e33084f06499c6aecb71e6952b27b8",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20762,13 +20761,12 @@
           "EVIDENCE-AND-TRANSFER-STRENGTH": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds ...",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "closed under F-132 by the same one-character correction as its rust twin (2026-07-31): the evidence line now cites DR1-015, which resolves — core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181 ##FINDING-DR1-015 'Constrained decoding helps weak models most' — the exact gloss the card attaches ('constraints lift weak models'); the false confirm was re-judged drift first, minted, and closed under its obligation, so the repair passed through the measurement; harvest d9 #rulings"
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5 + D8a"
+        "verified_at": "2026-07-31T15:33:42Z",
+        "verify_batch": "C4+C5 + D8a + D9-boss-a + D9-boss-a2"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md": {
@@ -24697,19 +24695,19 @@
             ]
           },
           "AGG-FRONT-DOOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED to the one true half: typescript-ai-native-lang/v0.6.0 ships no README.md — the only one of the repository's 42 shipped package versions without one, and the file has never existed in git history — so this umbrella's front-door pointer dead-ends; the go and rust halves of the prior family-wide reason are false (their READMEs exist)",
-              "the closure is a BUILD (write the -lang README) or a repoint, not a demotion of this sentence; release-route repair; harvest d8a #f-115"
+              "closed by the owner-ruled option (a) (2026-07-31, D9 rulings): typescript-ai-native-lang/v0.6.0/README.md now exists — written from the D9 §8 tree-verified draft (four [[binary]] declarations, tools/ts-extract + ts-oracle, both skills, vendored engines; divergences from the rust model measured: no schemas/ directory, JSDoc-carried spec URIs, node ≥ 22.6 prerequisite, GUIDE §15/§16) — so both targets the front-door sentence names exist and the sentence is true as written, unedited",
+              "the new file arrives unjudged and enters the corpus at the next mirror pass, by design; harvest d9 #f-115 + #rulings"
             ]
           }
         },
         "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6 + D8a"
+        "verify_batch": "C6 + D8a + D9-boss-a"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md": {
-      "content_hash": "628524051304c6bc98ec729c35e2f95ebe967e9d0dc409f94e6d3d582f31df3c",
+      "content_hash": "01e9a34ec895f7d6ea7758261ed5c3a70a9efe8270a6e1d59262a894d0b6d81f",
       "rollup": {
         "explicit": [
           "doc",
@@ -24731,7 +24729,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "628524051304c6bc98ec729c35e2f95ebe967e9d0dc409f94e6d3d582f31df3c",
+        "processed_hash": "01e9a34ec895f7d6ea7758261ed5c3a70a9efe8270a6e1d59262a894d0b6d81f",
         "verdicts": {
           "PACKAGE-INSTALLS-THE-ADDRESSABLE-SPECIFICATIONS-PRACTICE": {
             "v": "confirmed",
@@ -24903,14 +24901,13 @@
             ]
           },
           "COMPOSES-ATOMIC-COMMITS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — the misattribution is real and the count is corrected: the rule requiring spec:// citation lives in flow:git-conventional-commits (its boot snippet :24 ##CITE-SPEC-URIS-WHERE-RELEVANT), and git-atomic-commits' own boot :22 delegates message format to that sibling — so this row composes with the wrong flow; both payloads installed and checkable [1][3]",
-              "the practice itself is real and re-measured: 581 of 2 216 commits cite a spec:// URI at HEAD 45cd30b0 (git log --grep=spec:// --oneline | wc -l) [2]; the queue's restated '716' was a LINE count (735 lines via git log --format=%B | grep -c at the same HEAD) mistaken for a commit count — a commit count cannot fall, so 716 was self-refuting against the earlier 515/579; harvest d8c #f-219"
+              "closed by the owner-ruled option B (2026-07-31, D9 rulings): the row now composes with git-atomic-commits on the atomicity ground (one commit, one citable unit) and attributes the spec://-citation rule to its owner — 'the sibling flow:git-conventional-commits, which owns the message format' — mirroring the landed F-253 wording in sync-from-code's ##BOUNDARY-FLOW-ATOMIC-COMMITS",
+              "both flows installed and checkable [3] (vibe.lock:293,296); the format/atomicity line is git-atomic-commits' own boot ##CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY and the citation rule is git-conventional-commits' ##CITE-SPEC-URIS-WHERE-RELEVANT (boot :24) [1]; harvest d9-release-corrections-prepared.md #f-219 + #rulings"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -25010,8 +25007,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:18:08Z",
-        "verify_batch": "W3 + D8c"
+        "verified_at": "2026-07-31T15:32:52Z",
+        "verify_batch": "W3 + D8c + D9-boss-w"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md": {
@@ -61289,7 +61286,7 @@
       }
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md": {
-      "content_hash": "fcb692145a73bad6a2190c024920d48c0783231af0a1b412db5780799fcefc51",
+      "content_hash": "2a9de4f4afd73b2a3da40a8190d5394c460bd59c81973c6dd86cde06df9ac3d8",
       "rollup": {
         "explicit": [
           "impl",
@@ -61311,7 +61308,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "fcb692145a73bad6a2190c024920d48c0783231af0a1b412db5780799fcefc51",
+        "processed_hash": "2a9de4f4afd73b2a3da40a8190d5394c460bd59c81973c6dd86cde06df9ac3d8",
         "verdicts": {
           "PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE": {
             "v": "confirmed",
@@ -61329,16 +61326,13 @@
             ]
           },
           "IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md:19  ##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE This is a design-time",
-              "spec/boot/STATIC.md:1008  rule: read it once while shaping identifiers, not on every session.",
-              "DRIFT, self-defeating by construction, and the package's own manifest is where the fix was available. This sentence says the practice need not be read every session; it sits inside `spec/boot/STATIC.md`, the static lane `CLAUDE.md` instructs every session to read «first and in full», so it IS read every session. Making it true required routing the snippet through a conditional or dynamic entry — PROP-009's loading model supports exactly that — and this package's `[boot_snippet]` declares no `when` condition, so it compiles unconditionally like everything else. The provenance marker is at `spec/boot/STATIC.md:1001`. Ruled the same way as its README twin `##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE`."
+              "closed by the owner-ruled §3.6(a) + option (b) with the owner's own sentence (2026-07-31, D9 rulings): 'It is a design discipline, not a runtime rule: it binds the moment an identifier is minted, not every edit that uses one.' — the design-vs-runtime load survives and the read-once frequency claim, unsatisfiable in the shipped loading model (WhenCondition is OS-only by parser; a dynamic INDEX entry without when is still read unconditionally), is dropped [1]",
+              "the asymmetry with the README twin is preserved: ##IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE stays confirmed because the README is not compiled into the always-read lane; this sentence is (STATIC.md provenance marker), and no longer claims what the lane refutes; no Phase E when-vocabulary task filed — a 'while shaping identifiers' condition is not decidable at boot time; harvest d9 #f-245 + #rulings"
             ],
             "src": [
-              1,
-              2,
-              3
+              1
             ]
           },
           "READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED": {
@@ -61512,8 +61506,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:21:05Z",
-        "verify_batch": "W7"
+        "verified_at": "2026-07-31T15:32:52Z",
+        "verify_batch": "W7 + D9-boss-w"
       }
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md": {
