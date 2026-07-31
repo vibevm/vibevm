@@ -3621,6 +3621,114 @@ command that would have tested it.
   `sync-from-code` falls from 51 / 171 to **43 / 121** without one owner approval
   being spent.
 
+- **2026-07-31 · wave 8 — the release route re-verified without a single edit,
+  the boss's three unblocked verdicts closed alongside, and a strike-by-ruling
+  turned out to be scoped by the wrong reason.** The route is the owner's before
+  publication; the same basis that ran wave 7 ran here — a re-verdict that edits
+  nothing produces no spec diff — and the instrument confirms it held across all
+  three worker batches: merges of 45 verdicts with **0 refusals**, seal **1
+  sealed / 30 already current**, the one sealed file being the boss's single
+  intended package edit (below), not a worker's.
+
+  **Of the route's 40 never-re-verified verdicts (59 minus the address family's
+  19): 13 fell — 32.5 %, the predicted third — 3 routed out §3.6(b), 12 were
+  restated on corrected grounds, 12 stand.** The route is **10 obligations /
+  41 drifts, from 17 / 59**; F-115, F-186, F-212 and F-219 left it entirely,
+  their surviving halves single-package and re-routed to boss lanes.
+
+  **The falls' causes are the four named ones, and one is new in degree:**
+  four of the stacks batch's five falls were **falsified by the failing
+  verdict's own evidence list** — F-115's go and rust verdicts each cite, by
+  path and line 1, the README they convict as missing; F-212's rust verdict
+  cites the shipped names its sentence already uses. Cost to catch: one cache
+  read. The rest: the string searched where the thing is a field (F-186 — «H4
+  is in no register» against **four** ATLAS records under `refines:H4`, the
+  H-series being the ledger's *axis field*, never a heading); a lead convicted
+  of its fenced neighbour's defect (F-240, both — the do-not-copy carve-out
+  sits two lines above each lead; B-004's counts corrected to 17 packages /
+  14 confirmed / 0 drift / 3 unjudged, and the fence repair **changes no
+  verdict on any scope**, because no instrument sees inside a fence); a
+  sentence convicted of a claim it does not make (F-219's campaign-plans half
+  claims subjects/ledger/hashes — kept by the `fractality` adopter: 8 phases,
+  3 ledgers, 58 hashes bound — while the row's reason was its sibling's); and
+  `legacy-spec/` ratios voided by the owner's ruling. F-187 and F-213 fell
+  whole on §3.8/§3.7: the packages ship the skills their snippets name, and
+  `discipline/golden/` is the *adopting project's* directory — the package's
+  own terraform skill creates it, this host (the one real Rust consumer) has
+  `capture.sh` plus transcripts, and the Go anchor never names `capture.sh`.
+
+  **The wave's structural finding: an obligation merged by shared anchor
+  carries per-anchor reasons, and a strike-by-ruling scoped by the row's
+  reason hits anchors the ruling never examined.** §B.1's strike of F-189 was
+  aimed at «the host does not dispatch `go`» — the GO anchor's reason; the
+  rust and typescript verdicts always rested on PROP-026's own
+  `##SUPERSEDED-TOPOLOGY` / `##TCG-CRATE-DELETED`, and the Go sentence is
+  false on its own named subject `(vibevm, PROP-026)` — the `vibe-tcg`
+  lockfile-dispatch topology is retired for **every** language, and the same
+  Go document states the new topology correctly seven lines below. So the
+  strike voided a *ground* and the *verdicts* survive on their own; the rule —
+  one cache lookup per anchor before any strike — is recorded in the release
+  queue §B.1. Три fenced `##three-processes-lead` diagrams still draw the
+  retired topology with no anchor and no verdict — B-004's shape, flagged for
+  the same publication.
+
+  **A unit error in the queue's own restated figure, caught by arithmetic:**
+  «716 commit bodies cite a `spec://` URI» was a **line** count read as a
+  commit count — self-refuting, since a commit count cannot fall to the 579
+  measured later. At `HEAD = 45cd30b0`: **581 of 2 216 commits** (735 lines),
+  by `git log --grep="spec://" --oneline | wc -l`.
+
+  **The boss lane closed five obligations in parallel, two by building.**
+  F-241 — §3.3's revisit-when applied as written: the malformed-block report's
+  line numbers were computed and discarded in both reporters
+  (`locate_block`'s spans; vibe-check's `first_open`/`first_close`), and both
+  now name each marker's line, the expected clause carries the zero-markers
+  half of the well-formed shape, and the Class-F fix tail names the action;
+  tests in both crates assert the lines (29 + 30 green). The same build closed
+  **F-148 from code with zero spec diff** — a sync-route obligation whose
+  reason's third charge («how-to-unblock absent on `vibe check`») itself
+  convicted a surface the drill does not bind: `vibe check` aborts nothing.
+  F-287 — wave 6's correction to `##CODE-MARKS-…` re-judged at last (677
+  implements / 223 verifies edges, all authored code-side, `^Test:` 0, 224
+  `#[spec(` sites — exactly the corrected sentence); the re-verdict was the
+  closure's missing half. F-175 + F-303 — the also-test's «mechanical» removed
+  from body and summary in one §3.6(a) self-correction; the test and the
+  reader's-call concession stand.
+
+  **`summary-vs-body` prints 8 candidates now, not 17, and all eight are
+  adjudicated:** two already in the owner's queues (F-180, F-169's
+  bidirectional-graph half), one closed above (F-303), four coherent — the
+  summary drifts with its own body rows on one measurement (F-169, F-181,
+  F-162's contracts half, F-147) — and the changelog pair restated from the
+  string to the thing: `grep '^## Changelog'` finds 1, but **13 PROPs carry a
+  dated change record under numbered `## N. Version history {#history}`
+  headings, 38 dated entries** — 14 of 42 keeping the form, 28 keeping none.
+  The re-measuring session's own first grep missed the numbered headings — the
+  trap demonstrated itself mid-correction.
+
+  **Filed rather than fixed:** `BACKLOG.md` **B-009** — `CLAUDE.md:191`'s
+  wind-down step prescribes the bare `git push origin/main` that
+  `spec/boot/90-user.md:35` and `PROP-016:59` both deprecate as not the
+  standard rollout (surfaced when a recorded verdict used that line to demote
+  a package sentence the other two documents support); the **H1–H6 roster**
+  cited ~49 times corpus-wide and defined nowhere (owner:
+  `core-ai-native/v0.8.0/spec/appendix/`); F-153's unjudged twins
+  (`##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION` ×3 and core's own boot snippet);
+  five inconsistently-judged word-identical siblings; and
+  `typescript-ai-native-lang` as the only one of 42 shipped versions with no
+  `README.md` in its history.
+
+  **State at wave 8's close:** corpus **10 936 confirmed / 366 drift / 44
+  unverifiable — 96.4 %**, from 94.3 % at the Phase C gate. Registry **158
+  obligations / 366 drifts**, 71 resolved to history, one id newly assigned by
+  re-clustering (F-354). Routes: release **10 / 41**, sync-from-code 42 / 114,
+  build-or-demote 20 / 24, prose-edit 86 / 187. **157 of 366 verdicts still
+  owe a package repair; 209 are routed out; 90 obligations have nothing left
+  owed.** What remains of the release ask after re-verification: the address
+  family's one publication, five stack corrections and two two-word counts
+  behind the same gate, one which-side ruling (F-220's WAL-entry half), and
+  B-004's seventeen-fence product decision.
+
 ## 8. Deferrals {#deferrals}
 
 *(empty)*
