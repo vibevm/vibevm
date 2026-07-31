@@ -319,9 +319,16 @@ authored by the campaign that exists to remove them.
 **The rule.** Before any demotion, the perimeter is the whole tree and it is
 named in the record: `packages/**`, `vibedeps/**`, `crates/**`, `xtask/**`,
 `tools/**`, `spec/**`, **`discipline/**`**, **`terraform/**`**, `research/**`,
-`campaigns/**`, `legacy-spec/**`, and the repository root. Search for the
-**thing**, not for the string the verdict used — a mechanism can ship under
-another name, in another language, or as a shell script.
+`campaigns/**`, and the repository root. Search for the **thing**, not for the
+string the verdict used — a mechanism can ship under another name, in another
+language, or as a shell script.
+
+**`legacy-spec/**` is excluded** (owner ruling, 2026-07-31: *«legacy-spec это
+legacy, наплевать что там написано, исключай их из рассмотрения»*). It is not
+evidence of practice in either direction — neither that a form is kept, nor that
+it was abandoned. Wave 6 and wave 7 both leaned on archived-versus-live ratios
+drawn from it; those comparisons are re-stated without the archive column
+wherever they carried a conclusion.
 
 **And the four layers, restated because they are why the perimeter keeps
 biting:** a mechanism's SPEC lives in `core-ai-native`, its ENGINE in that
@@ -359,6 +366,51 @@ were *restated once to make the family agree*, and the family agreed on a false
 premise: the catalog's order is `terraform/adopt-v0.3/LOG.md`'s phase headings,
 six for six with pairings intact. When a verdict says it was restated for
 consistency, re-verify the whole set, not the row.
+
+### 3.8 Most of `ai-native` is written for a consumer this repository is not {#audience}
+
+**Owner ruling, 2026-07-31, and it voids a class of verdict rather than a row.**
+The `ai-native-lang` packages are built **first and foremost for external
+consumers** — language support that VibeVM's *clients* use, in other projects,
+in code trees we cannot see. How they use it is unknown to us.
+
+- **`go-ai-native-lang` is a prototype specification, deliberately unused in
+  this project, and it must stay unused.** The same holds for
+  `typescript-ai-native-lang` as an adopted stack. **These packages can be
+  checked only by their own artefacts and their TESTS.**
+- **`rust-ai-native-lang` is the exception and a special case**: part of VibeVM
+  itself is written in AI-Native Rust, so there the host genuinely is a consumer
+  and host evidence counts normally.
+
+**What this does to §3.1.** Source 2 reads «the host's observed conformance …
+the host is a living consumer and the honest test bench». That was written for
+`world` flows, where the host really is the consumer. **It does not transfer to
+a package whose audience is external.** So before any host observable is used
+against a package, the question is *whose behaviour does this sentence
+describe*: for `world`, this repository; for `ai-native`, an adopting project,
+of which this repository is one instance for Rust and **none** for Go or
+TypeScript.
+
+**The shape of the error, stated so it is recognisable.** A verdict that reads
+«the host does not dispatch it», «it is not installed here», «no instance exists
+in this repository» against a Go or TypeScript stack sentence is **measuring the
+wrong consumer**, and is false on that ground alone — no widening of the
+perimeter fixes it, because the right consumer is not in the tree at all.
+
+**Two corollaries paid for immediately.** *(i)* **Skill-directory evidence is
+void as a signal about a package.** `.claude/skills/`, `.agents/skills/` and
+`.opencode/skills/` hold arbitrary skills for whichever agents this host runs;
+what is installed there says nothing about what a package ships. *(ii)* **The
+host's own dispatch roster is not a contract with these packages.**
+`PROP-026`'s designation of `"go"` as an unsupported `language` is a correct and
+intentional statement about the host's TCG surface — the host does not write Go
+— and is not in contradiction with a package offering Go support to somebody
+else. Both were written up as findings on 2026-07-31 and both are struck.
+
+**This is §3.7's question asked one level up.** §3.7 asks *where does the
+evidence live*; this asks *whose behaviour is the fact even about*. Getting the
+first wrong reads a successful adoption as an absence. Getting the second wrong
+convicts a package for the silence of a consumer who was never in the room.
 
 ### 3.5 Every judged file already differs from its installed copy {#vendored}
 

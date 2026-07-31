@@ -151,13 +151,59 @@ family-wide edit would break two working sentences to fix one.
 | `F-153` | 6 | go, rust, typescript `-lang` | boot snippet cites `rust/…`, `go/…`, `cards/INDEX.md`; all live under `spec/` |
 | `F-115` | 3 | the three umbrella packages | the front door points at the `-lang` README and `typescript-ai-native-lang` ships **no README.md** |
 | `F-186` | 3 | go, rust `-lang` | the fact cites three evidence ids; `H4` is in **no** register in this repository |
-| `F-187` | 3 | go, rust, typescript `-lang` | the two **Go** skills are not installed — and the surface is **three homes, not one**: `.claude/skills/`, `.agents/skills/`, `.opencode/skills/`. The first two each carry the same four (rust ×2, typescript ×2); no Go skill is in any of them |
-| `F-188` | 3 | go, rust, typescript `-lang` | the printed CLI signature takes five parameters; the shipped verb takes two |
-| `F-189` | 3 | go, rust, typescript `-lang` | the host does not dispatch `go` — and it is **stronger than «not yet supported»**: `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:170` names an unsupported `language` «(e.g. `"go"`)» as returning the supported-set error, so the consumer's own spec designates Go unsupported *by name* while three shipped packages claim it |
+| `F-187` | 3 | go, rust, typescript `-lang` | ~~the two **Go** skills are not installed~~ — **VOID, see §B.1.** A skills directory holds arbitrary skills for whichever agents *this host* runs; what is installed here says nothing about what a package ships |
+| `F-188` | 3 | go, rust, typescript `-lang` | the printed CLI signature takes five parameters; the shipped verb takes two — **stands**, it is falsifiable inside the package |
+| `F-189` | 3 | go, rust, typescript `-lang` | ~~the host does not dispatch `go`~~ — **VOID, see §B.1.** The host is not a consumer of the Go stack and is not meant to be |
 | `F-190` | 3 | go, rust, typescript `-lang` | **the verdict is half false**: `DISABLED by policy` IS shipped; only `Defaulted` is wrong, and the three sentences are not word-identical |
 | `F-211` | 2 | go, rust `-lang` | `init` prints one parameter and five keys; the shipped op takes none and returns four |
 | `F-212` | 2 | go, rust `-lang` | `gated_packages` → `gated_crates`, and three kind strings are wrong |
 | `F-213` | 2 | go, rust `-lang` | `capture.sh` exists only at the **host's** `discipline/golden/`; no ai-native package carries a `discipline/` at all |
+
+### B.1 Owner ruling, 2026-07-31 — this host is not the test bench for these packages {#stacks-audience}
+
+**The `ai-native-lang` packages are built first and foremost for EXTERNAL
+CONSUMERS.** They are language support that VibeVM's *clients* use, in other
+projects, in code trees we cannot see. How those consumers use what we ship is
+unknown to us, and their absence here is not evidence of anything.
+
+- **`go-ai-native-lang` is a prototype specification, deliberately unused in
+  this project — and it must stay unused.** So must `typescript-ai-native-lang`
+  as an adopted stack. **We can check these packages only by their own artefacts
+  and their TESTS.**
+- **`rust-ai-native-lang` is the exception and a special case**: part of VibeVM
+  itself is written in AI-Native Rust, so for the Rust stack the host genuinely
+  *is* a consumer and host evidence counts normally.
+
+**This voids a class of verdict rather than a row.** Any finding that convicts a
+Go or TypeScript stack sentence because *this repository* does not dispatch it,
+has not installed it, or shows no instance of it, is measuring the wrong
+consumer. Two rows above are struck on exactly that ground:
+
+- **`F-187`** rested on Go skills being absent from the host's skill directories.
+  Those directories hold arbitrary skills for whichever agents this host runs;
+  this host has no reason to install a Go skill. Void.
+- **`F-189`** rested on `PROP-026` designating `"go"` unsupported. That is a
+  statement about **the host's own TCG dispatch**, which is correct and
+  intentional — the host does not write Go. It is not in contradiction with a
+  package that offers Go support to somebody else. Void, and the «two written
+  contracts in direct contradiction» reading recorded here on 2026-07-31 was
+  wrong.
+
+**What survives in this group is what is falsifiable inside the package**: a
+printed CLI signature against the shipped verb (`F-188`), a bare intra-package
+path (`F-153`), a roster against the package's own contents (`F-115`), an
+evidence id that is in no register (`F-186`). Those need no consumer at all.
+
+**And the general rule this settles, which reaches past group B.** §3.1's source
+2 — «the host's observed conformance … the host is a living consumer and the
+honest test bench» — was written for `world` flows, where the host really is the
+consumer. **It does not transfer to a package whose audience is external.**
+Before using host evidence against any package, the question is *whose
+behaviour does this sentence describe*, and for most of `ai-native` the answer
+is «an adopting project», of which this repository is one instance for Rust and
+none for Go or TypeScript.
+
+---
 
 **Prepared and reverted once.** Diffs for F-153, F-190, F-211, F-212 were
 written by workers on 2026-07-29, reviewed, and reverted wholesale with the rest

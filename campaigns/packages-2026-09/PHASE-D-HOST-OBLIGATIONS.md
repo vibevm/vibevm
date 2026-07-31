@@ -82,14 +82,21 @@ and it is therefore one ruling, not twenty-nine.
 > this flow** and boots it at slot 40 of its own generated `spec/boot/INDEX.md`.
 > Counted by file across archived · host-live · fractality:
 >
-> | form | `legacy-spec/` | host live plans | `fractality` plans |
-> |---|---:|---:|---:|
-> | commit map | 4 | 0 | **3** |
-> | safe stop | 12 | 0 | **3** |
-> | whole-campaign acceptance | 9 | 0 | **2** |
-> | non-goals | 9 | 0 | **3** |
-> | risks | 16 | 0 | **3** |
-> | Phase 0 | 16 | 0 | **2** |
+> | form | host live plans | `fractality` plans |
+> |---|---:|---:|
+> | commit map | 0 | **3** |
+> | safe stop | 0 | **3** |
+> | whole-campaign acceptance | 0 | **2** |
+> | non-goals | 0 | **3** |
+> | risks | 0 | **3** |
+> | Phase 0 | 0 | **2** |
+>
+> *(The `legacy-spec/` column this table first carried has been dropped — owner
+> ruling 2026-07-31, `legacy-spec/**` is legacy and is not evidence of practice
+> in either direction. Removing it **strengthens** the conclusion: with the
+> archive gone, every live instance of every form is in the sibling project and
+> none is in the host's own plans, so «adopt-then-drop» loses even the
+> «adopt» half of its evidence.)*
 >
 > **The practice is not abandoned; the host's own two plans are the outlier.**
 > That flips the ruling this section asks for. «Adopt-then-drop» invites «then

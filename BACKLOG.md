@@ -281,6 +281,39 @@ already written from it is the specification of the work.)*
   byte-identical and the rule they carry is the one in force. It is waste and a
   broken invariant, not a gate reporting green while not looking.
 
+### B-007 — do the specs owe ADRs, and in what form? {#b-007}
+
+| | |
+|---|---|
+| ##B007-ANCHOR **anchor** | the question is about `spec/common/**` and `spec/modules/**` as a genre, not about one anchor. The rule it would satisfy is `spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root` |
+| ##B007-LOCATOR **locator** | 153 sections in `spec/common/` + `spec/modules/**` carry a bolded **Decision** label; 4 carry all four fields |
+| ##B007-SEVERITY **severity** | P2 |
+| ##B007-DISPOSITION **disposition** | `open` — **filed at owner request, 2026-07-31**, as a question to answer rather than work to schedule |
+| ##B007-FILED **filed by** | the packages-actualization campaign, Phase D, wave 7 |
+
+- ##B007-THE-QUESTION **The question, in the owner's framing.** Should the specifications
+  carry Architecture Decision Records — and if so, **how**: as a section inside
+  the PROP/FEAT that owns the decision, as a separate `spec/decisions/` genre, or
+  as the four-field block the `decision-records` flow already prescribes? This is
+  a **spec-genre design question**, and answering it decides how much work the
+  `decision-records` host obligation actually is.
+- ##B007-WHAT-IS-MEASURED **What is measured, so the question starts from facts.** Sections
+  carrying a bolded `Decision` against those carrying all four fields
+  (`Decision` · `Why` · `Considered and rejected` · `Revisit when` /
+  `When to revisit`): `spec/common` + `spec/modules` **153 → 4**; all of `spec/`
+  **157 → 7**; the `fractality` specspace **34 → 14**; this campaign's own
+  records **15 → 8**. The practice is adopted at roughly **41 %** in the sibling
+  project and **4.6 %** in the host's PROP/FEAT tree. Counted 2026-07-31.
+- ##B007-WHY-IT-IS-A-QUESTION-NOT-A-TASK **Why it is a question and not a task.** «Add the missing fields to
+  153 sections» is the wrong shape twice over. Most of those decisions are not
+  reopenable, so a revisit condition on them would be ceremony; and the four-field
+  block is not obviously the right ADR form for a specification, which already
+  states rationale in prose. **What is owed first is the genre decision**, and
+  `spec-genres`' own map does not carry an ADR row today.
+- ##B007-WHAT-IT-UNBLOCKS **What it unblocks.** The largest single host obligation this phase
+  surfaced ([`PHASE-D-HOST-OBLIGATIONS.md`](campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md)).
+  It cannot be sized, let alone scheduled, until this is answered.
+
 ## P3 — accepted, no action planned {#p3}
 
 *(empty)*
