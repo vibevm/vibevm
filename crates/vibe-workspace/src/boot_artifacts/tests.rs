@@ -463,7 +463,17 @@ fn locate_block_well_formed_pair() {
 #[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#markers", r = 1)]
 fn locate_block_two_openers_is_malformed() {
     let content = "<vibevm>\na\n</vibevm>\n<vibevm>\nb\n</vibevm>\n";
-    assert!(matches!(locate_block(content), BlockLocation::Malformed(_)));
+    match locate_block(content) {
+        // The drill's precision: the report names each marker's line, so
+        // the operator repairing by hand does not have to search for them.
+        BlockLocation::Malformed(reason) => {
+            assert!(
+                reason.contains("at line(s) 1, 4") && reason.contains("at line(s) 3, 6"),
+                "the malformed report must name the marker lines; got: {reason}"
+            );
+        }
+        other => panic!("expected Malformed, got {other:?}"),
+    }
 }
 
 #[test]

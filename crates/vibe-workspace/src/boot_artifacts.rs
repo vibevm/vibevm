@@ -326,16 +326,16 @@ pub enum BlockLocation {
 pub fn locate_block(content: &str) -> BlockLocation {
     let mut open: Option<(usize, usize)> = None;
     let mut close: Option<(usize, usize)> = None;
-    let mut opens = 0usize;
-    let mut closes = 0usize;
+    let mut open_lines: Vec<usize> = Vec::new();
+    let mut close_lines: Vec<usize> = Vec::new();
     let mut offset = 0usize;
-    for line in content.split_inclusive('\n') {
+    for (line_no, line) in content.split_inclusive('\n').enumerate() {
         let trimmed = line.strip_suffix('\n').unwrap_or(line).trim();
         if trimmed == BLOCK_OPEN {
-            opens += 1;
+            open_lines.push(line_no + 1);
             open.get_or_insert((offset, offset + line.len()));
         } else if trimmed == BLOCK_CLOSE {
-            closes += 1;
+            close_lines.push(line_no + 1);
             close.get_or_insert((offset, offset + line.len()));
         }
         offset += line.len();
@@ -343,8 +343,10 @@ pub fn locate_block(content: &str) -> BlockLocation {
     // Matching on the recorded spans (not just the counts) lets the
     // compiler carry the "one of each → both recorded" invariant; the
     // impossible counts-without-spans combination falls through to the
-    // Malformed arm instead of a panic.
-    match (opens, closes, open, close) {
+    // Malformed arm instead of a panic. A Malformed report names each
+    // marker's line — the drill's precision: the operator repairs the
+    // file by hand and must not have to search for the markers.
+    match (open_lines.len(), close_lines.len(), open, close) {
         (0, 0, _, _) => BlockLocation::Absent,
         (1, 1, Some((open_start, _)), Some((close_start, close_end))) => {
             if open_start < close_start {
@@ -353,15 +355,33 @@ pub fn locate_block(content: &str) -> BlockLocation {
                     end: close_end,
                 }
             } else {
-                BlockLocation::Malformed(
-                    "the `</vibevm>` marker precedes its `<vibevm>` opener".to_string(),
-                )
+                BlockLocation::Malformed(format!(
+                    "the `</vibevm>` marker (line {}) precedes its `<vibevm>` opener (line {})",
+                    close_lines[0], open_lines[0]
+                ))
             }
         }
         (opens, closes, _, _) => BlockLocation::Malformed(format!(
-            "expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \
-             and {closes} `</vibevm>` marker line(s)"
+            "expected zero markers or exactly one `<vibevm>` … `</vibevm>` pair, found \
+             {opens} `<vibevm>` marker line(s){} and {closes} `</vibevm>` marker line(s){}",
+            at_lines(&open_lines),
+            at_lines(&close_lines)
         )),
+    }
+}
+
+/// Render a marker-line list as ` at line(s) 12, 40` — empty when there
+/// are no markers, so a zero count is not followed by an empty list.
+fn at_lines(lines: &[usize]) -> String {
+    if lines.is_empty() {
+        String::new()
+    } else {
+        let joined = lines
+            .iter()
+            .map(|l| l.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        format!(" at line(s) {joined}")
     }
 }
 

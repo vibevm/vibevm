@@ -53,31 +53,46 @@ impl Check for RedirectBlockCheck {
 /// duplicated from `vibe-workspace::boot_artifacts` rather than
 /// re-exported, to keep `vibe-check` independent of that crate's surface.
 fn malformed_vibevm_block(content: &str) -> Option<String> {
-    let mut opens = 0usize;
-    let mut closes = 0usize;
-    let mut first_open: Option<usize> = None;
-    let mut first_close: Option<usize> = None;
+    let mut open_lines: Vec<usize> = Vec::new();
+    let mut close_lines: Vec<usize> = Vec::new();
     for (i, line) in content.lines().enumerate() {
         match line.trim() {
-            "<vibevm>" => {
-                opens += 1;
-                first_open.get_or_insert(i);
-            }
-            "</vibevm>" => {
-                closes += 1;
-                first_close.get_or_insert(i);
-            }
+            "<vibevm>" => open_lines.push(i + 1),
+            "</vibevm>" => close_lines.push(i + 1),
             _ => {}
         }
     }
-    match (opens, closes) {
+    // The report names each marker's line — the drill's precision: the
+    // operator repairs the file by hand and must not have to search for
+    // the markers.
+    match (open_lines.len(), close_lines.len()) {
         (0, 0) => None,
-        (1, 1) if first_open < first_close => None,
-        (1, 1) => Some("the `</vibevm>` marker precedes its `<vibevm>` opener".to_string()),
-        (o, c) => Some(format!(
-            "expected exactly one `<vibevm>` … `</vibevm>` pair, found {o} `<vibevm>` \
-             and {c} `</vibevm>` marker line(s)"
+        (1, 1) if open_lines[0] < close_lines[0] => None,
+        (1, 1) => Some(format!(
+            "the `</vibevm>` marker (line {}) precedes its `<vibevm>` opener (line {})",
+            close_lines[0], open_lines[0]
         )),
+        (o, c) => Some(format!(
+            "expected zero markers or exactly one `<vibevm>` … `</vibevm>` pair, found \
+             {o} `<vibevm>` marker line(s){} and {c} `</vibevm>` marker line(s){}",
+            at_lines(&open_lines),
+            at_lines(&close_lines)
+        )),
+    }
+}
+
+/// Render a marker-line list as ` at line(s) 12, 40` — empty when there
+/// are no markers, so a zero count is not followed by an empty list.
+fn at_lines(lines: &[usize]) -> String {
+    if lines.is_empty() {
+        String::new()
+    } else {
+        let joined = lines
+            .iter()
+            .map(|l| l.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        format!(" at line(s) {joined}")
     }
 }
 
@@ -101,13 +116,16 @@ mod tests {
         )
         .unwrap();
         let report = check_project(project.path(), &opts());
+        let finding = report
+            .findings
+            .iter()
+            .find(|f| f.check == CheckId::RedirectBlock && f.severity == Severity::Error)
+            .unwrap_or_else(|| panic!("got: {:?}", report.findings));
+        // The drill's precision: the report names each marker's line.
         assert!(
-            report
-                .findings
-                .iter()
-                .any(|f| f.check == CheckId::RedirectBlock && f.severity == Severity::Error),
-            "got: {:?}",
-            report.findings
+            finding.message.contains("at line(s) 1, 4"),
+            "the malformed report must name the marker lines; got: {}",
+            finding.message
         );
     }
 
