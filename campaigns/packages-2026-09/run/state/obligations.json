@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 336,
+ "drift_verdicts": 272,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -34,7 +34,7 @@
    "drift_count": 11,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     ".gitignore",
@@ -122,119 +122,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "reason-text j=1.00",
-    "shared anchor #full-protocol-pointer"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/conflict-protocol",
-    "packages/org.vibevm.world/decision-records",
-    "packages/org.vibevm.world/git-atomic-commits",
-    "packages/org.vibevm.world/health-audit",
-    "packages/org.vibevm.world/source-mirrors",
-    "packages/org.vibevm.world/sync-from-code",
-    "packages/org.vibevm.world/wal"
-   ],
-   "files": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md",
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#full-protocol-pointer",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#full-ladder-pointer",
-    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md#recovery-drills-pointer",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#full-protocol-pointer",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#template-and-examples-pointer",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#trigger-design-pointer",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md#full-protocol-pointer",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#full-protocol-pointer",
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md#full-protocol-pointer",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md#full-protocol-pointer",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md#full-protocol-pointer"
-   ],
-   "drift_count": 11,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "campaigns",
-    "packages/org.vibevm.world/decision-records",
-    "packages/org.vibevm.world/git-atomic-commits",
-    "packages/org.vibevm.world/health-audit",
-    "packages/org.vibevm.world/source-mirrors",
-    "packages/org.vibevm.world/sync-from-code",
-    "packages/org.vibevm.world/wal",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-    "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:19    relative .md citations resolved: 23",
-    "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:20    broken: 0",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:32  ##full-protocol-pointer Full protocol:",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:33  [`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md). @impl/done",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:48  ##template-and-examples-pointer Copy-ready template and worked examples:",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:49  [`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md). @impl/done",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:51  ##trigger-design-pointer Trigger design and the periodic sweep:",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:52  [`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md). @impl/done",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:1  # Atomic Commits Protocol {#root}",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:1  # Running an audit {#root}",
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:1  # Source Mirrors Protocol {#root}",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:1  # Sync-from-Code Protocol {#root}",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:1  # WAL Protocol {#root}",
-    "spec/boot/STATIC.md:1131  [`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md`](../flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md).",
-    "spec/boot/STATIC.md:1256  Full protocol: [`spec/flows/sync-from-code/SYNC-PROTOCOL.md`](../flows/sync-from-code/SYNC-PROTOCOL.md).",
-    "spec/boot/STATIC.md:1428  Full protocol: [`spec/flows/wal/WAL-PROTOCOL.md`](../flows/wal/WAL-PROTOCOL.md).",
-    "spec/boot/STATIC.md:199  [`spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md`](../flows/conflict-protocol/CONFLICT-PROTOCOL.md).",
-    "spec/boot/STATIC.md:221  [`spec/flows/conflict-protocol/uncertainty-protocol.md`](../flows/conflict-protocol/uncertainty-protocol.md).",
-    "spec/boot/STATIC.md:233  [`spec/flows/conflict-protocol/failure-modes.md`](../flows/conflict-protocol/failure-modes.md).",
-    "spec/boot/STATIC.md:262  [`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md).",
-    "spec/boot/STATIC.md:278  [`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md).",
-    "spec/boot/STATIC.md:280  [`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md).",
-    "spec/boot/STATIC.md:605  Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md).",
-    "spec/common/PROP-000.md:163  … `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`;",
-    "vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:1  # Conflict Protocol {#root}",
-    "vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/failure-modes.md:1  # Failure Modes and Recovery {#root}",
-    "vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md:1  # Uncertainty Protocol {#root}",
-    "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:1  # Source Mirrors Protocol {#root}",
-    "vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md:1  # WAL Protocol {#root}"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the 69-dangling family, now in its sixth package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/conflict-protocol/…`, which from `spec/boot/` means `spec/flows/conflict-protocol/…`, and this host has no `spec/flows/`.",
-   "reasons": [
-    "DRIFT: the 69-dangling family, now in its sixth package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/conflict-protocol/…`, which from `spec/boot/` means `spec/flows/conflict-protocol/…`, and this host has no `spec/flows/`.",
-    "DRIFT: the 69-dangling family, now in its sixth package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/conflict-protocol/…`, which from `spec/boot/` means `spec/flows/conflict-protocol/…`, and this host has no `spec/flows/`.",
-    "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all.",
-    "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all.",
-    "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all.",
-    "the document does exist and the authoritative record cites it independently — what is missing is any target the compiled link can reach",
-    "DRIFT: the fact's subject is the pointer, and the directory it names does not exist in the consuming project. `ls -d spec/flows` returns «No such file or directory»; the host's spec/ holds WAL.md, boot, common, design, manual-tests, modules, terraforms. The three documents DO ship, in the package and at `vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/`. An agent that read this skill inside this repository and followed the pointer literally would find nothing — which the skill's own step-1 fallback half anticipates. W1's 69-dangling family.",
-    "DRIFT, W1's 69-dangling family, and this snippet carries three of them — all reaching the host's boot lane in the broken form at `STATIC.md:1131`, `:1133` and `:1135`. The link is written `../flows/source-mirrors/…` relative to `spec/boot/`, and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms: no `spec/flows/` directory exists in this repository. The target itself is fine in the package and the installed slot. RECORDED, because this package shows what the working form looks like: `PROP-016:8` reaches the same document successfully as `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL#root`. The host has a mechanism that resolves; the snippet uses one that does not.",
-    "DRIFT: the same 69-dangling family W1 opened. The target exists in the package and in the installed slot, but the compiled boot lane keeps the relative link `../flows/sync-from-code/SYNC-PROTOCOL.md`, which from `spec/boot/` means `spec/flows/sync-from-code/SYNC-PROTOCOL.md`, and this host has no `spec/flows/` at all. The same anchor name was judged drift in W1 and again in W2a and W2c.",
-    "DRIFT: the pointer does not resolve for the reader it is written for. spec/boot/STATIC.md:1428 keeps the relative link ../flows/wal/WAL-PROTOCOL.md, which from spec/boot/ means spec/flows/wal/WAL-PROTOCOL.md; `ls spec/flows` returns 'No such file or directory'. Same for the snippet's other two sibling links at :1403 and :1414. This is W1's 69-dangling-pointer family, and the same anchor name was judged drift there (git-atomic-commits' full-protocol-pointer)."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:32  ##full-protocol-pointer Full protocol:",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 11,
-   "id": "F-136",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -261,7 +148,7 @@
    "drift_count": 10,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native"
@@ -341,7 +228,7 @@
    "drift_count": 10,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -411,111 +298,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "shared anchor #sibling-document-pointers"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/campaign-plans",
-    "packages/org.vibevm.world/comparative-research",
-    "packages/org.vibevm.world/dev-runtime-docs",
-    "packages/org.vibevm.world/git-attribution-policy",
-    "packages/org.vibevm.world/git-autonomy",
-    "packages/org.vibevm.world/git-conventional-commits",
-    "packages/org.vibevm.world/licensing",
-    "packages/org.vibevm.world/sync-from-code"
-   ],
-   "files": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md",
-    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md",
-    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md",
-    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md",
-    "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#sibling-document-pointers",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#sibling-document-pointers",
-    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#sibling-document-pointers",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md#sibling-document-pointers",
-    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md#sibling-document-pointers",
-    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md#sibling-document-pointers",
-    "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md#sibling-document-pointers",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md#sibling-document-pointers"
-   ],
-   "drift_count": 8,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "campaigns",
-    "packages/org.vibevm.world/comparative-research",
-    "packages/org.vibevm.world/dev-runtime-docs",
-    "packages/org.vibevm.world/git-attribution-policy",
-    "packages/org.vibevm.world/git-autonomy",
-    "packages/org.vibevm.world/git-conventional-commits",
-    "packages/org.vibevm.world/sync-from-code",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:26  **Eleven relative citations, none broken.** Every protocol document a boot snippet",
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:69  `git-practices` itself. **`git-attribution-policy` is not on it**: both of its",
-    "campaigns/packages-2026-09/tasks/DRIFT-039.md:14  **8 of 8 links broken**, resolved one at a time rather than sampled:",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md:15  [`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`](../flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md). @impl/done",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:1  # Comparative Research Protocol {#root}",
-    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:18  ##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:69  ##sibling-document-pointers Full policy and rationale:",
-    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md:32  ##sibling-document-pointers Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md). @impl/done",
-    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:1  # Commit message format {#root}",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:1  # Sync-from-Code review workflow {#root}",
-    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:1  # When to run Sync-from-Code {#root}",
-    "spec/boot/STATIC.md:101  [`../flows/campaign-plans/execution-ledger.md`](../flows/campaign-plans/execution-ledger.md).",
-    "spec/boot/STATIC.md:1268  Decision table for whether to run: [`spec/flows/sync-from-code/when-to-apply.md`](../flows/sync-from-code/when-to-apply.md).",
-    "spec/boot/STATIC.md:1269  Human review checklist: [`spec/flows/sync-from-code/review-workflow.md`](../flows/sync-from-code/review-workflow.md).",
-    "spec/boot/STATIC.md:138  [`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`](../flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md).",
-    "spec/boot/STATIC.md:317  Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md).",
-    "spec/boot/STATIC.md:482  [`ATTRIBUTION-POLICY.md`](../flows/attribution-policy/ATTRIBUTION-POLICY.md).",
-    "spec/boot/STATIC.md:484  [`enforcement-checklist.md`](../flows/attribution-policy/enforcement-checklist.md).",
-    "spec/boot/STATIC.md:512  Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md).",
-    "spec/boot/STATIC.md:731  [`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md).",
-    "spec/boot/STATIC.md:838  [`LICENSING-PROTOCOL.md`](../flows/licensing/LICENSING-PROTOCOL.md).",
-    "spec/boot/STATIC.md:99  [`../flows/campaign-plans/phase-gates.md`](../flows/campaign-plans/phase-gates.md);",
-    "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
-    "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md:1  # The Execution Ledger {#root}",
-    "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md:1  # Phase Gates {#root}",
-    "vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:1  # Comparative Research Protocol {#root}",
-    "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:22  [`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md).",
-    "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md:3  **Scope of this document.** This file defines a product's *licensing"
-   ],
-   "cites": [],
-   "reason": "DRIFT, same family and the same reason: this fact is two pointers and nothing else. Both targets ship and both carry what is promised — phase mechanics and the record half — so the CONTENT claim is true; the paths are what fail, resolving to a `spec/flows/` the consuming project does not have. Third of the three `../flows/` pointers in this snippet; the other rules that merely contain such a link are judged on their rules.",
-   "reasons": [
-    "DRIFT: the fact's subject is the pointers. Three `../flows/…` links at snippet lines 15, 23 and 35, reproduced verbatim into the compiled lane at STATIC.md:138, 146 and 158, all resolving nowhere — `ls spec/` has no `flows` entry. The documents themselves ARE delivered, in the package and in `vibedeps/flow-comparative-research/0.1.0/`; only the relative path fails from where the host reads it. Eighth package in W1's 69-dangling family. NOTE: this anchor is also one of the two the boot-join reports as «3 words differ» — it sits alone on line 13 and survives `strip_markup`, an instrument artefact and not a prose difference.",
-    "DRIFT: the fact's subject is a `../flows/dev-runtime-docs/…` pointer, and the host has no `spec/flows/` directory, so it resolves nowhere from the compiled lane where the snippet is read. The protocol document itself ships, in the package and in the installed slot. W1's 69-dangling family.",
-    "the two documents a reader would need exist only under vibedeps/flow-git-attribution-policy/0.1.0/spec/flows/attribution-policy/",
-    "So the fact is true in the authoring tree and false in both places a consumer stands. A boot snippet's whole purpose is to be read from the compiled lane, and from there this link has never resolved",
-    "the target it names lives only under packages/ and vibedeps/; a booting session that follows the link from the compiled lane lands on nothing",
-    "DRIFT, W1's dangling family, fourth package in a row. `../flows/licensing/LICENSING-PROTOCOL.md` is read from the snippet's compiled position at `spec/boot/STATIC.md:838`, and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms — no `spec/flows/`, so the link has no target from the one lane where a session meets it. The document itself exists at `vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md`, where the same relative path resolves correctly against the package's own `spec/boot/`. A fact about the pointer, not about the protocol it names.",
-    "DRIFT: two pointers in one fact and both dangle for the host reader — `../flows/sync-from-code/when-to-apply.md` and `../flows/sync-from-code/review-workflow.md`, compiled verbatim into a lane whose `spec/flows/` does not exist. Both targets are real and are what the pointers call them; it is the address the consumer receives that fails."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:18  ##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 8,
-   "id": "F-145",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -539,7 +321,7 @@
    "drift_count": 7,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -614,7 +396,7 @@
    "drift_count": 7,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md",
@@ -700,7 +482,7 @@
    "drift_count": 7,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "manual-tests",
@@ -768,78 +550,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-path-does-not-resolve",
-   "merged_by": [
-    "reason-text j=1.00"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md#GO-CODE-FOLLOWS-THE-GO-GUIDE",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md#CARD-REGISTRY-FOR-GO",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md#RUST-CODE-FOLLOWS-THE-RUST-GUIDE",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md#CARD-REGISTRY-FOR-RUST",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md#TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md#CARD-REGISTRY-FOR-TYPESCRIPT"
-   ],
-   "drift_count": 6,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:12  ##CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` in this package (trigger → card;",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:6  (`go/GUIDE-AI-NATIVE-GO.md` in this package). @impl/done",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:1  # Card Registry — INDEX (Go projection)",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:16  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:36  ## 0. Why Go is special — and the law applied to Go {#law}",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md:12  ##CARD-REGISTRY-FOR-RUST Card registry for Rust: `cards/INDEX.md` in this package (trigger → card;",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md:6  (`rust/GUIDE-AI-NATIVE-RUST.md` in this package). @impl/done",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:1  # Card Registry — INDEX (Rust projection)",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:24  ## 0. The law, applied to Rust {#law}",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:13  ##CARD-REGISTRY-FOR-TYPESCRIPT Card registry for TypeScript: `cards/INDEX.md` in this package (trigger →",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:7  (`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` in this package). @impl/done",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:1  # Card Registry — INDEX (TypeScript projection)",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:31  ## 0. Why TypeScript is special — and the law applied to TS {#law}",
-    "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:10  ## 0. The law, applied to Rust"
-   ],
-   "cites": [],
-   "reason": "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`",
-   "reasons": [
-    "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`",
-    "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`",
-    "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`",
-    "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`",
-    "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:12  ##CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` in this package (trigger → card;",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 6,
-   "id": "F-153",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -862,7 +572,7 @@
    "drift_count": 6,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "ROADMAP.md",
@@ -944,7 +654,7 @@
    "drift_count": 5,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native",
@@ -1009,7 +719,7 @@
    "drift_count": 5,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native"
@@ -1069,7 +779,7 @@
    "drift_count": 5,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "conform.toml",
@@ -1135,7 +845,7 @@
    "drift_count": 5,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -1194,7 +904,7 @@
    "drift_count": 5,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md",
@@ -1265,7 +975,7 @@
    "drift_count": 5,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -1389,7 +1099,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/typescript-ai-native-lang"
@@ -1442,7 +1152,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -1508,7 +1218,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "VIBEVM-SPEC.md",
@@ -1572,7 +1282,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "legacy-spec",
@@ -1642,7 +1352,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "campaigns",
@@ -1698,84 +1408,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/comparative-research"
-   ],
-   "files": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-QUOTE-FIRST-CRITIQUE-SECOND",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-DELTAS-NOT-DECREES",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-THE-RE-FETCH-LIST",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#NEVER-LET-A-STUDY-SILENTLY-GO-STALE"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "legacy-spec",
-    "packages/org.vibevm.fractality/fractality",
-    "spec"
-   ],
-   "evidence_refs": [
-    "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …(quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead…",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:17  Tessl's one-sentence pitch:",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:19  > \"Tessl is a platform for managing context for coding agents, treating agent skills and context as software with a complete lifecycle: build, evaluate, distribute, and optimize.\"",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:569  **Priority.** **HIGH**. This is the single largest gap and the one that most strategically positions vibevm as a \"Claude-native\" tool. Maps to roadmap entry **M1.7** (see §6).",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:782  Maps to §5.1.",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:902  ### 7.4 Capture date and version",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:904  - **Capture date:** 2026-05-04.",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:905  - **Tessl CLI version visible in changelog:** 0.78.0.",
-    "legacy-spec/research/PROP-004-tessl-comparative-research.md:908  When refreshing this PROP, append a new `### 7.5 Refresh history` block recording: refresh date, capture-time Tessl version, what changed materially since last capture, what roadmap deltas need updating. Don't rewrite the existing inventory in place — keep it as a historical baseline.",
-    "legacy-spec/research/action-systems-vscode-idea.md:725  | Δ | Delta | Answers | → prospective PROP-039 REQ |",
-    "legacy-spec/research/action-systems-vscode-idea.md:776  | Subject | Upstream | Snapshot root | Accessed | Commit |",
-    "legacy-spec/research/action-systems-vscode-idea.md:778  | VSCode | `microsoft/vscode` (MIT) | `C:\\Users\\olegc\\git\\snapshot\\vscode` | 2026-07-15 | _not captured_ |",
-    "legacy-spec/research/settings-system-vscode-idea.md:358  …**D-01 [P0, settings-system PROP]** Layered deep-merge `L1 ⊂ L2 ⊂ L3` (L3 wins)…",
-    "legacy-spec/research/settings-system-vscode-idea.md:377  ## Re-fetch list (для обновления вместо переписывания)",
-    "legacy-spec/research/settings-system-vscode-idea.md:379  …VSCode snapshot: `C:\\Users\\olegc\\git\\snapshot\\vscode` (local mirror; upstream microsoft/vscode). Доступ 2026-07-16.",
-    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:196  …no text/code shapes from repos; short dated",
-    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:204  (every URL + access date + subject version). The synthesis",
-    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:70  _Priority P1 = Stage B core scope; P2 = Stage B strongly",
-    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:74  …**RD-1 (P1) The need-gate is an isolated, auditable call**…",
-    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/rlm-source-selection.md:9  …All URLs accessed",
-    "spec/boot/STATIC.md:149  …**Quote first, critique second.** The subject speaks in its own",
-    "spec/boot/STATIC.md:171  …Never let a study silently outlive its subject's next major"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the access-date half, which is zero across the whole corpus. Quote-first itself IS practised where quoting is allowed — the Tessl study opens §1 with the subject's pitch before any analysis and carries 27 blockquote lines. But **not one of those 27 quotes carries its own date**: `grep -niE 'accessed|access date|capture date'` returns 3 hits, all in the source-corpus paragraph and §7.4. And the template's own attribution shape `— <source>, accessed <YYYY-MM-DD>` occurs NOWHERE in the repository outside this package: `grep -rnE '— .*, accessed 20[0-9]{2}-'` over the archive, packages, spec and campaigns returns 0. The law's stated purpose is that the quote survives link rot; an undated quote does not.",
-   "reasons": [
-    "DRIFT on «each with a priority». Numbering is universal across all five studies (D-01…D-16, RD-1…RD-21, FD-1…FD-16, Δ1…Δ16, M1.7…M3.1) and the never-ratifies clause is confirmed separately. Priority is carried three different ways and **two of five studies carry none**: action-systems' delta table columns are `Δ | Delta | Answers | → prospective PROP-039 REQ` with no priority column, and FUGU-SYNTHESIS's entries carry a `[need-gate]` bracket instead. Tessl splits it — priority on each §5 gap, while §6's delta entries carry only `Maps to §5.x`. A law that says each delta carries a priority is met by three of five.",
-    "DRIFT on «the subject's version at capture». Four of the five studies close with a re-fetch list and all four carry access dates — that half holds. The version half splits evenly: Tessl §7.4 gives capture date 2026-05-04 AND «Tessl CLI version visible in changelog: 0.78.0», and the fractality re-fetch target pins per-source versions (`v3 2026-05-11`, `pinned 72d6940`); against that, action-systems' provenance table has a Commit column reading `_not captured_` for BOTH subjects, and the settings list carries dates with no version. The law's stated purpose is that a study can be refreshed instead of rewritten, and a list that does not say what version was read cannot tell a later reader what changed.",
-    "DRIFT: **no study in the perimeter has ever been stale-flagged or refreshed.** `grep -rniE 'stale-flag|stale flag|refresh history|refresh block'` over the archive, packages, spec and campaigns returns exactly two hits — the compiled rule itself at STATIC.md:172, and the Tessl study's own instruction to append a §7.5 Refresh history block. `grep -nE '^### 7[.]5'` on that study returns nothing: the block it told its own future reader to add was never added. The capture is dated 2026-05-04 against Tessl CLI 0.78.0 and the tree is now at 2026-07. The rule is delivered, restated by the subject it governs, and unexercised."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …(quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead…",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-QUOTE-FIRST-CRITIQUE-SECOND",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-DELTAS-NOT-DECREES",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-THE-RE-FETCH-LIST",
-    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#NEVER-LET-A-STUDY-SILENTLY-GO-STALE"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-173",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/health-audit"
    ],
    "files": [
@@ -1790,7 +1422,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md",
@@ -1862,7 +1494,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -1945,7 +1577,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/operating-modes",
@@ -2014,7 +1646,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -2080,7 +1712,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "xtask"
@@ -2142,7 +1774,7 @@
    "drift_count": 4,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -2304,146 +1936,68 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "shared anchor #MOTIVATION"
+    "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+    "packages/org.vibevm.world/comparative-research"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md"
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md"
    ],
    "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md#MOTIVATION",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md#MOTIVATION",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md#MOTIVATION"
-   ],
-   "drift_count": 3,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "RESTATED — drift is real but the recorded reason needs two corrections: the five-parameter signature the go card prints is the RUST CLI's shape (rust-ai-native-cli/src/main.rs:181 AddCell), while the shipped go verb takes two parameters (go-ai-native-cli/src/main.rs:153-158) and writes three files (codemod.rs:109-114); and the recorded 'no Example stub is written' clause is false — the stub IS written; a reader typing the documented command still gets an argument error; harvest d8a #f-188",
-   "reasons": [
-    "RESTATED — the recorded reason is the GO card's (add-cell five-parameter signature) and does not describe this sentence: the rust card's Motivation cites `vibe codemod rename-seam --from X --to Y`, and `vibe` ships no `codemod` subcommand at all (27 subcommands at HEAD, none codemod; rename-seam has zero implementations tree-wide); the same unbuilt command is load-bearing in the host's own PROP-031:21 ##BEACHHEAD-SCAFFOLD-I, corrected one line down at ##BEACHHEAD-LIMITS; harvest d8a #f-188",
-    "RESTATED on the package's own bench (§3.8): the TS card's Motivation cites `vibe codemod rename-seam` built on `ts-morph` — and both are absent from the TypeScript package's own tree (no codemod verb, no rename-seam, no ts-morph dependency anywhere in its crates or tools); the recorded Go add-cell reason does not describe this sentence; harvest d8a #f-188"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-188",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "shared anchor #COMPONENT-THE-PRODUCT-SEAM"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#COMPONENT-THE-PRODUCT-SEAM",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md#COMPONENT-THE-PRODUCT-SEAM",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md#COMPONENT-THE-PRODUCT-SEAM"
-   ],
-   "drift_count": 3,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "the same document already states the new topology correctly at ##STAGE-A-CONSULTATION-ORACLE (:141-144, 'the MCP delivery half ships in the go-ai-native-mcp package') — nothing here rests on whether this repository consumes Go; harvest d8b #f-189",
-   "reasons": [
-    "the Rust stack's own boot snippet names the new home: spec/boot/20-stack-rust-ai-native-lang.md:46 'served over MCP by mcp:org.vibevm.ai-native/rust-ai-native-mcp — PROP-027'; harvest d8b #f-189",
-    "the row's last clause came TRUE and any correction must keep it: the portability amendment was cashed — all three per-family mcp servers have zero vibe-mcp imports (grep over packages/org.vibevm.ai-native/*-ai-native-mcp/v*/crates/*/Cargo.toml: no output; typescript-ai-native-mcp depends on mcp-core); harvest d8b #f-189"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-189",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "reason-text j=1.00"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#POINTER-THE-PROTOCOL",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#POINTER-THE-AUTHORING-RULES",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#POINTER-THE-SPEC-TREE-LAYOUT"
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-QUOTE-FIRST-CRITIQUE-SECOND",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-THE-RE-FETCH-LIST",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#NEVER-LET-A-STUDY-SILENTLY-GO-STALE"
    ],
    "drift_count": 3,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
-    "packages/org.vibevm.world/addressable-specs",
+    "legacy-spec",
+    "packages/org.vibevm.fractality/fractality",
     "spec"
    ],
    "evidence_refs": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:34  ## Why addressability is requirement #1 {#why}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:61  ##the-difference-is-an-order-of-magnitude The difference is an order of magnitude, paid on *every* correction, several times per session — in metered tokens and in minutes of a short human day. @spec/done",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:72  ## The URI scheme {#uri-scheme}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:105  ## Deviations are first-class {#deviations}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:126  ## Size budgets {#budgets}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:15  ## The unit of meaning {#unit}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:38  ## Normativity is marked, not implied {#normativity}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:58  ## PROP vs FEAT {#prop-vs-feat}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:78  ## What goes where {#what-goes-where}",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:95  ## The `.human/` private buffer {#human-buffer}",
-    "spec/boot/STATIC.md:45  - Why addressability is IPC requirement #1, the URI scheme, the token economics: [`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md`](../flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md) - Unit of meaning, normativity marking, deviations, size budgets,",
-    "spec/boot/STATIC.md:51  - PROP vs FEAT, what goes where, the `.human/` buffer: [`spec/flows/addressable-specs/spec-tree-layout.md`](../flows/addressable-specs/spec-tree-layout.md)"
+    "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …(quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead…",
+    "legacy-spec/research/PROP-004-tessl-comparative-research.md:17  Tessl's one-sentence pitch:",
+    "legacy-spec/research/PROP-004-tessl-comparative-research.md:19  > \"Tessl is a platform for managing context for coding agents, treating agent skills and context as software with a complete lifecycle: build, evaluate, distribute, and optimize.\"",
+    "legacy-spec/research/PROP-004-tessl-comparative-research.md:902  ### 7.4 Capture date and version",
+    "legacy-spec/research/PROP-004-tessl-comparative-research.md:904  - **Capture date:** 2026-05-04.",
+    "legacy-spec/research/PROP-004-tessl-comparative-research.md:905  - **Tessl CLI version visible in changelog:** 0.78.0.",
+    "legacy-spec/research/PROP-004-tessl-comparative-research.md:908  When refreshing this PROP, append a new `### 7.5 Refresh history` block recording: refresh date, capture-time Tessl version, what changed materially since last capture, what roadmap deltas need updating. Don't rewrite the existing inventory in place — keep it as a historical baseline.",
+    "legacy-spec/research/action-systems-vscode-idea.md:776  | Subject | Upstream | Snapshot root | Accessed | Commit |",
+    "legacy-spec/research/action-systems-vscode-idea.md:778  | VSCode | `microsoft/vscode` (MIT) | `C:\\Users\\olegc\\git\\snapshot\\vscode` | 2026-07-15 | _not captured_ |",
+    "legacy-spec/research/settings-system-vscode-idea.md:377  ## Re-fetch list (для обновления вместо переписывания)",
+    "legacy-spec/research/settings-system-vscode-idea.md:379  …VSCode snapshot: `C:\\Users\\olegc\\git\\snapshot\\vscode` (local mirror; upstream microsoft/vscode). Доступ 2026-07-16.",
+    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:196  …no text/code shapes from repos; short dated",
+    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md:204  (every URL + access date + subject version). The synthesis",
+    "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/rlm-source-selection.md:9  …All URLs accessed",
+    "spec/boot/STATIC.md:149  …**Quote first, critique second.** The subject speaks in its own",
+    "spec/boot/STATIC.md:171  …Never let a study silently outlive its subject's next major"
    ],
    "cites": [],
-   "reason": "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve.",
+   "reason": "DRIFT on the access-date half, which is zero across the whole corpus. Quote-first itself IS practised where quoting is allowed — the Tessl study opens §1 with the subject's pitch before any analysis and carries 27 blockquote lines. But **not one of those 27 quotes carries its own date**: `grep -niE 'accessed|access date|capture date'` returns 3 hits, all in the source-corpus paragraph and §7.4. And the template's own attribution shape `— <source>, accessed <YYYY-MM-DD>` occurs NOWHERE in the repository outside this package: `grep -rnE '— .*, accessed 20[0-9]{2}-'` over the archive, packages, spec and campaigns returns 0. The law's stated purpose is that the quote survives link rot; an undated quote does not.",
    "reasons": [
-    "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve.",
-    "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve."
+    "DRIFT on «the subject's version at capture». Four of the five studies close with a re-fetch list and all four carry access dates — that half holds. The version half splits evenly: Tessl §7.4 gives capture date 2026-05-04 AND «Tessl CLI version visible in changelog: 0.78.0», and the fractality re-fetch target pins per-source versions (`v3 2026-05-11`, `pinned 72d6940`); against that, action-systems' provenance table has a Commit column reading `_not captured_` for BOTH subjects, and the settings list carries dates with no version. The law's stated purpose is that a study can be refreshed instead of rewritten, and a list that does not say what version was read cannot tell a later reader what changed.",
+    "DRIFT: **no study in the perimeter has ever been stale-flagged or refreshed.** `grep -rniE 'stale-flag|stale flag|refresh history|refresh block'` over the archive, packages, spec and campaigns returns exactly two hits — the compiled rule itself at STATIC.md:172, and the Tessl study's own instruction to append a §7.5 Refresh history block. `grep -nE '^### 7[.]5'` on that study returns nothing: the block it told its own future reader to add was never added. The capture is dated 2026-05-04 against Tessl CLI 0.78.0 and the tree is now at 2026-07. The rule is delivered, restated by the subject it governs, and unexercised."
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:34  ## Why addressability is requirement #1 {#why}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-193",
+   "fact": "legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md:307  …(quote-first with access dates; two-way gap analysis — where a fresh design would trail the incumbents and where it would lead…",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-QUOTE-FIRST-CRITIQUE-SECOND",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#LAW-THE-RE-FETCH-LIST",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#NEVER-LET-A-STUDY-SILENTLY-GO-STALE"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-173",
    "id_source": "minted",
    "carried": true
   },
@@ -2467,7 +2021,7 @@
    "drift_count": 3,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/decision-records",
@@ -2531,7 +2085,7 @@
    "drift_count": 3,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "campaigns",
@@ -2597,7 +2151,7 @@
    "drift_count": 3,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     ".claude",
@@ -2662,7 +2216,7 @@
    "drift_count": 3,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -2722,7 +2276,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native",
@@ -2801,94 +2355,6 @@
    "carried": true
   },
   {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "shared anchor #OP-INIT"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md#OP-INIT",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#OP-INIT"
-   ],
-   "drift_count": 2,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294  if op == \"init\" { // Re-init: a fresh gopls session (overlays cleared). match GoOracle::spawn(&root, READINESS_BUDGET) {",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74  fn init_result(oracle: &GoOracle<ChildTransport>) -> serde_json::Value { serde_json::json!({ \"gopls_version\": oracle....",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns..."
-   ],
-   "cites": [],
-   "reason": "**three of five keys and the one parameter are absent.** The protocol prints `init {root}` → `{gopls_version, gopls_path, go_version, root_files, ready}`. The shipped op takes no params — the root is the process root (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294) — and returns gopls_version, position_encoding, pull_diagnostics, ready (serve.rs:74-84). `gopls_path`, `go_version` and `root_files` are never produced; `position_encoding` and `pull_diagnostics` are produced and undocumented",
-   "reasons": [
-    "RESTATED with Rust's own key names: the recorded reason lists Go's gopls keys (gopls_version/gopls_path/go_version), which this protocol does not print; the rust protocol's documented init return names ra_path / toolchain / root_files, and the shipped op produces none of them (rust-ai-native-tcg/src/serve.rs:76 init_result; :282-284 re-init takes no params) — drift real, the parameter-and-keys gap is Rust-shaped, not Go-shaped; harvest d8a #f-211"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-211",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "shared anchor #CHECK-THE-PRINTED-POLICY-LINES"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES"
-   ],
-   "drift_count": 2,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [],
-   "evidence_refs": [],
-   "cites": [],
-   "reason": "`Defaulted` is a ConfigOrigin enum variant (vendor core-ai-native-conform/src/config.rs:231) and never reaches stderr — on a defaulted policy the tool prints 'go-ai-native-conform: NO conform.toml — topology default in force (roots = [\".\"], no cells gate); run go-ai-native init …' (go-ai-native-conform/src/lib.rs:31-35); drift is real in the first clause only; harvest d8b #f-190",
-   "reasons": [
-    "the prior reason cited vendor config.rs:173 pub floor_disable — the field that DRIVES the disabled-print — as evidence the print does not exist; drift is real in the first clause only; harvest d8b #f-190"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-190",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -2907,7 +2373,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "legacy-spec",
@@ -2953,7 +2419,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native",
@@ -3001,7 +2467,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -3057,7 +2523,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -3116,7 +2582,7 @@
    "drift_count": 2,
    "cross_package": true,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": true,
    "evidence_spans": [],
    "evidence_refs": [],
@@ -3162,7 +2628,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/decision-records",
@@ -3218,7 +2684,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "DEV-GUIDE.md",
@@ -3275,7 +2741,7 @@
    ],
    "drift_count": 2,
    "cross_package": false,
-   "installed": false,
+   "installed": true,
    "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
@@ -3335,7 +2801,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "DEV-GUIDE.md",
@@ -3390,7 +2856,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md",
@@ -3448,7 +2914,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     ".claude",
@@ -3507,7 +2973,7 @@
    "drift_count": 2,
    "cross_package": true,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": true,
    "evidence_spans": [],
    "evidence_refs": [],
@@ -3552,7 +3018,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "campaigns",
@@ -3611,7 +3077,7 @@
    ],
    "drift_count": 2,
    "cross_package": false,
-   "installed": false,
+   "installed": true,
    "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
@@ -3673,7 +3139,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -3721,69 +3187,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/managed-blocks"
-   ],
-   "files": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md#shortcuts-are-already-catalogued",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md#adoption-guide-pointer"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/managed-blocks",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:26  ##shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:27  smart detector, auto-repair, \"just regenerate the file\" — are",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:28  already catalogued with their failure modes in",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:29  [`rejected-designs.md`](../flows/managed-blocks/rejected-designs.md). @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:31  ##adoption-guide-pointer Migrating an existing overwriting tool, the fixture table for the",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:32  state machine, and what belongs inside the block:",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:33  [`adoption-guide.md`](../flows/managed-blocks/adoption-guide.md). @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:115  ## What belongs inside the block {#what-belongs}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:12  ## Migrating from whole-file overwrite {#migrating}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:78  ## Testing the state machine {#testing}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:87  | Fixture | Marker content | Expected verdict |",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:114  ## Whole-file ownership {#whole-file}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:13  ## A sidecar file instead of a block {#sidecar}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:51  ## Model-based or heuristic block detection {#model-detection}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:81  ## Auto-repairing a malformed block {#auto-repair}",
-    "spec/boot/STATIC.md:880  [`adoption-guide.md`](../flows/managed-blocks/adoption-guide.md).",
-    "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:166  - ##REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo). Rejected — it destroys co-tenant content; undoing it is the reason this PROP exists. @spec/done",
-    "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:167  - ##REJ-HEURISTIC-DETECTION **Heuristic or LLM-assisted block detection** (\"find the part that looks like vibevm's\"). Rejected — the region that gates a mutating write must be found by a deterministic byte scan, with no model and no guessing. @spec/done",
-    "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:168  - ##REJ-AUTO-REPAIR **Auto-repairing a malformed file** (delete the surplus marker, keep the first block). Rejected — vibevm never decides which of two regions is canonical; a malformed file is a hard stop for the human (§2.3). @spec/done",
-    "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT, second of this snippet's three `../flows/…` pointers and the same mechanism: `../flows/managed-blocks/rejected-designs.md` read from the compiled snippet's position in `spec/boot/STATIC.md` has no target, because the host has no `spec/flows/` directory. The catalogue itself is real and ships — the four shortcuts this sentence names (a sidecar file, a smart detector, auto-repair, «just regenerate the file») each have their own section in `rejected-designs.md` — so the claim about the content holds and the way a reader is told to reach it does not.",
-   "reasons": [
-    "DRIFT, third of three, same lane and same defect: `../flows/managed-blocks/adoption-guide.md` resolves nowhere from `spec/boot/`, where the host has no `spec/flows/`. The target exists in the package and the installed slot and carries all three things the pointer promises — the migration path for an overwriting tool, the fixture table for the state machine, and what belongs inside the block. Every pointer in this snippet shares the defect and every one reaches a session in that form."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:26  ##shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-243",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -3802,7 +3205,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -3837,55 +3240,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/qualified-naming"
-   ],
-   "files": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#grammar-and-forms-pointer"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/qualified-naming",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:16  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:1  # Qualified Naming Protocol {#root}",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:1  # Reference grammar {#root}",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:25  ref      := [ kind \":\" ] [ group \"/\" ] name [ \"@\" version ]",
-    "spec/boot/STATIC.md:1014  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
-    "spec/boot/STATIC.md:1031  Grammar and forms: [`ref-grammar.md`](../flows/qualified-naming/ref-grammar.md)."
-   ],
-   "cites": [],
-   "reason": "DRIFT on the pointer, W1's dangling family — seventh package in a row, and this snippet carries three. The instruction survives compilation into the host's boot lane word for word and the cited document exists in the package and the installed slot, so the content half is exact. The link is relative — `../flows/qualified-naming/…` — and resolves from `spec/boot/` to `spec/flows/qualified-naming/`, which does not exist: `ls -d spec/flows` returns «No such file or directory» and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms. So the one instruction that says «before the first name is minted» points a session at nothing.",
-   "reasons": [
-    "DRIFT, second of this snippet's three dangling `../flows/…` pointers. The target exists and does carry both a grammar production and a forms table, so the promise is kept inside the package, and the pointer reaches the host's boot lane verbatim. It resolves nowhere in the consuming project, because the host has no `spec/flows/` directory."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:16  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-246",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -3904,7 +3258,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -3963,7 +3317,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -4018,7 +3372,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -4071,7 +3425,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -4105,102 +3459,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/spec-genres"
-   ],
-   "files": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md#full-charters-pointer",
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md#routing-table-pointer"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/spec-genres",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:43  | Genre | Charter | Mutability | Reader | Authority |",
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md:13  ## The routing table {#routing}",
-    "spec/boot/STATIC.md:1185  [`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md`](../flows/spec-genres/SPEC-GENRES-PROTOCOL.md).",
-    "spec/boot/STATIC.md:1199  [`spec/flows/spec-genres/when-to-write-what.md`](../flows/spec-genres/when-to-write-what.md).",
-    "spec/design/README.md:13  ##genre-table-lead vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`: @doc/done",
-    "spec/design/README.md:36  ##when-to-write When a design discussion produces more reasoning than a PROP can absorb without losing its contract readability … (The general decision table is the flow's `when-to-write-what` document.) @doc/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the pointer, not on the charters — W1's dangling-sibling family, and the fact's SUBJECT is the pointer. The relative `../flows/spec-genres/SPEC-GENRES-PROTOCOL.md` is compiled verbatim into the host's `spec/boot/STATIC.md:1185`, and the host has no `spec/flows/` directory (`ls -d spec/flows` → No such file or directory), so from the one lane where a session actually reads this snippet the link resolves nowhere. The target itself is fine: the protocol ships in the package and in the installed slot, its table's column headers are exactly the three things the pointer promises plus Reader, and the host reaches it successfully by a different route — `spec/design/README.md:13` cites it by `spec://` address, which does resolve.",
-   "reasons": [
-    "DRIFT, same family and same mechanism as its two siblings in this snippet: the relative pointer is compiled into `spec/boot/STATIC.md:1199` and the host has no `spec/flows/` directory. The target is present and correct — `when-to-write-what.md` ships in the package and the installed slot and its routing table carries 7 situation rows. The host reaches the routing idea by naming the document rather than by following the path (`spec/design/README.md:36`)."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:43  | Genre | Charter | Mutability | Reader | Authority |",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-250",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "shared anchor #package-contents-lead"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/spec-genres",
-    "packages/org.vibevm.world/tool-design-lessons"
-   ],
-   "files": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/README.md",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/README.md#package-contents-lead",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md#package-contents-lead"
-   ],
-   "drift_count": 2,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.world/addressable-specs",
-    "packages/org.vibevm.world/spec-genres"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md:22  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
-    "packages/org.vibevm.world/spec-genres/v0.1.0/vibe.toml:16  source = \"spec/boot/17-flow-spec-genres.md\""
-   ],
-   "cites": [],
-   "reason": "DRIFT, and it is arithmetic the package can check against itself. The sentence promises «four pieces of content plus a boot snippet», which is five things. Four bullets follow, and the FOURTH one IS the boot snippet — so the snippet is counted twice and the flow documents are over-counted by one. What ships is three: `find packages/org.vibevm.world/spec-genres -type f` returns 7 files — LICENSE.md, README.md, vibe.toml, the snippet, and three documents under `spec/flows/spec-genres/`. The sibling convention makes it decidable rather than a reading: `addressable-specs` ships exactly the same shape, 3 flow documents plus a snippet, 7 files, and its identical anchor says «three». Widened to every `packages/org.vibevm.world/*/v*/README.md` carrying this anchor: 14 of 16 say «three», and the two saying «four» are this package and `tool-design-lessons` — which also ships only 3 flow documents plus its snippet. So the two outliers are both wrong in the same direction, and the majority is not a majority opinion but the correct count.",
-   "reasons": [
-    "DRIFT, and it is the second half of a pair `spec-genres` predicted. `find packages/org.vibevm.world/tool-design-lessons -type f | sort` returns exactly 7 files — LICENSE.md, README.md, vibe.toml, the boot snippet, and three documents under `spec/flows/tool-design-lessons/` — so the shipped content is THREE flow documents plus a snippet, and «four pieces of content plus a boot snippet» over-counts by one. The installed slot mirrors all 7 (`find vibedeps/flow-tool-design-lessons -type f`). This is decidable rather than a reading because the collection has a convention: across every `packages/org.vibevm.world/*/v*/README.md` carrying this anchor, 14 of 16 say «three», and the two saying «four» are `spec-genres` and this package — both shipping three. When `spec-genres` was judged, its worker named this package as the other outlier without opening it; the count here confirms that prediction independently."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md:22  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-251",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -4219,7 +3477,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/sync-from-code"
@@ -4257,107 +3515,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/tool-design-lessons"
-   ],
-   "files": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md#POINTER-SELF-UPDATING-TOOLS",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md#index-and-maxims-pointer"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/tool-design-lessons",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:24    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md). @impl/done",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:29  [`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md). @impl/done",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:34  ## Index {#index}",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:53  ## Cross-cutting maxims {#maxims}",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:16  ## S1 — activation truth is a live pointer, not the environment {#live-pointer}",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:244  ## S7 — removal and garbage collection that protect {#safe-removal}",
-    "spec/boot/STATIC.md:1290    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md).",
-    "spec/boot/STATIC.md:1295  [`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md)."
-   ],
-   "cites": [],
-   "reason": "DRIFT, W1's dangling family — sixth package in a row, and this snippet carries three. The content half is exact: the target covers all five subjects named, at S1 line 16 (activation), S2 54 (instances), S3 93 (identity), S4 131 (sources), S5 163 (environment edits) and S7 244 (removal). The path half fails where it is read: `ls -d spec/flows` reports ABSENT, so once the snippet is compiled into `spec/boot/STATIC.md` its `../flows/tool-design-lessons/…` links resolve nowhere in the consuming project. Inside the package the same links resolve, which is why the defect survives every check that runs against the package tree.",
-   "reasons": [
-    "DRIFT, third of three. The target carries `## Index {#index}` at line 34 (a 14-row table at 36-51) and `## Cross-cutting maxims {#maxims}` at 53 with three subsections, so the content is exactly as promised; all 14 index rows and all 14 `{#…}` link targets were resolved by hand. The pointer itself dangles from the compiled lane like its two siblings."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:24    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md). @impl/done",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-254",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/two-process-model"
-   ],
-   "files": [
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md#responsibility-table-pointer",
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md#file-channel-pointer"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/two-process-model",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
-    "spec/boot/STATIC.md:1366  Responsibility table: [`cognitive-load-split.md`](../flows/two-process-model/cognitive-load-split.md).",
-    "spec/boot/STATIC.md:1367  The file channel: [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md).",
-    "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md:1  # The cognitive load split {#root}",
-    "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md:1  # Files as IPC {#root}",
-    "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md:40  ## The three planes {#planes}"
-   ],
-   "cites": [],
-   "reason": "DRIFT: second of the three sibling pointers in this snippet. cognitive-load-split.md exists in the package and the installed slot and does carry the responsibility table (three zones, the shared-work table at 40-45), but the compiled link resolves to spec/flows/two-process-model/cognitive-load-split.md, which the host does not have.",
-   "reasons": [
-    "DRIFT: third of the three. files-as-ipc.md exists and is installed and is about the file channel (§planes, §requirements), and the same document is cited a second time from inside CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY — so the snippet dangles the same path twice. files_written = [] plus a verbatim compile is the mechanism; the package's own tree resolves it fine."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-255",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -4376,7 +3533,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -4432,7 +3589,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -4487,7 +3644,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "SPECSPACES.md",
@@ -4544,7 +3701,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native"
@@ -4586,7 +3743,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "campaigns",
@@ -4712,7 +3869,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/rust-ai-native-lang"
@@ -4754,7 +3911,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/rust-ai-native-lang",
@@ -4797,7 +3954,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/rust-ai-native-lang"
@@ -4838,7 +3995,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/rust-ai-native-lang"
@@ -4880,7 +4037,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/typescript-ai-native-lang"
@@ -4921,7 +4078,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -4965,7 +4122,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md"
@@ -5012,7 +4169,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "VIBEVM-SPEC.md",
@@ -5060,7 +4217,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -5108,7 +4265,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -5138,52 +4295,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/campaign-plans"
-   ],
-   "files": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#format-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/campaign-plans",
-    "spec",
-    "vibe.lock",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
-    "spec/boot/STATIC.md:81  [`../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md`](../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md).",
-    "vibe.lock:191  files_written = []",
-    "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the fact's SUBJECT is the pointer. `../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` resolves inside the package and inside the install slot, and not from `spec/boot/STATIC.md:127` where the host actually reads it — `ls spec/` returns WAL.md boot common design manual-tests modules terraforms, with no `flows`. W1's 69-dangling family; the format document itself ships and says what the snippet says it says.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-294",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -5201,7 +4312,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.fractality/fractality",
@@ -5250,7 +4361,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "legacy-spec",
@@ -5297,7 +4408,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "legacy-spec",
@@ -5347,7 +4458,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "docs"
@@ -5392,7 +4503,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/decision-records",
@@ -5441,7 +4552,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/decision-records",
@@ -5478,141 +4589,6 @@
     "single row"
    ],
    "packages": [
-    "packages/org.vibevm.world/discovery-prompt"
-   ],
-   "files": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md#deployment-walkthrough-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/discovery-prompt",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:79  ## The structural pieces {#pieces}",
-    "spec/boot/STATIC.md:342  [`spec/flows/discovery-prompt/usage.md`](../flows/discovery-prompt/usage.md).",
-    "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:143  ## Re-derive for your project {#re-derive}"
-   ],
-   "cites": [],
-   "reason": "DRIFT: same family and the same reason — this fact is nothing but the pointer. The target file exists and does carry both promised things (a four-step §deploy at usage.md:63-74 and an eleven-row §pieces table at :79-93), so the claim about the CONTENT is true; what fails is the path, which resolves in the package and the install slot and not from spec/boot/STATIC.md:342, where the host actually reads it. Second of the snippet's three `../flows/…` pointers; the third sits under a rule and is judged on the rule.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-300",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/discovery-prompt"
-   ],
-   "files": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md#ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/discovery-prompt",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
-    "spec/boot/STATIC.md:331  [`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`](../flows/discovery-prompt/DISCOVERY-PROMPT.md).",
-    "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the fact's SUBJECT is the location, and the location does not exist where the snippet is read. `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` resolves inside the package and inside `vibedeps/flow-discovery-prompt/0.1.0/`, but the snippet is compiled into the host's boot lane at spec/boot/STATIC.md:331 carrying the same `../flows/…` target, and `ls spec/` returns WAL.md boot common design manual-tests modules terraforms — the host has no `spec/flows/` directory at all. This is W1's 69-dangling family, now in its eighth package; the campaign's line is that a fact whose subject IS the pointer drifts, while a rule fact that merely contains one is judged on the rule (see NEVER-EDIT-THE-ARTIFACT-IN-PLACE in this same file, confirmed).",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-302",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/git-atomic-commits"
-   ],
-   "files": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md#splitting-procedure-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "campaigns",
-    "packages/org.vibevm.world/git-atomic-commits",
-    "spec",
-    "vibe.lock"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:1  # Splitting a large working tree into atomic commits {#root}",
-    "spec/boot/STATIC.md:594  [`spec/flows/atomic-commits/splitting-large-changes.md`](../flows/atomic-commits/splitting-large-changes.md).",
-    "vibe.lock:251  files_written = []"
-   ],
-   "cites": [],
-   "reason": "**the pointer a booting session reads lands on nothing.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host. `files_written = []` means this package will never create it either",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-305",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
     "packages/org.vibevm.world/git-attribution-policy"
    ],
    "files": [
@@ -5624,7 +4600,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     ".claude",
@@ -5678,7 +4654,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/git-atomic-commits",
@@ -5728,7 +4704,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -5780,7 +4756,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "campaigns",
@@ -5832,7 +4808,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/git-practices",
@@ -5877,7 +4853,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md",
@@ -5927,7 +4903,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "ROADMAP.md",
@@ -5975,7 +4951,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md"
@@ -6023,7 +4999,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md",
@@ -6065,37 +5041,35 @@
     "packages/org.vibevm.world/health-audit"
    ],
    "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md"
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md"
    ],
    "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#flow-document-pointers"
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#full-protocol-pointer"
    ],
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
-    "spec",
-    "vibedeps"
+    "packages/org.vibevm.world/health-audit"
    ],
    "evidence_refs": [
-    "spec/boot/STATIC.md:780  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
-    "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:34  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
-    "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:36  [`../flows/health-audit/audit-checklist.md`](../flows/health-audit/audit-checklist.md);",
-    "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:38  [`../flows/health-audit/running-an-audit.md`](../flows/health-audit/running-an-audit.md)."
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:1  # Running an audit {#root}"
    ],
    "cites": [],
-   "reason": "DRIFT: the fact's subject is three `../flows/health-audit/…` pointers and the host has no `spec/flows/` directory, so all three resolve nowhere from `spec/boot/STATIC.md` where the snippet is read. The documents themselves ship and say what the snippet says they say, in the package and in the installed slot. W1's 69-dangling family, ninth package.",
+   "reason": "DRIFT: the fact's subject is the pointer, and the directory it names does not exist in the consuming project. `ls -d spec/flows` returns «No such file or directory»; the host's spec/ holds WAL.md, boot, common, design, manual-tests, modules, terraforms. The three documents DO ship, in the package and at `vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/`. An agent that read this skill inside this repository and followed the pointer literally would find nothing — which the skill's own step-1 fallback half anticipates. W1's 69-dangling family.",
    "reasons": [],
    "status": "open",
    "wave": 1,
    "closure_route": "prose-edit",
-   "fact": "spec/boot/STATIC.md:780  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
-   "falsifier": "mixed",
+   "fact": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
+   "falsifier": "self",
    "routed_out": [],
    "owed": 1,
-   "id": "F-313",
+   "id": "F-136",
    "id_source": "minted",
    "carried": true
   },
@@ -6117,7 +5091,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "LICENSE.md",
@@ -6170,7 +5144,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "Cargo.toml",
@@ -6224,7 +5198,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -6263,57 +5237,6 @@
   },
   {
    "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/managed-blocks"
-   ],
-   "files": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md#READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/managed-blocks",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:19  ##READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:20  file the tool does not fully own, read",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:21  [`MANAGED-BLOCKS-PROTOCOL.md`](../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md)",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:22  first: marker design, the absent / present / malformed state",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:23  machine, the three verbs (create / update / remove), plan-time",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:24  classification. @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:125  ## Well-formedness: absent, present, malformed {#state-machine}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:152  ## The three verbs {#verbs}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:188  ## Classify at plan time, not mid-write {#plan-time}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:74  ## Marker design {#markers}",
-    "spec/boot/STATIC.md:871  [`MANAGED-BLOCKS-PROTOCOL.md`](../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md)"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the pointer, W1's 69-dangling family — fifth package in a row, and this snippet carries three of them. The four promised elements all exist as sections of the cited file (§markers 74, §state-machine 125, §verbs 152, §plan-time 188), so the content half is exact. The path half is not: the link is the relative `../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md`, the snippet is compiled into `spec/boot/STATIC.md`, so it resolves against `spec/boot/` → `spec/flows/managed-blocks/…`, and `ls -d spec/flows` returns «No such file or directory». The document exists in the package and in the installed slot; it is unreachable from the one lane where a session reads this instruction, which is the lane the word «Before» is addressed to.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:19  ##READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-316",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
    "rule": "r-zero-instances",
    "merged_by": [
     "single row"
@@ -6330,7 +5253,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -6381,7 +5304,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "manual-tests",
@@ -6433,7 +5356,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "manual-tests",
@@ -6484,7 +5407,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "manual-tests",
@@ -6533,7 +5456,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "manual-tests",
@@ -6584,7 +5507,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/operating-modes",
@@ -6633,7 +5556,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec",
@@ -6673,50 +5596,6 @@
     "packages/org.vibevm.world/operating-modes"
    ],
    "files": [
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md#worked-mode-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "spec"
-   ],
-   "evidence_refs": [
-    "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
-    "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.md#mfbt)) — pre-authorised heads-down execution. …",
-    "spec/boot/STATIC.md:971  The catalogue ships one worked mode:",
-    "spec/boot/STATIC.md:972  [`mfbt-mode.md`](../flows/operating-modes/mfbt-mode.md) — heads-down",
-    "spec/boot/STATIC.md:973  pre-authorised execution («move fast and break things»)."
-   ],
-   "cites": [],
-   "reason": "DRIFT, same family and same reason: `../flows/operating-modes/mfbt-mode.md` resolves nowhere in the consuming project. The document ships and carries the worked mode it promises. Second of the snippet's two `../flows/` pointers.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-323",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/operating-modes"
-   ],
-   "files": [
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md"
    ],
    "anchors": [
@@ -6725,7 +5604,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec",
@@ -6757,92 +5636,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/operating-modes"
-   ],
-   "files": [
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md#codeword-catalogue-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "spec"
-   ],
-   "evidence_refs": [
-    "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
-    "spec/boot/STATIC.md:962  The project's codewords are catalogued in",
-    "spec/boot/STATIC.md:963  [`OPERATING-MODES-PROTOCOL.md`](../flows/operating-modes/OPERATING-MODES-PROTOCOL.md).",
-    "spec/common/PROP-006-operating-modes.md:13  ##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.md`](../boot/90-user.md). @freeze/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the fact's subject is a `../flows/operating-modes/OPERATING-MODES-PROTOCOL.md` pointer, and the host has no `spec/flows/` directory, so it resolves nowhere from `spec/boot/STATIC.md` where the snippet is read. The protocol itself ships, in the package and in the installed slot. W1's 69-dangling family, tenth package. NOTE the host DOES maintain the catalogue this pointer is about, at `spec/boot/90-user.md`, with one entry — so the content the pointer promises exists here under a different address.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-324",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/qualified-naming"
-   ],
-   "files": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#fork-by-fork-rationale-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/qualified-naming",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:9  ##four-forks Four forks: flat versus grouped, enforce versus recommend, where short",
-    "spec/boot/STATIC.md:1032  Fork-by-fork rationale: [`naming-forks.md`](../flows/qualified-naming/naming-forks.md)."
-   ],
-   "cites": [],
-   "reason": "DRIFT, third of three. The target exists and carries four forks each with a `##CHOSEN-*` resolution, so the content is as promised; the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-245",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -6860,7 +5653,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/redbook",
@@ -6908,7 +5701,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -6957,7 +5750,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -7005,7 +5798,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates"
@@ -7050,7 +5843,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -7084,50 +5877,6 @@
   },
   {
    "type": "missing-support",
-   "rule": "r-no-checker",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/source-mirrors"
-   ],
-   "files": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md#fanout-mechanics-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/source-mirrors",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:159  ## Reference implementation {#reference}",
-    "spec/boot/STATIC.md:1133  [`spec/flows/source-mirrors/fanout-mechanics.md`](../flows/source-mirrors/fanout-mechanics.md).",
-    "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:131  ## Reference implementation {#reference}"
-   ],
-   "cites": [],
-   "reason": "DRIFT, second of the snippet's three dangling `../flows/…` pointers, compiled into `STATIC.md:1133` where nothing resolves. The content half of the claim holds — the target exists in package and slot and does carry a reference script at §reference. `PROP-016:57` reaches the same document via the working form `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root`.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:159  ## Reference implementation {#reference}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-332",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
     "single row"
@@ -7144,7 +5893,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/source-mirrors",
@@ -7194,7 +5943,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "mirrors.toml",
@@ -7220,50 +5969,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/source-mirrors"
-   ],
-   "files": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md#maintainers-day-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/source-mirrors",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
-    "spec/boot/STATIC.md:1135  [`spec/flows/source-mirrors/daily-loop.md`](../flows/source-mirrors/daily-loop.md).",
-    "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}"
-   ],
-   "cites": [],
-   "reason": "DRIFT, third of three, same mechanism and same lane (`STATIC.md:1135`). The target exists in the package and in `vibedeps/`; the `../flows/…` path resolves nowhere in the host because `spec/flows/` does not exist. `PROP-016:8` addresses it successfully as `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root`. All three of this snippet's pointers share the defect and all three reach a session in that form.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-334",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -7281,7 +5986,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -7328,7 +6033,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -7359,49 +6064,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/spec-genres"
-   ],
-   "files": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md#design-docs-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/spec-genres",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md:14  ## What stays in the contract, what spills out {#split}",
-    "spec/boot/STATIC.md:1201  [`spec/flows/spec-genres/design-docs.md`](../flows/spec-genres/design-docs.md).",
-    "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE … load-bearing rationale — the decision itself and the alternatives weighed, in each PROP's `Decision` / `Rejected alternatives` sections … — stays inside the PROP; the narrative lore moves out to here (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#contract-vs-lore`). @doc/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT, the third of the snippet's three dangling relative pointers (`STATIC.md:1201`, no host `spec/flows/`). RECORDED, because this one is weaker than its siblings in a second way the reviewer should see: the host never reaches `design-docs.md` at all. `grep 'design-docs'` across `spec/`, `campaigns/` and `CLAUDE.md` returns only the compiled pointer itself — when the host wants the contract/lore split it cites the PROTOCOL's `#contract-vs-lore` anchor instead. So the document ships, is installed, and is consumed by nobody through this pointer or any other.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md:14  ## What stays in the contract, what spills out {#split}",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-337",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "missing-support",
    "rule": "r-zero-instances",
    "merged_by": [
@@ -7418,7 +6080,7 @@
    ],
    "drift_count": 1,
    "cross_package": false,
-   "installed": false,
+   "installed": true,
    "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
@@ -7468,7 +6130,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.world/sync-from-code"
@@ -7515,7 +6177,7 @@
    ],
    "drift_count": 1,
    "cross_package": false,
-   "installed": false,
+   "installed": true,
    "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
@@ -7565,7 +6227,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "campaigns",
@@ -7615,7 +6277,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -7662,7 +6324,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -7713,7 +6375,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -7747,51 +6409,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/tool-design-lessons"
-   ],
-   "files": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md#POINTER-PACKAGING-LESSONS"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/tool-design-lessons",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:26    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md). @impl/done",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:152  ## P5 — vendor and commit the bootstrap toolchain {#vendor-bootstrap}",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:53  ## P2 — ship the runtime, not a description of it {#ship-runtime}",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:85  ## P3 — identity is the source, excluded by denylist {#identity-is-source}",
-    "spec/boot/STATIC.md:1292    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md)."
-   ],
-   "cites": [],
-   "reason": "DRIFT, second of this snippet's three. The target covers the three subjects named — what ships (P2, line 53), what identity is (P3, 85), the bootstrap (P5, 152) — and the `../flows/…` path has no target from `spec/boot/`, where the host has no `spec/flows/` directory. Same mechanism, same lane, same package.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:26    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md). @impl/done",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-345",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -7809,7 +6426,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "spec"
@@ -7839,49 +6456,6 @@
    "carried": true
   },
   {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/two-process-model"
-   ],
-   "files": [
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md#full-model-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "spec/WAL.md:24  files), and a second family runs through every package: **69 relative `../flows/…`",
-    "spec/boot/STATIC.md:1365  Full model: [`TWO-PROCESS-MODEL.md`](../flows/two-process-model/TWO-PROCESS-MODEL.md).",
-    "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:1  # The Two-Process Model {#root}"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the pointer does not resolve for the reader it is written for. The target exists and is installed (vibedeps/flow-two-process-model/0.1.0/…/TWO-PROCESS-MODEL.md, 190 lines), but STATIC.md:1365 keeps the relative link ../flows/two-process-model/TWO-PROCESS-MODEL.md, which from spec/boot/ means spec/flows/two-process-model/TWO-PROCESS-MODEL.md, and `ls spec/flows` returns 'No such file or directory'. W1's 69-dangling family; the same anchor name was judged drift there.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "spec/WAL.md:24  files), and a second family runs through every package: **69 relative `../flows/…`",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-348",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -7899,7 +6473,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md"
@@ -7945,7 +6519,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -7995,7 +6569,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native"
@@ -8042,7 +6616,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -8091,7 +6665,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": true,
+   "installed_differs": false,
    "release_event": false,
    "evidence_spans": [
     "SPECSPACES.md",
@@ -8429,6 +7003,71 @@
    "carried": true
   },
   {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "shared anchor #sibling-document-pointers"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/campaign-plans",
+    "packages/org.vibevm.world/comparative-research",
+    "packages/org.vibevm.world/dev-runtime-docs",
+    "packages/org.vibevm.world/git-attribution-policy",
+    "packages/org.vibevm.world/git-autonomy",
+    "packages/org.vibevm.world/git-conventional-commits",
+    "packages/org.vibevm.world/licensing",
+    "packages/org.vibevm.world/sync-from-code"
+   ],
+   "files": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md",
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md",
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md",
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md",
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md",
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#sibling-document-pointers",
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md#sibling-document-pointers",
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md#sibling-document-pointers",
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md#sibling-document-pointers",
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md#sibling-document-pointers",
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md#sibling-document-pointers",
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md#sibling-document-pointers",
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md#sibling-document-pointers"
+   ],
+   "drift_count": 8,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [
+    "campaigns",
+    "packages/org.vibevm.world/comparative-research",
+    "packages/org.vibevm.world/dev-runtime-docs",
+    "packages/org.vibevm.world/git-attribution-policy",
+    "packages/org.vibevm.world/git-autonomy",
+    "packages/org.vibevm.world/git-conventional-commits",
+    "packages/org.vibevm.world/sync-from-code",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT, same family and the same reason: this fact is two pointers and nothing else. Both targets ship and both carry what is promised — phase mechanics and the record half — so the CONTENT claim is true; the paths are what fail, resolving to a `spec/flows/` the consuming project does not have. Third of the three `../flows/` pointers in this snippet; the other rules that merely contain such a link are judged on their rules.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:18  ##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 8,
+   "id": "F-145",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -8606,6 +7245,54 @@
    "routed_out": [],
    "owed": 6,
    "id": "F-152",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-path-does-not-resolve",
+   "merged_by": [
+    "reason-text j=1.00"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md#GO-CODE-FOLLOWS-THE-GO-GUIDE",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md#CARD-REGISTRY-FOR-GO",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md#RUST-CODE-FOLLOWS-THE-RUST-GUIDE",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md#CARD-REGISTRY-FOR-RUST",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md#TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md#CARD-REGISTRY-FOR-TYPESCRIPT"
+   ],
+   "drift_count": 6,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:12  ##CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` in this package (trigger → card;",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 6,
+   "id": "F-153",
    "id_source": "minted",
    "carried": true
   },
@@ -9273,6 +7960,123 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "shared anchor #MOTIVATION"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md#MOTIVATION",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md#MOTIVATION",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md#MOTIVATION"
+   ],
+   "drift_count": 3,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "RESTATED — drift is real but the recorded reason needs two corrections: the five-parameter signature the go card prints is the RUST CLI's shape (rust-ai-native-cli/src/main.rs:181 AddCell), while the shipped go verb takes two parameters (go-ai-native-cli/src/main.rs:153-158) and writes three files (codemod.rs:109-114); and the recorded 'no Example stub is written' clause is false — the stub IS written; a reader typing the documented command still gets an argument error; harvest d8a #f-188",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-188",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "shared anchor #COMPONENT-THE-PRODUCT-SEAM"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#COMPONENT-THE-PRODUCT-SEAM",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md#COMPONENT-THE-PRODUCT-SEAM",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md#COMPONENT-THE-PRODUCT-SEAM"
+   ],
+   "drift_count": 3,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "the same document already states the new topology correctly at ##STAGE-A-CONSULTATION-ORACLE (:141-144, 'the MCP delivery half ships in the go-ai-native-mcp package') — nothing here rests on whether this repository consumes Go; harvest d8b #f-189",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-189",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "shared anchor #CHECK-THE-PRINTED-POLICY-LINES"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES"
+   ],
+   "drift_count": 2,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [],
+   "cites": [],
+   "reason": "`Defaulted` is a ConfigOrigin enum variant (vendor core-ai-native-conform/src/config.rs:231) and never reaches stderr — on a defaulted policy the tool prints 'go-ai-native-conform: NO conform.toml — topology default in force (roots = [\".\"], no cells gate); run go-ai-native init …' (go-ai-native-conform/src/lib.rs:31-35); drift is real in the first clause only; harvest d8b #f-190",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-190",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -9347,6 +8151,45 @@
    "routed_out": [],
    "owed": 3,
    "id": "F-192",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "reason-text j=1.00"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#POINTER-THE-PROTOCOL",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#POINTER-THE-AUTHORING-RULES",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md#POINTER-THE-SPEC-TREE-LAYOUT"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/addressable-specs",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:34  ## Why addressability is requirement #1 {#why}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-193",
    "id_source": "minted",
    "carried": true
   },
@@ -9550,6 +8393,45 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-209",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "shared anchor #OP-INIT"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md#OP-INIT",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#OP-INIT"
+   ],
+   "drift_count": 2,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**three of five keys and the one parameter are absent.** The protocol prints `init {root}` → `{gopls_version, gopls_path, go_version, root_files, ready}`. The shipped op takes no params — the root is the process root (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294) — and returns gopls_version, position_encoding, pull_diagnostics, ready (serve.rs:74-84). `gopls_path`, `go_version` and `root_files` are never produced; `position_encoding` and `pull_diagnostics` are produced and undocumented",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-211",
    "id_source": "minted",
    "carried": true
   },
@@ -9983,6 +8865,274 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-242",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/managed-blocks"
+   ],
+   "files": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md#shortcuts-are-already-catalogued",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md#adoption-guide-pointer"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/managed-blocks",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, second of this snippet's three `../flows/…` pointers and the same mechanism: `../flows/managed-blocks/rejected-designs.md` read from the compiled snippet's position in `spec/boot/STATIC.md` has no target, because the host has no `spec/flows/` directory. The catalogue itself is real and ships — the four shortcuts this sentence names (a sidecar file, a smart detector, auto-repair, «just regenerate the file») each have their own section in `rejected-designs.md` — so the claim about the content holds and the way a reader is told to reach it does not.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:26  ##shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-243",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/qualified-naming"
+   ],
+   "files": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#fork-by-fork-rationale-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/qualified-naming",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, third of three. The target exists and carries four forks each with a `##CHOSEN-*` resolution, so the content is as promised; the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-245",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/qualified-naming"
+   ],
+   "files": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md#grammar-and-forms-pointer"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/qualified-naming",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the pointer, W1's dangling family — seventh package in a row, and this snippet carries three. The instruction survives compilation into the host's boot lane word for word and the cited document exists in the package and the installed slot, so the content half is exact. The link is relative — `../flows/qualified-naming/…` — and resolves from `spec/boot/` to `spec/flows/qualified-naming/`, which does not exist: `ls -d spec/flows` returns «No such file or directory» and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms. So the one instruction that says «before the first name is minted» points a session at nothing.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:16  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-246",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/spec-genres"
+   ],
+   "files": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md#full-charters-pointer",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md#routing-table-pointer"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/spec-genres",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the pointer, not on the charters — W1's dangling-sibling family, and the fact's SUBJECT is the pointer. The relative `../flows/spec-genres/SPEC-GENRES-PROTOCOL.md` is compiled verbatim into the host's `spec/boot/STATIC.md:1185`, and the host has no `spec/flows/` directory (`ls -d spec/flows` → No such file or directory), so from the one lane where a session actually reads this snippet the link resolves nowhere. The target itself is fine: the protocol ships in the package and in the installed slot, its table's column headers are exactly the three things the pointer promises plus Reader, and the host reaches it successfully by a different route — `spec/design/README.md:13` cites it by `spec://` address, which does resolve.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:43  | Genre | Charter | Mutability | Reader | Authority |",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-250",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "shared anchor #package-contents-lead"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/spec-genres",
+    "packages/org.vibevm.world/tool-design-lessons"
+   ],
+   "files": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/README.md",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/README.md#package-contents-lead",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md#package-contents-lead"
+   ],
+   "drift_count": 2,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [
+    "packages/org.vibevm.world/addressable-specs",
+    "packages/org.vibevm.world/spec-genres"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and it is arithmetic the package can check against itself. The sentence promises «four pieces of content plus a boot snippet», which is five things. Four bullets follow, and the FOURTH one IS the boot snippet — so the snippet is counted twice and the flow documents are over-counted by one. What ships is three: `find packages/org.vibevm.world/spec-genres -type f` returns 7 files — LICENSE.md, README.md, vibe.toml, the snippet, and three documents under `spec/flows/spec-genres/`. The sibling convention makes it decidable rather than a reading: `addressable-specs` ships exactly the same shape, 3 flow documents plus a snippet, 7 files, and its identical anchor says «three». Widened to every `packages/org.vibevm.world/*/v*/README.md` carrying this anchor: 14 of 16 say «three», and the two saying «four» are this package and `tool-design-lessons` — which also ships only 3 flow documents plus its snippet. So the two outliers are both wrong in the same direction, and the majority is not a majority opinion but the correct count.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md:22  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-251",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/tool-design-lessons"
+   ],
+   "files": [
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md#POINTER-SELF-UPDATING-TOOLS",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md#index-and-maxims-pointer"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/tool-design-lessons",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, W1's dangling family — sixth package in a row, and this snippet carries three. The content half is exact: the target covers all five subjects named, at S1 line 16 (activation), S2 54 (instances), S3 93 (identity), S4 131 (sources), S5 163 (environment edits) and S7 244 (removal). The path half fails where it is read: `ls -d spec/flows` reports ABSENT, so once the snippet is compiled into `spec/boot/STATIC.md` its `../flows/tool-design-lessons/…` links resolve nowhere in the consuming project. Inside the package the same links resolve, which is why the defect survives every check that runs against the package tree.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:24    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md). @impl/done",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-254",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/two-process-model"
+   ],
+   "files": [
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md#responsibility-table-pointer",
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md#file-channel-pointer"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/two-process-model",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT: second of the three sibling pointers in this snippet. cognitive-load-split.md exists in the package and the installed slot and does carry the responsibility table (three zones, the shared-work table at 40-45), but the compiled link resolves to spec/flows/two-process-model/cognitive-load-split.md, which the host does not have.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-255",
    "id_source": "minted",
    "carried": true
   },
@@ -10785,6 +9935,45 @@
    "carried": true
   },
   {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/campaign-plans"
+   ],
+   "files": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md#format-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/campaign-plans",
+    "spec",
+    "vibe.lock",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the fact's SUBJECT is the pointer. `../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` resolves inside the package and inside the install slot, and not from `spec/boot/STATIC.md:127` where the host actually reads it — `ls spec/` returns WAL.md boot common design manual-tests modules terraforms, with no `flows`. W1's 69-dangling family; the format document itself ships and says what the snippet says it says.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-294",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -10828,6 +10017,44 @@
     "packages/org.vibevm.world/discovery-prompt"
    ],
    "files": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md#deployment-walkthrough-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/discovery-prompt",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT: same family and the same reason — this fact is nothing but the pointer. The target file exists and does carry both promised things (a four-step §deploy at usage.md:63-74 and an eleven-row §pieces table at :79-93), so the claim about the CONTENT is true; what fails is the path, which resolves in the package and the install slot and not from spec/boot/STATIC.md:342, where the host actually reads it. Second of the snippet's three `../flows/…` pointers; the third sits under a rule and is judged on the rule.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-300",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/discovery-prompt"
+   ],
+   "files": [
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md"
    ],
    "anchors": [
@@ -10849,6 +10076,44 @@
    "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
    "falsifier": "self",
    "id": "F-301",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/discovery-prompt"
+   ],
+   "files": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md#ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/discovery-prompt",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the fact's SUBJECT is the location, and the location does not exist where the snippet is read. `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` resolves inside the package and inside `vibedeps/flow-discovery-prompt/0.1.0/`, but the snippet is compiled into the host's boot lane at spec/boot/STATIC.md:331 carrying the same `../flows/…` target, and `ls spec/` returns WAL.md boot common design manual-tests modules terraforms — the host has no `spec/flows/` directory at all. This is W1's 69-dangling family, now in its eighth package; the campaign's line is that a fact whose subject IS the pointer drifts, while a rule fact that merely contains one is judged on the rule (see NEVER-EDIT-THE-ARTIFACT-IN-PLACE in this same file, confirmed).",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-302",
    "id_source": "minted",
    "carried": true
   },
@@ -10927,6 +10192,45 @@
    "carried": true
   },
   {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/git-atomic-commits"
+   ],
+   "files": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md#splitting-procedure-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "campaigns",
+    "packages/org.vibevm.world/git-atomic-commits",
+    "spec",
+    "vibe.lock"
+   ],
+   "cites": [],
+   "reason": "**the pointer a booting session reads lands on nothing.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host. `files_written = []` means this package will never create it either",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-305",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-no-checker",
    "merged_by": [
@@ -10965,6 +10269,43 @@
    "carried": true
   },
   {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#flow-document-pointers"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the fact's subject is three `../flows/health-audit/…` pointers and the host has no `spec/flows/` directory, so all three resolve nowhere from `spec/boot/STATIC.md` where the snippet is read. The documents themselves ship and say what the snippet says they say, in the package and in the installed slot. W1's 69-dangling family, ninth package.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "spec/boot/STATIC.md:780  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-313",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -10998,6 +10339,115 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-315",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/managed-blocks"
+   ],
+   "files": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md#READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/managed-blocks",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the pointer, W1's 69-dangling family — fifth package in a row, and this snippet carries three of them. The four promised elements all exist as sections of the cited file (§markers 74, §state-machine 125, §verbs 152, §plan-time 188), so the content half is exact. The path half is not: the link is the relative `../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md`, the snippet is compiled into `spec/boot/STATIC.md`, so it resolves against `spec/boot/` → `spec/flows/managed-blocks/…`, and `ls -d spec/flows` returns «No such file or directory». The document exists in the package and in the installed slot; it is unreachable from the one lane where a session reads this instruction, which is the lane the word «Before» is addressed to.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:19  ##READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-316",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/operating-modes"
+   ],
+   "files": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md#worked-mode-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, same family and same reason: `../flows/operating-modes/mfbt-mode.md` resolves nowhere in the consuming project. The document ships and carries the worked mode it promises. Second of the snippet's two `../flows/` pointers.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-323",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/operating-modes"
+   ],
+   "files": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md#codeword-catalogue-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the fact's subject is a `../flows/operating-modes/OPERATING-MODES-PROTOCOL.md` pointer, and the host has no `spec/flows/` directory, so it resolves nowhere from `spec/boot/STATIC.md` where the snippet is read. The protocol itself ships, in the package and in the installed slot. W1's 69-dangling family, tenth package. NOTE the host DOES maintain the catalogue this pointer is about, at `spec/boot/90-user.md`, with one entry — so the content the pointer promises exists here under a different address.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-324",
    "id_source": "minted",
    "carried": true
   },
@@ -11114,6 +10564,44 @@
   },
   {
    "type": "missing-support",
+   "rule": "r-no-checker",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/source-mirrors"
+   ],
+   "files": [
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md#fanout-mechanics-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/source-mirrors",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT, second of the snippet's three dangling `../flows/…` pointers, compiled into `STATIC.md:1133` where nothing resolves. The content half of the claim holds — the target exists in package and slot and does carry a reference script at §reference. `PROP-016:57` reaches the same document via the working form `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root`.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:159  ## Reference implementation {#reference}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-332",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
     "single row"
@@ -11146,6 +10634,81 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-333",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/source-mirrors"
+   ],
+   "files": [
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md#maintainers-day-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/source-mirrors",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT, third of three, same mechanism and same lane (`STATIC.md:1135`). The target exists in the package and in `vibedeps/`; the `../flows/…` path resolves nowhere in the host because `spec/flows/` does not exist. `PROP-016:8` addresses it successfully as `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root`. All three of this snippet's pointers share the defect and all three reach a session in that form.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-334",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/spec-genres"
+   ],
+   "files": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md#design-docs-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/spec-genres",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, the third of the snippet's three dangling relative pointers (`STATIC.md:1201`, no host `spec/flows/`). RECORDED, because this one is weaker than its siblings in a second way the reviewer should see: the host never reaches `design-docs.md` at all. `grep 'design-docs'` across `spec/`, `campaigns/` and `CLAUDE.md` returns only the compiled pointer itself — when the host wants the contract/lore split it cites the PROTOCOL's `#contract-vs-lore` anchor instead. So the document ships, is installed, and is consumed by nobody through this pointer or any other.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md:14  ## What stays in the contract, what spills out {#split}",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-337",
    "id_source": "minted",
    "carried": true
   },
@@ -11187,6 +10750,43 @@
    "carried": true
   },
   {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/tool-design-lessons"
+   ],
+   "files": [
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md#POINTER-PACKAGING-LESSONS"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/tool-design-lessons",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, second of this snippet's three. The target covers the three subjects named — what ships (P2, line 53), what identity is (P3, 85), the bootstrap (P5, 152) — and the `../flows/…` path has no target from `spec/boot/`, where the host has no `spec/flows/` directory. Same mechanism, same lane, same package.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:26    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md). @impl/done",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-345",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -11219,6 +10819,43 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-346",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/two-process-model"
+   ],
+   "files": [
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md#full-model-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the pointer does not resolve for the reader it is written for. The target exists and is installed (vibedeps/flow-two-process-model/0.1.0/…/TWO-PROCESS-MODEL.md, 190 lines), but STATIC.md:1365 keeps the relative link ../flows/two-process-model/TWO-PROCESS-MODEL.md, which from spec/boot/ means spec/flows/two-process-model/TWO-PROCESS-MODEL.md, and `ls spec/flows` returns 'No such file or directory'. W1's 69-dangling family; the same anchor name was judged drift there.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "spec/WAL.md:24  files), and a second family runs through every package: **69 relative `../flows/…`",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-348",
    "id_source": "minted",
    "carried": true
   },

@@ -4065,6 +4065,56 @@ aspirational — and every one is still live for the phases that remain.
   with «not an addressable anchor of this file» — the slice was rebuilt from
   `routing.json`'s true paths and merged 21/21.
 
+- **2026-07-31 · волна 9 — THE PUBLICATION. The address family closes whole,
+  the release batch lands, and the lane heals: `../flows/` in the compiled
+  boot lane goes 69 → 0.** The owner's «Публикуй» executed through the
+  probed runbook; the marker fork was ruled **(а)** — publish as is — after
+  the owner caught what the (б) recommendation missed: naive stripping breaks
+  cross-lane resolution (a dynamic module can cite an anchor that vanished
+  with the cleaning), so stripping waits for an aliasing design
+  (`#use spec://… as SOMETHING`), filed as **B-011**.
+
+  **The event is local, and no version was bumped**: the lockfile has pointed
+  all 36 packages at this working copy since 2026-07-26, so
+  `vibe reinstall --force` re-fetched every pinned version from `packages/`
+  and regenerated the boot artifacts — 206 files under `vibedeps/` +
+  `spec/boot/` moved (+15 167 / −9 950), carrying Phase B's markup into the
+  installed lane as §3.5 said a re-vendor would. **What was applied before
+  the re-vendor:** the address transformation (`address-repair.py --apply`,
+  62 constructs in 25 files, 0 residual); the release-batch finals (F-153's
+  six `spec/`-prefixes **plus the eight unjudged twins in the same lane** —
+  the §4.5 arithmetic made partial publication a fresh duplication, and the
+  owner's B-004 ruling set the pattern; F-211's two per-binary OP-INIT rows;
+  F-188's three per-stack Motivations, rust per ruling (ii) without the
+  PROP-031 citation; F-189's three PROP-027 seam rows **with the three fenced
+  diagrams redrawn in the same diff**; F-190's two two-clause repairs;
+  F-251's two counts); and B-004 ruling (i) — **all seventeen** fenced
+  re-derive first lines now name the install slot instead of a directory no
+  consumer has.
+
+  **Verification, per the runbook:** `../flows/` in `spec/boot/STATIC.md`
+  **0** (was 69), `@spec://` **69**; `address-repair.py --verify` — 0 links
+  remaining in scope; `cargo xtask sync-engines --check` green (51 pairs, 9
+  sets); **`tools/self-check.sh` EXIT=0** over the published tree;
+  `progress mirror` refreshed (260 views). **The re-judge went through the
+  instrument's own join**: a naive marker-filter matched 104 anchors — more
+  than double the family — and was discarded; the honest join (repaired
+  diff lines → governing anchor via the mirror's fact spans) gave **55
+  governing anchors, 46 of them drift → confirmed** (nine were already
+  confirmed on other claims of the same surfaces, B-004's multi-claim shape),
+  landing exactly at §A.1's «47 blocked on publication». Merges 46+16+2,
+  **0 refusals**; seals 22+18, 0 refused.
+
+  **State at wave 9's close:** corpus **11 030 / 272 / 44 — 97.2 %**, from
+  94.3 % at the Phase C gate and 96.2 % at this morning's wave-8 open.
+  Registry **121 obligations / 272 drifts**; **84 of 272 still owe a package
+  repair; 188 routed out; 87 obligations nothing left owed**. The `release`
+  route reads 2 / 4 and both rows' anchors are wholly routed — **the route's
+  owed remainder is zero**; F-136 and F-145, the two largest obligations the
+  phase opened with, are resolved whole. What still owes a package: the sync
+  queue's group B (23, unblocked, awaiting per-batch presentation) and the
+  boss-route tail.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

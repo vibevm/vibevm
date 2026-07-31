@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-31T15:54:43Z",
+  "updated_at": "2026-07-31T20:39:23Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -4316,7 +4316,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
-      "content_hash": "b61f3d864c52b7311a9b487101073021da9ff4f52643d7edac064caccc42ef8b",
+      "content_hash": "6b72508ecc7f7527993d4c214d1eb2cfc18ace5ad8ad160d1aac0092d7bd7f57",
       "rollup": {
         "explicit": [
           "impl",
@@ -4338,7 +4338,7 @@
       "unit_count": 1,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b61f3d864c52b7311a9b487101073021da9ff4f52643d7edac064caccc42ef8b",
+        "processed_hash": "6b72508ecc7f7527993d4c214d1eb2cfc18ace5ad8ad160d1aac0092d7bd7f57",
         "verdicts": {
           "FOLLOWS-DISCIPLINE": {
             "v": "confirmed",
@@ -4480,7 +4480,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T09:58:27Z",
+        "verified_at": "2026-07-31T20:39:23Z",
         "verify_batch": "C2 + D5b"
       }
     },
@@ -7693,7 +7693,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md": {
-      "content_hash": "a4e363c6331613c0fea4f6fbc41c9c47c425755fb7e578b206fe75fbd1eceda0",
+      "content_hash": "bed3c82e97af2dc526a06a1d369870751387d0ddc0917929d00036af0077cdd1",
       "rollup": {
         "explicit": [
           "impl",
@@ -7715,14 +7715,12 @@
       "unit_count": 1,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "a4e363c6331613c0fea4f6fbc41c9c47c425755fb7e578b206fe75fbd1eceda0",
+        "processed_hash": "bed3c82e97af2dc526a06a1d369870751387d0ddc0917929d00036af0077cdd1",
         "verdicts": {
           "GO-CODE-FOLLOWS-THE-GO-GUIDE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:6  (`go/GUIDE-AI-NATIVE-GO.md` in this package). @impl/done",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:36  ## 0. Why Go is special — and the law applied to Go {#law}",
-              "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`"
+              "the path now reads spec/go/GUIDE-AI-NATIVE-GO.md and resolves in the package tree and the install slot — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "READ-THE-GUIDE-FOR-STRUCTURE": {
@@ -7734,12 +7732,9 @@
             ]
           },
           "CARD-REGISTRY-FOR-GO": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:12  ##CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` in this package (trigger → card;",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:1  # Card Registry — INDEX (Go projection)",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:16  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
-              "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`"
+              "the path now reads spec/cards/INDEX.md and resolves in both roots; the STACK-SHIPS twin two lines below took the same spec/ prefix in the same publication — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "STACK-SHIPS-ITS-OWN-CARDS-PROJECTION": {
@@ -7873,8 +7868,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6 + D8b"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C6 + D8b + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md": {
@@ -9305,7 +9300,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "de4cc5d4efe00563d131b8efecb9846494c8b6c4fb9491dcc5e12ea23c442f09",
+      "content_hash": "b017335b5e11696c4fa72dc96d54cca623f0d38c3e5e12d77c294421359b7c6f",
       "rollup": {
         "explicit": [
           "spec",
@@ -9327,7 +9322,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "de4cc5d4efe00563d131b8efecb9846494c8b6c4fb9491dcc5e12ea23c442f09",
+        "processed_hash": "b017335b5e11696c4fa72dc96d54cca623f0d38c3e5e12d77c294421359b7c6f",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9370,9 +9365,9 @@
             ]
           },
           "MOTIVATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — drift is real but the recorded reason needs two corrections: the five-parameter signature the go card prints is the RUST CLI's shape (rust-ai-native-cli/src/main.rs:181 AddCell), while the shipped go verb takes two parameters (go-ai-native-cli/src/main.rs:153-158) and writes three files (codemod.rs:109-114); and the recorded 'no Example stub is written' clause is false — the stub IS written; a reader typing the documented command still gets an argument error; harvest d8a #f-188"
+              "the Motivation now prints the shipped two-flag signature (add-cell --cell --spec-uri), the true three-artefact split with the Example stub written, and the author-owed remainder — the rust five-parameter form it had transposed is gone — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
@@ -9435,8 +9430,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5 + C45-go-review + D8a"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + C45-go-review + D8a + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
@@ -11331,7 +11326,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
-      "content_hash": "d8e6ba429937c0280e459c648bcacb104288645d0fa08da8bc83d94cf878fbe5",
+      "content_hash": "a6e5656919f575f3e3956ab696b10dfb6c6f68eb8dca84edf9518530a643445d",
       "rollup": {
         "explicit": [
           "spec",
@@ -11353,7 +11348,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d8e6ba429937c0280e459c648bcacb104288645d0fa08da8bc83d94cf878fbe5",
+        "processed_hash": "a6e5656919f575f3e3956ab696b10dfb6c6f68eb8dca84edf9518530a643445d",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11485,12 +11480,9 @@
             ]
           },
           "OP-INIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294  if op == \"init\" { // Re-init: a fresh gopls session (overlays cleared). match GoOracle::spawn(&root, READINESS_BUDGET) {",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74  fn init_result(oracle: &GoOracle<ChildTransport>) -> serde_json::Value { serde_json::json!({ \"gopls_version\": oracle....",
-              "**three of five keys and the one parameter are absent.** The protocol prints `init {root}` → `{gopls_version, gopls_path, go_version, root_files, ready}`. The shipped op takes no params — the root is the process root (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294) — and returns gopls_version, position_encoding, pull_diagnostics, ready (serve.rs:74-84). `gopls_path`, `go_version` and `root_files` are never produced; `position_encoding` and `pull_diagnostics` are produced and undocumented"
+              "the row now documents the shipped contract — init {} -> {gopls_version, position_encoding, pull_diagnostics, ready} with the one-project no-parameter note — matching go-ai-native-tcg/src/serve.rs:74-84 exactly; ORACLE_PROTOCOL stays 1, no wire change — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "OP-UPDATE": {
@@ -11714,8 +11706,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:59:36Z",
-        "verify_batch": "C4+C5 + C45-go-review"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + C45-go-review + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
@@ -12237,7 +12229,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md": {
-      "content_hash": "d84abc3c12943492c44ea65d942e769e0d72851367162dce7d6dd80989ac5e7c",
+      "content_hash": "1447f48a9af677ed231a2a18feb5d95b3166f89491103dc7bc6cc67d3d01c3bd",
       "rollup": {
         "explicit": [
           "spec",
@@ -12259,7 +12251,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d84abc3c12943492c44ea65d942e769e0d72851367162dce7d6dd80989ac5e7c",
+        "processed_hash": "1447f48a9af677ed231a2a18feb5d95b3166f89491103dc7bc6cc67d3d01c3bd",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -12417,11 +12409,9 @@
             ]
           },
           "COMPONENT-THE-PRODUCT-SEAM": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED (the recorded 'the host does not dispatch go' ground is struck — §B.1/§3.8; the drift survives on the sentence's own named subject): the topology this row names was retired for EVERY language. PROP-026 ##SUPERSEDED-TOPOLOGY retires the multiplexed server with language as dispatch key; ##TCG-CRATE-DELETED deletes vibe-tcg and the vibe-mcp tcg_* adapters; ##TOOLS-NEW-HOME puts the four tools in the per-language mcp packages of PROP-027",
-              "in the shipped surface `language` is a compat guard that refuses a mismatch, not a dispatch key (go-ai-native-mcp/src/tools_discipline.rs:19-29); 'no new tools' is true (go-ai-native-mcp/src/lib.rs:60-63 mounts the same four), 'no new PROP' is not — PROP-027 is that PROP and this package's own boot snippet cites it (spec/boot/20-stack-go-ai-native-lang.md:60)",
-              "the same document already states the new topology correctly at ##STAGE-A-CONSULTATION-ORACLE (:141-144, 'the MCP delivery half ships in the go-ai-native-mcp package') — nothing here rests on whether this repository consumes Go; harvest d8b #f-189"
+              "the row now states the PROP-027 per-family topology (mcp:org.vibevm.ai-native/go-ai-native-mcp, language as compat guard, ENUM-BET-REREAD), and the fenced diagram below it was redrawn to the same topology in the same diff — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -12576,12 +12566,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
-      "content_hash": "c6e5f8166af51086a1a662acd9fe5651d3a596ee8f463e18940771a9ad892bb3",
+      "content_hash": "85a5d8ac2d74bd0bf84064515cdcd8bde3648679d901558de98bc861158cbf56",
       "rollup": {
         "explicit": [
           "impl",
@@ -12603,7 +12593,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c6e5f8166af51086a1a662acd9fe5651d3a596ee8f463e18940771a9ad892bb3",
+        "processed_hash": "85a5d8ac2d74bd0bf84064515cdcd8bde3648679d901558de98bc861158cbf56",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -12689,10 +12679,9 @@
             ]
           },
           "CHECK-THE-PRINTED-POLICY-LINES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — half the step quotes a string the tool prints and half quotes one it does not. `DISABLED by policy` is shipped verbatim, this casing, one line per disabled step (go-ai-native-cli/src/floor.rs:66) — that clause is correct and must not be touched; the prior reason ('appears in no shipped string') cited floor.rs:220, the lowercase summary counter, and missed the uppercase form 154 lines above in the same file",
-              "`Defaulted` is a ConfigOrigin enum variant (vendor core-ai-native-conform/src/config.rs:231) and never reaches stderr — on a defaulted policy the tool prints 'go-ai-native-conform: NO conform.toml — topology default in force (roots = [\".\"], no cells gate); run go-ai-native init …' (go-ai-native-conform/src/lib.rs:31-35); drift is real in the first clause only; harvest d8b #f-190"
+              "the step now quotes the line the tool prints (NO conform.toml — topology default in force) and keeps the verbatim-correct DISABLED by policy clause (floor.rs:66) — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "READ-THE-HEALTH-SUMMARY": {
@@ -12892,8 +12881,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:32:52Z",
-        "verify_batch": "C6 + D8b + D8a + D9-boss-a"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C6 + D8b + D8a + D9-boss-a + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md": {
@@ -13823,7 +13812,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md": {
-      "content_hash": "21e24fb2ed30cc6ab7c410332dbe36b81ef1c3a8cb87875e756f6ca3c9f3fdc6",
+      "content_hash": "d8f954e93fd3da2ca4fc6cb6b0118be9547b0ae5a5fcfac412f30c3ecad5b8f8",
       "rollup": {
         "explicit": [
           "impl",
@@ -13845,15 +13834,12 @@
       "unit_count": 1,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "21e24fb2ed30cc6ab7c410332dbe36b81ef1c3a8cb87875e756f6ca3c9f3fdc6",
+        "processed_hash": "d8f954e93fd3da2ca4fc6cb6b0118be9547b0ae5a5fcfac412f30c3ecad5b8f8",
         "verdicts": {
           "RUST-CODE-FOLLOWS-THE-RUST-GUIDE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md:6  (`rust/GUIDE-AI-NATIVE-RUST.md` in this package). @impl/done",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:24  ## 0. The law, applied to Rust {#law}",
-              "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:10  ## 0. The law, applied to Rust",
-              "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`"
+              "the path now reads spec/rust/GUIDE-AI-NATIVE-RUST.md and resolves in the package tree and the install slot — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "READ-THE-GUIDE-FOR-STRUCTURE": {
@@ -13865,12 +13851,9 @@
             ]
           },
           "CARD-REGISTRY-FOR-RUST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md:12  ##CARD-REGISTRY-FOR-RUST Card registry for Rust: `cards/INDEX.md` in this package (trigger → card;",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:1  # Card Registry — INDEX (Rust projection)",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:10  | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |",
-              "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`"
+              "the path now reads spec/cards/INDEX.md and resolves in both roots; the STACK-SHIPS twin took the same prefix — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "STACK-SHIPS-ITS-OWN-CARDS-PROJECTION": {
@@ -13994,8 +13977,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6 + D8b"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C6 + D8b + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md": {
@@ -15427,7 +15410,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "61ef40e00060efbfda7b2c5557a4c205ef8d1250dfe5bb48cdfac4cfe33507f6",
+      "content_hash": "a4d1220f998b13c9adae81757d80d600e1fa92a3a9abe89a67073025958f1be8",
       "rollup": {
         "explicit": [
           "spec",
@@ -15449,7 +15432,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "61ef40e00060efbfda7b2c5557a4c205ef8d1250dfe5bb48cdfac4cfe33507f6",
+        "processed_hash": "a4d1220f998b13c9adae81757d80d600e1fa92a3a9abe89a67073025958f1be8",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15495,9 +15478,9 @@
             ]
           },
           "MOTIVATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — the recorded reason is the GO card's (add-cell five-parameter signature) and does not describe this sentence: the rust card's Motivation cites `vibe codemod rename-seam --from X --to Y`, and `vibe` ships no `codemod` subcommand at all (27 subcommands at HEAD, none codemod; rename-seam has zero implementations tree-wide); the same unbuilt command is load-bearing in the host's own PROP-031:21 ##BEACHHEAD-SCAFFOLD-I, corrected one line down at ##BEACHHEAD-LIMITS; harvest d8a #f-188"
+              "rename-seam is now subjunctive ('would perform … specified and not yet built') and the shipped verb (rust-ai-native codemod add-cell, five flags) is named — no PROP-031 citation per the owner's ruling (ii) — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
@@ -15559,8 +15542,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:32:52Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D8a + D9-boss-a"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D8a + D9-boss-a + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
@@ -16988,7 +16971,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
-      "content_hash": "17f406bd1c9ea4b7de86afabb9d254239911021ec9e8ae4127c6c063a362f3aa",
+      "content_hash": "08e5f5c729852ce6b83a477a7e3f08bc0942488eb6f4b1a063e7fe7008c471fa",
       "rollup": {
         "explicit": [
           "spec",
@@ -17010,7 +16993,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "17f406bd1c9ea4b7de86afabb9d254239911021ec9e8ae4127c6c063a362f3aa",
+        "processed_hash": "08e5f5c729852ce6b83a477a7e3f08bc0942488eb6f4b1a063e7fe7008c471fa",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17146,9 +17129,9 @@
             ]
           },
           "OP-INIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED with Rust's own key names: the recorded reason lists Go's gopls keys (gopls_version/gopls_path/go_version), which this protocol does not print; the rust protocol's documented init return names ra_path / toolchain / root_files, and the shipped op produces none of them (rust-ai-native-tcg/src/serve.rs:76 init_result; :282-284 re-init takes no params) — drift real, the parameter-and-keys gap is Rust-shaped, not Go-shaped; harvest d8a #f-211"
+              "the row now documents the shipped contract — init {} -> {ra_version, position_encoding, pull_diagnostics, quiescent} with the canonicalized-root note — matching rust-ai-native-tcg/src/serve.rs:76-86 exactly; Rust's own keys, not Go's — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "OP-UPDATE": {
@@ -17366,8 +17349,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D5a + D8a"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a + D8a + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md": {
@@ -17687,7 +17670,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
-      "content_hash": "23d40984aa2d23c9c6545319471b33913c1fadc962d055bc41446a61104f5879",
+      "content_hash": "b503d8f1d2f8c9d5d2b44d425a9a2a8d51b8558e6f6131c552b4372ecfc6037d",
       "rollup": {
         "explicit": [
           "spec",
@@ -17709,7 +17692,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "23d40984aa2d23c9c6545319471b33913c1fadc962d055bc41446a61104f5879",
+        "processed_hash": "b503d8f1d2f8c9d5d2b44d425a9a2a8d51b8558e6f6131c552b4372ecfc6037d",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17887,10 +17870,9 @@
             ]
           },
           "COMPONENT-THE-PRODUCT-SEAM": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "reason accurate on its substance (the trailing 'and so was the Go one' clause dropped — the Go twin was recorded on a different, since-struck ground): 'language: rust dispatches through the lockfile to this package's slot artifact' names the retired topology — the vibe-tcg crate and the vibe-mcp tcg_* adapters are deleted (PROP-026:10-13), the tools ship in rust-ai-native-mcp (src/lib.rs:60-63), and language is a compat guard (rust-ai-native-mcp/src/tools_discipline.rs:20-30)",
-              "the Rust stack's own boot snippet names the new home: spec/boot/20-stack-rust-ai-native-lang.md:46 'served over MCP by mcp:org.vibevm.ai-native/rust-ai-native-mcp — PROP-027'; harvest d8b #f-189"
+              "the row now states the PROP-027 per-family topology (rust-ai-native-mcp, compat guard); the diagram redrawn in the same diff — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -18057,8 +18039,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D8b"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D8b + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
@@ -19161,8 +19143,31 @@
         "verify_batch": "C6 + D8a"
       }
     },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/README.md": {
+      "content_hash": "ac95aef09accdd404f63b3b362e5bf1c7080e75a425ac7a5e7e8008725c46049",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 18,
+        "fact_count": 17,
+        "unmarked_facts": 0
+      },
+      "marker_count": 18,
+      "unit_count": 4,
+      "issue_count": 0
+    },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md": {
-      "content_hash": "ce24632069a8bed7cf5df3f2e7382302671fd849bad33bd41cc06b3c54ace919",
+      "content_hash": "1615bece3a3918b4bc82676dec3b049bad0ebd8ddcfd74036a0a4f308298d8cc",
       "rollup": {
         "explicit": [
           "impl",
@@ -19184,14 +19189,12 @@
       "unit_count": 1,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "ce24632069a8bed7cf5df3f2e7382302671fd849bad33bd41cc06b3c54ace919",
+        "processed_hash": "1615bece3a3918b4bc82676dec3b049bad0ebd8ddcfd74036a0a4f308298d8cc",
         "verdicts": {
           "TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:7  (`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` in this package). @impl/done",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:31  ## 0. Why TypeScript is special — and the law applied to TS {#law}",
-              "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`"
+              "the path now reads spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md and resolves in both roots — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "READ-THE-GUIDE-FOR-STRUCTURE": {
@@ -19203,11 +19206,9 @@
             ]
           },
           "CARD-REGISTRY-FOR-TYPESCRIPT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:13  ##CARD-REGISTRY-FOR-TYPESCRIPT Card registry for TypeScript: `cards/INDEX.md` in this package (trigger →",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:1  # Card Registry — INDEX (TypeScript projection)",
-              "the path does not resolve from where the reader stands: the boot snippet cites a bare `rust/…`, `typescript/…`, `go/…` or `cards/INDEX.md` and every one of those lives under `spec/` in the package. The third instance of this family in the phase, after the Manifesto's `MAP-RUST-GUIDE` and the core README's `READ-STACK-GUIDE`"
+              "the path now reads spec/cards/INDEX.md and resolves in both roots; the STACK-SHIPS twin took the same prefix — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "STACK-SHIPS-ITS-OWN-CARDS-PROJECTION": {
@@ -19375,8 +19376,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
-        "verify_batch": "C6 + D8b"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C6 + D8b + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md": {
@@ -20641,7 +20642,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md": {
-      "content_hash": "d6f241d516b2274666d5ad3a0c1150d134e33084f06499c6aecb71e6952b27b8",
+      "content_hash": "f2983377b0c20eb862a448ef207d8d5a4c01b200af7d127aa06f6a7a082bcea2",
       "rollup": {
         "explicit": [
           "spec",
@@ -20663,7 +20664,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d6f241d516b2274666d5ad3a0c1150d134e33084f06499c6aecb71e6952b27b8",
+        "processed_hash": "f2983377b0c20eb862a448ef207d8d5a4c01b200af7d127aa06f6a7a082bcea2",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20701,9 +20702,9 @@
             ]
           },
           "MOTIVATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED on the package's own bench (§3.8): the TS card's Motivation cites `vibe codemod rename-seam` built on `ts-morph` — and both are absent from the TypeScript package's own tree (no codemod verb, no rename-seam, no ts-morph dependency anywhere in its crates or tools); the recorded Go add-cell reason does not describe this sentence; harvest d8a #f-188"
+              "rename-seam subjunctive over 'TypeScript's mature AST tooling' (the true ecosystem claim kept), the shipped two-flag verb named; ts-morph no longer claimed as the build substrate — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "STRUCTURE-AND-PARTICIPANTS": {
@@ -20755,12 +20756,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:33:42Z",
-        "verify_batch": "C4+C5 + D8a + D9-boss-a + D9-boss-a2"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + D8a + D9-boss-a + D9-boss-a2 + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md": {
-      "content_hash": "d556d4e5de9591e8803960b4756e006d1f4fd4f4b7770877a266b8818bd1dfcf",
+      "content_hash": "6cee59e5f9cf0a518c58a3a38ab2ff164c4658a0669fdad4f803b3afa80c6221",
       "rollup": {
         "explicit": [
           "impl",
@@ -20782,7 +20783,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d556d4e5de9591e8803960b4756e006d1f4fd4f4b7770877a266b8818bd1dfcf",
+        "processed_hash": "6cee59e5f9cf0a518c58a3a38ab2ff164c4658a0669fdad4f803b3afa80c6221",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -20869,10 +20870,9 @@
             ]
           },
           "CHECK-THE-PRINTED-POLICY-LINES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "RESTATED — same split as the Go copy: `DISABLED by policy` is shipped verbatim (typescript-ai-native-cli/src/floor.rs:62, inside the floor_disable loop :53-65) and that clause is correct; `Defaulted` is never printed — the line is 'typescript-ai-native-conform: NO conform.toml — topology default in force (roots = [\"src\"], no cells gate); run typescript-ai-native init …' (typescript-ai-native-conform/src/lib.rs:28-32)",
-              "the prior reason cited vendor config.rs:173 pub floor_disable — the field that DRIVES the disabled-print — as evidence the print does not exist; drift is real in the first clause only; harvest d8b #f-190"
+              "same two-clause repair as the go copy: the printed defaulted-policy line quoted, DISABLED by policy kept (ts floor.rs:62) — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "READ-THE-HEALTH-SUMMARY": {
@@ -21016,8 +21016,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T08:19:55Z",
-        "verify_batch": "C6 + D1a + D8b"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C6 + D1a + D8b + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md": {
@@ -23878,7 +23878,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md": {
-      "content_hash": "95d5b9cf62651c0b19a23b534eca87dcfa9055b955cdc37ed2e23e68aa4f6463",
+      "content_hash": "a13e921ed6297add2888743f62e7cfad2ee66ad68629593c9893e6a762b6e332",
       "rollup": {
         "explicit": [
           "spec",
@@ -23900,7 +23900,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "95d5b9cf62651c0b19a23b534eca87dcfa9055b955cdc37ed2e23e68aa4f6463",
+        "processed_hash": "a13e921ed6297add2888743f62e7cfad2ee66ad68629593c9893e6a762b6e332",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -24103,10 +24103,9 @@
             ]
           },
           "COMPONENT-THE-PRODUCT-SEAM": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "reason accurate: the row names a host crate that does not exist — vibe-tcg was 'deleted whole' (PROP-026:11), and 'mounted by vibe-mcp as four tcg_* tools' is false (crates/vibe-mcp/src/ carries no tcg adapter; its own skill_template.md:98-101 says the oracle no longer rides this server)",
-              "the row's last clause came TRUE and any correction must keep it: the portability amendment was cashed — all three per-family mcp servers have zero vibe-mcp imports (grep over packages/org.vibevm.ai-native/*-ai-native-mcp/v*/crates/*/Cargo.toml: no output; typescript-ai-native-mcp depends on mcp-core); harvest d8b #f-189"
+              "the row now states the PROP-027 topology and records the portability amendment as CASHED (typescript-ai-native-mcp on mcp-core, zero vibe-mcp imports); the diagram redrawn in the same diff — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ]
           },
           "COMPONENT-DETERMINISM-AND-AUDITABILITY": {
@@ -24242,8 +24241,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5 + D8b"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "C4+C5 + D8b + D11-release-a"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md": {
@@ -25002,7 +25001,7 @@
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md": {
-      "content_hash": "0265774947c8947e439c6eb2dbd05eef36ae8b5eb98a0d148cda8b7113d03fc9",
+      "content_hash": "85e9a192168af21a46fcaeabc49148b3a312440be19816f90f6d95b686080466",
       "rollup": {
         "explicit": [
           "impl",
@@ -25024,7 +25023,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0265774947c8947e439c6eb2dbd05eef36ae8b5eb98a0d148cda8b7113d03fc9",
+        "processed_hash": "85e9a192168af21a46fcaeabc49148b3a312440be19816f90f6d95b686080466",
         "verdicts": {
           "EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE": {
             "v": "drift",
@@ -25168,13 +25167,9 @@
             ]
           },
           "POINTER-THE-PROTOCOL": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:34  ## Why addressability is requirement #1 {#why}",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:72  ## The URI scheme {#uri-scheme}",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:61  ##the-difference-is-an-order-of-magnitude The difference is an order of magnitude, paid on *every* correction, several times per session — in metered tokens and in minutes of a short human day. @spec/done",
-              "spec/boot/STATIC.md:45  - Why addressability is IPC requirement #1, the URI scheme, the token economics: [`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md`](../flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md) - Unit of meaning, normativity marking, deviations, size budgets,",
-              "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -25182,13 +25177,9 @@
             ]
           },
           "POINTER-THE-AUTHORING-RULES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:15  ## The unit of meaning {#unit}",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:38  ## Normativity is marked, not implied {#normativity}",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:105  ## Deviations are first-class {#deviations}",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:126  ## Size budgets {#budgets}",
-              "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -25196,13 +25187,9 @@
             ]
           },
           "POINTER-THE-SPEC-TREE-LAYOUT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:58  ## PROP vs FEAT {#prop-vs-feat}",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:78  ## What goes where {#what-goes-where}",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:95  ## The `.human/` private buffer {#human-buffer}",
-              "spec/boot/STATIC.md:51  - PROP vs FEAT, what goes where, the `.human/` buffer: [`spec/flows/addressable-specs/spec-tree-layout.md`](../flows/addressable-specs/spec-tree-layout.md)",
-              "DRIFT: the 69-dangling family, seventh package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/addressable-specs/…`, which from `spec/boot/` means `spec/flows/addressable-specs/…`, and this host has no `spec/flows/`. Sharper here than elsewhere: this is the flow whose whole subject is that an address must resolve."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -25283,12 +25270,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:18:08Z",
-        "verify_batch": "W3"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W3 + D11-address"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
-      "content_hash": "fc6f60c68b3f1c07f23d154b4a6e83567b1642e61d904b0dea2b2cddb4122e0f",
+      "content_hash": "bd23b8d8d8847b7c7cf14eb97fd5bec6452bd8605bc520d693c5657394fecea6",
       "rollup": {
         "explicit": [
           "spec",
@@ -28088,7 +28075,7 @@
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md": {
-      "content_hash": "c44be62d2bafb8c88fc9c12da7c5230e67e86669f053e450b32a27ecaa606eb6",
+      "content_hash": "06037791eb4377b612595e33fc9ee54790a672597e582fbc0d43090da6177186",
       "rollup": {
         "explicit": [
           "impl",
@@ -28110,7 +28097,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c44be62d2bafb8c88fc9c12da7c5230e67e86669f053e450b32a27ecaa606eb6",
+        "processed_hash": "06037791eb4377b612595e33fc9ee54790a672597e582fbc0d43090da6177186",
         "verdicts": {
           "LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS": {
             "v": "confirmed",
@@ -28227,17 +28214,12 @@
             ]
           },
           "format-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:81  [`../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md`](../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md).",
-              "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
-              "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:1  # The Campaign Plan Format {#root}",
-              "vibe.lock:191  files_written = []",
-              "DRIFT: the fact's SUBJECT is the pointer. `../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` resolves inside the package and inside the install slot, and not from `spec/boot/STATIC.md:127` where the host actually reads it — `ls spec/` returns WAL.md boot common design manual-tests modules terraforms, with no `flows`. W1's 69-dangling family; the format document itself ships and says what the snippet says it says."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -28369,17 +28351,12 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:99  [`../flows/campaign-plans/phase-gates.md`](../flows/campaign-plans/phase-gates.md);",
-              "spec/boot/STATIC.md:101  [`../flows/campaign-plans/execution-ledger.md`](../flows/campaign-plans/execution-ledger.md).",
-              "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md:1  # Phase Gates {#root}",
-              "vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md:1  # The Execution Ledger {#root}",
-              "DRIFT, same family and the same reason: this fact is two pointers and nothing else. Both targets ship and both carry what is promised — phase mechanics and the record half — so the CONTENT claim is true; the paths are what fail, resolving to a `spec/flows/` the consuming project does not have. Third of the three `../flows/` pointers in this snippet; the other rules that merely contain such a link are judged on their rules."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -28495,8 +28472,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:27:17Z",
-        "verify_batch": "W4 + D2a + D6 + D10-plans"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W4 + D2a + D6 + D10-plans + D11-address"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
@@ -31115,7 +31092,7 @@
       }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md": {
-      "content_hash": "0696171995b2d3516cf5efbf6e8bc17e0cd665145d20e2ce5e5459950d884f49",
+      "content_hash": "e2fbfe8a945780e268e32414672819306653cbd11483290cfb1512a162f1e423",
       "rollup": {
         "explicit": [
           "impl",
@@ -31137,7 +31114,7 @@
       "unit_count": 3,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0696171995b2d3516cf5efbf6e8bc17e0cd665145d20e2ce5e5459950d884f49",
+        "processed_hash": "e2fbfe8a945780e268e32414672819306653cbd11483290cfb1512a162f1e423",
         "verdicts": {
           "THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS": {
             "v": "confirmed",
@@ -31172,17 +31149,12 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md:15  [`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`](../flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md). @impl/done",
-              "spec/boot/STATIC.md:138  [`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`](../flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md).",
-              "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:1  # Comparative Research Protocol {#root}",
-              "vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md:1  # Comparative Research Protocol {#root}",
-              "DRIFT: the fact's subject is the pointers. Three `../flows/…` links at snippet lines 15, 23 and 35, reproduced verbatim into the compiled lane at STATIC.md:138, 146 and 158, all resolving nowhere — `ls spec/` has no `flows` entry. The documents themselves ARE delivered, in the package and in `vibedeps/flow-comparative-research/0.1.0/`; only the relative path fails from where the host reads it. Eighth package in W1's 69-dangling family. NOTE: this anchor is also one of the two the boot-join reports as «3 words differ» — it sits alone on line 13 and survives `strip_markup`, an instrument artefact and not a prose difference."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -31235,19 +31207,13 @@
             ]
           },
           "LAW-DELTAS-NOT-DECREES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/research/settings-system-vscode-idea.md:358  …**D-01 [P0, settings-system PROP]** Layered deep-merge `L1 ⊂ L2 ⊂ L3` (L3 wins)…",
-              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:70  _Priority P1 = Stage B core scope; P2 = Stage B strongly",
-              "packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.md:74  …**RD-1 (P1) The need-gate is an isolated, auditable call**…",
-              "legacy-spec/research/action-systems-vscode-idea.md:725  | Δ | Delta | Answers | → prospective PROP-039 REQ |",
-              "legacy-spec/research/PROP-004-tessl-comparative-research.md:782  Maps to §5.1.",
-              "legacy-spec/research/PROP-004-tessl-comparative-research.md:569  **Priority.** **HIGH**. This is the single largest gap and the one that most strategically positions vibevm as a \"Claude-native\" tool. Maps to roadmap entry **M1.7** (see §6).",
-              "DRIFT on «each with a priority». Numbering is universal across all five studies (D-01…D-16, RD-1…RD-21, FD-1…FD-16, Δ1…Δ16, M1.7…M3.1) and the never-ratifies clause is confirmed separately. Priority is carried three different ways and **two of five studies carry none**: action-systems' delta table columns are `Δ | Delta | Answers | → prospective PROP-039 REQ` with no priority column, and FUGU-SYNTHESIS's entries carry a `[need-gate]` bracket instead. Tessl splits it — priority on each §5 gap, while §6's delta entries carry only `Maps to §5.x`. A law that says each delta carries a priority is met by three of five."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2
+              3
             ]
           },
           "LAW-THE-RE-FETCH-LIST": {
@@ -31328,12 +31294,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:39:43Z",
-        "verify_batch": "W4"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W4 + D11-address"
       }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md": {
-      "content_hash": "b1310825173a10ac2751eb4931db1c53582d620c79f15e73067c697f926b6dc3",
+      "content_hash": "77ca78c5dc0eb3042ec54b2b47a1208f172184326e7573bf9380453d7465116e",
       "rollup": {
         "explicit": [
           "spec",
@@ -33642,7 +33608,7 @@
       }
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md": {
-      "content_hash": "37bfb66e0000263b44944fbb58c8fa97f857ceff1ed6d76bb309b8068a1cedc0",
+      "content_hash": "6631e8677e8fb13727cab5b18400df14bb3c2c6902e3347a7801f7f43ba76e88",
       "rollup": {
         "explicit": [
           "impl",
@@ -33664,7 +33630,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "37bfb66e0000263b44944fbb58c8fa97f857ceff1ed6d76bb309b8068a1cedc0",
+        "processed_hash": "6631e8677e8fb13727cab5b18400df14bb3c2c6902e3347a7801f7f43ba76e88",
         "verdicts": {
           "PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET": {
             "v": "confirmed",
@@ -33774,11 +33740,9 @@
             ]
           },
           "full-protocol-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:199  [`spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md`](../flows/conflict-protocol/CONFLICT-PROTOCOL.md).",
-              "vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md:1  # Conflict Protocol {#root}",
-              "DRIFT: the 69-dangling family, now in its sixth package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/conflict-protocol/…`, which from `spec/boot/` means `spec/flows/conflict-protocol/…`, and this host has no `spec/flows/`."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -33889,11 +33853,9 @@
             ]
           },
           "full-ladder-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:221  [`spec/flows/conflict-protocol/uncertainty-protocol.md`](../flows/conflict-protocol/uncertainty-protocol.md).",
-              "vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md:1  # Uncertainty Protocol {#root}",
-              "DRIFT: the 69-dangling family, now in its sixth package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/conflict-protocol/…`, which from `spec/boot/` means `spec/flows/conflict-protocol/…`, and this host has no `spec/flows/`."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -33956,11 +33918,9 @@
             ]
           },
           "recovery-drills-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:233  [`spec/flows/conflict-protocol/failure-modes.md`](../flows/conflict-protocol/failure-modes.md).",
-              "vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/failure-modes.md:1  # Failure Modes and Recovery {#root}",
-              "DRIFT: the 69-dangling family, now in its sixth package. The target exists in the package and in the installed slot, but the compiled lane keeps `../flows/conflict-protocol/…`, which from `spec/boot/` means `spec/flows/conflict-protocol/…`, and this host has no `spec/flows/`."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -33968,12 +33928,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:10:09Z",
-        "verify_batch": "W3 + D3b"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W3 + D3b + D11-address"
       }
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md": {
-      "content_hash": "951dd530a7ed50d38c49ca51662ed3d06215fdc4e86d677ef4b646c831d3ee81",
+      "content_hash": "320453b6a58cc91261beb67b1867fbb709c3f49267ca3b5e73426e7094f82f48",
       "rollup": {
         "explicit": [
           "spec",
@@ -36492,7 +36452,7 @@
       }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md": {
-      "content_hash": "c1531d51b2f2ef018cb55e61bee96411863dd4b84f817c5ef9f49a9fad36f312",
+      "content_hash": "d54fa8d3d30fd32e80778a0642597025fc48a321e4872ef66e1a6f4514327264",
       "rollup": {
         "explicit": [
           "impl",
@@ -36514,7 +36474,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c1531d51b2f2ef018cb55e61bee96411863dd4b84f817c5ef9f49a9fad36f312",
+        "processed_hash": "d54fa8d3d30fd32e80778a0642597025fc48a321e4872ef66e1a6f4514327264",
         "verdicts": {
           "PROJECT-RECORDS-DECISIONS-NOT-FACTS": {
             "v": "confirmed",
@@ -36657,16 +36617,12 @@
             ]
           },
           "full-protocol-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:32  ##full-protocol-pointer Full protocol:",
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:33  [`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md). @impl/done",
-              "spec/boot/STATIC.md:262  [`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md).",
-              "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -36728,30 +36684,22 @@
             ]
           },
           "template-and-examples-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:48  ##template-and-examples-pointer Copy-ready template and worked examples:",
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:49  [`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md). @impl/done",
-              "spec/boot/STATIC.md:278  [`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md).",
-              "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "trigger-design-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:51  ##trigger-design-pointer Trigger design and the periodic sweep:",
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:52  [`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md). @impl/done",
-              "spec/boot/STATIC.md:280  [`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md).",
-              "DRIFT: the 69-dangling family. The relative link resolves inside the package and inside the installed slot, and the harvest's source-1 join counts it among 24 resolved / 0 broken — but the compiled boot lane keeps `../flows/decision-records/…`, which from `spec/boot/` means `spec/flows/decision-records/…`, and this host has no `spec/flows/` at all."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -36865,12 +36813,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:04:56Z",
-        "verify_batch": "W3"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W3 + D11-address"
       }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md": {
-      "content_hash": "fc347433b5c71707cec90d03a6027c104d9e1479d95fab83605c18af9d4d275c",
+      "content_hash": "5ef39412a555b6b100790d78b33120dd2a0b62f4fdbdc1a6a4ea7939f62b11a2",
       "rollup": {
         "explicit": [
           "spec",
@@ -39017,7 +38965,7 @@
       }
     },
     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md": {
-      "content_hash": "5961040c992be643e4aa4c6c70972226c027c14df6157cc89bc12027d1349e54",
+      "content_hash": "43e2aa1b991ffdd9029cc13bd95f230c9f33f253f08d316c5e6867cee33189fe",
       "rollup": {
         "explicit": [
           "impl",
@@ -39039,7 +38987,7 @@
       "unit_count": 3,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "5961040c992be643e4aa4c6c70972226c027c14df6157cc89bc12027d1349e54",
+        "processed_hash": "43e2aa1b991ffdd9029cc13bd95f230c9f33f253f08d316c5e6867cee33189fe",
         "verdicts": {
           "SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING": {
             "v": "confirmed",
@@ -39084,16 +39032,12 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md:18  ##sibling-document-pointers Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md). @impl/done",
-              "spec/boot/STATIC.md:317  Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md).",
-              "spec/common/PROP-000.md:291  ##SETUP-DOCS-FLOW vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @spec/done",
-              "DRIFT: the fact's subject is a `../flows/dev-runtime-docs/…` pointer, and the host has no `spec/flows/` directory, so it resolves nowhere from the compiled lane where the snippet is read. The protocol document itself ships, in the package and in the installed slot. W1's 69-dangling family."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -39126,8 +39070,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:32:21Z",
-        "verify_batch": "W6"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W6 + D11-address"
       }
     },
     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md": {
@@ -39676,7 +39620,7 @@
       }
     },
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md": {
-      "content_hash": "1a8f4fc4c6bbef216fb4b4f90ece4a1b8729710858bb76d720977c63a26f2ea4",
+      "content_hash": "9507100a873ff6439305a6c9f84856803b516d58f3dac8c3f9b6f9ad1b536b2d",
       "rollup": {
         "explicit": [
           "impl",
@@ -39698,7 +39642,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1a8f4fc4c6bbef216fb4b4f90ece4a1b8729710858bb76d720977c63a26f2ea4",
+        "processed_hash": "9507100a873ff6439305a6c9f84856803b516d58f3dac8c3f9b6f9ad1b536b2d",
         "verdicts": {
           "PROJECT-SHIPS-THE-DISCOVERY-PROMPT": {
             "v": "confirmed",
@@ -39716,16 +39660,12 @@
             ]
           },
           "ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
-              "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:1  <PROMPT_INFO>",
-              "spec/boot/STATIC.md:331  [`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`](../flows/discovery-prompt/DISCOVERY-PROMPT.md).",
-              "DRIFT: the fact's SUBJECT is the location, and the location does not exist where the snippet is read. `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` resolves inside the package and inside `vibedeps/flow-discovery-prompt/0.1.0/`, but the snippet is compiled into the host's boot lane at spec/boot/STATIC.md:331 carrying the same `../flows/…` target, and `ls spec/` returns WAL.md boot common design manual-tests modules terraforms — the host has no `spec/flows/` directory at all. This is W1's 69-dangling family, now in its eighth package; the campaign's line is that a fact whose subject IS the pointer drifts, while a rule fact that merely contains one is judged on the rule (see NEVER-EDIT-THE-ARTIFACT-IN-PLACE in this same file, confirmed)."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -39761,17 +39701,12 @@
             ]
           },
           "deployment-walkthrough-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:63  ## How to deploy {#deploy}",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:79  ## The structural pieces {#pieces}",
-              "vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md:143  ## Re-derive for your project {#re-derive}",
-              "spec/boot/STATIC.md:342  [`spec/flows/discovery-prompt/usage.md`](../flows/discovery-prompt/usage.md).",
-              "DRIFT: same family and the same reason — this fact is nothing but the pointer. The target file exists and does carry both promised things (a four-step §deploy at usage.md:63-74 and an eleven-row §pieces table at :79-93), so the claim about the CONTENT is true; what fails is the path, which resolves in the package and the install slot and not from spec/boot/STATIC.md:342, where the host actually reads it. Second of the snippet's three `../flows/…` pointers; the third sits under a rule and is judged on the rule."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -39851,12 +39786,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:08:00Z",
-        "verify_batch": "W4"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W4 + D11-address"
       }
     },
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md": {
-      "content_hash": "2dfd25b0b7e920a7e89afd5f70b4734e04571fa9ec24192a523a3febf1e496b6",
+      "content_hash": "5ec7e8a30ec61eaec608757a874cf175b904ee8aaa5871c53830e48e4c40a7ac",
       "rollup": {
         "explicit": [
           "spec",
@@ -40867,7 +40802,7 @@
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md": {
-      "content_hash": "e8331e0fc0a544a066a84a2604e25af9e31c7a6ca2d79e454ec5b188171318cd",
+      "content_hash": "f963e8874b3d0ff02be7b85b21c501bdff3c7d4c6f50a006712026dc9d4e0c88",
       "rollup": {
         "explicit": [
           "impl",
@@ -40889,7 +40824,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "e8331e0fc0a544a066a84a2604e25af9e31c7a6ca2d79e454ec5b188171318cd",
+        "processed_hash": "f963e8874b3d0ff02be7b85b21c501bdff3c7d4c6f50a006712026dc9d4e0c88",
         "verdicts": {
           "THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE": {
             "v": "confirmed",
@@ -41092,17 +41027,12 @@
             ]
           },
           "splitting-procedure-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md:1  # Splitting a large working tree into atomic commits {#root}",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-              "spec/boot/STATIC.md:594  [`spec/flows/atomic-commits/splitting-large-changes.md`](../flows/atomic-commits/splitting-large-changes.md).",
-              "vibe.lock:251  files_written = []",
-              "**the pointer a booting session reads lands on nothing.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host. `files_written = []` means this package will never create it either"
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -41150,18 +41080,12 @@
             ]
           },
           "full-protocol-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:1  # Atomic Commits Protocol {#root}",
-              "spec/boot/STATIC.md:605  Full rationale: [`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`](../flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md).",
-              "spec/common/PROP-000.md:163  … `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`;",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-              "**same failure as the splitting pointer, in the same snippet.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host. `files_written = []` means this package will never create it either",
-              "the document does exist and the authoritative record cites it independently — what is missing is any target the compiled link can reach"
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -41211,8 +41135,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T14:08:06Z",
-        "verify_batch": "W1a"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W1a + D11-address"
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md": {
@@ -43139,7 +43063,7 @@
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md": {
-      "content_hash": "56f6d27306238ab0b7964600a26c610801e19af2d7bebf67d2938b379c225d7a",
+      "content_hash": "d624cef159ced10523737520a1362dafe6b53b54c10980d3c6f54e2039d73867",
       "rollup": {
         "explicit": [
           "impl",
@@ -43161,7 +43085,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "56f6d27306238ab0b7964600a26c610801e19af2d7bebf67d2938b379c225d7a",
+        "processed_hash": "d624cef159ced10523737520a1362dafe6b53b54c10980d3c6f54e2039d73867",
         "verdicts": {
           "THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE": {
             "v": "confirmed",
@@ -43388,29 +43312,22 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md:69  ##sibling-document-pointers Full policy and rationale:",
-              "spec/boot/STATIC.md:482  [`ATTRIBUTION-POLICY.md`](../flows/attribution-policy/ATTRIBUTION-POLICY.md).",
-              "spec/boot/STATIC.md:484  [`enforcement-checklist.md`](../flows/attribution-policy/enforcement-checklist.md).",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:69  `git-practices` itself. **`git-attribution-policy` is not on it**: both of its",
-              "**both sibling links are dangling for every consumer.** the pointer resolves in the package and in neither place a consumer stands. Measured corpus-wide: 60 relative `../flows/…` pointers in the packages with 0 dangling; 120 in the installed vibedeps trees with 15 dangling; and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host at all.",
-              "the two documents a reader would need exist only under vibedeps/flow-git-attribution-policy/0.1.0/spec/flows/attribution-policy/"
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           }
         },
-        "verified_at": "2026-07-28T13:57:48Z",
-        "verify_batch": "W1c + D7"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W1c + D7 + D11-address"
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md": {
-      "content_hash": "94de27b95debb4ee7c2eb48bb87b7134eed54811a0b1023347797561ae2d1129",
+      "content_hash": "7d31376c42cd13f52966fcfe502d85a2495c8197ea74de4680c55bf72c421d32",
       "rollup": {
         "explicit": [
           "spec",
@@ -44946,7 +44863,7 @@
       }
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md": {
-      "content_hash": "d183036f997b71f243e0b4a873366492b59eae7853f13bff0034c8dd1e873aff",
+      "content_hash": "e35afbd96259bf07fa9c1a4f0b564e08dfce34b4f318c6f2177a45de055cbc14",
       "rollup": {
         "explicit": [
           "impl",
@@ -44968,7 +44885,7 @@
       "unit_count": 3,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d183036f997b71f243e0b4a873366492b59eae7853f13bff0034c8dd1e873aff",
+        "processed_hash": "e35afbd96259bf07fa9c1a4f0b564e08dfce34b4f318c6f2177a45de055cbc14",
         "verdicts": {
           "THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE": {
             "v": "confirmed",
@@ -45161,24 +45078,18 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md:32  ##sibling-document-pointers Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md). @impl/done",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:22    relative .md citations resolved: 11",
-              "campaigns/packages-2026-09/tasks/DRIFT-039.md:14  **8 of 8 links broken**, resolved one at a time rather than sampled:",
-              "spec/boot/STATIC.md:512  Full protocol: [`spec/flows/autonomy/AUTONOMY-PROTOCOL.md`](../flows/autonomy/AUTONOMY-PROTOCOL.md).",
-              "**the pointer resolves for exactly one reader, and it is not the reader it is written for.** Measured over the whole corpus rather than this one link: in the packages, 60 relative `../flows/…` pointers and **0 dangling**; in the installed `vibedeps/` trees, 120 pointers and **15 dangling** — the ones whose snippet still sits at the pre-DRIFT-039 `boot/` path, this flow's among them; and in the host's compiled boot lane, **69 pointers and 69 dangling**, because `spec/flows/` does not exist in the host at all (`ls -d spec/flows` → No such file or directory).",
-              "So the fact is true in the authoring tree and false in both places a consumer stands. A boot snippet's whole purpose is to be read from the compiled lane, and from there this link has never resolved"
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           }
         },
-        "verified_at": "2026-07-28T13:49:53Z",
-        "verify_batch": "W1d"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W1d + D11-address"
       }
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md": {
@@ -45722,7 +45633,7 @@
       }
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md": {
-      "content_hash": "50a43c9c90d59b8a8020753610d6e26909bf475e4b918e65aebcf5510416e73c",
+      "content_hash": "0b69bed96447eae39aa25b94ee8b7da21c9a8a6ae4a4fa2028f934f2eac71277",
       "rollup": {
         "explicit": [
           "impl",
@@ -45744,7 +45655,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "50a43c9c90d59b8a8020753610d6e26909bf475e4b918e65aebcf5510416e73c",
+        "processed_hash": "0b69bed96447eae39aa25b94ee8b7da21c9a8a6ae4a4fa2028f934f2eac71277",
         "verdicts": {
           "EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS": {
             "v": "confirmed",
@@ -45840,18 +45751,12 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:1  # Commit message format {#root}",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:26  **Eleven relative citations, none broken.** Every protocol document a boot snippet",
-              "spec/boot/STATIC.md:731  [`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md).",
-              "vibedeps/flow-git-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md:22  [`spec/flows/conventional-commits/conventional-commits.md`](../flows/conventional-commits/conventional-commits.md).",
-              "**the sibling pointer is dangling for every consumer.** the pointer resolves in the package and nowhere a consumer stands: 60 relative `../flows/…` pointers in the packages with 0 dangling, 120 in the installed vibedeps trees with 15 dangling, and **69 in the host's compiled boot lane, all 69 dangling**, because `spec/flows/` does not exist in the host",
-              "the target it names lives only under packages/ and vibedeps/; a booting session that follows the link from the compiled lane lands on nothing"
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -45933,8 +45838,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T14:02:07Z",
-        "verify_batch": "W1e"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W1e + D11-address"
       }
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md": {
@@ -47108,7 +47013,7 @@
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md": {
-      "content_hash": "c4054902635e8eb335aa835aef3827895d9e8660952d42029e4955f00d478060",
+      "content_hash": "ad7973e40c36533330f7aa8f3eb8eeb09dfd23d7c0d4bfa664e42524e17b0073",
       "rollup": {
         "explicit": [
           "impl",
@@ -47130,7 +47035,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c4054902635e8eb335aa835aef3827895d9e8660952d42029e4955f00d478060",
+        "processed_hash": "ad7973e40c36533330f7aa8f3eb8eeb09dfd23d7c0d4bfa664e42524e17b0073",
         "verdicts": {
           "PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -47309,17 +47214,12 @@
             ]
           },
           "flow-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:34  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:36  [`../flows/health-audit/audit-checklist.md`](../flows/health-audit/audit-checklist.md);",
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:38  [`../flows/health-audit/running-an-audit.md`](../flows/health-audit/running-an-audit.md).",
-              "spec/boot/STATIC.md:780  [`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);",
-              "DRIFT: the fact's subject is three `../flows/health-audit/…` pointers and the host has no `spec/flows/` directory, so all three resolve nowhere from `spec/boot/STATIC.md` where the snippet is read. The documents themselves ship and say what the snippet says they say, in the package and in the installed slot. W1's 69-dangling family, ninth package."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -47410,12 +47310,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:52:58Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W5 + D11-address"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md": {
-      "content_hash": "fee85116f5511638646081b0eaff08efabf993f925dbffd622a33acda52881a9",
+      "content_hash": "e8fb9569d55776e72177f8371857d04db664dc9cff53724b7d0a7b9b2bdbee04",
       "rollup": {
         "explicit": [
           "spec",
@@ -50424,7 +50324,7 @@
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md": {
-      "content_hash": "08fb98231b052b935c26fdc329f972b60c379c1e35ea318350ded75b0fd46fd9",
+      "content_hash": "2d07070caac7c3162aabb2cfa6d8f050ae71c25e2879e42fa618d1cdeb6ca096",
       "rollup": {
         "explicit": [
           "impl",
@@ -50446,7 +50346,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "08fb98231b052b935c26fdc329f972b60c379c1e35ea318350ded75b0fd46fd9",
+        "processed_hash": "2d07070caac7c3162aabb2cfa6d8f050ae71c25e2879e42fa618d1cdeb6ca096",
         "verdicts": {
           "THE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE": {
             "v": "confirmed",
@@ -50626,11 +50526,9 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:838  [`LICENSING-PROTOCOL.md`](../flows/licensing/LICENSING-PROTOCOL.md).",
-              "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md:3  **Scope of this document.** This file defines a product's *licensing",
-              "DRIFT, W1's dangling family, fourth package in a row. `../flows/licensing/LICENSING-PROTOCOL.md` is read from the snippet's compiled position at `spec/boot/STATIC.md:838`, and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms — no `spec/flows/`, so the link has no target from the one lane where a session meets it. The document itself exists at `vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md`, where the same relative path resolves correctly against the package's own `spec/boot/`. A fact about the pointer, not about the protocol it names."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -50730,12 +50628,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:47:02Z",
-        "verify_batch": "W6 + D6"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W6 + D6 + D11-address"
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md": {
-      "content_hash": "769c27157f61669f39946e0822e254ee69c1d85884ea0f5b21ab355e74fe1364",
+      "content_hash": "3fd232eb75bc20bcee9c0a721fb5fb4a5c42aa5c0a20bf7224e03549b90feb15",
       "rollup": {
         "explicit": [
           "spec",
@@ -50757,7 +50655,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "769c27157f61669f39946e0822e254ee69c1d85884ea0f5b21ab355e74fe1364",
+        "processed_hash": "3fd232eb75bc20bcee9c0a721fb5fb4a5c42aa5c0a20bf7224e03549b90feb15",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -51485,7 +51383,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:50:48Z",
+        "verified_at": "2026-07-31T20:39:23Z",
         "verify_batch": "W6 + D7 + D8c"
       }
     },
@@ -52895,7 +52793,7 @@
       }
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md": {
-      "content_hash": "5224916cba89bb31850ebe63bdd05ae06f24d0723b632f162e3be97b8850961d",
+      "content_hash": "8a25137a47bcf8a4b21bee4631be55076fca41ad36742896f9a27f71a1ef57f9",
       "rollup": {
         "explicit": [
           "impl",
@@ -52917,7 +52815,7 @@
       "unit_count": 3,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "5224916cba89bb31850ebe63bdd05ae06f24d0723b632f162e3be97b8850961d",
+        "processed_hash": "8a25137a47bcf8a4b21bee4631be55076fca41ad36742896f9a27f71a1ef57f9",
         "verdicts": {
           "PROJECT-SHIPS-THE-MANAGED-BLOCKS-PRACTICE": {
             "v": "confirmed",
@@ -52957,20 +52855,9 @@
             ]
           },
           "READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:19  ##READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:20  file the tool does not fully own, read",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:21  [`MANAGED-BLOCKS-PROTOCOL.md`](../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md)",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:22  first: marker design, the absent / present / malformed state",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:23  machine, the three verbs (create / update / remove), plan-time",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:24  classification. @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:74  ## Marker design {#markers}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:125  ## Well-formedness: absent, present, malformed {#state-machine}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:152  ## The three verbs {#verbs}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md:188  ## Classify at plan time, not mid-write {#plan-time}",
-              "spec/boot/STATIC.md:871  [`MANAGED-BLOCKS-PROTOCOL.md`](../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md)",
-              "DRIFT on the pointer, W1's 69-dangling family — fifth package in a row, and this snippet carries three of them. The four promised elements all exist as sections of the cited file (§markers 74, §state-machine 125, §verbs 152, §plan-time 188), so the content half is exact. The path half is not: the link is the relative `../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md`, the snippet is compiled into `spec/boot/STATIC.md`, so it resolves against `spec/boot/` → `spec/flows/managed-blocks/…`, and `ls -d spec/flows` returns «No such file or directory». The document exists in the package and in the installed slot; it is unreachable from the one lane where a session reads this instruction, which is the lane the word «Before» is addressed to."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -52978,21 +52865,9 @@
             ]
           },
           "shortcuts-are-already-catalogued": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:26  ##shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:27  smart detector, auto-repair, \"just regenerate the file\" — are",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:28  already catalogued with their failure modes in",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:29  [`rejected-designs.md`](../flows/managed-blocks/rejected-designs.md). @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:13  ## A sidecar file instead of a block {#sidecar}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:51  ## Model-based or heuristic block detection {#model-detection}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:81  ## Auto-repairing a malformed block {#auto-repair}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:114  ## Whole-file ownership {#whole-file}",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:166  - ##REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo). Rejected — it destroys co-tenant content; undoing it is the reason this PROP exists. @spec/done",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:167  - ##REJ-HEURISTIC-DETECTION **Heuristic or LLM-assisted block detection** (\"find the part that looks like vibevm's\"). Rejected — the region that gates a mutating write must be found by a deterministic byte scan, with no model and no guessing. @spec/done",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:168  - ##REJ-AUTO-REPAIR **Auto-repairing a malformed file** (delete the surplus marker, keep the first block). Rejected — vibevm never decides which of two regions is canonical; a malformed file is a hard stop for the human (§2.3). @spec/done",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:169  - ##REJ-SIDECAR **A sidecar file** (`.vibe/redirect`, a `vibe`-owned file the agent is pointed at) instead of a block inside `CLAUDE.md`. Rejected — the entire value of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is that every agent already reads them with zero configuration (PROP-009 §6.1's cross-agent property). A sidecar the agent does not natively read forfeits that. @spec/done",
-              "DRIFT, second of this snippet's three `../flows/…` pointers and the same mechanism: `../flows/managed-blocks/rejected-designs.md` read from the compiled snippet's position in `spec/boot/STATIC.md` has no target, because the host has no `spec/flows/` directory. The catalogue itself is real and ships — the four shortcuts this sentence names (a sidecar file, a smart detector, auto-repair, «just regenerate the file») each have their own section in `rejected-designs.md` — so the claim about the content holds and the way a reader is told to reach it does not."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -53000,17 +52875,9 @@
             ]
           },
           "adoption-guide-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:31  ##adoption-guide-pointer Migrating an existing overwriting tool, the fixture table for the",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:32  state machine, and what belongs inside the block:",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md:33  [`adoption-guide.md`](../flows/managed-blocks/adoption-guide.md). @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:12  ## Migrating from whole-file overwrite {#migrating}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:78  ## Testing the state machine {#testing}",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:87  | Fixture | Marker content | Expected verdict |",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md:115  ## What belongs inside the block {#what-belongs}",
-              "spec/boot/STATIC.md:880  [`adoption-guide.md`](../flows/managed-blocks/adoption-guide.md).",
-              "DRIFT, third of three, same lane and same defect: `../flows/managed-blocks/adoption-guide.md` resolves nowhere from `spec/boot/`, where the host has no `spec/flows/`. The target exists in the package and the installed slot and carries all three things the pointer promises — the migration path for an overwriting tool, the fixture table for the state machine, and what belongs inside the block. Every pointer in this snippet shares the defect and every one reaches a session in that form."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
@@ -53115,12 +52982,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:01:22Z",
-        "verify_batch": "W7"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W7 + D11-address"
       }
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md": {
-      "content_hash": "a0d5f7e270d26a52a6e66362698b9a38e993028e4191521e178eb5d026309440",
+      "content_hash": "b7a51d395463b6017cf013a982457879934c0b1426b20d9e94713cf5f7bcdda3",
       "rollup": {
         "explicit": [
           "spec",
@@ -56652,7 +56519,7 @@
       }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md": {
-      "content_hash": "14baaf6cbd3f48ba5423cfd7733187bcb5817a7e76caabf136e598c8c7c497a3",
+      "content_hash": "1b857ec3d182430be86b93977ca30954efd623a2f1b28effaebf01c7e7abeabb",
       "rollup": {
         "explicit": [
           "impl",
@@ -56914,7 +56781,7 @@
       }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md": {
-      "content_hash": "5414aab581d54282c5e4cab2a20f9fe8fcf08c19663443053539e54fab34ca98",
+      "content_hash": "fcb68dae1acd8b70920506ca031c4f847213281e3dd5bff15cd79ddeef53bec3",
       "rollup": {
         "explicit": [
           "spec",
@@ -58577,7 +58444,7 @@
       }
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md": {
-      "content_hash": "7ef1cdc1d4e64f0fd027a6c5a4dd21c20898bb782eff0e4388f9c8735c88bcd0",
+      "content_hash": "bb273abf6c1200f91d615ce7d5f0d011758904c73b061c6c6fdfb0763b113d9f",
       "rollup": {
         "explicit": [
           "impl",
@@ -58599,7 +58466,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "7ef1cdc1d4e64f0fd027a6c5a4dd21c20898bb782eff0e4388f9c8735c88bcd0",
+        "processed_hash": "bb273abf6c1200f91d615ce7d5f0d011758904c73b061c6c6fdfb0763b113d9f",
         "verdicts": {
           "THIS-PROJECT-USES-CODEWORD-TRIGGERED-OPERATING-MODES": {
             "v": "confirmed",
@@ -58678,17 +58545,12 @@
             ]
           },
           "codeword-catalogue-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:962  The project's codewords are catalogued in",
-              "spec/boot/STATIC.md:963  [`OPERATING-MODES-PROTOCOL.md`](../flows/operating-modes/OPERATING-MODES-PROTOCOL.md).",
-              "spec/boot/90-user.md:64  ##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @impl/done",
-              "spec/common/PROP-006-operating-modes.md:13  ##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.md`](../boot/90-user.md). @freeze/done",
-              "DRIFT: the fact's subject is a `../flows/operating-modes/OPERATING-MODES-PROTOCOL.md` pointer, and the host has no `spec/flows/` directory, so it resolves nowhere from `spec/boot/STATIC.md` where the snippet is read. The protocol itself ships, in the package and in the installed slot. W1's 69-dangling family, tenth package. NOTE the host DOES maintain the catalogue this pointer is about, at `spec/boot/90-user.md`, with one entry — so the content the pointer promises exists here under a different address."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -58749,18 +58611,12 @@
             ]
           },
           "worked-mode-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:971  The catalogue ships one worked mode:",
-              "spec/boot/STATIC.md:972  [`mfbt-mode.md`](../flows/operating-modes/mfbt-mode.md) — heads-down",
-              "spec/boot/STATIC.md:973  pre-authorised execution («move fast and break things»).",
-              "spec/boot/90-user.md:66  ##codewords-lead Codewords currently in force: @impl/done",
-              "spec/boot/90-user.md:68  - ##CODEWORD-MFBT **«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.md#mfbt)) — pre-authorised heads-down execution. …",
-              "DRIFT, same family and same reason: `../flows/operating-modes/mfbt-mode.md` resolves nowhere in the consuming project. The document ships and carries the worked mode it promises. Second of the snippet's two `../flows/` pointers."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -58954,12 +58810,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:11:46Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W5 + D11-address"
       }
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md": {
-      "content_hash": "34f934d610a6a07999a483986a98d6025dacdaab50151d463c987be76ec06434",
+      "content_hash": "04146b7a40d23a741a66038a30972345b76f1b9bdb077760aa229324d2a9476c",
       "rollup": {
         "explicit": [
           "spec",
@@ -61171,7 +61027,7 @@
       }
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md": {
-      "content_hash": "2a9de4f4afd73b2a3da40a8190d5394c460bd59c81973c6dd86cde06df9ac3d8",
+      "content_hash": "21fdbd7b4cfcae0aba505b89cd79708077c5a954fabff7866d52e9d36b5c4a19",
       "rollup": {
         "explicit": [
           "impl",
@@ -61193,7 +61049,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "2a9de4f4afd73b2a3da40a8190d5394c460bd59c81973c6dd86cde06df9ac3d8",
+        "processed_hash": "21fdbd7b4cfcae0aba505b89cd79708077c5a954fabff7866d52e9d36b5c4a19",
         "verdicts": {
           "PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE": {
             "v": "confirmed",
@@ -61221,16 +61077,12 @@
             ]
           },
           "READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:16  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:1  # Qualified Naming Protocol {#root}",
-              "spec/boot/STATIC.md:1014  read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)",
-              "DRIFT on the pointer, W1's dangling family — seventh package in a row, and this snippet carries three. The instruction survives compilation into the host's boot lane word for word and the cited document exists in the package and the installed slot, so the content half is exact. The link is relative — `../flows/qualified-naming/…` — and resolves from `spec/boot/` to `spec/flows/qualified-naming/`, which does not exist: `ls -d spec/flows` returns «No such file or directory» and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms. So the one instruction that says «before the first name is minted» points a session at nothing."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -61307,30 +61159,22 @@
             ]
           },
           "grammar-and-forms-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:1  # Reference grammar {#root}",
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:25  ref      := [ kind \":\" ] [ group \"/\" ] name [ \"@\" version ]",
-              "spec/boot/STATIC.md:1031  Grammar and forms: [`ref-grammar.md`](../flows/qualified-naming/ref-grammar.md).",
-              "DRIFT, second of this snippet's three dangling `../flows/…` pointers. The target exists and does carry both a grammar production and a forms table, so the promise is kept inside the package, and the pointer reaches the host's boot lane verbatim. It resolves nowhere in the consuming project, because the host has no `spec/flows/` directory."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "fork-by-fork-rationale-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:1  # Naming forks {#root}",
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md:9  ##four-forks Four forks: flat versus grouped, enforce versus recommend, where short",
-              "spec/boot/STATIC.md:1032  Fork-by-fork rationale: [`naming-forks.md`](../flows/qualified-naming/naming-forks.md).",
-              "DRIFT, third of three. The target exists and carries four forks each with a `##CHOSEN-*` resolution, so the content is as promised; the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -61391,12 +61235,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:32:52Z",
-        "verify_batch": "W7 + D9-boss-w"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W7 + D9-boss-w + D11-address"
       }
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md": {
-      "content_hash": "1b506ae082ac082cbdf1a188de26e5cba74df3c4ba975928ba7c8449e0f32a11",
+      "content_hash": "1348b64bf37a504c5094875f8526321e64f316dcab5a15e17befacad51f88045",
       "rollup": {
         "explicit": [
           "spec",
@@ -65104,7 +64948,7 @@
       }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md": {
-      "content_hash": "42c8ed93b007a456495927062df966e04ddcfbde906a89b97de876a0a4797adc",
+      "content_hash": "d7398e88dd92eb37dc35fe066e28f9371acead41ae4c80222ab9a2510f9cc5b0",
       "rollup": {
         "explicit": [
           "impl",
@@ -65404,7 +65248,7 @@
       }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md": {
-      "content_hash": "042263ea44a5c7e7fb5b451a7316f5738dd28b9b13ddfaafe6f396764fa8f3ba",
+      "content_hash": "b6c7180c227259c212fe864377b547737a0c04400c1bea3312bd88fa58ad40b2",
       "rollup": {
         "explicit": [
           "spec",
@@ -67747,7 +67591,7 @@
       }
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md": {
-      "content_hash": "057a74341e50fc52171b9d557daae76515e1cd7a9b420b3fc30ff51ee69d41a1",
+      "content_hash": "5024a7bb30bb9911ce8edab50e7aee1666b47717c9f0c932365c230ae6aa74c9",
       "rollup": {
         "explicit": [
           "impl",
@@ -67769,7 +67613,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "057a74341e50fc52171b9d557daae76515e1cd7a9b420b3fc30ff51ee69d41a1",
+        "processed_hash": "5024a7bb30bb9911ce8edab50e7aee1666b47717c9f0c932365c230ae6aa74c9",
         "verdicts": {
           "PROJECT-SOURCE-IS-MULTI-HOMED": {
             "v": "confirmed",
@@ -67865,44 +67709,32 @@
             ]
           },
           "full-protocol-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:1  # Source Mirrors Protocol {#root}",
-              "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md:1  # Source Mirrors Protocol {#root}",
-              "spec/boot/STATIC.md:1131  [`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md`](../flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md).",
-              "DRIFT, W1's 69-dangling family, and this snippet carries three of them — all reaching the host's boot lane in the broken form at `STATIC.md:1131`, `:1133` and `:1135`. The link is written `../flows/source-mirrors/…` relative to `spec/boot/`, and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms: no `spec/flows/` directory exists in this repository. The target itself is fine in the package and the installed slot. RECORDED, because this package shows what the working form looks like: `PROP-016:8` reaches the same document successfully as `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL#root`. The host has a mechanism that resolves; the snippet uses one that does not."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "fanout-mechanics-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:159  ## Reference implementation {#reference}",
-              "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:131  ## Reference implementation {#reference}",
-              "spec/boot/STATIC.md:1133  [`spec/flows/source-mirrors/fanout-mechanics.md`](../flows/source-mirrors/fanout-mechanics.md).",
-              "DRIFT, second of the snippet's three dangling `../flows/…` pointers, compiled into `STATIC.md:1133` where nothing resolves. The content half of the claim holds — the target exists in package and slot and does carry a reference script at §reference. `PROP-016:57` reaches the same document via the working form `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root`."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "maintainers-day-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
-              "vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/daily-loop.md:1  # The daily loop {#root}",
-              "spec/boot/STATIC.md:1135  [`spec/flows/source-mirrors/daily-loop.md`](../flows/source-mirrors/daily-loop.md).",
-              "DRIFT, third of three, same mechanism and same lane (`STATIC.md:1135`). The target exists in the package and in `vibedeps/`; the `../flows/…` path resolves nowhere in the host because `spec/flows/` does not exist. `PROP-016:8` addresses it successfully as `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root`. All three of this snippet's pointers share the defect and all three reach a session in that form."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -68016,12 +67848,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:57:38Z",
-        "verify_batch": "W6"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W6 + D11-address"
       }
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md": {
-      "content_hash": "8d3cad84987576f2dbd523c83b2dfe95511cafac783c166d19805954105f34e1",
+      "content_hash": "5dd5080013e31341959df9c1a6a06edb4f20e955b51bc0700dc7e1d0eff2e6c2",
       "rollup": {
         "explicit": [
           "spec",
@@ -70292,7 +70124,7 @@
       }
     },
     "packages/org.vibevm.world/spec-genres/v0.1.0/README.md": {
-      "content_hash": "b4e8b5ba56de3cdd9ad85d56f4fa47b521a754c1460faca355523dcd63a89db9",
+      "content_hash": "319f689d33c327cb9f71ac58a79819d91d118a152c04a18617fd7e7a9a762bed",
       "rollup": {
         "explicit": [
           "doc",
@@ -70314,7 +70146,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b4e8b5ba56de3cdd9ad85d56f4fa47b521a754c1460faca355523dcd63a89db9",
+        "processed_hash": "319f689d33c327cb9f71ac58a79819d91d118a152c04a18617fd7e7a9a762bed",
         "verdicts": {
           "PACKAGE-INSTALLS-A-GENRE-TAXONOMY": {
             "v": "confirmed",
@@ -70460,15 +70292,12 @@
             ]
           },
           "package-contents-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/spec-genres/v0.1.0/vibe.toml:16  source = \"spec/boot/17-flow-spec-genres.md\"",
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md:22  ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done",
-              "DRIFT, and it is arithmetic the package can check against itself. The sentence promises «four pieces of content plus a boot snippet», which is five things. Four bullets follow, and the FOURTH one IS the boot snippet — so the snippet is counted twice and the flow documents are over-counted by one. What ships is three: `find packages/org.vibevm.world/spec-genres -type f` returns 7 files — LICENSE.md, README.md, vibe.toml, the snippet, and three documents under `spec/flows/spec-genres/`. The sibling convention makes it decidable rather than a reading: `addressable-specs` ships exactly the same shape, 3 flow documents plus a snippet, 7 files, and its identical anchor says «three». Widened to every `packages/org.vibevm.world/*/v*/README.md` carrying this anchor: 14 of 16 say «three», and the two saying «four» are this package and `tool-design-lessons` — which also ships only 3 flow documents plus its snippet. So the two outliers are both wrong in the same direction, and the majority is not a majority opinion but the correct count."
+              "the count now reads three, matching the package's own three flow documents and the 14-sibling convention — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ],
             "src": [
-              1,
-              3
+              1
             ]
           },
           "CONTENT-THE-PROTOCOL": {
@@ -70671,12 +70500,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:40:10Z",
-        "verify_batch": "W6"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "W6 + D11-release-w"
       }
     },
     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md": {
-      "content_hash": "420728062e36d10696a6f6fea89ae7c72eafc9e4253f18a8c5f71bfe1e58727d",
+      "content_hash": "8169a00ed4013f6224cd95ad221ebafe0467df751365cc975661a0c6aee84a1f",
       "rollup": {
         "explicit": [
           "impl",
@@ -70698,7 +70527,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "420728062e36d10696a6f6fea89ae7c72eafc9e4253f18a8c5f71bfe1e58727d",
+        "processed_hash": "8169a00ed4013f6224cd95ad221ebafe0467df751365cc975661a0c6aee84a1f",
         "verdicts": {
           "PROJECT-DOCUMENTS-ARE-GENRE-TYPED": {
             "v": "confirmed",
@@ -70836,16 +70665,12 @@
             ]
           },
           "full-charters-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:43  | Genre | Charter | Mutability | Reader | Authority |",
-              "spec/boot/STATIC.md:1185  [`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md`](../flows/spec-genres/SPEC-GENRES-PROTOCOL.md).",
-              "spec/design/README.md:13  ##genre-table-lead vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`: @doc/done",
-              "DRIFT on the pointer, not on the charters — W1's dangling-sibling family, and the fact's SUBJECT is the pointer. The relative `../flows/spec-genres/SPEC-GENRES-PROTOCOL.md` is compiled verbatim into the host's `spec/boot/STATIC.md:1185`, and the host has no `spec/flows/` directory (`ls -d spec/flows` → No such file or directory), so from the one lane where a session actually reads this snippet the link resolves nowhere. The target itself is fine: the protocol ships in the package and in the installed slot, its table's column headers are exactly the three things the pointer promises plus Reader, and the host reaches it successfully by a different route — `spec/design/README.md:13` cites it by `spec://` address, which does resolve."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -70892,30 +70717,22 @@
             ]
           },
           "routing-table-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md:13  ## The routing table {#routing}",
-              "spec/boot/STATIC.md:1199  [`spec/flows/spec-genres/when-to-write-what.md`](../flows/spec-genres/when-to-write-what.md).",
-              "spec/design/README.md:36  ##when-to-write When a design discussion produces more reasoning than a PROP can absorb without losing its contract readability … (The general decision table is the flow's `when-to-write-what` document.) @doc/done",
-              "DRIFT, same family and same mechanism as its two siblings in this snippet: the relative pointer is compiled into `spec/boot/STATIC.md:1199` and the host has no `spec/flows/` directory. The target is present and correct — `when-to-write-what.md` ships in the package and the installed slot and its routing table carries 7 situation rows. The host reaches the routing idea by naming the document rather than by following the path (`spec/design/README.md:36`)."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "design-docs-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md:14  ## What stays in the contract, what spills out {#split}",
-              "spec/boot/STATIC.md:1201  [`spec/flows/spec-genres/design-docs.md`](../flows/spec-genres/design-docs.md).",
-              "spec/design/README.md:7  ##PROP-WINS-PRECEDENCE … load-bearing rationale — the decision itself and the alternatives weighed, in each PROP's `Decision` / `Rejected alternatives` sections … — stays inside the PROP; the narrative lore moves out to here (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#contract-vs-lore`). @doc/done",
-              "DRIFT, the third of the snippet's three dangling relative pointers (`STATIC.md:1201`, no host `spec/flows/`). RECORDED, because this one is weaker than its siblings in a second way the reviewer should see: the host never reaches `design-docs.md` at all. `grep 'design-docs'` across `spec/`, `campaigns/` and `CLAUDE.md` returns only the compiled pointer itself — when the host wants the contract/lore split it cites the PROTOCOL's `#contract-vs-lore` anchor instead. So the document ships, is installed, and is consumed by nobody through this pointer or any other."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -71015,12 +70832,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:40:10Z",
-        "verify_batch": "W6"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W6 + D11-address"
       }
     },
     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md": {
-      "content_hash": "d21b57a2943d51bf86725874f94d383ce58abe7bdcbd54635841cb294b03e9cb",
+      "content_hash": "0176779ee22c4ff769ffe6cb7fadd8a5328d7882e72ce407d2b97c1eec407313",
       "rollup": {
         "explicit": [
           "spec",
@@ -71042,7 +70859,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d21b57a2943d51bf86725874f94d383ce58abe7bdcbd54635841cb294b03e9cb",
+        "processed_hash": "0176779ee22c4ff769ffe6cb7fadd8a5328d7882e72ce407d2b97c1eec407313",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -71807,7 +71624,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:43:36Z",
+        "verified_at": "2026-07-31T20:39:23Z",
         "verify_batch": "W6 + D8c"
       }
     },
@@ -73246,7 +73063,7 @@
       }
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md": {
-      "content_hash": "d2cd6b5a37cbe3df22a537ecc375415fae40a903cd1e00c3ce524572adb5ebac",
+      "content_hash": "0ffd9dc06a41138bbff35ddc8710ebf9477ca8ff49ee87bc760b4d53556bbb70",
       "rollup": {
         "explicit": [
           "impl",
@@ -73268,7 +73085,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d2cd6b5a37cbe3df22a537ecc375415fae40a903cd1e00c3ce524572adb5ebac",
+        "processed_hash": "0ffd9dc06a41138bbff35ddc8710ebf9477ca8ff49ee87bc760b4d53556bbb70",
         "verdicts": {
           "THE-PROJECT-USES-SYNC-FROM-CODE": {
             "v": "confirmed",
@@ -73475,17 +73292,12 @@
             ]
           },
           "full-protocol-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md:1  # Sync-from-Code Protocol {#root}",
-              "spec/boot/STATIC.md:1256  Full protocol: [`spec/flows/sync-from-code/SYNC-PROTOCOL.md`](../flows/sync-from-code/SYNC-PROTOCOL.md).",
-              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:19    relative .md citations resolved: 23",
-              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:20    broken: 0",
-              "DRIFT: the same 69-dangling family W1 opened. The target exists in the package and in the installed slot, but the compiled boot lane keeps the relative link `../flows/sync-from-code/SYNC-PROTOCOL.md`, which from `spec/boot/` means `spec/flows/sync-from-code/SYNC-PROTOCOL.md`, and this host has no `spec/flows/` at all. The same anchor name was judged drift in W1 and again in W2a and W2c."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -73535,23 +73347,18 @@
             ]
           },
           "sibling-document-pointers": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md:1  # When to run Sync-from-Code {#root}",
-              "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md:1  # Sync-from-Code review workflow {#root}",
-              "spec/boot/STATIC.md:1268  Decision table for whether to run: [`spec/flows/sync-from-code/when-to-apply.md`](../flows/sync-from-code/when-to-apply.md).",
-              "spec/boot/STATIC.md:1269  Human review checklist: [`spec/flows/sync-from-code/review-workflow.md`](../flows/sync-from-code/review-workflow.md).",
-              "DRIFT: two pointers in one fact and both dangle for the host reader — `../flows/sync-from-code/when-to-apply.md` and `../flows/sync-from-code/review-workflow.md`, compiled verbatim into a lane whose `spec/flows/` does not exist. Both targets are real and are what the pointers call them; it is the address the consumer receives that fails."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           }
         },
-        "verified_at": "2026-07-28T19:56:59Z",
-        "verify_batch": "W2d"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W2d + D11-address"
       }
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md": {
@@ -75447,7 +75254,7 @@
       }
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md": {
-      "content_hash": "461f4c04aae06345f8284099d141816c10632eb25e4be639e6df515830875af4",
+      "content_hash": "e0fccd1532b363e9232253dcdf0b10721cb7919b08e75156ef005f0cf7bc7e07",
       "rollup": {
         "explicit": [
           "doc",
@@ -75469,7 +75276,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "461f4c04aae06345f8284099d141816c10632eb25e4be639e6df515830875af4",
+        "processed_hash": "e0fccd1532b363e9232253dcdf0b10721cb7919b08e75156ef005f0cf7bc7e07",
         "verdicts": {
           "PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS": {
             "v": "confirmed",
@@ -75531,19 +75338,12 @@
             ]
           },
           "package-contents-lead": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:1",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:1",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:1",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:1",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/LICENSE.md:1",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/vibe.toml:1",
-              "DRIFT, and it is the second half of a pair `spec-genres` predicted. `find packages/org.vibevm.world/tool-design-lessons -type f | sort` returns exactly 7 files — LICENSE.md, README.md, vibe.toml, the boot snippet, and three documents under `spec/flows/tool-design-lessons/` — so the shipped content is THREE flow documents plus a snippet, and «four pieces of content plus a boot snippet» over-counts by one. The installed slot mirrors all 7 (`find vibedeps/flow-tool-design-lessons -type f`). This is decidable rather than a reading because the collection has a convention: across every `packages/org.vibevm.world/*/v*/README.md` carrying this anchor, 14 of 16 say «three», and the two saying «four» are `spec-genres` and this package — both shipping three. When `spec-genres` was judged, its worker named this package as the other outlier without opening it; the count here confirms that prediction independently."
+              "the count now reads three, matching the package's own three flow documents — published 2026-07-31 (owner 'Публикуй'): the correction applied in the canonical package, re-vendored by vibe reinstall --force into the install slot, gate panel all green (self-check EXIT=0); harvest d9/d8b finals"
             ],
             "src": [
-              1,
-              3
+              1
             ]
           },
           "CONTENT-THE-CATALOG-INDEX": {
@@ -75765,12 +75565,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:13:27Z",
-        "verify_batch": "W7"
+        "verified_at": "2026-07-31T20:39:23Z",
+        "verify_batch": "W7 + D11-release-w"
       }
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md": {
-      "content_hash": "76736404c105718e2d4560629b031f32bc8191139b697ec52ab5ef0d31666d73",
+      "content_hash": "81e36861497cd1d4e4f5339e94c007ab1e6cdf83f4b966681863958711adcbda",
       "rollup": {
         "explicit": [
           "impl",
@@ -75792,7 +75592,7 @@
       "unit_count": 3,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "76736404c105718e2d4560629b031f32bc8191139b697ec52ab5ef0d31666d73",
+        "processed_hash": "81e36861497cd1d4e4f5339e94c007ab1e6cdf83f4b966681863958711adcbda",
         "verdicts": {
           "PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF": {
             "v": "confirmed",
@@ -75854,50 +75654,32 @@
             ]
           },
           "POINTER-SELF-UPDATING-TOOLS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:24    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md). @impl/done",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:1",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:16  ## S1 — activation truth is a live pointer, not the environment {#live-pointer}",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md:244  ## S7 — removal and garbage collection that protect {#safe-removal}",
-              "spec/boot/STATIC.md:1290    [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md).",
-              "DRIFT, W1's dangling family — sixth package in a row, and this snippet carries three. The content half is exact: the target covers all five subjects named, at S1 line 16 (activation), S2 54 (instances), S3 93 (identity), S4 131 (sources), S5 163 (environment edits) and S7 244 (removal). The path half fails where it is read: `ls -d spec/flows` reports ABSENT, so once the snippet is compiled into `spec/boot/STATIC.md` its `../flows/tool-design-lessons/…` links resolve nowhere in the consuming project. Inside the package the same links resolve, which is why the defect survives every check that runs against the package tree."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "POINTER-PACKAGING-LESSONS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:26    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md). @impl/done",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:1",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:53  ## P2 — ship the runtime, not a description of it {#ship-runtime}",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:85  ## P3 — identity is the source, excluded by denylist {#identity-is-source}",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:152  ## P5 — vendor and commit the bootstrap toolchain {#vendor-bootstrap}",
-              "spec/boot/STATIC.md:1292    [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md).",
-              "DRIFT, second of this snippet's three. The target covers the three subjects named — what ships (P2, line 53), what identity is (P3, 85), the bootstrap (P5, 152) — and the `../flows/…` path has no target from `spec/boot/`, where the host has no `spec/flows/` directory. Same mechanism, same lane, same package."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "index-and-maxims-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md:29  [`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md). @impl/done",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:34  ## Index {#index}",
-              "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md:53  ## Cross-cutting maxims {#maxims}",
-              "spec/boot/STATIC.md:1295  [`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md).",
-              "DRIFT, third of three. The target carries `## Index {#index}` at line 34 (a 14-row table at 36-51) and `## Cross-cutting maxims {#maxims}` at 53 with three subsections, so the content is exactly as promised; all 14 index rows and all 14 `{#…}` link targets were resolved by hand. The pointer itself dangles from the compiled lane like its two siblings."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -75991,8 +75773,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:13:27Z",
-        "verify_batch": "W7"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W7 + D11-address"
       }
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md": {
@@ -79102,7 +78884,7 @@
       }
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md": {
-      "content_hash": "9a7a3e8da2930eb4f9b3c249efc074d058e7d7c328fc6e27dfa81619089528a8",
+      "content_hash": "992ba6cee071c5a8d12976a73393e26e2da3a0647d3fca8beecfe3d2b07347ed",
       "rollup": {
         "explicit": [
           "impl",
@@ -79124,7 +78906,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "9a7a3e8da2930eb4f9b3c249efc074d058e7d7c328fc6e27dfa81619089528a8",
+        "processed_hash": "992ba6cee071c5a8d12976a73393e26e2da3a0647d3fca8beecfe3d2b07347ed",
         "verdicts": {
           "THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL": {
             "v": "confirmed",
@@ -79325,54 +79107,42 @@
             ]
           },
           "full-model-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:1365  Full model: [`TWO-PROCESS-MODEL.md`](../flows/two-process-model/TWO-PROCESS-MODEL.md).",
-              "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:1  # The Two-Process Model {#root}",
-              "spec/WAL.md:24  files), and a second family runs through every package: **69 relative `../flows/…`",
-              "DRIFT: the pointer does not resolve for the reader it is written for. The target exists and is installed (vibedeps/flow-two-process-model/0.1.0/…/TWO-PROCESS-MODEL.md, 190 lines), but STATIC.md:1365 keeps the relative link ../flows/two-process-model/TWO-PROCESS-MODEL.md, which from spec/boot/ means spec/flows/two-process-model/TWO-PROCESS-MODEL.md, and `ls spec/flows` returns 'No such file or directory'. W1's 69-dangling family; the same anchor name was judged drift there."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "responsibility-table-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:1366  Responsibility table: [`cognitive-load-split.md`](../flows/two-process-model/cognitive-load-split.md).",
-              "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md:1  # The cognitive load split {#root}",
-              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md:38  ### Both, differently {#both}",
-              "DRIFT: second of the three sibling pointers in this snippet. cognitive-load-split.md exists in the package and the installed slot and does carry the responsibility table (three zones, the shared-work table at 40-45), but the compiled link resolves to spec/flows/two-process-model/cognitive-load-split.md, which the host does not have."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
           "file-channel-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:1367  The file channel: [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md).",
-              "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md:1  # Files as IPC {#root}",
-              "vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md:40  ## The three planes {#planes}",
-              "DRIFT: third of the three. files-as-ipc.md exists and is installed and is about the file channel (§planes, §requirements), and the same document is cited a second time from inside CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY — so the snippet dangles the same path twice. files_written = [] plus a verbatim compile is the mechanism; the package's own tree resolves it fine."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           }
         },
-        "verified_at": "2026-07-28T19:11:51Z",
-        "verify_batch": "W2c"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W2c + D11-address"
       }
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md": {
-      "content_hash": "1b8bfd391e63718d519439db77367b2d186d49685d921ad2ded68a2ffbadf2c3",
+      "content_hash": "3c1cae2ba0fc4ee8afc01034f793a2b332d73f3240efc3942cc334dbca49be6e",
       "rollup": {
         "explicit": [
           "spec",
@@ -81356,7 +81126,7 @@
       }
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md": {
-      "content_hash": "db1e68a85ef8769b3ca9845ef95717172a89ac9ccbb9f0db715b31d5a0d4d734",
+      "content_hash": "c310e9d21fb1d8765709e1355e1fcca15c61b46df001cdca99fac39e37574815",
       "rollup": {
         "explicit": [
           "impl",
@@ -82765,7 +82535,7 @@
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md": {
-      "content_hash": "883335bb85b6c6138c2a16f65d0a2afbb6ca03ab504dbc47d940789c0d00e168",
+      "content_hash": "fbc2a08aef71b84d719a9f92b0ad53e7681a9ea874f51513d1ab55c9fc84be14",
       "rollup": {
         "explicit": [
           "impl",
@@ -82787,7 +82557,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "883335bb85b6c6138c2a16f65d0a2afbb6ca03ab504dbc47d940789c0d00e168",
+        "processed_hash": "fbc2a08aef71b84d719a9f92b0ad53e7681a9ea874f51513d1ab55c9fc84be14",
         "verdicts": {
           "PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY": {
             "v": "confirmed",
@@ -82994,26 +82764,22 @@
             ]
           },
           "full-protocol-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/boot/STATIC.md:1428  Full protocol: [`spec/flows/wal/WAL-PROTOCOL.md`](../flows/wal/WAL-PROTOCOL.md).",
-              "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:1  # WAL Protocol {#root}",
-              "vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md:1  # WAL Protocol {#root}",
-              "DRIFT: the pointer does not resolve for the reader it is written for. spec/boot/STATIC.md:1428 keeps the relative link ../flows/wal/WAL-PROTOCOL.md, which from spec/boot/ means spec/flows/wal/WAL-PROTOCOL.md; `ls spec/flows` returns 'No such file or directory'. Same for the snippet's other two sibling links at :1403 and :1414. This is W1's 69-dangling-pointer family, and the same anchor name was judged drift there (git-atomic-commits' full-protocol-pointer)."
+              "closed by the publication of 2026-07-31 (owner: 'Публикуй'; marker fork ruled (а), B-011 filed): this fact's pointer now reads @spec:// — position-independent, resolving from the package, the install slot and the compiled lane alike; address-repair.py applied (0 residual ../flows/ in scope), vibe reinstall --force re-vendored all packages, and the lane healed: ../flows/ in spec/boot/STATIC.md = 0 (was 69), @spec:// = 69; gate panel all green (tools/self-check.sh EXIT=0)"
             ],
             "src": [
               1,
-              2,
               3
             ]
           }
         },
-        "verified_at": "2026-07-28T18:52:29Z",
-        "verify_batch": "W2a"
+        "verified_at": "2026-07-31T20:38:28Z",
+        "verify_batch": "W2a + D11-address"
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md": {
-      "content_hash": "0224a8990b6e4f52f3d21ab20a1f539ab568e9edcac3f31b90dc0e1beb66eaa6",
+      "content_hash": "f0f2a1d8a214d5db1dc2e2ecbba15afda48701fb54b01fdea1670b531f94a24e",
       "rollup": {
         "explicit": [
           "spec",

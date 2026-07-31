@@ -422,6 +422,32 @@ already written from it is the specification of the work.)*
   selects the state zone. One of the two — a check that quietly writes is how a
   frozen zone stops being frozen.
 
+### B-011 — marker stripping in the boot compiler needs an aliasing design first {#b-011}
+
+| | |
+|---|---|
+| ##B011-ANCHOR **anchor** | the compile path: `crates/vibe-workspace/src/boot_artifacts.rs` (static lane), `boot_artifacts/normal.rs` (PROP-035 §8 compile); no marker handling exists anywhere in it today |
+| ##B011-LOCATOR **locator** | measured 2026-07-31: the 22 canonically-mapped static contributions carry 838 `##ANCHOR` / `@stage/state` tokens over 1 446 source lines, all of which compile verbatim into `spec/boot/STATIC.md` after a `--force` re-vendor |
+| ##B011-SEVERITY **severity** | P2 |
+| ##B011-DISPOSITION **disposition** | `open` — **owner design direction recorded 2026-07-31**, deliberately deferred («это не сейчас, это в бэклог») |
+| ##B011-FILED **filed by** | the packages-actualization campaign, the publication runbook's marker fork, 2026-07-31 |
+
+- ##B011-WHY-NAIVE-STRIPPING-IS-WRONG **Why naive stripping is wrong, in the owner's own framing.** Strip
+  the markup from the compiled lane and a **dynamic module can reference an
+  anchor that existed in the source markup and vanished after cleaning** — the
+  reference resolves at authoring time and dangles at read time. Stripping is
+  not a filter; it changes what is addressable from where, so it needs a
+  resolution design, not a regex.
+- ##B011-THE-DESIGN-DIRECTION **The design direction (owner, 2026-07-31).** Short names of the shape
+  `#use spec://… as SOMETHING`: a lane consumer imports an anchor under an
+  alias, and **when SOMETHING's carrier was cleaned, the compiler loads the
+  source markup and learns where the anchor lives** — resolution survives
+  stripping because the alias binds to the source-of-truth address, not to the
+  compiled text. Stripping then becomes safe to build on top.
+- ##B011-INTERIM **The interim, ruled the same day:** publish as is — the lane carries
+  the authoring tokens (the house grammar every agent here reads), and the
+  strip waits for the aliasing design rather than shipping half-safe.
+
 ## P3 — accepted, no action planned {#p3}
 
 *(empty)*

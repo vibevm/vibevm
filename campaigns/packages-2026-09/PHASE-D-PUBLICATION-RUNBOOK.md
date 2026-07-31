@@ -37,6 +37,15 @@ to canonical sources carry **838 `##ANCHOR` / `@stage/state` tokens over
 markup for the same reason it does not execute fenced directives; (а) spends
 the lane's budget on noise permanently to save one small reviewed build once.
 
+> **RULED — owner, 2026-07-31: (а), publish as is — and the recommendation
+> above was wrong in a way the owner caught.** Naive stripping breaks
+> cross-lane resolution: a dynamic module can reference an anchor that existed
+> in the source markup and vanished after cleaning. Stripping therefore needs
+> an aliasing design first (`#use spec://… as SOMETHING`, with the compiler
+> re-loading cleaned markup to resolve) — recorded as **BACKLOG B-011**,
+> deliberately deferred. The run proceeds under (а); step 2 below is skipped
+> and step 4's fork-(б) check does not apply.
+
 ## Approvals held, and what each covers {#approvals}
 
 | approval | covers |
